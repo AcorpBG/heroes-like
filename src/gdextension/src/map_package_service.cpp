@@ -6250,10 +6250,396 @@ Dictionary h3maped_player_slot_assignment_report(
 	return report;
 }
 
-Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Array &active_links, const Dictionary &assignment, const Dictionary &normalized) {
+struct H3MapedRng {
+	uint32_t state = 0;
+
+	int32_t next() {
+		state = state * 0x343fdu + 0x269ec3u;
+		return int32_t((state >> 16U) & 0x7fffu);
+	}
+};
+
+struct H3MapedRuntimeZoneSeed {
+	String record_id;
+	int32_t source_zone_id = -1;
+	int32_t source_index = -1;
+	int32_t source_bucket = -1;
+	int32_t source_owner_index = -1;
+	int32_t actual_player_color = -1;
+	int32_t source_base_size = 0;
+	String role;
+	Dictionary terrain_policy;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t scaled_size = 0;
+};
+
+struct H3MapedCoordCandidate {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct H3MapedRuntimeLinkSeed {
+	int32_t from_index = -1;
+	int32_t to_index = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+};
+
+int32_t h3maped_ftol_truncate(double value) {
+	return int32_t(std::trunc(value));
+}
+
+int32_t h3maped_distance_truncate(int32_t ax, int32_t ay, int32_t bx, int32_t by) {
+	const int64_t dx = int64_t(ax) - int64_t(bx);
+	const int64_t dy = int64_t(ay) - int64_t(by);
+	return h3maped_ftol_truncate(std::sqrt(double(dx * dx + dy * dy)));
+}
+
+bool h3maped_candidate_valid_4a1701(
+		const H3MapedRuntimeZoneSeed &current,
+		const H3MapedCoordCandidate &candidate,
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &placed_indices) {
+	if ((current.source_bucket == 0 || current.source_bucket == 1) && candidate.level == 1
+			&& current.actual_player_color != 3 && current.actual_player_color != 4 && current.actual_player_color != 5) {
+		return false;
+	}
+	for (int32_t other_index : placed_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		const H3MapedRuntimeZoneSeed &other = zones[size_t(other_index)];
+		if (other.source_zone_id == current.source_zone_id || other.level != candidate.level) {
+			continue;
+		}
+		const int32_t distance = h3maped_distance_truncate(candidate.x, candidate.y, other.x, other.y);
+		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
+		if (distance * 10 < minimum_tenths) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool h3maped_zones_connectable_49b6e2(const H3MapedRuntimeZoneSeed &first, const H3MapedRuntimeZoneSeed &second) {
+	const int32_t distance = h3maped_distance_truncate(first.x, first.y, second.x, second.y);
+	const int32_t size_sum = first.source_base_size + second.source_base_size;
+	if (first.level != second.level) {
+		if (size_sum < distance) {
+			return false;
+		}
+		return (size_sum - distance) > (std::min(first.source_base_size, second.source_base_size) / 2);
+	}
+	return size_sum * 11 >= distance * 10;
+}
+
+int32_t h3maped_link_acceptance_count_4a1967(
+		const H3MapedRuntimeZoneSeed &current,
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const std::vector<H3MapedRuntimeLinkSeed> &links) {
+	int32_t accepted = 0;
+	for (const H3MapedRuntimeLinkSeed &link : links) {
+		int32_t other_index = -1;
+		if (link.from_index == current.source_index) {
+			other_index = link.to_index;
+		} else if (link.to_index == current.source_index) {
+			other_index = link.from_index;
+		}
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		if (h3maped_zones_connectable_49b6e2(zones[size_t(other_index)], current)) {
+			accepted += 1;
+		}
+	}
+	return accepted;
+}
+
+Array h3maped_candidate_report_array(const std::vector<H3MapedCoordCandidate> &candidates, int32_t limit = 8) {
+	Array result;
+	const int32_t capped = std::min<int32_t>(int32_t(candidates.size()), limit);
+	for (int32_t index = 0; index < capped; ++index) {
+		const H3MapedCoordCandidate &candidate = candidates[size_t(index)];
+		Dictionary item;
+		item["x"] = candidate.x;
+		item["y"] = candidate.y;
+		item["level"] = candidate.level;
+		result.append(item);
+	}
+	return result;
+}
+
+void h3maped_append_angle_candidates_4a17f5(
+		const H3MapedRuntimeZoneSeed &base,
+		const H3MapedRuntimeZoneSeed &current,
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &placed_indices,
+		std::vector<H3MapedCoordCandidate> &candidates) {
+	static constexpr double X_TABLE[32] = {
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+	};
+	static constexpr double Y_TABLE[32] = {
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+	};
+	const int32_t combined_size = base.source_base_size + current.source_base_size;
+	for (int32_t direction = 0; direction < 32; ++direction) {
+		H3MapedCoordCandidate candidate;
+		candidate.x = h3maped_ftol_truncate(double(combined_size) * X_TABLE[direction] + double(base.x));
+		candidate.y = h3maped_ftol_truncate(double(combined_size) * Y_TABLE[direction] + double(base.y));
+		candidate.level = base.level;
+		if (h3maped_candidate_valid_4a1701(current, candidate, zones, placed_indices)) {
+			candidates.push_back(candidate);
+		}
+	}
+}
+
+void h3maped_prune_candidates_4a1ad8_single_level(
+		const H3MapedRuntimeZoneSeed &current_template,
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &placed_indices,
+		const std::vector<H3MapedRuntimeLinkSeed> &links,
+		std::vector<H3MapedCoordCandidate> &candidates) {
+	if (candidates.empty()) {
+		return;
+	}
+	int32_t best_link_count = 0;
+	for (const H3MapedCoordCandidate &candidate : candidates) {
+		H3MapedRuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		best_link_count = std::max(best_link_count, h3maped_link_acceptance_count_4a1967(candidate_zone, zones, links));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const H3MapedCoordCandidate &candidate) {
+		H3MapedRuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		return h3maped_link_acceptance_count_4a1967(candidate_zone, zones, links) < best_link_count;
+	}), candidates.end());
+	if (candidates.empty()) {
+		return;
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (int32_t other_index : placed_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index == current_template.source_index) {
+			continue;
+		}
+		const H3MapedRuntimeZoneSeed &other = zones[size_t(other_index)];
+		min_y = std::min(other.y - other.source_base_size, min_y);
+		min_x = std::min(other.x - other.source_base_size, min_x);
+		max_y = std::max(other.y + other.source_base_size + 1, max_y);
+		max_x = std::max(other.x + other.source_base_size + 1, max_x);
+	}
+
+	int32_t best_metric = 0x7d00;
+	for (const H3MapedCoordCandidate &candidate : candidates) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		best_metric = std::min(best_metric, std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const H3MapedCoordCandidate &candidate) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		const int32_t metric = std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x);
+		return best_metric < metric;
+	}), candidates.end());
+}
+
+Dictionary h3maped_coordinate_seed_4a1f3b_report(
+		std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const std::vector<H3MapedRuntimeLinkSeed> &links,
+		const Dictionary &normalized,
+		uint32_t rng_state_after_template_selection) {
+	Dictionary report;
+	report["status"] = "0x4a1f3b_0x4a17f5_0x4a1ad8_0x4a19ed_single_level_ported";
+	report["source"] = "h3maped 0x4a1f3b coordinate seeding, 0x4a17f5 angle candidates, 0x4a1ad8 single-level pruning, and 0x4a19ed bounding-box rescale";
+	report["angle_table_x_address"] = "0x58dc28";
+	report["angle_table_y_address"] = "0x58dd28";
+	report["ftol_address"] = "0x4e7dec";
+	report["distance_validation_address"] = "0x4a1701";
+	report["candidate_prune_address"] = "0x4a1ad8";
+	report["bbox_address"] = "0x4a19ed";
+	report["rng_state_after_template_selection_uint32"] = int64_t(rng_state_after_template_selection);
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	if (level_count != 1) {
+		report["status"] = "blocked_until_single_level_coordinate_port_extended";
+		report["blocked_reason"] = "current h3maped small scope is one-level land; two-level branch in 0x4a17f5/0x4a1ad8 is intentionally not claimed";
+		return report;
+	}
+	H3MapedRng rng;
+	rng.state = rng_state_after_template_selection;
+	Array placement_steps;
+	std::vector<int32_t> placed_indices;
+	int32_t rng_calls = 0;
+	auto place_zone = [&](int32_t zone_index, const String &pass_id) {
+		std::vector<H3MapedCoordCandidate> candidates;
+		Dictionary step;
+		step["pass"] = pass_id;
+		step["runtime_zone_index"] = zone_index;
+		step["source_zone_record_id"] = zones[size_t(zone_index)].record_id;
+		if (placed_indices.empty()) {
+			candidates.push_back(H3MapedCoordCandidate{0, 0, 0});
+			step["candidate_source"] = "0x4a1f7b_empty_runtime_vector_origin";
+		} else {
+			int32_t explicit_base_count = 0;
+			for (const H3MapedRuntimeLinkSeed &link : links) {
+				int32_t other_index = -1;
+				if (link.from_index == zone_index) {
+					other_index = link.to_index;
+				} else if (link.to_index == zone_index) {
+					other_index = link.from_index;
+				}
+				if (other_index < 0 || std::find(placed_indices.begin(), placed_indices.end(), other_index) == placed_indices.end()) {
+					continue;
+				}
+				explicit_base_count += 1;
+				h3maped_append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, placed_indices, candidates);
+			}
+			step["explicit_link_base_count"] = explicit_base_count;
+			if (candidates.empty()) {
+				for (int32_t other_index : placed_indices) {
+					h3maped_append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, placed_indices, candidates);
+				}
+				step["candidate_source"] = "0x4a2069_existing_runtime_zone_fallback";
+			} else {
+				step["candidate_source"] = "0x4a200c_explicit_source_link_endpoint";
+			}
+		}
+		step["candidate_count_before_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_before_4a1ad8"] = h3maped_candidate_report_array(candidates);
+		h3maped_prune_candidates_4a1ad8_single_level(zones[size_t(zone_index)], zones, placed_indices, links, candidates);
+		step["candidate_count_after_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_after_4a1ad8"] = h3maped_candidate_report_array(candidates);
+		if (!candidates.empty()) {
+			const int32_t rng_value = rng.next();
+			rng_calls += 1;
+			const int32_t selected_index = rng_value % int32_t(candidates.size());
+			const H3MapedCoordCandidate selected = candidates[size_t(selected_index)];
+			zones[size_t(zone_index)].x = selected.x;
+			zones[size_t(zone_index)].y = selected.y;
+			zones[size_t(zone_index)].level = selected.level;
+			step["rng_value"] = rng_value;
+			step["selected_candidate_index"] = selected_index;
+			Dictionary selected_report;
+			selected_report["x"] = selected.x;
+			selected_report["y"] = selected.y;
+			selected_report["level"] = selected.level;
+			step["selected_candidate"] = selected_report;
+		} else {
+			step["blocked_reason"] = "0x4a1f3b produced no coordinate candidates";
+		}
+		placement_steps.append(step);
+	};
+
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		place_zone(zone_index, "0x4a2226_initial_runtime_zone_insertion");
+		placed_indices.push_back(zone_index);
+	}
+	for (int32_t pass = 0; pass < 2; ++pass) {
+		for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+			place_zone(zone_index, pass == 0 ? "0x4a22b3_refinement_pass_1" : "0x4a22b3_refinement_pass_2");
+		}
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		min_y = std::min(zone.y - zone.source_base_size, min_y);
+		min_x = std::min(zone.x - zone.source_base_size, min_x);
+		max_y = std::max(zone.y + zone.source_base_size + 1, max_y);
+		max_x = std::max(zone.x + zone.source_base_size + 1, max_x);
+	}
+	const int32_t bbox_height = max_y - min_y;
+	const int32_t bbox_width = max_x - min_x;
+	const int32_t bbox_span = std::max(bbox_height, bbox_width);
+	const int32_t map_span = std::min(int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)));
+	const int32_t offset_y = (min_y - bbox_span + max_y) / 2;
+	const int32_t offset_x = (min_x - bbox_span + max_x) / 2;
+	for (H3MapedRuntimeZoneSeed &zone : zones) {
+		if (bbox_span > 0) {
+			zone.x = ((zone.x - offset_x) * map_span) / bbox_span;
+			zone.y = ((zone.y - offset_y) * map_span) / bbox_span;
+			zone.scaled_size = (zone.source_base_size * map_span) / bbox_span;
+		} else {
+			zone.scaled_size = zone.source_base_size;
+		}
+	}
+
+	Dictionary bbox;
+	bbox["min_y_before_rescale"] = min_y;
+	bbox["min_x_before_rescale"] = min_x;
+	bbox["max_y_before_rescale"] = max_y;
+	bbox["max_x_before_rescale"] = max_x;
+	bbox["height_before_rescale"] = bbox_height;
+	bbox["width_before_rescale"] = bbox_width;
+	bbox["selected_span_before_rescale"] = bbox_span;
+	bbox["map_span"] = map_span;
+	bbox["offset_y"] = offset_y;
+	bbox["offset_x"] = offset_x;
+	report["placement_step_count"] = placement_steps.size();
+	report["placement_steps"] = placement_steps;
+	report["rng_calls_after_template_selection"] = rng_calls;
+	report["rng_state_after_coordinate_seed_uint32"] = int64_t(rng.state);
+	report["bounding_box_rescale"] = bbox;
+	return report;
+}
+
+Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> &zones) {
+	Array result;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		Dictionary runtime_zone;
+		runtime_zone["runtime_zone_index"] = zone.source_index;
+		runtime_zone["source_zone_id"] = zone.source_zone_id;
+		runtime_zone["source_zone_record_id"] = zone.record_id;
+		runtime_zone["role"] = zone.role;
+		runtime_zone["source_bucket"] = zone.source_bucket;
+		runtime_zone["source_owner_index"] = zone.source_owner_index;
+		runtime_zone["actual_player_color"] = zone.actual_player_color;
+		runtime_zone["source_base_size"] = zone.source_base_size;
+		runtime_zone["runtime_size_before_bbox_rescale"] = zone.source_base_size;
+		runtime_zone["runtime_size_after_bbox_rescale"] = zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size;
+		runtime_zone["x_after_bbox_rescale"] = zone.x;
+		runtime_zone["y_after_bbox_rescale"] = zone.y;
+		runtime_zone["level"] = zone.level;
+		runtime_zone["terrain_policy"] = zone.terrain_policy;
+		result.append(runtime_zone);
+	}
+	return result;
+}
+
+Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Array &active_links, const Dictionary &assignment, const Dictionary &normalized, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	Dictionary zone_index_by_id;
-	Array runtime_zones;
+	std::vector<H3MapedRuntimeZoneSeed> runtime_zone_models;
 	int32_t min_source_zone_size = 0x7d00;
 	Array colors_by_source_owner = assignment.get("actual_colors_by_source_owner", Array());
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
@@ -6262,7 +6648,7 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 		}
 		Dictionary zone = Dictionary(active_zones[index]);
 		const String zone_id = String(zone.get("id", ""));
-		zone_index_by_id[zone_id] = runtime_zones.size();
+		zone_index_by_id[zone_id] = int32_t(runtime_zone_models.size());
 		const int32_t base_size = int32_t(zone.get("base_size", 0));
 		if (base_size < min_source_zone_size) {
 			min_source_zone_size = base_size;
@@ -6273,25 +6659,26 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 		if (source_owner_index >= 0 && source_owner_index < colors_by_source_owner.size()) {
 			actual_player_color = int32_t(colors_by_source_owner[source_owner_index]);
 		}
-		Dictionary runtime_zone;
-		runtime_zone["runtime_zone_index"] = runtime_zones.size();
-		runtime_zone["source_zone_id"] = int32_t(zone.get("source_zone_id", -1));
-		runtime_zone["source_zone_record_id"] = zone_id;
-		runtime_zone["role"] = String(zone.get("role", zone.get("type", "")));
+		H3MapedRuntimeZoneSeed runtime_zone;
+		runtime_zone.record_id = zone_id;
+		runtime_zone.source_zone_id = int32_t(zone.get("source_zone_id", -1));
+		runtime_zone.source_index = int32_t(runtime_zone_models.size());
+		runtime_zone.role = String(zone.get("role", zone.get("type", "")));
 		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
-		runtime_zone["source_bucket"] = int32_t(grammar_source.get("source_bucket", -1));
-		runtime_zone["source_owner_index"] = source_owner_index;
-		runtime_zone["actual_player_color"] = actual_player_color;
-		runtime_zone["source_base_size"] = base_size;
-		runtime_zone["runtime_size_before_bbox_rescale"] = base_size;
-		runtime_zone["terrain_policy"] = zone.get("terrain", Dictionary());
-		runtime_zones.append(runtime_zone);
+		runtime_zone.source_bucket = int32_t(grammar_source.get("source_bucket", -1));
+		runtime_zone.source_owner_index = source_owner_index;
+		runtime_zone.actual_player_color = actual_player_color;
+		runtime_zone.source_base_size = base_size;
+		runtime_zone.scaled_size = base_size;
+		runtime_zone.terrain_policy = zone.get("terrain", Dictionary());
+		runtime_zone_models.push_back(runtime_zone);
 	}
 	if (min_source_zone_size == 0x7d00) {
 		min_source_zone_size = 0;
 	}
 
 	Array runtime_links;
+	std::vector<H3MapedRuntimeLinkSeed> runtime_link_models;
 	for (int64_t index = 0; index < active_links.size(); ++index) {
 		if (Variant(active_links[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -6302,13 +6689,20 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 		Dictionary runtime_link;
 		runtime_link["from"] = from_id;
 		runtime_link["to"] = to_id;
-		runtime_link["from_runtime_zone_index"] = int32_t(zone_index_by_id.get(from_id, -1));
-		runtime_link["to_runtime_zone_index"] = int32_t(zone_index_by_id.get(to_id, -1));
-		runtime_link["guard_value"] = int32_t(link.get("guard_value", link.get("guard", Dictionary()).get("value", 0)));
-		runtime_link["wide"] = bool(link.get("wide", false));
-		runtime_link["border_guard"] = bool(link.get("border_guard", false));
+		const int32_t from_index = int32_t(zone_index_by_id.get(from_id, -1));
+		const int32_t to_index = int32_t(zone_index_by_id.get(to_id, -1));
+		const int32_t guard_value = int32_t(link.get("guard_value", link.get("guard", Dictionary()).get("value", 0)));
+		const bool wide = bool(link.get("wide", false));
+		const bool border_guard = bool(link.get("border_guard", false));
+		runtime_link["from_runtime_zone_index"] = from_index;
+		runtime_link["to_runtime_zone_index"] = to_index;
+		runtime_link["guard_value"] = guard_value;
+		runtime_link["wide"] = wide;
+		runtime_link["border_guard"] = border_guard;
 		runtime_links.append(runtime_link);
+		runtime_link_models.push_back(H3MapedRuntimeLinkSeed{from_index, to_index, guard_value, wide, border_guard});
 	}
+	Dictionary coordinate_seed = h3maped_coordinate_seed_4a1f3b_report(runtime_zone_models, runtime_link_models, normalized, rng_state_after_template_selection);
 
 	const int32_t width = int32_t(normalized.get("width", 0));
 	const int32_t height = int32_t(normalized.get("height", 0));
@@ -6328,15 +6722,17 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 	report["h3maped_water_mode_code"] = water_code;
 	report["scale_divisor"] = divisor;
 	report["link_seed_scale_argument"] = link_seed_scale_argument;
-	report["runtime_zone_count"] = runtime_zones.size();
-	report["runtime_zones"] = runtime_zones;
+	report["runtime_zone_count"] = int32_t(runtime_zone_models.size());
+	report["runtime_zones"] = h3maped_runtime_zone_seed_array(runtime_zone_models);
 	report["runtime_link_seed_count"] = runtime_links.size();
 	report["runtime_link_seeds"] = runtime_links;
-	report["blocked_next"] = "0x4a1f3b/0x4a19ed coordinate seeding and bounding-box rescale not ported";
+	report["coordinate_seed_status"] = coordinate_seed.get("status", "");
+	report["coordinate_seed"] = coordinate_seed;
+	report["blocked_next"] = "0x4a3a03 per-level zone footprint placement and later terrain/object phases not ported";
 	return report;
 }
 
-Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_record, const Dictionary &normalized, int32_t source_catalog_index, int32_t human_count, int32_t player_count) {
+Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_record, const Dictionary &normalized, int32_t source_catalog_index, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary payload;
 	if (template_record.is_empty()) {
 		payload["status"] = "adapted_template_not_found";
@@ -6418,7 +6814,7 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 	Dictionary assignment = h3maped_player_slot_assignment_report(human_capable, player_capable, h3maped_selected_color_bitmap_from_normalized(normalized), human_count, computer_count);
 	payload["assignment_status"] = assignment.get("status", "");
 	payload["player_slot_assignment"] = assignment;
-	Dictionary runtime_zone_seed = h3maped_runtime_zone_seed_report(active_zones, active_links, assignment, normalized);
+	Dictionary runtime_zone_seed = h3maped_runtime_zone_seed_report(active_zones, active_links, assignment, normalized, rng_state_after_template_selection);
 	payload["runtime_zone_seed_status"] = runtime_zone_seed.get("status", "");
 	payload["runtime_zone_seed"] = runtime_zone_seed;
 	payload["zones"] = active_zones;
@@ -6511,7 +6907,7 @@ Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normal
 		report["selected_template_vector_index"] = selected_index;
 		report["selected_template"] = selected_template;
 		report["h3maped_rng"] = h3maped_rng_evidence_report(seed_text, seed_value, rng_step, int32_t(accepted_templates.size()));
-		report["selected_template_payload"] = h3maped_adapted_template_payload_report(h3maped_adapted_template_record_for_source_index(source_catalog_index), normalized, source_catalog_index, human_count, player_count);
+		report["selected_template_payload"] = h3maped_adapted_template_payload_report(h3maped_adapted_template_record_for_source_index(source_catalog_index), normalized, source_catalog_index, human_count, player_count, rng_step.next_state);
 	} else if (supported_scope && accepted_templates.size() > 0) {
 		Dictionary evidence;
 		evidence["function_address"] = "0x4e7276";

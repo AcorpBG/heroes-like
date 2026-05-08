@@ -109,6 +109,20 @@ func _run() -> void:
 	if int(runtime_zones[0].get("actual_player_color", -1)) != 0 or int(runtime_zones[1].get("actual_player_color", -1)) != 1 or int(runtime_zones[2].get("actual_player_color", 99)) != -1:
 		_fail("The 0x4a218c runtime-zone seed boundary did not carry player-slot assignment into runtime zones: %s" % JSON.stringify(report))
 		return
+	if String(runtime_zone_seed.get("coordinate_seed_status", "")) != "0x4a1f3b_0x4a17f5_0x4a1ad8_0x4a19ed_single_level_ported":
+		_fail("The 0x4a218c boundary did not port the single-level h3maped coordinate seed and bbox rescale path: %s" % JSON.stringify(report))
+		return
+	var coordinate_seed: Dictionary = runtime_zone_seed.get("coordinate_seed", {})
+	if int(coordinate_seed.get("placement_step_count", -1)) != 18 or int(coordinate_seed.get("rng_calls_after_template_selection", -1)) != 18:
+		_fail("The h3maped coordinate seed path did not execute the initial insertion plus two refinement passes: %s" % JSON.stringify(report))
+		return
+	var bbox: Dictionary = coordinate_seed.get("bounding_box_rescale", {})
+	if int(bbox.get("map_span", -1)) != 36 or int(bbox.get("selected_span_before_rescale", 0)) <= 0:
+		_fail("The h3maped 0x4a19ed bbox rescale evidence is missing or invalid: %s" % JSON.stringify(report))
+		return
+	if not runtime_zones[0].has("x_after_bbox_rescale") or not runtime_zones[0].has("y_after_bbox_rescale") or int(runtime_zones[0].get("runtime_size_after_bbox_rescale", 0)) <= 0:
+		_fail("Runtime zones did not expose post-0x4a19ed coordinate and size evidence: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -164,6 +178,8 @@ func _run() -> void:
 		"adapted_template_id": selected_payload.get("adapted_template_id", ""),
 		"selected_zone_count": selected_payload.get("zone_count", 0),
 		"selected_link_count": selected_payload.get("link_count", 0),
+		"coordinate_seed_status": runtime_zone_seed.get("coordinate_seed_status", ""),
+		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
