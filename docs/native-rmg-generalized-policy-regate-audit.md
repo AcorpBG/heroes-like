@@ -959,3 +959,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_medium_normalwater_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `xl_islands`, followed by Large one-level normal-water/land cases and XL two-level route/terrain-shape cases. The remaining Medium normal-water debt is specifically town/route shape after the category, road-total, and underground-terrain gaps were reduced.
+
+## XL One-Level Islands Road, Terrain, Reward, And Guard Profile Cleanup
+
+The next merged top-gap case was `xl_islands`. The owner sample is a one-level island map with `3938` objects, `674` road cells across `6` road components, `4995` terrain-blocked tiles, and guarded town routes fully closed. Native previously had the right broad decoration/object volume but missed the profile shape: road cells were short and split into `10` components, terrain was over-blocked by `1505` tiles, guards were overfilled by `139`, rewards were underfilled by `49`, and total object count was `+93`.
+
+Normal generated catalog-auto XL one-level islands now use a scoped six-component road target, exact owner-like road-cell floor, lower guard-to-reward floor, owner-like reward floor, and higher island land fractions by zone role. This keeps guarded routes closed while reducing the category and terrain profile mismatch without treating the owner sample as a production-ready exact-count target.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_islands` export wrote `1/1` package in about `34.340s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-islands.h3m --amap .artifacts/rmg_native_batch_export_xl_islands_profile_probe/xl_islands.amap --compare --pretty --allow-failures` improved total object delta from `+93` to `+2`, road delta from `-52` to `0`, terrain-blocked delta from `+1505` to `+139`, category absolute delta from `193` to `6`, guard delta from `+139` to `-1`, and reward delta from `-49` to `0`.
+- The focused production-gap severity improved from `1868` to `172`. Remaining debt is route/town distribution shape rather than broad category or road totals: native still places `10` towns versus owner `8`, keeps `2` object-only reachable town pairs versus owner `1`, and road components are shape-similar but not exact (`210/167/126/89/55/27` versus owner `230/141/122/100/44/37`).
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` failed the partial policy gate only because a single-sample `144x144_l1` guard/reward average sits below the grouped owner baseline; the focused production-gap audit itself passed with severity `172`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `l_normalwater_randomplayers`, followed by XL two-level islands/water and Large land/water route-shape cases. The next correction should continue general profile-shape work and avoid reintroducing sample-only exact-count branches as runtime policy.
