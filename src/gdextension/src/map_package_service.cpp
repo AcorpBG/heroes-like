@@ -6087,6 +6087,89 @@ Dictionary h3maped_rng_evidence_report(const String &seed_text, uint32_t seed_va
 	return evidence;
 }
 
+bool h3maped_player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_t total_count) {
+	return human_count >= int32_t(filter.get("min_human", 1))
+			&& human_count <= int32_t(filter.get("max_human", 8))
+			&& total_count >= int32_t(filter.get("min_total", 2))
+			&& total_count <= int32_t(filter.get("max_total", 8));
+}
+
+Dictionary h3maped_adapted_template_record_for_source_index(int32_t source_catalog_index) {
+	Dictionary catalog = load_random_map_template_catalog();
+	Array templates = catalog.get("templates", Array());
+	const int32_t imported_source_index = source_catalog_index + 1;
+	for (int64_t index = 0; index < templates.size(); ++index) {
+		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = Dictionary(templates[index]);
+		Dictionary provenance = candidate.get("import_provenance", Dictionary());
+		if (int32_t(provenance.get("source_template_index", -1)) == imported_source_index) {
+			return candidate;
+		}
+	}
+	return Dictionary();
+}
+
+Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_record, int32_t source_catalog_index, int32_t human_count, int32_t player_count) {
+	Dictionary payload;
+	if (template_record.is_empty()) {
+		payload["status"] = "adapted_template_not_found";
+		payload["expected_imported_source_template_index"] = source_catalog_index + 1;
+		return payload;
+	}
+	Array source_zones = template_record.get("zones", Array());
+	Array source_links = template_record.get("links", Array());
+	Array active_zones;
+	Array active_links;
+	int32_t player_start_zone_count = 0;
+	int32_t treasure_zone_count = 0;
+	int32_t minimum_player_castles = 0;
+	for (int64_t index = 0; index < source_zones.size(); ++index) {
+		if (Variant(source_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(source_zones[index]);
+		if (!h3maped_player_filter_accepts(zone.get("player_filter", Dictionary()), human_count, player_count)) {
+			continue;
+		}
+		const String role = String(zone.get("role", zone.get("type", "")));
+		if (role == "human_start" || role == "computer_start") {
+			player_start_zone_count += 1;
+		}
+		if (role == "treasure") {
+			treasure_zone_count += 1;
+		}
+		Dictionary player_towns = zone.get("player_towns", Dictionary());
+		minimum_player_castles += int32_t(player_towns.get("min_castles", 0));
+		active_zones.append(zone);
+	}
+	for (int64_t index = 0; index < source_links.size(); ++index) {
+		if (Variant(source_links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = Dictionary(source_links[index]);
+		if (h3maped_player_filter_accepts(link.get("player_filter", Dictionary()), human_count, player_count)) {
+			active_links.append(link);
+		}
+	}
+	payload["status"] = "adapted_template_found";
+	payload["adapted_template_id"] = String(template_record.get("id", ""));
+	payload["source_catalog_index_zero_based"] = source_catalog_index;
+	payload["imported_source_template_index_one_based"] = source_catalog_index + 1;
+	payload["zone_count"] = active_zones.size();
+	payload["link_count"] = active_links.size();
+	payload["player_start_zone_count"] = player_start_zone_count;
+	payload["treasure_zone_count"] = treasure_zone_count;
+	payload["minimum_player_castles_before_assignment"] = minimum_player_castles;
+	payload["assignment_status"] = "blocked_until_0x4ac552_player_slot_assignment_ported";
+	payload["zones"] = active_zones;
+	payload["links"] = active_links;
+	payload["graph_summary"] = template_record.get("graph_summary", Dictionary());
+	payload["source"] = "content/random_map_template_catalog.json imported from recovered h3maped rmg-template-catalog provenance";
+	return payload;
+}
+
 Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normalized) {
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t human_count = int32_t(constraints.get("human_count", 1));
@@ -6146,10 +6229,13 @@ Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normal
 	if (supported_scope && accepted_templates.size() > 0 && h3maped_parse_explicit_seed(seed_text, seed_value)) {
 		const H3MapedRngStep rng_step = h3maped_first_rng_step(seed_value);
 		const int32_t selected_index = int32_t(rng_step.value % int32_t(accepted_templates.size()));
+		Dictionary selected_template = accepted_templates[selected_index];
+		const int32_t source_catalog_index = int32_t(selected_template.get("source_catalog_index", -1));
 		report["selected_template_status"] = "h3maped_rng_selected";
 		report["selected_template_vector_index"] = selected_index;
-		report["selected_template"] = accepted_templates[selected_index];
+		report["selected_template"] = selected_template;
 		report["h3maped_rng"] = h3maped_rng_evidence_report(seed_text, seed_value, rng_step, int32_t(accepted_templates.size()));
+		report["selected_template_payload"] = h3maped_adapted_template_payload_report(h3maped_adapted_template_record_for_source_index(source_catalog_index), source_catalog_index, human_count, player_count);
 	} else if (supported_scope && accepted_templates.size() > 0) {
 		Dictionary evidence;
 		evidence["function_address"] = "0x4e7276";

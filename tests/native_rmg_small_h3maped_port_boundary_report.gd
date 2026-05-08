@@ -51,6 +51,22 @@ func _run() -> void:
 	if String(selected_template.get("id", "")) != "h3maped_template_018":
 		_fail("The recovered h3maped RNG selected the wrong accepted template for seed 1: %s" % JSON.stringify(report))
 		return
+	var selected_payload: Dictionary = report.get("selected_template_payload", {})
+	if String(selected_payload.get("status", "")) != "adapted_template_found":
+		_fail("The selected h3maped source template was not resolved through the adapted catalog provenance: %s" % JSON.stringify(report))
+		return
+	if String(selected_payload.get("adapted_template_id", "")) != "translated_rmg_template_019_v1":
+		_fail("The selected h3maped source template resolved to the wrong adapted template id: %s" % JSON.stringify(report))
+		return
+	if int(selected_payload.get("zone_count", -1)) != 6 or int(selected_payload.get("link_count", -1)) != 5:
+		_fail("The selected h3maped source template payload lost zone/link topology: %s" % JSON.stringify(report))
+		return
+	if int(selected_payload.get("player_start_zone_count", -1)) != 4 or int(selected_payload.get("treasure_zone_count", -1)) != 2:
+		_fail("The selected h3maped source template payload lost source zone roles: %s" % JSON.stringify(report))
+		return
+	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
+		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
+		return
 	var accepted_ids := _accepted_template_ids(report)
 	for required_id in ["h3maped_template_000", "h3maped_template_012", "h3maped_template_048"]:
 		if not accepted_ids.has(required_id):
@@ -86,6 +102,9 @@ func _run() -> void:
 		"status": report.get("status", ""),
 		"accepted_template_count": report.get("accepted_template_count", 0),
 		"selected_template": selected_template.get("id", ""),
+		"adapted_template_id": selected_payload.get("adapted_template_id", ""),
+		"selected_zone_count": selected_payload.get("zone_count", 0),
+		"selected_link_count": selected_payload.get("link_count", 0),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
 	})])
