@@ -7155,6 +7155,378 @@ Array h3maped_line_trace_preview(const std::vector<H3MapedLineCellWrite> &trace,
 	return result;
 }
 
+H3MapedLineWriteResult h3maped_randomized_line_writer_4a2413(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t x1,
+		int32_t y1,
+		int32_t x2,
+		int32_t y2,
+		int32_t zone_id,
+		int32_t level,
+		int32_t random_span_limit,
+		H3MapedRng &rng,
+		int32_t *rng_call_count,
+		int32_t *inserted_midpoint_count,
+		int32_t *max_pending_point_count);
+
+bool h3maped_point_inside_bounds_4a2777(const H3MapedClipResult &point, const H3MapedClipBounds &bounds) {
+	return point.x >= bounds.min_x && point.x < bounds.max_x && point.y >= bounds.min_y && point.y < bounds.max_y;
+}
+
+void h3maped_merge_line_write_result_4a2777(
+		const H3MapedLineWriteResult &line,
+		std::map<int64_t, bool> &unique_cells,
+		int32_t &trace_write_count,
+		int32_t &out_of_bounds_write_count) {
+	for (const auto &item : line.unique_cells) {
+		unique_cells[item.first] = true;
+	}
+	trace_write_count += int32_t(line.trace.size());
+	out_of_bounds_write_count += line.out_of_bounds_write_count;
+}
+
+Dictionary h3maped_segment_report_4a2777(
+		const String &id,
+		const String &branch,
+		const String &writer,
+		int32_t from_x,
+		int32_t from_y,
+		int32_t to_x,
+		int32_t to_y,
+		const H3MapedLineWriteResult &line) {
+	Dictionary segment;
+	segment["id"] = id;
+	segment["branch"] = branch;
+	segment["writer"] = writer;
+	segment["from_x"] = from_x;
+	segment["from_y"] = from_y;
+	segment["to_x"] = to_x;
+	segment["to_y"] = to_y;
+	segment["trace_write_count"] = int32_t(line.trace.size());
+	segment["unique_cell_count"] = int32_t(line.unique_cells.size());
+	segment["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	return segment;
+}
+
+Dictionary h3maped_real_source_node_cycle_traversal_4a2777_report(
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const Dictionary &normalized,
+		const Dictionary &split_model,
+		uint32_t rng_state_after_coordinate_seed) {
+	Dictionary report;
+	report["status"] = "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized";
+	report["source"] = "h3maped 0x4a2777 over real 0x4cca55 source-node cycles: clip finalized +0x1c/+0x20 coordinates through 0x4a2b33, append runtime_zone+0x3f4 vertices, and paint boundary cells through 0x4a261a/0x4a2413";
+	report["function_address"] = "0x4a2777";
+	report["caller_address"] = "0x4a3e58..0x4a3e8c";
+	report["source_node_cycle_source"] = "runtime_split_pre_crossing_model.source_node_walks from 0x4cca55 after 0x4ccdfc finalization";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["deterministic_line_writer_address"] = "0x4a261a";
+	report["flagged_line_writer_address"] = "0x4a2413";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["project_materialized_cell_count"] = 0;
+
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	H3MapedClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["rng_state_before_0x4a2777_uint32"] = int64_t(rng_state_after_coordinate_seed);
+
+	Array walks = split_model.get("source_node_walks", Array());
+	Array zone_reports;
+	std::map<int64_t, bool> unique_cells;
+	int32_t trace_write_count = 0;
+	int32_t out_of_bounds_write_count = 0;
+	int32_t runtime_zone_walk_count = 0;
+	int32_t blocked_zone_count = 0;
+	int32_t fallback_zone_count = 0;
+	int32_t connector_segment_count = 0;
+	int32_t wrap_segment_count = 0;
+	int32_t final_segment_count = 0;
+	int32_t appended_vertex_count = 0;
+	int32_t skipped_unfinalized_node_count = 0;
+	int32_t skipped_out_of_bounds_clip_count = 0;
+	int32_t flagged_writer_segment_count = 0;
+	int32_t deterministic_writer_segment_count = 0;
+	int32_t randomized_rng_call_count = 0;
+	int32_t randomized_inserted_midpoint_count = 0;
+	int32_t randomized_max_pending_point_count = 0;
+	bool loop_guard_exhausted = false;
+	H3MapedRng rng;
+	rng.state = rng_state_after_coordinate_seed;
+
+	auto append_vertex = [&](Array &vertices, int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+		appended_vertex_count += 1;
+	};
+
+	auto append_segment = [&](Array &segments, const String &id, const String &branch, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_word, int32_t level, bool randomized, int32_t random_span_limit) {
+		H3MapedLineWriteResult line;
+		if (randomized) {
+			line = h3maped_randomized_line_writer_4a2413(
+					width,
+					height,
+					level_count,
+					water_code,
+					x1,
+					y1,
+					x2,
+					y2,
+					zone_word,
+					level,
+					random_span_limit,
+					rng,
+					&randomized_rng_call_count,
+					&randomized_inserted_midpoint_count,
+					&randomized_max_pending_point_count);
+			flagged_writer_segment_count += 1;
+		} else {
+			line = h3maped_line_writer_4a261a(width, height, level_count, water_code, x1, y1, x2, y2, zone_word, level);
+			deterministic_writer_segment_count += 1;
+		}
+		h3maped_merge_line_write_result_4a2777(line, unique_cells, trace_write_count, out_of_bounds_write_count);
+		segments.append(h3maped_segment_report_4a2777(id, branch, randomized ? String("0x4a2413") : String("0x4a261a"), x1, y1, x2, y2, line));
+	};
+
+	auto point_on_clip_border = [&](int32_t x, int32_t y) {
+		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
+	};
+
+	for (int64_t walk_index = 0; walk_index < walks.size(); ++walk_index) {
+		if (Variant(walks[walk_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary walk = Dictionary(walks[walk_index]);
+		const int32_t runtime_zone_index = int32_t(walk.get("runtime_zone_index", -1));
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = runtime_zone_index;
+		zone_report["source_zone_record_id"] = walk.get("source_zone_record_id", "");
+		zone_report["status"] = "blocked_before_cycle_consumption";
+		if (runtime_zone_index < 0 || runtime_zone_index >= int32_t(zones.size())) {
+			blocked_zone_count += 1;
+			zone_reports.append(zone_report);
+			continue;
+		}
+		const H3MapedRuntimeZoneSeed &zone = zones[size_t(runtime_zone_index)];
+		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : runtime_zone_index;
+		const int32_t level = zone.level;
+		const bool flagged_branch = runtime_zone_index < int32_t(zones.size()) && !(level_count == 2 && level != 1);
+		const int32_t random_span_limit = std::max<int32_t>(1, zone.source_base_size);
+		Array cycle_nodes = walk.get("cycle_nodes", Array());
+		std::vector<Vector2i> finalized_points;
+		Array point_reports;
+		for (int64_t node_index = 0; node_index < cycle_nodes.size(); ++node_index) {
+			if (Variant(cycle_nodes[node_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary node = Dictionary(cycle_nodes[node_index]);
+			if (!bool(node.get("finalized", false))) {
+				skipped_unfinalized_node_count += 1;
+				continue;
+			}
+			const int32_t x = int32_t(node.get("+0x1c_finalized_x", 0));
+			const int32_t y = int32_t(node.get("+0x20_finalized_y", 0));
+			finalized_points.push_back(Vector2i(x, y));
+			Dictionary point;
+			point["node_id"] = node.get("node_id", "");
+			point["x"] = x;
+			point["y"] = y;
+			point_reports.append(point);
+		}
+		zone_report["finalized_point_count"] = int32_t(finalized_points.size());
+		zone_report["finalized_points"] = point_reports;
+		zone_report["flagged_branch_from_0x4a3e69"] = flagged_branch;
+		zone_report["random_span_limit_source_base_size"] = random_span_limit;
+		if (finalized_points.size() < 2) {
+			blocked_zone_count += 1;
+			zone_report["status"] = "blocked_no_finalized_cycle_segments";
+			zone_reports.append(zone_report);
+			continue;
+		}
+
+		int32_t selected_segment_index = -1;
+		H3MapedClipResult clipped_current;
+		H3MapedClipResult clipped_target;
+		for (int32_t index = 0; index < int32_t(finalized_points.size()); ++index) {
+			const Vector2i from = finalized_points[size_t(index)];
+			const Vector2i to = finalized_points[size_t((index + 1) % int32_t(finalized_points.size()))];
+			if (from == to) {
+				continue;
+			}
+			H3MapedClipResult candidate_current = h3maped_clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
+			H3MapedClipResult candidate_target = h3maped_clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!h3maped_point_inside_bounds_4a2777(candidate_current, bounds)) {
+				skipped_out_of_bounds_clip_count += 1;
+				continue;
+			}
+			if (candidate_current.x == candidate_target.x && candidate_current.y == candidate_target.y) {
+				continue;
+			}
+			selected_segment_index = index;
+			clipped_current = candidate_current;
+			clipped_target = candidate_target;
+			break;
+		}
+
+		if (selected_segment_index < 0) {
+			fallback_zone_count += 1;
+			zone_report["status"] = "0x4a2777_rectangle_fallback_required_for_cycle";
+			zone_reports.append(zone_report);
+			continue;
+		}
+
+		Array segments;
+		Array vertices;
+		append_vertex(vertices, clipped_current.x, clipped_current.y);
+		append_segment(
+				segments,
+				"connector",
+				"0x4a2911_connector_segment_from_real_source_cycle",
+				clipped_current.x,
+				clipped_current.y,
+				clipped_target.x,
+				clipped_target.y,
+				zone_word,
+				level,
+				flagged_branch,
+				random_span_limit);
+		connector_segment_count += 1;
+
+		int32_t current_x = clipped_target.x;
+		int32_t current_y = clipped_target.y;
+		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+		int32_t source_index = (selected_segment_index + 1) % int32_t(finalized_points.size());
+		for (int32_t guard = 0; guard < int32_t(finalized_points.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(finalized_points.size());
+			if (source_index == selected_segment_index) {
+				break;
+			}
+			const Vector2i from = finalized_points[size_t(source_index)];
+			const Vector2i to = finalized_points[size_t(next_source_index)];
+			source_index = next_source_index;
+			if (from == to) {
+				continue;
+			}
+			const H3MapedClipResult next_clip = h3maped_clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!h3maped_point_inside_bounds_4a2777(next_clip, bounds)) {
+				skipped_out_of_bounds_clip_count += 1;
+				continue;
+			}
+
+			int32_t wrap_guard = 0;
+			while (current_x != next_clip.x && current_y != next_clip.y && point_on_clip_border(current_x, current_y) && point_on_clip_border(next_clip.x, next_clip.y) && wrap_guard < 8) {
+				int32_t border_x = current_x;
+				int32_t border_y = current_y;
+				String branch = "0x4a2aa7_bottom_edge_to_min_x";
+				if (current_x == bounds.min_x) {
+					if (current_y == bounds.min_y) {
+						border_x = right_x;
+						border_y = bounds.min_y;
+						branch = "0x4a2a91_top_edge_to_max_x_minus_one";
+					} else {
+						border_x = bounds.min_x;
+						border_y = bounds.min_y;
+						branch = "0x4a2a81_left_edge_to_min_y";
+					}
+				} else if (current_y == bounds.min_y) {
+					border_x = right_x;
+					border_y = bounds.min_y;
+					branch = "0x4a2a89_top_edge_to_max_x_minus_one";
+				} else if (current_x == right_x && current_y != bottom_y) {
+					border_x = right_x;
+					border_y = bottom_y;
+					branch = "0x4a2a98_right_edge_to_max_y_minus_one";
+				} else {
+					border_x = bounds.min_x;
+					border_y = bottom_y;
+					branch = "0x4a2aa7_bottom_edge_to_min_x";
+				}
+				append_segment(segments, "wrap", branch, current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
+				append_vertex(vertices, current_x, current_y);
+				current_x = border_x;
+				current_y = border_y;
+				wrap_segment_count += 1;
+				wrap_guard += 1;
+			}
+			if (wrap_guard >= 8 && current_x != next_clip.x && current_y != next_clip.y) {
+				loop_guard_exhausted = true;
+				break;
+			}
+			if (current_x != next_clip.x || current_y != next_clip.y) {
+				append_segment(
+						segments,
+						"final",
+						"0x4a2af2_final_segment_to_real_cycle_endpoint",
+						current_x,
+						current_y,
+						next_clip.x,
+						next_clip.y,
+						zone_word,
+						level,
+						false,
+						random_span_limit);
+				append_vertex(vertices, current_x, current_y);
+				final_segment_count += 1;
+				current_x = next_clip.x;
+				current_y = next_clip.y;
+			}
+			if (source_index == selected_segment_index) {
+				break;
+			}
+		}
+		runtime_zone_walk_count += 1;
+		zone_report["status"] = "0x4a2777_real_source_cycle_consumed";
+		zone_report["selected_segment_index"] = selected_segment_index;
+		zone_report["connector_from_x"] = clipped_current.x;
+		zone_report["connector_from_y"] = clipped_current.y;
+		zone_report["connector_to_x"] = clipped_target.x;
+		zone_report["connector_to_y"] = clipped_target.y;
+		zone_report["appended_vertex_count"] = vertices.size();
+		zone_report["appended_vertices"] = vertices;
+		zone_report["segment_count"] = segments.size();
+		zone_report["segments"] = segments;
+		zone_reports.append(zone_report);
+	}
+
+	report["runtime_zone_walk_count"] = runtime_zone_walk_count;
+	report["blocked_zone_count"] = blocked_zone_count;
+	report["fallback_zone_count"] = fallback_zone_count;
+	report["connector_segment_count"] = connector_segment_count;
+	report["wrap_segment_count"] = wrap_segment_count;
+	report["final_segment_count"] = final_segment_count;
+	report["appended_vertex_count"] = appended_vertex_count;
+	report["skipped_unfinalized_node_count"] = skipped_unfinalized_node_count;
+	report["skipped_out_of_bounds_clip_count"] = skipped_out_of_bounds_clip_count;
+	report["flagged_writer_segment_count"] = flagged_writer_segment_count;
+	report["deterministic_writer_segment_count"] = deterministic_writer_segment_count;
+	report["randomized_rng_call_count"] = randomized_rng_call_count;
+	report["randomized_inserted_midpoint_count"] = randomized_inserted_midpoint_count;
+	report["randomized_max_pending_point_count"] = randomized_max_pending_point_count;
+	report["rng_state_after_0x4a2777_uint32"] = int64_t(rng.state);
+	report["trace_write_count"] = trace_write_count;
+	report["unique_cell_count"] = int32_t(unique_cells.size());
+	report["out_of_bounds_write_count"] = out_of_bounds_write_count;
+	report["loop_guard_exhausted"] = loop_guard_exhausted;
+	report["zone_reports"] = zone_reports;
+	report["blocked_next"] = "feed these real 0x4a2777 boundary cells into 0x4a325d span fill and 0x4a3710 adjacency ordering before project terrain/object materialization";
+	return report;
+}
+
 Dictionary h3maped_line_writer_4a261a_report(const Dictionary &normalized) {
 	Dictionary report;
 	report["status"] = "0x4a261a_cell_line_writer_ported";
@@ -7757,10 +8129,14 @@ Dictionary h3maped_randomized_line_writer_4a2413_report(const Dictionary &normal
 	return report;
 }
 
-Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+Dictionary h3maped_first_footprint_helper_4a2777_report(
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const Dictionary &normalized,
+		const Dictionary &split_model,
+		uint32_t rng_state_after_coordinate_seed) {
 	Dictionary report;
-	report["status"] = "0x4a2777_disassembled_4a2b33_4a261a_4a2413_helpers_ported_runtime_layout_blocked";
-	report["source"] = "h3maped 0x4a2777 footprint connector helper; 0x4a2b33, 0x4a261a, and 0x4a2413 standalone dependencies are ported, while full helper materialization is still blocked on exact runtime link-node/source-rect traversal";
+	report["status"] = "0x4a2777_real_source_node_cycle_traversal_ported_span_fill_pending";
+	report["source"] = "h3maped 0x4a2777 footprint connector helper; standalone branches remain exposed, and the real 0x4cca55 source-node cycles are now consumed to paint h3maped boundary cells before span fill";
 	report["function_address"] = "0x4a2777";
 	report["clip_helper_address"] = "0x4a2b33";
 	report["line_cell_writer_address"] = "0x4a261a";
@@ -7796,6 +8172,9 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	report["connector_segment_evidence"] = h3maped_connector_segment_branch_4a2777_report(normalized);
 	report["boundary_wrapping_status"] = "0x4a2777_boundary_wrapping_continuation_ported_standalone";
 	report["boundary_wrapping_evidence"] = h3maped_boundary_wrapping_continuation_4a2777_report(normalized);
+	Dictionary real_cycle = h3maped_real_source_node_cycle_traversal_4a2777_report(zones, normalized, split_model, rng_state_after_coordinate_seed);
+	report["real_source_cycle_traversal_status"] = real_cycle.get("status", "");
+	report["real_source_cycle_traversal_evidence"] = real_cycle;
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
@@ -7808,8 +8187,9 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 		available_inputs.append(item);
 	}
 	report["available_runtime_zone_inputs"] = available_inputs;
-	report["materialized_cell_count"] = 0;
-	report["blocked_next"] = "recover phase node/link/source rectangle traversal well enough to execute 0x4a2777 without inventing connector geometry";
+	report["project_materialized_cell_count"] = 0;
+	report["h3maped_boundary_cell_count"] = int32_t(real_cycle.get("unique_cell_count", 0));
+	report["blocked_next"] = "feed real 0x4a2777 boundary cells into 0x4a325d span fill, then 0x4a3710 adjacency/ordering-vector semantics";
 	return report;
 }
 
@@ -8449,7 +8829,7 @@ Dictionary h3maped_footprint_runtime_layout_evidence_report() {
 	return report;
 }
 
-Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized, uint32_t rng_state_after_coordinate_seed) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_level_collection_ported_helpers_blocked";
 	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection and branch scheduling; footprint helper trio remains unported";
@@ -8506,11 +8886,13 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["levels"] = levels;
 	report["synthetic_source_zone_size"] = "0xd4";
 	report["synthetic_source_zone_defaults"] = synthetic_defaults;
-	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones, normalized);
+	Dictionary polygon_seed = h3maped_polygon_seed_4a3a03_report(zones, normalized);
+	Dictionary split_model = polygon_seed.get("runtime_split_pre_crossing_model", Dictionary());
+	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones, normalized, split_model, rng_state_after_coordinate_seed);
 	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report(normalized);
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
-	report["polygon_seed_evidence"] = h3maped_polygon_seed_4a3a03_report(zones, normalized);
+	report["polygon_seed_evidence"] = polygon_seed;
 	report["polygon_splitter_contract"] = h3maped_polygon_splitter_contract_4ccb64_report();
 	return report;
 }
@@ -8607,7 +8989,8 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 	report["runtime_link_seeds"] = runtime_links;
 	report["coordinate_seed_status"] = coordinate_seed.get("status", "");
 	report["coordinate_seed"] = coordinate_seed;
-	Dictionary footprint_phase = h3maped_level_footprint_phase_4a3a03_report(runtime_zone_models, normalized);
+	const uint32_t rng_state_after_coordinate_seed = uint32_t(int64_t(coordinate_seed.get("rng_state_after_coordinate_seed_uint32", int64_t(rng_state_after_template_selection))));
+	Dictionary footprint_phase = h3maped_level_footprint_phase_4a3a03_report(runtime_zone_models, normalized, rng_state_after_coordinate_seed);
 	report["level_footprint_phase_status"] = footprint_phase.get("status", "");
 	report["level_footprint_phase"] = footprint_phase;
 	report["blocked_next"] = "0x4a2777/0x4a325d/0x4a3710 footprint geometry helpers and later terrain/object phases not ported";
