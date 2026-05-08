@@ -103,6 +103,25 @@ func _run() -> void:
 	if full_eligibility_sequence.size() != 7 or String(full_eligibility_sequence[0].get("address", "")) != "0x49a6f9" or String(full_eligibility_sequence[2].get("address", "")) != "0x49a09c":
 		_fail("0x49aa93 recovered gate sequence drifted from executable disassembly: %s" % JSON.stringify(town_castle_placement))
 		return
+	var object_metadata: Dictionary = town_castle_placement.get("object_metadata_table", {})
+	if String(object_metadata.get("status", "")) != "0x57c648_runtime_object_metadata_table_bound_to_text_sources_inspection_only":
+		_fail("0x49aa93 object metadata table was not bound to the recovered h3maped runtime source tables: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(object_metadata.get("metadata_entry_count", -1)) != 232 or int(object_metadata.get("metadata_entry_size_bytes", -1)) != 16:
+		_fail("0x57c648 runtime object metadata table dimensions drifted from recovered executable evidence: %s" % JSON.stringify(object_metadata))
+		return
+	if String(object_metadata.get("metadata_runtime_table_address", "")) != "0x598300" or String(object_metadata.get("metadata_pointer_global_address", "")) != "0x57c648":
+		_fail("0x57c648 metadata pointer/runtime address drifted: %s" % JSON.stringify(object_metadata))
+		return
+	if int(object_metadata.get("objects_table_declared_row_count", -1)) != 1326 or int(object_metadata.get("objects_table_loaded_row_count", -1)) != 1326:
+		_fail("Recovered objects.txt row count drifted: %s" % JSON.stringify(object_metadata))
+		return
+	if int(object_metadata.get("town_type_id", -1)) != 98 or String(object_metadata.get("town_type_name", "")) != "Town" or int(object_metadata.get("town_template_row_count", -1)) != 9:
+		_fail("Recovered Town object template binding drifted: %s" % JSON.stringify(object_metadata))
+		return
+	if int(object_metadata.get("random_town_type_id", -1)) != 77 or String(object_metadata.get("random_town_type_name", "")) != "Random Town" or int(object_metadata.get("random_town_template_row_count", -1)) != 1:
+		_fail("Recovered Random Town object template binding drifted: %s" % JSON.stringify(object_metadata))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
