@@ -181,7 +181,7 @@ func _run() -> void:
 		_fail("The recovered h3maped polygon-node finalized/intersection offsets are missing: %s" % JSON.stringify(report))
 		return
 	var polygon_seed: Dictionary = level_footprint_phase.get("polygon_seed_evidence", {})
-	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_and_pre_crossing_split_ported_cleanup_pending":
+	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_and_split_cleanup_ported_finalizer_pending":
 		_fail("The h3maped 0x4a3a03 polygon seed-call schedule was not exposed: %s" % JSON.stringify(report))
 		return
 	if int(polygon_seed.get("materialized_primary_split_seed_count", -1)) != 6:
@@ -191,21 +191,27 @@ func _run() -> void:
 	if polygon_levels.size() != 1 or int(polygon_levels[0].get("split_call_count", -1)) != 6:
 		_fail("The h3maped polygon seed-call report did not match the one-level six-zone selected template: %s" % JSON.stringify(report))
 		return
-	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_insertion_and_bridge_ported_crossing_collapse_pending":
-		_fail("The h3maped polygon seed-call report must expose the ported pre-crossing split model and remaining cleanup blocker: %s" % JSON.stringify(report))
+	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_insertion_bridge_and_crossing_cleanup_ported_finalizer_pending":
+		_fail("The h3maped polygon seed-call report must expose the ported split cleanup model and remaining finalizer blocker: %s" % JSON.stringify(report))
 		return
 	var pre_crossing_model: Dictionary = polygon_seed.get("runtime_split_pre_crossing_model", {})
 	if int(pre_crossing_model.get("executed_split_call_count", -1)) != 6 or int(pre_crossing_model.get("pre_crossing_inserted_node_pair_count", -1)) != 6:
 		_fail("The h3maped pre-crossing split model did not execute the six primary insertions: %s" % JSON.stringify(report))
 		return
-	if int(pre_crossing_model.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 or int(pre_crossing_model.get("pre_crossing_total_node_pair_count", -1)) != 23:
+	if int(pre_crossing_model.get("pre_crossing_inserted_bridge_pair_count", -1)) != 13 or int(pre_crossing_model.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23:
 		_fail("The h3maped pre-crossing bridge/node-pair counts drifted from the executable model: %s" % JSON.stringify(report))
 		return
-	if int(pre_crossing_model.get("duplicate_skip_count", -1)) != 0 or int(pre_crossing_model.get("edge_removal_branch_count", -1)) != 0:
-		_fail("The seed 1 small-land split path unexpectedly hit duplicate or edge-removal branches: %s" % JSON.stringify(report))
+	if int(pre_crossing_model.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 24 or int(pre_crossing_model.get("edge_removal_branch_count", -1)) != 1:
+		_fail("The h3maped edge-removal/vector allocation counts drifted from the executable model: %s" % JSON.stringify(report))
 		return
-	if String(pre_crossing_model.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_not_yet_executed":
-		_fail("The h3maped pre-crossing split model must still leave crossing cleanup unclaimed: %s" % JSON.stringify(report))
+	if int(pre_crossing_model.get("duplicate_skip_count", -1)) != 0 or int(pre_crossing_model.get("crossing_test_count", -1)) != 24 or int(pre_crossing_model.get("crossing_collapse_count", -1)) != 6:
+		_fail("The h3maped crossing cleanup counts drifted from the executable model: %s" % JSON.stringify(report))
+		return
+	if String(pre_crossing_model.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported":
+		_fail("The h3maped split model did not port crossing cleanup: %s" % JSON.stringify(report))
+		return
+	if String(pre_crossing_model.get("finalizer_status", "")) != "0x4ccdfc_not_yet_executed":
+		_fail("The h3maped split model must still leave polygon finalization unclaimed: %s" % JSON.stringify(report))
 		return
 	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
 	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
