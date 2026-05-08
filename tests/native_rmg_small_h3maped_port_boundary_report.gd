@@ -290,8 +290,8 @@ func _run() -> void:
 	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_and_seed_relocation_ported_project_materialization_pending":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the real boundary-buffer port boundary: %s" % JSON.stringify(report))
 		return
-	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("project_materialized_cell_count", -1)) != 0:
-		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel without faking project cells: %s" % JSON.stringify(report))
+	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000":
+		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel: %s" % JSON.stringify(report))
 		return
 	var span_sample: Dictionary = second_helper.get("sample_span_fill", {})
 	if int(second_helper.get("sample_materialized_cell_count", 0)) <= 0 or int(span_sample.get("filled_cell_count", 0)) <= 0:
@@ -327,6 +327,42 @@ func _run() -> void:
 		return
 	if int(second_helper.get("real_boundary_remaining_unassigned_cell_count", -1)) != 272:
 		_fail("The h3maped 0x4a325d real span fill remaining-unassigned count drifted: %s" % JSON.stringify(report))
+		return
+	var project_materialization: Dictionary = second_helper.get("project_materialization", {})
+	if String(project_materialization.get("status", "")) != "h3maped_span_fill_project_grid_materialized_terrain_repaint_pending":
+		_fail("The h3maped 0x4a325d project grid materialization report was not exposed: %s" % JSON.stringify(report))
+		return
+	if String(project_materialization.get("adoption_status", "")) != "report_only_not_runtime_generation" or String(project_materialization.get("next_required_phase_address", "")) != "0x4a3f27":
+		_fail("The h3maped 0x4a325d project grid materialization must stay report-only until 0x4a3f27 is ported: %s" % JSON.stringify(report))
+		return
+	if int(second_helper.get("project_materialized_cell_count", -1)) != 1024 or int(second_helper.get("project_unresolved_cell_count", -1)) != 272:
+		_fail("The h3maped 0x4a325d project grid materialized/unresolved counts drifted: %s" % JSON.stringify(report))
+		return
+	if int(project_materialization.get("project_materialized_cell_count", -1)) != 1024 or int(project_materialization.get("unresolved_cell_count", -1)) != 272:
+		_fail("The h3maped 0x4a325d nested project grid materialized/unresolved counts drifted: %s" % JSON.stringify(report))
+		return
+	if int(project_materialization.get("zone_count", -1)) != 6 or int(project_materialization.get("materialized_level_count", -1)) != 1:
+		_fail("The h3maped 0x4a325d project grid materialization lost the selected small one-level shape: %s" % JSON.stringify(report))
+		return
+	var materialized_levels: Array = project_materialization.get("levels", [])
+	if materialized_levels.size() != 1 or not materialized_levels[0] is Dictionary:
+		_fail("The h3maped 0x4a325d project grid materialization level report was malformed: %s" % JSON.stringify(report))
+		return
+	var materialized_level: Dictionary = materialized_levels[0]
+	var terrain_codes: PackedInt32Array = materialized_level.get("terrain_code_u16", PackedInt32Array())
+	var owner_grid: Array = materialized_level.get("owner_grid", [])
+	if terrain_codes.size() != 1296 or owner_grid.size() != 36 or not owner_grid[0] is Array or owner_grid[0].size() != 36:
+		_fail("The h3maped 0x4a325d project grid materialization did not expose a 36x36 project grid: %s" % JSON.stringify(report))
+		return
+	var materialized_zones: Array = project_materialization.get("zones", [])
+	var materialized_zone_counts: Array[int] = []
+	for zone in materialized_zones:
+		if not zone is Dictionary:
+			_fail("The h3maped 0x4a325d project grid materialized zone report was malformed: %s" % JSON.stringify(report))
+			return
+		materialized_zone_counts.append(int(zone.get("cell_count", -1)))
+	if materialized_zone_counts != [266, 227, 204, 58, 152, 117]:
+		_fail("The h3maped 0x4a325d project grid materialized zone counts drifted: %s" % JSON.stringify(report))
 		return
 	var zone_fills: Array = real_span_fill.get("zone_fills", [])
 	if zone_fills.size() != 6 or not zone_fills[0] is Dictionary:
@@ -546,6 +582,10 @@ func _run() -> void:
 		"real_boundary_seed_blocked_count": real_span_fill.get("seed_blocked_count", 0),
 		"real_boundary_seed_relocated_count": real_span_fill.get("seed_relocated_count", 0),
 		"real_boundary_blocked_initial_span_count": real_span_fill.get("blocked_initial_span_count", 0),
+		"project_materialization_status": second_helper.get("project_materialization_status", ""),
+		"project_materialized_cell_count": second_helper.get("project_materialized_cell_count", 0),
+		"project_unresolved_cell_count": second_helper.get("project_unresolved_cell_count", 0),
+		"project_materialized_zone_counts": materialized_zone_counts,
 		"finalizer_status": finalizer.get("status", ""),
 		"finalizer_appended_runtime_zone_count": finalizer.get("appended_runtime_zone_count", 0),
 		"finalizer_order_reset_call_count": finalizer.get("zone_order_reset_call_count", 0),
