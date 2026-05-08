@@ -850,3 +850,22 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_2level_route_merged --skip-timing-summary --failure-limit 8` passed.
 
 This correction is important because it fixes a route-shape regression caused by package adoption, not just an object count. Production parity remains false; the next merged top blocker is `l_normalwater_randomplayers_2level`, followed by Large two-level land/islands and Medium two-level category/route-shape gaps.
+
+## Large Two-Level Normal-Water Category Profile Cleanup
+
+The next merged top-gap case was `l_normalwater_randomplayers_2level`. Its terrain shape and town count were already close, but the generic Large two-level object floor underfilled every major category: native had `3116` total objects versus owner `4007`, with decoration `1554` versus `1915`, guard `303` versus `535`, object `723` versus `821`, and reward `522` versus `722`.
+
+Normal generated catalog-auto Large two-level normal-water maps now use a scoped object floor, scenic floor, reward scale, and guard floor. Package conversion also preserves decorative/scenic blocker masks on Large two-level normal-water town routes. The surface land quota is relaxed from a literal `1.0` to `0.99` because the denser protected footprint can otherwise make the zone land quota infeasible, while still preserving the owner-like mostly-land surface.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- The first focused export attempt failed native validation with `zone_land_quota_infeasible` after the density increase. The committed policy keeps the density correction and relaxes Large normal-water two-level surface land fraction to `0.99`.
+- Focused `l_normalwater_randomplayers_2level` export then wrote `1/1` package in about `36.553s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-NormalWater-RandomPlayers-2level.h3m --amap .artifacts/rmg_native_batch_export_large_normalwater_2level_profile_probe/l_normalwater_randomplayers_2level.amap --compare --pretty --allow-failures` improved total object delta from `-891` to `-5`, guard delta from `-232` to `+1`, object category delta from `-98` to `-1`, reward delta from `-200` to `-76`, and object-route delta from `+38` to `+9`. Terrain delta moved from `+2` to `-203`, which remains inside the fast gate but is still recorded as production-shape debt.
+- The focused production-gap severity improved from `2780` to `628`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_normalwater_2level_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_normalwater_2level_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_normalwater_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `xl_water`, followed by Large two-level land/islands and Medium two-level route/category cases. The remaining work is now less about broad category floors and more about road/route/terrain shape across each water and level profile.
