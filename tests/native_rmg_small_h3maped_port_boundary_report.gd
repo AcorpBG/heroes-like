@@ -73,11 +73,24 @@ func _run() -> void:
 	if selected_payload.get("player_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost the 0x4ac552 player-capable owner bitmap: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("assignment_status", "")) != "blocked_until_0x4ac552_player_slot_assignment_ported":
-		_fail("The selected h3maped payload claimed full player assignment before 0x4ac552 is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("assignment_status", "")) != "0x4ac552_player_slot_assignment_ported":
+		_fail("The selected h3maped payload did not port the 0x4ac552 player-slot assignment step: %s" % JSON.stringify(report))
+		return
+	var assignment: Dictionary = selected_payload.get("player_slot_assignment", {})
+	if assignment.get("selected_color_bitmap", []) != [false, false, false, false, false, false, false, false]:
+		_fail("Default h3maped selected-color bitmap must follow the constructor-zeroed generator+0xed8 state: %s" % JSON.stringify(report))
+		return
+	if assignment.get("selected_color_order", []) != [0, 1, 2, 3, 4, 5, 6, 7]:
+		_fail("Default h3maped color order drifted from 0x4ac63f..0x4ac66e: %s" % JSON.stringify(report))
+		return
+	if assignment.get("actual_colors_by_source_owner", []) != [0, 1, 2, -1, -1, -1, -1, -1]:
+		_fail("The selected h3maped payload assigned the wrong source-owner to player-color mapping: %s" % JSON.stringify(report))
+		return
+	if int(assignment.get("assigned_player_count", -1)) != 3:
+		_fail("The selected h3maped payload did not assign all requested players: %s" % JSON.stringify(report))
 		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
-	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "documented_not_executed":
+	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
 		return
 	var accepted_ids := _accepted_template_ids(report)
