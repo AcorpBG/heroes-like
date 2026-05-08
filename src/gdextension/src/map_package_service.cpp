@@ -616,6 +616,7 @@ bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normali
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
 bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
 bool native_catalog_auto_large_one_level_land_profile(const Dictionary &normalized);
+bool native_catalog_auto_xl_one_level_land_profile(const Dictionary &normalized);
 bool native_catalog_auto_xl_two_level_islands_profile(const Dictionary &normalized);
 Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized);
 Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized);
@@ -1906,6 +1907,8 @@ int32_t catalog_auto_road_component_target_count(const Dictionary &normalized, i
 			target = 3;
 		} else if (level_count <= 1 && water_mode == "islands") {
 			target = 6;
+		} else if (level_count <= 1 && water_mode == "land") {
+			target = 3;
 		} else {
 			target = level_count > 1 ? 16 : 10;
 		}
@@ -2149,7 +2152,7 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		const int32_t area = std::max(1, width * height);
 		const String water_mode = String(normalized.get("water_mode", "land"));
 		const int32_t profile_target = water_mode == "islands" ? std::max<int32_t>(674, (area * 325) / 10000)
-															   : (area * (water_mode == "normal_water" ? 36 : 30)) / 1000;
+															   : (water_mode == "normal_water" ? (area * 36) / 1000 : std::max<int32_t>(727, (area * 35) / 1000));
 		total_target = std::max<int32_t>(total_target, profile_target);
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_large" && level_count == 1 && String(normalized.get("water_mode", "land")) == "normal_water") {
@@ -8807,6 +8810,13 @@ bool native_catalog_auto_large_one_level_land_profile(const Dictionary &normaliz
 			&& int32_t(normalized.get("level_count", 1)) <= 1;
 }
 
+bool native_catalog_auto_xl_one_level_land_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "land"
+			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
+			&& int32_t(normalized.get("level_count", 1)) <= 1;
+}
+
 bool native_catalog_auto_medium_two_level_islands_profile(const Dictionary &normalized) {
 	return native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& String(normalized.get("water_mode", "land")) == "islands"
@@ -8919,6 +8929,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 			return std::max(509, (area * 25) / 1000);
 		}
+		if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
+			return std::max(629, (area * 30) / 1000);
+		}
 		return level_count > 1 ? std::max(620, (area * 15) / 1000) : std::max(420, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
@@ -8981,6 +8994,9 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 		}
 		if (xl_two_level_normal_water) {
 			return std::max(1834, (area * 44) / 1000);
+		}
+		if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
+			return std::max(3413, (area * 164) / 1000);
 		}
 		return level_count > 1 ? std::max(3200, (area * 78) / 1000) : std::max(3300, (area * 160) / 1000);
 	}
@@ -9060,6 +9076,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.32));
 		return std::max(density_floor, reward_ratio_floor);
 	}
+	if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
+		density_floor = std::max(619, (area * 29) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.90));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
 		density_floor = std::max(136, (area * 11) / 1000);
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.58));
@@ -9116,6 +9137,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
 		return 482;
+	}
+	if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
+		return 692;
 	}
 	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
 		return 197;
@@ -15401,7 +15425,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
 				Dictionary candidate_zone = Dictionary(zones[(attempts + zone_scan) % zones.size()]);
 				const String candidate_zone_id = String(candidate_zone.get("id", ""));
-				if (candidate_zone_id.is_empty() || town_floor_used_zones.has(town_floor_zone_level_key(candidate_zone_id, target_level))) {
+				if (candidate_zone_id.is_empty()) {
+					continue;
+				}
+				if (town_floor_used_zones.has(town_floor_zone_level_key(candidate_zone_id, target_level))) {
 					continue;
 				}
 				zone = candidate_zone;

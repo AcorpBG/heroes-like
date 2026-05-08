@@ -1049,3 +1049,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `xl_nowater`, followed by XL two-level islands, Large one-level islands, XL one-level water, and XL two-level water. The next correction should continue route/barrier topology and road-component shape work rather than lowering town spacing to match exact owner town counts.
+
+## XL One-Level Land Road And Category Profile Cleanup
+
+The next merged top-gap case was `xl_nowater`. Terrain shape was already effectively correct, but native had the wrong profile balance: roads were short and fragmented (`690` cells in `10` components versus owner `727` in `3`), scenic/other objects were underfilled by `209`, guards by `69`, decorations by `96`, rewards overfilled by `255`, and native placed only `8` towns versus owner `12`.
+
+Normal generated catalog-auto XL one-level land maps now use a scoped three-component road target with an owner-like road-cell floor, an XL land scenic-object floor, an XL land decoration floor, a reward cap, and a higher guard floor after reward trimming. A town-floor zone-reuse probe was rejected before commit because it did not change the generated town count or audit metrics.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_nowater` export wrote `1/1` package in about `40.608s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-nowater.h3m --amap .artifacts/rmg_native_batch_export_xl_nowater_profile_probe/xl_nowater.amap --compare --pretty --allow-failures` improved focused production-gap severity from `1494` to `886`, total object delta from `-123` to `-1`, road delta from `-37` to `0`, and category absolute delta from `633` to `9`.
+- Category counts are now close: decoration `3413/3413`, scenic/object `629/629`, reward `692/692`, guard `623/619`, and town `7/12`. Road total now matches owner at `727` cells, but component shape is still not exact: native `381/238/108` versus owner `485/188/54`.
+- The remaining debt is town count and route shape: native has `7` towns versus owner `12`, so object-only reachable town pairs are capped at `21` versus owner `55`; guarded reachable pairs are `0` versus owner `1`, and nearest town spacing stays safe at `42` versus owner `39`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_profile_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.376s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves back to `xl_islands_2levels`, followed by Large one-level islands, XL one-level water, XL two-level water, and XL one-level land. The next correction should target route/town topology or the remaining island terrain/category shape gaps instead of adding more broad volume floors.
