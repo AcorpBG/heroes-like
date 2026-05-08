@@ -1299,3 +1299,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_guard_v3_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Large one-level islands no longer over-closes guarded routes, but it still needs real island subzone/town materialization so town count, object-only route shape, and terrain shape are owner-like without count-only overfitting.
+
+## Medium Two-Level Islands Object-Route Mask Cleanup
+
+The next contained Medium two-level islands defect was route shape, not raw object count. After the road split cleanup, `m_4players_2levels_islands` still matched owner town count, town level split, road total, and guarded-route closure, but native surface towns still had `6` object-only reachable pairs while owner evidence had none. A rejected category-trim probe confirmed that forcing exact decoration/reward/guard counts broke density/policy gates and worsened route shape.
+
+The kept correction is scoped to normal generated catalog-auto Medium two-level islands. Package adoption now computes audit-style object-only town routes that count decorative/scenic block tiles and guard body tiles, then adds compact single-cell route masks to existing decorative obstacles on the same level until those open town-pair routes are closed. This changes blocker shape without adding or deleting objects and without relying on guard control zones as permanent blockers.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `m_4players_2levels_islands` export wrote `1/1` package with native validation `pass`. The manifest recorded about `8.223s` total wall time, including `4.854s` generation, `1.377s` package conversion, and `1.016s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/M-4players-2levels-islands.h3m --amap .artifacts/rmg_native_batch_export_m_islands_route_mask_probe/m_4players_2levels_islands.amap --compare --pretty --allow-failures` improved object-route delta from `+6` to `0`: native and owner both now expose `0/10` object-only town-route pairs and `0/10` guarded town-route pairs.
+- Road count remains exact at `284` cells with the previous owner-like split intact (`155` surface, `129` underground). Town count and level split remain exact at `6` total, `5` surface and `1` underground.
+- Focused production-gap severity improved from `676` to `528`. The remaining focused debt is category/object overfill (`+185` total objects, category absolute delta `185`), terrain-blocked delta `+158`, and road component shape.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_route_mask_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `12.137s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_route_mask_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+
+This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Medium two-level islands now has owner-like town-route closure, exact town split, and exact road total, but it still overfills decoration/reward/guard categories and needs terrain/road component shape cleanup.
