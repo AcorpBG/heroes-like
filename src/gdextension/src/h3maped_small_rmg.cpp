@@ -2048,7 +2048,91 @@ Dictionary span_fill_4a325d_report(
 	report["blocked_initial_span_count"] = blocked_initial_span_count;
 	report["cells_by_zone_word"] = cells_by_zone_word_report;
 	report["zone_fills"] = zone_fill_reports;
-	report["blocked_next"] = "port h3maped 0x4a3710 adjacency finalization and 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized grid";
+	report["blocked_next"] = "feed the 0x4a325d span fill through the small-land 0x4a3710 finalizer, then port h3maped 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized grid";
+	return report;
+}
+
+Dictionary adjacency_finalizer_4a3710_report(const Dictionary &normalized_config, const Array &runtime_zones) {
+	Dictionary report;
+	const int32_t level_count = int32_t(normalized_config.get("level_count", 1));
+	const int32_t water_code = water_mode_code(normalized_config);
+	int32_t original_same_level_runtime_zone_count = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		if (int32_t(runtime.get("level", 0)) == 0) {
+			original_same_level_runtime_zone_count += 1;
+		}
+	}
+	const bool synthetic_branch_allowed = level_count > 1 || water_code != 0;
+	const int32_t final_runtime_zone_count = int32_t(runtime_zones.size());
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	report["status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	report["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and ordering reset/rebuild calls execute";
+	report["function_address"] = "0x4a3710";
+	report["call_site_address"] = "0x4a3efc..0x4a3f05";
+	report["call_site_start_index_source"] = "0x4a3a86..0x4a3a9a captures runtime-zone vector count before the synthetic branch and passes it at 0x4a3f02";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["zone_order_reset_address"] = "0x49b61b";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	report["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	report["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	report["final_runtime_zone_count"] = final_runtime_zone_count;
+	report["appended_runtime_zone_count"] = appended_runtime_zone_count;
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones at generator+0x10e4 from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("compares same-level runtime zone rectangles and searches source adjacency/list nodes for matching neighbor references");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside the map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors through vector insert 0x4ae166");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	recovered_operations.append("uses runtime_zone+0x3e8 short order values to avoid adding adjacency before existing earlier links are ordered");
+	report["recovered_operations"] = recovered_operations;
+	Array phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(initial_insert_phase);
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	phases.append(order_reset_phase);
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(ordered_insert_phase);
+	report["phases"] = phases;
+	Array missing_layout;
+	if (appended_runtime_zone_count > 0) {
+		missing_layout.append("runtime_zone+0xc4 adjacency record schema written by 0x4ae166 for appended synthetic zones");
+		missing_layout.append("runtime_zone+0x3e8 short ordering vector semantics used for appended-zone link ordering");
+		missing_layout.append("source polygon/list node fields at +0x0c/+0x10/+0x14 and nested +0x08 references");
+	}
+	missing_layout.append("project-side representation for finalized physical zone links and guarded pass points");
+	report["missing_runtime_layout"] = missing_layout;
+	report["zone_order_reset_call_count"] = final_runtime_zone_count;
+	report["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	report["materialized_adjacency_count"] = 0;
+	report["blocked_next"] = appended_runtime_zone_count == 0
+			? String("continue after the completed small-land 0x4a3710 no-appended-zone path into h3maped 0x4a3f27 terrain fill/repaint")
+			: String("recover adjacency record and ordering-vector schemas before translating appended-zone 0x4a3710 output into project zone links");
 	return report;
 }
 
@@ -2315,8 +2399,8 @@ Dictionary polygon_source_node_walks_4ccb64_report(const Dictionary &normalized_
 
 Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_config, Array &runtime_zones, int64_t rng_state_after_coordinate_seed) {
 	Dictionary report;
-	report["status"] = "0x4a3a03_0x4a325d_span_fill_ported_adjacency_terrain_pending";
-	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic branch decision, 0x4cc788 polygon seed setup, 0x4ccb64 split insertion, 0x4ccdfc finalization, 0x4cca55 source-node walks, 0x4a2777 boundary traversal, and 0x4a325d span fill";
+	report["status"] = "0x4a3a03_0x4a3710_footprint_helpers_ported_terrain_pending";
+	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic branch decision, 0x4cc788 polygon seed setup, 0x4ccb64 split insertion, 0x4ccdfc finalization, 0x4cca55 source-node walks, 0x4a2777 boundary traversal, 0x4a325d span fill, and the small-land 0x4a3710 no-appended-zone finalizer";
 	report["function_address"] = "0x4a3a03";
 	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
 	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
@@ -2327,8 +2411,8 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["second_helper_address"] = "0x4a325d";
 	report["finalizer_address"] = "0x4a3710";
 	report["rng_state_before_footprint_phase_uint32"] = rng_state_after_coordinate_seed;
-	report["cell_materialization_status"] = "0x4a325d_span_fill_ported_pending_0x4a3710_0x4a3f27";
-	report["blocked_next"] = "execute 0x4a3710 adjacency finalization and 0x4a3f27 terrain fill/repaint before any project terrain/object materialization";
+	report["cell_materialization_status"] = "0x4a3710_small_land_finalizer_ported_pending_0x4a3f27";
+	report["blocked_next"] = "execute 0x4a3f27 terrain fill/repaint before any project terrain/object materialization";
 
 	Dictionary synthetic_defaults;
 	synthetic_defaults["+0x04"] = 3;
@@ -2438,12 +2522,15 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 			runtime_zones,
 			source_walks,
 			uint32_t(rng_state_after_coordinate_seed));
+	Dictionary adjacency_finalizer = adjacency_finalizer_4a3710_report(normalized_config, runtime_zones);
 	polygon_seed["runtime_split_pre_crossing_model"] = source_walks;
 	polygon_seed["runtime_split_pre_crossing_status"] = source_walks.get("status", "");
 	polygon_seed["boundary_traversal_model"] = boundary_traversal;
 	polygon_seed["boundary_traversal_status"] = boundary_traversal.get("status", "");
 	polygon_seed["span_fill_model"] = span_fill;
 	polygon_seed["span_fill_status"] = span_fill.get("status", "");
+	polygon_seed["adjacency_finalizer_model"] = adjacency_finalizer;
+	polygon_seed["adjacency_finalizer_status"] = adjacency_finalizer.get("status", "");
 	report["level_count"] = level_count;
 	report["h3maped_water_mode_code"] = water_code;
 	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
@@ -2468,6 +2555,10 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["span_fill_seed_relocated_count"] = span_fill.get("seed_relocated_count", 0);
 	report["span_fill_blocked_initial_span_count"] = span_fill.get("blocked_initial_span_count", 0);
 	report["span_fill"] = span_fill;
+	report["adjacency_finalizer_status"] = adjacency_finalizer.get("status", "");
+	report["adjacency_finalizer_appended_runtime_zone_count"] = adjacency_finalizer.get("appended_runtime_zone_count", 0);
+	report["adjacency_finalizer_materialized_adjacency_count"] = adjacency_finalizer.get("materialized_adjacency_count", 0);
+	report["adjacency_finalizer"] = adjacency_finalizer;
 	report["polygon_source_node_walks"] = source_walks;
 	report["levels"] = levels;
 	report["polygon_seed_evidence"] = polygon_seed;
@@ -2808,7 +2899,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_interleaved_runtime_and_coordinate_replay_inspection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a325d_span_fill_inspection_only_adjacency_terrain_pending" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
