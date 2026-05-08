@@ -7027,7 +7027,7 @@ Dictionary h3maped_clip_helper_4a2b33_report(const Dictionary &normalized) {
 	samples.append(h3maped_clip_result_report("bottom_to_inside", 12, bounds.max_y + 5, 12, 20, bounds));
 	report["sample_clip_count"] = samples.size();
 	report["sample_clips"] = samples;
-	report["blocked_next"] = "wire 0x4a2b33 and 0x4a261a through the full 0x4a2777 polygon-boundary traversal, then port 0x4a2413";
+	report["blocked_next"] = "wire 0x4a2b33, 0x4a261a, and 0x4a2413 through the full 0x4a2777 polygon-boundary traversal";
 	return report;
 }
 
@@ -7179,14 +7179,129 @@ Dictionary h3maped_line_writer_4a261a_report(const Dictionary &normalized) {
 	}
 	report["sample_line_count"] = sample_reports.size();
 	report["sample_lines"] = sample_reports;
-	report["blocked_next"] = "wire 0x4a261a into full 0x4a2777 polygon-boundary traversal, including the flagged 0x4a2413 randomized/interpolated branch";
+	report["blocked_next"] = "wire 0x4a261a and the standalone 0x4a2413 randomized/interpolated writer into full 0x4a2777 polygon-boundary traversal";
+	return report;
+}
+
+H3MapedLineWriteResult h3maped_randomized_line_writer_4a2413(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t x1,
+		int32_t y1,
+		int32_t x2,
+		int32_t y2,
+		int32_t zone_id,
+		int32_t level,
+		int32_t random_span_limit,
+		H3MapedRng &rng,
+		int32_t *rng_call_count,
+		int32_t *inserted_midpoint_count,
+		int32_t *max_pending_point_count) {
+	H3MapedLineWriteResult result;
+	std::vector<Vector2i> pending;
+	pending.push_back(Vector2i(x2, y2));
+	if (max_pending_point_count != nullptr) {
+		*max_pending_point_count = std::max<int32_t>(*max_pending_point_count, int32_t(pending.size()));
+	}
+	int32_t current_x = x1;
+	int32_t current_y = y1;
+	for (int32_t guard = 0; guard < 4096 && !pending.empty(); ++guard) {
+		const Vector2i target = pending.back();
+		pending.pop_back();
+		const int32_t midpoint_x = (target.x + current_x + 1) / 2;
+		const int32_t midpoint_y = (target.y + current_y + 1) / 2;
+		if ((midpoint_x == current_x && midpoint_y == current_y) || (midpoint_x == target.x && midpoint_y == target.y)) {
+			const int32_t clamped_x = std::min(std::max(current_x, 0), width - 1);
+			const int32_t clamped_y = std::min(std::max(current_y, 0), height - 1);
+			h3maped_write_line_cell_4a261a(result, width, height, level_count, water_code, clamped_x, clamped_y, zone_id, level);
+			current_x = target.x;
+			current_y = target.y;
+			continue;
+		}
+		const int32_t dx = target.x - current_x;
+		const int32_t neg_dy = current_y - target.y;
+		const int32_t segment_length = h3maped_distance_truncate(0, 0, dx, neg_dy);
+		int32_t jittered_x = midpoint_x;
+		int32_t jittered_y = midpoint_y;
+		if (segment_length > 1) {
+			const int32_t jitter_limit = std::max<int32_t>(1, std::min(random_span_limit, segment_length));
+			const int32_t rng_value = rng.next();
+			if (rng_call_count != nullptr) {
+				*rng_call_count += 1;
+			}
+			const int32_t centered_offset = (rng_value % jitter_limit) - (jitter_limit / 2);
+			const int32_t adjusted_x = (int64_t(centered_offset) * int64_t(neg_dy)) / int64_t(segment_length);
+			const int32_t adjusted_y = (int64_t(dx) * int64_t(centered_offset)) / int64_t(segment_length);
+			jittered_x += adjusted_x;
+			jittered_y += adjusted_y;
+		}
+		pending.push_back(target);
+		pending.push_back(Vector2i(jittered_x, jittered_y));
+		if (inserted_midpoint_count != nullptr) {
+			*inserted_midpoint_count += 1;
+		}
+		if (max_pending_point_count != nullptr) {
+			*max_pending_point_count = std::max<int32_t>(*max_pending_point_count, int32_t(pending.size()));
+		}
+	}
+	return result;
+}
+
+Dictionary h3maped_randomized_line_writer_4a2413_report(const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2413_randomized_line_writer_ported_standalone";
+	report["source"] = "h3maped 0x4a2413 flagged branch writer; recursively subdivides a segment, jitters midpoint candidates with 0x4e7276, clamps writes to map bounds, and writes zone words like 0x4a261a";
+	report["function_address"] = "0x4a2413";
+	report["rng_address"] = "0x4e7276";
+	report["distance_helper_address"] = "0x4cc5ad";
+	report["map_cell_stride_bytes"] = 0x30;
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	H3MapedRng rng;
+	rng.state = 1;
+	int32_t rng_call_count = 0;
+	int32_t inserted_midpoint_count = 0;
+	int32_t max_pending_point_count = 0;
+	H3MapedLineWriteResult line = h3maped_randomized_line_writer_4a2413(
+			width,
+			height,
+			level_count,
+			water_code,
+			2,
+			2,
+			width - 3,
+			height - 5,
+			9,
+			0,
+			6,
+			rng,
+			&rng_call_count,
+			&inserted_midpoint_count,
+			&max_pending_point_count);
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["h3maped_water_mode_code"] = water_code;
+	report["sample_rng_initial_state_uint32"] = 1;
+	report["sample_rng_final_state_uint32"] = int64_t(rng.state);
+	report["sample_rng_call_count"] = rng_call_count;
+	report["sample_inserted_midpoint_count"] = inserted_midpoint_count;
+	report["sample_max_pending_point_count"] = max_pending_point_count;
+	report["sample_trace_write_count"] = int32_t(line.trace.size());
+	report["sample_unique_cell_count"] = int32_t(line.unique_cells.size());
+	report["sample_out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	report["sample_trace_preview"] = h3maped_line_trace_preview(line.trace);
+	report["blocked_next"] = "wire 0x4a2413 through the flagged 0x4a2777 branch using real runtime zone/source-list traversal";
 	return report;
 }
 
 Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4a2777_disassembled_4a261a_line_writer_ported_runtime_layout_blocked";
-	report["source"] = "h3maped 0x4a2777 footprint connector helper; 0x4a261a cell-line writer is ported, while full helper materialization is still blocked on exact runtime link-node/source-rect layout and 0x4a2413";
+	report["status"] = "0x4a2777_disassembled_4a2b33_4a261a_4a2413_helpers_ported_runtime_layout_blocked";
+	report["source"] = "h3maped 0x4a2777 footprint connector helper; 0x4a2b33, 0x4a261a, and 0x4a2413 standalone dependencies are ported, while full helper materialization is still blocked on exact runtime link-node/source-rect traversal";
 	report["function_address"] = "0x4a2777";
 	report["clip_helper_address"] = "0x4a2b33";
 	report["line_cell_writer_address"] = "0x4a261a";
@@ -7214,6 +7329,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	report["clip_helper_evidence"] = h3maped_clip_helper_4a2b33_report(normalized);
 	report["line_writer_status"] = "0x4a261a_cell_line_writer_ported";
 	report["line_writer_evidence"] = h3maped_line_writer_4a261a_report(normalized);
+	report["randomized_line_writer_status"] = "0x4a2413_randomized_line_writer_ported_standalone";
+	report["randomized_line_writer_evidence"] = h3maped_randomized_line_writer_4a2413_report(normalized);
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
@@ -7227,7 +7344,7 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	}
 	report["available_runtime_zone_inputs"] = available_inputs;
 	report["materialized_cell_count"] = 0;
-	report["blocked_next"] = "recover phase node/link/source rectangle traversal plus 0x4a2413 well enough to execute 0x4a2777 without inventing connector geometry";
+	report["blocked_next"] = "recover phase node/link/source rectangle traversal well enough to execute 0x4a2777 without inventing connector geometry";
 	return report;
 }
 
