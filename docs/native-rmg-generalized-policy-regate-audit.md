@@ -1103,3 +1103,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_islands_1level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `xl_water`, followed by XL two-level water, Large one-level islands, XL one-level land, and Medium/Large route-shape cases. The next correction should address XL one-level water category/road shape or broader town/route topology.
+
+## XL One-Level Normal-Water Road And Category Profile Cleanup
+
+The next merged top-gap case was `xl_water`. Native one-level XL normal-water output had the right town count but the wrong category balance and road/component shape: decorations were underfilled, rewards and guards were overfilled, and road cells were split into components that did not resemble owner evidence closely enough.
+
+Normal generated catalog-auto XL one-level normal-water maps now use a scoped road total and road-component skew, a decoration floor, a reward cap, and a slightly lower water-shape land fraction for the surface zone roles. This keeps the profile keyed to XL one-level normal-water instead of changing the broader normal-water or islands paths.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_water` export wrote `1/1` package with native validation `pass`. The manifest recorded about `27.483s` case wall time, including `15.227s` generation, `8.726s` package conversion, and `3.530s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-water.h3m --amap .artifacts/rmg_native_batch_export_xl_water_profile_probe2/xl_water.amap --compare --pretty --allow-failures` improved focused production-gap severity from `907` to `555`, total object delta from `+49` to `+11`, road delta from `-9` to `0`, terrain-blocked delta from `-151` to `+58`, and category absolute delta from `223` to `11`.
+- Category counts are now close: decoration `1813/1813`, reward `409/409`, town `10/10`, guard `204/202`, and scenic/object `518/509`. Road total now matches owner at `755` cells, while component shape remains close but not exact: native `636/107/12` versus owner `637/96/22`.
+- The remaining debt is route/barrier shape: native object-only reachable town pairs remain `45` versus owner `28`, guarded reachable pairs are `0` versus owner `2`, and nearest town spacing stays safe at `37` versus owner `30`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged2 --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.365s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged2 --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blockers are now `xl_water_2levels`, `l_islands_randomplayers`, `xl_nowater`, Medium four-player two-level islands, and Large/Medium route-shape cases. The next correction should continue broad route/barrier/town topology and two-level profile shape, not exact-count fitting.
