@@ -1190,3 +1190,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_road_shape_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blockers remain XL one-level land, Large one-level islands, Medium two-level islands, Large two-level land, Large two-level normal-water, and XL water/islands route-shape cases. Large one-level islands now has a closer road total and component skew, but still needs the real zone/subzone/town placement model so island towns are not under-materialized and guarded routes are not over-closed.
+
+## XL One-Level Land Road-Component Shape Cleanup
+
+The next narrow road-shape defect was `xl_nowater`. Earlier work had already matched total road cells at `727`, but the three component sizes still underweighted the primary road cluster: native `381/238/108` versus owner `485/188/54`.
+
+Normal generated catalog-auto XL one-level land maps now use a stronger dominant-component weight for road materialization. The change is scoped to XL one-level land; XL normal-water already has its own stronger profile, and Large land keeps its previous weighting.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_nowater` export wrote `1/1` package with native validation `pass`. The manifest recorded about `42.537s` total wall time, including `23.427s` generation, `11.141s` package conversion, and `6.501s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-nowater.h3m --amap .artifacts/rmg_native_batch_export_xl_nowater_road_shape_probe/xl_nowater.amap --compare --pretty --allow-failures` kept road-cell delta exact at `0` and improved road component shape from `381/238/108` to `485/196/46` versus owner `485/188/54`.
+- The same focused audit still shows the real remaining blocker: native town count is `7` versus owner `12`, object-only reachable town pairs are `21` versus owner `55`, and guarded-route reachable pairs are `0` versus owner `1`.
+- Focused `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_road_shape_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `1/1` matched native package and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_road_shape_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.268s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_road_shape_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. `xl_nowater` now has close road count and component shape, but town/subzone materialization and route openness remain wrong: the native map has too few towns and too few object-only town routes compared with owner evidence. The next substantial fix should model the town/subzone and guarded crossing behavior instead of continuing count-only tuning.
