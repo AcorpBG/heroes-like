@@ -139,8 +139,8 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
 		return
 	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
-	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_4a261a_line_writer_ported_runtime_layout_blocked":
-		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed with the ported 0x4a261a line-writer boundary: %s" % JSON.stringify(report))
+	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_4a2b33_4a261a_4a2413_helpers_ported_runtime_layout_blocked":
+		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed with the ported dependency boundaries: %s" % JSON.stringify(report))
 		return
 	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
 		_fail("The h3maped 0x4a2777 helper lost its executable-backed clipping/cell-writer addresses: %s" % JSON.stringify(report))
@@ -183,6 +183,19 @@ func _run() -> void:
 		if int(sample.get("trace_write_count", 0)) <= 0 or int(sample.get("unique_cell_count", 0)) <= 0 or int(sample.get("out_of_bounds_write_count", -1)) != 0:
 			_fail("The h3maped 0x4a261a sample line did not materialize in-bounds cells: %s" % JSON.stringify(report))
 			return
+	if String(first_helper.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a2413 randomized line writer: %s" % JSON.stringify(report))
+		return
+	var randomized_line_writer: Dictionary = first_helper.get("randomized_line_writer_evidence", {})
+	if String(randomized_line_writer.get("status", "")) != "0x4a2413_randomized_line_writer_ported_standalone":
+		_fail("The h3maped 0x4a2413 randomized line-writer report did not run: %s" % JSON.stringify(report))
+		return
+	if int(randomized_line_writer.get("sample_rng_call_count", 0)) <= 0 or int(randomized_line_writer.get("sample_inserted_midpoint_count", 0)) <= 0:
+		_fail("The h3maped 0x4a2413 randomized line-writer report did not exercise midpoint jitter: %s" % JSON.stringify(report))
+		return
+	if int(randomized_line_writer.get("sample_trace_write_count", 0)) <= 0 or int(randomized_line_writer.get("sample_out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2413 randomized line-writer report did not materialize in-bounds cells: %s" % JSON.stringify(report))
+		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_disassembled_cell_span_fill_blocked":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
@@ -348,6 +361,7 @@ func _run() -> void:
 		"first_helper_status": first_helper.get("status", ""),
 		"clip_helper_status": first_helper.get("clip_helper_status", ""),
 		"line_writer_status": first_helper.get("line_writer_status", ""),
+		"randomized_line_writer_status": first_helper.get("randomized_line_writer_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
