@@ -1892,7 +1892,11 @@ int32_t catalog_auto_road_component_target_count(const Dictionary &normalized, i
 	} else if (size_class == "homm3_medium") {
 		target = level_count > 1 ? 8 : 4;
 	} else if (size_class == "homm3_large") {
-		target = level_count > 1 ? 12 : 8;
+		if (level_count <= 1 && water_mode == "normal_water") {
+			target = 3;
+		} else {
+			target = level_count > 1 ? 12 : 8;
+		}
 	} else if (size_class == "homm3_extra_large") {
 		if (level_count <= 1 && water_mode == "normal_water") {
 			target = 3;
@@ -2143,6 +2147,10 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		const int32_t profile_target = water_mode == "islands" ? std::max<int32_t>(674, (area * 325) / 10000)
 															   : (area * (water_mode == "normal_water" ? 36 : 30)) / 1000;
 		total_target = std::max<int32_t>(total_target, profile_target);
+	}
+	if (String(normalized.get("size_class_id", "")) == "homm3_large" && level_count == 1 && String(normalized.get("water_mode", "land")) == "normal_water") {
+		const int32_t area = std::max(1, width * height);
+		total_target = std::max<int32_t>(total_target, std::max<int32_t>(398, (area * 34) / 1000));
 	}
 
 	const int32_t component_target = catalog_auto_road_component_target_count(normalized, total_target);
@@ -8777,6 +8785,13 @@ bool native_catalog_auto_large_two_level_islands_profile(const Dictionary &norma
 			&& int32_t(normalized.get("level_count", 1)) > 1;
 }
 
+bool native_catalog_auto_large_one_level_normal_water_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "normal_water"
+			&& String(normalized.get("size_class_id", "")) == "homm3_large"
+			&& int32_t(normalized.get("level_count", 1)) <= 1;
+}
+
 bool native_catalog_auto_medium_two_level_islands_profile(const Dictionary &normalized) {
 	return native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& String(normalized.get("water_mode", "land")) == "islands"
@@ -8895,6 +8910,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 			return std::max(860, (area * 37) / 1000);
 		}
+		if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
+			return std::max(283, (area * 24) / 1000);
+		}
 		return level_count > 1 ? std::max(720, (area * 31) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
@@ -8921,7 +8939,8 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const bool xl_single_level_islands = water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1;
 	const bool large_two_level_islands = native_catalog_auto_large_two_level_islands_profile(normalized);
-	if (water_mode != "land" && !xl_single_level_islands && !large_two_level_islands) {
+	const bool large_one_level_normal_water = native_catalog_auto_large_one_level_normal_water_profile(normalized);
+	if (water_mode != "land" && !xl_single_level_islands && !large_two_level_islands && !large_one_level_normal_water) {
 		return 0;
 	}
 	const int32_t width = int32_t(normalized.get("width", 36));
@@ -8936,6 +8955,9 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 	if (size_class_id == "homm3_large") {
 		if (large_two_level_islands) {
 			return std::max(1790, (area * 77) / 1000);
+		}
+		if (large_one_level_normal_water) {
+			return std::max(994, (area * 85) / 1000);
 		}
 		return level_count > 1 ? std::max(2050, (area * 88) / 1000) : std::max(1750, (area * 150) / 1000);
 	}
@@ -9003,6 +9025,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.32));
 		return std::max(density_floor, reward_ratio_floor);
 	}
+	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
+		density_floor = std::max(136, (area * 11) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.58));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (size_class_id == "homm3_large" && water_mode == "islands" && level_count <= 1) {
 		density_floor = (area * 7) / 1000;
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.30));
@@ -9040,6 +9067,13 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 	return 0;
 }
 
+int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
+	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
+		return 197;
+	}
+	return -1;
+}
+
 int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, int32_t start_count) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -9054,6 +9088,9 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 	const int32_t area = std::max(1, width * height * level_count);
 	const String water_mode = String(normalized.get("water_mode", "land"));
 	if (level_count <= 1) {
+		if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
+			return std::max(1, start_count);
+		}
 		if (size_class_id == "homm3_large" && water_mode == "land") {
 			return std::max(std::max(8, start_count + 3), int32_t(std::ceil(double(area) * 0.68 / 1000.0)));
 		}
@@ -11493,6 +11530,47 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		native_catalog_auto_density_supplement["native_catalog_auto_scenic_supplement"] = native_catalog_auto_scenic_supplement;
 		native_catalog_auto_density_supplement["native_catalog_auto_decoration_supplement"] = native_catalog_auto_decoration_supplement;
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
+	const int32_t native_catalog_auto_reward_cap = native_catalog_auto_generated_reward_cap(normalized);
+	if (parity_targets.is_empty()
+			&& native_catalog_auto_reward_cap >= 0
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
+		const auto reward_trim_started_at = std::chrono::steady_clock::now();
+		const int32_t reward_count = placement_count_for_spatial_category(placements, "reward");
+		const int32_t desired_trim_count = std::max(0, reward_count - native_catalog_auto_reward_cap);
+		if (desired_trim_count > 0) {
+			Array trimmed_placements;
+			Array removed_ids;
+			int32_t removed_count = 0;
+			for (int64_t index = placements.size() - 1; index >= 0; --index) {
+				if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+					trimmed_placements.push_front(placements[index]);
+					continue;
+				}
+				Dictionary placement = Dictionary(placements[index]);
+				if (String(placement.get("kind", "")) == "reward_reference" && removed_count < desired_trim_count) {
+					removed_ids.append(placement.get("placement_id", ""));
+					++removed_count;
+					continue;
+				}
+				trimmed_placements.push_front(placement);
+			}
+			placements = trimmed_placements;
+			Dictionary trim_summary;
+			trim_summary["schema_id"] = "native_rmg_catalog_auto_reward_category_cap_trim_v1";
+			trim_summary["target_reward_category_count"] = native_catalog_auto_reward_cap;
+			trim_summary["initial_reward_category_count"] = reward_count;
+			trim_summary["desired_trim_count"] = desired_trim_count;
+			trim_summary["removed_reward_reference_count"] = removed_count;
+			trim_summary["removed_placement_ids"] = removed_ids;
+			trim_summary["final_reward_category_count"] = placement_count_for_spatial_category(placements, "reward");
+			trim_summary["policy"] = "generated catalog-auto trims only surplus generic reward references for profiles whose owner group shows lower reward density";
+			trim_summary["status"] = int32_t(trim_summary.get("final_reward_category_count", 0)) <= native_catalog_auto_reward_cap ? "pass" : "partial";
+			trim_summary["signature"] = hash32_hex(canonical_variant(trim_summary));
+			native_catalog_auto_density_supplement["native_catalog_auto_reward_category_cap_trim"] = trim_summary;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_reward_category_cap_trim", elapsed_usec_since(reward_trim_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	if (owner_medium_reward_target >= 0) {
@@ -16494,6 +16572,18 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 				return 0.49;
 			}
 			return 0.52;
+		}
+		if (size_class_id == "homm3_large") {
+			if (role.contains("start")) {
+				return 0.56;
+			}
+			if (role == "junction") {
+				return 0.50;
+			}
+			if (role == "treasure" || role == "neutral") {
+				return 0.45;
+			}
+			return 0.48;
 		}
 		if (role.contains("start")) {
 			return 0.65;
