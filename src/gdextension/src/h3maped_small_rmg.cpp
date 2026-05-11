@@ -6159,6 +6159,50 @@ Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_f
 	return bridge;
 }
 
+Dictionary h3maped_road_line_visit_458e61_report() {
+	Dictionary visit;
+	visit["schema_id"] = "aurelion_h3maped_small_road_line_visit_v1";
+	visit["status"] = "h3maped_0x458e61_line_visit_boundary_recovered_adapter_materialization_pending";
+	visit["function_address"] = "0x458e61";
+	visit["source"] = "Recovered from h3maped.exe: 0x458e61 visits one line coordinate, probes road-adapter state, skips cells already carrying the requested road type, marks candidate cells through adapter virtual slot +0x08, then delegates neighbor-sensitive road art/flip selection to 0x458a2f and 0x4587f7.";
+	visit["coordinate_argument_stack_offset"] = "ebp+0x08";
+	visit["toolkit_adapter_pointer_field"] = "+0x00";
+	visit["toolkit_requested_road_type_field"] = "+0x04";
+	visit["probe_virtual_slot"] = "+0x14";
+	visit["probe_virtual_address_for_road_adapter"] = "0x49af7b";
+	visit["probe_semantics"] = "read signed road-type nibble from generated cell+0x24 using (cell+0x24 << 2) >> 28";
+	visit["skip_condition"] = "if adapter +0x14 returns the requested road type, do not rematerialize this coordinate";
+	visit["start_coordinate_virtual_slot"] = "+0x0c";
+	visit["start_coordinate_virtual_address_for_road_adapter"] = "0x49aef9";
+	visit["start_coordinate_semantics"] = "delegate to wrapped terrain adapter +0x0c and copy the two-coordinate start point";
+	visit["terrain_gate_virtual_slot"] = "+0x0c";
+	visit["candidate_mark_virtual_slot"] = "+0x08";
+	visit["candidate_mark_virtual_address_for_road_adapter"] = "0x49aec5";
+	visit["candidate_mark_semantics"] = "write requested road type into generated cell+0x24 top road nibble without final art/flip";
+	visit["final_write_helper_address"] = "0x458a2f";
+	visit["neighbor_mask_helper_address"] = "0x4587f7";
+	visit["rectangle_flush_helper_address"] = "0x458af6";
+	visit["edge_mask_helper_address"] = "0x4bf3f4";
+	visit["edge_mask_semantics"] = "initialize 8 neighbor flags to one and clear edge-facing entries when the coordinate is on map borders";
+	visit["neighbor_direction_table_address"] = "0x5a5028";
+	visit["neighbor_direction_table_end_address"] = "0x5a5068";
+	visit["neighbor_direction_record_count"] = 8;
+	visit["neighbor_direction_record_size_bytes"] = 8;
+	visit["neighbor_retouch_semantics"] = "for each enabled neighboring direction, call 0x458a2f on the adjacent coordinate after current cell candidate marking";
+	visit["road_art_selection_source_table"] = "0x538a04..0x538a8f";
+	visit["road_art_pair_table_address"] = "0x538a84";
+	visit["rng_tie_break_address"] = "0x4e7276";
+	visit["final_write_virtual_slot"] = "+0x04";
+	visit["final_write_virtual_address_for_road_adapter"] = "0x49ae47";
+	visit["final_write_semantics"] = "write road type/art/flip fields into generated cell+0x24/+0x28 after 0x458893 classifies neighbor shape";
+	visit["readback_virtual_slot"] = "+0x10";
+	visit["readback_virtual_address_for_road_adapter"] = "0x49af1d";
+	visit["readback_semantics"] = "read road type, art index, and flip flags from generated cell+0x24/+0x28 for neighbor-shape stability checks";
+	visit["materializes_road_geometry"] = false;
+	visit["blocked_reason"] = "The executable line-visit and adapter virtual boundary is recovered, but the clean port still needs an owned generated-cell mutation implementation and a complete coordinate vector before it may serialize road cells.";
+	return visit;
+}
+
 Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
 	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
@@ -6189,6 +6233,7 @@ Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	toolkit["line_initializer_address"] = "0x458d37";
 	toolkit["line_stepper_address"] = "0x458d66";
 	toolkit["line_visit_address"] = "0x458e61";
+	toolkit["line_visit_boundary"] = h3maped_road_line_visit_458e61_report();
 	toolkit["neighbor_direction_table_address"] = "0x5a5028";
 	toolkit["neighbor_direction_table_end_address"] = "0x5a5068";
 	toolkit["neighbor_direction_record_size_bytes"] = 8;
@@ -6217,8 +6262,8 @@ Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	runtime_vtable_entries.append("0x5584c0");
 	toolkit["runtime_vtable_entries"] = runtime_vtable_entries;
 	toolkit["materializes_road_geometry"] = false;
-	toolkit["road_cell_write_status"] = "pending_adapter_virtual_write_path_port";
-	toolkit["blocked_reason"] = "The toolkit entry, vtables, and line/path helper boundary are recovered, but the adapter virtual write path behind 0x458e61 and the road art/cell mutation semantics are not yet ported.";
+	toolkit["road_cell_write_status"] = "adapter_virtual_write_boundary_recovered_clean_cell_mutation_pending";
+	toolkit["blocked_reason"] = "The toolkit entry, vtables, line visit, and adapter virtual write boundary are recovered, but the clean port has not yet implemented authoritative generated-cell road mutation or complete +0x14b0 coordinate-vector parity.";
 	toolkit["signature"] = h3maped_hash32_hex(String("h3maped_4b4243_road_toolkit_entry:")
 			+ String::num_int64(width) + ":"
 			+ String::num_int64(height) + ":"
