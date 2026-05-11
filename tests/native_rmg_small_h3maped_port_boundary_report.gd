@@ -460,10 +460,14 @@ func _run() -> void:
 	var terrain_shape_classes: PackedInt32Array = terrain_fill.get("terrain_shape_class_u8", PackedInt32Array())
 	var tile_byte_0: PackedInt32Array = terrain_fill.get("tile_byte_0_terrain_id_u8", PackedInt32Array())
 	var tile_byte_1: PackedInt32Array = terrain_fill.get("tile_byte_1_terrain_art_u8", PackedInt32Array())
+	var tile_byte_2: PackedInt32Array = terrain_fill.get("tile_byte_2_river_type_u8", PackedInt32Array())
+	var tile_byte_3: PackedInt32Array = terrain_fill.get("tile_byte_3_river_art_u8", PackedInt32Array())
+	var tile_byte_4: PackedInt32Array = terrain_fill.get("tile_byte_4_road_type_u8", PackedInt32Array())
+	var tile_byte_5: PackedInt32Array = terrain_fill.get("tile_byte_5_road_art_u8", PackedInt32Array())
 	var tile_byte_6: PackedInt32Array = terrain_fill.get("tile_byte_6_terrain_flags_u8", PackedInt32Array())
 	var owner_byte_grid: PackedInt32Array = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array())
 	var repaint_member_grid: PackedInt32Array = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array())
-	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or tile_byte_0.size() != 1296 or tile_byte_1.size() != 1296 or tile_byte_6.size() != 1296 or owner_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
+	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or tile_byte_0.size() != 1296 or tile_byte_1.size() != 1296 or tile_byte_2.size() != 1296 or tile_byte_3.size() != 1296 or tile_byte_4.size() != 1296 or tile_byte_5.size() != 1296 or tile_byte_6.size() != 1296 or owner_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
 		_fail("TerrainPlacement visual arrays must cover every small-map cell: %s" % JSON.stringify({
 			"terrain_code_u16": terrain_codes.size(),
 			"terrain_art_index_u8": terrain_art_indices.size(),
@@ -472,6 +476,10 @@ func _run() -> void:
 			"terrain_shape_class_u8": terrain_shape_classes.size(),
 			"tile_byte_0_terrain_id_u8": tile_byte_0.size(),
 			"tile_byte_1_terrain_art_u8": tile_byte_1.size(),
+			"tile_byte_2_river_type_u8": tile_byte_2.size(),
+			"tile_byte_3_river_art_u8": tile_byte_3.size(),
+			"tile_byte_4_road_type_u8": tile_byte_4.size(),
+			"tile_byte_5_road_art_u8": tile_byte_5.size(),
 			"tile_byte_6_terrain_flags_u8": tile_byte_6.size(),
 			"owner_byte_grid_u8": owner_byte_grid.size(),
 			"zone_repaint_member_grid_u8": repaint_member_grid.size(),
@@ -480,9 +488,12 @@ func _run() -> void:
 	if String(terrain_fill.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending":
 		_fail("0x49b2b6 terrain-byte packing status was not exposed: %s" % JSON.stringify(terrain_fill))
 		return
+	if String(terrain_fill.get("tile_byte_overlay_status", "")) != "road_and_river_overlay_bytes_zero_until_0x4ab37f_0x4b4243_and_0x4ab6ac_0x4abd5f_ports":
+		_fail("0x49b2b6 overlay byte pending status was not exposed: %s" % JSON.stringify(terrain_fill))
+		return
 	for index in range(terrain_codes.size()):
 		var expected_byte_6 := (1 if int(terrain_flip_h[index]) != 0 else 0) | (2 if int(terrain_flip_v[index]) != 0 else 0)
-		if int(tile_byte_0[index]) != (int(terrain_codes[index]) & 0x3f) or int(tile_byte_1[index]) != (int(terrain_art_indices[index]) & 0xff) or int(tile_byte_6[index]) != expected_byte_6:
+		if int(tile_byte_0[index]) != (int(terrain_codes[index]) & 0x3f) or int(tile_byte_1[index]) != (int(terrain_art_indices[index]) & 0xff) or int(tile_byte_2[index]) != 0 or int(tile_byte_3[index]) != 0 or int(tile_byte_4[index]) != 0 or int(tile_byte_5[index]) != 0 or int(tile_byte_6[index]) != expected_byte_6:
 			_fail("0x49b2b6 terrain-byte packing drifted from generated-cell fields: %s" % JSON.stringify({
 				"index": index,
 				"terrain_code": terrain_codes[index],
@@ -491,6 +502,10 @@ func _run() -> void:
 				"flip_v": terrain_flip_v[index],
 				"tile_byte_0": tile_byte_0[index],
 				"tile_byte_1": tile_byte_1[index],
+				"tile_byte_2": tile_byte_2[index],
+				"tile_byte_3": tile_byte_3[index],
+				"tile_byte_4": tile_byte_4[index],
+				"tile_byte_5": tile_byte_5[index],
 				"tile_byte_6": tile_byte_6[index],
 			}))
 			return
