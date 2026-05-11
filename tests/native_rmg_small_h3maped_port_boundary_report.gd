@@ -665,6 +665,22 @@ func _run() -> void:
 			or bool(road_toolkit_entry.get("materializes_road_geometry", true)):
 		_fail("Materialized h3maped payload did not expose the recovered 0x4b4243 road-toolkit entry boundary: %s" % JSON.stringify(road_toolkit_entry))
 		return
+	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
+	if String(road_line_visit.get("status", "")) != "h3maped_0x458e61_line_visit_boundary_recovered_adapter_materialization_pending" \
+			or String(road_line_visit.get("function_address", "")) != "0x458e61" \
+			or String(road_line_visit.get("probe_virtual_slot", "")) != "+0x14" \
+			or String(road_line_visit.get("probe_virtual_address_for_road_adapter", "")) != "0x49af7b" \
+			or String(road_line_visit.get("candidate_mark_virtual_slot", "")) != "+0x08" \
+			or String(road_line_visit.get("candidate_mark_virtual_address_for_road_adapter", "")) != "0x49aec5" \
+			or String(road_line_visit.get("final_write_helper_address", "")) != "0x458a2f" \
+			or String(road_line_visit.get("neighbor_mask_helper_address", "")) != "0x4587f7" \
+			or String(road_line_visit.get("final_write_virtual_address_for_road_adapter", "")) != "0x49ae47" \
+			or String(road_line_visit.get("readback_virtual_address_for_road_adapter", "")) != "0x49af1d" \
+			or String(road_line_visit.get("road_art_selection_source_table", "")) != "0x538a04..0x538a8f" \
+			or String(road_line_visit.get("road_art_pair_table_address", "")) != "0x538a84" \
+			or bool(road_line_visit.get("materializes_road_geometry", true)):
+		_fail("Materialized h3maped payload did not expose the recovered 0x458e61 line-visit adapter boundary: %s" % JSON.stringify(road_line_visit))
+		return
 	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized" \
 			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
@@ -798,6 +814,7 @@ func _run() -> void:
 		"path_state_seed_status": path_state_seed.get("status", ""),
 		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
 		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
+		"road_line_visit_status": road_line_visit.get("status", ""),
 		"road_coordinate_vector_source_status": coordinate_vector_source.get("status", ""),
 		"road_coordinate_vector_partial_count": coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0),
 		"out_of_scope_generation_status": medium.get("status", ""),
