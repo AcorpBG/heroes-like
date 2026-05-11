@@ -6361,7 +6361,9 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 				chain["path_cost_offset"] = "+0x1c";
 				chain["walk_semantics"] = "0x4ab37f follows cell+0x10/+0x14/+0x18 predecessor coordinates while cell+0x1c low word remains nonzero";
 				chain["road_cell_mutation_materialized"] = false;
+				chain["candidate_mark_write_materialized"] = false;
 				Array reverse_trace_preview;
+				PackedInt32Array predecessor_chain_flat_cells;
 				int32_t trace_flat = candidate_flat;
 				int32_t step_count = 0;
 				bool reached_seed = trace_flat == flat_index;
@@ -6371,6 +6373,7 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 					const int32_t trace_x = trace_flat % width;
 					const int32_t trace_y = (trace_flat / width) % height;
 					const int32_t trace_level = trace_flat / (width * height);
+					predecessor_chain_flat_cells.append(trace_flat);
 					if (reverse_trace_preview.size() < 16) {
 						Dictionary trace_cell;
 						trace_cell["flat_cell_index"] = trace_flat;
@@ -6400,11 +6403,16 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 					seed_trace_cell["path_cost_low_word"] = 0;
 					reverse_trace_preview.append(seed_trace_cell);
 				}
+				if (reached_seed) {
+					predecessor_chain_flat_cells.append(flat_index);
+				}
 				chain["predecessor_chain_status"] = reached_seed
 						? "h3maped_0x4ab37f_predecessor_chain_reaches_seed"
 						: (broken_chain ? "h3maped_0x4ab37f_predecessor_chain_broken" : "h3maped_0x4ab37f_predecessor_chain_guard_limit_hit");
 				chain["predecessor_chain_reaches_seed"] = reached_seed;
 				chain["predecessor_chain_step_count"] = step_count;
+				chain["predecessor_chain_flat_cells"] = predecessor_chain_flat_cells;
+				chain["predecessor_chain_flat_cell_count"] = predecessor_chain_flat_cells.size();
 				chain["reverse_trace_preview"] = reverse_trace_preview;
 				total_predecessor_chain_cell_visits += step_count + 1;
 				max_predecessor_chain_step_count = std::max(max_predecessor_chain_step_count, step_count);
@@ -6772,6 +6780,89 @@ Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	return toolkit;
 }
 
+Dictionary h3maped_road_candidate_marking_49aec5_report(const Dictionary &terrain_fill, const Dictionary &path_seed_update, int32_t selected_road_type) {
+	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	const int32_t tile_count = width * height * level_count;
+	PackedInt32Array road_type_nibble;
+	PackedInt32Array road_art_u8;
+	PackedInt32Array road_flip_a;
+	PackedInt32Array road_flip_b;
+	road_type_nibble.resize(tile_count);
+	road_art_u8.resize(tile_count);
+	road_flip_a.resize(tile_count);
+	road_flip_b.resize(tile_count);
+	for (int32_t index = 0; index < tile_count; ++index) {
+		road_type_nibble.set(index, 0);
+		road_art_u8.set(index, 0);
+		road_flip_a.set(index, 0);
+		road_flip_b.set(index, 0);
+	}
+	Array predecessor_chains = path_seed_update.get("predecessor_chain_records", Array());
+	std::map<int32_t, bool> unique_marked_cells;
+	int32_t write_attempt_count = 0;
+	int32_t invalid_flat_cell_count = 0;
+	for (int64_t chain_index = 0; chain_index < predecessor_chains.size(); ++chain_index) {
+		if (Variant(predecessor_chains[chain_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary chain = Dictionary(predecessor_chains[chain_index]);
+		if (!bool(chain.get("predecessor_chain_reaches_seed", false))) {
+			continue;
+		}
+		PackedInt32Array flat_cells = chain.get("predecessor_chain_flat_cells", PackedInt32Array());
+		for (int32_t cell_index = 0; cell_index < flat_cells.size(); ++cell_index) {
+			const int32_t flat_cell = int32_t(flat_cells[cell_index]);
+			write_attempt_count += 1;
+			if (flat_cell < 0 || flat_cell >= tile_count) {
+				invalid_flat_cell_count += 1;
+				continue;
+			}
+			if (unique_marked_cells.find(flat_cell) == unique_marked_cells.end()) {
+				unique_marked_cells[flat_cell] = true;
+			}
+			road_type_nibble.set(flat_cell, selected_road_type & 0x0f);
+		}
+	}
+	PackedInt32Array marked_flat_cells;
+	for (const auto &entry : unique_marked_cells) {
+		marked_flat_cells.append(entry.first);
+	}
+	Dictionary report;
+	report["schema_id"] = "aurelion_h3maped_small_road_candidate_marking_v1";
+	report["status"] = unique_marked_cells.empty()
+			? String("h3maped_0x49aec5_candidate_road_type_marks_blocked_no_predecessor_chains")
+			: String("h3maped_0x49aec5_candidate_road_type_marks_materialized_art_pending");
+	report["function_address"] = "0x49aec5";
+	report["source"] = "Recovered from h3maped.exe road-adapter virtual slot +0x08: mask generated cell+0x24 with 0xc3ffffff and write the requested road type nibble shifted by 26 before 0x458a2f final art/flip classification.";
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["selected_road_type"] = selected_road_type;
+	report["candidate_mark_write_mask_cell_0x24_hex"] = "0xc3ffffff";
+	report["candidate_mark_road_type_shift"] = 26;
+	report["source_predecessor_chain_count"] = predecessor_chains.size();
+	report["candidate_mark_write_attempt_count"] = write_attempt_count;
+	report["candidate_marked_cell_count"] = int32_t(unique_marked_cells.size());
+	report["candidate_mark_invalid_flat_cell_count"] = invalid_flat_cell_count;
+	report["candidate_marked_flat_cells"] = marked_flat_cells;
+	report["candidate_road_type_nibble_u8"] = road_type_nibble;
+	report["final_road_art_u8"] = road_art_u8;
+	report["final_road_flip_a_u8"] = road_flip_a;
+	report["final_road_flip_b_u8"] = road_flip_b;
+	report["materializes_candidate_road_type_nibble"] = !unique_marked_cells.empty();
+	report["materializes_final_road_art"] = false;
+	report["materializes_serialized_road_overlay"] = false;
+	report["blocked_reason"] = "Only the recovered 0x49aec5 candidate road-type nibble mark is materialized. 0x458a2f/0x458893 final road art/flip selection, complete +0x14b0 vector parity, and 0x49b2b6 road overlay byte serialization remain pending.";
+	report["signature"] = h3maped_hash32_hex(String("h3maped_49aec5_candidate_road_type_marks:")
+			+ String::num_int64(tile_count) + ":"
+			+ String::num_int64(selected_road_type) + ":"
+			+ String::num_int64(unique_marked_cells.size()) + ":"
+			+ String::num_int64(write_attempt_count));
+	return report;
+}
+
 Dictionary h3maped_road_pair_iteration_4ab52a_report(const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase, const Dictionary &path_seed_update) {
 	Array coordinate_records = coordinate_vector_source.get("materialized_partial_coordinate_records", Array());
 	Array candidate_low_words = path_seed_update.get("candidate_low_words", Array());
@@ -6995,6 +7086,10 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	Dictionary path_state_seed = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 	boundary["path_state_seed"] = path_state_seed;
 	boundary["road_pair_iteration"] = h3maped_road_pair_iteration_4ab52a_report(coordinate_vector_source, rng_state_before_road_phase, path_state_seed);
+	Dictionary pair_iteration_for_marking = boundary.get("road_pair_iteration", Dictionary());
+	const int32_t selected_road_type_for_marking = int32_t(pair_iteration_for_marking.get("selected_road_type", 0));
+	Dictionary candidate_marking = h3maped_road_candidate_marking_49aec5_report(terrain_fill, path_state_seed, selected_road_type_for_marking);
+	boundary["road_candidate_marking"] = candidate_marking;
 	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill, path_state_seed);
 	boundary["road_toolkit_entry"] = h3maped_road_toolkit_4b4243_report(terrain_fill);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
@@ -7018,12 +7113,15 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["predecessor_chain_count"] = path_state_seed.get("predecessor_chain_count", 0);
 	boundary["predecessor_chain_total_cell_visits"] = path_state_seed.get("predecessor_chain_total_cell_visits", 0);
 	boundary["predecessor_chain_max_step_count"] = path_state_seed.get("predecessor_chain_max_step_count", 0);
+	boundary["candidate_marking_status"] = candidate_marking.get("status", "");
+	boundary["candidate_marked_cell_count"] = candidate_marking.get("candidate_marked_cell_count", 0);
+	boundary["candidate_mark_write_attempt_count"] = candidate_marking.get("candidate_mark_write_attempt_count", 0);
 	boundary["connection_count"] = connection_records.size();
 	boundary["connection_records_have_geometry"] = false;
 	boundary["generated_road_segment_count"] = 0;
 	boundary["generated_road_cell_count"] = 0;
 	boundary["no_synthetic_road_geometry"] = true;
-	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation, 0x4ab37f adapter bridge, and 0x4b4243 toolkit entry boundaries are recovered but not authoritative without the complete +0x14b0 coordinate vector and the downstream adapter virtual road-cell write path, so the reset path must not emit fake road loops.";
+	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation, 0x4ab37f adapter bridge, and 0x49aec5 candidate road-type marks are recovered for the current partial vector, but final 0x458a2f/0x458893 road art/flip writes, complete +0x14b0 coordinate-vector parity, and road overlay serialization remain pending, so the reset path must not emit runtime roads.";
 	boundary["cell_0x24_road_type_bits"] = "26..29";
 	boundary["cell_0x28_road_art_bits"] = "0..7";
 	boundary["cell_0x28_road_flip_bits"] = "19..20";
@@ -7032,7 +7130,8 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	phase_sequence.append("0x4aae2f_reset_cell_low_word_and_coordinate_chain_state");
 	phase_sequence.append("0x4aae7b_seed_path_state_from_connection_coordinate");
 	phase_sequence.append("0x4ab37f_construct_type_random_map_and_type_road_map_adapters");
-	phase_sequence.append("0x4b4243_road_toolkit_path_materialization_pending");
+	phase_sequence.append("0x49aec5_candidate_road_type_mark_materialized_art_pending");
+	phase_sequence.append("0x4b4243_road_toolkit_final_art_materialization_pending");
 	boundary["phase_sequence"] = phase_sequence;
 	boundary["signature"] = h3maped_hash32_hex(String("h3maped_road_adapter_boundary:") + String::num_int64(connection_records.size()) + String(":0x4ab52a:0x4ab37f:0x4b4243"));
 	return boundary;
