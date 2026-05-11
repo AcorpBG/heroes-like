@@ -740,6 +740,10 @@ func _run() -> void:
 	if bool(medium.get("ok", true)) or String(medium.get("status", "")) != "archived_legacy_native_rmg_disabled":
 		_fail("Out-of-scope native catalog-auto generation must route to archived legacy disabled: %s" % JSON.stringify(medium))
 		return
+	var medium_debug: Dictionary = service.generate_random_map(medium_config, {"startup_path": "h3maped_medium_archived_gate", "allow_archived_legacy_native_rmg": true})
+	if bool(medium_debug.get("ok", true)) or String(medium_debug.get("status", "")) != "archived_legacy_native_rmg_disabled":
+		_fail("The archived native catalog-auto path must remain disabled even when an old debug bypass option is passed: %s" % JSON.stringify(medium_debug))
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"status": report.get("status", ""),
