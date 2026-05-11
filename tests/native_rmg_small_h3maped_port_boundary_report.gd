@@ -623,7 +623,7 @@ func _run() -> void:
 		_fail("Materialized h3maped payload did not expose the recovered 0x4aae2f path-state reset: %s" % JSON.stringify(path_state_reset))
 		return
 	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
-	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_coordinate_vector_sources_recovered_record_materialization_incomplete" \
+	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized" \
 			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
 			or String(coordinate_vector_source.get("vector_begin_offset", "")) != "+0x14b4" \
 			or String(coordinate_vector_source.get("vector_end_offset", "")) != "+0x14b8" \
@@ -633,6 +633,47 @@ func _run() -> void:
 			or int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0)) != generated.get("town_records", []).size() + generated.get("object_placements", []).size() \
 			or bool(coordinate_vector_source.get("complete_executable_vector_claim", true)):
 		_fail("Materialized h3maped payload did not expose the recovered +0x14b0 road coordinate vector source ledger: %s" % JSON.stringify(coordinate_vector_source))
+		return
+	var partial_vector_records: Array = coordinate_vector_source.get("materialized_partial_coordinate_records", [])
+	if partial_vector_records.size() != int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1)) \
+			or int(coordinate_vector_source.get("materialized_partial_coordinate_byte_count", -1)) != partial_vector_records.size() * 12 \
+			or int(coordinate_vector_source.get("materialized_partial_vector_end_byte_offset", -1)) != partial_vector_records.size() * 12:
+		_fail("Materialized h3maped +0x14b0 partial vector byte/count ledger drifted: %s" % JSON.stringify(coordinate_vector_source))
+		return
+	if partial_vector_records.size() != generated.get("town_records", []).size() + generated.get("object_placements", []).size():
+		_fail("Materialized h3maped +0x14b0 partial vector must include adopted towns and mines only: %s" % JSON.stringify({
+			"vector_count": partial_vector_records.size(),
+			"town_count": generated.get("town_records", []).size(),
+			"mine_count": generated.get("object_placements", []).size(),
+		}))
+		return
+	var first_vector_record: Dictionary = partial_vector_records[0] if partial_vector_records.size() > 0 and partial_vector_records[0] is Dictionary else {}
+	var first_town_record: Dictionary = generated.get("town_records", [])[0] if generated.get("town_records", []).size() > 0 and generated.get("town_records", [])[0] is Dictionary else {}
+	if String(first_vector_record.get("source_kind", "")) != "town" \
+			or String(first_vector_record.get("append_address", "")) != "0x4a959b" \
+			or int(first_vector_record.get("record_size_bytes", 0)) != 12 \
+			or int(first_vector_record.get("vector_index", -1)) != 0 \
+			or int(first_vector_record.get("byte_offset_from_begin", -1)) != 0 \
+			or int(first_vector_record.get("x", -1)) != int(first_town_record.get("x", -2)) \
+			or int(first_vector_record.get("y", -1)) != int(first_town_record.get("y", -2)) \
+			or int(first_vector_record.get("level", -1)) != int(first_town_record.get("level", -2)):
+		_fail("First materialized h3maped +0x14b0 vector entry did not mirror the first adopted town record: %s" % JSON.stringify({
+			"vector_record": first_vector_record,
+			"town_record": first_town_record,
+		}))
+		return
+	var last_vector_record: Dictionary = partial_vector_records[partial_vector_records.size() - 1] if partial_vector_records.size() > 0 and partial_vector_records[partial_vector_records.size() - 1] is Dictionary else {}
+	if String(last_vector_record.get("source_kind", "")) != "mine" \
+			or String(last_vector_record.get("append_address", "")) != "0x4a6bb4" \
+			or int(last_vector_record.get("vector_index", -1)) != partial_vector_records.size() - 1 \
+			or int(last_vector_record.get("byte_offset_from_begin", -1)) != (partial_vector_records.size() - 1) * 12 \
+			or String(last_vector_record.get("executable_adjustment_status", "")) != "pending_exact_h3maped_object_metadata_offset_application":
+		_fail("Last materialized h3maped +0x14b0 vector entry did not preserve the mine append boundary: %s" % JSON.stringify(last_vector_record))
+		return
+	if int(road_boundary.get("partial_coordinate_record_count", -1)) != partial_vector_records.size() \
+			or int(road_boundary.get("partial_coordinate_byte_count", -1)) != partial_vector_records.size() * 12 \
+			or String(road_boundary.get("partial_coordinate_vector_status", "")) != String(coordinate_vector_source.get("status", "")):
+		_fail("Road adapter boundary did not carry the materialized partial +0x14b0 vector counts forward: %s" % JSON.stringify(road_boundary))
 		return
 	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
 	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:

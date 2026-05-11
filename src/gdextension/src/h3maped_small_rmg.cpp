@@ -6045,11 +6045,43 @@ Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill
 	return reset;
 }
 
+Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
+	const int32_t x = int32_t(record.get("x", 0));
+	const int32_t y = int32_t(record.get("y", 0));
+	const int32_t level = int32_t(record.get("level", 0));
+	Dictionary vector_record;
+	vector_record["vector_index"] = vector_index;
+	vector_record["byte_offset_from_begin"] = vector_index * 12;
+	vector_record["record_size_bytes"] = 12;
+	vector_record["phase"] = phase;
+	vector_record["append_address"] = append_address;
+	vector_record["push_helper_address"] = "0x4ae1fd";
+	vector_record["source_kind"] = source_kind;
+	vector_record["source_placement_id"] = record.get("placement_id", "");
+	vector_record["source_runtime_zone_index"] = record.get("runtime_zone_index", -1);
+	vector_record["source_zone_id"] = record.get("source_zone_id", -1);
+	vector_record["x"] = x;
+	vector_record["y"] = y;
+	vector_record["level"] = level;
+	vector_record["coordinate_triplet"] = Array::make(x, y, level);
+	vector_record["primary_occupancy_key"] = record.get("primary_occupancy_key", h3maped_level_point_key(x, y, level));
+	vector_record["coordinate_semantics"] = "project-adopted object anchor for the recovered generator+0x14b0 12-byte coordinate-vector entry";
+	vector_record["executable_adjustment_status"] = "pending_exact_h3maped_object_metadata_offset_application";
+	vector_record["road_reader_status"] = "pending_0x4ab52a_iteration_after_complete_vector_and_0x4aae7b_path_seed_port";
+	vector_record["signature"] = h3maped_hash32_hex(String("h3maped_coordinate_vector_record:")
+			+ String::num_int64(vector_index) + ":"
+			+ String(source_kind) + ":"
+			+ String::num_int64(x) + ":"
+			+ String::num_int64(y) + ":"
+			+ String::num_int64(level));
+	return vector_record;
+}
+
 Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_records, const Array &mine_records) {
 	Dictionary source;
 	source["schema_id"] = "aurelion_h3maped_small_road_coordinate_vector_source_v1";
-	source["status"] = "h3maped_generator_plus_0x14b0_coordinate_vector_sources_recovered_record_materialization_incomplete";
-	source["source"] = "Recovered from h3maped.exe: direct town placement and object placement push 12-byte coordinate records into generator+0x14b0 through 0x4ae1fd; final road phase reads begin/end from +0x14b4/+0x14b8.";
+	source["status"] = "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized";
+	source["source"] = "Recovered from h3maped.exe: direct town placement and object placement push 12-byte coordinate records into generator+0x14b0 through 0x4ae1fd; final road phase reads begin/end from +0x14b4/+0x14b8. This ledger materializes only the already adopted town and mine coordinate records.";
 	source["vector_object_offset"] = "+0x14b0";
 	source["vector_begin_offset"] = "+0x14b4";
 	source["vector_end_offset"] = "+0x14b8";
@@ -6062,8 +6094,43 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 	source["materialized_town_record_count"] = town_records.size();
 	source["materialized_mine_record_count"] = mine_records.size();
 	source["materialized_partial_coordinate_record_count"] = town_records.size() + mine_records.size();
+	source["materialized_partial_coordinate_byte_count"] = int32_t(town_records.size() + mine_records.size()) * 12;
+	source["materialized_partial_vector_begin_byte_offset"] = 0;
+	source["materialized_partial_vector_end_byte_offset"] = int32_t(town_records.size() + mine_records.size()) * 12;
 	source["complete_executable_vector_claim"] = false;
 	source["blocked_reason"] = "Only direct town records and selected mine records are currently adopted into the package; weighted rewards, guards, monsters, decorations, and final object passes that may also affect the executable vector are not ported.";
+	source["coordinate_adjustment_status"] = "partial_project_anchor_entries_materialized_exact_h3maped_metadata_offsets_pending";
+	source["reader_iteration_status"] = "pending_0x4ab52a_complete_vector_iteration";
+	Array partial_records;
+	int32_t vector_index = 0;
+	for (int64_t index = 0; index < town_records.size(); ++index) {
+		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		partial_records.append(h3maped_coordinate_vector_record_from_object(
+				Dictionary(town_records[index]),
+				vector_index,
+				"0x4a93a2_direct_town_placement",
+				"0x4a959b",
+				"town"));
+		vector_index += 1;
+	}
+	for (int64_t index = 0; index < mine_records.size(); ++index) {
+		if (Variant(mine_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		partial_records.append(h3maped_coordinate_vector_record_from_object(
+				Dictionary(mine_records[index]),
+				vector_index,
+				"0x4a9911_0x4a9641_object_placement",
+				"0x4a6bb4",
+				"mine"));
+		vector_index += 1;
+	}
+	source["materialized_partial_coordinate_records"] = partial_records;
+	source["materialized_partial_coordinate_record_count"] = partial_records.size();
+	source["materialized_partial_coordinate_byte_count"] = int32_t(partial_records.size()) * 12;
+	source["materialized_partial_vector_end_byte_offset"] = int32_t(partial_records.size()) * 12;
 	Array recovered_sources;
 	Dictionary town_source;
 	town_source["phase"] = "0x4a93a2_direct_town_placement";
@@ -6079,7 +6146,7 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 	mine_source["coordinate_semantics"] = "selected object coordinate adjusted by object metadata offsets before vector push";
 	recovered_sources.append(mine_source);
 	source["recovered_sources"] = recovered_sources;
-	source["signature"] = h3maped_hash32_hex(String("h3maped_road_coordinate_vector_source:") + String::num_int64(town_records.size()) + ":" + String::num_int64(mine_records.size()));
+	source["signature"] = h3maped_hash32_hex(String("h3maped_road_coordinate_vector_source:") + String::num_int64(partial_records.size()) + ":" + String::num_int64(town_records.size()) + ":" + String::num_int64(mine_records.size()));
 	return source;
 }
 
@@ -6104,6 +6171,9 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
+	boundary["partial_coordinate_record_count"] = coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0);
+	boundary["partial_coordinate_byte_count"] = coordinate_vector_source.get("materialized_partial_coordinate_byte_count", 0);
+	boundary["partial_coordinate_vector_status"] = coordinate_vector_source.get("status", "");
 	boundary["road_type_rng_function_address"] = "0x4e7276";
 	boundary["road_type_rng_modulus"] = 3;
 	boundary["road_type_rng_addend"] = 1;
