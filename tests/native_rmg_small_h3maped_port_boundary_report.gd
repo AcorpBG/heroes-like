@@ -608,9 +608,31 @@ func _run() -> void:
 			or String(path_seed_update.get("target_enqueue_block", "")) != "0x4ab31c..0x4ab32f" \
 			or String(path_seed_update.get("queue_cleanup_block", "")) != "0x4ab353..0x4ab36e" \
 			or String(path_seed_update.get("seed_initialization_status", "")) != "h3maped_0x4aae7b_seed_cell_initialization_materialized_propagation_pending" \
+			or String(path_seed_update.get("neighbor_direction_table_status", "")) != "h3maped_0x5a2658_direction_table_materialized_propagation_pending" \
 			or bool(path_seed_update.get("materializes_road_geometry", true)):
 		_fail("The clean h3maped inspection report did not expose the recovered 0x4aae7b update rule: %s" % JSON.stringify(path_seed_update))
 		return
+	var direction_dx: PackedInt32Array = path_seed_update.get("neighbor_direction_dx_i32", PackedInt32Array())
+	var direction_dy: PackedInt32Array = path_seed_update.get("neighbor_direction_dy_i32", PackedInt32Array())
+	var direction_records: Array = path_seed_update.get("neighbor_direction_records", [])
+	if String(path_seed_update.get("neighbor_direction_table_address", "")) != "0x5a2658" \
+			or String(path_seed_update.get("neighbor_direction_table_end_address", "")) != "0x5a2698" \
+			or String(path_seed_update.get("neighbor_direction_table_initializer", "")) != "0x499db3..0x499e20" \
+			or direction_dx.size() != 8 \
+			or direction_dy.size() != 8 \
+			or direction_records.size() != 8:
+		_fail("The recovered 0x5a2658 neighbor direction table was not materialized: %s" % JSON.stringify(path_seed_update))
+		return
+	var expected_dx := [1, 1, 0, -1, -1, -1, 0, 1]
+	var expected_dy := [0, 1, 1, 1, 0, -1, -1, -1]
+	for direction_index in range(8):
+		var direction_record: Dictionary = direction_records[direction_index] if direction_records[direction_index] is Dictionary else {}
+		if int(direction_dx[direction_index]) != int(expected_dx[direction_index]) \
+				or int(direction_dy[direction_index]) != int(expected_dy[direction_index]) \
+				or int(direction_record.get("dx", 999)) != int(expected_dx[direction_index]) \
+				or int(direction_record.get("dy", 999)) != int(expected_dy[direction_index]):
+			_fail("The recovered 0x5a2658 neighbor direction table values drifted at index %d: %s" % [direction_index, JSON.stringify(path_seed_update)])
+			return
 	var road_coordinate_vector_source: Dictionary = selected_payload.get("road_coordinate_vector_source", {}) if selected_payload.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
