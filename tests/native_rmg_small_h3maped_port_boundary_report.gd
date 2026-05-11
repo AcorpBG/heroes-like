@@ -637,6 +637,8 @@ func _run() -> void:
 	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
 	var road_adapter_bridge: Dictionary = road_adapter_boundary.get("road_adapter_bridge", {}) if road_adapter_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
+	var road_toolkit_entry: Dictionary = road_adapter_boundary.get("road_toolkit_entry", {}) if road_adapter_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
+	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
 	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
 	var reset_pred_x: PackedInt32Array = path_state_reset.get("predecessor_x_i32", PackedInt32Array())
 	var reset_pred_y: PackedInt32Array = path_state_reset.get("predecessor_y_i32", PackedInt32Array())
@@ -747,6 +749,54 @@ func _run() -> void:
 			"predecessor_chain_count": predecessor_chains.size(),
 		}))
 		return
+	var road_neighbor_dx: PackedInt32Array = road_line_visit.get("neighbor_direction_dx_i32", PackedInt32Array())
+	var road_neighbor_dy: PackedInt32Array = road_line_visit.get("neighbor_direction_dy_i32", PackedInt32Array())
+	var road_neighbor_records: Array = road_line_visit.get("neighbor_direction_records", [])
+	var road_shape_records: Array = road_line_visit.get("road_art_shape_records", [])
+	var expected_road_dx := [0, 1, 1, 1, 0, -1, -1, -1]
+	var expected_road_dy := [-1, -1, 0, 1, 1, 1, 0, -1]
+	if String(road_toolkit_entry.get("neighbor_direction_table_initializer", "")) != "0x4bf38b..0x4bf3f3" \
+			or String(road_line_visit.get("neighbor_direction_table_initializer", "")) != "0x4bf38b..0x4bf3f3" \
+			or road_neighbor_dx.size() != 8 \
+			or road_neighbor_dy.size() != 8 \
+			or road_neighbor_records.size() != 8 \
+			or road_shape_records.size() != 4 \
+			or int(road_line_visit.get("road_art_shape_record_size_bytes", 0)) != 0x20 \
+			or String(road_line_visit.get("final_write_cell_0x24_mask_hex", "")) != "0xc3ffffff" \
+			or int(road_line_visit.get("final_write_cell_0x24_road_type_shift", -1)) != 26 \
+			or String(road_line_visit.get("final_write_cell_0x28_mask_hex", "")) != "0xffe7ff00" \
+			or int(road_line_visit.get("final_write_cell_0x28_flip_shift", -1)) != 19 \
+			or bool(road_line_visit.get("materializes_road_geometry", true)):
+		_fail("0x4b4243/0x458e61 road toolkit table/write evidence was not materialized from h3maped.exe: %s" % JSON.stringify(road_line_visit))
+		return
+	for road_direction_index in range(8):
+		var road_direction_record: Dictionary = road_neighbor_records[road_direction_index] if road_neighbor_records[road_direction_index] is Dictionary else {}
+		if int(road_neighbor_dx[road_direction_index]) != int(expected_road_dx[road_direction_index]) \
+				or int(road_neighbor_dy[road_direction_index]) != int(expected_road_dy[road_direction_index]) \
+				or int(road_direction_record.get("dx", 999)) != int(expected_road_dx[road_direction_index]) \
+				or int(road_direction_record.get("dy", 999)) != int(expected_road_dy[road_direction_index]):
+			_fail("0x5a5028 road-neighbor table values drifted at index %d: %s" % [road_direction_index, JSON.stringify(road_line_visit)])
+			return
+	var expected_shape_offsets := [
+		[0, 1, 2, 3, 4, 5, 6, 7],
+		[4, 3, 2, 1, 0, 7, 6, 5],
+		[0, 7, 6, 5, 4, 3, 2, 1],
+		[4, 5, 6, 7, 0, 1, 2, 3],
+	]
+	var expected_shape_flip_a := [0, 0, 1, 1]
+	var expected_shape_flip_b := [0, 1, 0, 1]
+	for shape_index in range(4):
+		var shape_record: Dictionary = road_shape_records[shape_index] if road_shape_records[shape_index] is Dictionary else {}
+		var shape_offsets: PackedInt32Array = shape_record.get("neighbor_flag_offsets", PackedInt32Array())
+		if shape_offsets.size() != 8 \
+				or int(shape_record.get("flip_selector_a", -1)) != int(expected_shape_flip_a[shape_index]) \
+				or int(shape_record.get("flip_selector_b", -1)) != int(expected_shape_flip_b[shape_index]):
+			_fail("0x538a04 road-shape record drifted at index %d: %s" % [shape_index, JSON.stringify(road_line_visit)])
+			return
+		for shape_offset_index in range(8):
+			if int(shape_offsets[shape_offset_index]) != int(expected_shape_offsets[shape_index][shape_offset_index]):
+				_fail("0x538a04 road-shape offset drifted at record %d offset %d: %s" % [shape_index, shape_offset_index, JSON.stringify(road_line_visit)])
+				return
 	for seed_record_index in [0, seed_initializations.size() - 1]:
 		var seed_init: Dictionary = seed_initializations[seed_record_index] if seed_initializations[seed_record_index] is Dictionary else {}
 		if String(seed_init.get("seed_write_block", "")) != "0x4aaedc..0x4aaf0e" \
@@ -838,6 +888,8 @@ func _run() -> void:
 		"path_state_candidate_accept_count": path_seed_update.get("candidate_accept_count", 0),
 		"path_state_predecessor_chain_count": path_seed_update.get("predecessor_chain_count", 0),
 		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
+		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
+		"road_line_visit_status": road_line_visit.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
 		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),

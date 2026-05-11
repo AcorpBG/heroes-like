@@ -6598,6 +6598,53 @@ Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_f
 }
 
 Dictionary h3maped_road_line_visit_458e61_report() {
+	constexpr int32_t road_neighbor_count = 8;
+	constexpr int32_t road_neighbor_dx[road_neighbor_count] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	constexpr int32_t road_neighbor_dy[road_neighbor_count] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+	constexpr const char *road_neighbor_addresses[road_neighbor_count] = {
+		"0x5a5028", "0x5a5030", "0x5a5038", "0x5a5040",
+		"0x5a5048", "0x5a5050", "0x5a5058", "0x5a5060"
+	};
+	Array road_neighbor_records;
+	PackedInt32Array road_neighbor_dx_array;
+	PackedInt32Array road_neighbor_dy_array;
+	for (int32_t index = 0; index < road_neighbor_count; ++index) {
+		Dictionary record;
+		record["index"] = index;
+		record["address"] = road_neighbor_addresses[index];
+		record["dx"] = road_neighbor_dx[index];
+		record["dy"] = road_neighbor_dy[index];
+		record["initializer_address"] = "0x4bf38b..0x4bf3f3";
+		road_neighbor_records.append(record);
+		road_neighbor_dx_array.append(road_neighbor_dx[index]);
+		road_neighbor_dy_array.append(road_neighbor_dy[index]);
+	}
+	constexpr int32_t road_shape_record_count = 4;
+	constexpr int32_t road_shape_offsets[road_shape_record_count][8] = {
+		{ 0, 1, 2, 3, 4, 5, 6, 7 },
+		{ 4, 3, 2, 1, 0, 7, 6, 5 },
+		{ 0, 7, 6, 5, 4, 3, 2, 1 },
+		{ 4, 5, 6, 7, 0, 1, 2, 3 },
+	};
+	constexpr int32_t road_shape_flip_a[road_shape_record_count] = { 0, 0, 1, 1 };
+	constexpr int32_t road_shape_flip_b[road_shape_record_count] = { 0, 1, 0, 1 };
+	constexpr const char *road_shape_addresses[road_shape_record_count] = {
+		"0x538a04", "0x538a24", "0x538a44", "0x538a64"
+	};
+	Array road_shape_records;
+	for (int32_t record_index = 0; record_index < road_shape_record_count; ++record_index) {
+		PackedInt32Array offsets;
+		for (int32_t offset_index = 0; offset_index < 8; ++offset_index) {
+			offsets.append(road_shape_offsets[record_index][offset_index]);
+		}
+		Dictionary record;
+		record["record_index"] = record_index;
+		record["address"] = road_shape_addresses[record_index];
+		record["neighbor_flag_offsets"] = offsets;
+		record["flip_selector_a"] = road_shape_flip_a[record_index];
+		record["flip_selector_b"] = road_shape_flip_b[record_index];
+		road_shape_records.append(record);
+	}
 	Dictionary visit;
 	visit["schema_id"] = "aurelion_h3maped_small_road_line_visit_v1";
 	visit["status"] = "h3maped_0x458e61_line_visit_boundary_recovered_adapter_materialization_pending";
@@ -6624,15 +6671,30 @@ Dictionary h3maped_road_line_visit_458e61_report() {
 	visit["edge_mask_semantics"] = "initialize 8 neighbor flags to one and clear edge-facing entries when the coordinate is on map borders";
 	visit["neighbor_direction_table_address"] = "0x5a5028";
 	visit["neighbor_direction_table_end_address"] = "0x5a5068";
+	visit["neighbor_direction_table_initializer"] = "0x4bf38b..0x4bf3f3";
 	visit["neighbor_direction_record_count"] = 8;
 	visit["neighbor_direction_record_size_bytes"] = 8;
+	visit["neighbor_direction_records"] = road_neighbor_records;
+	visit["neighbor_direction_dx_i32"] = road_neighbor_dx_array;
+	visit["neighbor_direction_dy_i32"] = road_neighbor_dy_array;
 	visit["neighbor_retouch_semantics"] = "for each enabled neighboring direction, call 0x458a2f on the adjacent coordinate after current cell candidate marking";
-	visit["road_art_selection_source_table"] = "0x538a04..0x538a8f";
+	visit["road_art_selection_source_table"] = "0x538a04..0x538a8b";
 	visit["road_art_pair_table_address"] = "0x538a84";
+	visit["road_art_shape_records"] = road_shape_records;
+	visit["road_art_shape_record_count"] = road_shape_records.size();
+	visit["road_art_shape_record_size_bytes"] = 0x20;
+	visit["road_art_shape_selector_semantics"] = "0x458893 selects one of four 0x20-byte offset records using (flip_selector_b + flip_selector_a * 2), then classifies art and flip from the eight neighbor flags.";
 	visit["rng_tie_break_address"] = "0x4e7276";
 	visit["final_write_virtual_slot"] = "+0x04";
 	visit["final_write_virtual_address_for_road_adapter"] = "0x49ae47";
-	visit["final_write_semantics"] = "write road type/art/flip fields into generated cell+0x24/+0x28 after 0x458893 classifies neighbor shape";
+	visit["candidate_mark_write_mask_cell_0x24_hex"] = "0xc3ffffff";
+	visit["candidate_mark_road_type_shift"] = 26;
+	visit["final_write_cell_0x24_mask_hex"] = "0xc3ffffff";
+	visit["final_write_cell_0x24_road_type_shift"] = 26;
+	visit["final_write_cell_0x28_mask_hex"] = "0xffe7ff00";
+	visit["final_write_cell_0x28_art_mask_hex"] = "0x000000ff";
+	visit["final_write_cell_0x28_flip_shift"] = 19;
+	visit["final_write_semantics"] = "0x49ae79 writes road type into cell+0x24 bits 26..29, writes road art into cell+0x28 low byte, and writes two flip bits into cell+0x28 bits 19..20 after 0x458893 classifies neighbor shape";
 	visit["readback_virtual_slot"] = "+0x10";
 	visit["readback_virtual_address_for_road_adapter"] = "0x49af1d";
 	visit["readback_semantics"] = "read road type, art index, and flip flags from generated cell+0x24/+0x28 for neighbor-shape stability checks";
@@ -6674,6 +6736,7 @@ Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	toolkit["line_visit_boundary"] = h3maped_road_line_visit_458e61_report();
 	toolkit["neighbor_direction_table_address"] = "0x5a5028";
 	toolkit["neighbor_direction_table_end_address"] = "0x5a5068";
+	toolkit["neighbor_direction_table_initializer"] = "0x4bf38b..0x4bf3f3";
 	toolkit["neighbor_direction_record_size_bytes"] = 8;
 	toolkit["neighbor_direction_record_count"] = 8;
 	toolkit["width"] = width;
