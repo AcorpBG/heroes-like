@@ -6159,6 +6159,73 @@ Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_f
 	return bridge;
 }
 
+Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
+	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	Dictionary toolkit;
+	toolkit["schema_id"] = "aurelion_h3maped_small_road_toolkit_entry_v1";
+	toolkit["status"] = "h3maped_0x4b4243_road_toolkit_entry_recovered_path_helpers_pending";
+	toolkit["function_address"] = "0x4b4243";
+	toolkit["source"] = "Recovered from h3maped.exe: this entry initializes the road toolkit object from the road adapter, stores the adapter start coordinate and adapter pointer, switches vtables, then delegates path/raster work to 0x458d37 and 0x458e61. The downstream adapter virtual writes are still not ported, so no road cells are serialized.";
+	toolkit["toolkit_argument_register"] = "ecx";
+	toolkit["road_adapter_argument_stack_offset"] = "ebp+0x08";
+	toolkit["path_endpoint_argument_stack_offsets"] = Array::make("ebp+0x0c", "ebp+0x10");
+	toolkit["initial_vtable_address"] = "0x5419d4";
+	toolkit["runtime_vtable_address"] = "0x5419f4";
+	toolkit["alternate_runtime_vtable_address"] = "0x541a14";
+	toolkit["constructor_address"] = "0x4b4243";
+	toolkit["destructor_address"] = "0x4b42a4";
+	toolkit["cleanup_address"] = "0x4b42c0";
+	toolkit["secondary_constructor_address"] = "0x4b4331";
+	toolkit["secondary_cleanup_address"] = "0x4b432a";
+	toolkit["adapter_virtual_start_coordinate_slot"] = "+0x0c";
+	toolkit["adapter_virtual_probe_slot"] = "+0x14";
+	toolkit["adapter_virtual_terrain_class_slot"] = "+0x18";
+	toolkit["toolkit_start_x_field"] = "+0x04";
+	toolkit["toolkit_start_y_field"] = "+0x08";
+	toolkit["toolkit_adapter_pointer_field"] = "+0x0c";
+	toolkit["toolkit_path_state_field"] = "+0x10";
+	toolkit["line_initializer_address"] = "0x458d37";
+	toolkit["line_stepper_address"] = "0x458d66";
+	toolkit["line_visit_address"] = "0x458e61";
+	toolkit["neighbor_direction_table_address"] = "0x5a5028";
+	toolkit["neighbor_direction_table_end_address"] = "0x5a5068";
+	toolkit["neighbor_direction_record_size_bytes"] = 8;
+	toolkit["neighbor_direction_record_count"] = 8;
+	toolkit["width"] = width;
+	toolkit["height"] = height;
+	toolkit["level_count"] = level_count;
+	Array initial_vtable_entries;
+	initial_vtable_entries.append("0x4b421b");
+	initial_vtable_entries.append("0x4b3bbd");
+	initial_vtable_entries.append("0x4b3bf0");
+	initial_vtable_entries.append("0x4b4223");
+	initial_vtable_entries.append("0x4b3c03");
+	initial_vtable_entries.append("0x4b3c3f");
+	initial_vtable_entries.append("0x4e6ab4");
+	initial_vtable_entries.append("0x558468");
+	toolkit["initial_vtable_entries"] = initial_vtable_entries;
+	Array runtime_vtable_entries;
+	runtime_vtable_entries.append("0x4b421b");
+	runtime_vtable_entries.append("0x4b3bbd");
+	runtime_vtable_entries.append("0x4b3bf0");
+	runtime_vtable_entries.append("0x4b4223");
+	runtime_vtable_entries.append("0x4b3c03");
+	runtime_vtable_entries.append("0x4b3c3f");
+	runtime_vtable_entries.append("0x4b42a4");
+	runtime_vtable_entries.append("0x5584c0");
+	toolkit["runtime_vtable_entries"] = runtime_vtable_entries;
+	toolkit["materializes_road_geometry"] = false;
+	toolkit["road_cell_write_status"] = "pending_adapter_virtual_write_path_port";
+	toolkit["blocked_reason"] = "The toolkit entry, vtables, and line/path helper boundary are recovered, but the adapter virtual write path behind 0x458e61 and the road art/cell mutation semantics are not yet ported.";
+	toolkit["signature"] = h3maped_hash32_hex(String("h3maped_4b4243_road_toolkit_entry:")
+			+ String::num_int64(width) + ":"
+			+ String::num_int64(height) + ":"
+			+ String::num_int64(level_count));
+	return toolkit;
+}
+
 Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
 	const int32_t x = int32_t(record.get("x", 0));
 	const int32_t y = int32_t(record.get("y", 0));
@@ -6284,6 +6351,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["coordinate_vector_source"] = coordinate_vector_source;
 	boundary["path_state_seed"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill);
+	boundary["road_toolkit_entry"] = h3maped_road_toolkit_4b4243_report(terrain_fill);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
@@ -6302,7 +6370,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["generated_road_segment_count"] = 0;
 	boundary["generated_road_cell_count"] = 0;
 	boundary["no_synthetic_road_geometry"] = true;
-	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation and 0x4ab37f adapter bridge boundaries are recovered but not authoritative without the complete +0x14b0 coordinate vector and the 0x4b4243 road toolkit body, so the reset path must not emit fake road loops.";
+	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation, 0x4ab37f adapter bridge, and 0x4b4243 toolkit entry boundaries are recovered but not authoritative without the complete +0x14b0 coordinate vector and the downstream adapter virtual road-cell write path, so the reset path must not emit fake road loops.";
 	boundary["cell_0x24_road_type_bits"] = "26..29";
 	boundary["cell_0x28_road_art_bits"] = "0..7";
 	boundary["cell_0x28_road_flip_bits"] = "19..20";

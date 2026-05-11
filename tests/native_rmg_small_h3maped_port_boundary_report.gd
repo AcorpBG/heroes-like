@@ -651,6 +651,20 @@ func _run() -> void:
 			or bool(road_adapter_bridge.get("materializes_road_geometry", true)):
 		_fail("Materialized h3maped payload did not expose the recovered 0x4ab37f road-adapter bridge: %s" % JSON.stringify(road_adapter_bridge))
 		return
+	var road_toolkit_entry: Dictionary = road_boundary.get("road_toolkit_entry", {}) if road_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
+	if String(road_toolkit_entry.get("status", "")) != "h3maped_0x4b4243_road_toolkit_entry_recovered_path_helpers_pending" \
+			or String(road_toolkit_entry.get("function_address", "")) != "0x4b4243" \
+			or String(road_toolkit_entry.get("initial_vtable_address", "")) != "0x5419d4" \
+			or String(road_toolkit_entry.get("runtime_vtable_address", "")) != "0x5419f4" \
+			or String(road_toolkit_entry.get("cleanup_address", "")) != "0x4b42c0" \
+			or String(road_toolkit_entry.get("line_initializer_address", "")) != "0x458d37" \
+			or String(road_toolkit_entry.get("line_visit_address", "")) != "0x458e61" \
+			or String(road_toolkit_entry.get("neighbor_direction_table_address", "")) != "0x5a5028" \
+			or int(road_toolkit_entry.get("neighbor_direction_record_count", 0)) != 8 \
+			or int(road_toolkit_entry.get("neighbor_direction_record_size_bytes", 0)) != 8 \
+			or bool(road_toolkit_entry.get("materializes_road_geometry", true)):
+		_fail("Materialized h3maped payload did not expose the recovered 0x4b4243 road-toolkit entry boundary: %s" % JSON.stringify(road_toolkit_entry))
+		return
 	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized" \
 			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
@@ -779,6 +793,7 @@ func _run() -> void:
 		"path_state_reset_status": path_state_reset.get("status", ""),
 		"path_state_seed_status": path_state_seed.get("status", ""),
 		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
+		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
 		"road_coordinate_vector_source_status": coordinate_vector_source.get("status", ""),
 		"road_coordinate_vector_partial_count": coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0),
 		"out_of_scope_generation_status": medium.get("status", ""),
