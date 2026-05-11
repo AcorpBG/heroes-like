@@ -6174,6 +6174,27 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
 	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
 	const int32_t partial_record_count = int32_t(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0));
+	constexpr int32_t direction_count = 8;
+	constexpr int32_t direction_dx[direction_count] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	constexpr int32_t direction_dy[direction_count] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	constexpr const char *direction_addresses[direction_count] = {
+		"0x5a2658", "0x5a2660", "0x5a2668", "0x5a2670",
+		"0x5a2678", "0x5a2680", "0x5a2688", "0x5a2690"
+	};
+	Array direction_records;
+	PackedInt32Array direction_dx_array;
+	PackedInt32Array direction_dy_array;
+	for (int32_t direction_index = 0; direction_index < direction_count; ++direction_index) {
+		Dictionary direction;
+		direction["index"] = direction_index;
+		direction["address"] = direction_addresses[direction_index];
+		direction["dx"] = direction_dx[direction_index];
+		direction["dy"] = direction_dy[direction_index];
+		direction["initializer_address"] = "0x499db3..0x499e20";
+		direction_records.append(direction);
+		direction_dx_array.append(direction_dx[direction_index]);
+		direction_dy_array.append(direction_dy[direction_index]);
+	}
 	Array coordinate_records = coordinate_vector_source.get("materialized_partial_coordinate_records", Array());
 	Array seed_initializations;
 	const int32_t seed_initialization_count = std::max(0, partial_record_count - 1);
@@ -6235,7 +6256,13 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	seed["seed_initializations"] = seed_initializations;
 	seed["predecessor_coordinate_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
 	seed["neighbor_direction_table_address"] = "0x5a2658";
-	seed["default_neighbor_direction_count"] = 8;
+	seed["neighbor_direction_table_end_address"] = "0x5a2698";
+	seed["neighbor_direction_table_initializer"] = "0x499db3..0x499e20";
+	seed["neighbor_direction_table_status"] = "h3maped_0x5a2658_direction_table_materialized_propagation_pending";
+	seed["neighbor_direction_records"] = direction_records;
+	seed["neighbor_direction_dx_i32"] = direction_dx_array;
+	seed["neighbor_direction_dy_i32"] = direction_dy_array;
+	seed["default_neighbor_direction_count"] = direction_count;
 	seed["metadata_reduced_neighbor_direction_count"] = 5;
 	seed["terrain_class_mask_offset"] = "cell+0x24";
 	seed["terrain_class_low_bits_mask_hex"] = "0x3f";
