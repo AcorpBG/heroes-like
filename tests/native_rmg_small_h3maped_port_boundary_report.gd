@@ -344,6 +344,9 @@ func _run() -> void:
 	if int(mine_reward_placement.get("treasure_reward_object_lookup_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_object_lookup_primary_retry_budget_total", -1)) != 126 or bool(mine_reward_placement.get("treasure_reward_object_lookup_candidate_execution_materialized", true)):
 		_fail("0x4aa1db reward object lookup counts/materialization flags drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
+	if String(mine_reward_placement.get("treasure_reward_candidate_scan_status", "")) != "0x4a9f1c_candidate_scan_gates_materialized_proxy_execution_pending" or int(mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", -1)) != 14:
+		_fail("0x4a9f1c candidate scan status/proxy inventory drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
 	var first_lookup: Dictionary = first_attempt.get("object_lookup_control_flow", {})
 	if String(first_lookup.get("function_address", "")) != "0x4aa1db" or String(first_lookup.get("candidate_scan_helper_address", "")) != "0x4a9f1c":
 		_fail("0x4aa1db first lookup helper addresses drifted: %s" % JSON.stringify(first_lookup))
@@ -359,6 +362,25 @@ func _run() -> void:
 		return
 	if first_lookup.get("coordinate_sentinel", []) != [-1, -1, -1] or bool(first_lookup.get("materializes_reward_object", true)):
 		_fail("0x4aa1db lookup must preserve sentinel coordinates and remain non-materializing: %s" % JSON.stringify(first_lookup))
+		return
+	var first_candidate_scan: Dictionary = first_lookup.get("candidate_scan_control_flow", {})
+	if String(first_candidate_scan.get("function_address", "")) != "0x4a9f1c" or String(first_candidate_scan.get("generator_candidate_vector_begin_offset", "")) != "generator+0x10f4" or String(first_candidate_scan.get("generator_candidate_vector_end_offset", "")) != "generator+0x10f8":
+		_fail("0x4a9f1c candidate vector offsets drifted: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if String(first_candidate_scan.get("type_metadata_table_pointer_address", "")) != "0x57c648" or int(first_candidate_scan.get("type_metadata_stride_bytes", -1)) != 0x10:
+		_fail("0x4a9f1c object metadata table evidence drifted: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if String(first_candidate_scan.get("global_type_count_table_address", "")) != "0x5a26e4" or String(first_candidate_scan.get("zone_type_count_table_address", "")) != "0x5a2a8c":
+		_fail("0x4a9f1c type-count cap table evidence drifted: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if int(first_candidate_scan.get("value_range_min", -1)) != 3430 or int(first_candidate_scan.get("value_range_max", -1)) != 13723:
+		_fail("0x4a9f1c first candidate value range drifted from 0x4aa1db primary range: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if String(first_candidate_scan.get("resource_helper_address", "")) != "0x4a9e40" or String(first_candidate_scan.get("footprint_probe_helper_address", "")) != "0x49a6f9" or String(first_candidate_scan.get("optional_coverage_ratio_helper_address", "")) != "0x4aa195" or String(first_candidate_scan.get("weighted_selection_rng_address", "")) != "0x4e7276":
+		_fail("0x4a9f1c helper address evidence drifted: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if int(first_candidate_scan.get("native_proxy_inventory_reward_reference_count", -1)) != 14 or bool(first_candidate_scan.get("native_proxy_candidate_execution_materialized", true)):
+		_fail("0x4a9f1c native proxy inventory must be visible but non-materializing: %s" % JSON.stringify(first_candidate_scan))
 		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
@@ -1066,6 +1088,8 @@ func _run() -> void:
 		"treasure_reward_value_rng_call_count": mine_reward_placement.get("treasure_reward_value_rng_call_count", 0),
 		"treasure_reward_object_lookup_status": mine_reward_placement.get("treasure_reward_object_lookup_status", ""),
 		"treasure_reward_object_lookup_count": mine_reward_placement.get("treasure_reward_object_lookup_count", 0),
+		"treasure_reward_candidate_scan_status": mine_reward_placement.get("treasure_reward_candidate_scan_status", ""),
+		"treasure_reward_proxy_inventory_reward_reference_count": mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
