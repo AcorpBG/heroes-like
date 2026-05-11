@@ -667,11 +667,14 @@ func _run() -> void:
 			})])
 			return
 	var road_coordinate_record_count := int(road_coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1))
-	if String(road_pair_iteration.get("status", "")) != "h3maped_0x4ab52a_pair_iteration_ported_path_costs_pending" \
+	if String(road_pair_iteration.get("status", "")) != "h3maped_0x4ab52a_pair_iteration_ported_path_costs_materialized_road_adapter_pending" \
 			or String(road_pair_iteration.get("function_address", "")) != "0x4ab52a" \
 			or int(road_pair_iteration.get("coordinate_record_count", -1)) != road_coordinate_record_count \
 			or int(road_pair_iteration.get("outer_seed_iteration_count", -1)) != max(0, road_coordinate_record_count - 1) \
 			or int(road_pair_iteration.get("pair_candidate_iteration_count", -1)) != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
+			or not bool(road_pair_iteration.get("path_costs_materialized", false)) \
+			or int(road_pair_iteration.get("candidate_low_word_count", -1)) != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
+			or int(road_pair_iteration.get("candidate_accept_count", -1)) != int(path_seed_update.get("candidate_accept_count", -2)) \
 			or String(road_pair_iteration.get("candidate_low_word_read_block", "")) != "0x4ab5df..0x4ab60a" \
 			or int(road_pair_iteration.get("candidate_low_word_threshold", -1)) != 0x7530 \
 			or String(road_pair_iteration.get("candidate_accept_condition", "")) != "candidate cell +0x1c low word <= 0x7530" \
