@@ -3024,6 +3024,10 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	PackedInt32Array terrain_shape_classes;
 	PackedInt32Array writeout_tile_byte_0;
 	PackedInt32Array writeout_tile_byte_1;
+	PackedInt32Array writeout_tile_byte_2;
+	PackedInt32Array writeout_tile_byte_3;
+	PackedInt32Array writeout_tile_byte_4;
+	PackedInt32Array writeout_tile_byte_5;
 	PackedInt32Array writeout_tile_byte_6;
 	terrain_codes.resize(tile_count);
 	terrain_art_indices.resize(tile_count);
@@ -3032,6 +3036,10 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	terrain_shape_classes.resize(tile_count);
 	writeout_tile_byte_0.resize(tile_count);
 	writeout_tile_byte_1.resize(tile_count);
+	writeout_tile_byte_2.resize(tile_count);
+	writeout_tile_byte_3.resize(tile_count);
+	writeout_tile_byte_4.resize(tile_count);
+	writeout_tile_byte_5.resize(tile_count);
 	writeout_tile_byte_6.resize(tile_count);
 	for (int32_t flat_index = 0; flat_index < tile_count; ++flat_index) {
 		terrain_codes.set(flat_index, 8);
@@ -3041,6 +3049,10 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 		terrain_shape_classes.set(flat_index, 0);
 		writeout_tile_byte_0.set(flat_index, 8);
 		writeout_tile_byte_1.set(flat_index, 0);
+		writeout_tile_byte_2.set(flat_index, 0);
+		writeout_tile_byte_3.set(flat_index, 0);
+		writeout_tile_byte_4.set(flat_index, 0);
+		writeout_tile_byte_5.set(flat_index, 0);
 		writeout_tile_byte_6.set(flat_index, 0);
 	}
 
@@ -3172,9 +3184,14 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	report["terrain_shape_class_u8"] = terrain_shape_classes;
 	report["tile_byte_0_terrain_id_u8"] = writeout_tile_byte_0;
 	report["tile_byte_1_terrain_art_u8"] = writeout_tile_byte_1;
+	report["tile_byte_2_river_type_u8"] = writeout_tile_byte_2;
+	report["tile_byte_3_river_art_u8"] = writeout_tile_byte_3;
+	report["tile_byte_4_road_type_u8"] = writeout_tile_byte_4;
+	report["tile_byte_5_road_art_u8"] = writeout_tile_byte_5;
 	report["tile_byte_6_terrain_flags_u8"] = writeout_tile_byte_6;
 	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending";
 	report["tile_byte_writeout_source"] = "0x49b2b6 serializes cell+0x24 bits 0..5 to byte 0, bits 6..13 to byte 1, and cell+0x28 bits 15..16 to output byte 6 bits 0..1";
+	report["tile_byte_overlay_status"] = "road_and_river_overlay_bytes_zero_until_0x4ab37f_0x4b4243_and_0x4ab6ac_0x4abd5f_ports";
 	report["terrain_visual_shape_class_counts"] = terrain_shape_class_counts;
 	report["terrain_visual_transition_cell_count"] = terrain_visual_transition_cell_count;
 	report["terrain_visual_fallback_count"] = terrain_visual_fallback_count;
@@ -5775,6 +5792,34 @@ Dictionary h3maped_terrain_grid_from_fill(const Dictionary &normalized_config, c
 			terrain_codes.set(index, 8);
 		}
 	}
+	PackedInt32Array tile_byte_0 = terrain_fill.get("tile_byte_0_terrain_id_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_1 = terrain_fill.get("tile_byte_1_terrain_art_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_2 = terrain_fill.get("tile_byte_2_river_type_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_3 = terrain_fill.get("tile_byte_3_river_art_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_4 = terrain_fill.get("tile_byte_4_road_type_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_5 = terrain_fill.get("tile_byte_5_road_art_u8", PackedInt32Array());
+	PackedInt32Array tile_byte_6 = terrain_fill.get("tile_byte_6_terrain_flags_u8", PackedInt32Array());
+	if (tile_byte_0.size() != width * height) {
+		tile_byte_0 = terrain_codes;
+	}
+	if (tile_byte_1.size() != width * height) {
+		tile_byte_1.resize(width * height);
+	}
+	if (tile_byte_2.size() != width * height) {
+		tile_byte_2.resize(width * height);
+	}
+	if (tile_byte_3.size() != width * height) {
+		tile_byte_3.resize(width * height);
+	}
+	if (tile_byte_4.size() != width * height) {
+		tile_byte_4.resize(width * height);
+	}
+	if (tile_byte_5.size() != width * height) {
+		tile_byte_5.resize(width * height);
+	}
+	if (tile_byte_6.size() != width * height) {
+		tile_byte_6.resize(width * height);
+	}
 	Dictionary terrain_counts;
 	Dictionary biome_counts;
 	for (int32_t index = 0; index < terrain_codes.size(); ++index) {
@@ -5793,6 +5838,15 @@ Dictionary h3maped_terrain_grid_from_fill(const Dictionary &normalized_config, c
 	level_record["height"] = height;
 	level_record["tile_count"] = width * height;
 	level_record["terrain_code_u16"] = terrain_codes;
+	level_record["tile_byte_0_terrain_id_u8"] = tile_byte_0;
+	level_record["tile_byte_1_terrain_art_u8"] = tile_byte_1;
+	level_record["tile_byte_2_river_type_u8"] = tile_byte_2;
+	level_record["tile_byte_3_river_art_u8"] = tile_byte_3;
+	level_record["tile_byte_4_road_type_u8"] = tile_byte_4;
+	level_record["tile_byte_5_road_art_u8"] = tile_byte_5;
+	level_record["tile_byte_6_flags_u8"] = tile_byte_6;
+	level_record["tile_byte_writeout_status"] = terrain_fill.get("tile_byte_writeout_status", "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending");
+	level_record["tile_byte_overlay_status"] = terrain_fill.get("tile_byte_overlay_status", "road_and_river_overlay_bytes_pending");
 	level_record["terrain_counts"] = terrain_counts;
 	level_record["biome_counts"] = biome_counts;
 	level_record["h3maped_source_status"] = terrain_fill.get("status", "");
@@ -5813,6 +5867,8 @@ Dictionary h3maped_terrain_grid_from_fill(const Dictionary &normalized_config, c
 	grid["terrain_palette_ids"] = Array();
 	grid["terrain_counts"] = terrain_counts;
 	grid["levels"] = levels;
+	grid["tile_byte_writeout_status"] = level_record.get("tile_byte_writeout_status", "");
+	grid["tile_byte_overlay_status"] = level_record.get("tile_byte_overlay_status", "");
 	grid["materialized_level_count"] = levels.size();
 	grid["level_count_semantics"] = "h3maped_small_surface_level_materialized_only";
 	grid["signature"] = h3maped_hash32_hex(String("h3maped_terrain_grid:") + String::num_int64(width) + ":" + String::num_int64(height) + ":" + String::num_int64(level_count) + ":" + String(level_record["signature"]));
