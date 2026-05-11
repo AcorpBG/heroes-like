@@ -80,7 +80,7 @@ func _run() -> void:
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_mine_constraint_scan_ported_package_adoption_pending":
+	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_0x4aa354_value_selection_ported_package_adoption_pending":
 		_fail("The clean boundary did not expose recovered h3maped mine/reward source fields and 0x4a9641 constraint scanning: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
@@ -308,6 +308,35 @@ func _run() -> void:
 		return
 	if bool(first_scheduler.get("materializes_reward_objects", true)):
 		_fail("0x4aab7e scheduler math boundary must not claim reward object materialization yet: %s" % JSON.stringify(first_scheduler))
+		return
+	if String(mine_reward_placement.get("treasure_reward_attempt_status", "")) != "0x4aa354_reward_value_selection_materialized_object_lookup_pending":
+		_fail("0x4aa354 reward attempt status did not expose the recovered value-selection boundary: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("treasure_reward_attempt_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_value_rng_call_count", -1)) != 42:
+		_fail("0x4aa354 reward attempt/RNG counts drifted from the seed-1 scheduler steps: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("treasure_reward_rng_state_before_0x4aa354_uint32", -1)) != 2990262233 or int(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", -1)) != 2283988067:
+		_fail("0x4aa354 reward value RNG state drifted from recovered 0x4e7276 replay: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var reward_attempts: Array = mine_reward_placement.get("treasure_reward_attempt_records", [])
+	if reward_attempts.size() != 42:
+		_fail("0x4aa354 reward attempt records did not cover all scheduler attempts: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var first_attempt: Dictionary = reward_attempts[0]
+	if int(first_attempt.get("selected_band_index", -1)) != 0 or int(first_attempt.get("value_rng_value", -1)) != 8723 or int(first_attempt.get("selected_reward_value", -1)) != 13723:
+		_fail("0x4aa354 first reward value selection drifted from low + rng %% (high-low): %s" % JSON.stringify(first_attempt))
+		return
+	if String(first_attempt.get("pre_attempt_helper_address", "")) != "0x49ce64" or String(first_attempt.get("object_lookup_helper_address", "")) != "0x4aa1db" or String(first_attempt.get("guard_value_helper_address", "")) != "0x4a960a" or String(first_attempt.get("post_object_helper_address", "")) != "0x4a5c07":
+		_fail("0x4aa354 first reward helper handoff addresses drifted: %s" % JSON.stringify(first_attempt))
+		return
+	var first_zone_band_order: Array = []
+	for reward_attempt_index in range(7):
+		first_zone_band_order.append(int(Dictionary(reward_attempts[reward_attempt_index]).get("selected_band_index", -1)))
+	if first_zone_band_order != [0, 1, 2, 2, 1, 2, 1]:
+		_fail("0x4aac70/0x4aa354 first-zone scheduler band order drifted: %s" % JSON.stringify(first_zone_band_order))
+		return
+	if bool(first_attempt.get("materializes_reward_object", true)):
+		_fail("0x4aa354 value-selection boundary must not claim reward object materialization before 0x4aa1db is ported: %s" % JSON.stringify(first_attempt))
 		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
@@ -620,7 +649,7 @@ func _run() -> void:
 	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_mine_constraint_scan_ported_rewards_pending":
+	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_0x4aa354_value_selection_ported_rewards_pending":
 		_fail("The phase ledger did not mark h3maped mine source ledgers and 0x4a9641 scan as ported with reward placement still pending: %s" % JSON.stringify(report))
 		return
 	var path_seed_update: Dictionary = selected_payload.get("path_state_seed_update_rule", {}) if selected_payload.get("path_state_seed_update_rule", {}) is Dictionary else {}
@@ -712,6 +741,7 @@ func _run() -> void:
 			or int(road_pair_iteration.get("candidate_low_word_threshold", -1)) != 0x7530 \
 			or String(road_pair_iteration.get("candidate_accept_condition", "")) != "candidate cell +0x1c low word <= 0x7530" \
 			or String(road_pair_iteration.get("road_adapter_call_site", "")) != "0x4ab611..0x4ab620 -> 0x4ab37f" \
+			or int(road_pair_iteration.get("rng_state_before_road_phase_uint32", -1)) != int(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", -2)) \
 			or bool(road_pair_iteration.get("road_geometry_materialized", true)):
 		_fail("The clean h3maped inspection report did not expose the recovered 0x4ab52a road pair loop: %s" % JSON.stringify(road_pair_iteration))
 		return
@@ -947,7 +977,7 @@ func _run() -> void:
 				or bool(seed_init.get("materializes_neighbor_propagation", true)):
 			_fail("0x4aae7b seed-cell initialization drifted from executable semantics: %s" % JSON.stringify(seed_init))
 			return
-	if int(road_pair_iteration.get("selected_road_type", 0)) != 3:
+	if int(road_pair_iteration.get("selected_road_type", 0)) != 1 or int(road_pair_iteration.get("road_type_rng_value", -1)) != 22929:
 		_fail("Recovered 0x4ab52a seed-1 road type selection drifted from the current h3maped RNG replay: %s" % JSON.stringify(road_pair_iteration))
 		return
 
@@ -1009,6 +1039,9 @@ func _run() -> void:
 		"treasure_scheduler_status": mine_reward_placement.get("treasure_scheduler_status", ""),
 		"treasure_scheduler_active_zone_count": mine_reward_placement.get("treasure_scheduler_active_zone_count", 0),
 		"treasure_scheduler_scaled_step_total": mine_reward_placement.get("treasure_scheduler_scaled_step_total", 0),
+		"treasure_reward_attempt_status": mine_reward_placement.get("treasure_reward_attempt_status", ""),
+		"treasure_reward_attempt_count": mine_reward_placement.get("treasure_reward_attempt_count", 0),
+		"treasure_reward_value_rng_call_count": mine_reward_placement.get("treasure_reward_value_rng_call_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
