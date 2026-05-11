@@ -6174,6 +6174,35 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
 	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
 	const int32_t partial_record_count = int32_t(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0));
+	Array coordinate_records = coordinate_vector_source.get("materialized_partial_coordinate_records", Array());
+	Array seed_initializations;
+	const int32_t seed_initialization_count = std::max(0, partial_record_count - 1);
+	for (int32_t seed_index = 0; seed_index < seed_initialization_count && seed_index < coordinate_records.size(); ++seed_index) {
+		if (Variant(coordinate_records[seed_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary coordinate = Dictionary(coordinate_records[seed_index]);
+		const int32_t x = int32_t(coordinate.get("x", -1));
+		const int32_t y = int32_t(coordinate.get("y", -1));
+		const int32_t level = int32_t(coordinate.get("level", -1));
+		const bool in_bounds = x >= 0 && x < width && y >= 0 && y < height && level >= 0 && level < level_count;
+		const int32_t flat_index = in_bounds ? ((level * height + y) * width + x) : -1;
+		Dictionary item;
+		item["seed_vector_index"] = seed_index;
+		item["seed_byte_offset"] = seed_index * 12;
+		item["source_placement_id"] = coordinate.get("source_placement_id", "");
+		item["source_kind"] = coordinate.get("source_kind", "");
+		item["x"] = x;
+		item["y"] = y;
+		item["level"] = level;
+		item["flat_cell_index"] = flat_index;
+		item["in_bounds"] = in_bounds;
+		item["seed_write_block"] = "0x4aaedc..0x4aaf0e";
+		item["path_cost_low_word_after_seed"] = 0;
+		item["predecessor_after_seed"] = Array::make(-1, -1, -1);
+		item["materializes_neighbor_propagation"] = false;
+		seed_initializations.append(item);
+	}
 	Dictionary seed;
 	seed["schema_id"] = "aurelion_h3maped_small_road_path_state_seed_v1";
 	seed["status"] = "h3maped_0x4aae7b_path_state_seed_boundary_recovered_toolkit_pending";
@@ -6199,6 +6228,11 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	seed["complete_coordinate_vector_claim"] = false;
 	seed["seed_cell_state_offset"] = "+0x1c";
 	seed["seed_cell_low_word_after_seed"] = 0;
+	seed["seed_initialization_status"] = "h3maped_0x4aae7b_seed_cell_initialization_materialized_propagation_pending";
+	seed["seed_initialization_block"] = "0x4aaedc..0x4aaf0e";
+	seed["seed_initialization_call_count"] = seed_initializations.size();
+	seed["seed_initialization_expected_outer_seed_count"] = seed_initialization_count;
+	seed["seed_initializations"] = seed_initializations;
 	seed["predecessor_coordinate_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
 	seed["neighbor_direction_table_address"] = "0x5a2658";
 	seed["default_neighbor_direction_count"] = 8;
