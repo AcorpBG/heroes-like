@@ -610,6 +610,32 @@ func _run() -> void:
 			or bool(path_seed_update.get("materializes_road_geometry", true)):
 		_fail("The clean h3maped inspection report did not expose the recovered 0x4aae7b update rule: %s" % JSON.stringify(path_seed_update))
 		return
+	var road_coordinate_vector_source: Dictionary = selected_payload.get("road_coordinate_vector_source", {}) if selected_payload.get("road_coordinate_vector_source", {}) is Dictionary else {}
+	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
+	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
+	var road_coordinate_record_count := int(road_coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1))
+	if String(road_pair_iteration.get("status", "")) != "h3maped_0x4ab52a_pair_iteration_ported_path_costs_pending" \
+			or String(road_pair_iteration.get("function_address", "")) != "0x4ab52a" \
+			or int(road_pair_iteration.get("coordinate_record_count", -1)) != road_coordinate_record_count \
+			or int(road_pair_iteration.get("outer_seed_iteration_count", -1)) != max(0, road_coordinate_record_count - 1) \
+			or int(road_pair_iteration.get("pair_candidate_iteration_count", -1)) != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
+			or String(road_pair_iteration.get("candidate_low_word_read_block", "")) != "0x4ab5df..0x4ab60a" \
+			or int(road_pair_iteration.get("candidate_low_word_threshold", -1)) != 0x7530 \
+			or String(road_pair_iteration.get("candidate_accept_condition", "")) != "candidate cell +0x1c low word <= 0x7530" \
+			or String(road_pair_iteration.get("road_adapter_call_site", "")) != "0x4ab611..0x4ab620 -> 0x4ab37f" \
+			or bool(road_pair_iteration.get("road_geometry_materialized", true)):
+		_fail("The clean h3maped inspection report did not expose the recovered 0x4ab52a road pair loop: %s" % JSON.stringify(road_pair_iteration))
+		return
+	if road_coordinate_record_count != 15 or int(road_pair_iteration.get("pair_candidate_iteration_count", -1)) != 105:
+		_fail("Seed-1 partial road coordinate vector drifted from the currently ported h3maped town/mine record ledger: %s" % JSON.stringify({
+			"coordinate_record_count": road_coordinate_record_count,
+			"pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", -1),
+			"road_coordinate_vector_source": road_coordinate_vector_source,
+		}))
+		return
+	if int(road_pair_iteration.get("selected_road_type", 0)) != 3:
+		_fail("Recovered 0x4ab52a seed-1 road type selection drifted from the current h3maped RNG replay: %s" % JSON.stringify(road_pair_iteration))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
 	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
@@ -681,6 +707,10 @@ func _run() -> void:
 		"terrain_repaint_call_count": footprint_phase.get("terrain_repaint_call_count", 0),
 		"terrain_art_index_flip_status": terrain_fill.get("terrain_art_index_flip_status", ""),
 		"tile_byte_writeout_status": terrain_fill.get("tile_byte_writeout_status", ""),
+		"road_pair_iteration_status": road_pair_iteration.get("status", ""),
+		"road_coordinate_record_count": road_coordinate_record_count,
+		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
+		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),
 		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
 		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
 		"path_state_update_block": path_seed_update.get("normal_neighbor_update_block", ""),
