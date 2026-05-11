@@ -119,17 +119,12 @@ The boundary exposes a phase ledger and keeps every unported materialization pha
 7. `guard_reward_monster_placement` - `0x4a9d6a`, `0x4a9911`, `0x4a9c7c`, `0x4a9641`, `0x4aab7e` - mine/reward source field ledgers, `0x4a9911` mine template/record/guard handoff ledger, recovered terrain-mask filtering, and `0x4a9641` mine candidate scan/selection/body-cell marking ported for inspection; production package adoption, `0x4aa354`, reward placement, and guarding still pending.
 8. `final_cell_object_passes` - `0x49eb8d`, `0x4ab52a`, `0x4ac4ae` - pending clean port.
 
-`MapPackageService.generate_random_map` now adopts the clean small-map port into a partial generated package for normal small land `native_catalog_auto` requests. It materializes the ported terrain grid, owned town records, and selected mine records into a structurally valid `MapDocument` with status `h3maped_small_clean_restart_phase_package_adoption_partial`, but it does not claim runtime authority or full parity. The package keeps roads, physical connection blockers, rewards through `0x4aa354`, guards/monsters, and final h3maped writeout phases explicitly pending with `native_runtime_authoritative: false`, `full_parity_claim: false`, and `no_authored_writeback: true`.
+`MapPackageService.generate_random_map` no longer emits the partial small-map package for normal small land `native_catalog_auto` requests. It returns `h3maped_small_clean_restart_generation_not_ready` until the clean h3maped-derived path can materialize terrain, owned towns/player starts, roads, physical blockers, guards, rewards, and final cell/object writeout phases together. The explicit inspection API remains available through `MapPackageService.inspect_h3maped_small_rmg_port`.
 
-For the seed `1` boundary case, the package adoption path currently reports:
+For the seed `1` boundary case, normal generation currently reports:
 
-- `generated_validation_status: pass`,
-- `generated_town_count: 3`,
-- `generated_mine_count: 12`,
-- `generated_connection_count: 5`,
-- `connection_generation_status: h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending`,
-- `terrain_generation_status: h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port`,
-- `town_generation_status: h3maped_0x4a93a2_town_records_adopted`,
-- `object_generation_status: h3maped_0x4a9911_0x4a9641_mines_materialized_rewards_guards_pending`,
-- `road_generation_status: h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending`,
-- `guard_generation_status: h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending`.
+- `ok: false`,
+- `generation_status: h3maped_small_clean_restart_generation_not_ready`,
+- `error_code: h3maped_phase_port_incomplete`,
+- inspection report `runtime_generation_allowed: false`,
+- out-of-scope `native_catalog_auto` requests still return `archived_legacy_native_rmg_disabled`.
