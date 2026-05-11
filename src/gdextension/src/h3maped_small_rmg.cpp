@@ -6653,6 +6653,34 @@ Dictionary h3maped_road_line_visit_458e61_report() {
 		record["flip_selector_b"] = road_shape_flip_b[record_index];
 		road_shape_records.append(record);
 	}
+	constexpr int32_t road_art_variant_count = 17;
+	constexpr int32_t road_art_variant_classes[road_art_variant_count] = {
+		4, 4, 5, 5, 5, 5, 6, 6, 7, 7, 2, 2, 3, 3, 0, 1, 8
+	};
+	PackedInt32Array road_art_variant_class_sequence;
+	for (int32_t variant_index = 0; variant_index < road_art_variant_count; ++variant_index) {
+		road_art_variant_class_sequence.append(road_art_variant_classes[variant_index]);
+	}
+	Array road_art_variant_buckets;
+	for (int32_t art_class = 0; art_class <= 8; ++art_class) {
+		int32_t first_variant_index = -1;
+		int32_t variant_count = 0;
+		for (int32_t variant_index = 0; variant_index < road_art_variant_count; ++variant_index) {
+			if (road_art_variant_classes[variant_index] != art_class) {
+				continue;
+			}
+			if (first_variant_index < 0) {
+				first_variant_index = variant_index;
+			}
+			variant_count += 1;
+		}
+		Dictionary bucket;
+		bucket["art_class"] = art_class;
+		bucket["first_variant_index"] = first_variant_index;
+		bucket["variant_count"] = variant_count;
+		bucket["runtime_record_offset_bytes"] = 0x08 + art_class * 0x08;
+		road_art_variant_buckets.append(bucket);
+	}
 	Dictionary visit;
 	visit["schema_id"] = "aurelion_h3maped_small_road_line_visit_v1";
 	visit["status"] = "h3maped_0x458e61_line_visit_boundary_recovered_adapter_materialization_pending";
@@ -6692,6 +6720,14 @@ Dictionary h3maped_road_line_visit_458e61_report() {
 	visit["road_art_shape_record_count"] = road_shape_records.size();
 	visit["road_art_shape_record_size_bytes"] = 0x20;
 	visit["road_art_shape_selector_semantics"] = "0x458893 selects one of four 0x20-byte offset records using (flip_selector_b + flip_selector_a * 2), then classifies art and flip from the eight neighbor flags.";
+	visit["road_art_variant_initializer_address"] = "0x4b41f4..0x4b4200";
+	visit["road_art_variant_initializer_helper"] = "0x458755";
+	visit["road_art_variant_source_table_address"] = "0x54198c";
+	visit["road_art_variant_runtime_table_address"] = "0x5a2f80";
+	visit["road_art_variant_class_sequence"] = road_art_variant_class_sequence;
+	visit["road_art_variant_count"] = road_art_variant_count;
+	visit["road_art_variant_bucket_records"] = road_art_variant_buckets;
+	visit["road_art_variant_bucket_semantics"] = "0x458755 copies the 17 class ids, then builds nine 8-byte records at runtime table +0x08 where +0x00 is the first variant index and +0x04 is the variant count for each art class.";
 	visit["rng_tie_break_address"] = "0x4e7276";
 	visit["final_write_virtual_slot"] = "+0x04";
 	visit["final_write_virtual_address_for_road_adapter"] = "0x49ae47";
