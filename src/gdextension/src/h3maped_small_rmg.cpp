@@ -18,6 +18,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -273,6 +274,17 @@ struct H3ObjectRow {
 	int32_t subtype_id = -1;
 	int32_t group_id = -1;
 	int32_t final_flag = 0;
+};
+
+struct H3MapedRewardCandidate {
+	const char *constructor_address;
+	const char *vtable_address;
+	int32_t type_id = -1;
+	int32_t subtype_id = 0;
+	int32_t value = 0;
+	int32_t weight = 0;
+	int32_t extra_0x14 = 0;
+	const char *source_note;
 };
 
 struct H3MaskPoint {
@@ -4847,6 +4859,187 @@ int32_t reward_proxy_reference_count() {
 	return count;
 }
 
+int32_t reward_proxy_reference_count_for_type_subtype(int32_t type_id, int32_t subtype_id) {
+	Dictionary catalog = load_json_dictionary(REWARD_PROXY_CATALOG_PATH);
+	Array entries = catalog.get("entries", Array());
+	int32_t count = 0;
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		if (Variant(entries[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary entry = Dictionary(entries[index]);
+		if (String(entry.get("generated_kind", "")) != "reward_reference") {
+			continue;
+		}
+		if (int32_t(entry.get("homm3_re_object_type_id", -1)) == type_id && int32_t(entry.get("homm3_re_object_subtype", 0)) == subtype_id) {
+			count += 1;
+		}
+	}
+	return count;
+}
+
+int32_t h3maped_global_type_limit_5a26e4(int32_t type_id) {
+	const std::pair<int32_t, int32_t> overrides[] = {
+		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
+		{ 32, 32 }, { 51, 32 }, { 61, 32 }, { 102, 32 }, { 41, 32 }, { 4, 32 },
+		{ 47, 32 }, { 107, 32 }, { 104, 32 }, { 113, 32 }, { 88, 32 }, { 89, 32 },
+		{ 90, 32 }, { 92, 32 }, { 55, 32 }, { 109, 32 }, { 112, 32 }, { 48, 32 },
+		{ 22, 32 }, { 39, 32 }, { 108, 32 }, { 105, 32 }, { 83, 48 }, { 7, 32 }
+	};
+	for (const auto &entry : overrides) {
+		if (entry.first == type_id) {
+			return entry.second;
+		}
+	}
+	return 0x7d00;
+}
+
+int32_t h3maped_zone_type_limit_5a2a8c(int32_t type_id) {
+	const std::pair<int32_t, int32_t> overrides[] = {
+		{ 2, 1 }, { 13, 1 }, { 14, 1 }, { 15, 1 }, { 27, 1 }, { 28, 1 },
+		{ 30, 1 }, { 31, 1 }, { 35, 1 }, { 38, 1 }, { 42, 1 }, { 48, 1 },
+		{ 49, 1 }, { 56, 1 }, { 58, 1 }, { 60, 1 }, { 64, 1 }, { 80, 1 },
+		{ 94, 1 }, { 96, 1 }, { 99, 1 }, { 106, 1 }, { 110, 1 }, { 113, 3 }
+	};
+	for (const auto &entry : overrides) {
+		if (entry.first == type_id) {
+			return entry.second;
+		}
+	}
+	return 0x7d00;
+}
+
+std::vector<H3MapedRewardCandidate> h3maped_reward_proxy_backed_candidates_49f95a() {
+	return {
+		{ "0x49fa63", "0x540bd0", 6, 0, 6000, 20, 5000, "Pandora Box value candidate" },
+		{ "0x49faa5", "0x540bd0", 6, 0, 12000, 20, 10000, "Pandora Box value candidate" },
+		{ "0x49fae7", "0x540bd0", 6, 0, 18000, 20, 15000, "Pandora Box value candidate" },
+		{ "0x49fb29", "0x540bd0", 6, 0, 24000, 20, 20000, "Pandora Box value candidate" },
+		{ "0x49fb6b", "0x540be0", 6, 0, 5000, 5, 5000, "Pandora Box variant candidate" },
+		{ "0x49fbaf", "0x540be0", 6, 0, 10000, 5, 10000, "Pandora Box variant candidate" },
+		{ "0x49fbe9", "0x540be0", 6, 0, 15000, 5, 15000, "Pandora Box variant candidate" },
+		{ "0x49fc28", "0x540be0", 6, 0, 20000, 5, 20000, "Pandora Box variant candidate" },
+		{ "0x4a0150", "0x540ba0", 12, 0, 2000, 500, 0, "Campfire candidate" },
+		{ "0x4a026b", "0x540ba0", 16, 0, 3000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a02a3", "0x540ba0", 16, 1, 2000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a02df", "0x540ba0", 16, 2, 2000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a031b", "0x540ba0", 16, 3, 5000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0357", "0x540ba0", 16, 4, 1500, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0393", "0x540ba0", 16, 5, 3000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a03cf", "0x540ba0", 16, 6, 9000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0b4a", "0x540bb0", 66, 0, 2000, 150, 0, "Random Treasure Artifact candidate" },
+		{ "0x4a0b82", "0x540bb0", 67, 0, 5000, 150, 0, "Random Minor Artifact candidate" },
+		{ "0x4a0bba", "0x540bb0", 68, 0, 10000, 150, 0, "Random Major Artifact candidate" },
+		{ "0x4a0bf2", "0x540bb0", 69, 0, 20000, 150, 0, "Random Relic candidate" },
+		{ "0x4a0c2f", "0x540c10", 76, 0, 1500, 2000, 0, "Random Resource candidate" },
+		{ "0x4a0ca3", "0x540c10", 79, 0, 1400, 300, 0, "Resource candidate" },
+		{ "0x4a0cdb", "0x540c10", 79, 2, 1400, 300, 0, "Resource candidate" },
+		{ "0x4a0d17", "0x540c10", 79, 1, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0d53", "0x540c10", 79, 3, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0d8f", "0x540c10", 79, 4, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0dcb", "0x540c10", 79, 5, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0e07", "0x540c10", 79, 6, 750, 300, 0, "Resource candidate" },
+		{ "0x4a11a7", "0x540ba0", 84, 0, 1000, 100, 0, "Crypt candidate" },
+		{ "0x4a1324", "0x540c90", 93, 0, 500, 30, 1, "Spell Scroll candidate" },
+		{ "0x4a134c", "0x540c90", 93, 0, 2000, 30, 2, "Spell Scroll candidate" },
+		{ "0x4a137a", "0x540c90", 93, 0, 3000, 30, 3, "Spell Scroll candidate" },
+		{ "0x4a13a5", "0x540c90", 93, 0, 4000, 30, 4, "Spell Scroll candidate" },
+		{ "0x4a13d0", "0x540c90", 93, 0, 5000, 30, 5, "Spell Scroll candidate" },
+		{ "0x4a1515", "0x540ba0", 101, 0, 1500, 1000, 0, "Treasure Chest candidate" },
+		{ "0x4a1605", "0x540ba0", 107, 0, 1000, 50, 0, "School of War candidate" }
+	};
+}
+
+Dictionary reward_candidate_scan_4a9f1c_report(int32_t min_value, int32_t max_value, bool skip_metadata_gate, bool skip_visited_gate) {
+	Dictionary scan;
+	scan["phase"] = "0x4a9f1c_reward_candidate_scan";
+	scan["function_address"] = "0x4a9f1c";
+	scan["generator_candidate_vector_begin_offset"] = "generator+0x10f4";
+	scan["generator_candidate_vector_end_offset"] = "generator+0x10f8";
+	scan["candidate_vector_constructor_address"] = "0x49f95a";
+	scan["candidate_vector_scope"] = "proxy_backed_reward_subset_recovered_from_0x49f95a";
+	scan["complete_generator_candidate_vector_materialized"] = false;
+	scan["object_type_source_offset"] = "candidate+0x04";
+	scan["object_subtype_source_offset"] = "candidate+0x08";
+	scan["object_value_virtual_slot"] = "candidate_vtable+0x04";
+	scan["object_visited_virtual_slot"] = "candidate_vtable+0x08";
+	scan["candidate_weight_offset"] = "candidate+0x10";
+	scan["type_metadata_table_pointer_address"] = "0x57c648";
+	scan["type_metadata_stride_bytes"] = 0x10;
+	scan["type_metadata_byte_0_gate"] = "skip nonzero byte0 with byte2 zero when skip-metadata flag is false";
+	scan["global_type_count_table_address"] = "0x5a26e4";
+	scan["zone_type_count_table_address"] = "0x5a2a8c";
+	scan["generator_type_count_offset"] = "generator+0x1110+type*4";
+	scan["zone_type_count_offset"] = "zone_record+0x44+type*4";
+	scan["value_range_min"] = min_value;
+	scan["value_range_max"] = max_value;
+	scan["resource_helper_address"] = "0x4a9e40";
+	scan["footprint_probe_helper_address"] = "0x49a6f9";
+	scan["optional_coverage_ratio_helper_address"] = "0x4aa195";
+	scan["weighted_selection_rng_address"] = "0x4e7276";
+	scan["skip_metadata_gate"] = skip_metadata_gate;
+	scan["skip_visited_gate"] = skip_visited_gate;
+	scan["native_proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
+	scan["native_proxy_inventory_reward_reference_count"] = reward_proxy_reference_count();
+
+	const std::vector<H3MapedRewardCandidate> candidates = h3maped_reward_proxy_backed_candidates_49f95a();
+	Array eligible_preview;
+	int32_t eligible_count = 0;
+	int32_t total_weight = 0;
+	int32_t rejected_value_count = 0;
+	int32_t rejected_proxy_mapping_count = 0;
+	int32_t rejected_limit_count = 0;
+	for (const H3MapedRewardCandidate &candidate_record : candidates) {
+		const int32_t global_limit = h3maped_global_type_limit_5a26e4(candidate_record.type_id);
+		const int32_t zone_limit = h3maped_zone_type_limit_5a2a8c(candidate_record.type_id);
+		const bool limit_pass = global_limit > 0 && zone_limit > 0;
+		if (!limit_pass) {
+			rejected_limit_count += 1;
+			continue;
+		}
+		if (candidate_record.value < min_value || candidate_record.value > max_value) {
+			rejected_value_count += 1;
+			continue;
+		}
+		const int32_t proxy_match_count = reward_proxy_reference_count_for_type_subtype(candidate_record.type_id, candidate_record.subtype_id);
+		if (proxy_match_count <= 0) {
+			rejected_proxy_mapping_count += 1;
+			continue;
+		}
+		eligible_count += 1;
+		total_weight += candidate_record.weight;
+		if (eligible_preview.size() < 12) {
+			Dictionary candidate;
+			candidate["constructor_address"] = candidate_record.constructor_address;
+			candidate["vtable_address"] = candidate_record.vtable_address;
+			candidate["type_id"] = candidate_record.type_id;
+			candidate["type_name"] = object_type_name_from_names_file(candidate_record.type_id);
+			candidate["subtype_id"] = candidate_record.subtype_id;
+			candidate["value"] = candidate_record.value;
+			candidate["weight"] = candidate_record.weight;
+			candidate["extra_0x14"] = candidate_record.extra_0x14;
+			candidate["global_type_limit_5a26e4"] = global_limit;
+			candidate["zone_type_limit_5a2a8c"] = zone_limit;
+			candidate["native_proxy_match_count"] = proxy_match_count;
+			candidate["source_note"] = candidate_record.source_note;
+			eligible_preview.append(candidate);
+		}
+	}
+
+	scan["candidate_vector_record_count"] = int32_t(candidates.size());
+	scan["eligible_candidate_count"] = eligible_count;
+	scan["eligible_candidate_weight_total"] = total_weight;
+	scan["rejected_value_range_count"] = rejected_value_count;
+	scan["rejected_native_proxy_mapping_count"] = rejected_proxy_mapping_count;
+	scan["rejected_type_limit_count"] = rejected_limit_count;
+	scan["eligible_candidate_preview"] = eligible_preview;
+	scan["native_proxy_candidate_scan_materialized"] = true;
+	scan["native_proxy_weighted_selection_materialized"] = false;
+	scan["native_proxy_candidate_execution_materialized"] = false;
+	scan["status"] = "0x4a9f1c_proxy_backed_candidate_scan_materialized_weighted_selection_pending";
+	return scan;
+}
+
 std::vector<uint8_t> occupied_grid_from_town_records(const Dictionary &town_castle_placement, int32_t width, int32_t height, int32_t level_count) {
 	std::vector<uint8_t> occupied;
 	const int32_t expected_grid_size = width * height * level_count;
@@ -5014,6 +5207,9 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t treasure_reward_value_rng_call_count = 0;
 	int32_t treasure_reward_object_lookup_count = 0;
 	int32_t treasure_reward_object_lookup_primary_retry_budget_total = 0;
+	int32_t treasure_reward_candidate_scan_count = 0;
+	int32_t treasure_reward_candidate_scan_eligible_total = 0;
+	int32_t treasure_reward_candidate_scan_weight_total = 0;
 
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
@@ -5534,38 +5730,17 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			object_lookup["placement_coordinate_helper_address"] = "0x49abd6";
 			object_lookup["cleanup_helper_address"] = "0x49d6e0";
 			object_lookup["object_dimensions_offsets"] = Array::make("+0x34", "+0x38");
-			Dictionary candidate_scan;
-			candidate_scan["phase"] = "0x4a9f1c_reward_candidate_scan";
-			candidate_scan["function_address"] = "0x4a9f1c";
-			candidate_scan["generator_candidate_vector_begin_offset"] = "generator+0x10f4";
-			candidate_scan["generator_candidate_vector_end_offset"] = "generator+0x10f8";
-			candidate_scan["object_type_source_offset"] = "candidate+0x04";
-			candidate_scan["object_value_virtual_slot"] = "candidate_vtable+0x04";
-			candidate_scan["object_visited_virtual_slot"] = "candidate_vtable+0x08";
-			candidate_scan["type_metadata_table_pointer_address"] = "0x57c648";
-			candidate_scan["type_metadata_stride_bytes"] = 0x10;
-			candidate_scan["type_metadata_byte_0_gate"] = "skip nonzero byte0 with byte2 zero when skip-metadata flag is false";
-			candidate_scan["global_type_count_table_address"] = "0x5a26e4";
-			candidate_scan["zone_type_count_table_address"] = "0x5a2a8c";
-			candidate_scan["generator_type_count_offset"] = "generator+0x1110+type*4";
-			candidate_scan["zone_type_count_offset"] = "zone_record+0x44+type*4";
-			candidate_scan["value_range_min"] = selected_value / 4;
-			candidate_scan["value_range_max"] = selected_value;
-			candidate_scan["resource_helper_address"] = "0x4a9e40";
-			candidate_scan["footprint_probe_helper_address"] = "0x49a6f9";
-			candidate_scan["optional_coverage_ratio_helper_address"] = "0x4aa195";
-			candidate_scan["weighted_selection_rng_address"] = "0x4e7276";
-			candidate_scan["native_proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
-			candidate_scan["native_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
-			candidate_scan["native_proxy_candidate_execution_materialized"] = false;
-			candidate_scan["status"] = "0x4a9f1c_candidate_scan_gates_materialized_proxy_execution_pending";
+			Dictionary candidate_scan = reward_candidate_scan_4a9f1c_report(selected_value / 4, selected_value, true, true);
 			object_lookup["candidate_scan_control_flow"] = candidate_scan;
 			object_lookup["native_proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
 			object_lookup["native_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
 			object_lookup["materializes_reward_object"] = false;
-			object_lookup["status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
+			object_lookup["status"] = "0x4aa1db_lookup_control_flow_with_proxy_backed_candidate_scan_materialized_selection_pending";
 			treasure_reward_object_lookup_count += 1;
 			treasure_reward_object_lookup_primary_retry_budget_total += 3;
+			treasure_reward_candidate_scan_count += 1;
+			treasure_reward_candidate_scan_eligible_total += int32_t(candidate_scan.get("eligible_candidate_count", 0));
+			treasure_reward_candidate_scan_weight_total += int32_t(candidate_scan.get("eligible_candidate_weight_total", 0));
 
 			Dictionary attempt;
 			attempt["phase"] = "0x4aa354_reward_attempt";
@@ -5650,10 +5825,14 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["treasure_reward_attempt_records"] = treasure_reward_attempt_records;
 	report["treasure_reward_rng_state_before_0x4aa354_uint32"] = int64_t(reward_rng_state_before);
 	report["treasure_reward_rng_state_after_0x4aa354_uint32"] = int64_t(reward_rng_state_after);
-	report["treasure_reward_object_lookup_status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
+	report["treasure_reward_object_lookup_status"] = "0x4aa1db_lookup_control_flow_with_proxy_backed_candidate_scan_materialized_selection_pending";
 	report["treasure_reward_object_lookup_count"] = treasure_reward_object_lookup_count;
 	report["treasure_reward_object_lookup_primary_retry_budget_total"] = treasure_reward_object_lookup_primary_retry_budget_total;
-	report["treasure_reward_candidate_scan_status"] = "0x4a9f1c_candidate_scan_gates_materialized_proxy_execution_pending";
+	report["treasure_reward_candidate_scan_status"] = "0x4a9f1c_proxy_backed_candidate_scan_materialized_weighted_selection_pending";
+	report["treasure_reward_candidate_scan_count"] = treasure_reward_candidate_scan_count;
+	report["treasure_reward_candidate_scan_eligible_total"] = treasure_reward_candidate_scan_eligible_total;
+	report["treasure_reward_candidate_scan_weight_total"] = treasure_reward_candidate_scan_weight_total;
+	report["treasure_reward_candidate_vector_proxy_backed_record_count"] = int32_t(h3maped_reward_proxy_backed_candidates_49f95a().size());
 	report["treasure_reward_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
 	report["treasure_reward_object_lookup_candidate_execution_materialized"] = false;
 	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_and_0x4aa354_reward_value_selection_executed_inspection_only_package_adoption_rewards_and_guarding_pending";
