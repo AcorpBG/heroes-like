@@ -7302,6 +7302,132 @@ Dictionary h3maped_road_candidate_marking_49aec5_report(const Dictionary &terrai
 		return report;
 	}
 
+	Dictionary h3maped_road_overlay_serialization_49b2b6_report(const Dictionary &terrain_fill, const Dictionary &final_art_materialization) {
+		const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+		const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+		const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+		const int32_t tile_count = width * height * level_count;
+		PackedInt32Array tile_byte_0 = terrain_fill.get("tile_byte_0_terrain_id_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_1 = terrain_fill.get("tile_byte_1_terrain_art_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_2 = terrain_fill.get("tile_byte_2_river_type_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_3 = terrain_fill.get("tile_byte_3_river_art_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_4 = terrain_fill.get("tile_byte_4_road_type_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_5 = terrain_fill.get("tile_byte_5_road_art_u8", PackedInt32Array());
+		PackedInt32Array tile_byte_6 = terrain_fill.get("tile_byte_6_terrain_flags_u8", PackedInt32Array());
+		if (tile_byte_0.size() != tile_count) {
+			tile_byte_0.resize(tile_count);
+		}
+		if (tile_byte_1.size() != tile_count) {
+			tile_byte_1.resize(tile_count);
+		}
+		if (tile_byte_2.size() != tile_count) {
+			tile_byte_2.resize(tile_count);
+		}
+		if (tile_byte_3.size() != tile_count) {
+			tile_byte_3.resize(tile_count);
+		}
+		if (tile_byte_4.size() != tile_count) {
+			tile_byte_4.resize(tile_count);
+		}
+		if (tile_byte_5.size() != tile_count) {
+			tile_byte_5.resize(tile_count);
+		}
+		if (tile_byte_6.size() != tile_count) {
+			tile_byte_6.resize(tile_count);
+		}
+		PackedInt32Array road_type = final_art_materialization.get("final_road_type_nibble_u8", PackedInt32Array());
+		PackedInt32Array road_art = final_art_materialization.get("final_road_art_u8", PackedInt32Array());
+		PackedInt32Array road_flip_a = final_art_materialization.get("final_road_flip_a_u8", PackedInt32Array());
+		PackedInt32Array road_flip_b = final_art_materialization.get("final_road_flip_b_u8", PackedInt32Array());
+		const bool source_arrays_ready = road_type.size() == tile_count
+				&& road_art.size() == tile_count
+				&& road_flip_a.size() == tile_count
+				&& road_flip_b.size() == tile_count;
+		int32_t road_overlay_cell_count = 0;
+		int32_t road_type_selected_count = 0;
+		int32_t road_art_nonzero_count = 0;
+		int32_t road_flip_flagged_cell_count = 0;
+		if (source_arrays_ready) {
+			for (int32_t index = 0; index < tile_count; ++index) {
+				const int32_t current_road_type = int32_t(road_type[index]) & 0x0f;
+				if (current_road_type == 0) {
+					tile_byte_4.set(index, 0);
+					tile_byte_5.set(index, 0);
+					tile_byte_6.set(index, int32_t(tile_byte_6[index]) & ~0x30);
+					continue;
+				}
+				const int32_t current_road_art = int32_t(road_art[index]) & 0xff;
+				const int32_t road_flip_bits = ((int32_t(road_flip_a[index]) & 0x01) << 4)
+						| ((int32_t(road_flip_b[index]) & 0x01) << 5);
+				tile_byte_4.set(index, current_road_type);
+				tile_byte_5.set(index, current_road_art);
+				tile_byte_6.set(index, (int32_t(tile_byte_6[index]) & ~0x30) | road_flip_bits);
+				road_overlay_cell_count += 1;
+				if (current_road_type == int32_t(final_art_materialization.get("selected_road_type", -1))) {
+					road_type_selected_count += 1;
+				}
+				if (current_road_art != 0) {
+					road_art_nonzero_count += 1;
+				}
+				if (road_flip_bits != 0) {
+					road_flip_flagged_cell_count += 1;
+				}
+			}
+		}
+		Dictionary report;
+		report["schema_id"] = "aurelion_h3maped_small_road_overlay_serialization_v1";
+		report["status"] = source_arrays_ready && road_overlay_cell_count > 0
+				? String("h3maped_0x49b2b6_road_overlay_bytes_materialized_partial_vector")
+				: String("h3maped_0x49b2b6_road_overlay_bytes_blocked_missing_final_art_grid");
+		report["function_address"] = "0x49b2b6";
+		report["source"] = "Recovered from h3maped.exe 0x49b2b6: cell+0x24 bits 26..29 serialize to tile byte 4, cell+0x28 low byte serializes to tile byte 5, and cell+0x28 bits 19..20 serialize to tile byte 6 bits 4..5.";
+		report["width"] = width;
+		report["height"] = height;
+		report["level_count"] = level_count;
+		report["tile_count"] = tile_count;
+		report["source_arrays_ready"] = source_arrays_ready;
+		report["selected_road_type"] = final_art_materialization.get("selected_road_type", -1);
+		report["road_overlay_cell_count"] = road_overlay_cell_count;
+		report["road_type_selected_count"] = road_type_selected_count;
+		report["road_art_nonzero_count"] = road_art_nonzero_count;
+		report["road_flip_flagged_cell_count"] = road_flip_flagged_cell_count;
+		report["expected_final_road_cell_count"] = final_art_materialization.get("final_road_cell_count", 0);
+		report["expected_final_nonzero_art_cell_count"] = final_art_materialization.get("final_nonzero_art_cell_count", 0);
+		report["tile_byte_0_terrain_id_u8"] = tile_byte_0;
+		report["tile_byte_1_terrain_art_u8"] = tile_byte_1;
+		report["tile_byte_2_river_type_u8"] = tile_byte_2;
+		report["tile_byte_3_river_art_u8"] = tile_byte_3;
+		report["tile_byte_4_road_type_u8"] = tile_byte_4;
+		report["tile_byte_5_road_art_u8"] = tile_byte_5;
+		report["tile_byte_6_flags_u8"] = tile_byte_6;
+		report["tile_byte_4_source_bits"] = "cell+0x24 bits 26..29";
+		report["tile_byte_5_source_bits"] = "cell+0x28 bits 0..7";
+		report["tile_byte_6_road_flip_source_bits"] = "cell+0x28 bits 19..20 -> tile byte 6 bits 4..5";
+		report["materializes_serialized_road_overlay"] = source_arrays_ready && road_overlay_cell_count > 0;
+		report["materializes_serialized_river_overlay"] = false;
+		report["complete_coordinate_vector_claim"] = false;
+		report["blocked_reason"] = "Road overlay bytes are serialized only for the current partial predecessor-chain vector. Complete +0x14b0 vector parity, special/object propagation, river bytes, blockers, guards, rewards, and final runtime package adoption remain pending.";
+		report["signature"] = h3maped_hash32_hex(String("h3maped_49b2b6_road_overlay:")
+				+ String::num_int64(road_overlay_cell_count) + ":"
+				+ String::num_int64(road_art_nonzero_count) + ":"
+				+ String::num_int64(road_flip_flagged_cell_count));
+		return report;
+	}
+
+	Dictionary h3maped_terrain_fill_with_road_overlay_49b2b6(const Dictionary &terrain_fill, const Dictionary &road_overlay_serialization) {
+		Dictionary serialized = terrain_fill.duplicate(true);
+		if (bool(road_overlay_serialization.get("materializes_serialized_road_overlay", false))) {
+			serialized["tile_byte_4_road_type_u8"] = road_overlay_serialization.get("tile_byte_4_road_type_u8", PackedInt32Array());
+			serialized["tile_byte_5_road_art_u8"] = road_overlay_serialization.get("tile_byte_5_road_art_u8", PackedInt32Array());
+			serialized["tile_byte_6_terrain_flags_u8"] = road_overlay_serialization.get("tile_byte_6_flags_u8", PackedInt32Array());
+			serialized["tile_byte_writeout_status"] = "0x49b2b6_terrain_and_partial_road_bytes_packed_overlay_bytes_pending";
+			serialized["tile_byte_overlay_status"] = "road_overlay_bytes_materialized_from_0x458a2f_0x458893_partial_vector_river_pending";
+			serialized["road_overlay_serialization_status"] = road_overlay_serialization.get("status", "");
+			serialized["road_overlay_cell_count"] = road_overlay_serialization.get("road_overlay_cell_count", 0);
+		}
+		return serialized;
+	}
+
 	Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
 	const int32_t x = int32_t(record.get("x", 0));
 	const int32_t y = int32_t(record.get("y", 0));
@@ -7411,8 +7537,8 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 		Dictionary boundary;
 		boundary["schema_id"] = "aurelion_h3maped_small_road_adapter_boundary_v1";
 		boundary["generation_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
-		boundary["road_materialization_status"] = "h3maped_0x458a2f_458893_final_art_flip_materialized_overlay_pending";
-		boundary["full_generation_status"] = "h3maped_road_phase_final_art_grid_materialized_overlay_serialization_pending";
+		boundary["road_materialization_status"] = "h3maped_0x49b2b6_road_overlay_bytes_materialized_partial_vector";
+		boundary["full_generation_status"] = "h3maped_road_phase_partial_overlay_serialized_generation_blocked";
 	boundary["source"] = "Recovered from /root/Downloads/h3maped.exe disassembly; no synthetic road geometry is emitted from this boundary.";
 	boundary["h3maped_phase_runner_address"] = "0x4ab52a";
 	boundary["h3maped_cell_state_reset_address"] = "0x4aae2f";
@@ -7432,6 +7558,8 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 		const int32_t selected_road_type_for_marking = int32_t(pair_iteration_for_marking.get("selected_road_type", 0));
 		Dictionary final_art_materialization = h3maped_road_final_art_flip_458a2f_report(terrain_fill, path_state_seed, pair_iteration_for_marking);
 		boundary["road_final_art_materialization"] = final_art_materialization;
+		Dictionary road_overlay_serialization = h3maped_road_overlay_serialization_49b2b6_report(terrain_fill, final_art_materialization);
+		boundary["road_overlay_serialization"] = road_overlay_serialization;
 		Dictionary candidate_marking = h3maped_road_candidate_marking_49aec5_report(terrain_fill, path_state_seed, selected_road_type_for_marking);
 		boundary["road_candidate_marking"] = candidate_marking;
 		boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill, path_state_seed);
@@ -7463,12 +7591,14 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 		boundary["final_art_materialization_status"] = final_art_materialization.get("status", "");
 		boundary["final_road_cell_count"] = final_art_materialization.get("final_road_cell_count", 0);
 		boundary["final_road_art_rng_call_count"] = final_art_materialization.get("rng_call_count", 0);
+		boundary["road_overlay_serialization_status"] = road_overlay_serialization.get("status", "");
+		boundary["road_overlay_cell_count"] = road_overlay_serialization.get("road_overlay_cell_count", 0);
 	boundary["connection_count"] = connection_records.size();
 	boundary["connection_records_have_geometry"] = false;
 	boundary["generated_road_segment_count"] = 0;
 	boundary["generated_road_cell_count"] = 0;
 	boundary["no_synthetic_road_geometry"] = true;
-		boundary["blocked_reason"] = "The 0x4aae7b path-state propagation, 0x4ab37f adapter bridge, 0x49aec5 candidate road-type marks, and 0x458a2f/0x458893 final art/flip grid are recovered for the current partial vector. Complete +0x14b0 coordinate-vector parity, special/object propagation, and road overlay serialization remain pending, so the reset path must not emit runtime roads.";
+		boundary["blocked_reason"] = "The 0x4aae7b path-state propagation, 0x4ab37f adapter bridge, 0x49aec5 candidate road-type marks, 0x458a2f/0x458893 final art/flip grid, and 0x49b2b6 road overlay byte serialization are recovered for the current partial vector. Complete +0x14b0 coordinate-vector parity, special/object propagation, blockers, guards, rewards, and final runtime package adoption remain pending, so the reset path must not emit runtime roads.";
 	boundary["cell_0x24_road_type_bits"] = "26..29";
 	boundary["cell_0x28_road_art_bits"] = "0..7";
 	boundary["cell_0x28_road_flip_bits"] = "19..20";
@@ -7479,7 +7609,7 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 		phase_sequence.append("0x4ab37f_construct_type_random_map_and_type_road_map_adapters");
 		phase_sequence.append("0x49aec5_candidate_road_type_mark_materialized_art_pending");
 		phase_sequence.append("0x458a2f_0x458893_final_art_flip_materialized_overlay_pending");
-		phase_sequence.append("0x49b2b6_road_overlay_serialization_pending");
+		phase_sequence.append("0x49b2b6_road_overlay_bytes_materialized_partial_vector");
 	boundary["phase_sequence"] = phase_sequence;
 	boundary["signature"] = h3maped_hash32_hex(String("h3maped_road_adapter_boundary:") + String::num_int64(connection_records.size()) + String(":0x4ab52a:0x4ab37f:0x4b4243"));
 	return boundary;
@@ -7500,7 +7630,6 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
 	Dictionary footprint = runtime_build.get("zone_footprint_placement", Dictionary());
 	Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
-	Dictionary terrain_grid = h3maped_terrain_grid_from_fill(normalized_config, terrain_fill);
 	Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
 	Array connection_records = h3maped_connection_records_from_port(payload);
@@ -7509,6 +7638,9 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
 	const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", 0)));
 	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, road_coordinate_vector_source, rng_state_before_road_phase);
+	Dictionary road_overlay_serialization = road_adapter_boundary.get("road_overlay_serialization", Dictionary());
+	Dictionary terrain_fill_with_roads = h3maped_terrain_fill_with_road_overlay_49b2b6(terrain_fill, road_overlay_serialization);
+	Dictionary terrain_grid = h3maped_terrain_grid_from_fill(normalized_config, terrain_fill_with_roads);
 	connection_payload["road_adapter_boundary"] = road_adapter_boundary;
 	connection_payload["road_materialization_status"] = road_adapter_boundary.get("road_materialization_status", "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending");
 

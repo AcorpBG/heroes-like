@@ -639,6 +639,7 @@ func _run() -> void:
 	var road_adapter_bridge: Dictionary = road_adapter_boundary.get("road_adapter_bridge", {}) if road_adapter_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
 	var road_candidate_marking: Dictionary = road_adapter_boundary.get("road_candidate_marking", {}) if road_adapter_boundary.get("road_candidate_marking", {}) is Dictionary else {}
 	var road_final_art_materialization: Dictionary = road_adapter_boundary.get("road_final_art_materialization", {}) if road_adapter_boundary.get("road_final_art_materialization", {}) is Dictionary else {}
+	var road_overlay_serialization: Dictionary = road_adapter_boundary.get("road_overlay_serialization", {}) if road_adapter_boundary.get("road_overlay_serialization", {}) is Dictionary else {}
 	var road_toolkit_entry: Dictionary = road_adapter_boundary.get("road_toolkit_entry", {}) if road_adapter_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
 	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
 	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
@@ -820,6 +821,26 @@ func _run() -> void:
 				"final_nonzero_art_count": final_nonzero_art_count,
 			}))
 			return
+		var road_overlay_byte_4: PackedInt32Array = road_overlay_serialization.get("tile_byte_4_road_type_u8", PackedInt32Array())
+		var road_overlay_byte_5: PackedInt32Array = road_overlay_serialization.get("tile_byte_5_road_art_u8", PackedInt32Array())
+		var road_overlay_byte_6: PackedInt32Array = road_overlay_serialization.get("tile_byte_6_flags_u8", PackedInt32Array())
+		if String(road_overlay_serialization.get("status", "")) != "h3maped_0x49b2b6_road_overlay_bytes_materialized_partial_vector" \
+				or road_overlay_byte_4.size() != 1296 \
+				or road_overlay_byte_5.size() != 1296 \
+				or road_overlay_byte_6.size() != 1296 \
+				or int(road_overlay_serialization.get("road_overlay_cell_count", 0)) != candidate_marked_cell_count \
+				or int(road_overlay_serialization.get("road_overlay_cell_count", 0)) != 411 \
+				or int(road_overlay_serialization.get("road_type_selected_count", 0)) != candidate_marked_cell_count \
+				or int(road_overlay_serialization.get("road_art_nonzero_count", 0)) != final_nonzero_art_count \
+				or not bool(road_overlay_serialization.get("materializes_serialized_road_overlay", false)) \
+				or bool(road_overlay_serialization.get("materializes_serialized_river_overlay", true)) \
+				or bool(road_overlay_serialization.get("complete_coordinate_vector_claim", true)):
+			_fail("0x49b2b6 road overlay bytes were not serialized from the recovered final road grid: %s" % JSON.stringify(road_overlay_serialization))
+			return
+		if int(road_adapter_boundary.get("road_overlay_cell_count", 0)) != candidate_marked_cell_count \
+				or String(road_adapter_boundary.get("road_overlay_serialization_status", "")) != "h3maped_0x49b2b6_road_overlay_bytes_materialized_partial_vector":
+			_fail("Road adapter boundary did not promote the recovered 0x49b2b6 road overlay serialization status: %s" % JSON.stringify(road_adapter_boundary))
+			return
 	var road_neighbor_dx: PackedInt32Array = road_line_visit.get("neighbor_direction_dx_i32", PackedInt32Array())
 	var road_neighbor_dy: PackedInt32Array = road_line_visit.get("neighbor_direction_dy_i32", PackedInt32Array())
 	var road_neighbor_records: Array = road_line_visit.get("neighbor_direction_records", [])
@@ -987,6 +1008,8 @@ func _run() -> void:
 			"road_final_cell_count": road_final_art_materialization.get("final_road_cell_count", 0),
 			"road_final_write_count": road_final_art_materialization.get("final_write_count", 0),
 			"road_final_art_rng_call_count": road_final_art_materialization.get("rng_call_count", 0),
+			"road_overlay_serialization_status": road_overlay_serialization.get("status", ""),
+			"road_overlay_cell_count": road_overlay_serialization.get("road_overlay_cell_count", 0),
 			"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
 		"road_line_visit_status": road_line_visit.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
