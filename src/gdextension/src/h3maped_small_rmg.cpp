@@ -4865,8 +4865,8 @@ std::vector<uint8_t> occupied_grid_from_town_records(const Dictionary &town_cast
 
 Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones, int32_t source_catalog_index, const Dictionary &runtime_build, const Dictionary &town_castle_placement) {
 	Dictionary report;
-	report["status"] = "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_mine_constraint_scan_ported_package_adoption_pending";
-	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields, 0x4a9911 mine template bucket selection/record/guard handoff, 0x4a9641 mine placement constraint candidate scan, and phase 10 0x4aab7e treasure-band triplets rebound from recovered rmg-template-catalog and objects.txt source rows; package adoption and 0x4aa354 reward placement remain pending";
+	report["status"] = "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_0x4aa354_value_selection_ported_package_adoption_pending";
+	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields, 0x4a9911 mine template bucket selection/record/guard handoff, 0x4a9641 mine placement constraint candidate scan, phase 10 0x4aab7e treasure-band scheduler, and 0x4aa354 reward value selection rebound from recovered rmg-template-catalog and objects.txt source rows; package adoption, 0x4aa1db reward object lookup, and guarding remain pending";
 	report["mine_phase_address"] = "0x4a9d6a";
 	report["mine_minimum_helper_address"] = "0x4a9911";
 	report["mine_density_scheduler_address"] = "0x4a9c7c";
@@ -4887,7 +4887,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["mine_template_subtype_filter_offset"] = "candidate_template_metadata+0x20";
 	report["mine_template_terrain_filter_status"] = "0x42cc99_runtime_terrain_bitset_filter_ported_from_reversed_objects_txt_masks_inspection_only";
 	report["mine_placement_constraint_status"] = "0x4a9641_constraint_scan_executed_inspection_package_adoption_pending";
-	report["mine_placement_constraint_gap"] = "candidate scan executes against current generated-cell and objects.txt wrapper data, but production package adoption, exact generator cell bit26 lifecycle, and 0x4aa354 reward placement remain pending";
+	report["mine_placement_constraint_gap"] = "candidate scan executes against current generated-cell and objects.txt wrapper data, but production package adoption, exact generator cell bit26 lifecycle, 0x4aa1db reward object lookup, and guard materialization remain pending";
 	Dictionary placement_constraint;
 	placement_constraint["address"] = "0x4a9641";
 	placement_constraint["pre_scan_helper_address"] = "0x49b76d";
@@ -4967,6 +4967,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	Array mine_minimum_helper_calls;
 	Array treasure_band_fields;
 	Array treasure_scheduler_zones;
+	Array treasure_reward_attempt_records;
 	int32_t source_zone_missing_count = 0;
 	int32_t mine_minimum_field_count = 0;
 	int32_t mine_density_field_count = 0;
@@ -4992,6 +4993,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t treasure_low_below_100_count = 0;
 	int32_t treasure_scheduler_active_zone_count = 0;
 	int32_t treasure_scheduler_scaled_step_total = 0;
+	int32_t treasure_reward_attempt_count = 0;
+	int32_t treasure_reward_value_rng_call_count = 0;
 
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
@@ -5438,6 +5441,95 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 		zone_reports.append(zone_report);
 	}
 
+	const uint32_t reward_rng_state_before = mine_object_rng.state;
+	for (int64_t scheduler_index = 0; scheduler_index < treasure_scheduler_zones.size(); ++scheduler_index) {
+		if (Variant(treasure_scheduler_zones[scheduler_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary scheduler = Dictionary(treasure_scheduler_zones[scheduler_index]);
+		Array band_records = scheduler.get("band_records", Array());
+		Array accumulator_records = scheduler.get("accumulator_records", Array());
+		Array attempt_records;
+		std::vector<int32_t> accumulator_values;
+		std::vector<int32_t> step_weights;
+		std::vector<bool> enabled_bands;
+		for (int64_t band_index = 0; band_index < band_records.size(); ++band_index) {
+			Dictionary band = Variant(band_records[band_index]).get_type() == Variant::DICTIONARY
+					? Dictionary(band_records[band_index])
+					: Dictionary();
+			Dictionary accumulator = band_index < accumulator_records.size() && Variant(accumulator_records[band_index]).get_type() == Variant::DICTIONARY
+					? Dictionary(accumulator_records[band_index])
+					: Dictionary();
+			accumulator_values.push_back(int32_t(accumulator.get("initial_accumulator", 0)));
+			step_weights.push_back(int32_t(accumulator.get("step_weight", 0)));
+			enabled_bands.push_back(bool(band.get("eligible", false)));
+		}
+		const int32_t scaled_step = int32_t(scheduler.get("scaled_step_after_sqrt_trunc", 0));
+		for (int32_t attempt_index = 0; attempt_index < scaled_step; ++attempt_index) {
+			int32_t selected_band_index = -1;
+			int32_t selected_accumulator = 0x7fffffff;
+			for (int32_t band_index = 0; band_index < int32_t(enabled_bands.size()); ++band_index) {
+				if (!enabled_bands[size_t(band_index)]) {
+					continue;
+				}
+				if (selected_band_index < 0 || accumulator_values[size_t(band_index)] < selected_accumulator) {
+					selected_band_index = band_index;
+					selected_accumulator = accumulator_values[size_t(band_index)];
+				}
+			}
+			if (selected_band_index < 0 || selected_band_index >= band_records.size()) {
+				break;
+			}
+			Dictionary band = Dictionary(band_records[selected_band_index]);
+			const int32_t low = int32_t(band.get("low", 0));
+			const int32_t high = int32_t(band.get("high", 0));
+			const int32_t step_weight = step_weights[size_t(selected_band_index)];
+			accumulator_values[size_t(selected_band_index)] += step_weight;
+			const bool consumes_value_rng = high > low;
+			int32_t value_rng = -1;
+			int32_t selected_value = high;
+			if (consumes_value_rng) {
+				value_rng = mine_object_rng.next();
+				treasure_reward_value_rng_call_count += 1;
+				selected_value = low + (value_rng % (high - low));
+			}
+
+			Dictionary attempt;
+			attempt["phase"] = "0x4aa354_reward_attempt";
+			attempt["runtime_zone_index"] = scheduler.get("runtime_zone_index", -1);
+			attempt["source_row"] = scheduler.get("source_row", -1);
+			attempt["attempt_index"] = attempt_index;
+			attempt["selected_band_index"] = selected_band_index;
+			attempt["accumulator_before_selection"] = selected_accumulator;
+			attempt["accumulator_step_weight"] = step_weight;
+			attempt["accumulator_after_selection"] = accumulator_values[size_t(selected_band_index)];
+			attempt["low"] = low;
+			attempt["high"] = high;
+			attempt["value_rng_consumed"] = consumes_value_rng;
+			attempt["value_rng_function_address"] = consumes_value_rng ? String("0x4e7276") : String("");
+			attempt["value_rng_value"] = value_rng;
+			attempt["selected_reward_value"] = selected_value;
+			attempt["pre_attempt_helper_address"] = "0x49ce64";
+			attempt["object_lookup_helper_address"] = "0x4aa1db";
+			attempt["guard_value_helper_address"] = "0x4a960a";
+			attempt["post_object_helper_address"] = "0x4a5c07";
+			attempt["mode"] = 0;
+			attempt["materializes_reward_object"] = false;
+			attempt["status"] = "0x4aa354_reward_value_selection_materialized_object_lookup_pending";
+			attempt_records.append(attempt);
+			treasure_reward_attempt_records.append(attempt);
+			treasure_reward_attempt_count += 1;
+		}
+		scheduler["reward_attempt_status"] = attempt_records.is_empty()
+				? String("0x4aa354_reward_attempts_skipped_no_enabled_bands")
+				: String("0x4aa354_reward_attempt_value_selection_materialized_object_lookup_pending");
+		scheduler["reward_attempt_count"] = attempt_records.size();
+		scheduler["reward_attempt_records"] = attempt_records;
+		scheduler["materializes_reward_objects"] = false;
+		treasure_scheduler_zones[scheduler_index] = scheduler;
+	}
+	const uint32_t reward_rng_state_after = mine_object_rng.state;
+
 	report["zone_count"] = zone_reports.size();
 	report["source_zone_missing_count"] = source_zone_missing_count;
 	report["zones"] = zone_reports;
@@ -5477,7 +5569,13 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["treasure_scheduler_active_zone_count"] = treasure_scheduler_active_zone_count;
 	report["treasure_scheduler_scaled_step_total"] = treasure_scheduler_scaled_step_total;
 	report["treasure_scheduler_zones"] = treasure_scheduler_zones;
-	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_executed_inspection_only_pending_package_adoption_0x4aa354_rewards_and_guarding";
+	report["treasure_reward_attempt_status"] = "0x4aa354_reward_value_selection_materialized_object_lookup_pending";
+	report["treasure_reward_attempt_count"] = treasure_reward_attempt_count;
+	report["treasure_reward_value_rng_call_count"] = treasure_reward_value_rng_call_count;
+	report["treasure_reward_attempt_records"] = treasure_reward_attempt_records;
+	report["treasure_reward_rng_state_before_0x4aa354_uint32"] = int64_t(reward_rng_state_before);
+	report["treasure_reward_rng_state_after_0x4aa354_uint32"] = int64_t(reward_rng_state_after);
+	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_and_0x4aa354_reward_value_selection_executed_inspection_only_package_adoption_rewards_and_guarding_pending";
 	return report;
 }
 
@@ -5604,7 +5702,7 @@ Array clean_phase_ledger() {
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x49a1d8, 0x49aa93, 0x49a6f9, 0x49a09c, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending" },
-		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4a9911, 0x4a9c7c, 0x4a9641, 0x4aab7e", "0x4a9d6a_0x4a9911_0x4a9641_mine_constraint_scan_ported_rewards_pending" },
+		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4a9911, 0x4a9c7c, 0x4a9641, 0x4aab7e, 0x4aa354", "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_0x4aa354_value_selection_ported_rewards_pending" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "0x4ab52a_pair_iteration_ported_0x4aae7b_0x4b4243_materialization_pending" },
 	};
 	for (const Phase &phase : PHASES) {
@@ -5727,7 +5825,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		Array connection_records = h3maped_connection_records_from_port(payload);
 		Dictionary coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 		Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
-		const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", int64_t(next_state))));
+		const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", int64_t(next_state)))));
 		payload["road_coordinate_vector_source"] = coordinate_vector_source;
 		payload["road_adapter_boundary"] = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, coordinate_vector_source, rng_state_before_road_phase);
 		payload["path_state_seed_update_rule"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
@@ -7698,7 +7796,7 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
 	Dictionary road_coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 	Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
-	const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", 0)));
+	const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", 0))));
 	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, road_coordinate_vector_source, rng_state_before_road_phase);
 	Dictionary road_overlay_serialization = road_adapter_boundary.get("road_overlay_serialization", Dictionary());
 	Dictionary terrain_fill_with_roads = h3maped_terrain_fill_with_road_overlay_49b2b6(terrain_fill, road_overlay_serialization);
