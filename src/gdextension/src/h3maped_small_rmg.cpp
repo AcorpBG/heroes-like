@@ -4966,6 +4966,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	Array mine_density_fields;
 	Array mine_minimum_helper_calls;
 	Array treasure_band_fields;
+	Array treasure_scheduler_zones;
 	int32_t source_zone_missing_count = 0;
 	int32_t mine_minimum_field_count = 0;
 	int32_t mine_density_field_count = 0;
@@ -4989,6 +4990,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t positive_treasure_band_count = 0;
 	int32_t total_treasure_density_weight = 0;
 	int32_t treasure_low_below_100_count = 0;
+	int32_t treasure_scheduler_active_zone_count = 0;
+	int32_t treasure_scheduler_scaled_step_total = 0;
 
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
@@ -5344,6 +5347,9 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 
 		Array treasure_bands = source_zone.get("treasure_bands", Array());
 		int32_t zone_treasure_density_weight = 0;
+		int32_t zone_treasure_density_product = 1;
+		int32_t zone_eligible_band_count = 0;
+		Array scheduler_band_records;
 		for (int32_t band = 0; band < 3; ++band) {
 			Dictionary band_source = band < treasure_bands.size() && Variant(treasure_bands[band]).get_type() == Variant::DICTIONARY
 					? Dictionary(treasure_bands[band])
@@ -5351,11 +5357,14 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			const int32_t low = int32_t(band_source.get("low", 0));
 			const int32_t high = int32_t(band_source.get("high", 0));
 			const int32_t density = int32_t(band_source.get("density", 0));
+			const bool scheduler_band_eligible = density > 0 && low >= 100;
 			treasure_band_field_count += 1;
 			total_treasure_density_weight += density;
-			zone_treasure_density_weight += density;
-			if (density > 0 && low >= 100) {
+			if (scheduler_band_eligible) {
 				positive_treasure_band_count += 1;
+				zone_eligible_band_count += 1;
+				zone_treasure_density_weight += density;
+				zone_treasure_density_product *= density;
 			}
 			if (density > 0 && low < 100) {
 				treasure_low_below_100_count += 1;
@@ -5372,8 +5381,56 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			band_record["high"] = high;
 			band_record["density"] = density;
 			band_record["helper_address"] = "0x4aa354";
-			band_record["placement_status"] = density > 0 && low >= 100 ? String("pending_0x4aa354_reward_object_value_selection_and_guarding") : String("skipped_ineligible_band");
+			band_record["placement_status"] = scheduler_band_eligible ? String("pending_0x4aa354_reward_object_value_selection_and_guarding") : String("skipped_ineligible_band");
 			treasure_band_fields.append(band_record);
+			Dictionary scheduler_band;
+			scheduler_band["band_index"] = band;
+			scheduler_band["low"] = low;
+			scheduler_band["high"] = high;
+			scheduler_band["density"] = density;
+			scheduler_band["eligible"] = scheduler_band_eligible;
+			scheduler_band["disabled_flag_stack_offset"] = String("ebp") + (band == 0 ? String("-0x14") : band == 1 ? String("-0x13") : String("-0x12"));
+			scheduler_band_records.append(scheduler_band);
+		}
+		Dictionary scheduler;
+		scheduler["phase"] = "0x4aab7e_treasure_band_scheduler";
+		scheduler["runtime_zone_index"] = int32_t(index);
+		scheduler["source_row"] = zone_report.get("source_row", -1);
+		scheduler["runtime_h3maped_terrain_id"] = runtime_h3maped_terrain_id;
+		scheduler["eligible_band_count"] = zone_eligible_band_count;
+		scheduler["total_density_weight"] = zone_treasure_density_weight;
+		scheduler["density_product"] = zone_eligible_band_count > 0 ? zone_treasure_density_product : 0;
+		const int32_t scheduler_scale_dividend = runtime_h3maped_terrain_id == 8 ? 0x640 : 0x320;
+		const int32_t scheduler_density_divisor = zone_treasure_density_weight > 0 ? scheduler_scale_dividend / zone_treasure_density_weight : 0;
+		const int32_t scheduler_scaled_step = scheduler_density_divisor > 0 ? int32_t(std::sqrt(double(scheduler_density_divisor))) : 0;
+		scheduler["scale_dividend"] = scheduler_scale_dividend;
+		scheduler["scale_density_divisor"] = scheduler_density_divisor;
+		scheduler["scaled_step_after_sqrt_trunc"] = scheduler_scaled_step;
+		scheduler["math_helper_addresses"] = Array::make("0x4e7d44_sqrt", "0x4e7dec_fistp_trunc");
+		scheduler["band_records"] = scheduler_band_records;
+		Array accumulator_records;
+		for (int32_t band = 0; band < scheduler_band_records.size(); ++band) {
+			Dictionary scheduler_band = Dictionary(scheduler_band_records[band]);
+			const bool eligible = bool(scheduler_band.get("eligible", false));
+			const int32_t density = int32_t(scheduler_band.get("density", 0));
+			Dictionary accumulator;
+			accumulator["band_index"] = band;
+			accumulator["initial_accumulator"] = 0;
+			accumulator["step_weight"] = eligible && density > 0 ? zone_treasure_density_product / density : 0;
+			accumulator["selection_order_rule"] = "0x4aac70 selects the enabled band with the lowest accumulator, then adds the band step weight before calling 0x4aa354";
+			accumulator_records.append(accumulator);
+		}
+		scheduler["accumulator_records"] = accumulator_records;
+		scheduler["reward_attempt_helper_address"] = "0x4aa354";
+		scheduler["post_reward_guard_helper_address"] = "0x4aa9b7";
+		scheduler["materializes_reward_objects"] = false;
+		scheduler["status"] = zone_eligible_band_count > 0
+				? String("0x4aab7e_treasure_scheduler_math_materialized_reward_objects_pending")
+				: String("0x4aab7e_treasure_scheduler_skipped_no_eligible_bands");
+		treasure_scheduler_zones.append(scheduler);
+		if (zone_eligible_band_count > 0) {
+			treasure_scheduler_active_zone_count += 1;
+			treasure_scheduler_scaled_step_total += scheduler_scaled_step;
 		}
 		zone_report["minimum_mine_count"] = zone_minimum_mine_count;
 		zone_report["mine_density_weight_total"] = zone_mine_density_weight;
@@ -5415,6 +5472,11 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["total_treasure_density_weight"] = total_treasure_density_weight;
 	report["treasure_low_below_100_count"] = treasure_low_below_100_count;
 	report["treasure_band_fields"] = treasure_band_fields;
+	report["treasure_scheduler_status"] = "0x4aab7e_treasure_scheduler_math_materialized_reward_objects_pending";
+	report["treasure_scheduler_zone_count"] = treasure_scheduler_zones.size();
+	report["treasure_scheduler_active_zone_count"] = treasure_scheduler_active_zone_count;
+	report["treasure_scheduler_scaled_step_total"] = treasure_scheduler_scaled_step_total;
+	report["treasure_scheduler_zones"] = treasure_scheduler_zones;
 	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_executed_inspection_only_pending_package_adoption_0x4aa354_rewards_and_guarding";
 	return report;
 }
