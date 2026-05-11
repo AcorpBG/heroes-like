@@ -692,6 +692,37 @@ func _run() -> void:
 			or seed_initializations.size() != road_coordinate_record_count - 1:
 		_fail("0x4aae7b seed-cell initialization count did not match the 0x4ab52a outer seed loop: %s" % JSON.stringify(path_seed_update))
 		return
+	var propagation_summaries: Array = path_seed_update.get("normal_neighbor_propagation_summaries", [])
+	var candidate_low_words: Array = path_seed_update.get("candidate_low_words", [])
+	var first_seed_costs: PackedInt32Array = path_seed_update.get("first_seed_path_cost_low_word_u16", PackedInt32Array())
+	var first_seed_pred_x: PackedInt32Array = path_seed_update.get("first_seed_predecessor_x_i32", PackedInt32Array())
+	var first_seed_pred_y: PackedInt32Array = path_seed_update.get("first_seed_predecessor_y_i32", PackedInt32Array())
+	var first_seed_pred_level: PackedInt32Array = path_seed_update.get("first_seed_predecessor_level_i32", PackedInt32Array())
+	if String(path_seed_update.get("normal_neighbor_propagation_status", "")) != "h3maped_0x4aae7b_normal_neighbor_path_costs_materialized_special_vectors_pending" \
+			or String(path_seed_update.get("candidate_low_word_status", "")) != "h3maped_0x4ab52a_candidate_low_words_materialized_from_normal_0x4aae7b" \
+			or int(path_seed_update.get("normal_neighbor_propagation_seed_count", -1)) != road_coordinate_record_count - 1 \
+			or propagation_summaries.size() != road_coordinate_record_count - 1 \
+			or int(path_seed_update.get("candidate_low_word_count", -1)) != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
+			or candidate_low_words.size() != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
+			or int(path_seed_update.get("candidate_accept_count", 0)) <= 0 \
+			or first_seed_costs.size() != 1296 \
+			or first_seed_pred_x.size() != 1296 \
+			or first_seed_pred_y.size() != 1296 \
+			or first_seed_pred_level.size() != 1296:
+		_fail("0x4aae7b normal neighbor path-cost propagation was not materialized correctly: %s" % JSON.stringify(path_seed_update))
+		return
+	var first_propagation: Dictionary = propagation_summaries[0] if propagation_summaries[0] is Dictionary else {}
+	if int(first_propagation.get("reached_cell_count", 0)) <= 1 \
+			or int(first_propagation.get("relaxed_edge_count", 0)) <= 0 \
+			or String(first_propagation.get("normal_neighbor_update_block", "")) != "0x4ab2d8..0x4ab33a" \
+			or bool(first_propagation.get("special_vector_updates_materialized", true)):
+		_fail("0x4aae7b first seed propagation summary drifted from the materialized normal-neighbor boundary: %s" % JSON.stringify(first_propagation))
+		return
+	var first_candidate_low_word: Dictionary = candidate_low_words[0] if candidate_low_words[0] is Dictionary else {}
+	if int(first_candidate_low_word.get("candidate_low_word", 0x7d00)) > 0x7530 \
+			or not bool(first_candidate_low_word.get("candidate_accepts_0x4ab52a", false)):
+		_fail("0x4ab52a candidate low-word threshold semantics drifted after normal path propagation: %s" % JSON.stringify(first_candidate_low_word))
+		return
 	for seed_record_index in [0, seed_initializations.size() - 1]:
 		var seed_init: Dictionary = seed_initializations[seed_record_index] if seed_initializations[seed_record_index] is Dictionary else {}
 		if String(seed_init.get("seed_write_block", "")) != "0x4aaedc..0x4aaf0e" \
@@ -778,6 +809,9 @@ func _run() -> void:
 		"road_pair_iteration_status": road_pair_iteration.get("status", ""),
 		"path_state_reset_status": path_state_reset.get("status", ""),
 		"path_state_seed_initialization_count": path_seed_update.get("seed_initialization_call_count", 0),
+		"path_state_normal_propagation_status": path_seed_update.get("normal_neighbor_propagation_status", ""),
+		"path_state_candidate_low_word_count": path_seed_update.get("candidate_low_word_count", 0),
+		"path_state_candidate_accept_count": path_seed_update.get("candidate_accept_count", 0),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
 		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),

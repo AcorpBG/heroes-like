@@ -6197,6 +6197,25 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	}
 	Array coordinate_records = coordinate_vector_source.get("materialized_partial_coordinate_records", Array());
 	Array seed_initializations;
+	Array propagation_summaries;
+	Array candidate_low_words;
+	PackedInt32Array first_seed_path_costs;
+	PackedInt32Array first_seed_predecessor_x;
+	PackedInt32Array first_seed_predecessor_y;
+	PackedInt32Array first_seed_predecessor_level;
+	const int32_t tile_count = width * height * level_count;
+	const int32_t expected_grid_size = tile_count;
+	PackedInt32Array repaint_grid = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array());
+	PackedInt32Array terrain_codes = terrain_fill.get("terrain_code_u16", PackedInt32Array());
+	const bool propagation_grid_available = width > 0
+			&& height > 0
+			&& level_count > 0
+			&& repaint_grid.size() == expected_grid_size
+			&& terrain_codes.size() == expected_grid_size;
+	int32_t total_candidate_low_word_count = 0;
+	int32_t total_candidate_accept_count = 0;
+	int32_t total_reached_cell_count = 0;
+	int32_t total_relaxed_edge_count = 0;
 	const int32_t seed_initialization_count = std::max(0, partial_record_count - 1);
 	for (int32_t seed_index = 0; seed_index < seed_initialization_count && seed_index < coordinate_records.size(); ++seed_index) {
 		if (Variant(coordinate_records[seed_index]).get_type() != Variant::DICTIONARY) {
@@ -6223,6 +6242,124 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 		item["predecessor_after_seed"] = Array::make(-1, -1, -1);
 		item["materializes_neighbor_propagation"] = false;
 		seed_initializations.append(item);
+
+		if (!propagation_grid_available || !in_bounds) {
+			continue;
+		}
+		PackedInt32Array costs;
+		PackedInt32Array predecessor_x;
+		PackedInt32Array predecessor_y;
+		PackedInt32Array predecessor_level;
+		costs.resize(tile_count);
+		predecessor_x.resize(tile_count);
+		predecessor_y.resize(tile_count);
+		predecessor_level.resize(tile_count);
+		std::vector<uint8_t> queued(size_t(tile_count), 0);
+		std::vector<int32_t> queue;
+		queue.reserve(size_t(tile_count));
+		for (int32_t index = 0; index < tile_count; ++index) {
+			costs.set(index, 0x7d00);
+			predecessor_x.set(index, -1);
+			predecessor_y.set(index, -1);
+			predecessor_level.set(index, -1);
+		}
+		costs.set(flat_index, 0);
+		queue.push_back(flat_index);
+		queued[size_t(flat_index)] = 1;
+		int32_t relaxed_edges = 0;
+		for (size_t cursor = 0; cursor < queue.size(); ++cursor) {
+			const int32_t current_flat = queue[cursor];
+			queued[size_t(current_flat)] = 0;
+			const int32_t current_x = current_flat % width;
+			const int32_t current_y = (current_flat / width) % height;
+			const int32_t current_level = current_flat / (width * height);
+			const int32_t current_cost = int32_t(costs[current_flat]) & 0xffff;
+			for (int32_t direction_index = direction_count - 1; direction_index >= 0; --direction_index) {
+				const int32_t nx = current_x + direction_dx[direction_index];
+				const int32_t ny = current_y + direction_dy[direction_index];
+				const int32_t nl = current_level;
+				if (nx < 0 || ny < 0 || nx >= width || ny >= height || nl < 0 || nl >= level_count) {
+					continue;
+				}
+				const int32_t target_flat = ((nl * height + ny) * width + nx);
+				const int32_t terrain_class = int32_t(terrain_codes[target_flat]) & 0x3f;
+				if (terrain_class == 8 || terrain_class == 9 || int32_t(repaint_grid[target_flat]) == 0) {
+					continue;
+				}
+				const int32_t step_cost = (direction_index & 1) != 0 ? 0x3c : 0x14;
+				const int32_t computed_cost = current_cost + step_cost;
+				if (computed_cost >= (int32_t(costs[target_flat]) & 0xffff)) {
+					continue;
+				}
+				costs.set(target_flat, computed_cost);
+				predecessor_x.set(target_flat, current_x);
+				predecessor_y.set(target_flat, current_y);
+				predecessor_level.set(target_flat, current_level);
+				relaxed_edges += 1;
+				if (queued[size_t(target_flat)] == 0) {
+					queue.push_back(target_flat);
+					queued[size_t(target_flat)] = 1;
+				}
+			}
+		}
+		int32_t reached_cells = 0;
+		int32_t max_reached_cost = 0;
+		for (int32_t index = 0; index < tile_count; ++index) {
+			const int32_t cell_cost = int32_t(costs[index]) & 0xffff;
+			if (cell_cost != 0x7d00) {
+				reached_cells += 1;
+				max_reached_cost = std::max(max_reached_cost, cell_cost);
+			}
+		}
+		total_reached_cell_count += reached_cells;
+		total_relaxed_edge_count += relaxed_edges;
+		Dictionary propagation;
+		propagation["seed_vector_index"] = seed_index;
+		propagation["seed_flat_cell_index"] = flat_index;
+		propagation["normal_neighbor_update_block"] = "0x4ab2d8..0x4ab33a";
+		propagation["direction_iteration_order"] = "0x4ab060 decrements index 7..0 over 0x5a2658";
+		propagation["reached_cell_count"] = reached_cells;
+		propagation["relaxed_edge_count"] = relaxed_edges;
+		propagation["max_reached_path_cost_low_word"] = max_reached_cost;
+		propagation["special_vector_updates_materialized"] = false;
+		Array candidate_preview;
+		for (int32_t candidate_index = seed_index + 1; candidate_index < partial_record_count && candidate_index < coordinate_records.size(); ++candidate_index) {
+			if (Variant(coordinate_records[candidate_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary candidate_coordinate = Dictionary(coordinate_records[candidate_index]);
+			const int32_t cx = int32_t(candidate_coordinate.get("x", -1));
+			const int32_t cy = int32_t(candidate_coordinate.get("y", -1));
+			const int32_t cl = int32_t(candidate_coordinate.get("level", -1));
+			const bool candidate_in_bounds = cx >= 0 && cx < width && cy >= 0 && cy < height && cl >= 0 && cl < level_count;
+			const int32_t candidate_flat = candidate_in_bounds ? ((cl * height + cy) * width + cx) : -1;
+			const int32_t candidate_low_word = candidate_in_bounds ? (int32_t(costs[candidate_flat]) & 0xffff) : 0x7d00;
+			const bool accepted = candidate_low_word <= 0x7530;
+			Dictionary candidate;
+			candidate["seed_vector_index"] = seed_index;
+			candidate["candidate_vector_index"] = candidate_index;
+			candidate["candidate_flat_cell_index"] = candidate_flat;
+			candidate["candidate_low_word"] = candidate_low_word;
+			candidate["candidate_accept_threshold"] = 0x7530;
+			candidate["candidate_accepts_0x4ab52a"] = accepted;
+			candidate["in_bounds"] = candidate_in_bounds;
+			total_candidate_low_word_count += 1;
+			if (accepted) {
+				total_candidate_accept_count += 1;
+			}
+			if (candidate_preview.size() < 6) {
+				candidate_preview.append(candidate);
+			}
+			candidate_low_words.append(candidate);
+		}
+		propagation["candidate_low_word_preview"] = candidate_preview;
+		propagation_summaries.append(propagation);
+		if (seed_index == 0) {
+			first_seed_path_costs = costs;
+			first_seed_predecessor_x = predecessor_x;
+			first_seed_predecessor_y = predecessor_y;
+			first_seed_predecessor_level = predecessor_level;
+		}
 	}
 	Dictionary seed;
 	seed["schema_id"] = "aurelion_h3maped_small_road_path_state_seed_v1";
@@ -6254,6 +6391,23 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	seed["seed_initialization_call_count"] = seed_initializations.size();
 	seed["seed_initialization_expected_outer_seed_count"] = seed_initialization_count;
 	seed["seed_initializations"] = seed_initializations;
+	seed["normal_neighbor_propagation_status"] = propagation_grid_available
+			? "h3maped_0x4aae7b_normal_neighbor_path_costs_materialized_special_vectors_pending"
+			: "h3maped_0x4aae7b_normal_neighbor_path_costs_blocked_missing_grid";
+	seed["normal_neighbor_propagation_seed_count"] = propagation_summaries.size();
+	seed["normal_neighbor_propagation_summaries"] = propagation_summaries;
+	seed["normal_neighbor_total_reached_cell_count"] = total_reached_cell_count;
+	seed["normal_neighbor_total_relaxed_edge_count"] = total_relaxed_edge_count;
+	seed["candidate_low_word_status"] = propagation_grid_available
+			? "h3maped_0x4ab52a_candidate_low_words_materialized_from_normal_0x4aae7b"
+			: "pending_0x4aae7b_path_cost_grid_materialization";
+	seed["candidate_low_word_count"] = total_candidate_low_word_count;
+	seed["candidate_accept_count"] = total_candidate_accept_count;
+	seed["candidate_low_words"] = candidate_low_words;
+	seed["first_seed_path_cost_low_word_u16"] = first_seed_path_costs;
+	seed["first_seed_predecessor_x_i32"] = first_seed_predecessor_x;
+	seed["first_seed_predecessor_y_i32"] = first_seed_predecessor_y;
+	seed["first_seed_predecessor_level_i32"] = first_seed_predecessor_level;
 	seed["predecessor_coordinate_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
 	seed["neighbor_direction_table_address"] = "0x5a2658";
 	seed["neighbor_direction_table_end_address"] = "0x5a2698";
