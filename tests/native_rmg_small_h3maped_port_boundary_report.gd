@@ -607,6 +607,7 @@ func _run() -> void:
 			or String(path_seed_update.get("predecessor_write_block", "")) != "0x4ab310..0x4ab31b" \
 			or String(path_seed_update.get("target_enqueue_block", "")) != "0x4ab31c..0x4ab32f" \
 			or String(path_seed_update.get("queue_cleanup_block", "")) != "0x4ab353..0x4ab36e" \
+			or String(path_seed_update.get("seed_initialization_status", "")) != "h3maped_0x4aae7b_seed_cell_initialization_materialized_propagation_pending" \
 			or bool(path_seed_update.get("materializes_road_geometry", true)):
 		_fail("The clean h3maped inspection report did not expose the recovered 0x4aae7b update rule: %s" % JSON.stringify(path_seed_update))
 		return
@@ -663,6 +664,21 @@ func _run() -> void:
 			"road_coordinate_vector_source": road_coordinate_vector_source,
 		}))
 		return
+	var seed_initializations: Array = path_seed_update.get("seed_initializations", [])
+	if int(path_seed_update.get("seed_initialization_call_count", -1)) != road_coordinate_record_count - 1 \
+			or int(path_seed_update.get("seed_initialization_expected_outer_seed_count", -1)) != road_coordinate_record_count - 1 \
+			or seed_initializations.size() != road_coordinate_record_count - 1:
+		_fail("0x4aae7b seed-cell initialization count did not match the 0x4ab52a outer seed loop: %s" % JSON.stringify(path_seed_update))
+		return
+	for seed_record_index in [0, seed_initializations.size() - 1]:
+		var seed_init: Dictionary = seed_initializations[seed_record_index] if seed_initializations[seed_record_index] is Dictionary else {}
+		if String(seed_init.get("seed_write_block", "")) != "0x4aaedc..0x4aaf0e" \
+				or int(seed_init.get("path_cost_low_word_after_seed", -1)) != 0 \
+				or seed_init.get("predecessor_after_seed", []) != [-1, -1, -1] \
+				or not bool(seed_init.get("in_bounds", false)) \
+				or bool(seed_init.get("materializes_neighbor_propagation", true)):
+			_fail("0x4aae7b seed-cell initialization drifted from executable semantics: %s" % JSON.stringify(seed_init))
+			return
 	if int(road_pair_iteration.get("selected_road_type", 0)) != 3:
 		_fail("Recovered 0x4ab52a seed-1 road type selection drifted from the current h3maped RNG replay: %s" % JSON.stringify(road_pair_iteration))
 		return
@@ -739,6 +755,7 @@ func _run() -> void:
 		"tile_byte_writeout_status": terrain_fill.get("tile_byte_writeout_status", ""),
 		"road_pair_iteration_status": road_pair_iteration.get("status", ""),
 		"path_state_reset_status": path_state_reset.get("status", ""),
+		"path_state_seed_initialization_count": path_seed_update.get("seed_initialization_call_count", 0),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
 		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),
