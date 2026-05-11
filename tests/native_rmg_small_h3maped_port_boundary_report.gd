@@ -613,6 +613,36 @@ func _run() -> void:
 	var road_coordinate_vector_source: Dictionary = selected_payload.get("road_coordinate_vector_source", {}) if selected_payload.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
+	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
+	var reset_pred_x: PackedInt32Array = path_state_reset.get("predecessor_x_i32", PackedInt32Array())
+	var reset_pred_y: PackedInt32Array = path_state_reset.get("predecessor_y_i32", PackedInt32Array())
+	var reset_pred_level: PackedInt32Array = path_state_reset.get("predecessor_level_i32", PackedInt32Array())
+	var reset_costs: PackedInt32Array = path_state_reset.get("path_cost_low_word_u16", PackedInt32Array())
+	var reset_materialized: PackedInt32Array = path_state_reset.get("materialized_bit25_grid_u8", PackedInt32Array())
+	if String(path_state_reset.get("status", "")) != "h3maped_0x4aae2f_path_state_reset_grid_materialized_road_seed_pending" \
+			or reset_pred_x.size() != 1296 \
+			or reset_pred_y.size() != 1296 \
+			or reset_pred_level.size() != 1296 \
+			or reset_costs.size() != 1296 \
+			or reset_materialized.size() != 1296:
+		_fail("The clean h3maped report did not materialize the 0x4aae2f path-state reset arrays: %s" % JSON.stringify({
+			"status": path_state_reset.get("status", ""),
+			"predecessor_x_count": reset_pred_x.size(),
+			"predecessor_y_count": reset_pred_y.size(),
+			"predecessor_level_count": reset_pred_level.size(),
+			"path_cost_count": reset_costs.size(),
+			"materialized_count": reset_materialized.size(),
+		}))
+		return
+	for reset_index in [0, 431, 1295]:
+		if int(reset_pred_x[reset_index]) != -1 or int(reset_pred_y[reset_index]) != -1 or int(reset_pred_level[reset_index]) != -1 or int(reset_costs[reset_index]) != 0x7d00:
+			_fail("0x4aae2f reset array values drifted from executable semantics at index %d: %s" % [reset_index, JSON.stringify({
+				"predecessor_x": reset_pred_x[reset_index],
+				"predecessor_y": reset_pred_y[reset_index],
+				"predecessor_level": reset_pred_level[reset_index],
+				"path_cost_low_word": reset_costs[reset_index],
+			})])
+			return
 	var road_coordinate_record_count := int(road_coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1))
 	if String(road_pair_iteration.get("status", "")) != "h3maped_0x4ab52a_pair_iteration_ported_path_costs_pending" \
 			or String(road_pair_iteration.get("function_address", "")) != "0x4ab52a" \
@@ -708,6 +738,7 @@ func _run() -> void:
 		"terrain_art_index_flip_status": terrain_fill.get("terrain_art_index_flip_status", ""),
 		"tile_byte_writeout_status": terrain_fill.get("tile_byte_writeout_status", ""),
 		"road_pair_iteration_status": road_pair_iteration.get("status", ""),
+		"path_state_reset_status": path_state_reset.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
 		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),

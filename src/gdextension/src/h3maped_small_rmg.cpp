@@ -6112,9 +6112,27 @@ Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill
 	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
 	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
 	const int32_t tile_count = width * height * level_count;
+	PackedInt32Array predecessor_x;
+	PackedInt32Array predecessor_y;
+	PackedInt32Array predecessor_level;
+	PackedInt32Array path_cost_low_word;
+	PackedInt32Array materialized_bit25;
+	predecessor_x.resize(tile_count);
+	predecessor_y.resize(tile_count);
+	predecessor_level.resize(tile_count);
+	path_cost_low_word.resize(tile_count);
+	materialized_bit25.resize(tile_count);
+	PackedInt32Array repaint_grid = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array());
+	for (int32_t index = 0; index < tile_count; ++index) {
+		predecessor_x.set(index, -1);
+		predecessor_y.set(index, -1);
+		predecessor_level.set(index, -1);
+		path_cost_low_word.set(index, 0x7d00);
+		materialized_bit25.set(index, index < repaint_grid.size() && int32_t(repaint_grid[index]) != 0 ? 1 : 0);
+	}
 	Dictionary reset;
 	reset["schema_id"] = "aurelion_h3maped_small_road_path_state_reset_v1";
-	reset["status"] = "h3maped_0x4aae2f_path_state_reset_ported_road_seed_and_toolkit_pending";
+	reset["status"] = "h3maped_0x4aae2f_path_state_reset_grid_materialized_road_seed_pending";
 	reset["function_address"] = "0x4aae2f";
 	reset["source"] = "Recovered from h3maped.exe: loop width*height*levels over generated cells, write -1 to cell+0x10/+0x14/+0x18, and force cell+0x1c low word to 0x7d00 while preserving the upper word.";
 	reset["generated_cell_base_offset"] = "generator+0x14";
@@ -6132,9 +6150,22 @@ Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill
 	reset["cell_state_low_word_after_reset_hex"] = "0x7d00";
 	reset["cell_state_low_word_after_reset"] = 0x7d00;
 	reset["preserves_cell_state_upper_word"] = true;
+	reset["predecessor_x_i32"] = predecessor_x;
+	reset["predecessor_y_i32"] = predecessor_y;
+	reset["predecessor_level_i32"] = predecessor_level;
+	reset["path_cost_low_word_u16"] = path_cost_low_word;
+	reset["materialized_bit25_grid_u8"] = materialized_bit25;
+	reset["predecessor_array_count"] = predecessor_x.size();
+	reset["path_cost_array_count"] = path_cost_low_word.size();
+	reset["materialized_bit25_count"] = materialized_bit25.size();
+	reset["materialized_bit25_source"] = "carried from 0x4a325d/0x4a3f27 zone repaint-member grid as the current clean generated-cell materialization boundary";
 	reset["path_seed_status_after_reset"] = "pending_0x4aae7b_coordinate_vector_seed";
 	reset["road_toolkit_status_after_reset"] = "pending_0x4b4243_road_toolkit_port";
-	reset["signature"] = h3maped_hash32_hex(String("h3maped_4aae2f_path_state_reset:") + String::num_int64(width) + ":" + String::num_int64(height) + ":" + String::num_int64(level_count));
+	reset["signature"] = h3maped_hash32_hex(String("h3maped_4aae2f_path_state_reset:")
+			+ String::num_int64(width) + ":"
+			+ String::num_int64(height) + ":"
+			+ String::num_int64(level_count) + ":"
+			+ String::num_int64(tile_count));
 	return reset;
 }
 
