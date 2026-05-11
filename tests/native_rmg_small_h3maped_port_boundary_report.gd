@@ -560,195 +560,18 @@ func _run() -> void:
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
-	if not bool(generated.get("ok", false)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_phase_package_adoption_partial":
-		_fail("Small native catalog-auto generation must adopt only the currently ported h3maped phases: %s" % JSON.stringify({
+	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
+		_fail("Small native catalog-auto generation must stay blocked until the clean h3maped phases can materialize complete maps: %s" % JSON.stringify({
 			"ok": generated.get("ok", false),
 			"status": generated.get("status", ""),
 			"generation_status": generated.get("generation_status", ""),
+			"full_generation_status": generated.get("full_generation_status", ""),
 			"error_code": generated.get("error_code", ""),
 		}))
 		return
-	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
-		_fail("Materialized h3maped small payload must validate as a package document without authored writeback: %s" % JSON.stringify({
-			"validation_status": generated.get("validation_status", ""),
-			"no_authored_writeback": generated.get("no_authored_writeback", false),
-			"validation_report": generated.get("validation_report", {}),
-		}))
-		return
-	if bool(generated.get("native_runtime_authoritative", true)) or bool(generated.get("full_parity_claim", true)):
-		_fail("Partial h3maped materialization must not claim runtime authority or full parity before roads/rewards/guards are ported: %s" % JSON.stringify({
-			"native_runtime_authoritative": generated.get("native_runtime_authoritative", true),
-			"full_parity_claim": generated.get("full_parity_claim", true),
-			"full_generation_status": generated.get("full_generation_status", ""),
-		}))
-		return
-	var generated_terrain: Dictionary = generated.get("terrain_grid", {})
-	if int(generated_terrain.get("tile_count", 0)) != 36 * 36 or String(generated_terrain.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port":
-		_fail("Materialized h3maped terrain grid did not come from the clean 0x4a3f27 port: %s" % JSON.stringify({
-			"tile_count": generated_terrain.get("tile_count", 0),
-			"generation_status": generated_terrain.get("generation_status", ""),
-		}))
-		return
-	if generated.get("town_records", []).size() != 3 or generated.get("object_placements", []).size() <= 0:
-		_fail("Materialized h3maped payload did not adopt town and mine records: %s" % JSON.stringify({
-			"town_count": generated.get("town_records", []).size(),
-			"object_count": generated.get("object_placements", []).size(),
-		}))
-		return
-	var connection_payload: Dictionary = generated.get("connection_payload", {}) if generated.get("connection_payload", {}) is Dictionary else {}
-	if int(connection_payload.get("connection_count", 0)) != int(selected_payload.get("link_count", 0)) \
-			or String(generated.get("connection_generation_status", "")) != "h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending":
-		_fail("Materialized h3maped payload did not preserve recovered 0x4a79a3 link payload semantics: %s" % JSON.stringify({
-			"connection_generation_status": generated.get("connection_generation_status", ""),
-			"connection_count": connection_payload.get("connection_count", 0),
-			"link_count": selected_payload.get("link_count", 0),
-		}))
-		return
-	var road_boundary: Dictionary = generated.get("road_adapter_boundary", {}) if generated.get("road_adapter_boundary", {}) is Dictionary else {}
-	if String(road_boundary.get("generation_status", "")) != "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending" \
-			or String(road_boundary.get("h3maped_phase_runner_address", "")) != "0x4ab52a" \
-			or String(road_boundary.get("h3maped_road_adapter_entry_address", "")) != "0x4ab37f" \
-			or String(road_boundary.get("h3maped_road_toolkit_entry_address", "")) != "0x4b4243" \
-			or int(road_boundary.get("coordinate_record_size_bytes", 0)) != 12 \
-			or int(road_boundary.get("candidate_low_word_threshold", 0)) != 0x7530 \
-			or not bool(road_boundary.get("no_synthetic_road_geometry", false)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x4ab52a/0x4ab37f road adapter boundary: %s" % JSON.stringify(road_boundary))
-		return
-	var path_state_reset: Dictionary = road_boundary.get("path_state_reset", {}) if road_boundary.get("path_state_reset", {}) is Dictionary else {}
-	if String(path_state_reset.get("status", "")) != "h3maped_0x4aae2f_path_state_reset_ported_road_seed_and_toolkit_pending" \
-			or int(path_state_reset.get("reset_cell_count", 0)) != 36 * 36 \
-			or int(path_state_reset.get("generated_cell_stride_bytes", 0)) != 0x30 \
-			or int(path_state_reset.get("cell_state_low_word_after_reset", 0)) != 0x7d00 \
-			or not bool(path_state_reset.get("preserves_cell_state_upper_word", false)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x4aae2f path-state reset: %s" % JSON.stringify(path_state_reset))
-		return
-	var path_state_seed: Dictionary = road_boundary.get("path_state_seed", {}) if road_boundary.get("path_state_seed", {}) is Dictionary else {}
-	if String(path_state_seed.get("status", "")) != "h3maped_0x4aae7b_path_state_seed_boundary_recovered_toolkit_pending" \
-			or String(path_state_seed.get("function_address", "")) != "0x4aae7b" \
-			or int(path_state_seed.get("coordinate_argument_size_bytes", 0)) != 12 \
-			or String(path_state_seed.get("neighbor_direction_table_address", "")) != "0x5a2658" \
-			or int(path_state_seed.get("default_neighbor_direction_count", 0)) != 8 \
-			or int(path_state_seed.get("metadata_reduced_neighbor_direction_count", 0)) != 5 \
-			or String(path_state_seed.get("cell_materialized_required_bit_offset", "")) != "cell+0x28 bit25" \
-			or String(path_state_seed.get("cell_object_present_bit_offset", "")) != "cell+0x28 bit22" \
-			or int(path_state_seed.get("normal_step_cost", 0)) != 20 \
-			or int(path_state_seed.get("odd_direction_step_cost", 0)) != 60 \
-			or int(path_state_seed.get("object_lane_step_cost", 0)) != 2 \
-			or bool(path_state_seed.get("materializes_road_geometry", true)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x4aae7b path-state seed boundary: %s" % JSON.stringify(path_state_seed))
-		return
-	var road_adapter_bridge: Dictionary = road_boundary.get("road_adapter_bridge", {}) if road_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
-	if String(road_adapter_bridge.get("status", "")) != "h3maped_0x4ab37f_road_adapter_bridge_recovered_toolkit_pending" \
-			or String(road_adapter_bridge.get("function_address", "")) != "0x4ab37f" \
-			or String(road_adapter_bridge.get("terrain_adapter_vtable_address", "")) != "0x540a14" \
-			or String(road_adapter_bridge.get("road_adapter_vtable_address", "")) != "0x540a34" \
-			or String(road_adapter_bridge.get("road_toolkit_entry_address", "")) != "0x4b4243" \
-			or String(road_adapter_bridge.get("road_toolkit_cleanup_address", "")) != "0x4b42c0" \
-			or String(road_adapter_bridge.get("terrain_adapter_destructor_address", "")) != "0x49a030" \
-			or int(road_adapter_bridge.get("generated_cell_stride_bytes", 0)) != 0x30 \
-			or int(road_adapter_bridge.get("stack_argument_count", 0)) != 4 \
-			or String(road_adapter_bridge.get("road_type_argument_stack_offset", "")) != "ebp+0x14" \
-			or bool(road_adapter_bridge.get("materializes_road_geometry", true)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x4ab37f road-adapter bridge: %s" % JSON.stringify(road_adapter_bridge))
-		return
-	var road_toolkit_entry: Dictionary = road_boundary.get("road_toolkit_entry", {}) if road_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
-	if String(road_toolkit_entry.get("status", "")) != "h3maped_0x4b4243_road_toolkit_entry_recovered_path_helpers_pending" \
-			or String(road_toolkit_entry.get("function_address", "")) != "0x4b4243" \
-			or String(road_toolkit_entry.get("initial_vtable_address", "")) != "0x5419d4" \
-			or String(road_toolkit_entry.get("runtime_vtable_address", "")) != "0x5419f4" \
-			or String(road_toolkit_entry.get("cleanup_address", "")) != "0x4b42c0" \
-			or String(road_toolkit_entry.get("line_initializer_address", "")) != "0x458d37" \
-			or String(road_toolkit_entry.get("line_visit_address", "")) != "0x458e61" \
-			or String(road_toolkit_entry.get("neighbor_direction_table_address", "")) != "0x5a5028" \
-			or int(road_toolkit_entry.get("neighbor_direction_record_count", 0)) != 8 \
-			or int(road_toolkit_entry.get("neighbor_direction_record_size_bytes", 0)) != 8 \
-			or bool(road_toolkit_entry.get("materializes_road_geometry", true)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x4b4243 road-toolkit entry boundary: %s" % JSON.stringify(road_toolkit_entry))
-		return
-	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
-	if String(road_line_visit.get("status", "")) != "h3maped_0x458e61_line_visit_boundary_recovered_adapter_materialization_pending" \
-			or String(road_line_visit.get("function_address", "")) != "0x458e61" \
-			or String(road_line_visit.get("probe_virtual_slot", "")) != "+0x14" \
-			or String(road_line_visit.get("probe_virtual_address_for_road_adapter", "")) != "0x49af7b" \
-			or String(road_line_visit.get("candidate_mark_virtual_slot", "")) != "+0x08" \
-			or String(road_line_visit.get("candidate_mark_virtual_address_for_road_adapter", "")) != "0x49aec5" \
-			or String(road_line_visit.get("final_write_helper_address", "")) != "0x458a2f" \
-			or String(road_line_visit.get("neighbor_mask_helper_address", "")) != "0x4587f7" \
-			or String(road_line_visit.get("final_write_virtual_address_for_road_adapter", "")) != "0x49ae47" \
-			or String(road_line_visit.get("readback_virtual_address_for_road_adapter", "")) != "0x49af1d" \
-			or String(road_line_visit.get("road_art_selection_source_table", "")) != "0x538a04..0x538a8f" \
-			or String(road_line_visit.get("road_art_pair_table_address", "")) != "0x538a84" \
-			or bool(road_line_visit.get("materializes_road_geometry", true)):
-		_fail("Materialized h3maped payload did not expose the recovered 0x458e61 line-visit adapter boundary: %s" % JSON.stringify(road_line_visit))
-		return
-	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
-	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized" \
-			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
-			or String(coordinate_vector_source.get("vector_begin_offset", "")) != "+0x14b4" \
-			or String(coordinate_vector_source.get("vector_end_offset", "")) != "+0x14b8" \
-			or String(coordinate_vector_source.get("coordinate_push_helper_address", "")) != "0x4ae1fd" \
-			or String(coordinate_vector_source.get("direct_town_append_address", "")) != "0x4a959b" \
-			or String(coordinate_vector_source.get("generic_object_append_address", "")) != "0x4a6bb4" \
-			or int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0)) != generated.get("town_records", []).size() + generated.get("object_placements", []).size() \
-			or bool(coordinate_vector_source.get("complete_executable_vector_claim", true)):
-		_fail("Materialized h3maped payload did not expose the recovered +0x14b0 road coordinate vector source ledger: %s" % JSON.stringify(coordinate_vector_source))
-		return
-	var partial_vector_records: Array = coordinate_vector_source.get("materialized_partial_coordinate_records", [])
-	if partial_vector_records.size() != int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1)) \
-			or int(coordinate_vector_source.get("materialized_partial_coordinate_byte_count", -1)) != partial_vector_records.size() * 12 \
-			or int(coordinate_vector_source.get("materialized_partial_vector_end_byte_offset", -1)) != partial_vector_records.size() * 12:
-		_fail("Materialized h3maped +0x14b0 partial vector byte/count ledger drifted: %s" % JSON.stringify(coordinate_vector_source))
-		return
-	if partial_vector_records.size() != generated.get("town_records", []).size() + generated.get("object_placements", []).size():
-		_fail("Materialized h3maped +0x14b0 partial vector must include adopted towns and mines only: %s" % JSON.stringify({
-			"vector_count": partial_vector_records.size(),
-			"town_count": generated.get("town_records", []).size(),
-			"mine_count": generated.get("object_placements", []).size(),
-		}))
-		return
-	var first_vector_record: Dictionary = partial_vector_records[0] if partial_vector_records.size() > 0 and partial_vector_records[0] is Dictionary else {}
-	var first_town_record: Dictionary = generated.get("town_records", [])[0] if generated.get("town_records", []).size() > 0 and generated.get("town_records", [])[0] is Dictionary else {}
-	if String(first_vector_record.get("source_kind", "")) != "town" \
-			or String(first_vector_record.get("append_address", "")) != "0x4a959b" \
-			or int(first_vector_record.get("record_size_bytes", 0)) != 12 \
-			or int(first_vector_record.get("vector_index", -1)) != 0 \
-			or int(first_vector_record.get("byte_offset_from_begin", -1)) != 0 \
-			or int(first_vector_record.get("x", -1)) != int(first_town_record.get("x", -2)) \
-			or int(first_vector_record.get("y", -1)) != int(first_town_record.get("y", -2)) \
-			or int(first_vector_record.get("level", -1)) != int(first_town_record.get("level", -2)):
-		_fail("First materialized h3maped +0x14b0 vector entry did not mirror the first adopted town record: %s" % JSON.stringify({
-			"vector_record": first_vector_record,
-			"town_record": first_town_record,
-		}))
-		return
-	var last_vector_record: Dictionary = partial_vector_records[partial_vector_records.size() - 1] if partial_vector_records.size() > 0 and partial_vector_records[partial_vector_records.size() - 1] is Dictionary else {}
-	if String(last_vector_record.get("source_kind", "")) != "mine" \
-			or String(last_vector_record.get("append_address", "")) != "0x4a6bb4" \
-			or int(last_vector_record.get("vector_index", -1)) != partial_vector_records.size() - 1 \
-			or int(last_vector_record.get("byte_offset_from_begin", -1)) != (partial_vector_records.size() - 1) * 12 \
-			or String(last_vector_record.get("executable_adjustment_status", "")) != "pending_exact_h3maped_object_metadata_offset_application":
-		_fail("Last materialized h3maped +0x14b0 vector entry did not preserve the mine append boundary: %s" % JSON.stringify(last_vector_record))
-		return
-	if int(road_boundary.get("partial_coordinate_record_count", -1)) != partial_vector_records.size() \
-			or int(road_boundary.get("partial_coordinate_byte_count", -1)) != partial_vector_records.size() * 12 \
-			or String(road_boundary.get("partial_coordinate_vector_status", "")) != String(coordinate_vector_source.get("status", "")):
-		_fail("Road adapter boundary did not carry the materialized partial +0x14b0 vector counts forward: %s" % JSON.stringify(road_boundary))
-		return
-	if int(path_state_seed.get("partial_coordinate_record_count", -1)) != partial_vector_records.size() \
-			or not bool(path_state_seed.get("complete_coordinate_vector_required", false)) \
-			or bool(path_state_seed.get("complete_coordinate_vector_claim", true)):
-		_fail("0x4aae7b path-state seed boundary did not preserve the partial-vector blocker: %s" % JSON.stringify(path_state_seed))
-		return
-	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
-	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:
-		_fail("The clean h3maped reset path must not emit fake road geometry before 0x4b4243 is ported: %s" % JSON.stringify(road_network))
-		return
-	if String(generated.get("road_generation_status", "")) != "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending" \
-			or String(generated.get("guard_generation_status", "")) != "h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending":
-		_fail("Materialized h3maped payload must keep unported road/guard object phases explicit: %s" % JSON.stringify({
-			"road_generation_status": generated.get("road_generation_status", ""),
-			"guard_generation_status": generated.get("guard_generation_status", ""),
-		}))
+	if String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete" \
+			or bool(Dictionary(generated.get("h3maped_small_port", {})).get("runtime_generation_allowed", true)):
+		_fail("Blocked small generation must expose the inspection report and keep runtime generation disabled: %s" % JSON.stringify(generated))
 		return
 	var medium_config := config.duplicate(true)
 	medium_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
@@ -804,19 +627,8 @@ func _run() -> void:
 		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
 		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
 		"generation_status": generated.get("status", ""),
-		"generated_validation_status": generated.get("validation_status", ""),
-		"generated_town_count": generated.get("town_records", []).size(),
-		"generated_mine_count": generated.get("object_placements", []).size(),
-		"generated_connection_count": connection_payload.get("connection_count", 0),
-		"generated_connection_status": generated.get("connection_generation_status", ""),
-		"road_adapter_boundary_status": road_boundary.get("generation_status", ""),
-		"path_state_reset_status": path_state_reset.get("status", ""),
-		"path_state_seed_status": path_state_seed.get("status", ""),
-		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
-		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
-		"road_line_visit_status": road_line_visit.get("status", ""),
-		"road_coordinate_vector_source_status": coordinate_vector_source.get("status", ""),
-		"road_coordinate_vector_partial_count": coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0),
+		"generation_error_code": generated.get("error_code", ""),
+		"runtime_generation_allowed": Dictionary(generated.get("h3maped_small_port", {})).get("runtime_generation_allowed", true),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)
