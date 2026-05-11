@@ -6111,6 +6111,54 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	return seed;
 }
 
+Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_fill) {
+	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	Dictionary bridge;
+	bridge["schema_id"] = "aurelion_h3maped_small_road_adapter_bridge_v1";
+	bridge["status"] = "h3maped_0x4ab37f_road_adapter_bridge_recovered_toolkit_pending";
+	bridge["function_address"] = "0x4ab37f";
+	bridge["source"] = "Recovered from h3maped.exe: ecx is the generator, four stack arguments are a coordinate triplet plus selected road type, the function builds a generated-cell terrain adapter and road adapter, calls 0x4b4243, then follows predecessor coordinates until the path chain terminates.";
+	bridge["generator_argument_register"] = "ecx";
+	bridge["stack_argument_count"] = 4;
+	bridge["coordinate_argument_stack_offsets"] = Array::make("ebp+0x08", "ebp+0x0c", "ebp+0x10");
+	bridge["road_type_argument_stack_offset"] = "ebp+0x14";
+	bridge["return_type"] = "bool_al";
+	bridge["generated_cell_base_offset"] = "generator+0x14";
+	bridge["generated_cell_stride_bytes"] = 0x30;
+	bridge["width"] = width;
+	bridge["height"] = height;
+	bridge["level_count"] = level_count;
+	bridge["terrain_adapter_stack_base"] = "ebp-0x50";
+	bridge["terrain_adapter_vtable_address"] = "0x540a14";
+	bridge["terrain_adapter_cell_base_field"] = "ebp-0x48";
+	bridge["terrain_adapter_width_field"] = "ebp-0x44";
+	bridge["terrain_adapter_height_field"] = "ebp-0x40";
+	bridge["terrain_adapter_level_count_field"] = "ebp-0x3c";
+	bridge["road_adapter_stack_base"] = "ebp-0x1c";
+	bridge["road_adapter_vtable_address"] = "0x540a34";
+	bridge["road_adapter_terrain_adapter_pointer_field"] = "ebp-0x18";
+	bridge["road_adapter_start_coordinate_fields"] = Array::make("ebp-0x24", "ebp-0x20");
+	bridge["road_toolkit_entry_address"] = "0x4b4243";
+	bridge["road_toolkit_cleanup_address"] = "0x4b42c0";
+	bridge["terrain_adapter_destructor_address"] = "0x49a030";
+	bridge["path_predecessor_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
+	bridge["path_cost_offset"] = "+0x1c";
+	bridge["path_cost_low_word_mask_hex"] = "0xffff";
+	bridge["road_type_source_offset"] = "cell+0x24";
+	bridge["road_type_decode"] = "signed top nibble after (cell+0x24 << 2) >> 28";
+	bridge["path_follow_condition"] = "when decoded road type matches the selected road type and the current cell path-cost low word is nonzero, copy the current coordinate to the last-coordinate slot and replace the input coordinate with cell+0x10/+0x14/+0x18";
+	bridge["start_reached_condition"] = "same level and matching x or y against the saved start coordinate before cleanup";
+	bridge["materializes_road_geometry"] = false;
+	bridge["blocked_reason"] = "0x4ab37f constructs the adapters and invokes 0x4b4243, but the toolkit body that writes road cells/art is still not ported.";
+	bridge["signature"] = h3maped_hash32_hex(String("h3maped_4ab37f_road_adapter_bridge:")
+			+ String::num_int64(width) + ":"
+			+ String::num_int64(height) + ":"
+			+ String::num_int64(level_count));
+	return bridge;
+}
+
 Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
 	const int32_t x = int32_t(record.get("x", 0));
 	const int32_t y = int32_t(record.get("y", 0));
@@ -6235,6 +6283,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["path_state_reset"] = h3maped_path_state_reset_4aae2f_report(terrain_fill);
 	boundary["coordinate_vector_source"] = coordinate_vector_source;
 	boundary["path_state_seed"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
+	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
@@ -6253,7 +6302,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["generated_road_segment_count"] = 0;
 	boundary["generated_road_cell_count"] = 0;
 	boundary["no_synthetic_road_geometry"] = true;
-	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation boundary is recovered but not authoritative without the complete +0x14b0 coordinate vector and the 0x4b4243 road toolkit, so the reset path must not emit fake road loops.";
+	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation and 0x4ab37f adapter bridge boundaries are recovered but not authoritative without the complete +0x14b0 coordinate vector and the 0x4b4243 road toolkit body, so the reset path must not emit fake road loops.";
 	boundary["cell_0x24_road_type_bits"] = "26..29";
 	boundary["cell_0x28_road_art_bits"] = "0..7";
 	boundary["cell_0x28_road_flip_bits"] = "19..20";
