@@ -802,6 +802,8 @@ func _run() -> void:
 	var road_neighbor_dy: PackedInt32Array = road_line_visit.get("neighbor_direction_dy_i32", PackedInt32Array())
 	var road_neighbor_records: Array = road_line_visit.get("neighbor_direction_records", [])
 	var road_shape_records: Array = road_line_visit.get("road_art_shape_records", [])
+	var road_art_variant_sequence: PackedInt32Array = road_line_visit.get("road_art_variant_class_sequence", PackedInt32Array())
+	var road_art_variant_buckets: Array = road_line_visit.get("road_art_variant_bucket_records", [])
 	var expected_road_dx := [0, 1, 1, 1, 0, -1, -1, -1]
 	var expected_road_dy := [-1, -1, 0, 1, 1, 1, 0, -1]
 	if String(road_toolkit_entry.get("neighbor_direction_table_initializer", "")) != "0x4bf38b..0x4bf3f3" \
@@ -810,6 +812,11 @@ func _run() -> void:
 			or road_neighbor_dy.size() != 8 \
 			or road_neighbor_records.size() != 8 \
 			or road_shape_records.size() != 4 \
+			or String(road_line_visit.get("road_art_variant_initializer_address", "")) != "0x4b41f4..0x4b4200" \
+			or String(road_line_visit.get("road_art_variant_source_table_address", "")) != "0x54198c" \
+			or String(road_line_visit.get("road_art_variant_runtime_table_address", "")) != "0x5a2f80" \
+			or road_art_variant_sequence.size() != 17 \
+			or road_art_variant_buckets.size() != 9 \
 			or int(road_line_visit.get("road_art_shape_record_size_bytes", 0)) != 0x20 \
 			or String(road_line_visit.get("final_write_cell_0x24_mask_hex", "")) != "0xc3ffffff" \
 			or int(road_line_visit.get("final_write_cell_0x24_road_type_shift", -1)) != 26 \
@@ -846,6 +853,21 @@ func _run() -> void:
 			if int(shape_offsets[shape_offset_index]) != int(expected_shape_offsets[shape_index][shape_offset_index]):
 				_fail("0x538a04 road-shape offset drifted at record %d offset %d: %s" % [shape_index, shape_offset_index, JSON.stringify(road_line_visit)])
 				return
+	var expected_variant_sequence := [4, 4, 5, 5, 5, 5, 6, 6, 7, 7, 2, 2, 3, 3, 0, 1, 8]
+	for variant_index in range(expected_variant_sequence.size()):
+		if int(road_art_variant_sequence[variant_index]) != int(expected_variant_sequence[variant_index]):
+			_fail("0x54198c road-art variant class sequence drifted at index %d: %s" % [variant_index, JSON.stringify(road_line_visit)])
+			return
+	var expected_bucket_starts := [14, 15, 10, 12, 0, 2, 6, 8, 16]
+	var expected_bucket_counts := [1, 1, 2, 2, 2, 4, 2, 2, 1]
+	for art_class in range(9):
+		var bucket: Dictionary = road_art_variant_buckets[art_class] if road_art_variant_buckets[art_class] is Dictionary else {}
+		if int(bucket.get("art_class", -1)) != art_class \
+				or int(bucket.get("first_variant_index", -1)) != int(expected_bucket_starts[art_class]) \
+				or int(bucket.get("variant_count", -1)) != int(expected_bucket_counts[art_class]) \
+				or int(bucket.get("runtime_record_offset_bytes", -1)) != 0x08 + art_class * 0x08:
+			_fail("0x458755 road-art variant bucket drifted for art class %d: %s" % [art_class, JSON.stringify(road_line_visit)])
+			return
 	for seed_record_index in [0, seed_initializations.size() - 1]:
 		var seed_init: Dictionary = seed_initializations[seed_record_index] if seed_initializations[seed_record_index] is Dictionary else {}
 		if String(seed_init.get("seed_write_block", "")) != "0x4aaedc..0x4aaf0e" \
