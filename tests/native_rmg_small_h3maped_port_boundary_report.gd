@@ -636,6 +636,7 @@ func _run() -> void:
 	var road_coordinate_vector_source: Dictionary = selected_payload.get("road_coordinate_vector_source", {}) if selected_payload.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
+	var road_adapter_bridge: Dictionary = road_adapter_boundary.get("road_adapter_bridge", {}) if road_adapter_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
 	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
 	var reset_pred_x: PackedInt32Array = path_state_reset.get("predecessor_x_i32", PackedInt32Array())
 	var reset_pred_y: PackedInt32Array = path_state_reset.get("predecessor_y_i32", PackedInt32Array())
@@ -697,6 +698,7 @@ func _run() -> void:
 		return
 	var propagation_summaries: Array = path_seed_update.get("normal_neighbor_propagation_summaries", [])
 	var candidate_low_words: Array = path_seed_update.get("candidate_low_words", [])
+	var predecessor_chains: Array = path_seed_update.get("predecessor_chain_records", [])
 	var first_seed_costs: PackedInt32Array = path_seed_update.get("first_seed_path_cost_low_word_u16", PackedInt32Array())
 	var first_seed_pred_x: PackedInt32Array = path_seed_update.get("first_seed_predecessor_x_i32", PackedInt32Array())
 	var first_seed_pred_y: PackedInt32Array = path_seed_update.get("first_seed_predecessor_y_i32", PackedInt32Array())
@@ -708,6 +710,10 @@ func _run() -> void:
 			or int(path_seed_update.get("candidate_low_word_count", -1)) != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
 			or candidate_low_words.size() != int((road_coordinate_record_count * (road_coordinate_record_count - 1)) / 2) \
 			or int(path_seed_update.get("candidate_accept_count", 0)) <= 0 \
+			or String(path_seed_update.get("predecessor_chain_status", "")) != "h3maped_0x4ab37f_predecessor_chains_materialized_from_normal_0x4aae7b" \
+			or int(path_seed_update.get("predecessor_chain_count", -1)) != int(path_seed_update.get("candidate_accept_count", -2)) \
+			or predecessor_chains.size() != int(path_seed_update.get("candidate_accept_count", -2)) \
+			or bool(path_seed_update.get("predecessor_chain_materializes_road_geometry", true)) \
 			or first_seed_costs.size() != 1296 \
 			or first_seed_pred_x.size() != 1296 \
 			or first_seed_pred_y.size() != 1296 \
@@ -725,6 +731,21 @@ func _run() -> void:
 	if int(first_candidate_low_word.get("candidate_low_word", 0x7d00)) > 0x7530 \
 			or not bool(first_candidate_low_word.get("candidate_accepts_0x4ab52a", false)):
 		_fail("0x4ab52a candidate low-word threshold semantics drifted after normal path propagation: %s" % JSON.stringify(first_candidate_low_word))
+		return
+	var first_predecessor_chain: Dictionary = predecessor_chains[0] if predecessor_chains[0] is Dictionary else {}
+	if String(first_predecessor_chain.get("predecessor_chain_status", "")) != "h3maped_0x4ab37f_predecessor_chain_reaches_seed" \
+			or not bool(first_predecessor_chain.get("predecessor_chain_reaches_seed", false)) \
+			or int(first_predecessor_chain.get("predecessor_chain_step_count", 0)) <= 0 \
+			or bool(first_predecessor_chain.get("road_cell_mutation_materialized", true)) \
+			or String(road_adapter_bridge.get("status", "")) != "h3maped_0x4ab37f_predecessor_chains_materialized_toolkit_pending" \
+			or not bool(road_adapter_bridge.get("predecessor_chain_materialized", false)) \
+			or int(road_adapter_bridge.get("predecessor_chain_count", -1)) != predecessor_chains.size() \
+			or bool(road_adapter_bridge.get("materializes_road_geometry", true)):
+		_fail("0x4ab37f predecessor-chain materialization did not stay aligned with the recovered path-state arrays: %s" % JSON.stringify({
+			"first_predecessor_chain": first_predecessor_chain,
+			"road_adapter_bridge": road_adapter_bridge,
+			"predecessor_chain_count": predecessor_chains.size(),
+		}))
 		return
 	for seed_record_index in [0, seed_initializations.size() - 1]:
 		var seed_init: Dictionary = seed_initializations[seed_record_index] if seed_initializations[seed_record_index] is Dictionary else {}
@@ -815,6 +836,8 @@ func _run() -> void:
 		"path_state_normal_propagation_status": path_seed_update.get("normal_neighbor_propagation_status", ""),
 		"path_state_candidate_low_word_count": path_seed_update.get("candidate_low_word_count", 0),
 		"path_state_candidate_accept_count": path_seed_update.get("candidate_accept_count", 0),
+		"path_state_predecessor_chain_count": path_seed_update.get("predecessor_chain_count", 0),
+		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
 		"selected_road_type": road_pair_iteration.get("selected_road_type", 0),

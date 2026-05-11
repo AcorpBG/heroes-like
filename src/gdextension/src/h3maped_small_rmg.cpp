@@ -6199,6 +6199,7 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	Array seed_initializations;
 	Array propagation_summaries;
 	Array candidate_low_words;
+	Array predecessor_chain_records;
 	PackedInt32Array first_seed_path_costs;
 	PackedInt32Array first_seed_predecessor_x;
 	PackedInt32Array first_seed_predecessor_y;
@@ -6216,6 +6217,8 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	int32_t total_candidate_accept_count = 0;
 	int32_t total_reached_cell_count = 0;
 	int32_t total_relaxed_edge_count = 0;
+	int32_t total_predecessor_chain_cell_visits = 0;
+	int32_t max_predecessor_chain_step_count = 0;
 	const int32_t seed_initialization_count = std::max(0, partial_record_count - 1);
 	for (int32_t seed_index = 0; seed_index < seed_initialization_count && seed_index < coordinate_records.size(); ++seed_index) {
 		if (Variant(coordinate_records[seed_index]).get_type() != Variant::DICTIONARY) {
@@ -6346,6 +6349,66 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 			total_candidate_low_word_count += 1;
 			if (accepted) {
 				total_candidate_accept_count += 1;
+				Dictionary chain;
+				chain["seed_vector_index"] = seed_index;
+				chain["candidate_vector_index"] = candidate_index;
+				chain["seed_flat_cell_index"] = flat_index;
+				chain["candidate_flat_cell_index"] = candidate_flat;
+				chain["seed_coordinate_triplet"] = coordinate.get("coordinate_triplet", Array::make(x, y, level));
+				chain["candidate_coordinate_triplet"] = candidate_coordinate.get("coordinate_triplet", Array::make(cx, cy, cl));
+				chain["candidate_low_word"] = candidate_low_word;
+				chain["predecessor_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
+				chain["path_cost_offset"] = "+0x1c";
+				chain["walk_semantics"] = "0x4ab37f follows cell+0x10/+0x14/+0x18 predecessor coordinates while cell+0x1c low word remains nonzero";
+				chain["road_cell_mutation_materialized"] = false;
+				Array reverse_trace_preview;
+				int32_t trace_flat = candidate_flat;
+				int32_t step_count = 0;
+				bool reached_seed = trace_flat == flat_index;
+				bool broken_chain = false;
+				const int32_t max_trace_steps = tile_count + 1;
+				while (!reached_seed && !broken_chain && trace_flat >= 0 && trace_flat < tile_count && step_count < max_trace_steps) {
+					const int32_t trace_x = trace_flat % width;
+					const int32_t trace_y = (trace_flat / width) % height;
+					const int32_t trace_level = trace_flat / (width * height);
+					if (reverse_trace_preview.size() < 16) {
+						Dictionary trace_cell;
+						trace_cell["flat_cell_index"] = trace_flat;
+						trace_cell["x"] = trace_x;
+						trace_cell["y"] = trace_y;
+						trace_cell["level"] = trace_level;
+						trace_cell["path_cost_low_word"] = int32_t(costs[trace_flat]) & 0xffff;
+						reverse_trace_preview.append(trace_cell);
+					}
+					const int32_t px = int32_t(predecessor_x[trace_flat]);
+					const int32_t py = int32_t(predecessor_y[trace_flat]);
+					const int32_t pl = int32_t(predecessor_level[trace_flat]);
+					if (px < 0 || py < 0 || pl < 0 || px >= width || py >= height || pl >= level_count) {
+						broken_chain = true;
+						break;
+					}
+					trace_flat = ((pl * height + py) * width + px);
+					step_count += 1;
+					reached_seed = trace_flat == flat_index;
+				}
+				if (reached_seed && reverse_trace_preview.size() < 16) {
+					Dictionary seed_trace_cell;
+					seed_trace_cell["flat_cell_index"] = flat_index;
+					seed_trace_cell["x"] = x;
+					seed_trace_cell["y"] = y;
+					seed_trace_cell["level"] = level;
+					seed_trace_cell["path_cost_low_word"] = 0;
+					reverse_trace_preview.append(seed_trace_cell);
+				}
+				chain["predecessor_chain_status"] = reached_seed
+						? "h3maped_0x4ab37f_predecessor_chain_reaches_seed"
+						: (broken_chain ? "h3maped_0x4ab37f_predecessor_chain_broken" : "h3maped_0x4ab37f_predecessor_chain_guard_limit_hit");
+				chain["predecessor_chain_reaches_seed"] = reached_seed;
+				chain["predecessor_chain_step_count"] = step_count;
+				chain["reverse_trace_preview"] = reverse_trace_preview;
+				total_predecessor_chain_cell_visits += step_count + 1;
+				max_predecessor_chain_step_count = std::max(max_predecessor_chain_step_count, step_count);
+				predecessor_chain_records.append(chain);
 			}
 			if (candidate_preview.size() < 6) {
 				candidate_preview.append(candidate);
@@ -6404,6 +6467,14 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	seed["candidate_low_word_count"] = total_candidate_low_word_count;
 	seed["candidate_accept_count"] = total_candidate_accept_count;
 	seed["candidate_low_words"] = candidate_low_words;
+	seed["predecessor_chain_status"] = propagation_grid_available
+			? "h3maped_0x4ab37f_predecessor_chains_materialized_from_normal_0x4aae7b"
+			: "pending_0x4aae7b_path_cost_grid_materialization";
+	seed["predecessor_chain_count"] = predecessor_chain_records.size();
+	seed["predecessor_chain_records"] = predecessor_chain_records;
+	seed["predecessor_chain_total_cell_visits"] = total_predecessor_chain_cell_visits;
+	seed["predecessor_chain_max_step_count"] = max_predecessor_chain_step_count;
+	seed["predecessor_chain_materializes_road_geometry"] = false;
 	seed["first_seed_path_cost_low_word_u16"] = first_seed_path_costs;
 	seed["first_seed_predecessor_x_i32"] = first_seed_predecessor_x;
 	seed["first_seed_predecessor_y_i32"] = first_seed_predecessor_y;
@@ -6465,13 +6536,18 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	return seed;
 }
 
-Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_fill) {
+Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_fill, const Dictionary &path_seed_update) {
 	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
 	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
 	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	const int32_t predecessor_chain_count = int32_t(path_seed_update.get("predecessor_chain_count", 0));
+	const bool predecessor_chains_materialized = predecessor_chain_count > 0
+			&& String(path_seed_update.get("predecessor_chain_status", "")) == "h3maped_0x4ab37f_predecessor_chains_materialized_from_normal_0x4aae7b";
 	Dictionary bridge;
 	bridge["schema_id"] = "aurelion_h3maped_small_road_adapter_bridge_v1";
-	bridge["status"] = "h3maped_0x4ab37f_road_adapter_bridge_recovered_toolkit_pending";
+	bridge["status"] = predecessor_chains_materialized
+			? "h3maped_0x4ab37f_predecessor_chains_materialized_toolkit_pending"
+			: "h3maped_0x4ab37f_road_adapter_bridge_recovered_toolkit_pending";
 	bridge["function_address"] = "0x4ab37f";
 	bridge["source"] = "Recovered from h3maped.exe: ecx is the generator, four stack arguments are a coordinate triplet plus selected road type, the function builds a generated-cell terrain adapter and road adapter, calls 0x4b4243, then follows predecessor coordinates until the path chain terminates.";
 	bridge["generator_argument_register"] = "ecx";
@@ -6504,12 +6580,20 @@ Dictionary h3maped_road_adapter_bridge_4ab37f_report(const Dictionary &terrain_f
 	bridge["road_type_decode"] = "signed top nibble after (cell+0x24 << 2) >> 28";
 	bridge["path_follow_condition"] = "when decoded road type matches the selected road type and the current cell path-cost low word is nonzero, copy the current coordinate to the last-coordinate slot and replace the input coordinate with cell+0x10/+0x14/+0x18";
 	bridge["start_reached_condition"] = "same level and matching x or y against the saved start coordinate before cleanup";
+	bridge["predecessor_chain_status"] = path_seed_update.get("predecessor_chain_status", "");
+	bridge["predecessor_chain_count"] = predecessor_chain_count;
+	bridge["predecessor_chain_total_cell_visits"] = path_seed_update.get("predecessor_chain_total_cell_visits", 0);
+	bridge["predecessor_chain_max_step_count"] = path_seed_update.get("predecessor_chain_max_step_count", 0);
+	bridge["predecessor_chain_materialized"] = predecessor_chains_materialized;
 	bridge["materializes_road_geometry"] = false;
-	bridge["blocked_reason"] = "0x4ab37f constructs the adapters and invokes 0x4b4243, but the toolkit body that writes road cells/art is still not ported.";
+	bridge["blocked_reason"] = predecessor_chains_materialized
+			? "0x4ab37f adapter setup and predecessor-chain walks are materialized from the normal 0x4aae7b path state, but 0x4b4243/0x458e61 road-cell mutation and art writes are still not ported."
+			: "0x4ab37f constructs the adapters and invokes 0x4b4243, but the toolkit body that writes road cells/art is still not ported.";
 	bridge["signature"] = h3maped_hash32_hex(String("h3maped_4ab37f_road_adapter_bridge:")
 			+ String::num_int64(width) + ":"
 			+ String::num_int64(height) + ":"
-			+ String::num_int64(level_count));
+			+ String::num_int64(level_count) + ":"
+			+ String::num_int64(predecessor_chain_count));
 	return bridge;
 }
 
@@ -6848,7 +6932,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	Dictionary path_state_seed = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 	boundary["path_state_seed"] = path_state_seed;
 	boundary["road_pair_iteration"] = h3maped_road_pair_iteration_4ab52a_report(coordinate_vector_source, rng_state_before_road_phase, path_state_seed);
-	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill);
+	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill, path_state_seed);
 	boundary["road_toolkit_entry"] = h3maped_road_toolkit_4b4243_report(terrain_fill);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
@@ -6867,6 +6951,10 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["candidate_low_word_threshold_hex"] = "0x7530";
 	boundary["candidate_low_word_threshold"] = 0x7530;
 	boundary["road_pair_candidate_iteration_count"] = pair_iteration.get("pair_candidate_iteration_count", 0);
+	boundary["predecessor_chain_status"] = path_state_seed.get("predecessor_chain_status", "");
+	boundary["predecessor_chain_count"] = path_state_seed.get("predecessor_chain_count", 0);
+	boundary["predecessor_chain_total_cell_visits"] = path_state_seed.get("predecessor_chain_total_cell_visits", 0);
+	boundary["predecessor_chain_max_step_count"] = path_state_seed.get("predecessor_chain_max_step_count", 0);
 	boundary["connection_count"] = connection_records.size();
 	boundary["connection_records_have_geometry"] = false;
 	boundary["generated_road_segment_count"] = 0;
