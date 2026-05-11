@@ -128,3 +128,13 @@ For the seed `1` boundary case, normal generation currently reports:
 - `error_code: h3maped_phase_port_incomplete`,
 - inspection report `runtime_generation_allowed: false`,
 - out-of-scope `native_catalog_auto` requests still return `archived_legacy_native_rmg_disabled`.
+
+The inspection payload now also exposes the recovered `0x4aae7b` path-state update rule needed before road materialization can be ported:
+
+- normal neighbor update block `0x4ab2d8..0x4ab33a`,
+- special-vector update block `0x4ab25d..0x4ab2d0`,
+- normal cost source `current_cost + 0x14`, or `current_cost + 0x3c` when the direction index low bit is set,
+- special-vector cost source `current_cost + 0x32`,
+- update condition `computed_cost < target_cell_low_word`,
+- low-word preservation expression `((old_cell_state ^ computed_cost) & 0xffff) ^ old_cell_state`,
+- predecessor write and target enqueue blocks `0x4ab310..0x4ab31b` and `0x4ab31c..0x4ab32f`.

@@ -5443,6 +5443,8 @@ Array clean_phase_ledger() {
 
 } // namespace
 
+Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source);
+
 bool supports_scope(const Dictionary &normalized_config) {
 	return int32_t(normalized_config.get("width", 0)) == 36
 			&& int32_t(normalized_config.get("height", 0)) == 36
@@ -5535,7 +5537,14 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		report["selected_template_vector_index"] = selected_index;
 		report["selected_template"] = selected_template;
 		report["h3maped_rng"] = rng;
-		report["selected_template_payload"] = selected_template_payload(adapted_template_for_source_index(source_catalog_index), normalized_config, source_catalog_index, human_count, player_count, next_state);
+		Dictionary payload = selected_template_payload(adapted_template_for_source_index(source_catalog_index), normalized_config, source_catalog_index, human_count, player_count, next_state);
+		Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
+		Dictionary footprint = runtime_build.get("zone_footprint_placement", Dictionary());
+		Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
+		Dictionary empty_coordinate_vector_source;
+		empty_coordinate_vector_source["materialized_partial_coordinate_record_count"] = 0;
+		payload["path_state_seed_update_rule"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, empty_coordinate_vector_source);
+		report["selected_template_payload"] = payload;
 	} else if (supported && !accepted_templates.is_empty()) {
 		Dictionary rng;
 		rng["function_address"] = "0x4e7276";
@@ -6098,8 +6107,23 @@ Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill,
 	seed["odd_direction_step_cost"] = 60;
 	seed["object_lane_step_cost"] = 2;
 	seed["special_vector_step_cost_delta"] = 0x32;
+	seed["normal_neighbor_update_block"] = "0x4ab2d8..0x4ab33a";
+	seed["special_vector_update_block"] = "0x4ab25d..0x4ab2d0";
+	seed["normal_neighbor_cost_source"] = "current_cost + 0x14, or current_cost + 0x3c when direction index bit0 is set";
+	seed["special_vector_cost_source"] = "current_cost + 0x32";
+	seed["update_compare"] = "computed_cost < target_cell_low_word";
+	seed["update_reject_compare_address"] = "0x4ab2f4..0x4ab2f6";
+	seed["special_update_reject_compare_address"] = "0x4ab288..0x4ab28a";
 	seed["path_cost_low_word_mask_hex"] = "0xffff";
-	seed["path_cost_update_semantics"] = "if computed cost is lower than the target cell low word, replace the low word while preserving upper bits, copy predecessor coordinate triplet to cell+0x10/+0x14/+0x18, and enqueue the target coordinate through 0x4a489d";
+	seed["path_cost_low_word_preserve_expression"] = "((old_cell_state ^ computed_cost) & 0xffff) ^ old_cell_state";
+	seed["path_cost_update_semantics"] = "if computed cost is lower than the target cell low word, replace only the low word of cell+0x1c, copy the current coordinate triplet into target cell+0x10/+0x14/+0x18, and enqueue the target coordinate through 0x4a489d";
+	seed["predecessor_write_block"] = "0x4ab310..0x4ab31b";
+	seed["special_predecessor_write_block"] = "0x4ab2a4..0x4ab2af";
+	seed["target_enqueue_block"] = "0x4ab31c..0x4ab32f";
+	seed["special_target_enqueue_block"] = "0x4ab2b0..0x4ab2c3";
+	seed["direction_loop_decrement_block"] = "0x4ab33a..0x4ab348";
+	seed["direction_loop_end_jump"] = "0x4aaf0f";
+	seed["queue_cleanup_block"] = "0x4ab353..0x4ab36e";
 	seed["materializes_road_geometry"] = false;
 	seed["road_toolkit_status_after_seed"] = "pending_0x4ab37f_0x4b4243_road_materialization";
 	seed["blocked_reason"] = "The executable propagation boundary is recovered, but the complete +0x14b0 coordinate vector and the downstream 0x4ab37f/0x4b4243 road toolkit are still required before emitting road cells.";

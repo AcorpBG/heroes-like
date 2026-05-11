@@ -558,6 +558,20 @@ func _run() -> void:
 	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_mine_constraint_scan_ported_rewards_pending":
 		_fail("The phase ledger did not mark h3maped mine source ledgers and 0x4a9641 scan as ported with reward placement still pending: %s" % JSON.stringify(report))
 		return
+	var path_seed_update: Dictionary = selected_payload.get("path_state_seed_update_rule", {}) if selected_payload.get("path_state_seed_update_rule", {}) is Dictionary else {}
+	if String(path_seed_update.get("status", "")) != "h3maped_0x4aae7b_path_state_seed_boundary_recovered_toolkit_pending" \
+			or String(path_seed_update.get("normal_neighbor_update_block", "")) != "0x4ab2d8..0x4ab33a" \
+			or String(path_seed_update.get("special_vector_update_block", "")) != "0x4ab25d..0x4ab2d0" \
+			or String(path_seed_update.get("normal_neighbor_cost_source", "")) != "current_cost + 0x14, or current_cost + 0x3c when direction index bit0 is set" \
+			or String(path_seed_update.get("special_vector_cost_source", "")) != "current_cost + 0x32" \
+			or String(path_seed_update.get("update_compare", "")) != "computed_cost < target_cell_low_word" \
+			or String(path_seed_update.get("path_cost_low_word_preserve_expression", "")) != "((old_cell_state ^ computed_cost) & 0xffff) ^ old_cell_state" \
+			or String(path_seed_update.get("predecessor_write_block", "")) != "0x4ab310..0x4ab31b" \
+			or String(path_seed_update.get("target_enqueue_block", "")) != "0x4ab31c..0x4ab32f" \
+			or String(path_seed_update.get("queue_cleanup_block", "")) != "0x4ab353..0x4ab36e" \
+			or bool(path_seed_update.get("materializes_road_geometry", true)):
+		_fail("The clean h3maped inspection report did not expose the recovered 0x4aae7b update rule: %s" % JSON.stringify(path_seed_update))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
 	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
@@ -572,6 +586,10 @@ func _run() -> void:
 	if String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete" \
 			or bool(Dictionary(generated.get("h3maped_small_port", {})).get("runtime_generation_allowed", true)):
 		_fail("Blocked small generation must expose the inspection report and keep runtime generation disabled: %s" % JSON.stringify(generated))
+		return
+	var blocked_port: Dictionary = generated.get("h3maped_small_port", {}) if generated.get("h3maped_small_port", {}) is Dictionary else {}
+	if String(blocked_port.get("status", "")) != "h3maped_small_clean_restart_template_selection_ready":
+		_fail("Blocked small generation must carry the h3maped inspection boundary forward: %s" % JSON.stringify(blocked_port))
 		return
 	var medium_config := config.duplicate(true)
 	medium_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
@@ -626,6 +644,8 @@ func _run() -> void:
 		"terrain_art_index_flip_status": terrain_fill.get("terrain_art_index_flip_status", ""),
 		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
 		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
+		"path_state_update_block": path_seed_update.get("normal_neighbor_update_block", ""),
+		"path_state_cost_preserve": path_seed_update.get("path_cost_low_word_preserve_expression", ""),
 		"generation_status": generated.get("status", ""),
 		"generation_error_code": generated.get("error_code", ""),
 		"runtime_generation_allowed": Dictionary(generated.get("h3maped_small_port", {})).get("runtime_generation_allowed", true),
