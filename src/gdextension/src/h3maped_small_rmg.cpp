@@ -29,6 +29,7 @@ constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
 constexpr const char *CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
 constexpr const char *ADAPTED_CATALOG_PATH = "res://content/random_map_template_catalog.json";
+constexpr const char *REWARD_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
 constexpr const char *H3_OBJECTS_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3bitmap/raw/objects.txt";
 constexpr const char *H3_OBJECT_NAMES_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3bitmap/raw/objnames.txt";
 constexpr int32_t H3_OBJECT_METADATA_ENTRY_COUNT = 232;
@@ -4830,6 +4831,22 @@ std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_terrain(const s
 	return result;
 }
 
+int32_t reward_proxy_reference_count() {
+	Dictionary catalog = load_json_dictionary(REWARD_PROXY_CATALOG_PATH);
+	Array entries = catalog.get("entries", Array());
+	int32_t count = 0;
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		if (Variant(entries[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary entry = Dictionary(entries[index]);
+		if (String(entry.get("generated_kind", "")) == "reward_reference") {
+			count += 1;
+		}
+	}
+	return count;
+}
+
 std::vector<uint8_t> occupied_grid_from_town_records(const Dictionary &town_castle_placement, int32_t width, int32_t height, int32_t level_count) {
 	std::vector<uint8_t> occupied;
 	const int32_t expected_grid_size = width * height * level_count;
@@ -5444,6 +5461,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	}
 
 	const uint32_t reward_rng_state_before = mine_object_rng.state;
+	const int32_t reward_proxy_inventory_count = reward_proxy_reference_count();
 	for (int64_t scheduler_index = 0; scheduler_index < treasure_scheduler_zones.size(); ++scheduler_index) {
 		if (Variant(treasure_scheduler_zones[scheduler_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -5516,7 +5534,34 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			object_lookup["placement_coordinate_helper_address"] = "0x49abd6";
 			object_lookup["cleanup_helper_address"] = "0x49d6e0";
 			object_lookup["object_dimensions_offsets"] = Array::make("+0x34", "+0x38");
-			object_lookup["native_proxy_catalog_path"] = "res://content/homm3_re_reward_object_proxy_catalog.json";
+			Dictionary candidate_scan;
+			candidate_scan["phase"] = "0x4a9f1c_reward_candidate_scan";
+			candidate_scan["function_address"] = "0x4a9f1c";
+			candidate_scan["generator_candidate_vector_begin_offset"] = "generator+0x10f4";
+			candidate_scan["generator_candidate_vector_end_offset"] = "generator+0x10f8";
+			candidate_scan["object_type_source_offset"] = "candidate+0x04";
+			candidate_scan["object_value_virtual_slot"] = "candidate_vtable+0x04";
+			candidate_scan["object_visited_virtual_slot"] = "candidate_vtable+0x08";
+			candidate_scan["type_metadata_table_pointer_address"] = "0x57c648";
+			candidate_scan["type_metadata_stride_bytes"] = 0x10;
+			candidate_scan["type_metadata_byte_0_gate"] = "skip nonzero byte0 with byte2 zero when skip-metadata flag is false";
+			candidate_scan["global_type_count_table_address"] = "0x5a26e4";
+			candidate_scan["zone_type_count_table_address"] = "0x5a2a8c";
+			candidate_scan["generator_type_count_offset"] = "generator+0x1110+type*4";
+			candidate_scan["zone_type_count_offset"] = "zone_record+0x44+type*4";
+			candidate_scan["value_range_min"] = selected_value / 4;
+			candidate_scan["value_range_max"] = selected_value;
+			candidate_scan["resource_helper_address"] = "0x4a9e40";
+			candidate_scan["footprint_probe_helper_address"] = "0x49a6f9";
+			candidate_scan["optional_coverage_ratio_helper_address"] = "0x4aa195";
+			candidate_scan["weighted_selection_rng_address"] = "0x4e7276";
+			candidate_scan["native_proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
+			candidate_scan["native_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
+			candidate_scan["native_proxy_candidate_execution_materialized"] = false;
+			candidate_scan["status"] = "0x4a9f1c_candidate_scan_gates_materialized_proxy_execution_pending";
+			object_lookup["candidate_scan_control_flow"] = candidate_scan;
+			object_lookup["native_proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
+			object_lookup["native_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
 			object_lookup["materializes_reward_object"] = false;
 			object_lookup["status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
 			treasure_reward_object_lookup_count += 1;
@@ -5608,6 +5653,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["treasure_reward_object_lookup_status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
 	report["treasure_reward_object_lookup_count"] = treasure_reward_object_lookup_count;
 	report["treasure_reward_object_lookup_primary_retry_budget_total"] = treasure_reward_object_lookup_primary_retry_budget_total;
+	report["treasure_reward_candidate_scan_status"] = "0x4a9f1c_candidate_scan_gates_materialized_proxy_execution_pending";
+	report["treasure_reward_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
 	report["treasure_reward_object_lookup_candidate_execution_materialized"] = false;
 	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_and_0x4aa354_reward_value_selection_executed_inspection_only_package_adoption_rewards_and_guarding_pending";
 	return report;
