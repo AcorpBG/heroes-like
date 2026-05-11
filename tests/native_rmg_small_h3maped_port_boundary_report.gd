@@ -338,6 +338,28 @@ func _run() -> void:
 	if bool(first_attempt.get("materializes_reward_object", true)):
 		_fail("0x4aa354 value-selection boundary must not claim reward object materialization before 0x4aa1db is ported: %s" % JSON.stringify(first_attempt))
 		return
+	if String(mine_reward_placement.get("treasure_reward_object_lookup_status", "")) != "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending":
+		_fail("0x4aa1db reward object lookup control flow was not exposed as the next pending boundary: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("treasure_reward_object_lookup_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_object_lookup_primary_retry_budget_total", -1)) != 126 or bool(mine_reward_placement.get("treasure_reward_object_lookup_candidate_execution_materialized", true)):
+		_fail("0x4aa1db reward object lookup counts/materialization flags drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var first_lookup: Dictionary = first_attempt.get("object_lookup_control_flow", {})
+	if String(first_lookup.get("function_address", "")) != "0x4aa1db" or String(first_lookup.get("candidate_scan_helper_address", "")) != "0x4a9f1c":
+		_fail("0x4aa1db first lookup helper addresses drifted: %s" % JSON.stringify(first_lookup))
+		return
+	if int(first_lookup.get("primary_probe_retry_budget", -1)) != 3 or int(first_lookup.get("primary_min_value", -1)) != 3430 or int(first_lookup.get("primary_max_value", -1)) != 13723:
+		_fail("0x4aa1db first lookup primary value range/retry drifted: %s" % JSON.stringify(first_lookup))
+		return
+	if int(first_lookup.get("remaining_value_threshold", -1)) != 0x5dc or String(first_lookup.get("secondary_min_formula", "")) != "remaining_value / 4" or String(first_lookup.get("secondary_max_formula", "")) != "(remaining_value * 5) / 4":
+		_fail("0x4aa1db remaining-value split constants drifted: %s" % JSON.stringify(first_lookup))
+		return
+	if String(first_lookup.get("secondary_validation_helper_address", "")) != "0x49d471" or String(first_lookup.get("placement_coordinate_helper_address", "")) != "0x49abd6" or String(first_lookup.get("cleanup_helper_address", "")) != "0x49d6e0":
+		_fail("0x4aa1db validation/placement/cleanup helper addresses drifted: %s" % JSON.stringify(first_lookup))
+		return
+	if first_lookup.get("coordinate_sentinel", []) != [-1, -1, -1] or bool(first_lookup.get("materializes_reward_object", true)):
+		_fail("0x4aa1db lookup must preserve sentinel coordinates and remain non-materializing: %s" % JSON.stringify(first_lookup))
+		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
 		return
@@ -1042,6 +1064,8 @@ func _run() -> void:
 		"treasure_reward_attempt_status": mine_reward_placement.get("treasure_reward_attempt_status", ""),
 		"treasure_reward_attempt_count": mine_reward_placement.get("treasure_reward_attempt_count", 0),
 		"treasure_reward_value_rng_call_count": mine_reward_placement.get("treasure_reward_value_rng_call_count", 0),
+		"treasure_reward_object_lookup_status": mine_reward_placement.get("treasure_reward_object_lookup_status", ""),
+		"treasure_reward_object_lookup_count": mine_reward_placement.get("treasure_reward_object_lookup_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),

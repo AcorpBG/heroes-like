@@ -4995,6 +4995,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t treasure_scheduler_scaled_step_total = 0;
 	int32_t treasure_reward_attempt_count = 0;
 	int32_t treasure_reward_value_rng_call_count = 0;
+	int32_t treasure_reward_object_lookup_count = 0;
+	int32_t treasure_reward_object_lookup_primary_retry_budget_total = 0;
 
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
@@ -5493,6 +5495,32 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 				treasure_reward_value_rng_call_count += 1;
 				selected_value = low + (value_rng % (high - low));
 			}
+			Dictionary object_lookup;
+			object_lookup["phase"] = "0x4aa1db_reward_object_lookup";
+			object_lookup["function_address"] = "0x4aa1db";
+			object_lookup["candidate_scan_helper_address"] = "0x4a9f1c";
+			object_lookup["primary_probe_retry_budget"] = 3;
+			object_lookup["primary_min_value"] = selected_value / 4;
+			object_lookup["primary_max_value"] = selected_value;
+			object_lookup["primary_value_divisor"] = 4;
+			object_lookup["primary_probe_flags"] = Array::make(1, 1);
+			object_lookup["coordinate_sentinel"] = Array::make(-1, -1, -1);
+			object_lookup["selected_value_output_stack_offset"] = "ebp-0x08";
+			object_lookup["remaining_value_threshold"] = 0x5dc;
+			object_lookup["remaining_value_threshold_hex"] = "0x5dc";
+			object_lookup["secondary_probe_retry_budget"] = 3;
+			object_lookup["secondary_min_formula"] = "remaining_value / 4";
+			object_lookup["secondary_max_formula"] = "(remaining_value * 5) / 4";
+			object_lookup["secondary_probe_flags"] = Array::make(0, 1);
+			object_lookup["secondary_validation_helper_address"] = "0x49d471";
+			object_lookup["placement_coordinate_helper_address"] = "0x49abd6";
+			object_lookup["cleanup_helper_address"] = "0x49d6e0";
+			object_lookup["object_dimensions_offsets"] = Array::make("+0x34", "+0x38");
+			object_lookup["native_proxy_catalog_path"] = "res://content/homm3_re_reward_object_proxy_catalog.json";
+			object_lookup["materializes_reward_object"] = false;
+			object_lookup["status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
+			treasure_reward_object_lookup_count += 1;
+			treasure_reward_object_lookup_primary_retry_budget_total += 3;
 
 			Dictionary attempt;
 			attempt["phase"] = "0x4aa354_reward_attempt";
@@ -5511,6 +5539,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			attempt["selected_reward_value"] = selected_value;
 			attempt["pre_attempt_helper_address"] = "0x49ce64";
 			attempt["object_lookup_helper_address"] = "0x4aa1db";
+			attempt["object_lookup_status"] = object_lookup.get("status", "");
+			attempt["object_lookup_control_flow"] = object_lookup;
 			attempt["guard_value_helper_address"] = "0x4a960a";
 			attempt["post_object_helper_address"] = "0x4a5c07";
 			attempt["mode"] = 0;
@@ -5575,6 +5605,10 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["treasure_reward_attempt_records"] = treasure_reward_attempt_records;
 	report["treasure_reward_rng_state_before_0x4aa354_uint32"] = int64_t(reward_rng_state_before);
 	report["treasure_reward_rng_state_after_0x4aa354_uint32"] = int64_t(reward_rng_state_after);
+	report["treasure_reward_object_lookup_status"] = "0x4aa1db_lookup_control_flow_materialized_candidate_execution_pending";
+	report["treasure_reward_object_lookup_count"] = treasure_reward_object_lookup_count;
+	report["treasure_reward_object_lookup_primary_retry_budget_total"] = treasure_reward_object_lookup_primary_retry_budget_total;
+	report["treasure_reward_object_lookup_candidate_execution_materialized"] = false;
 	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_and_0x4aa354_reward_value_selection_executed_inspection_only_package_adoption_rewards_and_guarding_pending";
 	return report;
 }
