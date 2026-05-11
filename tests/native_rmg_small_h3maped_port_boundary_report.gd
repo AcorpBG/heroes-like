@@ -458,19 +458,42 @@ func _run() -> void:
 	var terrain_flip_h: PackedInt32Array = terrain_fill.get("terrain_flip_h", PackedInt32Array())
 	var terrain_flip_v: PackedInt32Array = terrain_fill.get("terrain_flip_v", PackedInt32Array())
 	var terrain_shape_classes: PackedInt32Array = terrain_fill.get("terrain_shape_class_u8", PackedInt32Array())
+	var tile_byte_0: PackedInt32Array = terrain_fill.get("tile_byte_0_terrain_id_u8", PackedInt32Array())
+	var tile_byte_1: PackedInt32Array = terrain_fill.get("tile_byte_1_terrain_art_u8", PackedInt32Array())
+	var tile_byte_6: PackedInt32Array = terrain_fill.get("tile_byte_6_terrain_flags_u8", PackedInt32Array())
 	var owner_byte_grid: PackedInt32Array = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array())
 	var repaint_member_grid: PackedInt32Array = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array())
-	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or owner_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
+	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or tile_byte_0.size() != 1296 or tile_byte_1.size() != 1296 or tile_byte_6.size() != 1296 or owner_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
 		_fail("TerrainPlacement visual arrays must cover every small-map cell: %s" % JSON.stringify({
 			"terrain_code_u16": terrain_codes.size(),
 			"terrain_art_index_u8": terrain_art_indices.size(),
 			"terrain_flip_h": terrain_flip_h.size(),
 			"terrain_flip_v": terrain_flip_v.size(),
 			"terrain_shape_class_u8": terrain_shape_classes.size(),
+			"tile_byte_0_terrain_id_u8": tile_byte_0.size(),
+			"tile_byte_1_terrain_art_u8": tile_byte_1.size(),
+			"tile_byte_6_terrain_flags_u8": tile_byte_6.size(),
 			"owner_byte_grid_u8": owner_byte_grid.size(),
 			"zone_repaint_member_grid_u8": repaint_member_grid.size(),
 		}))
 		return
+	if String(terrain_fill.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending":
+		_fail("0x49b2b6 terrain-byte packing status was not exposed: %s" % JSON.stringify(terrain_fill))
+		return
+	for index in range(terrain_codes.size()):
+		var expected_byte_6 := (1 if int(terrain_flip_h[index]) != 0 else 0) | (2 if int(terrain_flip_v[index]) != 0 else 0)
+		if int(tile_byte_0[index]) != (int(terrain_codes[index]) & 0x3f) or int(tile_byte_1[index]) != (int(terrain_art_indices[index]) & 0xff) or int(tile_byte_6[index]) != expected_byte_6:
+			_fail("0x49b2b6 terrain-byte packing drifted from generated-cell fields: %s" % JSON.stringify({
+				"index": index,
+				"terrain_code": terrain_codes[index],
+				"terrain_art": terrain_art_indices[index],
+				"flip_h": terrain_flip_h[index],
+				"flip_v": terrain_flip_v[index],
+				"tile_byte_0": tile_byte_0[index],
+				"tile_byte_1": tile_byte_1[index],
+				"tile_byte_6": tile_byte_6[index],
+			}))
+			return
 	var terrain_code_counts: Dictionary = terrain_fill.get("terrain_code_counts_after_repaint", {})
 	if int(terrain_code_counts.get(0, -1)) != 492 or int(terrain_code_counts.get(2, -1)) != 165 or int(terrain_code_counts.get(3, -1)) != 222 or int(terrain_code_counts.get(5, -1)) != 232 or int(terrain_code_counts.get(8, -1)) != 185:
 		_fail("0x4a3f27 terrain code grid counts drifted from terrain-id counts: %s" % JSON.stringify(terrain_code_counts))
@@ -642,6 +665,7 @@ func _run() -> void:
 		"terrain_fill_repaint_status": footprint_phase.get("terrain_fill_repaint_status", ""),
 		"terrain_repaint_call_count": footprint_phase.get("terrain_repaint_call_count", 0),
 		"terrain_art_index_flip_status": terrain_fill.get("terrain_art_index_flip_status", ""),
+		"tile_byte_writeout_status": terrain_fill.get("tile_byte_writeout_status", ""),
 		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
 		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
 		"path_state_update_block": path_seed_update.get("normal_neighbor_update_block", ""),
