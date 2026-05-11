@@ -25431,8 +25431,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary normalized = normalize_random_map_config(config);
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	if (h3maped_small_rmg::supports_scope(normalized)
-			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
-			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
+			&& native_rmg_generalized_native_catalog_auto_policy(normalized)) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
 		Dictionary h3maped_payload = h3maped_small_rmg::generate_materialized_payload(normalized, extension_profile);
 		if (!bool(h3maped_payload.get("ok", false))) {
@@ -25504,8 +25503,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		h3maped_payload["full_parity_claim"] = false;
 		return h3maped_payload;
 	}
-	if (native_rmg_archived_legacy_catalog_auto_output(normalized)
-			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
+	if (native_rmg_archived_legacy_catalog_auto_output(normalized)) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
 		return h3maped_small_rmg::archived_legacy_disabled_result(normalized, extension_profile, native_rmg_runtime_policy_classification(normalized));
 	}

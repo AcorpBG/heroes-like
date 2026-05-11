@@ -72,7 +72,7 @@ The reset now has a new isolated native module:
 - Implementation: `src/gdextension/src/h3maped_small_rmg.cpp`
 - Public boundary: `MapPackageService.inspect_h3maped_small_rmg_port(config)`
 
-This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native catalog-auto implementation remains in the repository as archived debug/evidence code only. Normal `native_catalog_auto` requests cannot fall through to it unless a caller explicitly passes `allow_archived_legacy_native_rmg` for local evidence/debug.
+This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native catalog-auto implementation remains in the repository as archived debug/evidence code only. `native_catalog_auto` requests cannot fall through to it, including local debug/evidence calls.
 
 The clean restart boundary currently supports only 36x36 one-level land inspection. It verifies the local h3maped reset anchor by checking `/root/Downloads/h3maped.exe` file size and MZ header against the recorded reset SHA-256, then computes template acceptance from h3maped-derived size-score/player-capacity data. Numeric seeds use the recovered executable RNG step from `0x4e7269/0x4e7276`; non-numeric seeds are blocked rather than hashed.
 
