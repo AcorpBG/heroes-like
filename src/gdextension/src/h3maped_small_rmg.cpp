@@ -6045,6 +6045,72 @@ Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill
 	return reset;
 }
 
+Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source) {
+	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	const int32_t partial_record_count = int32_t(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0));
+	Dictionary seed;
+	seed["schema_id"] = "aurelion_h3maped_small_road_path_state_seed_v1";
+	seed["status"] = "h3maped_0x4aae7b_path_state_seed_boundary_recovered_toolkit_pending";
+	seed["function_address"] = "0x4aae7b";
+	seed["source"] = "Recovered from h3maped.exe: ecx is the generator, the stack argument is one 12-byte coordinate record, the seed cell is reset, then queue/vector-backed neighbor propagation writes low-word path costs and predecessor coordinates into generated cells before 0x4ab37f/0x4b4243 materializes roads.";
+	seed["generator_argument_register"] = "ecx";
+	seed["coordinate_argument_size_bytes"] = 12;
+	seed["coordinate_argument_stack_offsets"] = Array::make("ebp+0x08", "ebp+0x0c", "ebp+0x10");
+	seed["coordinate_record_byte_11_seed_tag_source"] = "ebp+0x13";
+	seed["local_queue_primary_stack_base"] = "ebp-0x78";
+	seed["local_queue_secondary_stack_base"] = "ebp-0x88";
+	seed["queue_push_helper_address"] = "0x4a489d";
+	seed["queue_seed_helper_address"] = "0x4ae20e";
+	seed["queue_pop_helper_address"] = "0x4ae23e";
+	seed["secondary_queue_remove_helper_address"] = "0x4cce95";
+	seed["generated_cell_base_offset"] = "generator+0x14";
+	seed["generated_cell_stride_bytes"] = 0x30;
+	seed["width"] = width;
+	seed["height"] = height;
+	seed["level_count"] = level_count;
+	seed["partial_coordinate_record_count"] = partial_record_count;
+	seed["complete_coordinate_vector_required"] = true;
+	seed["complete_coordinate_vector_claim"] = false;
+	seed["seed_cell_state_offset"] = "+0x1c";
+	seed["seed_cell_low_word_after_seed"] = 0;
+	seed["predecessor_coordinate_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
+	seed["neighbor_direction_table_address"] = "0x5a2658";
+	seed["default_neighbor_direction_count"] = 8;
+	seed["metadata_reduced_neighbor_direction_count"] = 5;
+	seed["terrain_class_mask_offset"] = "cell+0x24";
+	seed["terrain_class_low_bits_mask_hex"] = "0x3f";
+	seed["blocked_terrain_class_values"] = Array::make(8, 9);
+	seed["cell_materialized_required_bit_offset"] = "cell+0x28 bit25";
+	seed["cell_object_present_bit_offset"] = "cell+0x28 bit22";
+	seed["current_cell_object_flags_offset"] = "cell+0x27";
+	seed["current_cell_object_flags_mask_hex"] = "0x3c";
+	seed["runtime_object_metadata_table_address"] = "0x57c648";
+	seed["special_level_transition_object_type"] = 0x67;
+	seed["special_vector_14c0_object_types"] = Array::make(0x2b, 0x2c);
+	seed["special_vector_14d0_object_type"] = 0x2d;
+	seed["special_vector_14c0_begin_offset"] = "generator+0x14c4";
+	seed["special_vector_14c0_end_offset"] = "generator+0x14c8";
+	seed["special_vector_14d0_begin_offset"] = "generator+0x14d4";
+	seed["special_vector_14d0_end_offset"] = "generator+0x14d8";
+	seed["normal_step_cost"] = 20;
+	seed["odd_direction_step_cost"] = 60;
+	seed["object_lane_step_cost"] = 2;
+	seed["special_vector_step_cost_delta"] = 0x32;
+	seed["path_cost_low_word_mask_hex"] = "0xffff";
+	seed["path_cost_update_semantics"] = "if computed cost is lower than the target cell low word, replace the low word while preserving upper bits, copy predecessor coordinate triplet to cell+0x10/+0x14/+0x18, and enqueue the target coordinate through 0x4a489d";
+	seed["materializes_road_geometry"] = false;
+	seed["road_toolkit_status_after_seed"] = "pending_0x4ab37f_0x4b4243_road_materialization";
+	seed["blocked_reason"] = "The executable propagation boundary is recovered, but the complete +0x14b0 coordinate vector and the downstream 0x4ab37f/0x4b4243 road toolkit are still required before emitting road cells.";
+	seed["signature"] = h3maped_hash32_hex(String("h3maped_4aae7b_path_state_seed:")
+			+ String::num_int64(width) + ":"
+			+ String::num_int64(height) + ":"
+			+ String::num_int64(level_count) + ":"
+			+ String::num_int64(partial_record_count));
+	return seed;
+}
+
 Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
 	const int32_t x = int32_t(record.get("x", 0));
 	const int32_t y = int32_t(record.get("y", 0));
@@ -6168,6 +6234,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["h3maped_road_toolkit_runtime_vtable_address"] = "0x5419f4";
 	boundary["path_state_reset"] = h3maped_path_state_reset_4aae2f_report(terrain_fill);
 	boundary["coordinate_vector_source"] = coordinate_vector_source;
+	boundary["path_state_seed"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
@@ -6186,7 +6253,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["generated_road_segment_count"] = 0;
 	boundary["generated_road_cell_count"] = 0;
 	boundary["no_synthetic_road_geometry"] = true;
-	boundary["blocked_reason"] = "0x4b4243 road toolkit and 0x4aae7b path-state propagation are not yet ported, so the reset path must not emit fake road loops.";
+	boundary["blocked_reason"] = "The 0x4aae7b path-state propagation boundary is recovered but not authoritative without the complete +0x14b0 coordinate vector and the 0x4b4243 road toolkit, so the reset path must not emit fake road loops.";
 	boundary["cell_0x24_road_type_bits"] = "26..29";
 	boundary["cell_0x28_road_art_bits"] = "0..7";
 	boundary["cell_0x28_road_flip_bits"] = "19..20";

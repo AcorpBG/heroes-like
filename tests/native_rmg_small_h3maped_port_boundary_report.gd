@@ -622,6 +622,21 @@ func _run() -> void:
 			or not bool(path_state_reset.get("preserves_cell_state_upper_word", false)):
 		_fail("Materialized h3maped payload did not expose the recovered 0x4aae2f path-state reset: %s" % JSON.stringify(path_state_reset))
 		return
+	var path_state_seed: Dictionary = road_boundary.get("path_state_seed", {}) if road_boundary.get("path_state_seed", {}) is Dictionary else {}
+	if String(path_state_seed.get("status", "")) != "h3maped_0x4aae7b_path_state_seed_boundary_recovered_toolkit_pending" \
+			or String(path_state_seed.get("function_address", "")) != "0x4aae7b" \
+			or int(path_state_seed.get("coordinate_argument_size_bytes", 0)) != 12 \
+			or String(path_state_seed.get("neighbor_direction_table_address", "")) != "0x5a2658" \
+			or int(path_state_seed.get("default_neighbor_direction_count", 0)) != 8 \
+			or int(path_state_seed.get("metadata_reduced_neighbor_direction_count", 0)) != 5 \
+			or String(path_state_seed.get("cell_materialized_required_bit_offset", "")) != "cell+0x28 bit25" \
+			or String(path_state_seed.get("cell_object_present_bit_offset", "")) != "cell+0x28 bit22" \
+			or int(path_state_seed.get("normal_step_cost", 0)) != 20 \
+			or int(path_state_seed.get("odd_direction_step_cost", 0)) != 60 \
+			or int(path_state_seed.get("object_lane_step_cost", 0)) != 2 \
+			or bool(path_state_seed.get("materializes_road_geometry", true)):
+		_fail("Materialized h3maped payload did not expose the recovered 0x4aae7b path-state seed boundary: %s" % JSON.stringify(path_state_seed))
+		return
 	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
 	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_coordinate_vector_records_materialized" \
 			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
@@ -674,6 +689,11 @@ func _run() -> void:
 			or int(road_boundary.get("partial_coordinate_byte_count", -1)) != partial_vector_records.size() * 12 \
 			or String(road_boundary.get("partial_coordinate_vector_status", "")) != String(coordinate_vector_source.get("status", "")):
 		_fail("Road adapter boundary did not carry the materialized partial +0x14b0 vector counts forward: %s" % JSON.stringify(road_boundary))
+		return
+	if int(path_state_seed.get("partial_coordinate_record_count", -1)) != partial_vector_records.size() \
+			or not bool(path_state_seed.get("complete_coordinate_vector_required", false)) \
+			or bool(path_state_seed.get("complete_coordinate_vector_claim", true)):
+		_fail("0x4aae7b path-state seed boundary did not preserve the partial-vector blocker: %s" % JSON.stringify(path_state_seed))
 		return
 	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
 	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:
@@ -743,6 +763,7 @@ func _run() -> void:
 		"generated_connection_status": generated.get("connection_generation_status", ""),
 		"road_adapter_boundary_status": road_boundary.get("generation_status", ""),
 		"path_state_reset_status": path_state_reset.get("status", ""),
+		"path_state_seed_status": path_state_seed.get("status", ""),
 		"road_coordinate_vector_source_status": coordinate_vector_source.get("status", ""),
 		"road_coordinate_vector_partial_count": coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0),
 		"out_of_scope_generation_status": medium.get("status", ""),
