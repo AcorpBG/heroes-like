@@ -637,6 +637,7 @@ func _run() -> void:
 	var road_adapter_boundary: Dictionary = selected_payload.get("road_adapter_boundary", {}) if selected_payload.get("road_adapter_boundary", {}) is Dictionary else {}
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
 	var road_adapter_bridge: Dictionary = road_adapter_boundary.get("road_adapter_bridge", {}) if road_adapter_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
+	var road_candidate_marking: Dictionary = road_adapter_boundary.get("road_candidate_marking", {}) if road_adapter_boundary.get("road_candidate_marking", {}) is Dictionary else {}
 	var road_toolkit_entry: Dictionary = road_adapter_boundary.get("road_toolkit_entry", {}) if road_adapter_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
 	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
 	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
@@ -738,6 +739,7 @@ func _run() -> void:
 	if String(first_predecessor_chain.get("predecessor_chain_status", "")) != "h3maped_0x4ab37f_predecessor_chain_reaches_seed" \
 			or not bool(first_predecessor_chain.get("predecessor_chain_reaches_seed", false)) \
 			or int(first_predecessor_chain.get("predecessor_chain_step_count", 0)) <= 0 \
+			or int(first_predecessor_chain.get("predecessor_chain_flat_cell_count", 0)) <= 0 \
 			or bool(first_predecessor_chain.get("road_cell_mutation_materialized", true)) \
 			or String(road_adapter_bridge.get("status", "")) != "h3maped_0x4ab37f_predecessor_chains_materialized_toolkit_pending" \
 			or not bool(road_adapter_bridge.get("predecessor_chain_materialized", false)) \
@@ -747,6 +749,53 @@ func _run() -> void:
 			"first_predecessor_chain": first_predecessor_chain,
 			"road_adapter_bridge": road_adapter_bridge,
 			"predecessor_chain_count": predecessor_chains.size(),
+		}))
+		return
+	var candidate_road_types: PackedInt32Array = road_candidate_marking.get("candidate_road_type_nibble_u8", PackedInt32Array())
+	var candidate_road_art: PackedInt32Array = road_candidate_marking.get("final_road_art_u8", PackedInt32Array())
+	var candidate_road_flip_a: PackedInt32Array = road_candidate_marking.get("final_road_flip_a_u8", PackedInt32Array())
+	var candidate_road_flip_b: PackedInt32Array = road_candidate_marking.get("final_road_flip_b_u8", PackedInt32Array())
+	var candidate_marked_cells: PackedInt32Array = road_candidate_marking.get("candidate_marked_flat_cells", PackedInt32Array())
+	var candidate_marked_cell_count := int(road_candidate_marking.get("candidate_marked_cell_count", -1))
+	if String(road_candidate_marking.get("status", "")) != "h3maped_0x49aec5_candidate_road_type_marks_materialized_art_pending" \
+			or int(road_candidate_marking.get("selected_road_type", -1)) != int(road_pair_iteration.get("selected_road_type", -2)) \
+			or int(road_candidate_marking.get("candidate_mark_road_type_shift", -1)) != 26 \
+			or String(road_candidate_marking.get("candidate_mark_write_mask_cell_0x24_hex", "")) != "0xc3ffffff" \
+			or candidate_road_types.size() != 1296 \
+			or candidate_road_art.size() != 1296 \
+			or candidate_road_flip_a.size() != 1296 \
+			or candidate_road_flip_b.size() != 1296 \
+			or candidate_marked_cells.size() != candidate_marked_cell_count \
+			or candidate_marked_cell_count <= 0 \
+			or int(road_candidate_marking.get("candidate_mark_write_attempt_count", 0)) < candidate_marked_cell_count \
+			or not bool(road_candidate_marking.get("materializes_candidate_road_type_nibble", false)) \
+			or bool(road_candidate_marking.get("materializes_final_road_art", true)) \
+			or bool(road_candidate_marking.get("materializes_serialized_road_overlay", true)):
+		_fail("0x49aec5 candidate road-type marking was not materialized correctly: %s" % JSON.stringify(road_candidate_marking))
+		return
+	var candidate_grid_selected_count := 0
+	for road_grid_index in range(candidate_road_types.size()):
+		if int(candidate_road_types[road_grid_index]) == int(road_pair_iteration.get("selected_road_type", -1)):
+			candidate_grid_selected_count += 1
+		elif int(candidate_road_types[road_grid_index]) != 0:
+			_fail("0x49aec5 candidate road-type grid contains an unexpected road type: %s" % JSON.stringify({
+				"index": road_grid_index,
+				"value": candidate_road_types[road_grid_index],
+				"selected_road_type": road_pair_iteration.get("selected_road_type", -1),
+			}))
+			return
+		if int(candidate_road_art[road_grid_index]) != 0 or int(candidate_road_flip_a[road_grid_index]) != 0 or int(candidate_road_flip_b[road_grid_index]) != 0:
+			_fail("0x49aec5 candidate marking must not synthesize final road art/flip: %s" % JSON.stringify({
+				"index": road_grid_index,
+				"art": candidate_road_art[road_grid_index],
+				"flip_a": candidate_road_flip_a[road_grid_index],
+				"flip_b": candidate_road_flip_b[road_grid_index],
+			}))
+			return
+	if candidate_grid_selected_count != candidate_marked_cell_count:
+		_fail("0x49aec5 candidate road-type mark count drifted from the grid: %s" % JSON.stringify({
+			"grid_selected_count": candidate_grid_selected_count,
+			"candidate_marked_cell_count": candidate_marked_cell_count,
 		}))
 		return
 	var road_neighbor_dx: PackedInt32Array = road_line_visit.get("neighbor_direction_dx_i32", PackedInt32Array())
@@ -888,6 +937,8 @@ func _run() -> void:
 		"path_state_candidate_accept_count": path_seed_update.get("candidate_accept_count", 0),
 		"path_state_predecessor_chain_count": path_seed_update.get("predecessor_chain_count", 0),
 		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
+		"road_candidate_marking_status": road_candidate_marking.get("status", ""),
+		"road_candidate_marked_cell_count": road_candidate_marking.get("candidate_marked_cell_count", 0),
 		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
 		"road_line_visit_status": road_line_visit.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
