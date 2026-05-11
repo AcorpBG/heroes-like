@@ -5463,7 +5463,7 @@ Array clean_phase_ledger() {
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x49a1d8, 0x49aa93, 0x49a6f9, 0x49a09c, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4a9911, 0x4a9c7c, 0x4a9641, 0x4aab7e", "0x4a9d6a_0x4a9911_0x4a9641_mine_constraint_scan_ported_rewards_pending" },
-		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
+		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "0x4ab52a_pair_iteration_ported_0x4aae7b_0x4b4243_materialization_pending" },
 	};
 	for (const Phase &phase : PHASES) {
 		Dictionary record;
@@ -5478,6 +5478,11 @@ Array clean_phase_ledger() {
 } // namespace
 
 Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source);
+Array h3maped_town_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
+Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
+Array h3maped_connection_records_from_port(const Dictionary &payload);
+Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_records, const Array &mine_records);
+Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase);
 
 bool supports_scope(const Dictionary &normalized_config) {
 	return int32_t(normalized_config.get("width", 0)) == 36
@@ -5575,9 +5580,15 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
 		Dictionary footprint = runtime_build.get("zone_footprint_placement", Dictionary());
 		Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
-		Dictionary empty_coordinate_vector_source;
-		empty_coordinate_vector_source["materialized_partial_coordinate_record_count"] = 0;
-		payload["path_state_seed_update_rule"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, empty_coordinate_vector_source);
+		Array town_records = h3maped_town_records_from_port(normalized_config, payload);
+		Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
+		Array connection_records = h3maped_connection_records_from_port(payload);
+		Dictionary coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
+		Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
+		const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", int64_t(next_state))));
+		payload["road_coordinate_vector_source"] = coordinate_vector_source;
+		payload["road_adapter_boundary"] = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, coordinate_vector_source, rng_state_before_road_phase);
+		payload["path_state_seed_update_rule"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 		report["selected_template_payload"] = payload;
 	} else if (supported && !accepted_templates.is_empty()) {
 		Dictionary rng;
@@ -6368,6 +6379,80 @@ Dictionary h3maped_road_toolkit_4b4243_report(const Dictionary &terrain_fill) {
 	return toolkit;
 }
 
+Dictionary h3maped_road_pair_iteration_4ab52a_report(const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase) {
+	Array coordinate_records = coordinate_vector_source.get("materialized_partial_coordinate_records", Array());
+	const int32_t record_count = int32_t(coordinate_records.size());
+	H3MapedRng rng { uint32_t(rng_state_before_road_phase) };
+	const int32_t road_type_rng_value = rng.next();
+	const int32_t road_type = road_type_rng_value % 3 + 1;
+	Dictionary iteration;
+	iteration["schema_id"] = "aurelion_h3maped_small_road_pair_iteration_v1";
+	iteration["status"] = "h3maped_0x4ab52a_pair_iteration_ported_path_costs_pending";
+	iteration["function_address"] = "0x4ab52a";
+	iteration["source"] = "Recovered from h3maped.exe: choose one road type with 0x4e7276 % 3 + 1, then iterate each generator+0x14b0 coordinate record as a path seed and every later record as a candidate endpoint.";
+	iteration["coordinate_vector_begin_offset"] = "+0x14b4";
+	iteration["coordinate_vector_end_offset"] = "+0x14b8";
+	iteration["coordinate_record_size_bytes"] = 12;
+	iteration["road_type_rng_function_address"] = "0x4e7276";
+	iteration["rng_state_before_road_phase_uint32"] = rng_state_before_road_phase;
+	iteration["road_type_rng_value"] = road_type_rng_value;
+	iteration["rng_state_after_road_type_uint32"] = int64_t(rng.state);
+	iteration["road_type_modulus"] = 3;
+	iteration["road_type_addend"] = 1;
+	iteration["selected_road_type"] = road_type;
+	iteration["coordinate_record_count"] = record_count;
+	iteration["outer_seed_iteration_count"] = std::max(0, record_count - 1);
+	iteration["pair_candidate_iteration_count"] = record_count > 1 ? (record_count * (record_count - 1)) / 2 : 0;
+	iteration["cell_state_reset_call_site"] = "0x4ab583";
+	iteration["path_state_seed_call_site"] = "0x4ab595";
+	iteration["candidate_low_word_read_block"] = "0x4ab5df..0x4ab60a";
+	iteration["candidate_low_word_threshold_hex"] = "0x7530";
+	iteration["candidate_low_word_threshold"] = 0x7530;
+	iteration["candidate_accept_condition"] = "candidate cell +0x1c low word <= 0x7530";
+	iteration["road_adapter_call_site"] = "0x4ab611..0x4ab620 -> 0x4ab37f";
+	iteration["progress_callback_address"] = "generator+0xed4 vtable+0x08";
+	iteration["complete_coordinate_vector_claim"] = bool(coordinate_vector_source.get("complete_executable_vector_claim", false));
+	iteration["path_costs_materialized"] = false;
+	iteration["road_geometry_materialized"] = false;
+	iteration["blocked_reason"] = "The pair loop and road-type RNG are ported, but endpoint low-word eligibility depends on the still-pending 0x4aae7b path-cost propagation and 0x4b4243 road toolkit.";
+	Array outer_iterations;
+	for (int32_t seed_index = 0; seed_index < std::max(0, record_count - 1); ++seed_index) {
+		Dictionary seed_record = Variant(coordinate_records[seed_index]).get_type() == Variant::DICTIONARY
+				? Dictionary(coordinate_records[seed_index])
+				: Dictionary();
+		Dictionary outer;
+		outer["seed_vector_index"] = seed_index;
+		outer["seed_byte_offset"] = seed_index * 12;
+		outer["seed_coordinate_triplet"] = seed_record.get("coordinate_triplet", Array());
+		outer["reset_call_required_before_seed"] = true;
+		outer["path_seed_call_required"] = true;
+		outer["candidate_start_vector_index"] = seed_index + 1;
+		outer["candidate_count"] = std::max(0, record_count - seed_index - 1);
+		outer["candidate_low_word_status"] = "pending_0x4aae7b_path_cost_grid_materialization";
+		Array candidate_preview;
+		for (int32_t candidate_index = seed_index + 1; candidate_index < record_count && candidate_preview.size() < 6; ++candidate_index) {
+			Dictionary candidate_record = Variant(coordinate_records[candidate_index]).get_type() == Variant::DICTIONARY
+					? Dictionary(coordinate_records[candidate_index])
+					: Dictionary();
+			Dictionary candidate;
+			candidate["candidate_vector_index"] = candidate_index;
+			candidate["candidate_byte_offset"] = candidate_index * 12;
+			candidate["candidate_coordinate_triplet"] = candidate_record.get("coordinate_triplet", Array());
+			candidate["candidate_low_word_threshold"] = 0x7530;
+			candidate["candidate_accept_status"] = "pending_path_cost_low_word";
+			candidate_preview.append(candidate);
+		}
+		outer["candidate_preview"] = candidate_preview;
+		outer_iterations.append(outer);
+	}
+	iteration["outer_iterations"] = outer_iterations;
+	iteration["signature"] = h3maped_hash32_hex(String("h3maped_4ab52a_pair_iteration:")
+			+ String::num_int64(record_count) + ":"
+			+ String::num_int64(road_type_rng_value) + ":"
+			+ String::num_int64(road_type));
+	return iteration;
+}
+
 Dictionary h3maped_coordinate_vector_record_from_object(const Dictionary &record, int32_t vector_index, const String &phase, const String &append_address, const String &source_kind) {
 	const int32_t x = int32_t(record.get("x", 0));
 	const int32_t y = int32_t(record.get("y", 0));
@@ -6473,7 +6558,7 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 	return source;
 }
 
-Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source) {
+Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase) {
 	Dictionary boundary;
 	boundary["schema_id"] = "aurelion_h3maped_small_road_adapter_boundary_v1";
 	boundary["generation_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -6491,6 +6576,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["h3maped_road_toolkit_runtime_vtable_address"] = "0x5419f4";
 	boundary["path_state_reset"] = h3maped_path_state_reset_4aae2f_report(terrain_fill);
 	boundary["coordinate_vector_source"] = coordinate_vector_source;
+	boundary["road_pair_iteration"] = h3maped_road_pair_iteration_4ab52a_report(coordinate_vector_source, rng_state_before_road_phase);
 	boundary["path_state_seed"] = h3maped_path_state_seed_4aae7b_report(terrain_fill, coordinate_vector_source);
 	boundary["road_adapter_bridge"] = h3maped_road_adapter_bridge_4ab37f_report(terrain_fill);
 	boundary["road_toolkit_entry"] = h3maped_road_toolkit_4b4243_report(terrain_fill);
@@ -6500,13 +6586,17 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["partial_coordinate_record_count"] = coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0);
 	boundary["partial_coordinate_byte_count"] = coordinate_vector_source.get("materialized_partial_coordinate_byte_count", 0);
 	boundary["partial_coordinate_vector_status"] = coordinate_vector_source.get("status", "");
+	Dictionary pair_iteration = boundary.get("road_pair_iteration", Dictionary());
 	boundary["road_type_rng_function_address"] = "0x4e7276";
+	boundary["road_type_rng_value"] = pair_iteration.get("road_type_rng_value", 0);
+	boundary["selected_road_type"] = pair_iteration.get("selected_road_type", 0);
 	boundary["road_type_rng_modulus"] = 3;
 	boundary["road_type_rng_addend"] = 1;
 	boundary["road_type_min"] = 1;
 	boundary["road_type_max"] = 3;
 	boundary["candidate_low_word_threshold_hex"] = "0x7530";
 	boundary["candidate_low_word_threshold"] = 0x7530;
+	boundary["road_pair_candidate_iteration_count"] = pair_iteration.get("pair_candidate_iteration_count", 0);
 	boundary["connection_count"] = connection_records.size();
 	boundary["connection_records_have_geometry"] = false;
 	boundary["generated_road_segment_count"] = 0;
@@ -6548,7 +6638,9 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Array connection_records = h3maped_connection_records_from_port(payload);
 	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
 	Dictionary road_coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
-	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, road_coordinate_vector_source);
+	Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
+	const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", 0)));
+	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, road_coordinate_vector_source, rng_state_before_road_phase);
 	connection_payload["road_adapter_boundary"] = road_adapter_boundary;
 	connection_payload["road_materialization_status"] = road_adapter_boundary.get("road_materialization_status", "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending");
 
