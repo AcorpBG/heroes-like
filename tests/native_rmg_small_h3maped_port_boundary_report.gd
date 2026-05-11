@@ -638,6 +638,7 @@ func _run() -> void:
 	var road_pair_iteration: Dictionary = road_adapter_boundary.get("road_pair_iteration", {}) if road_adapter_boundary.get("road_pair_iteration", {}) is Dictionary else {}
 	var road_adapter_bridge: Dictionary = road_adapter_boundary.get("road_adapter_bridge", {}) if road_adapter_boundary.get("road_adapter_bridge", {}) is Dictionary else {}
 	var road_candidate_marking: Dictionary = road_adapter_boundary.get("road_candidate_marking", {}) if road_adapter_boundary.get("road_candidate_marking", {}) is Dictionary else {}
+	var road_final_art_materialization: Dictionary = road_adapter_boundary.get("road_final_art_materialization", {}) if road_adapter_boundary.get("road_final_art_materialization", {}) is Dictionary else {}
 	var road_toolkit_entry: Dictionary = road_adapter_boundary.get("road_toolkit_entry", {}) if road_adapter_boundary.get("road_toolkit_entry", {}) is Dictionary else {}
 	var road_line_visit: Dictionary = road_toolkit_entry.get("line_visit_boundary", {}) if road_toolkit_entry.get("line_visit_boundary", {}) is Dictionary else {}
 	var path_state_reset: Dictionary = road_adapter_boundary.get("path_state_reset", {}) if road_adapter_boundary.get("path_state_reset", {}) is Dictionary else {}
@@ -773,31 +774,52 @@ func _run() -> void:
 			or bool(road_candidate_marking.get("materializes_serialized_road_overlay", true)):
 		_fail("0x49aec5 candidate road-type marking was not materialized correctly: %s" % JSON.stringify(road_candidate_marking))
 		return
-	var candidate_grid_selected_count := 0
-	for road_grid_index in range(candidate_road_types.size()):
-		if int(candidate_road_types[road_grid_index]) == int(road_pair_iteration.get("selected_road_type", -1)):
-			candidate_grid_selected_count += 1
-		elif int(candidate_road_types[road_grid_index]) != 0:
-			_fail("0x49aec5 candidate road-type grid contains an unexpected road type: %s" % JSON.stringify({
-				"index": road_grid_index,
-				"value": candidate_road_types[road_grid_index],
+		for candidate_art_grid_index in range(candidate_road_art.size()):
+			if int(candidate_road_art[candidate_art_grid_index]) != 0 or int(candidate_road_flip_a[candidate_art_grid_index]) != 0 or int(candidate_road_flip_b[candidate_art_grid_index]) != 0:
+				_fail("0x49aec5 candidate marking must not synthesize final road art/flip: %s" % JSON.stringify({
+					"index": candidate_art_grid_index,
+					"art": candidate_road_art[candidate_art_grid_index],
+					"flip_a": candidate_road_flip_a[candidate_art_grid_index],
+					"flip_b": candidate_road_flip_b[candidate_art_grid_index],
+				}))
+				return
+		if int(road_candidate_marking.get("candidate_road_type_grid_selected_count", -1)) != candidate_marked_cell_count:
+			_fail("0x49aec5 candidate road-type mark count drifted from the grid: %s" % JSON.stringify({
+				"candidate_marked_cell_count": candidate_marked_cell_count,
+				"cpp_grid_selected_count": road_candidate_marking.get("candidate_road_type_grid_selected_count", -1),
 				"selected_road_type": road_pair_iteration.get("selected_road_type", -1),
 			}))
 			return
-		if int(candidate_road_art[road_grid_index]) != 0 or int(candidate_road_flip_a[road_grid_index]) != 0 or int(candidate_road_flip_b[road_grid_index]) != 0:
-			_fail("0x49aec5 candidate marking must not synthesize final road art/flip: %s" % JSON.stringify({
-				"index": road_grid_index,
-				"art": candidate_road_art[road_grid_index],
-				"flip_a": candidate_road_flip_a[road_grid_index],
-				"flip_b": candidate_road_flip_b[road_grid_index],
+		var final_road_types: PackedInt32Array = road_final_art_materialization.get("final_road_type_nibble_u8", PackedInt32Array())
+		var final_road_art: PackedInt32Array = road_final_art_materialization.get("final_road_art_u8", PackedInt32Array())
+		var final_road_flip_a: PackedInt32Array = road_final_art_materialization.get("final_road_flip_a_u8", PackedInt32Array())
+		var final_road_flip_b: PackedInt32Array = road_final_art_materialization.get("final_road_flip_b_u8", PackedInt32Array())
+		if String(road_final_art_materialization.get("status", "")) != "h3maped_0x458a2f_458893_final_art_flip_materialized_overlay_pending" \
+				or final_road_types.size() != 1296 \
+				or final_road_art.size() != 1296 \
+				or final_road_flip_a.size() != 1296 \
+				or final_road_flip_b.size() != 1296 \
+				or int(road_final_art_materialization.get("selected_road_type", -1)) != int(road_pair_iteration.get("selected_road_type", -2)) \
+				or int(road_final_art_materialization.get("final_road_cell_count", 0)) != candidate_marked_cell_count \
+				or int(road_final_art_materialization.get("final_road_cell_count", 0)) != 411 \
+				or int(road_final_art_materialization.get("candidate_mark_count", 0)) != candidate_marked_cell_count \
+				or int(road_final_art_materialization.get("rng_call_count", 0)) != 1006 \
+				or int(road_final_art_materialization.get("final_write_count", 0)) != 1006 \
+				or int(road_final_art_materialization.get("neighbor_retouch_call_count", 0)) <= 0 \
+				or not bool(road_final_art_materialization.get("materializes_final_road_art", false)) \
+				or bool(road_final_art_materialization.get("materializes_serialized_road_overlay", true)) \
+				or bool(road_final_art_materialization.get("complete_coordinate_vector_claim", true)):
+			_fail("0x458a2f/0x458893 final road art/flip grid was not materialized as an inspection-only h3maped port: %s" % JSON.stringify(road_final_art_materialization))
+			return
+		var final_grid_selected_count := int(road_final_art_materialization.get("final_road_type_grid_selected_count", -1))
+		var final_nonzero_art_count := int(road_final_art_materialization.get("final_nonzero_art_cell_count", -1))
+		if final_grid_selected_count != candidate_marked_cell_count or final_nonzero_art_count <= 0:
+			_fail("0x458a2f final road art grid count drifted from candidate marks: %s" % JSON.stringify({
+				"final_grid_selected_count": final_grid_selected_count,
+				"candidate_marked_cell_count": candidate_marked_cell_count,
+				"final_nonzero_art_count": final_nonzero_art_count,
 			}))
 			return
-	if candidate_grid_selected_count != candidate_marked_cell_count:
-		_fail("0x49aec5 candidate road-type mark count drifted from the grid: %s" % JSON.stringify({
-			"grid_selected_count": candidate_grid_selected_count,
-			"candidate_marked_cell_count": candidate_marked_cell_count,
-		}))
-		return
 	var road_neighbor_dx: PackedInt32Array = road_line_visit.get("neighbor_direction_dx_i32", PackedInt32Array())
 	var road_neighbor_dy: PackedInt32Array = road_line_visit.get("neighbor_direction_dy_i32", PackedInt32Array())
 	var road_neighbor_records: Array = road_line_visit.get("neighbor_direction_records", [])
@@ -959,9 +981,13 @@ func _run() -> void:
 		"path_state_candidate_accept_count": path_seed_update.get("candidate_accept_count", 0),
 		"path_state_predecessor_chain_count": path_seed_update.get("predecessor_chain_count", 0),
 		"road_adapter_bridge_status": road_adapter_bridge.get("status", ""),
-		"road_candidate_marking_status": road_candidate_marking.get("status", ""),
-		"road_candidate_marked_cell_count": road_candidate_marking.get("candidate_marked_cell_count", 0),
-		"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
+			"road_candidate_marking_status": road_candidate_marking.get("status", ""),
+			"road_candidate_marked_cell_count": road_candidate_marking.get("candidate_marked_cell_count", 0),
+			"road_final_art_status": road_final_art_materialization.get("status", ""),
+			"road_final_cell_count": road_final_art_materialization.get("final_road_cell_count", 0),
+			"road_final_write_count": road_final_art_materialization.get("final_write_count", 0),
+			"road_final_art_rng_call_count": road_final_art_materialization.get("rng_call_count", 0),
+			"road_toolkit_entry_status": road_toolkit_entry.get("status", ""),
 		"road_line_visit_status": road_line_visit.get("status", ""),
 		"road_coordinate_record_count": road_coordinate_record_count,
 		"road_pair_candidate_iteration_count": road_pair_iteration.get("pair_candidate_iteration_count", 0),
