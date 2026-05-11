@@ -282,6 +282,33 @@ func _run() -> void:
 	if treasure_band_fields.size() != 18 or int(treasure_band_fields[0].get("low", -1)) != 10000 or int(treasure_band_fields[0].get("high", -1)) != 15000 or int(treasure_band_fields[0].get("density", -1)) != 1:
 		_fail("0x4aab7e first treasure band drifted from recovered low/high/density triplet: %s" % JSON.stringify(mine_reward_placement))
 		return
+	if String(mine_reward_placement.get("treasure_scheduler_status", "")) != "0x4aab7e_treasure_scheduler_math_materialized_reward_objects_pending":
+		_fail("0x4aab7e treasure scheduler status did not expose the recovered scheduler math boundary: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("treasure_scheduler_zone_count", -1)) != 6 or int(mine_reward_placement.get("treasure_scheduler_active_zone_count", -1)) != 6 or int(mine_reward_placement.get("treasure_scheduler_scaled_step_total", -1)) != 42:
+		_fail("0x4aab7e treasure scheduler zone/step totals drifted from recovered seed-1 math: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var treasure_scheduler_zones: Array = mine_reward_placement.get("treasure_scheduler_zones", [])
+	if treasure_scheduler_zones.size() != 6:
+		_fail("0x4aab7e treasure scheduler did not expose one scheduler record per runtime zone: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var first_scheduler: Dictionary = treasure_scheduler_zones[0]
+	if int(first_scheduler.get("eligible_band_count", -1)) != 3 or int(first_scheduler.get("total_density_weight", -1)) != 16 or int(first_scheduler.get("density_product", -1)) != 54:
+		_fail("0x4aab7e first scheduler density math drifted: %s" % JSON.stringify(first_scheduler))
+		return
+	if int(first_scheduler.get("scale_dividend", -1)) != 0x320 or int(first_scheduler.get("scale_density_divisor", -1)) != 50 or int(first_scheduler.get("scaled_step_after_sqrt_trunc", -1)) != 7:
+		_fail("0x4aab7e first scheduler sqrt/trunc scale math drifted: %s" % JSON.stringify(first_scheduler))
+		return
+	if first_scheduler.get("math_helper_addresses", []) != ["0x4e7d44_sqrt", "0x4e7dec_fistp_trunc"] or String(first_scheduler.get("reward_attempt_helper_address", "")) != "0x4aa354" or String(first_scheduler.get("post_reward_guard_helper_address", "")) != "0x4aa9b7":
+		_fail("0x4aab7e scheduler helper addresses drifted from recovered executable evidence: %s" % JSON.stringify(first_scheduler))
+		return
+	var first_accumulators: Array = first_scheduler.get("accumulator_records", [])
+	if first_accumulators.size() != 3 or int(first_accumulators[0].get("step_weight", -1)) != 54 or int(first_accumulators[1].get("step_weight", -1)) != 9 or int(first_accumulators[2].get("step_weight", -1)) != 6:
+		_fail("0x4aab7e first scheduler accumulator weights drifted from product/density math: %s" % JSON.stringify(first_scheduler))
+		return
+	if bool(first_scheduler.get("materializes_reward_objects", true)):
+		_fail("0x4aab7e scheduler math boundary must not claim reward object materialization yet: %s" % JSON.stringify(first_scheduler))
+		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
 		return
@@ -979,6 +1006,9 @@ func _run() -> void:
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
 		"treasure_band_density_weight": mine_reward_placement.get("total_treasure_density_weight", 0),
+		"treasure_scheduler_status": mine_reward_placement.get("treasure_scheduler_status", ""),
+		"treasure_scheduler_active_zone_count": mine_reward_placement.get("treasure_scheduler_active_zone_count", 0),
+		"treasure_scheduler_scaled_step_total": mine_reward_placement.get("treasure_scheduler_scaled_step_total", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
