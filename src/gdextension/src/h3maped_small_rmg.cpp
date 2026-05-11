@@ -3022,17 +3022,26 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	PackedInt32Array terrain_flip_h;
 	PackedInt32Array terrain_flip_v;
 	PackedInt32Array terrain_shape_classes;
+	PackedInt32Array writeout_tile_byte_0;
+	PackedInt32Array writeout_tile_byte_1;
+	PackedInt32Array writeout_tile_byte_6;
 	terrain_codes.resize(tile_count);
 	terrain_art_indices.resize(tile_count);
 	terrain_flip_h.resize(tile_count);
 	terrain_flip_v.resize(tile_count);
 	terrain_shape_classes.resize(tile_count);
+	writeout_tile_byte_0.resize(tile_count);
+	writeout_tile_byte_1.resize(tile_count);
+	writeout_tile_byte_6.resize(tile_count);
 	for (int32_t flat_index = 0; flat_index < tile_count; ++flat_index) {
 		terrain_codes.set(flat_index, 8);
 		terrain_art_indices.set(flat_index, 0);
 		terrain_flip_h.set(flat_index, 0);
 		terrain_flip_v.set(flat_index, 0);
 		terrain_shape_classes.set(flat_index, 0);
+		writeout_tile_byte_0.set(flat_index, 8);
+		writeout_tile_byte_1.set(flat_index, 0);
+		writeout_tile_byte_6.set(flat_index, 0);
 	}
 
 	Dictionary terrain_counts_after_repaint;
@@ -3130,6 +3139,9 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 				terrain_flip_h.set(flat_index, visual.flip_h);
 				terrain_flip_v.set(flat_index, visual.flip_v);
 				terrain_shape_classes.set(flat_index, visual.class_code);
+				writeout_tile_byte_0.set(flat_index, terrain_code & 0x3f);
+				writeout_tile_byte_1.set(flat_index, visual.art_index & 0xff);
+				writeout_tile_byte_6.set(flat_index, (visual.flip_h != 0 ? 0x01 : 0x00) | (visual.flip_v != 0 ? 0x02 : 0x00));
 				terrain_shape_class_counts[visual.class_code] = int32_t(terrain_shape_class_counts.get(visual.class_code, 0)) + 1;
 				if (visual.class_code != 0) {
 					terrain_visual_transition_cell_count += 1;
@@ -3158,6 +3170,11 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	report["terrain_flip_h"] = terrain_flip_h;
 	report["terrain_flip_v"] = terrain_flip_v;
 	report["terrain_shape_class_u8"] = terrain_shape_classes;
+	report["tile_byte_0_terrain_id_u8"] = writeout_tile_byte_0;
+	report["tile_byte_1_terrain_art_u8"] = writeout_tile_byte_1;
+	report["tile_byte_6_terrain_flags_u8"] = writeout_tile_byte_6;
+	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending";
+	report["tile_byte_writeout_source"] = "0x49b2b6 serializes cell+0x24 bits 0..5 to byte 0, bits 6..13 to byte 1, and cell+0x28 bits 15..16 to output byte 6 bits 0..1";
 	report["terrain_visual_shape_class_counts"] = terrain_shape_class_counts;
 	report["terrain_visual_transition_cell_count"] = terrain_visual_transition_cell_count;
 	report["terrain_visual_fallback_count"] = terrain_visual_fallback_count;
