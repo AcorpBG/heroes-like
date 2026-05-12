@@ -52,6 +52,11 @@ func _run() -> void:
 	if not bool(binary.get("ok", false)) or String(binary.get("status", "")) != "verified_reset_anchor":
 		_fail("The reset boundary did not verify the local h3maped.exe anchor: %s" % JSON.stringify(report))
 		return
+	if String(binary.get("verification_policy", "")) != "local_file_size_mz_header_and_sha256_checked_against_reset_anchor" \
+			or not bool(binary.get("sha256_matches", false)) \
+			or String(binary.get("actual_sha256", "")) != "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37":
+		_fail("The h3maped.exe reset anchor must be checked by SHA-256, not only recorded: %s" % JSON.stringify(binary))
+		return
 	if int(report.get("size_score", -1)) != 1 or int(report.get("h3maped_water_mode_code", -1)) != 0:
 		_fail("Small land size score/water code did not follow the recovered formula: %s" % JSON.stringify(report))
 		return

@@ -27,7 +27,7 @@ Medium, large, XL, water, islands, and underground generation are out of scope f
 
 The active compact port currently supports inspection only:
 
-1. Verifies the local h3maped.exe reset anchor by file size and MZ header, while recording the SHA-256 anchor.
+1. Verifies the local h3maped.exe reset anchor by file size, MZ header, and actual SHA-256 match against `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`.
 2. Selects accepted small-land templates from recovered h3maped template evidence.
 3. Uses numeric h3maped RNG `0x4e7269/0x4e7276`; non-numeric seed hashing is blocked.
 4. Resolves selected source template `h3maped_template_018` to adapted template `translated_rmg_template_019_v1` for seed `1`, 1 human, 3 total players.
