@@ -7416,6 +7416,112 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	return report;
 }
 
+Dictionary h3maped_connection_geometry_4a696b_report(const Dictionary &seed, const Dictionary &terrain_fill) {
+	Dictionary report;
+	report["function_address"] = "0x4a696b";
+	report["source_range_level_gate"] = "0x4a69b3..0x4a69bd";
+	report["source_range_shape_vector"] = "0x4a69d3..0x4a6a05";
+	report["source_range_candidate_scan"] = "0x4a6a21..0x4a6b10";
+	report["source_range_endpoint_record_write"] = "0x4a6b2e..0x4a6c4c";
+	report["source_range_guard_spawn"] = "0x4a6c56..0x4a6ccc";
+	report["same_level_required"] = true;
+	report["different_level_return_false_range"] = "0x4a69b3..0x4a69bd";
+	report["owner_low_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31";
+	report["object_presence_reject_source"] = "cell+0x28 bit 24";
+	report["terrain_gate_source"] = "cell+0x24 bits 0..5 reject terrain 8";
+	report["validation_helper_address"] = "0x49aa93";
+	report["lane_helper_address"] = "0x4a6795";
+	report["candidate_vector_append_helper_address"] = "0x4ae1fd";
+	report["best_candidate_vector_record_size_bytes"] = 12;
+	report["candidate_shape_vector_source"] = "generator+0x5a8";
+	report["candidate_shape_vector_begin_offset"] = "generator+0x5a8";
+	report["candidate_shape_vector_end_offset"] = "generator+0x5ac";
+	report["candidate_shape_vector_pointer_stride_bytes"] = 4;
+	report["candidate_shape_vector_bucket_offset"] = "generator+0x34+0x57*0x10";
+	report["candidate_shape_vector_object_type"] = 0x57;
+	report["candidate_shape_vector_object_type_name"] = object_type_name_from_names_file(0x57);
+	std::vector<H3ObjectRow> shipyard_rows = h3_object_rows_by_type(0x57);
+	report["candidate_shape_vector_template_count"] = int32_t(shipyard_rows.size());
+	if (!shipyard_rows.empty()) {
+		const H3ObjectRow &row = shipyard_rows.front();
+		report["candidate_shape_vector_template_def_name"] = row.def_name;
+		report["candidate_shape_vector_template_source_line"] = row.source_line;
+		report["candidate_shape_vector_template_passability_mask"] = row.passability_mask;
+		report["candidate_shape_vector_template_action_mask"] = row.action_mask;
+		report["candidate_shape_vector_template_primary_terrain_mask"] = row.terrain_mask_primary;
+		report["candidate_shape_vector_template_secondary_terrain_mask"] = row.terrain_mask_secondary;
+	}
+	report["candidate_shape_vector_status"] = "0x4a696b_type_87_shipyard_bucket_identified";
+	report["candidate_shape_vector_selection_range"] = "0x4a69d3..0x4a6a00";
+	report["candidate_shape_vector_random_selector_address"] = "0x4e7276";
+	report["endpoint_record_allocation_size_bytes"] = 0x1c;
+	report["endpoint_record_allocator_address"] = "0x5044b1";
+	report["endpoint_record_constructor_address"] = "0x49ba89";
+	report["endpoint_record_vtable"] = "0x540ab0";
+	report["endpoint_record_commit_vfunc_slot"] = "generator_vtable+0x04";
+	report["road_coordinate_vector_offset"] = "generator+0x14b0";
+	report["runtime_zone_endpoint_vector_offset"] = "runtime_zone+0x404";
+	report["endpoint_vector_append_helper_address"] = "0x40bb15";
+	report["materializes_endpoint_coordinates"] = false;
+	report["endpoint_coordinate_materialized_count"] = 0;
+
+	const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
+	const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
+	const int32_t map_width = int32_t(terrain_fill.get("width", 0));
+	const int32_t map_height = int32_t(terrain_fill.get("height", 0));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	Array zone_reports = terrain_fill.get("zones", Array());
+	Dictionary bbox_a;
+	Dictionary bbox_b;
+	for (int64_t zone_index = 0; zone_index < zone_reports.size(); ++zone_index) {
+		if (Variant(zone_reports[zone_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(zone_reports[zone_index]);
+		const int32_t runtime_index = int32_t(zone.get("runtime_zone_index", -1));
+		if (runtime_index == runtime_a) {
+			bbox_a = zone;
+		} else if (runtime_index == runtime_b) {
+			bbox_b = zone;
+		}
+	}
+	report["runtime_zone_a"] = runtime_a;
+	report["runtime_zone_b"] = runtime_b;
+	report["map_width"] = map_width;
+	report["map_height"] = map_height;
+	report["level_count"] = level_count;
+	if (bbox_a.is_empty() || bbox_b.is_empty() || map_width <= 0 || map_height <= 0) {
+		report["status"] = "0x4a696b_blocked_missing_runtime_zone_inputs";
+		report["candidate_scan_status"] = "not_run_missing_runtime_zone_inputs";
+		return report;
+	}
+	const int32_t level_a = int32_t(bbox_a.get("seed_level", 0));
+	const int32_t level_b = int32_t(bbox_b.get("seed_level", 0));
+	Dictionary bbox_summary_a;
+	bbox_summary_a["min_x"] = bbox_a.get("bbox_min_x_after_0x4a2105", 0);
+	bbox_summary_a["min_y"] = bbox_a.get("bbox_min_y_after_0x4a2105", 0);
+	bbox_summary_a["max_x_exclusive"] = bbox_a.get("bbox_max_x_after_0x4a2105_exclusive", 0);
+	bbox_summary_a["max_y_exclusive"] = bbox_a.get("bbox_max_y_after_0x4a2105_exclusive", 0);
+	bbox_summary_a["level"] = level_a;
+	Dictionary bbox_summary_b;
+	bbox_summary_b["min_x"] = bbox_b.get("bbox_min_x_after_0x4a2105", 0);
+	bbox_summary_b["min_y"] = bbox_b.get("bbox_min_y_after_0x4a2105", 0);
+	bbox_summary_b["max_x_exclusive"] = bbox_b.get("bbox_max_x_after_0x4a2105_exclusive", 0);
+	bbox_summary_b["max_y_exclusive"] = bbox_b.get("bbox_max_y_after_0x4a2105_exclusive", 0);
+	bbox_summary_b["level"] = level_b;
+	report["bbox_a"] = bbox_summary_a;
+	report["bbox_b"] = bbox_summary_b;
+	if (level_a != level_b) {
+		report["status"] = "0x4a696b_different_level_return_false";
+		report["candidate_scan_status"] = "0x4a696b_skipped_different_level";
+		return report;
+	}
+	report["status"] = "0x4a696b_same_level_shipyard_lane_helper_identified_endpoint_geometry_pending";
+	report["candidate_scan_status"] = "0x4a696b_same_level_candidate_scan_recovered_not_materialized";
+	return report;
+}
+
 Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config, const Dictionary &terrain_fill) {
 	Array result;
 	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
@@ -7466,6 +7572,9 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		record["geometry_4a6cf2_overlap"] = overlap_report;
 		record["geometry_4a6cf2_status"] = overlap_report.get("status", "");
 		record["geometry_4a6cf2_overlap_cell_count"] = overlap_report.get("overlap_cell_count", 0);
+		Dictionary helper_4a696b_report = h3maped_connection_geometry_4a696b_report(seed, terrain_fill);
+		record["geometry_4a696b"] = helper_4a696b_report;
+		record["geometry_4a696b_status"] = helper_4a696b_report.get("status", "");
 		record["road_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 		record["h3maped_phase"] = "0x4a79a3_link_payload_semantics";
 		record["h3maped_source"] = seed;
@@ -7494,6 +7603,8 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t overlap_4a6cf2_cell_total = 0;
 	int32_t overlap_4a6cf2_high_owner_sentinel_total = 0;
 	int32_t overlap_4a6cf2_high_owner_materialized_total = 0;
+	int32_t helper_4a696b_link_count = 0;
+	int32_t helper_4a696b_same_level_ready_count = 0;
 	Array normal_guard_spawn_intents;
 	Array geometry_dispatch_plan;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
@@ -7524,6 +7635,13 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 				overlap_4a6cf2_nonempty_link_count += 1;
 			}
 		}
+		Dictionary helper_4a696b = record.get("geometry_4a696b", Dictionary());
+		if (!helper_4a696b.is_empty()) {
+			helper_4a696b_link_count += 1;
+			if (String(helper_4a696b.get("status", "")) == String("0x4a696b_same_level_shipyard_lane_helper_identified_endpoint_geometry_pending")) {
+				helper_4a696b_same_level_ready_count += 1;
+			}
+		}
 		Dictionary dispatch;
 		dispatch["connection_id"] = record.get("connection_id", "");
 		dispatch["link_index"] = record.get("link_index", index);
@@ -7536,6 +7654,7 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		dispatch["required_outputs_before_guard_spawn"] = "endpoint_coordinates_occupied_blocked_connection_cells_processed_marker";
 		dispatch["wide_geometry_role"] = "none_traced_wide_suppresses_normal_guard_after_geometry";
 		dispatch["helper_4a6cf2_overlap"] = overlap_4a6cf2;
+		dispatch["helper_4a696b"] = helper_4a696b;
 		dispatch["status"] = "dispatch_order_ported_success_path_geometry_pending";
 		geometry_dispatch_plan.append(dispatch);
 		const int32_t scaled_value = int32_t(record.get("normal_guard_scaled_value", 0));
@@ -7606,6 +7725,12 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["geometry_4a6cf2_overlap_high_owner_sentinel_total"] = overlap_4a6cf2_high_owner_sentinel_total;
 	connection_payload["geometry_4a6cf2_overlap_high_owner_materialized_total"] = overlap_4a6cf2_high_owner_materialized_total;
 	connection_payload["geometry_4a6cf2_endpoint_coordinate_materialized_count"] = 0;
+	connection_payload["geometry_4a696b_link_count"] = helper_4a696b_link_count;
+	connection_payload["geometry_4a696b_same_level_ready_count"] = helper_4a696b_same_level_ready_count;
+	connection_payload["geometry_4a696b_endpoint_coordinate_materialized_count"] = 0;
+	connection_payload["geometry_4a696b_status"] = helper_4a696b_same_level_ready_count == helper_4a696b_link_count && helper_4a696b_link_count > 0
+			? String("0x4a696b_same_level_shipyard_lane_helper_identified_all_links_endpoint_geometry_pending")
+			: String("0x4a696b_same_level_shipyard_lane_helper_not_applicable_or_missing_inputs");
 	connection_payload["geometry_dispatch_plan"] = geometry_dispatch_plan;
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
 	connection_payload["road_materialization_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
