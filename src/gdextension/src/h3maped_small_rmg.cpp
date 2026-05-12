@@ -7216,18 +7216,34 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	report["source_range_overlap"] = "0x4a6d52..0x4a6ddc";
 	report["source_range_candidate_scan"] = "0x4a6de2..0x4a6f4a";
 	report["source_range_endpoint_record_write"] = "0x4a6f50..0x4a7073";
+	report["same_level_return_false_range"] = "0x4a6d3d..0x4a6d40";
+	report["source_zone_type_gate_range"] = "0x4a6d46..0x4a6d4c";
 	report["source_range_wide_read"] = "0x4a707b..0x4a709a";
 	report["source_range_block_cells"] = "0x4a70aa..0x4a7100";
 	report["source_range_guard_spawn"] = "0x4a72bd..0x4a72e8";
 	report["owner_low_byte_source"] = "cell+0x20 bits 16..23";
 	report["owner_high_byte_source"] = "cell+0x20 bits 24..31";
-	report["owner_channel_requirement_source"] = "0x4a61bc, 0x4a696b, and 0x4a6cf2 compare both generated-cell owner bytes before endpoint geometry succeeds";
+	report["owner_channel_requirement_source"] = "0x4a61bc and 0x4a696b compare both generated-cell owner bytes for same-level endpoints; 0x4a6cf2 does so only after the cross-level gate passes";
 	report["owner_high_byte_producer"] = "0x4a5767 reset plus 0x49a318 anchor/occupancy normalization";
 	report["candidate_shape_vector_source"] = "generator+0x6a8";
 	report["candidate_shape_vector_begin_offset"] = "generator+0x6a8";
 	report["candidate_shape_vector_end_offset"] = "generator+0x6ac";
 	report["candidate_shape_vector_pointer_stride_bytes"] = 4;
-	report["candidate_shape_vector_status"] = "pending_generator_0x6a8_shape_list_port";
+	report["candidate_shape_vector_bucket_offset"] = "generator+0x34+0x67*0x10";
+	report["candidate_shape_vector_object_type"] = 0x67;
+	report["candidate_shape_vector_object_type_name"] = object_type_name_from_names_file(0x67);
+	std::vector<H3ObjectRow> subterranean_gate_rows = h3_object_rows_by_type(0x67);
+	report["candidate_shape_vector_template_count"] = int32_t(subterranean_gate_rows.size());
+	if (!subterranean_gate_rows.empty()) {
+		const H3ObjectRow &row = subterranean_gate_rows.front();
+		report["candidate_shape_vector_template_def_name"] = row.def_name;
+		report["candidate_shape_vector_template_source_line"] = row.source_line;
+		report["candidate_shape_vector_template_passability_mask"] = row.passability_mask;
+		report["candidate_shape_vector_template_action_mask"] = row.action_mask;
+		report["candidate_shape_vector_template_primary_terrain_mask"] = row.terrain_mask_primary;
+		report["candidate_shape_vector_template_secondary_terrain_mask"] = row.terrain_mask_secondary;
+	}
+	report["candidate_shape_vector_status"] = "0x4a6cf2_type_103_subterranean_gate_bucket_identified";
 	report["candidate_shape_vector_selection_range"] = "0x4a6de2..0x4a6e0c";
 	report["candidate_shape_vector_random_selector_address"] = "0x4e7276";
 	report["selected_shape_object_pointer_read"] = "[selected_shape_pointer+0x00]";
@@ -7282,12 +7298,14 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 
 	const int32_t level_a = int32_t(bbox_a.get("seed_level", 0));
 	const int32_t level_b = int32_t(bbox_b.get("seed_level", 0));
-	const int32_t min_x = std::max(int32_t(bbox_a.get("bbox_min_x_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_x_after_0x4a2105", 0)));
-	const int32_t min_y = std::max(int32_t(bbox_a.get("bbox_min_y_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_y_after_0x4a2105", 0)));
-	const int32_t max_x = std::min(int32_t(bbox_a.get("bbox_max_x_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_x_after_0x4a2105_exclusive", 0)));
-	const int32_t max_y = std::min(int32_t(bbox_a.get("bbox_max_y_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_y_after_0x4a2105_exclusive", 0)));
-	const int32_t overlap_width = level_a == level_b ? std::max(0, max_x - min_x) : 0;
-	const int32_t overlap_height = level_a == level_b ? std::max(0, max_y - min_y) : 0;
+	const bool same_level = level_a == level_b;
+	const bool cross_level_scan = !same_level;
+	const int32_t min_x = cross_level_scan ? std::max(int32_t(bbox_a.get("bbox_min_x_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_x_after_0x4a2105", 0))) : 0;
+	const int32_t min_y = cross_level_scan ? std::max(int32_t(bbox_a.get("bbox_min_y_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_y_after_0x4a2105", 0))) : 0;
+	const int32_t max_x = cross_level_scan ? std::min(int32_t(bbox_a.get("bbox_max_x_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_x_after_0x4a2105_exclusive", 0))) : 0;
+	const int32_t max_y = cross_level_scan ? std::min(int32_t(bbox_a.get("bbox_max_y_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_y_after_0x4a2105_exclusive", 0))) : 0;
+	const int32_t overlap_width = cross_level_scan ? std::max(0, max_x - min_x) : 0;
+	const int32_t overlap_height = cross_level_scan ? std::max(0, max_y - min_y) : 0;
 	const int32_t overlap_cell_count = overlap_width * overlap_height;
 	Dictionary bbox_summary_a;
 	bbox_summary_a["min_x"] = bbox_a.get("bbox_min_x_after_0x4a2105", 0);
@@ -7313,6 +7331,21 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	report["bbox_b"] = bbox_summary_b;
 	report["overlap_rect"] = overlap_rect;
 	report["overlap_cell_count"] = overlap_cell_count;
+	if (same_level) {
+		report["overlap_owner_a_cell_count"] = 0;
+		report["overlap_owner_b_cell_count"] = 0;
+		report["overlap_other_owner_cell_count"] = 0;
+		report["overlap_unassigned_cell_count"] = 0;
+		report["overlap_high_owner_a_cell_count"] = 0;
+		report["overlap_high_owner_b_cell_count"] = 0;
+		report["overlap_high_other_owner_cell_count"] = 0;
+		report["overlap_high_owner_sentinel_cell_count"] = 0;
+		report["overlap_low_word_score_sum"] = 0;
+		report["owner_channel_status"] = "not_read_same_level_return_false";
+		report["candidate_scan_status"] = "0x4a6cf2_skipped_same_level";
+		report["status"] = "0x4a6cf2_same_level_return_false";
+		return report;
+	}
 
 	int32_t owner_a_cell_count = 0;
 	int32_t owner_b_cell_count = 0;
@@ -7543,14 +7576,30 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_endpoint_geometry_pending";
 	connection_payload["geometry_dispatch_link_count"] = geometry_dispatch_plan.size();
 	connection_payload["geometry_endpoint_coordinate_materialized_count"] = endpoint_coordinate_materialized_count;
-	connection_payload["geometry_owner_channel_status"] = overlap_4a6cf2_high_owner_materialized_total > 0
+	int32_t overlap_4a6cf2_same_level_return_false_count = 0;
+	for (int64_t index = 0; index < connection_records.size(); ++index) {
+		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = Dictionary(connection_records[index]);
+		Dictionary overlap_4a6cf2 = record.get("geometry_4a6cf2_overlap", Dictionary());
+		if (String(overlap_4a6cf2.get("status", "")) == String("0x4a6cf2_same_level_return_false")) {
+			overlap_4a6cf2_same_level_return_false_count += 1;
+		}
+	}
+	connection_payload["geometry_4a6cf2_same_level_return_false_count"] = overlap_4a6cf2_same_level_return_false_count;
+	connection_payload["geometry_owner_channel_status"] = overlap_4a6cf2_same_level_return_false_count == overlap_4a6cf2_link_count && overlap_4a6cf2_link_count > 0
+			? String("0x4a61bc_0x4a696b_high_owner_channel_required_same_level_helpers")
+			: (overlap_4a6cf2_high_owner_materialized_total > 0
 			? (overlap_4a6cf2_high_owner_sentinel_total > 0
 					? String("0x4a5767_49a318_high_owner_channel_partially_materialized")
 					: String("0x4a5767_49a318_high_owner_channel_materialized"))
-			: String("0x4a5767_49a318_high_owner_channel_pending");
-	connection_payload["geometry_4a6cf2_overlap_status"] = overlap_4a6cf2_high_owner_materialized_total > 0
-			? String("0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending")
-			: String("0x4a6cf2_overlap_precheck_materialized_high_owner_channel_pending");
+			: String("0x4a5767_49a318_high_owner_channel_pending"));
+	connection_payload["geometry_4a6cf2_overlap_status"] = overlap_4a6cf2_same_level_return_false_count == overlap_4a6cf2_link_count && overlap_4a6cf2_link_count > 0
+			? String("0x4a6cf2_same_level_return_false_all_links")
+			: (overlap_4a6cf2_high_owner_materialized_total > 0
+					? String("0x4a6cf2_cross_level_subterranean_gate_precheck_materialized_candidate_scan_pending")
+					: String("0x4a6cf2_cross_level_subterranean_gate_precheck_materialized_high_owner_channel_pending"));
 	connection_payload["geometry_4a6cf2_overlap_link_count"] = overlap_4a6cf2_link_count;
 	connection_payload["geometry_4a6cf2_nonempty_overlap_link_count"] = overlap_4a6cf2_nonempty_link_count;
 	connection_payload["geometry_4a6cf2_overlap_cell_total"] = overlap_4a6cf2_cell_total;
