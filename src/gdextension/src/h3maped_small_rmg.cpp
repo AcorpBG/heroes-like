@@ -2029,8 +2029,8 @@ void h3maped_decode_grid_key(int64_t key, int32_t &level, int32_t &x, int32_t &y
 
 Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count) {
 	Dictionary report;
-	report["status"] = "0x4bc5f0_repaint_order_queue_drain_gap_report_inspection_only";
-	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape over a copied 0x4a3f27 terrain grid and reports the remaining exact-drain gap";
+	report["status"] = "0x4bc5f0_repaint_order_queue_drain_projection_inspection_only";
+	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape per 0x4a3f27 repaint over a copied terrain grid";
 	report["ported_addresses"] = Array::make("0x4bc5f0", "0x4bbd01", "0x4bc988", "0x4bb74b", "0x4bba59", "0x4bbfcc");
 	report["exact_drain_complete"] = false;
 	report["blocked_exact_dependencies"] = Array::make("0x4bd1c1_ordered_container_insert_semantics", "0x4bd374_container_remove_semantics", "0x4bd408_container_copy_semantics", "0x4bad0f_scratch_visual_state_feedback");
@@ -2051,6 +2051,8 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	int32_t changed_cell_update_count = 0;
 	int32_t set_b_insert_count = 0;
 	int32_t set_a_insert_count = 0;
+	int32_t max_set_a_count = 0;
+	int32_t max_set_b_count = 0;
 
 	auto append_set_b = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain, const char *source_branch) {
 		if (x < 0 || y < 0 || x >= width || y >= height) {
@@ -2127,21 +2129,74 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 			append_set_b(level, x, y, current_terrain, source_branch);
 		}
 	};
-	auto process_4bb74b_topology = [&](int32_t level, int32_t x, int32_t y) {
-		const int32_t terrain = terrain_at_grid_index(drain_grid, width, height, level_tile_count, level, x, y, -1);
-		if (terrain < 0) {
+	auto process_4bb74b_topology = [&](int32_t level, int32_t x, int32_t y, int32_t active_terrain) {
+		if (active_terrain < 0) {
 			return;
 		}
-		if (!h3maped_toolkit_byte5_allows_same_class_gate(terrain)) {
-			seed_4bb74b_neighbor_branch(level, x, y - 1, terrain, true, "0x4bb7b7_neighbor_0x4bba13_false");
-			seed_4bb74b_neighbor_branch(level, x, y + 1, terrain, true, "0x4bb80b_neighbor_0x4bba13_false");
-			seed_4bb74b_neighbor_branch(level, x - 1, y, terrain, false, "0x4bb863_neighbor_0x4bba36_false");
-			seed_4bb74b_neighbor_branch(level, x + 1, y, terrain, false, "0x4bb8b7_neighbor_0x4bba36_false");
+		set_terrain_at_grid_index(drain_grid, width, height, level_tile_count, level, x, y, active_terrain);
+		if (!h3maped_toolkit_byte5_allows_same_class_gate(active_terrain)) {
+			seed_4bb74b_neighbor_branch(level, x, y - 1, active_terrain, true, "0x4bb7b7_neighbor_0x4bba13_false");
+			seed_4bb74b_neighbor_branch(level, x, y + 1, active_terrain, true, "0x4bb80b_neighbor_0x4bba13_false");
+			seed_4bb74b_neighbor_branch(level, x - 1, y, active_terrain, false, "0x4bb863_neighbor_0x4bba36_false");
+			seed_4bb74b_neighbor_branch(level, x + 1, y, active_terrain, false, "0x4bb8b7_neighbor_0x4bba36_false");
 		} else if (h3maped_candidate_gate_4bc988_grid(drain_grid, width, height, level_tile_count, level, x, y)) {
 			append_set_a(level, x, y, "0x4bb9ed_current_candidate_to_set_a");
 		} else {
-			seed_4bba59(level, x, y, terrain);
+			seed_4bba59(level, x, y, active_terrain);
 		}
+	};
+	auto update_max_queue_counts = [&]() {
+		max_set_a_count = std::max(max_set_a_count, int32_t(set_a.size()));
+		max_set_b_count = std::max(max_set_b_count, int32_t(set_b.size()));
+	};
+	int32_t set_a_drain_count = 0;
+	int32_t set_b_drain_count = 0;
+	int32_t set_b_candidate_true_count = 0;
+	int32_t retouched_cell_write_count = 0;
+	int32_t guard_count = 0;
+	const int32_t drain_guard_limit = 32768;
+	auto drain_queue_for_active_terrain = [&](int32_t active_terrain) {
+		update_max_queue_counts();
+		while ((!set_a.empty() || !set_b.empty()) && guard_count < drain_guard_limit) {
+			guard_count += 1;
+			while (!set_a.empty() && guard_count < drain_guard_limit) {
+				guard_count += 1;
+				const int64_t key = *set_a.begin();
+				set_a.erase(set_a.begin());
+				int32_t level = 0;
+				int32_t x = 0;
+				int32_t y = 0;
+				h3maped_decode_grid_key(key, level, x, y);
+				set_a_drain_count += 1;
+				std::vector<int64_t> changed_keys;
+				retouched_cell_write_count += h3maped_frontier_retouch_4bbd01(drain_grid, width, height, level_tile_count, level, x, y, &drain_samples, 24, &changed_keys);
+				for (int64_t changed_key : changed_keys) {
+					int32_t changed_level = 0;
+					int32_t changed_x = 0;
+					int32_t changed_y = 0;
+					h3maped_decode_grid_key(changed_key, changed_level, changed_x, changed_y);
+					process_4bb74b_topology(changed_level, changed_x, changed_y, active_terrain);
+				}
+				update_max_queue_counts();
+			}
+			while (set_a.empty() && !set_b.empty() && guard_count < drain_guard_limit) {
+				guard_count += 1;
+				const int64_t key = *set_b.begin();
+				set_b.erase(set_b.begin());
+				int32_t level = 0;
+				int32_t x = 0;
+				int32_t y = 0;
+				h3maped_decode_grid_key(key, level, x, y);
+				set_b_drain_count += 1;
+				if (h3maped_candidate_gate_4bc988_grid(drain_grid, width, height, level_tile_count, level, x, y)) {
+					set_b_candidate_true_count += 1;
+					process_4bb74b_topology(level, x, y, active_terrain);
+				}
+				update_max_queue_counts();
+			}
+		}
+		set_a.clear();
+		set_b.clear();
 	};
 
 	for (int64_t zone_index = 0; zone_index < selected_terrain_codes.size(); ++zone_index) {
@@ -2160,8 +2215,8 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != int32_t(zone_index)) {
 						continue;
 					}
+					changed_cell_update_count += 1;
 					if (set_terrain_at_grid_index(drain_grid, width, height, level_tile_count, level, x, y, terrain)) {
-						changed_cell_update_count += 1;
 						if (h3maped_candidate_gate_4bc988_grid(drain_grid, width, height, level_tile_count, level, x, y)) {
 							append_set_a(level, x, y, "0x4bb9ed_repaint_candidate_to_set_a");
 						} else {
@@ -2174,6 +2229,7 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 							seed_4bb74b_neighbor_branch(level, x + 1, y, terrain, false, "0x4bb8b7_repaint_neighbor_0x4bba36_false");
 						}
 					}
+					drain_queue_for_active_terrain(terrain);
 				}
 			}
 		}
@@ -2207,50 +2263,6 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 		}
 	}
 
-	const int32_t initial_set_a_count = int32_t(set_a.size());
-	const int32_t initial_set_b_count = int32_t(set_b.size());
-	int32_t set_a_drain_count = 0;
-	int32_t set_b_drain_count = 0;
-	int32_t set_b_candidate_true_count = 0;
-	int32_t retouched_cell_write_count = 0;
-	int32_t guard_count = 0;
-	while ((!set_a.empty() || !set_b.empty()) && guard_count < 8192) {
-		guard_count += 1;
-		while (!set_a.empty() && guard_count < 8192) {
-			guard_count += 1;
-			const int64_t key = *set_a.begin();
-			set_a.erase(set_a.begin());
-			int32_t level = 0;
-			int32_t x = 0;
-			int32_t y = 0;
-			h3maped_decode_grid_key(key, level, x, y);
-			set_a_drain_count += 1;
-			std::vector<int64_t> changed_keys;
-			retouched_cell_write_count += h3maped_frontier_retouch_4bbd01(drain_grid, width, height, level_tile_count, level, x, y, &drain_samples, 24, &changed_keys);
-			for (int64_t changed_key : changed_keys) {
-				int32_t changed_level = 0;
-				int32_t changed_x = 0;
-				int32_t changed_y = 0;
-				h3maped_decode_grid_key(changed_key, changed_level, changed_x, changed_y);
-				process_4bb74b_topology(changed_level, changed_x, changed_y);
-			}
-		}
-		while (set_a.empty() && !set_b.empty() && guard_count < 8192) {
-			guard_count += 1;
-			const int64_t key = *set_b.begin();
-			set_b.erase(set_b.begin());
-			int32_t level = 0;
-			int32_t x = 0;
-			int32_t y = 0;
-			h3maped_decode_grid_key(key, level, x, y);
-			set_b_drain_count += 1;
-			if (h3maped_candidate_gate_4bc988_grid(drain_grid, width, height, level_tile_count, level, x, y)) {
-				set_b_candidate_true_count += 1;
-				process_4bb74b_topology(level, x, y);
-			}
-		}
-	}
-
 	int32_t final_missing_count = 0;
 	Dictionary final_missing_class_histogram;
 	for (int32_t level = 0; level < level_count; ++level) {
@@ -2271,15 +2283,16 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 		}
 	}
 	report["changed_cell_update_count"] = changed_cell_update_count;
-	report["initial_set_a_candidate_count"] = initial_set_a_count;
-	report["initial_set_b_candidate_count"] = initial_set_b_count;
+	report["initial_set_a_candidate_count"] = max_set_a_count;
+	report["initial_set_b_candidate_count"] = max_set_b_count;
 	report["total_set_a_insert_count"] = set_a_insert_count;
 	report["total_set_b_insert_count"] = set_b_insert_count;
 	report["set_a_drain_count"] = set_a_drain_count;
 	report["set_b_drain_count"] = set_b_drain_count;
 	report["set_b_candidate_true_count"] = set_b_candidate_true_count;
 	report["retouched_cell_write_count"] = retouched_cell_write_count;
-	report["drain_guard_exhausted"] = guard_count >= 8192;
+	report["drain_guard_limit"] = drain_guard_limit;
+	report["drain_guard_exhausted"] = guard_count >= drain_guard_limit;
 	report["initial_missing_bucket_cell_count"] = initial_missing_count;
 	report["post_drain_missing_bucket_cell_count"] = final_missing_count;
 	report["post_drain_full_grid_projection_complete"] = final_missing_count == 0;
@@ -2287,7 +2300,7 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	report["seed_samples"] = seed_samples;
 	report["drain_samples"] = drain_samples;
 	report["drained_terrain_code_u16"] = drain_grid;
-	report["blocked_next"] = "replace this gap report with the exact 0x4bd1c1/0x4bd374/0x4bd408 container behavior and 0x4bad0f scratch-state feedback inside the 0x4bc5f0 queue drain";
+	report["blocked_next"] = "replace this copied terrain-only projection with exact 0x4bd1c1/0x4bd374/0x4bd408 container return semantics plus 0x4bad0f scratch visual-state feedback before runtime adoption";
 	return report;
 }
 
