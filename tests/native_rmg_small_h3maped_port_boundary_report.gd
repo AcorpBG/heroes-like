@@ -338,27 +338,30 @@ func _run() -> void:
 	if bool(first_attempt.get("materializes_reward_object", true)):
 		_fail("0x4aa354 value-selection boundary must not claim reward object materialization before 0x4aa1db is ported: %s" % JSON.stringify(first_attempt))
 		return
-	if String(mine_reward_placement.get("treasure_reward_object_lookup_status", "")) != "0x4aa1db_lookup_control_flow_with_direct_field_candidate_scan_materialized_selection_pending":
+	if String(mine_reward_placement.get("treasure_reward_object_lookup_status", "")) != "0x4aa1db_lookup_control_flow_with_materialized_candidate_scan_dynamic_value_sites_pending":
 		_fail("0x4aa1db reward object lookup control flow was not exposed as the next pending boundary: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if int(mine_reward_placement.get("treasure_reward_object_lookup_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_object_lookup_primary_retry_budget_total", -1)) != 126 or bool(mine_reward_placement.get("treasure_reward_object_lookup_candidate_execution_materialized", true)):
 		_fail("0x4aa1db reward object lookup counts/materialization flags drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
-	if String(mine_reward_placement.get("treasure_reward_candidate_scan_status", "")) != "0x4a9f1c_direct_field_candidate_scan_materialized_weighted_selection_pending" or int(mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", -1)) != 14:
+	if String(mine_reward_placement.get("treasure_reward_candidate_scan_status", "")) != "0x4a9f1c_materialized_candidate_scan_dynamic_value_sites_pending" or int(mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", -1)) != 14:
 		_fail("0x4a9f1c candidate scan status/proxy inventory drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
-	if int(mine_reward_placement.get("treasure_reward_candidate_scan_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_candidate_vector_direct_field_record_count", -1)) != 98:
-		_fail("0x4a9f1c recovered direct-field candidate-vector scan count drifted: %s" % JSON.stringify(mine_reward_placement))
+	if int(mine_reward_placement.get("treasure_reward_candidate_scan_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_candidate_vector_materialized_record_count", -1)) != 123:
+		_fail("0x4a9f1c recovered materialized candidate-vector scan count drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
 	var vector_construction: Dictionary = mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})
 	if int(vector_construction.get("static_insert_site_count", -1)) != 126 or int(vector_construction.get("static_insert_helper_42d8d8_count", -1)) != 27 or int(vector_construction.get("static_insert_helper_40bb26_count", -1)) != 99:
 		_fail("0x49f95a reward vector construction-site summary drifted: %s" % JSON.stringify(vector_construction))
 		return
-	if int(vector_construction.get("current_direct_field_materialized_record_count", -1)) != 98 or int(vector_construction.get("uncovered_static_insert_site_count", -1)) != 28:
-		_fail("0x49f95a direct-field vector coverage gap drifted: %s" % JSON.stringify(vector_construction))
+	if int(vector_construction.get("current_direct_field_materialized_record_count", -1)) != 98 or int(vector_construction.get("current_literal_constructor_materialized_record_count", -1)) != 25 or int(vector_construction.get("current_materialized_record_count", -1)) != 123 or int(vector_construction.get("uncovered_static_insert_site_count", -1)) != 3:
+		_fail("0x49f95a materialized vector coverage gap drifted: %s" % JSON.stringify(vector_construction))
 		return
-	if int(mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", -1)) != 348 or int(mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", -1)) != 72798:
-		_fail("0x4a9f1c recovered direct-field candidate scan totals drifted: %s" % JSON.stringify(mine_reward_placement))
+	if int(vector_construction.get("dynamic_constructor_site_pending_count", -1)) != 3:
+		_fail("0x49f95a dynamic constructor site gap drifted: %s" % JSON.stringify(vector_construction))
+		return
+	if int(mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", -1)) != 463 or int(mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", -1)) != 95948:
+		_fail("0x4a9f1c recovered materialized candidate scan totals drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
 	var first_lookup: Dictionary = first_attempt.get("object_lookup_control_flow", {})
 	if String(first_lookup.get("function_address", "")) != "0x4aa1db" or String(first_lookup.get("candidate_scan_helper_address", "")) != "0x4a9f1c":
@@ -389,14 +392,14 @@ func _run() -> void:
 	if int(first_candidate_scan.get("value_range_min", -1)) != 3430 or int(first_candidate_scan.get("value_range_max", -1)) != 13723:
 		_fail("0x4a9f1c first candidate value range drifted from 0x4aa1db primary range: %s" % JSON.stringify(first_candidate_scan))
 		return
-	if String(first_candidate_scan.get("candidate_vector_constructor_address", "")) != "0x49f95a" or int(first_candidate_scan.get("candidate_vector_record_count", -1)) != 98 or bool(first_candidate_scan.get("complete_generator_candidate_vector_materialized", true)):
-		_fail("0x4a9f1c recovered direct-field vector scope drifted: %s" % JSON.stringify(first_candidate_scan))
+	if String(first_candidate_scan.get("candidate_vector_constructor_address", "")) != "0x49f95a" or int(first_candidate_scan.get("candidate_vector_record_count", -1)) != 123 or bool(first_candidate_scan.get("complete_generator_candidate_vector_materialized", true)):
+		_fail("0x4a9f1c recovered materialized vector scope drifted: %s" % JSON.stringify(first_candidate_scan))
 		return
-	if int(first_candidate_scan.get("candidate_vector_static_insert_site_count", -1)) != 126 or int(first_candidate_scan.get("candidate_vector_uncovered_static_site_count", -1)) != 28:
+	if int(first_candidate_scan.get("candidate_vector_static_insert_site_count", -1)) != 126 or int(first_candidate_scan.get("candidate_vector_uncovered_static_site_count", -1)) != 3:
 		_fail("0x4a9f1c candidate scan lost the 0x49f95a full-vector construction gap: %s" % JSON.stringify(first_candidate_scan))
 		return
-	if int(first_candidate_scan.get("eligible_candidate_count", -1)) != 10 or int(first_candidate_scan.get("eligible_candidate_weight_total", -1)) != 358:
-		_fail("0x4a9f1c first direct-field candidate eligibility drifted: %s" % JSON.stringify(first_candidate_scan))
+	if int(first_candidate_scan.get("eligible_candidate_count", -1)) != 12 or int(first_candidate_scan.get("eligible_candidate_weight_total", -1)) != 418:
+		_fail("0x4a9f1c first materialized candidate eligibility drifted: %s" % JSON.stringify(first_candidate_scan))
 		return
 	if String(first_candidate_scan.get("resource_helper_address", "")) != "0x4a9e40" or String(first_candidate_scan.get("footprint_probe_helper_address", "")) != "0x49a6f9" or String(first_candidate_scan.get("optional_coverage_ratio_helper_address", "")) != "0x4aa195" or String(first_candidate_scan.get("weighted_selection_rng_address", "")) != "0x4e7276":
 		_fail("0x4a9f1c helper address evidence drifted: %s" % JSON.stringify(first_candidate_scan))
@@ -405,7 +408,7 @@ func _run() -> void:
 		_fail("0x4a9f1c native proxy inventory must be visible but non-materializing: %s" % JSON.stringify(first_candidate_scan))
 		return
 	var first_eligible_preview: Array = first_candidate_scan.get("eligible_candidate_preview", [])
-	if first_eligible_preview.size() < 10:
+	if first_eligible_preview.size() < 12:
 		_fail("0x4a9f1c first eligible candidate preview is too small: %s" % JSON.stringify(first_candidate_scan))
 		return
 	var first_preview_candidate: Dictionary = first_eligible_preview[0]
@@ -415,6 +418,10 @@ func _run() -> void:
 	var artifact_preview_candidate: Dictionary = first_eligible_preview[8]
 	if int(artifact_preview_candidate.get("type_id", -1)) != 67:
 		_fail("0x4a9f1c eligible preview lost the recovered Random Minor Artifact candidate: %s" % JSON.stringify(first_candidate_scan))
+		return
+	var spell_scroll_preview_candidate: Dictionary = first_eligible_preview[10]
+	if int(spell_scroll_preview_candidate.get("type_id", -1)) != 93:
+		_fail("0x4a9f1c eligible preview lost the recovered literal-constructor Spell Scroll candidate: %s" % JSON.stringify(first_candidate_scan))
 		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
@@ -1128,6 +1135,8 @@ func _run() -> void:
 		"treasure_reward_candidate_scan_weight_total": mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", 0),
 		"treasure_reward_candidate_vector_proxy_backed_record_count": mine_reward_placement.get("treasure_reward_candidate_vector_proxy_backed_record_count", 0),
 		"treasure_reward_candidate_vector_direct_field_record_count": mine_reward_placement.get("treasure_reward_candidate_vector_direct_field_record_count", 0),
+		"treasure_reward_candidate_vector_literal_constructor_record_count": mine_reward_placement.get("treasure_reward_candidate_vector_literal_constructor_record_count", 0),
+		"treasure_reward_candidate_vector_materialized_record_count": mine_reward_placement.get("treasure_reward_candidate_vector_materialized_record_count", 0),
 		"treasure_reward_candidate_vector_static_insert_site_count": Dictionary(mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})).get("static_insert_site_count", 0),
 		"treasure_reward_candidate_vector_uncovered_static_site_count": Dictionary(mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})).get("uncovered_static_insert_site_count", 0),
 		"treasure_reward_proxy_inventory_reward_reference_count": mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", 0),
