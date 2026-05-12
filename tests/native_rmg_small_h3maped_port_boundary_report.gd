@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_next_executable_phase_port":
-		_fail("The clean restart must stop after template selection until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a17f5_coordinate_candidate_port":
+		_fail("The clean restart must stop before coordinate candidate math until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -125,7 +125,7 @@ func _run() -> void:
 		_fail("Player-slot assignment must remain inspection-only until runtime-zone/player materialization is ported: %s" % JSON.stringify(assignment))
 		return
 	var runtime_zones: Dictionary = selected_payload.get("runtime_zone_build", {})
-	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_record_setup_ported" \
+	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_record_setup_and_0x4a1f3b_endpoint_schedule_ported" \
 			or String(runtime_zones.get("owner_color_mapping_source", "")) != "generator+0xee4" \
 			or int(runtime_zones.get("runtime_zone_count", -1)) != 6 \
 			or int(runtime_zones.get("assigned_start_zone_count", -1)) != 3 \
@@ -151,6 +151,37 @@ func _run() -> void:
 			or String(runtime_records[2].get("role", "")) != "treasure" \
 			or String(runtime_records[0].get("coordinate_status", "")) != "pending_0x4a1f3b_0x4a17f5_0x4a1701":
 		_fail("Runtime-zone records lost selected-template/source-owner identity: %s" % JSON.stringify(runtime_zones))
+		return
+	var early_links: Dictionary = runtime_zones.get("early_link_placement", {})
+	if String(runtime_zones.get("early_link_placement_status", "")) != "0x4a1f3b_endpoint_control_flow_ported" \
+			or int(early_links.get("link_seed_count", -1)) != 5 \
+			or int(early_links.get("creation_pass_count", -1)) != 6 \
+			or int(early_links.get("stabilization_pass_count", -1)) != 2 \
+			or int(early_links.get("call_count", -1)) != 18 \
+			or int(early_links.get("explicit_endpoint_attempt_count", -1)) != 25 \
+			or int(early_links.get("fallback_attempt_count_if_no_valid_endpoint", -1)) != 3:
+		_fail("The 0x4a1f3b early endpoint schedule drifted: %s" % JSON.stringify(early_links))
+		return
+	if bool(early_links.get("materializes_coordinates", true)) \
+			or bool(early_links.get("materializes_connection_guards", true)):
+		_fail("The 0x4a1f3b schedule must not materialize coordinates or guards: %s" % JSON.stringify(early_links))
+		return
+	var link_seeds: Array = early_links.get("link_seeds", [])
+	if link_seeds.size() != 5 \
+			or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 \
+			or int(link_seeds[0].get("runtime_zone_b", -1)) != 3 \
+			or int(link_seeds[3].get("guard_value", -1)) != 6000 \
+			or String(link_seeds[0].get("early_consumer", "")) != "0x4a1f3b_endpoint_only" \
+			or String(link_seeds[0].get("late_payload_consumer", "")) != "0x4a79a3":
+		_fail("The 0x4a1f3b link-seed identity or late payload preservation drifted: %s" % JSON.stringify(early_links))
+		return
+	var link_calls: Array = early_links.get("calls", [])
+	if link_calls.size() != 18 \
+			or String(link_calls[0].get("pass", "")) != "creation" \
+			or Array(link_calls[3].get("available_endpoint_runtime_zones", [])) != [0] \
+			or Array(link_calls[4].get("available_endpoint_runtime_zones", [])) != [1, 3, 2] \
+			or String(link_calls[6].get("pass", "")) != "stabilization_1":
+		_fail("The 0x4a1f3b creation/stabilization call order drifted: %s" % JSON.stringify(early_links))
 		return
 
 	var color_config := config.duplicate(true)

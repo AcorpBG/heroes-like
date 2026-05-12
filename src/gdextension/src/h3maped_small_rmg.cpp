@@ -329,10 +329,138 @@ int32_t owner_color_for_source_owner(const Array &colors_by_source_owner, int32_
 	return int32_t(colors_by_source_owner[source_owner_index]);
 }
 
+Dictionary early_link_placement_schedule_report(const Dictionary &template_record, const Array &runtime_zone_records, int32_t human_count, int32_t player_count) {
+	Dictionary report;
+	report["status"] = "0x4a1f3b_endpoint_control_flow_ported";
+	report["source"] = "h3maped 0x4a1f3b walks source zone link endpoint records and calls 0x4a17f5; Value/Wide/Border Guard payloads are preserved for later 0x4a79a3";
+	report["link_endpoint_consumer_address"] = "0x4a1f3b";
+	report["candidate_generator_address"] = "0x4a17f5";
+	report["distance_validation_address"] = "0x4a1701";
+	report["payload_policy"] = "early endpoint schedule consumes only link endpoints; guard Value, Wide, and Border Guard are not consumed before late connection geometry";
+	report["materializes_coordinates"] = false;
+	report["materializes_connection_guards"] = false;
+
+	Dictionary runtime_index_by_zone_id;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+		if (Variant(runtime_zone_records[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zone_records[runtime_index];
+		runtime_index_by_zone_id[String(runtime.get("source_zone_key", ""))] = runtime_index;
+	}
+
+	Array adjacency;
+	for (int64_t index = 0; index < runtime_zone_records.size(); ++index) {
+		adjacency.append(Array());
+	}
+
+	Array link_seeds;
+	Array links = template_record.get("links", Array());
+	for (int64_t index = 0; index < links.size(); ++index) {
+		if (Variant(links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = links[index];
+		if (!player_filter_accepts(link.get("player_filter", Dictionary()), human_count, player_count)) {
+			continue;
+		}
+		const String from_id = String(link.get("from", ""));
+		const String to_id = String(link.get("to", ""));
+		const int32_t runtime_a = int32_t(runtime_index_by_zone_id.get(from_id, -1));
+		const int32_t runtime_b = int32_t(runtime_index_by_zone_id.get(to_id, -1));
+		Dictionary endpoints = link.get("source_endpoints", Dictionary());
+		Dictionary guard = link.get("guard", Dictionary());
+
+		Dictionary seed;
+		seed["link_index"] = link_seeds.size();
+		seed["source_from_zone_key"] = from_id;
+		seed["source_to_zone_key"] = to_id;
+		seed["source_endpoint_a"] = endpoints.get("zone1", -1);
+		seed["source_endpoint_b"] = endpoints.get("zone2", -1);
+		seed["runtime_zone_a"] = runtime_a;
+		seed["runtime_zone_b"] = runtime_b;
+		seed["guard_value"] = link.get("guard_value", guard.get("value", 0));
+		seed["wide"] = bool(link.get("wide", false));
+		seed["border_guard"] = bool(link.get("border_guard", false));
+		seed["early_consumer"] = "0x4a1f3b_endpoint_only";
+		seed["late_payload_consumer"] = "0x4a79a3";
+		link_seeds.append(seed);
+
+		if (runtime_a >= 0 && runtime_a < adjacency.size() && runtime_b >= 0 && runtime_b < adjacency.size()) {
+			Array a = adjacency[runtime_a];
+			a.append(runtime_b);
+			adjacency[runtime_a] = a;
+			Array b = adjacency[runtime_b];
+			b.append(runtime_a);
+			adjacency[runtime_b] = b;
+		}
+	}
+
+	Array placement_calls;
+	int32_t explicit_endpoint_attempts = 0;
+	int32_t fallback_attempts_if_no_valid_endpoint = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+		Array available_links;
+		Array linked = runtime_index < adjacency.size() ? Array(adjacency[runtime_index]) : Array();
+		for (int64_t link_index = 0; link_index < linked.size(); ++link_index) {
+			const int32_t linked_runtime = int32_t(linked[link_index]);
+			if (linked_runtime >= 0 && linked_runtime < runtime_index) {
+				available_links.append(linked_runtime);
+			}
+		}
+		explicit_endpoint_attempts += available_links.size();
+		if (available_links.is_empty()) {
+			fallback_attempts_if_no_valid_endpoint += int32_t(runtime_index);
+		}
+		Dictionary call;
+		call["pass"] = "creation";
+		call["runtime_zone_index"] = runtime_index;
+		call["runtime_vector_count_before_call"] = runtime_index;
+		call["available_endpoint_runtime_zones"] = available_links;
+		call["fallback_candidate_count_if_no_valid_endpoint"] = available_links.is_empty() ? runtime_index : 0;
+		call["coordinate_status"] = "pending_0x4a17f5_candidate_math_and_0x4a1701_validation";
+		placement_calls.append(call);
+	}
+	for (int32_t repeat = 0; repeat < 2; ++repeat) {
+		for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+			Array available_links;
+			Array linked = runtime_index < adjacency.size() ? Array(adjacency[runtime_index]) : Array();
+			for (int64_t link_index = 0; link_index < linked.size(); ++link_index) {
+				const int32_t linked_runtime = int32_t(linked[link_index]);
+				if (linked_runtime >= 0 && linked_runtime < runtime_zone_records.size()) {
+					available_links.append(linked_runtime);
+				}
+			}
+			explicit_endpoint_attempts += available_links.size();
+			if (available_links.is_empty()) {
+				fallback_attempts_if_no_valid_endpoint += int32_t(runtime_zone_records.size());
+			}
+			Dictionary call;
+			call["pass"] = repeat == 0 ? String("stabilization_1") : String("stabilization_2");
+			call["runtime_zone_index"] = runtime_index;
+			call["runtime_vector_count_before_call"] = runtime_zone_records.size();
+			call["available_endpoint_runtime_zones"] = available_links;
+			call["fallback_candidate_count_if_no_valid_endpoint"] = available_links.is_empty() ? runtime_zone_records.size() : 0;
+			call["coordinate_status"] = "pending_0x4a17f5_candidate_math_and_0x4a1701_validation";
+			placement_calls.append(call);
+		}
+	}
+
+	report["creation_pass_count"] = runtime_zone_records.size();
+	report["stabilization_pass_count"] = 2;
+	report["link_seed_count"] = link_seeds.size();
+	report["link_seeds"] = link_seeds;
+	report["call_count"] = placement_calls.size();
+	report["explicit_endpoint_attempt_count"] = explicit_endpoint_attempts;
+	report["fallback_attempt_count_if_no_valid_endpoint"] = fallback_attempts_if_no_valid_endpoint;
+	report["calls"] = placement_calls;
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count) {
 	Dictionary report;
-	report["status"] = "0x4a218c_runtime_zone_record_setup_ported";
-	report["source"] = "h3maped 0x4a218c consumes 0x4ac62a generator+0xee4 owner-color mapping before coordinate, terrain, footprint, and object materialization";
+	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a1f3b_endpoint_schedule_ported";
+	report["source"] = "h3maped 0x4a218c consumes 0x4ac62a generator+0xee4 owner-color mapping, then schedules 0x4a1f3b endpoint placement before coordinate, terrain, footprint, and object materialization";
 	report["runtime_zone_vector_source"] = "selected adapted-template active zones";
 	report["owner_color_mapping_source"] = "generator+0xee4";
 	report["materializes_runtime_zone_coordinates"] = false;
@@ -382,6 +510,7 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &template_record, c
 
 		Dictionary record;
 		record["runtime_zone_index"] = records.size();
+		record["source_zone_key"] = zone.get("id", "");
 		record["role"] = role;
 		record["source_owner_index"] = source_owner_index;
 		record["actual_owner_color"] = actual_owner_color;
@@ -402,6 +531,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &template_record, c
 	report["minimum_player_castles"] = minimum_player_castles;
 	report["actual_owner_colors_by_runtime_zone"] = owner_colors;
 	report["runtime_zone_records"] = records;
+	Dictionary endpoint_schedule = early_link_placement_schedule_report(template_record, records, human_count, player_count);
+	report["early_link_placement_status"] = endpoint_schedule.get("status", "");
+	report["early_link_placement"] = endpoint_schedule;
 	return report;
 }
 
@@ -426,7 +558,7 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary runtime_zones = runtime_zone_record_setup_report(template_record, assignment, human_count, human_count + computer_count);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
-	payload["materialization_status"] = "blocked_until_next_executable_phase_port";
+	payload["materialization_status"] = "blocked_until_0x4a17f5_coordinate_candidate_port";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
 }
@@ -441,7 +573,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
-		{ "runtime_zone_build", "0x4a218c", "active_record_setup_only" },
+		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b", "active_record_setup_and_endpoint_schedule_only" },
 		{ "zone_footprint_placement", "0x4a3a03", "pending" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },

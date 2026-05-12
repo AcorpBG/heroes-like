@@ -2,167 +2,70 @@
 
 Status: active reset slice.
 
-The previous native RMG implementation is archived as legacy evidence/debug code. It is not the production random map generator path. Normal generation must not silently fall back to that implementation because it mixed recovered-template labels with hash selection, per-case fitting, road-cluster materialization, and validation gates that did not prove physical zone separation.
+The previous native catalog-auto RMG implementation is archived as legacy evidence/debug code. It is not the production random map generator path, and `MapPackageService.generate_random_map` must not fall back to it.
 
 ## Source Anchor
-
-The replacement slice is scoped to the verified local Heroes III map editor executable:
 
 - Binary: `/root/Downloads/h3maped.exe`
 - Format: PE32 GUI Intel 80386 Windows executable
 - SHA-256: `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`
-- Recovered spec reference: `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- Recovered spec: `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- Active module: `src/gdextension/src/h3maped_small_rmg.cpp`
+- Historical ledger only: `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp`
 
-If an implementation detail is not supported by executable-derived behavior, recovered spec evidence, or direct generated-map comparison, it is not allowed into the production path.
+If behavior is not supported by executable-derived evidence, recovered spec evidence, or direct generated-map comparison, it is not allowed into the production path.
 
 ## Scope
 
-Initial scope is small maps only:
+Initial scope is only 36x36, one-level, land maps.
 
-- Size: 36x36.
-- Surface-only land maps first.
-- Surface plus underground, normal water, and islands only after the small land path has binary-backed template selection, physical zone separation, roads, blockers, guards, towns, mines, and reward placement working without fallback.
+Medium, large, XL, water, islands, and underground generation are out of scope for this reset until the small land path can materialize zones, terrain, owned starts, towns, roads, blockers, guards, mines, rewards, and final writeout from h3maped-derived phases.
 
-Medium, large, and extra-large maps are out of scope for this reset slice.
+## Current Active Boundary
+
+The active compact port currently supports inspection only:
+
+1. Verifies the local h3maped.exe reset anchor by file size and MZ header, while recording the SHA-256 anchor.
+2. Selects accepted small-land templates from recovered h3maped template evidence.
+3. Uses numeric h3maped RNG `0x4e7269/0x4e7276`; non-numeric seed hashing is blocked.
+4. Resolves selected source template `h3maped_template_018` to adapted template `translated_rmg_template_019_v1` for seed `1`, 1 human, 3 total players.
+5. Ports player-slot assignment `0x4ac62a..0x4ac6ec` for inspection: source capability masks, `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`.
+6. Ports runtime-zone record setup `0x4a218c` for inspection: six active runtime-zone records for the seed-1 boundary case, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles.
+7. Ports early endpoint-placement schedule `0x4a1f3b` for inspection: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. This phase consumes only link endpoints; `Value`, `Wide`, and `Border Guard` are preserved for later `0x4a79a3`.
+
+The active port does not materialize coordinates, terrain, map cells, towns, roads, blockers, guards, mines, rewards, or final map packages.
+
+## Runtime Gate
+
+Supported small land generation currently returns:
+
+- `ok: false`
+- `generation_status: h3maped_small_clean_restart_generation_not_ready`
+- `error_code: h3maped_phase_port_incomplete`
+- `runtime_generation_allowed: false`
+
+Out-of-scope generation currently returns `archived_legacy_native_rmg_disabled`.
+
+Explicit translated-template requests do not bypass the reset gate.
 
 ## Hard Rules
 
 - No hash-based template selection as a substitute for h3maped behavior.
 - No sample-specific exact-count fitting in runtime generation.
-- No road clusters that merely look like road counts; roads must serialize route geometry.
-- No blocker/decoration placement that passes count checks while leaving unguarded open paths between zones.
+- No road clusters that merely look like road counts.
+- No blocker/decoration placement that passes counts while leaving unguarded open paths between zones.
 - No player-start repair pass that only patches owner/town fields after placement.
 - No validation that treats metadata zone links as sufficient when map cells do not enforce the link.
 - No production fallback to archived native catalog-auto output.
 
-## Required Port Shape
+## Next Required Ports
 
-The new small-map path should be isolated from the archived implementation and should mirror the executable-derived sequence:
+The next clean phases are:
 
-1. Select the small-map template using h3maped-derived rules.
-2. Materialize physical zones and terrain regions.
-3. Place owned starting towns at player starts.
-4. Place neutral towns according to the selected template.
-5. Build real roads between the towns, zones, and required exits.
-6. Place mines, rewards, monsters, blockers, and decorations using executable-derived density and mask semantics.
-7. Guard zone links and high-value paths physically on the grid.
-8. Validate by reading the produced map cells and objects, not by trusting generator intent.
+1. `0x4a17f5` coordinate candidate generation.
+2. `0x4a1701` spacing validation and candidate acceptance.
+3. `0x49b53d` runtime terrain choice.
+4. `0x4a3a03` zone footprint placement.
+5. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
 
-Our content IDs, art assets, and object registries may adapt the output to this project, but placement semantics, masks, blocked tiles, guarded links, and route topology must follow the executable-derived behavior.
-
-## First Acceptance Target
-
-The first target comparison is a 36x36 single-level land map from the local owner corpus, especially `maps/h3m-maps/S-RandomNumberofplayers.h3m` when present. The first useful pass must report:
-
-- player-owned town count and ownership,
-- neutral town count,
-- physical zone count and terrain separation,
-- road connected components and endpoints,
-- guarded versus unguarded zone links,
-- blocker/decorative obstacle occupancy,
-- mine and reward distribution.
-
-Passing broad counts alone is not sufficient.
-
-## Current Boundary
-
-The reset now has a new isolated native module:
-
-- Header: `src/gdextension/include/h3maped_small_rmg.hpp`
-- Implementation: `src/gdextension/src/h3maped_small_rmg.cpp`
-- Public boundary: `MapPackageService.inspect_h3maped_small_rmg_port(config)`
-
-Reset correction on 2026-05-12: the previous oversized inspection implementation was moved out of the active compile path to `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp`. That file is historical evidence only. The active implementation now keeps a small auditable boundary: executable anchor verification, h3maped-derived template acceptance, numeric `0x4e7269/0x4e7276` RNG template selection, selected adapted-template identity, and the player-slot phase described below. Runtime zones, towns, roads, blockers, guards, mines, rewards, and final writeout are pending phase ports rather than partially materialized ledgers.
-
-The compact port now includes the next executable phase, player-slot assignment `0x4ac62a..0x4ac6ec`, without reintroducing the old ledger bulk. It records source zone `+0x04/+0x1c` capability bitmaps, selected-color bitmap offset `generator+0xed8`, assignment slot offset `generator+0xee0`, and mapped-color offset `generator+0xee4`. For seed `1`, 1 human, and 3 total players, the default zero selected-color bitmap assigns source owners `[0, 1, 2]` to colors `[0, 1, 2]`; when color `2` is preselected, color ordering becomes `[2, 0, 1, 3, 4, 5, 6, 7]` and source owners map to `[2, 0, 1]`. This phase is still inspection-only and does not materialize runtime players, towns, zones, or a map package.
-
-The active port also includes the `0x4a218c` runtime-zone record setup boundary. It loads the selected adapted template, consumes the `generator+0xee4` owner-color mapping from player-slot assignment, and reports source-zone records before coordinate, terrain, footprint, or cell materialization. For seed `1`, the six active runtime zones carry owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles. With selected color `2`, the same runtime zones remap to `[2, 0, -1, 1, -1, -1]`.
-
-This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native generator implementation remains in the repository as archived debug/evidence code only. No `generate_random_map` request can fall through to it: supported small 36x36 one-level land configs route to the h3maped reset gate, and out-of-scope sizes/modes/templates return `archived_legacy_native_rmg_disabled`, including explicit translated-template requests and local debug/evidence calls.
-
-The reset module does not expose a public partial package-generation function. The earlier partial materialization helper is retained only as blocked inspection scaffolding inside the implementation and reports `runtime_generation_allowed: false` if reached; it is not declared in the public header and is not called by `MapPackageService.generate_random_map`.
-
-The clean restart boundary currently supports only 36x36 one-level land inspection. It verifies the local h3maped reset anchor by checking `/root/Downloads/h3maped.exe` file size and MZ header against the recorded reset SHA-256, then computes template acceptance from h3maped-derived size-score/player-capacity data. Numeric seeds use the recovered executable RNG step from `0x4e7269/0x4e7276`; non-numeric seeds are blocked rather than hashed.
-
-For seed `1`, 1 human, and 3 total players, the boundary reports:
-
-- status `h3maped_small_clean_restart_template_selection_ready`,
-- 13 accepted small-land templates,
-- RNG first value `41`,
-- selected vector index `2`,
-- selected source template `h3maped_template_018`,
-- adapted template `translated_rmg_template_019_v1`,
-- 6 active zones, 5 links, 4 player-start zones, 2 treasure zones, and 4 minimum player castles.
-
-The clean module now also ports the inspection-only player-slot assignment step from `0x4ac62a..0x4ac6ec`. It builds human/player capability bitmaps from source zone `+0x04/+0x1c`, reads the selected-color bitmap as `generator+0xed8`, fills assignment slots as `generator+0xee0`, and reports mapped owner colors as `generator+0xee4`. With the default constructor-zeroed selected-color bitmap, seed `1` assigns source owners `[0, 1, 2]` to actual colors `[0, 1, 2]`; with color `2` preselected, the reported color order becomes `[2, 0, 1, 3, 4, 5, 6, 7]` and source owners map to `[2, 0, 1]`.
-
-The clean module now ports the record-construction part of runtime-zone build `0x4a218c` for inspection only. It rebuilds the runtime-zone vector report, derives the scale divisor from h3maped water mode, computes the initial scale reference as `min(min_source_base_size * width, min_source_base_size * height) / divisor`, initializes one runtime-zone record per active source zone using the `0x49b452` field semantics, applies source owner mapping through `generator+0xee4`, interleaves town/faction choices through `0x49b3c1`, resolves source link endpoints into runtime-zone link seeds, and applies `0x49b53d` runtime terrain selection before footprint placement. For the seed `1` boundary case this reports 6 runtime-zone records, 5 link seeds, minimum source base size `11`, land divisor `5`, and initial scale reference `79`.
-
-The clean module also ports the `0x4a1f3b` early endpoint-control schedule for inspection only. During runtime-zone construction, h3maped calls `0x4a1f3b` once while each zone is being allocated, when only earlier runtime zones are present in the vector, then runs two full stabilization passes over all runtime zones. The report lists available endpoint-linked runtime zones for each scheduled call and the fallback candidate count if no coordinate candidate survives. For the seed `1` boundary case this reports 18 scheduled calls, 25 endpoint attempts, and 3 possible fallback candidates across creation calls.
-
-The clean module now replays the one-level `0x4a218c` runtime/coordinate RNG order for inspection only. The report exposes `0x49b452`/`0x49b3c1` town RNG, `0x4a17f5` 32-angle candidates from tables `0x58dc28/0x58dd28`, `0x4a1701` spacing validation, `0x4a1ad8` single-level candidate pruning, and `0x4a19ed` bounding-box rescale. For the seed `1` boundary case this produces 4 town RNG calls, 18 coordinate RNG calls, 22 interleaved replay events, 18 candidate-selection steps, and a rescale span of `84` onto the 36-tile small map.
-
-The clean module now ports `0x49b53d` runtime terrain selection before the `0x4a3a03` footprint phase. For the seed `1` boundary case it consumes two terrain RNG calls for the treasure zones, uses the recovered town-choice terrain table at `0x540908`, and selects dirt/dirt/snow/grass/dirt/rough across the 6 runtime zones. Because those RNG calls happen before footprint placement in the executable order, the same seed now reports `0x4a2777` real source-node boundary traversal with 221 unique boundary cells, `0x4a325d` real boundary span fill with 890 unique filled cells and 185 remaining unassigned cells.
-
-The clean module also ports the `0x4a3f27` terrain fill/repaint schedule for inspection over the real `0x4a325d` zone-word buffer. It records the full-map terrain-8 water fill, scans owner bytes and repaint-member bits, and schedules 1111 per-cell `0x4bd099` repaint calls for seed `1`, producing terrain counts dirt 492, grass 165, snow 222, rough 232, and water 185. It now also normalizes one-level terrain art/index/flip fields through the ported TerrainPlacement relation-ring/class/row/flip model, exposing 1296-cell `terrain_code_u16`, `terrain_art_index_u8`, `terrain_flip_h`, `terrain_flip_v`, and `terrain_shape_class_u8` arrays with 413 transition cells and 20 visual fallback cells for the seed `1` boundary case.
-
-The same terrain-fill boundary now exposes the terrain portion of final generated-cell writeout from `0x49b2b6`. For each of the 1296 small-map cells, it packs generated-cell terrain id bits into tile byte 0, terrain art bits into tile byte 1, river bytes 2..3 as zero while river phases are pending, road bytes 4..5 as zero while road phases are pending, and terrain flip bits into tile byte 6 bits 0..1. The materialized terrain-grid helper carries these byte arrays forward as a staging contract, but road and river overlay bytes remain pending and are not synthesized.
-
-The terrain-fill boundary now also exposes and partially materializes the second generated-cell owner byte required by the connection helpers. Disassembly shows the line writers `0x4a2413/0x4a261a` populate `cell+0x20` bits 16..23, while occupancy reset `0x4a5767` calls `0x4a59e2` to initialize bits 24..31 to sentinel `-1`, and helper `0x49a318` then propagates high-owner bytes from runtime-zone anchors when crossing into different low-owner cells. The clean port now carries both `owner_byte_grid_u8` / `owner_low_byte_grid_u8` and `owner_high_byte_grid_i8`; for the seed `1` boundary case it materializes 1111 high-owner cells, leaves 185 sentinel water/unmaterialized cells, and reports counts `{0:171, 1:201, 2:174, 3:262, 4:124, 5:179}`. The remaining gap is the extra `0x49a318` bit-22/object-metadata branch, not the baseline owner/materialized/terrain propagation.
-
-The clean module now ports the field-consumption boundary for the `0x4a8d2c` direct settlement minimum pass, the owner-byte candidate-scan boundary of direct helper `0x4a93a2`, the recovered `0x49a1d8` validity precheck used by `0x49aa93`, the current Town-body `0x49a09c` gate order over the generated-cell grid, the recovered `0x4a93a2` best-distance random tie consumer, and the `0x4a93a2` post-selection object-record writeout ledger. For the seed `1` boundary case the selected template reports four required player castles, zero required player towns, zero neutral towns/castles, 24 density fields, no positive settlement density weights, three assigned-owner direct candidate scans with 451 total owner/repaint candidates, 451 candidates passing the terrain validity precheck, 97 Town-footprint passes, three 0x28-byte town object records with generator+0xf44 serials 0..2, one recovered owner `-1` early-fail call for the unassigned player slot, and one `0x4e7276` random tie call. Project package adoption of the generator virtual placement hook, generalized object/template terrain-class handling beyond the current Town body grid, `0x4a901a` weighted placement, ownership writeout, and later cleanup/link processing remain pending.
-
-The clean module now also rebinds the selected template's mine and treasure fields from the recovered h3maped source catalog because the adapted project catalog currently drops those fields as null. Phase `0x4a9d6a` mine minimum/density source fields and phase `0x4aab7e` treasure-band triplets are ported as source ledgers for inspection: seed `1` reports 6 bound source rows, 42 mine minimum fields, 42 mine density fields, 18 positive mine minimum fields, 18 positive mine density fields, total minimum mine count 18, total mine density weight 18, 18 eligible treasure bands, and total treasure density weight 96. The `0x4a9911` mine helper template-bucket ledger is now bound to recovered `objects.txt` rows for inspection: Mine type `53` has 46 template rows, Resource type `79` has 7 adjacent-resource rows, the 18 minimum mine helper calls see 116 subtype-matched template candidates, apply the recovered terrain-bitset filter through reversed `objects.txt` terrain masks, allocate `0x1c` records through `0x49ba89`, specialize vtable `0x540ab0`, compute guard bases 1500/3500/7000 before `0x4a960a -> 0x4a65a5`, and record the adjacent resource handoff through `0x4a9e40`. The recovered `0x4a9641` placement constraint boundary now executes for inspection against the generated-cell grid and selected mine wrappers: it scans the object footprint rectangle, requires the generated-cell `+0x20` owner byte to match the runtime/source zone, applies the current `0x49aa93` body/collision/terrain/owner gate, optionally applies the wood/ore special distance ring from the zone anchor, ranks tied candidates by the `+0x20` low-word score and nearby valid-cell count capped at 5, chooses through `0x4e7276`, and marks selected mine body cells in the inspection occupancy grid. The recovered `0x4aab7e` treasure scheduler math is now materialized for inspection: seed `1` exposes 6 active scheduler records, 3 eligible bands per zone, total density `16`, density product `54`, scale dividend `0x320`, divisor `50`, truncated sqrt step `7`, accumulator step weights `54/9/6`, and helper handoff addresses `0x4e7d44`, `0x4e7dec`, `0x4aa354`, and `0x4aa9b7`. The recovered `0x4aa354` value-selection boundary is now materialized for inspection only: seed `1` exposes 42 scheduler attempts, 42 reward-value RNG calls, first-zone band order `0/1/2/2/1/2/1`, first reward value `13723`, and post-reward RNG state `2283988067`, which is now the road phase input. The recovered `0x4aa1db` lookup control flow is now exposed for those same attempts: primary `0x4a9f1c` scan ranges use `selected_value / 4 .. selected_value`, retry budget 3, sentinel coordinates `[-1,-1,-1]`, secondary remaining-value threshold `0x5dc`, split formulas `remaining / 4` and `(remaining * 5) / 4`, validation helper `0x49d471`, placement coordinate helper `0x49abd6`, and cleanup helper `0x49d6e0`. The direct-field plus literal-constructor subset of `0x49f95a` is now materialized as 123 executable-derived candidate records: 98 direct-field records and 25 literal constructor-backed records. The bounded `0x4a9f1c` scan applies value-range, type-limit, and native proxy-mapping gates for all 42 reward attempts, totaling 463 eligible hits and weight 95948; the first seed-1 attempt reports 12 eligible candidates and weight 418 after rejecting value-valid records with no native proxy mapping, and now includes literal-constructor Spell Scroll candidates. The `0x49f95a` construction-site ledger now exposes 126 static vector insert sites from the executable, with only 3 dynamic value-function constructor sites still pending: `0x49fa2a`, `0x4a043a`, and `0x4a0f54`. Complete generator `+0x10f4` vector parity, dynamic value-function recovery, weighted candidate selection, selected record execution/stamping, production package adoption, exact cell bit-26 lifecycle, and guarding remain pending.
-
-The guard-value scaler `0x4a65a5` is now ported instead of left as a pending marker. The port uses the recovered threshold and slope tables, applies global monster strength to raw link `Value` guards, and applies the `0x4a960a` local-plus-global effective monster strength rule to mine guard bases. For the seed `1` small-land boundary, the five connection guard values scale from raw 3000/3000/3000/6000/6000 to total scaled value `16000`; the 18 minimum-mine guard handoffs produce 10 nonzero scaled guard values totaling `59500`. The connection payload now carries five `0x4a5e03` normal-guard spawn intents with guard values, helper `0x4a5c07`, and generator object-placement vfunc handoff recorded. They remain non-materialized because the executable calls `0x4a5e03` only after late connection geometry helpers supply endpoint coordinates; synthetic guard coordinates are forbidden.
-
-The three remaining dynamic reward value-function formulas are now ported into the inspection boundary from `/root/Downloads/h3maped.exe`: `0x49c64b` for vtable `0x540bc0`, `0x49c849` for vtable `0x540c00`, and corrected `0x49ca8b` for vtable `0x540c60`. The one-level loop limits are exposed as `0x76` creature rows for `0x49fa2a`, `0x3a` type-17 rows for `0x4a043a`, and `0x76` inner creature rows for `0x4a0f54`. Dynamic record expansion still remains blocked until the runtime creature table behind pointer `0x581298`, generator resource totals `+0xf60/+0xf64`, and `generator+0x568..0x56c` vector are ported.
-
-The boundary now also separates scan-ready static records from non-scan-ready dynamic record skeletons. For one-level maps, `0x4a043a` contributes 58 unconditional type-17 skeleton records through helper `0x40bb26`; `0x49fa2a` and `0x4a0f54` remain runtime-gated by creature rows and the `generator+0x568` vector. Dynamic skeletons are deliberately excluded from the `0x4a9f1c` scan totals until their executable-backed runtime values are available.
-
-The runtime creature-table loader boundary is now identified for that dynamic reward blocker. Function `0x40ce11` writes rows into static storage `0x57cea0` with stride `0x74`, sources entries from `loader_object+0x20`, writes string pointers at creature row `+0x14/+0x18/+0x1c`, and copies numeric fields from source row `+0x08..+0x58` into creature row `+0x20..+0x70`. This is loader evidence only; the project-side creature table rows still need to be ported before dynamic reward candidate values can enter `0x4a9f1c`.
-
-The direct-placement blocker has been narrowed from an unknown condition to the recovered `0x49aa93` gate sequence. The executable first calls `0x49a6f9` for rectangle/footprint rejection, reads object metadata flags from `0x57c648 + type*0x10`, calls `0x49a09c` for footprint passability/owner/occupied/water scanning, then applies the already ported `0x49a1d8` anchor validity precheck, owner-byte match, bit-22 object collision plus metadata-secondary checks, and final water/non-water terrain matching. The boundary now binds the `0x57c648` runtime object metadata path to recovered `objects.txt`/`objnames.txt` source data for inspection: 232 object type names, 1326 object rows, Town type `98` with 9 template rows, and Random Town type `77` with 1 template row. It also ports the Town text-mask body scan used by `0x49a6f9` for inspection with 13 passability/body cells and 1 action cell. The current Town-body `0x49a09c` gate order reports 97 passes, 135 bounds rejects, 1 bit-22 reject, 22 bit-25/materialized-cell rejects, 196 owner rejects, and zero terrain-9/water-class rejects across the 3 assigned-owner scans. The same seed `1` run stamps 3 direct town records into the inspection object layer and marks 39 bit-22-style occupied body cells. The `0x4a93a2` writeout ledger records each 0x28-byte allocation, constructor `0x49ba89`, town vtable `0x540a9c`, generator+0xf44 serial, record+0x1c/+0x20/+0x24 field writes, generator virtual placement hook site, source-zone coordinate writeback site, and anchor bit27/bit26 update site. The third player-castle call now selects from 3 tied best-distance candidates through the recovered `0x4a93a2` random tie path: RNG value `12382`, selected index `1`, selected coordinate `(18,5)`. The remaining blockers are project package adoption of the virtual placement hook, generalized object/template terrain-class handling beyond the current Town body grid, weighted placement, and later guard/reward/object passes.
-
-The clean module now ports the recovered late raw-link payload semantics from `0x4a79a3` into the generated package ledger. It does not invent road geometry. For each selected template link it records endpoints, runtime-zone pair, raw `Value`, `Wide` normal-guard suppression, `Border Guard` special-object intent, and any scaled `0x4a5e03` normal-guard spawn input. The seed `1` boundary case carries 5 connection records and 5 non-materialized normal-guard spawn intents totaling scaled guard value `16000`. The `0x4a79a3` dispatch order is recorded as data: first pass `0x4a7b96..0x4a7c3d` tries helpers `0x4a61bc`, `0x4a696b`, and `0x4a6cf2`; second pass `0x4a7c8f..0x4a7e71` tries `0x4a696b` and `0x4a7605`. Direct executable inspection corrected the `0x4a6cf2` scope: it compares the two runtime-zone levels at `0x4a6d3d..0x4a6d40` and returns false when they are equal, so all five current one-level seed `1` links report `0x4a6cf2_same_level_return_false`, zero overlap cells, and zero endpoint coordinates. The same ledger records `generator+0x6a8/+0x6ac` as the type-103 Subterranean Gate bucket (`generator+0x34+0x67*0x10`), resolved through `objnames.txt` as `Subterranean Gate` with one `objects.txt` row, `AvTCave.def`; the remaining vector/writeout evidence is cross-level-only: selection through `0x4e7276`, `0x4ae52a`/`0x4ae1fd` best-candidate helpers, `0x5044b1` plus `0x49ba89` endpoint-record allocation/constructor, generator vfunc slot `+0x04`, runtime-zone `+0x404`, `0x40bb15`, and validation helper `0x49aa93`. Direct executable inspection now also identifies `0x4a696b` as the same-level Shipyard lane helper: it returns false when levels differ at `0x4a69b3..0x4a69bd`, selects from `generator+0x5a8/+0x5ac` which resolves to object type 87 `Shipyard` with one `objects.txt` row, `AVXshyd0.def`, gates on low/high owner bytes, object-present bit 24, terrain 8, `0x49aa93`, and `0x4a6795`, then writes endpoint and road-coordinate vectors only on the unported success path. Direct executable inspection now identifies `0x4a61bc` as the first same-level transition-vector helper: dispatcher `0x4a79a3` builds stack vectors at `ebp-0x74` and `ebp-0x64` from owner-transition cells, calls `0x4a61bc` at `0x4a7be7..0x4a7bf5`, and the helper gates on same-level non-type-8 zones, low/high owner bytes, empty neighbor object vectors, direction table `0x5a2658`, low-word scores, and later `0x4a5a23` / `0x4a5e73` / `0x4a5e03` guard paths. The ledger explicitly records that `Wide` suppresses normal guard placement after geometry, not geometry itself. For the current one-level small case, same-level endpoint geometry must come from `0x4a61bc`, `0x4a696b`, and `0x4a7605`; the remaining blockers are those helper success paths, the extra `0x49a318` object-metadata branch, `0x4a5e03` endpoint-coordinate invocation, `0x4a5e73 -> 0x4a5a23` type-9 Border Guard materialization, and full runtime road/blocker/guard adoption.
-
-The road boundary is now explicit in the partial package instead of being collapsed to a generic pending flag. Disassembly of `/root/Downloads/h3maped.exe` shows `0x4ab52a` selecting a single road type through `0x4e7276 % 3 + 1`, then iterating generator coordinate records from `+0x14b4..+0x14b8` as 12-byte entries: each outer record calls `0x4aae2f` and `0x4aae7b` as the path seed, and each later record reads the candidate cell `+0x1c` low word at `0x4ab5df..0x4ab60a`, accepts only `<= 0x7530`, and then calls `0x4ab37f`. The inspection payload now ports that pair-loop ledger for the current partial vector: seed `1` has 15 partial records and 105 pair candidates. The vector object source is now narrowed: constructor/destructor code initializes and releases `generator+0x14b0`, final road code reads begin/end from `+0x14b4/+0x14b8`, direct town placement pushes records at `0x4a959b`, and generic object placement pushes records at `0x4a6bb4`, both through helper `0x4ae1fd`. The current package ledger materializes 15 partial 12-byte coordinate-vector records from the adopted 3 town records and 12 mine records, including vector index, byte offset, append source, source placement id, coordinate triplet, and occupancy key, but does not claim exact h3maped metadata-offset adjustment or the complete executable vector because rewards, guards, monsters, decoration/blockers, and final object passes are not yet ported. The clean reset path now materializes the bounded `0x4aae2f` reset over the generated cell dimensions: it exposes 1296-cell predecessor x/y/level arrays set to `-1`, a 1296-cell path-cost low-word array set to `0x7d00`, and the current bit-25 materialized-cell grid carried from the `0x4a325d/0x4a3f27` repaint-member boundary. The clean reset path now also materializes the seed-cell initialization portion of `0x4aae7b` for the 14 outer seed records in the current pair loop: each seed record writes path-cost low word `0`, leaves predecessor coordinates `[-1, -1, -1]`, and records write block `0x4aaedc..0x4aaf0e`. The `0x5a2658..0x5a2698` neighbor direction table is materialized from executable initializer `0x499db3..0x499e20` as eight `(dx,dy)` records: `(1,0)`, `(1,1)`, `(0,1)`, `(-1,1)`, `(-1,0)`, `(-1,-1)`, `(0,-1)`, `(1,-1)`. The normal-neighbor `0x4aae7b` propagation is now materialized for the current small generated-cell grid: it expands through those neighbor offsets, requires the current bit-25 materialized-cell grid, rejects terrain classes 8/9, applies executable step costs `0x14` or `0x3c` for odd direction indexes, updates lower path-cost words and predecessor coordinates, and exposes the resulting 105 candidate low-word reads for the `0x4ab52a` threshold gate. The `0x4ab52a` pair ledger now consumes those low words and records 105 threshold-accepted candidates for the current partial vector, which removes the previous endpoint-eligibility unknown but still does not write road geometry. The special object vectors and object-lane branches remain pending: object-present bit 22 and metadata table `0x57c648`, special object types `0x67`, `0x2b..0x2c`, and `0x2d`, and `generator+0x14c0/+0x14d0` vectors are still recorded as recovered but not materialized into the propagation buffer. The `0x4ab37f` bridge is recovered as adapter setup only: it takes the same coordinate triplet plus the selected road type, builds a generated-cell terrain adapter at `ebp-0x50` with vtable `0x540a14`, wraps it in a road adapter at `ebp-0x1c` with vtable `0x540a34`, calls the road toolkit entry `0x4b4243`, cleans through `0x4b42c0` and `0x49a030`, then follows predecessor coordinates from `cell+0x10/+0x14/+0x18` while the path-cost low word at `cell+0x1c` remains nonzero. The `0x4b4243` toolkit entry is recovered as initializer/dispatcher evidence: it calls the road adapter virtual slot `+0x0c` to fetch the start coordinate, stores toolkit fields at `+0x04/+0x08/+0x0c`, switches vtable `0x5419d4` to `0x5419f4`, and delegates path work through `0x458d37` and `0x458e61` using neighbor table `0x5a5028..0x5a5068`. The `0x458e61` line-visit boundary is recovered far enough to identify adapter slot use: road-adapter `+0x14`/`0x49af7b` probes the existing road-type nibble from `cell+0x24`, `+0x08`/`0x49aec5` marks the requested road type, helper `0x4587f7` derives neighbor masks using `0x4bf3f4` and table `0x5a5028..0x5a5068`, helper `0x458a2f` classifies road shape through table `0x538a04..0x538a8f`, road-adapter `+0x04`/`0x49ae47` writes final road type/art/flip fields into `cell+0x24/+0x28`, and road-adapter `+0x10`/`0x49af1d` reads those fields back for stability checks. The clean reset path therefore still emits zero road segments/cells and records `no_synthetic_road_geometry: true` until a clean generated-cell mutation implementation and complete `+0x14b0` coordinate-vector parity are ported.
-
-The `0x4ab37f` bridge now consumes the materialized normal `0x4aae7b` predecessor arrays as an inspection-only path-chain ledger. For the seed `1` partial vector it records 105 predecessor chains, each tied to an accepted `0x4ab52a` candidate and each reaching its seed coordinate through `cell+0x10/+0x14/+0x18`; the bridge status is `h3maped_0x4ab37f_predecessor_chains_materialized_toolkit_pending`. This is deliberately still not road serialization: `0x4b4243`, `0x458e61`, road type/art/flip mutation in `cell+0x24/+0x28`, full `+0x14b0` vector parity, and final map writeout remain pending.
-
-The road-toolkit table/write boundary is now recovered from the executable and exposed in the inspection payload. The `0x4b4243` toolkit entry carries neighbor table `0x5a5028..0x5a5068`, initialized by `0x4bf38b..0x4bf3f3`, as eight `(dx,dy)` records: `(0,-1)`, `(1,-1)`, `(1,0)`, `(1,1)`, `(0,1)`, `(-1,1)`, `(-1,0)`, and `(-1,-1)`. The `0x458e61` line-visit boundary now also exposes the `0x538a04..0x538a8b` road-shape table as four 0x20-byte records with neighbor-flag offsets and flip selectors, plus the recovered generated-cell write semantics: candidate marking and final road-type writes mask `cell+0x24` with `0xc3ffffff` and shift the road type by 26, final road art writes use the low byte of `cell+0x28` after mask `0xffe7ff00`, and final flip bits occupy `cell+0x28` bits 19..20. The `0x49aec5` candidate road-type mark now materializes over the current predecessor-chain cells only: seed `1` records 411 unique candidate-marked cells with selected road type `3`. The road art variant table used by `0x458a2f/0x458893` is also recovered: initializer `0x4b41f4..0x4b4200` calls `0x458755`, source table `0x54198c` contains 17 class ids `[4,4,5,5,5,5,6,6,7,7,2,2,3,3,0,1,8]`, and runtime table `0x5a2f80` exposes nine bucket records where each art class stores first variant index and variant count. The current clean port now materializes the `0x458a2f/0x458893` final road art/flip grid for the partial predecessor-chain data only: it classifies eight neighbor flags with the recovered control flow, applies `0x4bf3f4` edge masks, retouches neighboring same-type roads like `0x458e61`, and consumes `0x4e7276` only when readback art class/flip differs. Seed `1` records 411 final road cells, 1006 final art writes, and 1006 final-art RNG calls. The clean port also materializes the recovered `0x49b2b6` road overlay byte serialization for that partial grid: road type `cell+0x24[26..29]` becomes tile byte 4, road art `cell+0x28[0..7]` becomes tile byte 5, and road flip bits `cell+0x28[19..20]` become tile byte 6 bits 4..5 while preserving terrain flip bits. Seed `1` records 411 serialized road-overlay cells. This still stops before runtime generation: complete `+0x14b0` vector parity, special/object propagation, river bytes, blockers, guards, rewards, and final package adoption remain pending.
-
-The boundary exposes a phase ledger and keeps every unported materialization phase pending:
-
-1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
-2. `player_slot_assignment` - `0x4ac62a..0x4ac6ec` - ported for inspection only.
-3. `runtime_zone_build` - `0x4a218c`, `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x49b452`, `0x49b3c1`, `0x49b53d` - runtime records, endpoint control flow, interleaved coordinate-candidate replay, and runtime terrain selection ported for inspection only.
-4. `zone_footprint_placement` - `0x4a3a03`, `0x4cc788`, `0x4cca55`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a325d`, `0x4a3710` - level collection, polygon source-node walks, `0x4a2777` boundary traversal, `0x4a325d` span fill, and small-land `0x4a3710` no-appended-zone finalizer ported for inspection only.
-5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - terrain fill/repaint schedule and one-level TerrainPlacement art/index/flip normalization ported for inspection only.
-6. `object_category_placement` - `0x4a8d2c`, `0x4a93a2`, `0x49a1d8`, `0x49aa93`, `0x49a6f9`, `0x49a09c`, `0x4a8db2`, `0x4a8c15` - town/castle field consumption, direct owner-byte candidate scanning, direct validity precheck, recovered best-distance random tie selection, recovered full eligibility gate ledger, `objects.txt`/`objnames.txt` Town/Random Town metadata binding, Town text-mask body scan, current Town-body `0x49a09c` gate order, direct town record/body-cell marking, and the `0x4a93a2` post-selection object-record writeout ledger ported for inspection only; project package adoption, generalized object/template terrain-class handling, weighted placement, and cleanup still pending.
-7. `guard_reward_monster_placement` - `0x4a9d6a`, `0x4a9911`, `0x4a9c7c`, `0x4a9641`, `0x4aab7e`, `0x4aa354`, `0x4aa1db`, `0x4a9f1c` - mine/reward source field ledgers, `0x4a9911` mine template/record/guard handoff ledger, recovered terrain-mask filtering, `0x4a9641` mine candidate scan/selection/body-cell marking, `0x4aab7e` treasure scheduler density/product/sqrt/accumulator math, `0x4aa354` reward value RNG selection, `0x4aa1db` object-lookup control-flow ledger, and a 123-record materialized `0x49f95a` subset/`0x4a9f1c` value/type/proxy scan over 42 reward attempts ported for inspection while 3 dynamic value-function constructor sites remain pending; complete generator-vector parity, weighted selection/stamping, production package adoption, and guarding still pending.
-8. `final_cell_object_passes` - `0x49eb8d`, `0x4ab52a`, `0x4ac4ae` - `0x4ab52a` pair iteration, `0x4aae2f` path-state reset, the `0x4aae7b` seed-cell low-word initialization, the `0x5a2658` neighbor direction table, normal-neighbor path-cost propagation, `0x4ab52a` candidate low-word threshold consumption, `0x4ab37f` predecessor-chain ledgers, the `0x4b4243/0x458e61` road-neighbor/shape/write table evidence, and the `0x49aec5` candidate road-type nibble mark are ported for the current clean generated-cell grid; special vectors, object-lane propagation, final `0x458a2f/0x458893` road art/flip mutation, road overlay serialization, and final object passes pending clean port.
-
-`MapPackageService.generate_random_map` no longer emits the partial small-map package for normal small land requests, including explicit translated-template configs. It returns `h3maped_small_clean_restart_generation_not_ready` until the clean h3maped-derived path can materialize terrain, owned towns/player starts, roads, physical blockers, guards, rewards, and final cell/object writeout phases together. The explicit inspection API remains available through `MapPackageService.inspect_h3maped_small_rmg_port`.
-
-For the seed `1` boundary case, normal generation currently reports:
-
-- `ok: false`,
-- `generation_status: h3maped_small_clean_restart_generation_not_ready`,
-- `error_code: h3maped_phase_port_incomplete`,
-- inspection report `runtime_generation_allowed: false`,
-- inspection report `partial_materialized_payload_status: archived_inspection_blocked_not_exported`,
-- out-of-scope `native_catalog_auto` and explicit translated-template requests return `archived_legacy_native_rmg_disabled`.
-
-The inspection payload now also exposes the recovered `0x4aae7b` path-state update rule needed before road materialization can be ported:
-
-- normal neighbor update block `0x4ab2d8..0x4ab33a`,
-- special-vector update block `0x4ab25d..0x4ab2d0`,
-- normal cost source `current_cost + 0x14`, or `current_cost + 0x3c` when the direction index low bit is set,
-- special-vector cost source `current_cost + 0x32`,
-- update condition `computed_cost < target_cell_low_word`,
-- low-word preservation expression `((old_cell_state ^ computed_cost) & 0xffff) ^ old_cell_state`,
-- seed-cell low-word initialization block `0x4aaedc..0x4aaf0e`, currently materialized for the 14 outer seed records as path-cost low word `0` with predecessor coordinates `[-1, -1, -1]`,
-- neighbor direction table initializer `0x499db3..0x499e20`, materialized as eight `0x5a2658..0x5a2698` `(dx,dy)` records in clockwise order from east,
-- normal-neighbor path-cost propagation over the current 1296-cell generated-cell grid, materializing candidate low-word reads for `0x4ab52a` while keeping special-object vector branches pending,
-- predecessor write and target enqueue blocks `0x4ab310..0x4ab31b` and `0x4ab31c..0x4ab32f`.
+Runtime generation remains blocked until these phases collectively produce authoritative cells and objects.
