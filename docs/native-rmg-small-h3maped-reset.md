@@ -36,8 +36,9 @@ The active compact port currently supports inspection only:
 9. Ports runtime terrain selection `0x49b53d` for inspection: match-to-town zones use table `0x540908`, treasure zones use `0x4e7276` over source terrain flags `+0x85..+0x8c`, and seed `1` selects project terrains `[dirt, dirt, snow, grass, dirt, rough]` with two terrain RNG calls.
 10. Ports the top-level zone-footprint schedule `0x4a3a03` for inspection: one land level collects six runtime zones, schedules six polygon split calls, skips the synthetic fallback zone, and records the helper sequence `0x4a2777 -> 0x4a325d -> 0x4a3710`.
 11. Ports the small-land `0x4a3710` finalizer boundary: with no appended synthetic runtime zone, adjacency insertion loops skip, six ordering resets/rebuilds are scheduled, and no cells or adjacency records are materialized.
+12. Ports the standalone `0x4a325d` span-fill primitive from disassembly for inspection: 12-byte span records, `0x00ff0000` unassigned zone-word scan, `cell+0x20` zone-byte writes, and `cell+0x2b |= 0x10` reserved-flag writes are covered by a bounded contract sample. This is not connected to runtime output until real `0x4a2777` boundary traversal feeds it.
 
-The active port does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate, terrain, footprint scheduling, and the small-land no-appended-zone finalizer boundary are exposed as inspection data only and are not package generation.
+The active port does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate, terrain, footprint scheduling, the small-land no-appended-zone finalizer boundary, and the standalone span-fill primitive are exposed as inspection data only and are not package generation.
 
 ## Runtime Gate
 
@@ -66,7 +67,7 @@ Explicit translated-template requests do not bypass the reset gate.
 
 The next clean phases are:
 
-1. `0x4a2777/0x4a325d` boundary traversal and zone span-fill materialization.
+1. `0x4a2777` boundary traversal and wiring its real boundary buffer into the ported `0x4a325d` span-fill primitive.
 2. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
 
 Runtime generation remains blocked until these phases collectively produce authoritative cells and objects.

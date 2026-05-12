@@ -76,6 +76,25 @@ struct CoordCandidate {
 	int32_t level = 0;
 };
 
+struct SpanRecord {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct SpanFillResult {
+	int32_t filled_cell_count = 0;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+	Array trace_preview;
+};
+
+constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
+constexpr uint32_t H3MAPED_ZONE_WORD_CLEAR_MASK = 0xff00ffffU;
+
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0, "", 0, 0, 0, 0, 0 },
 	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0, "", 0, 0, 0, 0, 0 },
@@ -99,6 +118,93 @@ const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, 0, "", 0, 0, 0, 0, 0 },
 	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, 0, "", 0, 0, 0, 0, 0 },
 };
+
+int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return (int64_t(level) * int64_t(height) + int64_t(y)) * int64_t(width) + int64_t(x);
+}
+
+bool h3maped_cell_unassigned(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	const int64_t index = h3maped_cell_index(width, height, x, y, level);
+	return index >= 0 && index < int64_t(zone_words.size()) && (zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD;
+}
+
+void append_span_fill_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
+	if (trace_preview.size() >= 8) {
+		return;
+	}
+	Dictionary item;
+	item["x"] = x;
+	item["y"] = y;
+	item["level"] = level;
+	trace_preview.append(item);
+}
+
+SpanFillResult h3maped_span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t zone_word_id, const SpanRecord &seed) {
+	SpanFillResult result;
+	std::vector<SpanRecord> pending;
+	auto push_span = [&](const SpanRecord &span) {
+		pending.push_back(span);
+		result.pushed_span_count += 1;
+		result.max_pending_span_count = std::max<int32_t>(result.max_pending_span_count, int32_t(pending.size()));
+	};
+	push_span(seed);
+	while (!pending.empty()) {
+		const SpanRecord span = pending.back();
+		pending.pop_back();
+		result.popped_span_count += 1;
+		if (span.level < 0 || span.level >= level_count || span.y < 0 || span.y >= height || span.x < 0 || span.x >= width) {
+			result.out_of_bounds_span_count += 1;
+			continue;
+		}
+		int32_t x = span.x;
+		while (x > 0 && h3maped_cell_unassigned(zone_words, width, height, x - 1, span.y, span.level)) {
+			x -= 1;
+		}
+		bool wrote_any = false;
+		bool upper_run_open = false;
+		bool lower_run_open = false;
+		SpanRecord upper_span;
+		SpanRecord lower_span;
+		for (; x < width && h3maped_cell_unassigned(zone_words, width, height, x, span.y, span.level); ++x) {
+			const int64_t index = h3maped_cell_index(width, height, x, span.y, span.level);
+			zone_words[size_t(index)] = (zone_words[size_t(index)] & H3MAPED_ZONE_WORD_CLEAR_MASK) | (uint32_t(zone_word_id & 0xff) << 16U);
+			if (!(water_code == 2 && span.level == 1)) {
+				cell_flags[size_t(index)] = uint8_t(cell_flags[size_t(index)] | 0x10U);
+			}
+			wrote_any = true;
+			result.filled_cell_count += 1;
+			append_span_fill_preview(result.trace_preview, x, span.y, span.level);
+
+			const bool upper_open = span.y > 0 && h3maped_cell_unassigned(zone_words, width, height, x, span.y - 1, span.level);
+			if (upper_open && !upper_run_open) {
+				upper_span = SpanRecord{ x, span.y - 1, span.level };
+				upper_run_open = true;
+			} else if (!upper_open && upper_run_open) {
+				push_span(upper_span);
+				upper_run_open = false;
+			}
+
+			const bool lower_open = span.y + 1 < height && h3maped_cell_unassigned(zone_words, width, height, x, span.y + 1, span.level);
+			if (lower_open && !lower_run_open) {
+				lower_span = SpanRecord{ x, span.y + 1, span.level };
+				lower_run_open = true;
+			} else if (!lower_open && lower_run_open) {
+				push_span(lower_span);
+				lower_run_open = false;
+			}
+		}
+		if (upper_run_open) {
+			push_span(upper_span);
+		}
+		if (lower_run_open) {
+			push_span(lower_span);
+		}
+		if (!wrote_any) {
+			result.blocked_initial_span_count += 1;
+		}
+	}
+	return result;
+}
 
 int32_t water_mode_code(const Dictionary &normalized) {
 	const String water_mode = String(normalized.get("water_mode", "land"));
@@ -1261,6 +1367,102 @@ Dictionary footprint_finalizer_4a3710_report(const Dictionary &normalized_config
 	return report;
 }
 
+Dictionary span_fill_primitive_4a325d_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a325d_standalone_span_fill_primitive_ported_real_boundary_pending";
+	report["source"] = "h3maped 0x4a325d disassembly: stack-backed 12-byte span records, unassigned zone-word scan under 0x00ff0000, zone-byte write to cell+0x20, and reserved flag write to cell+0x2b";
+	report["function_address"] = "0x4a325d";
+	report["span_vector_push_address"] = "0x4ae1fd";
+	report["span_vector_pop_address"] = "0x4ae23e";
+	report["seed_relocation_range"] = "0x4a32b2..0x4a338b";
+	report["span_loop_range"] = "0x4a3391..0x4a3537";
+	report["map_cell_stride_bytes"] = 0x30;
+	report["unassigned_zone_word_sentinel"] = "0x00ff0000";
+	report["zone_word_write_mask"] = "cell+0x20 = (cell+0x20 & 0xff00ffff) | ((source_zone_word & 0xff) << 16)";
+	report["reserved_flag_write"] = "cell+0x2b |= 0x10 unless water_mode == islands and level == 1";
+	report["uses_real_0x4a2777_boundary"] = false;
+	report["materializes_project_grid"] = false;
+
+	const int32_t width = 12;
+	const int32_t height = 10;
+	const int32_t level_count = 1;
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t cell_count = width * height * level_count;
+	std::vector<uint32_t> zone_words(size_t(cell_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(cell_count), 0);
+	const int32_t boundary_zone_word_id = 12;
+	const int32_t fill_zone_word_id = 9;
+	const int32_t min_x = 2;
+	const int32_t min_y = 2;
+	const int32_t max_x = 9;
+	const int32_t max_y = 7;
+	int32_t boundary_cell_count = 0;
+	auto mark_boundary = [&](int32_t x, int32_t y) {
+		const int64_t index = h3maped_cell_index(width, height, x, y, 0);
+		if (index < 0 || index >= int64_t(zone_words.size())) {
+			return;
+		}
+		if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			boundary_cell_count += 1;
+		}
+		zone_words[size_t(index)] = (uint32_t(boundary_zone_word_id & 0xff) << 16U);
+		cell_flags[size_t(index)] = uint8_t(cell_flags[size_t(index)] | 0x10U);
+	};
+	for (int32_t x = min_x; x <= max_x; ++x) {
+		mark_boundary(x, min_y);
+		mark_boundary(x, max_y);
+	}
+	for (int32_t y = min_y; y <= max_y; ++y) {
+		mark_boundary(min_x, y);
+		mark_boundary(max_x, y);
+	}
+	SpanFillResult fill = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, fill_zone_word_id, SpanRecord{ min_x + 1, min_y + 1, 0 });
+	int32_t remaining_unassigned_count = 0;
+	int32_t filled_zone_word_count = 0;
+	int32_t reserved_flag_count = 0;
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int64_t index = h3maped_cell_index(width, height, x, y, 0);
+			const uint32_t masked_zone_word = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+			if (masked_zone_word == H3MAPED_UNASSIGNED_ZONE_WORD) {
+				remaining_unassigned_count += 1;
+			}
+			if (masked_zone_word == (uint32_t(fill_zone_word_id & 0xff) << 16U)) {
+				filled_zone_word_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_count += 1;
+			}
+		}
+	}
+	Dictionary sample;
+	sample["map_width"] = width;
+	sample["map_height"] = height;
+	sample["level_count"] = level_count;
+	sample["h3maped_water_mode_code"] = water_code;
+	sample["boundary_min_x"] = min_x;
+	sample["boundary_min_y"] = min_y;
+	sample["boundary_max_x"] = max_x;
+	sample["boundary_max_y"] = max_y;
+	sample["boundary_cell_count"] = boundary_cell_count;
+	sample["seed_x"] = min_x + 1;
+	sample["seed_y"] = min_y + 1;
+	sample["seed_level"] = 0;
+	sample["filled_cell_count"] = fill.filled_cell_count;
+	sample["filled_zone_word_count"] = filled_zone_word_count;
+	sample["remaining_unassigned_cell_count"] = remaining_unassigned_count;
+	sample["reserved_flag_cell_count"] = reserved_flag_count;
+	sample["pushed_span_count"] = fill.pushed_span_count;
+	sample["popped_span_count"] = fill.popped_span_count;
+	sample["max_pending_span_count"] = fill.max_pending_span_count;
+	sample["out_of_bounds_span_count"] = fill.out_of_bounds_span_count;
+	sample["blocked_initial_span_count"] = fill.blocked_initial_span_count;
+	sample["trace_preview"] = fill.trace_preview;
+	report["sample_contract"] = sample;
+	report["blocked_next"] = "wire 0x4a2777 real boundary traversal into this 0x4a325d span primitive before project terrain/cell adoption";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -1355,6 +1557,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary finalizer = footprint_finalizer_4a3710_report(normalized_config, records, int32_t(footprint_schedule.get("total_matching_runtime_zones", 0)));
 	footprint_schedule["finalizer_status"] = finalizer.get("status", "");
 	footprint_schedule["finalizer"] = finalizer;
+	Dictionary span_fill = span_fill_primitive_4a325d_report(normalized_config);
+	footprint_schedule["span_fill_primitive_status"] = span_fill.get("status", "");
+	footprint_schedule["span_fill_primitive"] = span_fill;
 	footprint_schedule["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
@@ -1398,7 +1603,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a3710", "active_schedule_and_small_land_finalizer_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a325d, 0x4a3710", "active_schedule_span_primitive_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },
