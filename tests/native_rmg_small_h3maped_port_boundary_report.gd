@@ -269,7 +269,12 @@ func _run() -> void:
 			or int(polygon_split.get("locator_call_count", -1)) != 6 \
 			or int(polygon_split.get("locator_materialized_count", -1)) != 1 \
 			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
+			or int(polygon_split.get("first_pre_crossing_insertion_count", -1)) != 1 \
+			or int(polygon_split.get("first_pre_crossing_bridge_pair_count", -1)) <= 0 \
+			or int(polygon_split.get("first_post_pre_crossing_allocated_node_pair_count", -1)) <= 5 \
+			or int(polygon_split.get("first_post_pre_crossing_active_node_pair_count", -1)) <= 5 \
 			or not bool(polygon_split.get("duplicate_endpoint_guard_materialized", false)) \
+			or not bool(polygon_split.get("materializes_first_source_node_graph_mutation", false)) \
 			or String(polygon_split.get("function_address", "")) != "0x4ccb64" \
 			or String(polygon_split.get("locator_address", "")) != "0x4cca55" \
 			or String(polygon_split.get("node_constructor_address", "")) != "0x4cc955" \
@@ -282,6 +287,10 @@ func _run() -> void:
 	var second_polygon_split_call: Dictionary = polygon_split_calls[1]
 	if String(first_polygon_split_call.get("locator_status", "")) != "0x4cca55_initial_graph_locator_materialized" \
 			or String(first_polygon_split_call.get("duplicate_endpoint_guard_result", "")) != "0x4ccb64_not_duplicate_endpoint" \
+			or String(first_polygon_split_call.get("insertion_status", "")) != "0x4ccb64_first_split_pre_crossing_inserted" \
+			or int(first_polygon_split_call.get("bridge_pair_count", -1)) <= 0 \
+			or bool(first_polygon_split_call.get("bridge_loop_guard_exhausted", true)) \
+			or String(first_polygon_split_call.get("crossing_cleanup_status", "")) != "pending_0x4ccc7a_0x4cc68e_after_first_pre_crossing_insert" \
 			or String(first_polygon_split_call.get("located_node_id", "")) == "" \
 			or String(first_polygon_split_call.get("located_pair_id", "")) == "" \
 			or String(second_polygon_split_call.get("locator_status", "")) != "pending_current_graph_after_0x4ccb64_mutation":
