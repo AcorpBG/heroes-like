@@ -296,6 +296,22 @@ func _run() -> void:
 			or bool(boundary_helpers.get("materializes_project_grid", true)):
 		_fail("Boundary helper primitives must remain disconnected from runtime output until 0x4a2777 is assembled: %s" % JSON.stringify(boundary_helpers))
 		return
+	var rectangle_fallback: Dictionary = footprint_schedule.get("rectangle_fallback", {})
+	var rectangle_sample: Dictionary = rectangle_fallback.get("sample_contract", {})
+	if String(footprint_schedule.get("rectangle_fallback_status", "")) != "0x4a2777_rectangle_fallback_branch_ported_standalone" \
+			or int(rectangle_sample.get("edge_call_count", -1)) != 4 \
+			or int(rectangle_sample.get("edge_write_count", -1)) != 26 \
+			or int(rectangle_sample.get("edge_unique_write_count", -1)) != 22 \
+			or int(rectangle_sample.get("unique_zone_word_cell_count", -1)) != 22 \
+			or int(rectangle_sample.get("reserved_flag_cell_count", -1)) != 22 \
+			or int(rectangle_sample.get("out_of_bounds_write_count", -1)) != 0 \
+			or int(rectangle_sample.get("footprint_vertex_count", -1)) != 4:
+		_fail("The 0x4a2777 rectangle fallback branch drifted: %s" % JSON.stringify(rectangle_fallback))
+		return
+	if bool(rectangle_fallback.get("uses_real_source_node_walk", true)) \
+			or bool(rectangle_fallback.get("materializes_project_grid", true)):
+		_fail("The 0x4a2777 rectangle fallback must remain standalone until real source-node traversal is ported: %s" % JSON.stringify(rectangle_fallback))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
