@@ -492,6 +492,8 @@ func _run() -> void:
 	var visual_static_lookup_contract: Dictionary = visual_classifier.get("static_range_lookup_contract", {})
 	var visual_static_table_contracts: Dictionary = visual_classifier.get("static_table_contracts", {})
 	var visual_static_tables_decoded: Array = visual_static_table_contracts.get("tables", [])
+	var visual_row_selection_contract: Dictionary = visual_classifier.get("visual_row_selection_contract", {})
+	var visual_row_selection_samples: Array = visual_row_selection_contract.get("samples", [])
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
@@ -667,6 +669,31 @@ func _run() -> void:
 			or int(visual_static_lookup_contract.get("sample_selected_art_index", -1)) != 60 \
 			or bool(visual_static_lookup_contract.get("materializes_full_terrain_art_grid", true)):
 		_fail("The TerrainPlacement static range lookup contract drifted: %s" % JSON.stringify(visual_static_lookup_contract))
+		return
+	if String(visual_row_selection_contract.get("status", "")) != "0x4ba938_0x4ba989_0x4baabf_visual_row_selection_ported_samples" \
+			or int(visual_row_selection_contract.get("sample_count", -1)) != 4 \
+			or bool(visual_row_selection_contract.get("materializes_visual_records", true)) \
+			or bool(visual_row_selection_contract.get("materializes_full_terrain_art_grid", true)):
+		_fail("The TerrainPlacement visual row selection contract drifted: %s" % JSON.stringify(visual_row_selection_contract))
+		return
+	var normal_full_selection := _find_by_key(visual_row_selection_samples, "id", "normal_full_grass_seed_1")
+	var normal_transition_selection := _find_by_key(visual_row_selection_samples, "id", "normal_transition_class_28_seed_1")
+	var water_transition_selection := _find_by_key(visual_row_selection_samples, "id", "water_transition_class_16_seed_1")
+	var rock_selection := _find_by_key(visual_row_selection_samples, "id", "rock_class_8_flag_1_0_seed_1")
+	if int(normal_full_selection.get("selected_row", -1)) != 60 \
+			or String(normal_full_selection.get("bucket_compact_rows", "")) != "57-72" \
+			or not bool(normal_full_selection.get("selected_special_bucket", false)) \
+			or int(normal_full_selection.get("probability_rng_value", -1)) != 41 \
+			or int(normal_full_selection.get("art_rng_value", -1)) != 18467 \
+			or int(normal_transition_selection.get("selected_row", -1)) != 77 \
+			or String(normal_transition_selection.get("bucket_compact_rows", "")) != "77" \
+			or int(water_transition_selection.get("selected_row", -1)) != 20 \
+			or String(water_transition_selection.get("bucket_compact_rows", "")) != "20" \
+			or int(rock_selection.get("selected_row", -1)) != 11 \
+			or String(rock_selection.get("bucket_compact_rows", "")) != "10-11" \
+			or int(rock_selection.get("out_flag_a", -1)) != 0 \
+			or int(rock_selection.get("out_flag_b", -1)) != 0:
+		_fail("The TerrainPlacement visual row selection samples drifted: %s" % JSON.stringify(visual_row_selection_samples))
 		return
 	if String(visual_static_table_contracts.get("status", "")) != "h3maped_exe_static_terrain_visual_tables_decoded" \
 			or int(visual_static_table_contracts.get("table_count", -1)) != 5 \
