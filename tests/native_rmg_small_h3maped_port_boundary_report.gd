@@ -435,6 +435,7 @@ func _run() -> void:
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
 	var changed_cell_update: Dictionary = terrain_repaint_boundary.get("changed_cell_update", {})
+	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
@@ -494,6 +495,14 @@ func _run() -> void:
 			or bool(changed_cell_update.get("materializes_tile_byte_1", true)) \
 			or bool(changed_cell_update.get("materializes_tile_byte_6_terrain_flags", true)):
 		_fail("The TerrainPlacement changed-cell update evidence drifted: %s" % JSON.stringify(changed_cell_update))
+		return
+	if String(copyback_gate.get("status", "")) != "0x4bc988_TerrainPlacement_retouch_gate_recovered_copyback_pending" \
+			or String(copyback_gate.get("gate_address", "")) != "0x4bc988" \
+			or String(copyback_gate.get("ordered_insert_helper_address", "")) != "0x4bd1c1" \
+			or String(copyback_gate.get("container_insert_address", "")) != "0x4bd374" \
+			or String(copyback_gate.get("container_lookup_address", "")) != "0x4bd3c5" \
+			or bool(copyback_gate.get("copyback_to_generated_cell_0x24_0x28", true)):
+		_fail("The TerrainPlacement copyback gate evidence drifted: %s" % JSON.stringify(copyback_gate))
 		return
 	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1" \
 			or String(terrain_grid.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only" \
