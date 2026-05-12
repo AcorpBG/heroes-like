@@ -499,6 +499,8 @@ func _run() -> void:
 	var repaint_order_queue_seed_addresses: Array = repaint_order_queue_seed.get("ported_addresses", [])
 	var repaint_order_queue_drain: Dictionary = terrain_cell_writeout.get("repaint_order_queue_drain", {})
 	var repaint_order_queue_drain_addresses: Array = repaint_order_queue_drain.get("ported_addresses", [])
+	var drained_visual_projection: Dictionary = repaint_order_queue_drain.get("drained_visual_projection", {})
+	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -679,6 +681,8 @@ func _run() -> void:
 			or bool(repaint_order_queue_drain.get("drain_guard_exhausted", true)) \
 			or int(repaint_order_queue_drain.get("drain_guard_limit", -1)) != 32768 \
 			or not Dictionary(repaint_order_queue_drain.get("post_drain_missing_class_histogram", {"unexpected": 1})).is_empty() \
+			or String(repaint_order_queue_drain.get("drained_final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(repaint_order_queue_drain.get("drained_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or Array(repaint_order_queue_drain.get("blocked_exact_dependencies", [])).is_empty() \
 			or Array(repaint_order_queue_drain.get("seed_samples", [])).is_empty() \
 			or Array(repaint_order_queue_drain.get("drain_samples", [])).is_empty() \
@@ -687,6 +691,24 @@ func _run() -> void:
 			or bool(repaint_order_queue_drain.get("materializes_package_tiles", true)) \
 			or bool(repaint_order_queue_drain.get("adopts_into_runtime_grid", true)):
 		_fail("The h3maped repaint-order queue drain projection drifted: %s" % JSON.stringify(repaint_order_queue_drain))
+		return
+	if int(drained_final_sweep_boundary_counter.get("tile_count", -1)) != 1296 \
+			or PackedInt32Array(drained_final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array())).size() != 1296 \
+			or bool(drained_final_sweep_boundary_counter.get("materializes_visual_records", true)) \
+			or bool(drained_final_sweep_boundary_counter.get("materializes_package_tiles", true)):
+		_fail("The h3maped drained-grid final sweep boundary counter drifted: %s" % JSON.stringify(drained_final_sweep_boundary_counter))
+		return
+	if String(drained_visual_projection.get("status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
+			or int(drained_visual_projection.get("projected_cell_count", -1)) != 1296 \
+			or int(drained_visual_projection.get("missing_bucket_cell_count", -1)) != 0 \
+			or not bool(drained_visual_projection.get("full_grid_projection_complete", false)) \
+			or int(drained_visual_projection.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or int(drained_visual_projection.get("terrain_flag_cell_count", -1)) <= 0 \
+			or PackedInt32Array(drained_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(drained_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array())).size() != 1296 \
+			or bool(drained_visual_projection.get("adopts_into_tile_byte_arrays", true)) \
+			or bool(drained_visual_projection.get("materializes_package_tiles", true)):
+		_fail("The h3maped drained-grid visual projection drifted: %s" % JSON.stringify(drained_visual_projection))
 		return
 	var first_missing_visual_projection: Dictionary = visual_projection_missing_samples[0]
 	if String(first_missing_visual_projection.get("same_terrain_mask_address", "")) != "0x4bc74c" \

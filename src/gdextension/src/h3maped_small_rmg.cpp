@@ -2027,7 +2027,9 @@ void h3maped_decode_grid_key(int64_t key, int32_t &level, int32_t &x, int32_t &y
 	x = int32_t(key & 0xfffff);
 }
 
-Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count) {
+Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
+
+Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
 	Dictionary report;
 	report["status"] = "0x4bc5f0_repaint_order_queue_drain_projection_inspection_only";
 	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape per 0x4a3f27 repaint over a copied terrain grid";
@@ -2300,6 +2302,12 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	report["seed_samples"] = seed_samples;
 	report["drain_samples"] = drain_samples;
 	report["drained_terrain_code_u16"] = drain_grid;
+	Dictionary drained_final_sweep_boundary_counter = generated_grid_final_sweep_boundary_counter_report(drain_grid, width, height, level_count);
+	report["drained_final_sweep_boundary_counter_status"] = drained_final_sweep_boundary_counter.get("status", "");
+	report["drained_final_sweep_boundary_counter"] = drained_final_sweep_boundary_counter;
+	Dictionary drained_visual_projection = generated_grid_visual_projection_report(drain_grid, drained_final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array()), width, height, level_count, rng_state_before_visual_selection);
+	report["drained_visual_projection_status"] = drained_visual_projection.get("status", "");
+	report["drained_visual_projection"] = drained_visual_projection;
 	report["blocked_next"] = "replace this copied terrain-only projection with exact 0x4bd1c1/0x4bd374/0x4bd408 container return semantics plus 0x4bad0f scratch visual-state feedback before runtime adoption";
 	return report;
 }
@@ -5069,7 +5077,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary repaint_order_queue_seed = h3maped_repaint_order_queue_seed_report(zone_words, selected_terrain_codes, terrain_code_u16, width, height, level_count);
 	report["repaint_order_queue_seed_status"] = repaint_order_queue_seed.get("status", "");
 	report["repaint_order_queue_seed"] = repaint_order_queue_seed;
-	Dictionary repaint_order_queue_drain = h3maped_repaint_order_queue_drain_projection_report(zone_words, selected_terrain_codes, terrain_code_u16, width, height, level_count);
+	Dictionary repaint_order_queue_drain = h3maped_repaint_order_queue_drain_projection_report(zone_words, selected_terrain_codes, terrain_code_u16, width, height, level_count, uint32_t(int64_t(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", rng_state_before_boundary))));
 	report["repaint_order_queue_drain_status"] = repaint_order_queue_drain.get("status", "");
 	report["repaint_order_queue_drain"] = repaint_order_queue_drain;
 	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
