@@ -1510,6 +1510,37 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	return report;
 }
 
+Dictionary polygon_finalizer_4ccdfc_report(int32_t total_polygon_split_calls) {
+	Dictionary report;
+	report["status"] = "0x4ccdfc_source_node_finalizer_gate_ported_inspection_only";
+	report["source"] = "h3maped 0x4ccdfc iterates polygon graph vector entries, skips nodes without +0x08 or already marked at +0x18, computes +0x1c/+0x20 finalized coordinates through 0x4ccd69, and marks the node plus two linked nodes finalized before 0x4a2777 consumes the cycles";
+	report["function_address"] = "0x4ccdfc";
+	report["intersection_helper_address"] = "0x4ccd69";
+	report["node_vector_begin_offset"] = "polygon+0x08";
+	report["node_vector_end_offset"] = "polygon+0x0c";
+	report["node_has_aux_edge_offset"] = "source_node+0x08";
+	report["node_finalized_flag_offset"] = "source_node+0x18";
+	report["finalized_x_offset"] = "source_node+0x1c";
+	report["finalized_y_offset"] = "source_node+0x20";
+	report["scheduled_split_call_count"] = total_polygon_split_calls;
+	report["materializes_source_node_graph"] = false;
+	report["materializes_finalized_cycles"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+	report["eligible_node_scan_materialized"] = false;
+	report["finalized_coordinate_write_materialized"] = false;
+
+	Array write_sequence;
+	write_sequence.append("0x4cce25 skip when source_node+0x08 is null");
+	write_sequence.append("0x4cce2b skip when source_node+0x18 is already set");
+	write_sequence.append("0x4cce4d compute intersection through 0x4ccd69");
+	write_sequence.append("0x4cce5b write source_node+0x1c/+0x20");
+	write_sequence.append("0x4cce64 set source_node+0x18");
+	write_sequence.append("0x4cce6e..0x4cce84 mirror +0x1c/+0x20/+0x18 to two linked nodes");
+	report["write_sequence"] = write_sequence;
+	report["blocked_next"] = "materialize the 0x4ccb64 graph vector so 0x4ccdfc can write finalized coordinates for real 0x4a2777 boundary traversal";
+	return report;
+}
+
 Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_zone_footprint_schedule_ported";
@@ -1613,6 +1644,9 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	Dictionary polygon_split = polygon_split_insertion_4ccb64_report(levels, total_polygon_split_calls);
 	report["polygon_split_status"] = polygon_split.get("status", "");
 	report["polygon_split"] = polygon_split;
+	Dictionary polygon_finalizer = polygon_finalizer_4ccdfc_report(total_polygon_split_calls);
+	report["polygon_finalizer_status"] = polygon_finalizer.get("status", "");
+	report["polygon_finalizer"] = polygon_finalizer;
 	report["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	return report;
 }

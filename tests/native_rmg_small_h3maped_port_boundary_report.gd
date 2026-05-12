@@ -279,6 +279,21 @@ func _run() -> void:
 			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
 		_fail("The 0x4ccb64 split gate must remain inspection-only until source-node graph materialization is ported: %s" % JSON.stringify(polygon_split))
 		return
+	var polygon_finalizer: Dictionary = footprint_schedule.get("polygon_finalizer", {})
+	if String(footprint_schedule.get("polygon_finalizer_status", "")) != "0x4ccdfc_source_node_finalizer_gate_ported_inspection_only" \
+			or String(polygon_finalizer.get("function_address", "")) != "0x4ccdfc" \
+			or String(polygon_finalizer.get("intersection_helper_address", "")) != "0x4ccd69" \
+			or int(polygon_finalizer.get("scheduled_split_call_count", -1)) != 6 \
+			or bool(polygon_finalizer.get("eligible_node_scan_materialized", true)) \
+			or bool(polygon_finalizer.get("finalized_coordinate_write_materialized", true)) \
+			or Array(polygon_finalizer.get("write_sequence", [])).size() != 6:
+		_fail("The 0x4ccdfc source-node finalizer gate drifted: %s" % JSON.stringify(polygon_finalizer))
+		return
+	if bool(polygon_finalizer.get("materializes_source_node_graph", true)) \
+			or bool(polygon_finalizer.get("materializes_finalized_cycles", true)) \
+			or bool(polygon_finalizer.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("The 0x4ccdfc finalizer gate must remain inspection-only until source-node graph materialization is ported: %s" % JSON.stringify(polygon_finalizer))
+		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \
 			or Array(footprint_levels[0].get("matching_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
