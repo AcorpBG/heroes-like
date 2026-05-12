@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <map>
+#include <set>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -1839,6 +1840,181 @@ Dictionary h3maped_queue_retouch_projection_report(const PackedInt32Array &terra
 	report["retouch_samples"] = retouch_samples;
 	report["retouched_terrain_code_u16"] = retouched;
 	report["blocked_next"] = "replace missing-bucket-only projection with the full 0x4bc5f0 set A/B queue drain seeded by actual 0x4bb74b repaint order before runtime adoption";
+	return report;
+}
+
+int64_t h3maped_grid_key(int32_t level, int32_t x, int32_t y) {
+	return (int64_t(level) << 40) | (int64_t(y) << 20) | int64_t(x);
+}
+
+Dictionary h3maped_repaint_order_queue_seed_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4a3f27_0x4bb74b_0x4bba59_repaint_order_queue_seed_projection";
+	report["source"] = "replays the h3maped 0x4a3f27 water-then-zone repaint order on a copied terrain grid and records 0x4bba59 set-B candidates seeded by changed-cell updates";
+	report["ported_addresses"] = Array::make("0x4a3f27", "0x4a4025", "0x4a4082", "0x4a415a", "0x4bb681", "0x4bb74b", "0x4bba59", "0x4bc5f0");
+	report["materializes_queue_drain"] = false;
+	report["materializes_package_tiles"] = false;
+	report["adopts_into_runtime_grid"] = false;
+	const int32_t level_tile_count = width * height;
+	PackedInt32Array replay_grid;
+	replay_grid.resize(int32_t(zone_words.size()));
+	for (int32_t index = 0; index < replay_grid.size(); ++index) {
+		replay_grid.set(index, 8);
+	}
+	std::set<int64_t> set_b_candidates;
+	std::set<int64_t> set_a_candidates;
+	Array candidate_samples;
+	int32_t changed_cell_update_count = 0;
+	auto append_candidate = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain, const char *source_branch) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const int32_t neighbor = terrain_at_grid_index(replay_grid, width, height, level_tile_count, level, x, y, current_terrain);
+		if (neighbor == current_terrain) {
+			return;
+		}
+		const int64_t key = h3maped_grid_key(level, x, y);
+		set_b_candidates.insert(key);
+		if (candidate_samples.size() < 12) {
+			Dictionary sample;
+			sample["x"] = x;
+			sample["y"] = y;
+			sample["level"] = level;
+			sample["terrain_before_drain"] = neighbor;
+			sample["current_repaint_terrain"] = current_terrain;
+			sample["source_branch"] = source_branch;
+			candidate_samples.append(sample);
+		}
+	};
+	auto seed_4bba59 = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain) {
+		append_candidate(level, x, y - 1, current_terrain, "0x4bba59_north_south_cardinal");
+		append_candidate(level, x, y + 1, current_terrain, "0x4bba59_north_south_cardinal");
+		append_candidate(level, x - 1, y, current_terrain, "0x4bba59_west_east_cardinal");
+		append_candidate(level, x + 1, y, current_terrain, "0x4bba59_west_east_cardinal");
+		const std::array<std::array<int32_t, 2>, 4> diagonals = { { { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } } };
+		for (const auto &delta : diagonals) {
+			const int32_t nx = x + delta[0];
+			const int32_t ny = y + delta[1];
+			const int32_t neighbor = terrain_at_grid_index(replay_grid, width, height, level_tile_count, level, nx, ny, current_terrain);
+			if (!h3maped_toolkit_byte5_allows_same_class_gate(neighbor)) {
+				continue;
+			}
+			append_candidate(level, nx, ny, current_terrain, "0x4bba59_diagonal_byte5_zero_neighbor");
+		}
+	};
+	auto seed_4bb74b_neighbor_branch = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain, bool horizontal_pair_wrapper, const char *source_branch) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const int32_t neighbor = terrain_at_grid_index(replay_grid, width, height, level_tile_count, level, x, y, current_terrain);
+		if (neighbor == current_terrain) {
+			return;
+		}
+		const bool gate = horizontal_pair_wrapper
+				? h3maped_horizontal_pair_gate_4bc674(replay_grid, width, height, level_tile_count, level, x, y, neighbor)
+				: h3maped_vertical_pair_gate_4bc6e0(replay_grid, width, height, level_tile_count, level, x, y, neighbor);
+		if (!gate) {
+			seed_4bba59(level, x, y, current_terrain);
+			append_candidate(level, x, y, current_terrain, source_branch);
+		}
+	};
+	for (int64_t zone_index = 0; zone_index < selected_terrain_codes.size(); ++zone_index) {
+		const int32_t terrain = int32_t(selected_terrain_codes[zone_index]);
+		if (terrain == 8) {
+			continue;
+		}
+		for (int32_t level = 0; level < level_count; ++level) {
+			for (int32_t y = 0; y < height; ++y) {
+				for (int32_t x = 0; x < width; ++x) {
+					const int32_t index = level * level_tile_count + y * width + x;
+					if (index < 0 || index >= int32_t(zone_words.size())) {
+						continue;
+					}
+					const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != int32_t(zone_index)) {
+						continue;
+					}
+					if (set_terrain_at_grid_index(replay_grid, width, height, level_tile_count, level, x, y, terrain)) {
+						changed_cell_update_count += 1;
+						const int64_t key = h3maped_grid_key(level, x, y);
+						if (h3maped_candidate_gate_4bc988_grid(replay_grid, width, height, level_tile_count, level, x, y)) {
+							set_a_candidates.insert(key);
+						} else {
+							seed_4bba59(level, x, y, terrain);
+						}
+						if (!h3maped_toolkit_byte5_allows_same_class_gate(terrain)) {
+							seed_4bb74b_neighbor_branch(level, x, y - 1, terrain, true, "0x4bb7b7_neighbor_0x4bba13_false");
+							seed_4bb74b_neighbor_branch(level, x, y + 1, terrain, true, "0x4bb80b_neighbor_0x4bba13_false");
+							seed_4bb74b_neighbor_branch(level, x - 1, y, terrain, false, "0x4bb863_neighbor_0x4bba36_false");
+							seed_4bb74b_neighbor_branch(level, x + 1, y, terrain, false, "0x4bb8b7_neighbor_0x4bba36_false");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	TerrainVisualGridTables tables;
+	if (FileAccess::file_exists(BINARY_PATH)) {
+		Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+		if (file.is_valid() && file->is_open()) {
+			tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
+			tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
+			tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
+			tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
+			tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+		}
+	}
+	int32_t missing_bucket_count = 0;
+	int32_t missing_bucket_in_set_b_count = 0;
+	int32_t missing_bucket_candidate_gate_true_count = 0;
+	Array missing_bucket_queue_samples;
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t index = level * level_tile_count + y * width + x;
+				if (index < 0 || index >= final_terrain_code_u16.size()) {
+					continue;
+				}
+				const int32_t center = final_terrain_code_u16[index];
+				const TerrainClassResult classified = classify_grid_cell(final_terrain_code_u16, width, height, level_tile_count, level, x, y, center);
+				if (visual_row_bucket_exists_for_grid_cell(tables, center, classified)) {
+					continue;
+				}
+				missing_bucket_count += 1;
+				const int64_t key = h3maped_grid_key(level, x, y);
+				const bool in_set_b = set_b_candidates.find(key) != set_b_candidates.end();
+				const bool candidate_gate = h3maped_candidate_gate_4bc988_grid(final_terrain_code_u16, width, height, level_tile_count, level, x, y);
+				if (in_set_b) {
+					missing_bucket_in_set_b_count += 1;
+				}
+				if (candidate_gate) {
+					missing_bucket_candidate_gate_true_count += 1;
+				}
+				if (missing_bucket_queue_samples.size() < 8) {
+					Dictionary sample;
+					sample["x"] = x;
+					sample["y"] = y;
+					sample["level"] = level;
+					sample["terrain_id"] = center;
+					sample["class"] = classified.shape_class;
+					sample["in_repaint_order_set_b"] = in_set_b;
+					sample["candidate_gate_0x4bc988"] = candidate_gate;
+					missing_bucket_queue_samples.append(sample);
+				}
+			}
+		}
+	}
+	report["changed_cell_update_count"] = changed_cell_update_count;
+	report["set_a_candidate_count"] = int32_t(set_a_candidates.size());
+	report["set_b_candidate_count"] = int32_t(set_b_candidates.size());
+	report["missing_bucket_cell_count"] = missing_bucket_count;
+	report["missing_bucket_cells_in_repaint_order_set_b"] = missing_bucket_in_set_b_count;
+	report["missing_bucket_set_b_coverage_complete"] = missing_bucket_count > 0 && missing_bucket_in_set_b_count == missing_bucket_count;
+	report["missing_bucket_candidate_gate_true_count"] = missing_bucket_candidate_gate_true_count;
+	report["candidate_samples"] = candidate_samples;
+	report["missing_bucket_queue_samples"] = missing_bucket_queue_samples;
+	report["blocked_next"] = "drain these set-B candidates through the exact 0x4bc5f0 loop and 0x4bb74b writes instead of using the missing-bucket projection";
 	return report;
 }
 
@@ -4604,6 +4780,9 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary terrain_visual_projection = generated_grid_visual_projection_report(terrain_code_u16, final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array()), width, height, level_count, uint32_t(int64_t(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", rng_state_before_boundary))));
 	report["terrain_visual_projection_status"] = terrain_visual_projection.get("status", "");
 	report["terrain_visual_projection"] = terrain_visual_projection;
+	Dictionary repaint_order_queue_seed = h3maped_repaint_order_queue_seed_report(zone_words, selected_terrain_codes, terrain_code_u16, width, height, level_count);
+	report["repaint_order_queue_seed_status"] = repaint_order_queue_seed.get("status", "");
+	report["repaint_order_queue_seed"] = repaint_order_queue_seed;
 	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
 	report["tile_serializer_contract"] = tile_serializer_49b2b6_contract_report();
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
