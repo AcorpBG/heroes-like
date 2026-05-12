@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words":
-		_fail("The clean restart must stop before terrain/cell writeout until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_TerrainPlacement_art_index_flip_and_project_grid_adoption":
+		_fail("The clean restart must stop before TerrainPlacement/project-grid adoption until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -418,6 +418,33 @@ func _run() -> void:
 			or int(zone_fill_reports[4].get("filled_cell_count", -1)) != 174 \
 			or int(zone_fill_reports[5].get("filled_cell_count", -1)) != 185:
 		_fail("The real 0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(real_span_fill))
+		return
+	var terrain_cell_writeout: Dictionary = footprint_schedule.get("terrain_cell_writeout", {})
+	var terrain_counts: Dictionary = terrain_cell_writeout.get("terrain_name_counts", {})
+	var h3_terrain_counts: Dictionary = terrain_cell_writeout.get("h3_terrain_code_counts", {})
+	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
+			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
+			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
+			or int(terrain_cell_writeout.get("reserved_flag_cell_count", -1)) != 1111 \
+			or int(terrain_cell_writeout.get("unassigned_water_cell_count", -1)) != 185 \
+			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x49b2b6_art_index_flip_writeout" \
+			or bool(terrain_cell_writeout.get("materializes_project_grid", true)) \
+			or bool(terrain_cell_writeout.get("materializes_package_tiles", true)):
+		_fail("The 0x4a3f27 terrain-cell writeout inspection drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if int(terrain_counts.get("dirt", -1)) != 492 \
+			or int(terrain_counts.get("grass", -1)) != 165 \
+			or int(terrain_counts.get("snow", -1)) != 222 \
+			or int(terrain_counts.get("rough", -1)) != 232 \
+			or int(terrain_counts.get("water", -1)) != 185:
+		_fail("The 0x4a3f27 project-terrain cell counts drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if int(h3_terrain_counts.get("0", -1)) != 492 \
+			or int(h3_terrain_counts.get("2", -1)) != 165 \
+			or int(h3_terrain_counts.get("3", -1)) != 222 \
+			or int(h3_terrain_counts.get("5", -1)) != 232 \
+			or int(h3_terrain_counts.get("8", -1)) != 185:
+		_fail("The 0x4a3f27 h3 terrain-code cell counts drifted: %s" % JSON.stringify(terrain_cell_writeout))
 		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \

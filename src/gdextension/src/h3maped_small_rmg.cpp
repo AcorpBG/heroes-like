@@ -2609,7 +2609,7 @@ Dictionary seed_relocation_4a325d_report(const Dictionary &source_node_walk, con
 	return report;
 }
 
-Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary) {
+Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	report["status"] = "0x4a325d_real_0x4a2777_boundary_span_fill_executed";
 	report["source"] = "h3maped 0x4a325d executed against the real 0x4a2777 boundary buffer produced from finalized 0x4cca55 source-node cycles";
@@ -2774,6 +2774,79 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 	report["cells_by_zone_word"] = cells_by_zone_word;
 	report["zone_fill_reports"] = zone_fill_reports;
 	report["blocked_next"] = "adopt this h3maped zone-word buffer into 0x4a3f27 terrain/cell writeout, then towns, roads, blockers, guards, mines, rewards, and final package output";
+	if (zone_words_out != nullptr && cell_flags_out != nullptr) {
+		*zone_words_out = zone_words;
+		*cell_flags_out = cell_flags;
+	}
+	return report;
+}
+
+Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, const Dictionary &terrain_selection, uint32_t rng_state_before_boundary) {
+	Dictionary report;
+	report["status"] = "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only";
+	report["source"] = "h3maped 0x4a3f27 terrain fill/repaint schedule consumes the 0x4a325d zone-word buffer and assigns each generated cell its runtime-zone terrain, with remaining unassigned cells carried as water/void for later TerrainPlacement art/index/flip normalization";
+	report["function_address"] = "0x4a3f27";
+	report["span_fill_source_address"] = "0x4a325d";
+	report["tile_serializer_address"] = "0x49b2b6";
+	report["materializes_project_grid"] = false;
+	report["materializes_package_tiles"] = false;
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = int32_t(normalized_config.get("level_count", 1));
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["level_count"] = level_count;
+
+	std::vector<uint32_t> zone_words;
+	std::vector<uint8_t> cell_flags;
+	Dictionary span_fill = real_span_fill_4a325d_report(normalized_config, runtime_zone_records, levels, polygon_finalizer, rng_state_before_boundary, &zone_words, &cell_flags);
+	report["span_fill_status"] = span_fill.get("status", "");
+	report["span_fill_total_boundary_or_filled_cell_count"] = span_fill.get("total_boundary_or_filled_cell_count", 0);
+	report["span_fill_remaining_unassigned_cell_count"] = span_fill.get("remaining_unassigned_cell_count", 0);
+
+	Array selected_terrain_names = terrain_selection.get("selected_project_terrain_ids", Array());
+	Array selected_terrain_codes = terrain_selection.get("selected_h3maped_terrain_ids", Array());
+	Dictionary terrain_name_counts;
+	Dictionary h3_terrain_code_counts;
+	Dictionary cells_by_zone_word;
+	int32_t reserved_cell_count = 0;
+	int32_t unassigned_cell_count = 0;
+	const int32_t cell_count = int32_t(zone_words.size());
+	for (int32_t index = 0; index < cell_count; ++index) {
+		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+		int32_t h3_terrain_code = 8;
+		String terrain_name = "water";
+		if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			unassigned_cell_count += 1;
+		} else {
+			const int32_t zone_word_id = int32_t((masked >> 16U) & 0xffU);
+			const String zone_key = String::num_int64(zone_word_id);
+			cells_by_zone_word[zone_key] = int32_t(cells_by_zone_word.get(zone_key, 0)) + 1;
+			if (zone_word_id >= 0 && zone_word_id < selected_terrain_names.size()) {
+				terrain_name = String(selected_terrain_names[zone_word_id]);
+			}
+			if (zone_word_id >= 0 && zone_word_id < selected_terrain_codes.size()) {
+				h3_terrain_code = int32_t(selected_terrain_codes[zone_word_id]);
+			}
+		}
+		terrain_name_counts[terrain_name] = int32_t(terrain_name_counts.get(terrain_name, 0)) + 1;
+		const String code_key = String::num_int64(h3_terrain_code);
+		h3_terrain_code_counts[code_key] = int32_t(h3_terrain_code_counts.get(code_key, 0)) + 1;
+		if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+			reserved_cell_count += 1;
+		}
+	}
+
+	report["cell_count"] = cell_count;
+	report["tile_byte_zero_terrain_cell_count"] = cell_count;
+	report["reserved_flag_cell_count"] = reserved_cell_count;
+	report["unassigned_water_cell_count"] = unassigned_cell_count;
+	report["terrain_name_counts"] = terrain_name_counts;
+	report["h3_terrain_code_counts"] = h3_terrain_code_counts;
+	report["cells_by_zone_word"] = cells_by_zone_word;
+	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x49b2b6_art_index_flip_writeout";
+	report["blocked_next"] = "adopt terrain code/art/index/flip bytes into project terrain grid, then place owned towns, roads, blockers, guards, mines, rewards, and final packages";
 	return report;
 }
 
@@ -2896,7 +2969,12 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["span_fill_unique_filled_cell_count"] = real_span_fill.get("unique_filled_cell_count", 0);
 	report["span_fill_total_boundary_or_filled_cell_count"] = real_span_fill.get("total_boundary_or_filled_cell_count", 0);
 	report["span_fill_remaining_unassigned_cell_count"] = real_span_fill.get("remaining_unassigned_cell_count", 0);
-	report["next_materialization_status"] = "pending_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
+	Dictionary terrain_cell_writeout = terrain_cell_writeout_4a3f27_report(normalized_config, runtime_zone_records, levels, polygon_finalizer, terrain_selection, uint32_t(int64_t(terrain_selection.get("rng_state_after_0x49b53d_uint32", coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0)))));
+	report["terrain_cell_writeout_status"] = terrain_cell_writeout.get("status", "");
+	report["terrain_cell_writeout"] = terrain_cell_writeout;
+	report["terrain_cell_count"] = terrain_cell_writeout.get("cell_count", 0);
+	report["terrain_unassigned_water_cell_count"] = terrain_cell_writeout.get("unassigned_water_cell_count", 0);
+	report["next_materialization_status"] = "pending_TerrainPlacement_art_index_flip_and_project_grid_adoption";
 	return report;
 }
 
@@ -3667,7 +3745,7 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary randomized_line_writer = randomized_line_writer_4a2413_report(normalized_config);
 	footprint_schedule["randomized_line_writer_status"] = randomized_line_writer.get("status", "");
 	footprint_schedule["randomized_line_writer"] = randomized_line_writer;
-	footprint_schedule["next_materialization_status"] = "pending_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
+	footprint_schedule["next_materialization_status"] = "pending_TerrainPlacement_art_index_flip_and_project_grid_adoption";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
 	return report;
@@ -3694,7 +3772,7 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary runtime_zones = runtime_zone_record_setup_report(normalized_config, template_record, assignment, human_count, human_count + computer_count, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
-	payload["materialization_status"] = "blocked_until_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
+	payload["materialization_status"] = "blocked_until_TerrainPlacement_art_index_flip_and_project_grid_adoption";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
 }
