@@ -1096,6 +1096,102 @@ Dictionary runtime_terrain_selection_report(const Array &runtime_zone_records, c
 	return report;
 }
 
+Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_zone_footprint_schedule_ported";
+	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic fallback decision, and helper schedule before 0x4a2777/0x4a325d/0x4a3710 cell materialization";
+	report["function_address"] = "0x4a3a03";
+	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
+	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
+	report["first_helper_address"] = "0x4a2777";
+	report["second_helper_address"] = "0x4a325d";
+	report["finalizer_address"] = "0x4a3710";
+	report["materializes_zone_cells"] = false;
+	report["materializes_boundary_cells"] = false;
+	report["materializes_span_fill"] = false;
+
+	Dictionary synthetic_defaults;
+	synthetic_defaults["+0x04"] = 3;
+	synthetic_defaults["+0x1c"] = -1;
+	synthetic_defaults["+0xa0"] = 100;
+	synthetic_defaults["+0xa4"] = 1000;
+	synthetic_defaults["+0xa8"] = 5;
+	synthetic_defaults["+0xac"] = 2000;
+	synthetic_defaults["+0xb0"] = 6000;
+	synthetic_defaults["+0xb4"] = 1;
+	report["synthetic_source_zone_size"] = "0xd4";
+	report["synthetic_source_zone_defaults"] = synthetic_defaults;
+
+	Dictionary scaled_by_runtime;
+	Array scaled_coordinates = coordinate_replay.get("scaled_zone_coordinates", Array());
+	for (int64_t index = 0; index < scaled_coordinates.size(); ++index) {
+		if (Variant(scaled_coordinates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary scaled = scaled_coordinates[index];
+		scaled_by_runtime[String::num_int64(int64_t(scaled.get("runtime_zone_index", -1)))] = scaled;
+	}
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array levels;
+	int32_t total_matching_runtime_zones = 0;
+	int32_t total_polygon_split_calls = 0;
+	int32_t appended_synthetic_runtime_zone_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array matching_indices;
+		Array split_calls;
+		for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+			if (Variant(runtime_zone_records[runtime_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary runtime = runtime_zone_records[runtime_index];
+			const int32_t zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+			Dictionary scaled = scaled_by_runtime.get(String::num_int64(zone_index), Dictionary());
+			if (int32_t(scaled.get("level", 0)) != level) {
+				continue;
+			}
+			matching_indices.append(zone_index);
+			Dictionary split_call;
+			split_call["call_site_address"] = "0x4a3a79";
+			split_call["runtime_zone_index"] = zone_index;
+			split_call["x"] = scaled.get("x_after_bbox_rescale", 0);
+			split_call["y"] = scaled.get("y_after_bbox_rescale", 0);
+			split_call["level"] = level;
+			split_call["runtime_size_after_bbox_rescale"] = scaled.get("runtime_size_after_bbox_rescale", 0);
+			split_call["payload"] = "runtime_zone_pointer";
+			split_call["source_fields"] = "runtime_zone+0x10 x/y copied after 0x4a19ed rescale, then pushed to 0x4ccb64";
+			split_calls.append(split_call);
+		}
+		total_matching_runtime_zones += matching_indices.size();
+		total_polygon_split_calls += split_calls.size();
+		const bool synthetic_branch_allowed = level == 1 || water_code != 0;
+		Dictionary level_report;
+		level_report["level_index"] = level;
+		level_report["matching_runtime_zone_count"] = matching_indices.size();
+		level_report["matching_runtime_zone_indices"] = matching_indices;
+		level_report["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+		level_report["synthetic_fallback_zone_created"] = false;
+		level_report["synthetic_fallback_zone_reason"] = synthetic_branch_allowed
+				? String("requires 0x4a3b48 direction scan before source-zone allocation")
+				: String("skipped because level != 1 and water mode is land, matching 0x4a3a9d..0x4a3aa9");
+		level_report["polygon_split_call_count"] = split_calls.size();
+		level_report["polygon_split_calls"] = split_calls;
+		level_report["helper_call_sequence"] = Array::make("0x4a2777", "0x4a325d", "0x4a3710");
+		level_report["helper_call_status"] = "scheduled_not_executed";
+		levels.append(level_report);
+	}
+
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
+	report["total_polygon_split_calls"] = total_polygon_split_calls;
+	report["appended_synthetic_runtime_zone_count"] = appended_synthetic_runtime_zone_count;
+	report["levels"] = levels;
+	report["next_materialization_status"] = "pending_0x4a2777_0x4a325d_0x4a3710_zone_cell_materialization";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -1186,6 +1282,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary terrain_selection = runtime_terrain_selection_report(records, coordinate_replay);
 	report["terrain_selection_status"] = terrain_selection.get("status", "");
 	report["terrain_selection"] = terrain_selection;
+	Dictionary footprint_schedule = zone_footprint_schedule_report(normalized_config, records, coordinate_replay);
+	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
+	report["zone_footprint_schedule"] = footprint_schedule;
 	return report;
 }
 
@@ -1210,7 +1309,7 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary runtime_zones = runtime_zone_record_setup_report(normalized_config, template_record, assignment, human_count, human_count + computer_count, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
-	payload["materialization_status"] = "blocked_until_0x4a3a03_zone_footprint_port";
+	payload["materialization_status"] = "blocked_until_0x4a2777_0x4a325d_zone_cell_materialization_port";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
 }
@@ -1226,7 +1325,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03", "pending" },
+		{ "zone_footprint_placement", "0x4a3a03", "active_schedule_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },
