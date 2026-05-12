@@ -1423,6 +1423,48 @@ Dictionary runtime_terrain_selection_report(const Array &runtime_zone_records, c
 	return report;
 }
 
+Dictionary polygon_seed_4cc788_report() {
+	Dictionary report;
+	report["status"] = "0x4cc788_initial_source_node_bounds_ported_inspection_only";
+	report["source"] = "h3maped 0x4cc788 constructs the initial polygon source-node rectangle from constants 0xffffff38 (-200) and 0x190 (400), then links four 0x4cc955 nodes before 0x4ccb64 runtime-zone split insertions";
+	report["function_address"] = "0x4cc788";
+	report["node_constructor_address"] = "0x4cc955";
+	report["splitter_address"] = "0x4ccb64";
+	report["finalizer_address"] = "0x4ccdfc";
+	report["locator_address"] = "0x4cca55";
+	report["materializes_project_grid"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["constant_min_hex"] = "0xffffff38";
+	bounds["constant_max_hex"] = "0x190";
+	report["initial_bounds"] = bounds;
+
+	Array initial_edges;
+	auto append_edge = [&](const char *id, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y) {
+		Dictionary edge;
+		edge["id"] = id;
+		edge["from_x"] = from_x;
+		edge["from_y"] = from_y;
+		edge["to_x"] = to_x;
+		edge["to_y"] = to_y;
+		edge["payload"] = 0;
+		initial_edges.append(edge);
+	};
+	append_edge("top", -200, -200, 400, -200);
+	append_edge("right", 400, -200, 400, 400);
+	append_edge("bottom", 400, 400, -200, 400);
+	append_edge("left", -200, 400, -200, -200);
+	report["initial_edge_count"] = initial_edges.size();
+	report["initial_edges"] = initial_edges;
+	report["blocked_next"] = "port 0x4ccb64 split insertion and 0x4ccdfc source-node finalization before feeding real cycles into 0x4a2777";
+	return report;
+}
+
 Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_zone_footprint_schedule_ported";
@@ -1430,12 +1472,20 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["function_address"] = "0x4a3a03";
 	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
 	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
+	report["polygon_constructor_address"] = "0x4cc788";
+	report["polygon_split_address"] = "0x4ccb64";
+	report["polygon_finalize_address"] = "0x4ccdfc";
+	report["polygon_locator_address"] = "0x4cca55";
 	report["first_helper_address"] = "0x4a2777";
 	report["second_helper_address"] = "0x4a325d";
 	report["finalizer_address"] = "0x4a3710";
 	report["materializes_zone_cells"] = false;
 	report["materializes_boundary_cells"] = false;
 	report["materializes_span_fill"] = false;
+
+	Dictionary polygon_seed = polygon_seed_4cc788_report();
+	report["polygon_seed_status"] = polygon_seed.get("status", "");
+	report["polygon_seed"] = polygon_seed;
 
 	Dictionary synthetic_defaults;
 	synthetic_defaults["+0x04"] = 3;
