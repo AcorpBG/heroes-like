@@ -32,8 +32,9 @@ The active compact port currently supports inspection only:
 5. Ports player-slot assignment `0x4ac62a..0x4ac6ec` for inspection: source capability masks, `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`.
 6. Ports runtime-zone record setup `0x4a218c` for inspection: six active runtime-zone records for the seed-1 boundary case, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles.
 7. Ports early endpoint-placement schedule `0x4a1f3b` for inspection: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. This phase consumes only link endpoints; `Value`, `Wide`, and `Border Guard` are preserved for later `0x4a79a3`.
+8. Ports coordinate candidate replay `0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed` for inspection: seed `1` reports 18 placement steps, four town-choice RNG calls during `0x49b452`, 18 coordinate RNG calls during `0x4a1f3b`, 22 total replay RNG events, and bbox span `84` rescaled onto the 36-tile map.
 
-The active port does not materialize coordinates, terrain, map cells, towns, roads, blockers, guards, mines, rewards, or final map packages.
+The active port does not materialize terrain, map cells, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate replay is exposed as inspection data only and is not package generation.
 
 ## Runtime Gate
 
@@ -62,10 +63,8 @@ Explicit translated-template requests do not bypass the reset gate.
 
 The next clean phases are:
 
-1. `0x4a17f5` coordinate candidate generation.
-2. `0x4a1701` spacing validation and candidate acceptance.
-3. `0x49b53d` runtime terrain choice.
-4. `0x4a3a03` zone footprint placement.
-5. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
+1. `0x49b53d` runtime terrain choice.
+2. `0x4a3a03` zone footprint placement.
+3. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
 
 Runtime generation remains blocked until these phases collectively produce authoritative cells and objects.
