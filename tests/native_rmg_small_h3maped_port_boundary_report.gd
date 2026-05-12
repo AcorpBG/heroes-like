@@ -263,17 +263,29 @@ func _run() -> void:
 		_fail("The 0x4cc788 initial source-node edge order drifted: %s" % JSON.stringify(polygon_seed))
 		return
 	var polygon_split: Dictionary = footprint_schedule.get("polygon_split", {})
-	if String(footprint_schedule.get("polygon_split_status", "")) != "0x4ccb64_split_insertion_gate_ported_inspection_only" \
+	var polygon_split_calls: Array = polygon_split.get("scheduled_calls", [])
+	if String(footprint_schedule.get("polygon_split_status", "")) != "0x4ccb64_first_locator_and_duplicate_guard_ported_inspection_only" \
 			or int(polygon_split.get("scheduled_split_call_count", -1)) != 6 \
 			or int(polygon_split.get("locator_call_count", -1)) != 6 \
-			or bool(polygon_split.get("duplicate_endpoint_guard_materialized", true)) \
+			or int(polygon_split.get("locator_materialized_count", -1)) != 1 \
+			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
+			or not bool(polygon_split.get("duplicate_endpoint_guard_materialized", false)) \
 			or String(polygon_split.get("function_address", "")) != "0x4ccb64" \
 			or String(polygon_split.get("locator_address", "")) != "0x4cca55" \
 			or String(polygon_split.get("node_constructor_address", "")) != "0x4cc955" \
 			or String(polygon_split.get("crossing_test_address", "")) != "0x4ccc7a" \
 			or String(polygon_split.get("intersection_helper_address", "")) != "0x4ccd69" \
-			or Array(polygon_split.get("scheduled_calls", [])).size() != 6:
+			or polygon_split_calls.size() != 6:
 		_fail("The 0x4ccb64 split insertion gate drifted: %s" % JSON.stringify(polygon_split))
+		return
+	var first_polygon_split_call: Dictionary = polygon_split_calls[0]
+	var second_polygon_split_call: Dictionary = polygon_split_calls[1]
+	if String(first_polygon_split_call.get("locator_status", "")) != "0x4cca55_initial_graph_locator_materialized" \
+			or String(first_polygon_split_call.get("duplicate_endpoint_guard_result", "")) != "0x4ccb64_not_duplicate_endpoint" \
+			or String(first_polygon_split_call.get("located_node_id", "")) == "" \
+			or String(first_polygon_split_call.get("located_pair_id", "")) == "" \
+			or String(second_polygon_split_call.get("locator_status", "")) != "pending_current_graph_after_0x4ccb64_mutation":
+		_fail("The first 0x4cca55 locator materialization drifted: %s" % JSON.stringify(polygon_split))
 		return
 	if bool(polygon_split.get("materializes_source_node_graph", true)) \
 			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
