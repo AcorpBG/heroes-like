@@ -72,6 +72,8 @@ The reset now has a new isolated native module:
 - Implementation: `src/gdextension/src/h3maped_small_rmg.cpp`
 - Public boundary: `MapPackageService.inspect_h3maped_small_rmg_port(config)`
 
+Reset correction on 2026-05-12: the previous oversized inspection implementation was moved out of the active compile path to `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp`. That file is historical evidence only. The active implementation now stops at a small auditable boundary: executable anchor verification, h3maped-derived template acceptance, numeric `0x4e7269/0x4e7276` RNG template selection, and selected adapted-template identity. Player slots, runtime zones, towns, roads, blockers, guards, mines, rewards, and final writeout are pending phase ports rather than partially materialized ledgers.
+
 This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native generator implementation remains in the repository as archived debug/evidence code only. No `generate_random_map` request can fall through to it: supported small 36x36 one-level land configs route to the h3maped reset gate, and out-of-scope sizes/modes/templates return `archived_legacy_native_rmg_disabled`, including explicit translated-template requests and local debug/evidence calls.
 
 The reset module does not expose a public partial package-generation function. The earlier partial materialization helper is retained only as blocked inspection scaffolding inside the implementation and reports `runtime_generation_allowed: false` if reached; it is not declared in the public header and is not called by `MapPackageService.generate_random_map`.
