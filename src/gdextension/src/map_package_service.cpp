@@ -25430,15 +25430,12 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	String top_profile_phase_id;
 	Dictionary normalized = normalize_random_map_config(config);
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
-	if (h3maped_small_rmg::supports_scope(normalized)
-			&& native_rmg_generalized_native_catalog_auto_policy(normalized)) {
+	if (h3maped_small_rmg::supports_scope(normalized)) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
 		return h3maped_small_rmg::generation_not_ready_result(normalized, extension_profile);
 	}
-	if (native_rmg_archived_legacy_catalog_auto_output(normalized)) {
-		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-		return h3maped_small_rmg::archived_legacy_disabled_result(normalized, extension_profile, native_rmg_runtime_policy_classification(normalized));
-	}
+	Dictionary reset_extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
+	return h3maped_small_rmg::archived_legacy_disabled_result(normalized, reset_extension_profile, native_rmg_runtime_policy_classification(normalized));
 	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
 	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
 	const bool translated_catalog_structural_profile_supported = native_rmg_translated_catalog_structural_profile_supported(normalized);

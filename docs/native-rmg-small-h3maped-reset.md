@@ -2,7 +2,7 @@
 
 Status: active reset slice.
 
-The previous native catalog-auto RMG path is archived as legacy evidence/debug code. It is not the production random map generator path. Normal generation must not silently fall back to that implementation because it mixed recovered-template labels with hash selection, per-case fitting, road-cluster materialization, and validation gates that did not prove physical zone separation.
+The previous native RMG implementation is archived as legacy evidence/debug code. It is not the production random map generator path. Normal generation must not silently fall back to that implementation because it mixed recovered-template labels with hash selection, per-case fitting, road-cluster materialization, and validation gates that did not prove physical zone separation.
 
 ## Source Anchor
 
@@ -72,7 +72,7 @@ The reset now has a new isolated native module:
 - Implementation: `src/gdextension/src/h3maped_small_rmg.cpp`
 - Public boundary: `MapPackageService.inspect_h3maped_small_rmg_port(config)`
 
-This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native catalog-auto implementation remains in the repository as archived debug/evidence code only. `native_catalog_auto` requests cannot fall through to it, including local debug/evidence calls.
+This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native generator implementation remains in the repository as archived debug/evidence code only. No `generate_random_map` request can fall through to it: supported small 36x36 one-level land configs route to the h3maped reset gate, and out-of-scope sizes/modes/templates return `archived_legacy_native_rmg_disabled`, including explicit translated-template requests and local debug/evidence calls.
 
 The reset module does not expose a public partial package-generation function. The earlier partial materialization helper is retained only as blocked inspection scaffolding inside the implementation and reports `runtime_generation_allowed: false` if reached; it is not declared in the public header and is not called by `MapPackageService.generate_random_map`.
 
@@ -135,7 +135,7 @@ The boundary exposes a phase ledger and keeps every unported materialization pha
 7. `guard_reward_monster_placement` - `0x4a9d6a`, `0x4a9911`, `0x4a9c7c`, `0x4a9641`, `0x4aab7e`, `0x4aa354`, `0x4aa1db`, `0x4a9f1c` - mine/reward source field ledgers, `0x4a9911` mine template/record/guard handoff ledger, recovered terrain-mask filtering, `0x4a9641` mine candidate scan/selection/body-cell marking, `0x4aab7e` treasure scheduler density/product/sqrt/accumulator math, `0x4aa354` reward value RNG selection, `0x4aa1db` object-lookup control-flow ledger, and a 123-record materialized `0x49f95a` subset/`0x4a9f1c` value/type/proxy scan over 42 reward attempts ported for inspection while 3 dynamic value-function constructor sites remain pending; complete generator-vector parity, weighted selection/stamping, production package adoption, and guarding still pending.
 8. `final_cell_object_passes` - `0x49eb8d`, `0x4ab52a`, `0x4ac4ae` - `0x4ab52a` pair iteration, `0x4aae2f` path-state reset, the `0x4aae7b` seed-cell low-word initialization, the `0x5a2658` neighbor direction table, normal-neighbor path-cost propagation, `0x4ab52a` candidate low-word threshold consumption, `0x4ab37f` predecessor-chain ledgers, the `0x4b4243/0x458e61` road-neighbor/shape/write table evidence, and the `0x49aec5` candidate road-type nibble mark are ported for the current clean generated-cell grid; special vectors, object-lane propagation, final `0x458a2f/0x458893` road art/flip mutation, road overlay serialization, and final object passes pending clean port.
 
-`MapPackageService.generate_random_map` no longer emits the partial small-map package for normal small land `native_catalog_auto` requests. It returns `h3maped_small_clean_restart_generation_not_ready` until the clean h3maped-derived path can materialize terrain, owned towns/player starts, roads, physical blockers, guards, rewards, and final cell/object writeout phases together. The explicit inspection API remains available through `MapPackageService.inspect_h3maped_small_rmg_port`.
+`MapPackageService.generate_random_map` no longer emits the partial small-map package for normal small land requests, including explicit translated-template configs. It returns `h3maped_small_clean_restart_generation_not_ready` until the clean h3maped-derived path can materialize terrain, owned towns/player starts, roads, physical blockers, guards, rewards, and final cell/object writeout phases together. The explicit inspection API remains available through `MapPackageService.inspect_h3maped_small_rmg_port`.
 
 For the seed `1` boundary case, normal generation currently reports:
 
@@ -144,7 +144,7 @@ For the seed `1` boundary case, normal generation currently reports:
 - `error_code: h3maped_phase_port_incomplete`,
 - inspection report `runtime_generation_allowed: false`,
 - inspection report `partial_materialized_payload_status: archived_inspection_blocked_not_exported`,
-- out-of-scope `native_catalog_auto` requests still return `archived_legacy_native_rmg_disabled`.
+- out-of-scope `native_catalog_auto` and explicit translated-template requests return `archived_legacy_native_rmg_disabled`.
 
 The inspection payload now also exposes the recovered `0x4aae7b` path-state update rule needed before road materialization can be ported:
 
