@@ -374,6 +374,19 @@ func _run() -> void:
 	if dynamic_functions.size() != 3 or String(Dictionary(dynamic_functions[0]).get("address", "")) != "0x49c64b" or String(Dictionary(dynamic_functions[1]).get("address", "")) != "0x49c849" or String(Dictionary(dynamic_functions[2]).get("address", "")) != "0x49ca8b":
 		_fail("0x49f95a dynamic value-function addresses drifted: %s" % JSON.stringify(dynamic_values))
 		return
+	var dynamic_skeletons: Array = dynamic_values.get("dynamic_record_skeletons", [])
+	if dynamic_skeletons.size() != 3:
+		_fail("0x49f95a dynamic record skeleton count drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	if int(dynamic_values.get("known_unconditional_dynamic_record_count", -1)) != 0x3a or int(dynamic_values.get("scan_ready_dynamic_record_count", -1)) != 0:
+		_fail("0x49f95a dynamic skeleton record-count gates drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	if String(Dictionary(dynamic_skeletons[1]).get("constructor_call_address", "")) != "0x4a043a" or int(Dictionary(dynamic_skeletons[1]).get("known_unconditional_record_count", -1)) != 0x3a:
+		_fail("0x49f95a type-17 dynamic skeleton loop drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	if String(Dictionary(dynamic_skeletons[0]).get("record_count_status", "")) != "runtime_creature_table_pending" or String(Dictionary(dynamic_skeletons[2]).get("record_count_status", "")) != "generator_vector_and_runtime_creature_table_pending":
+		_fail("0x49f95a dynamic creature-loop skeleton gates drifted: %s" % JSON.stringify(dynamic_values))
+		return
 	if int(mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", -1)) != 463 or int(mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", -1)) != 95948:
 		_fail("0x4a9f1c recovered materialized candidate scan totals drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
