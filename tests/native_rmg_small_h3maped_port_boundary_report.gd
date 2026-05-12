@@ -110,10 +110,12 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a79a3 connection geometry dispatch boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
-	if String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending" \
+	if String(connection_payload.get("geometry_owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_pending" \
+			or String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_high_owner_channel_pending" \
 			or int(connection_payload.get("geometry_4a6cf2_overlap_link_count", -1)) != 5 \
 			or int(connection_payload.get("geometry_4a6cf2_nonempty_overlap_link_count", -1)) != 3 \
 			or int(connection_payload.get("geometry_4a6cf2_overlap_cell_total", -1)) != 502 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_sentinel_total", -1)) != 502 \
 			or int(connection_payload.get("geometry_4a6cf2_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a6cf2 overlap/candidate-scan boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
@@ -143,6 +145,11 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_end_offset", "")) != "generator+0x6ac" \
 			or int(first_4a6cf2_overlap.get("candidate_shape_vector_pointer_stride_bytes", -1)) != 4 \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_status", "")) != "pending_generator_0x6a8_shape_list_port" \
+			or String(first_4a6cf2_overlap.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
+			or String(first_4a6cf2_overlap.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
+			or String(first_4a6cf2_overlap.get("owner_high_byte_producer", "")) != "0x4a5767 reset plus 0x49a318 anchor/occupancy normalization" \
+			or String(first_4a6cf2_overlap.get("owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_pending" \
+			or String(first_4a6cf2_overlap.get("candidate_scan_status", "")) != "0x4a6de2_overlap_low_owner_score_scan_materialized_high_owner_channel_pending" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_selection_range", "")) != "0x4a6de2..0x4a6e0c" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_random_selector_address", "")) != "0x4e7276" \
 			or String(first_4a6cf2_overlap.get("validation_helper_address", "")) != "0x49aa93" \
@@ -157,6 +164,7 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
 			or bool(first_4a6cf2_overlap.get("materializes_endpoint_coordinates", true)) \
 			or int(first_4a6cf2_overlap.get("endpoint_coordinate_materialized_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != int(first_4a6cf2_overlap.get("overlap_cell_count", -2)) \
 			or int(first_4a6cf2_overlap.get("overlap_cell_count", 0)) <= 0:
 		_fail("0x4a6cf2 overlap helper evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
 		return
@@ -744,8 +752,9 @@ func _run() -> void:
 	var tile_byte_5: PackedInt32Array = terrain_fill.get("tile_byte_5_road_art_u8", PackedInt32Array())
 	var tile_byte_6: PackedInt32Array = terrain_fill.get("tile_byte_6_terrain_flags_u8", PackedInt32Array())
 	var owner_byte_grid: PackedInt32Array = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array())
+	var owner_high_byte_grid: PackedInt32Array = terrain_fill.get("owner_high_byte_grid_i8", PackedInt32Array())
 	var repaint_member_grid: PackedInt32Array = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array())
-	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or tile_byte_0.size() != 1296 or tile_byte_1.size() != 1296 or tile_byte_2.size() != 1296 or tile_byte_3.size() != 1296 or tile_byte_4.size() != 1296 or tile_byte_5.size() != 1296 or tile_byte_6.size() != 1296 or owner_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
+	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296 or tile_byte_0.size() != 1296 or tile_byte_1.size() != 1296 or tile_byte_2.size() != 1296 or tile_byte_3.size() != 1296 or tile_byte_4.size() != 1296 or tile_byte_5.size() != 1296 or tile_byte_6.size() != 1296 or owner_byte_grid.size() != 1296 or owner_high_byte_grid.size() != 1296 or repaint_member_grid.size() != 1296:
 		_fail("TerrainPlacement visual arrays must cover every small-map cell: %s" % JSON.stringify({
 			"terrain_code_u16": terrain_codes.size(),
 			"terrain_art_index_u8": terrain_art_indices.size(),
@@ -760,8 +769,16 @@ func _run() -> void:
 			"tile_byte_5_road_art_u8": tile_byte_5.size(),
 			"tile_byte_6_terrain_flags_u8": tile_byte_6.size(),
 			"owner_byte_grid_u8": owner_byte_grid.size(),
+			"owner_high_byte_grid_i8": owner_high_byte_grid.size(),
 			"zone_repaint_member_grid_u8": repaint_member_grid.size(),
 		}))
+		return
+	if String(terrain_fill.get("occupancy_reset_high_owner_status", "")) != "0x4a5767_reset_high_owner_sentinel_materialized_49a318_copy_pending" \
+			or String(terrain_fill.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
+			or String(terrain_fill.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
+			or int(terrain_fill.get("owner_high_byte_materialized_count", -1)) != 0 \
+			or int(terrain_fill.get("owner_high_byte_sentinel_count", -1)) != 1296:
+		_fail("0x4a5767/0x49a318 high owner-byte boundary drifted: %s" % JSON.stringify(terrain_fill))
 		return
 	if String(terrain_fill.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending":
 		_fail("0x49b2b6 terrain-byte packing status was not exposed: %s" % JSON.stringify(terrain_fill))

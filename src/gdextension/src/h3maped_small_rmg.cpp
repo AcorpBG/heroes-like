@@ -3042,6 +3042,13 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	report["terrain_adapter_vtable"] = "0x540a14";
 	report["generated_cell_stride_bytes"] = 0x30;
 	report["owner_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_low_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31";
+	report["occupancy_reset_function_address"] = "0x4a5767";
+	report["occupancy_reset_cell_init_helper_address"] = "0x4a59e2";
+	report["occupancy_reset_anchor_normalization_helper_address"] = "0x49a318";
+	report["occupancy_reset_high_owner_status"] = "0x4a5767_reset_high_owner_sentinel_materialized_49a318_copy_pending";
+	report["occupancy_reset_high_owner_initial_sentinel"] = -1;
 	report["zone_repaint_member_bit"] = "cell+0x28 bit 28 / cell+0x2b bit 0x10";
 	report["runtime_repaint_compare"] = "0x4a4142..0x4a4163 compares signed owner byte to runtime-zone loop index";
 
@@ -3063,13 +3070,16 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	report["islands_connector_repaint_status"] = water_code == 2 ? String("scheduled_for_level_zero_runtime_zones") : String("skipped_non_islands_water_mode");
 
 	PackedInt32Array owner_byte_grid;
+	PackedInt32Array owner_high_byte_grid;
 	PackedInt32Array repaint_member_grid;
 	PackedInt32Array zone_word_low_grid;
 	owner_byte_grid.resize(tile_count);
+	owner_high_byte_grid.resize(tile_count);
 	repaint_member_grid.resize(tile_count);
 	zone_word_low_grid.resize(tile_count);
 	for (int32_t flat_index = 0; flat_index < tile_count; ++flat_index) {
 		owner_byte_grid.set(flat_index, -1);
+		owner_high_byte_grid.set(flat_index, -1);
 		repaint_member_grid.set(flat_index, 0);
 		zone_word_low_grid.set(flat_index, 0);
 	}
@@ -3104,6 +3114,9 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 		}
 	}
 	report["assigned_owner_cell_count"] = assigned_owner_cell_count;
+	report["owner_low_byte_materialized_count"] = assigned_owner_cell_count;
+	report["owner_high_byte_materialized_count"] = 0;
+	report["owner_high_byte_sentinel_count"] = tile_count;
 	report["zone_repaint_member_cell_count"] = repaint_member_cell_count;
 	report["unresolved_cell_count"] = unresolved_cell_count;
 	report["bbox_update_scan_status"] = "0x4a2105_scans_owned_cells_and_updates_runtime_zone_bbox_via_0x49b66d";
@@ -3269,6 +3282,8 @@ Dictionary terrain_fill_repaint_4a3f27_report(
 	report["terrain_code_counts_after_repaint"] = terrain_code_counts;
 	report["terrain_code_u16"] = terrain_codes;
 	report["owner_byte_grid_u8"] = owner_byte_grid;
+	report["owner_low_byte_grid_u8"] = owner_byte_grid;
+	report["owner_high_byte_grid_i8"] = owner_high_byte_grid;
 	report["zone_repaint_member_grid_u8"] = repaint_member_grid;
 	report["zone_word_low_u16"] = zone_word_low_grid;
 	report["terrain_art_index_u8"] = terrain_art_indices;
@@ -6979,6 +6994,10 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	report["source_range_wide_read"] = "0x4a707b..0x4a709a";
 	report["source_range_block_cells"] = "0x4a70aa..0x4a7100";
 	report["source_range_guard_spawn"] = "0x4a72bd..0x4a72e8";
+	report["owner_low_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31";
+	report["owner_channel_requirement_source"] = "0x4a61bc, 0x4a696b, and 0x4a6cf2 compare both generated-cell owner bytes before endpoint geometry succeeds";
+	report["owner_high_byte_producer"] = "0x4a5767 reset plus 0x49a318 anchor/occupancy normalization";
 	report["candidate_shape_vector_source"] = "generator+0x6a8";
 	report["candidate_shape_vector_begin_offset"] = "generator+0x6a8";
 	report["candidate_shape_vector_end_offset"] = "generator+0x6ac";
@@ -7009,6 +7028,7 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	const int32_t map_height = int32_t(terrain_fill.get("height", 0));
 	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
 	PackedInt32Array owner_grid = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array());
+	PackedInt32Array owner_high_grid = terrain_fill.get("owner_high_byte_grid_i8", PackedInt32Array());
 	Array zone_reports = terrain_fill.get("zones", Array());
 	Dictionary bbox_a;
 	Dictionary bbox_b;
@@ -7029,9 +7049,9 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	report["map_width"] = map_width;
 	report["map_height"] = map_height;
 	report["level_count"] = level_count;
-	if (bbox_a.is_empty() || bbox_b.is_empty() || map_width <= 0 || map_height <= 0 || owner_grid.size() < map_width * map_height * level_count) {
+	if (bbox_a.is_empty() || bbox_b.is_empty() || map_width <= 0 || map_height <= 0 || owner_grid.size() < map_width * map_height * level_count || owner_high_grid.size() < map_width * map_height * level_count) {
 		report["status"] = "0x4a6cf2_overlap_precheck_blocked_missing_generated_cell_inputs";
-		report["blocked_reason"] = "requires 0x4a2105 runtime-zone bboxes and generated-cell owner byte grid before candidate scan";
+		report["blocked_reason"] = "requires 0x4a2105 runtime-zone bboxes plus generated-cell low/high owner byte grids before candidate scan";
 		return report;
 	}
 
@@ -7073,6 +7093,10 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	int32_t owner_b_cell_count = 0;
 	int32_t other_owner_cell_count = 0;
 	int32_t unassigned_cell_count = 0;
+	int32_t high_owner_a_cell_count = 0;
+	int32_t high_owner_b_cell_count = 0;
+	int32_t high_other_owner_cell_count = 0;
+	int32_t high_sentinel_cell_count = 0;
 	int32_t low_word_sum = 0;
 	PackedInt32Array zone_word_low_grid = terrain_fill.get("zone_word_low_u16", PackedInt32Array());
 	if (overlap_cell_count > 0) {
@@ -7092,6 +7116,16 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 				} else {
 					other_owner_cell_count += 1;
 				}
+				const int32_t high_owner = owner_high_grid[flat_index];
+				if (high_owner == runtime_a) {
+					high_owner_a_cell_count += 1;
+				} else if (high_owner == runtime_b) {
+					high_owner_b_cell_count += 1;
+				} else if (high_owner < 0) {
+					high_sentinel_cell_count += 1;
+				} else {
+					high_other_owner_cell_count += 1;
+				}
 				if (flat_index >= 0 && flat_index < zone_word_low_grid.size()) {
 					low_word_sum += int32_t(zone_word_low_grid[flat_index]);
 				}
@@ -7102,12 +7136,24 @@ Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &s
 	report["overlap_owner_b_cell_count"] = owner_b_cell_count;
 	report["overlap_other_owner_cell_count"] = other_owner_cell_count;
 	report["overlap_unassigned_cell_count"] = unassigned_cell_count;
+	report["overlap_high_owner_a_cell_count"] = high_owner_a_cell_count;
+	report["overlap_high_owner_b_cell_count"] = high_owner_b_cell_count;
+	report["overlap_high_other_owner_cell_count"] = high_other_owner_cell_count;
+	report["overlap_high_owner_sentinel_cell_count"] = high_sentinel_cell_count;
 	report["overlap_low_word_score_sum"] = low_word_sum;
+	const bool high_owner_channel_ready = overlap_cell_count > 0 && high_sentinel_cell_count < overlap_cell_count;
+	report["owner_channel_status"] = high_owner_channel_ready
+			? String("0x4a5767_49a318_high_owner_channel_partially_materialized")
+			: String("0x4a5767_49a318_high_owner_channel_pending");
 	report["candidate_scan_status"] = overlap_cell_count > 0
-			? String("0x4a6de2_overlap_owner_score_scan_materialized_shape_list_pending")
+			? (high_owner_channel_ready
+					? String("0x4a6de2_overlap_low_high_owner_score_scan_materialized_shape_list_pending")
+					: String("0x4a6de2_overlap_low_owner_score_scan_materialized_high_owner_channel_pending"))
 			: String("0x4a6cf2_returns_false_empty_overlap");
 	report["status"] = overlap_cell_count > 0
-			? String("0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending")
+			? (high_owner_channel_ready
+					? String("0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending")
+					: String("0x4a6cf2_overlap_precheck_materialized_high_owner_channel_pending"))
 			: String("0x4a6cf2_empty_overlap_no_endpoint_geometry");
 	return report;
 }
@@ -7152,6 +7198,7 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		record["border_guard_status"] = border_guard ? String("pending_0x4a5e73_0x4a5a23_type_9_materialization") : String("not_a_border_guard_link");
 		record["geometry_status"] = "0x4a79a3_dispatch_plan_ported_endpoint_geometry_pending";
 		record["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_no_endpoint_coordinates";
+		record["geometry_owner_channel_status"] = "0x4a61bc_0x4a696b_0x4a6cf2_require_low_and_high_cell_0x20_owner_bytes";
 		record["geometry_first_pass_helpers"] = first_pass_helpers;
 		record["geometry_second_pass_helpers"] = second_pass_helpers;
 		record["geometry_success_helper"] = "";
@@ -7187,6 +7234,7 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t overlap_4a6cf2_link_count = 0;
 	int32_t overlap_4a6cf2_nonempty_link_count = 0;
 	int32_t overlap_4a6cf2_cell_total = 0;
+	int32_t overlap_4a6cf2_high_owner_sentinel_total = 0;
 	Array normal_guard_spawn_intents;
 	Array geometry_dispatch_plan;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
@@ -7211,6 +7259,7 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 			overlap_4a6cf2_link_count += 1;
 			const int32_t overlap_cell_count = int32_t(overlap_4a6cf2.get("overlap_cell_count", 0));
 			overlap_4a6cf2_cell_total += overlap_cell_count;
+			overlap_4a6cf2_high_owner_sentinel_total += int32_t(overlap_4a6cf2.get("overlap_high_owner_sentinel_cell_count", 0));
 			if (overlap_cell_count > 0) {
 				overlap_4a6cf2_nonempty_link_count += 1;
 			}
@@ -7267,10 +7316,16 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_endpoint_geometry_pending";
 	connection_payload["geometry_dispatch_link_count"] = geometry_dispatch_plan.size();
 	connection_payload["geometry_endpoint_coordinate_materialized_count"] = endpoint_coordinate_materialized_count;
-	connection_payload["geometry_4a6cf2_overlap_status"] = "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending";
+	connection_payload["geometry_owner_channel_status"] = overlap_4a6cf2_high_owner_sentinel_total > 0
+			? String("0x4a5767_49a318_high_owner_channel_pending")
+			: String("0x4a5767_49a318_high_owner_channel_materialized");
+	connection_payload["geometry_4a6cf2_overlap_status"] = overlap_4a6cf2_high_owner_sentinel_total > 0
+			? String("0x4a6cf2_overlap_precheck_materialized_high_owner_channel_pending")
+			: String("0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending");
 	connection_payload["geometry_4a6cf2_overlap_link_count"] = overlap_4a6cf2_link_count;
 	connection_payload["geometry_4a6cf2_nonempty_overlap_link_count"] = overlap_4a6cf2_nonempty_link_count;
 	connection_payload["geometry_4a6cf2_overlap_cell_total"] = overlap_4a6cf2_cell_total;
+	connection_payload["geometry_4a6cf2_overlap_high_owner_sentinel_total"] = overlap_4a6cf2_high_owner_sentinel_total;
 	connection_payload["geometry_4a6cf2_endpoint_coordinate_materialized_count"] = 0;
 	connection_payload["geometry_dispatch_plan"] = geometry_dispatch_plan;
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
