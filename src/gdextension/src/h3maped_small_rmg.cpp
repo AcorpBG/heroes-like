@@ -2027,6 +2027,43 @@ void h3maped_decode_grid_key(int64_t key, int32_t &level, int32_t &x, int32_t &y
 	x = int32_t(key & 0xfffff);
 }
 
+Dictionary h3maped_queue_container_contract_report(int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported";
+	report["source"] = "disassembly-backed TerrainPlacement queue container ordering contract used by the 0x4bc5f0 set-A/set-B drain projection";
+	report["ported_addresses"] = Array::make("0x4bd1c1", "0x4bd374", "0x4bd3c5", "0x4bd408");
+	report["ordered_insert_address"] = "0x4bd1c1";
+	report["remove_address"] = "0x4bd374";
+	report["lookup_address"] = "0x4bd3c5";
+	report["copy_pair_address"] = "0x4bd408";
+	report["ordering"] = "ascending y, then ascending x";
+	report["duplicate_insert_semantics"] = "existing coordinate is returned with inserted flag false";
+	report["remove_semantics"] = "removes the matching coordinate range returned by lower-bound lookup";
+	report["copy_pair_semantics"] = "copies x/y coordinate fields from a node into the caller pair";
+	report["one_level_order_emulated_by_h3maped_grid_key"] = level_count == 1;
+	report["emulation_scope"] = "valid for current small one-level reset scope; multi-level ordering must be recovered before underground adoption";
+	std::set<int64_t> sample_keys;
+	sample_keys.insert(h3maped_grid_key(0, 2, 1));
+	sample_keys.insert(h3maped_grid_key(0, 0, 1));
+	sample_keys.insert(h3maped_grid_key(0, 1, 0));
+	sample_keys.insert(h3maped_grid_key(0, 0, 0));
+	Array sample_order;
+	for (int64_t key : sample_keys) {
+		int32_t level = 0;
+		int32_t x = 0;
+		int32_t y = 0;
+		h3maped_decode_grid_key(key, level, x, y);
+		Dictionary item;
+		item["level"] = level;
+		item["x"] = x;
+		item["y"] = y;
+		sample_order.append(item);
+	}
+	report["sample_order"] = sample_order;
+	report["materializes_runtime_queue"] = false;
+	return report;
+}
+
 Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
 
 Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
@@ -2035,7 +2072,10 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape per 0x4a3f27 repaint over a copied terrain grid";
 	report["ported_addresses"] = Array::make("0x4bc5f0", "0x4bbd01", "0x4bc988", "0x4bb74b", "0x4bba59", "0x4bbfcc");
 	report["exact_drain_complete"] = false;
-	report["blocked_exact_dependencies"] = Array::make("0x4bd1c1_ordered_container_insert_semantics", "0x4bd374_container_remove_semantics", "0x4bd408_container_copy_semantics", "0x4bad0f_scratch_visual_state_feedback");
+	report["blocked_exact_dependencies"] = Array::make("0x4bad0f_scratch_visual_state_feedback");
+	Dictionary queue_container_contract = h3maped_queue_container_contract_report(level_count);
+	report["queue_container_contract_status"] = queue_container_contract.get("status", "");
+	report["queue_container_contract"] = queue_container_contract;
 	report["adopts_into_runtime_grid"] = false;
 	report["materializes_package_tiles"] = false;
 	report["materializes_art_bytes"] = false;
@@ -2308,7 +2348,7 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	Dictionary drained_visual_projection = generated_grid_visual_projection_report(drain_grid, drained_final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array()), width, height, level_count, rng_state_before_visual_selection);
 	report["drained_visual_projection_status"] = drained_visual_projection.get("status", "");
 	report["drained_visual_projection"] = drained_visual_projection;
-	report["blocked_next"] = "replace this copied terrain-only projection with exact 0x4bd1c1/0x4bd374/0x4bd408 container return semantics plus 0x4bad0f scratch visual-state feedback before runtime adoption";
+	report["blocked_next"] = "replace this copied terrain-only projection with full 0x4bad0f scratch visual-state feedback and safe generated-cell/runtime adoption";
 	return report;
 }
 

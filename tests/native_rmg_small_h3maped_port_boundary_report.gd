@@ -499,6 +499,9 @@ func _run() -> void:
 	var repaint_order_queue_seed_addresses: Array = repaint_order_queue_seed.get("ported_addresses", [])
 	var repaint_order_queue_drain: Dictionary = terrain_cell_writeout.get("repaint_order_queue_drain", {})
 	var repaint_order_queue_drain_addresses: Array = repaint_order_queue_drain.get("ported_addresses", [])
+	var repaint_order_queue_drain_blocked_exact_dependencies: Array = repaint_order_queue_drain.get("blocked_exact_dependencies", [])
+	var queue_container_contract: Dictionary = repaint_order_queue_drain.get("queue_container_contract", {})
+	var queue_container_sample_order: Array = queue_container_contract.get("sample_order", [])
 	var drained_visual_projection: Dictionary = repaint_order_queue_drain.get("drained_visual_projection", {})
 	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var drained_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("drained_tile_writeback_candidate", {})
@@ -685,7 +688,8 @@ func _run() -> void:
 			or not Dictionary(repaint_order_queue_drain.get("post_drain_missing_class_histogram", {"unexpected": 1})).is_empty() \
 			or String(repaint_order_queue_drain.get("drained_final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
 			or String(repaint_order_queue_drain.get("drained_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
-			or Array(repaint_order_queue_drain.get("blocked_exact_dependencies", [])).is_empty() \
+			or String(repaint_order_queue_drain.get("queue_container_contract_status", "")) != "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported" \
+			or repaint_order_queue_drain_blocked_exact_dependencies != ["0x4bad0f_scratch_visual_state_feedback"] \
 			or Array(repaint_order_queue_drain.get("seed_samples", [])).is_empty() \
 			or Array(repaint_order_queue_drain.get("drain_samples", [])).is_empty() \
 			or PackedInt32Array(repaint_order_queue_drain.get("drained_terrain_code_u16", PackedInt32Array())).size() != 1296 \
@@ -699,6 +703,26 @@ func _run() -> void:
 			or bool(drained_final_sweep_boundary_counter.get("materializes_visual_records", true)) \
 			or bool(drained_final_sweep_boundary_counter.get("materializes_package_tiles", true)):
 		_fail("The h3maped drained-grid final sweep boundary counter drifted: %s" % JSON.stringify(drained_final_sweep_boundary_counter))
+		return
+	if String(queue_container_contract.get("status", "")) != "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported" \
+			or not Array(queue_container_contract.get("ported_addresses", [])).has("0x4bd1c1") \
+			or not Array(queue_container_contract.get("ported_addresses", [])).has("0x4bd374") \
+			or not Array(queue_container_contract.get("ported_addresses", [])).has("0x4bd3c5") \
+			or not Array(queue_container_contract.get("ported_addresses", [])).has("0x4bd408") \
+			or String(queue_container_contract.get("ordering", "")) != "ascending y, then ascending x" \
+			or String(queue_container_contract.get("duplicate_insert_semantics", "")).find("inserted flag false") == -1 \
+			or not bool(queue_container_contract.get("one_level_order_emulated_by_h3maped_grid_key", false)) \
+			or bool(queue_container_contract.get("materializes_runtime_queue", true)) \
+			or queue_container_sample_order.size() != 4 \
+			or int(Dictionary(queue_container_sample_order[0]).get("x", -1)) != 0 \
+			or int(Dictionary(queue_container_sample_order[0]).get("y", -1)) != 0 \
+			or int(Dictionary(queue_container_sample_order[1]).get("x", -1)) != 1 \
+			or int(Dictionary(queue_container_sample_order[1]).get("y", -1)) != 0 \
+			or int(Dictionary(queue_container_sample_order[2]).get("x", -1)) != 0 \
+			or int(Dictionary(queue_container_sample_order[2]).get("y", -1)) != 1 \
+			or int(Dictionary(queue_container_sample_order[3]).get("x", -1)) != 2 \
+			or int(Dictionary(queue_container_sample_order[3]).get("y", -1)) != 1:
+		_fail("The h3maped queue container contract drifted: %s" % JSON.stringify(queue_container_contract))
 		return
 	if String(drained_visual_projection.get("status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or int(drained_visual_projection.get("projected_cell_count", -1)) != 1296 \
