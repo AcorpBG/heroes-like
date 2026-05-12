@@ -4825,6 +4825,63 @@ int32_t mine_guard_base_value(int32_t subtype) {
 	return 3500;
 }
 
+int32_t h3maped_strength_scaled_value_4a65a5(int32_t base_value, int32_t mode) {
+	static constexpr int32_t THRESHOLD_1[] = {50000, 2500, 1500, 1000, 500, 0};
+	static constexpr int32_t THRESHOLD_2[] = {50000, 7500, 7500, 7500, 5000, 5000};
+	static constexpr int32_t SLOPE_1[] = {0, 2, 3, 4, 6, 6};
+	static constexpr int32_t SLOPE_2[] = {0, 2, 3, 4, 4, 6};
+	const int32_t clamped_mode = std::max(0, std::min(5, mode));
+	const int32_t base = std::max(0, base_value);
+	int32_t value = 0;
+	if (base > THRESHOLD_1[clamped_mode]) {
+		value += ((base - THRESHOLD_1[clamped_mode]) * SLOPE_1[clamped_mode]) / 4;
+	}
+	if (base > THRESHOLD_2[clamped_mode]) {
+		value += ((base - THRESHOLD_2[clamped_mode]) * SLOPE_2[clamped_mode]) / 4;
+	}
+	return value < 2000 ? 0 : value;
+}
+
+int32_t h3maped_global_monster_strength_mode(const Dictionary &normalized_config) {
+	return std::max(0, std::min(5, int32_t(normalized_config.get("global_monster_strength_mode", 3))));
+}
+
+int32_t h3maped_local_monster_strength_mode(const Variant &strength_value) {
+	const String token = String(strength_value).to_lower().strip_edges();
+	if (token == "0" || token == "n" || token == "none" || token == "no" || token == "none_or_unguarded") {
+		return 0;
+	}
+	if (token == "2" || token == "w" || token == "weak" || token == "core_low") {
+		return 2;
+	}
+	if (token == "4" || token == "s" || token == "strong") {
+		return 4;
+	}
+	if (token == "1") {
+		return 1;
+	}
+	if (token == "5") {
+		return 5;
+	}
+	return 3;
+}
+
+int32_t h3maped_effective_monster_strength_mode_4a960a(const Dictionary &normalized_config, const Dictionary &source_zone) {
+	const int32_t source_strength = h3maped_local_monster_strength_mode(source_zone.get("monster_strength", "avg"));
+	if (source_strength == 0) {
+		return 0;
+	}
+	return std::max(0, std::min(5, source_strength + h3maped_global_monster_strength_mode(normalized_config) - 3));
+}
+
+int32_t h3maped_mine_guard_scaled_value_4a960a_4a65a5(const Dictionary &normalized_config, const Dictionary &source_zone, int32_t base_value) {
+	const int32_t source_strength = h3maped_local_monster_strength_mode(source_zone.get("monster_strength", "avg"));
+	if (source_strength == 0) {
+		return 0;
+	}
+	return h3maped_strength_scaled_value_4a65a5(base_value, h3maped_effective_monster_strength_mode_4a960a(normalized_config, source_zone));
+}
+
 bool h3_object_row_matches_runtime_terrain(const H3ObjectRow &row, int32_t h3maped_terrain_id) {
 	if (h3maped_terrain_id < 0 || h3maped_terrain_id >= 9 || row.terrain_mask_secondary.length() < 9) {
 		return true;
@@ -5423,7 +5480,7 @@ std::vector<uint8_t> occupied_grid_from_town_records(const Dictionary &town_cast
 	return occupied;
 }
 
-Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones, int32_t source_catalog_index, const Dictionary &runtime_build, const Dictionary &town_castle_placement) {
+Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones, int32_t source_catalog_index, const Dictionary &runtime_build, const Dictionary &town_castle_placement, const Dictionary &normalized_config) {
 	Dictionary report;
 	report["status"] = "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_0x4aa354_value_selection_ported_package_adoption_pending";
 	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields, 0x4a9911 mine template bucket selection/record/guard handoff, 0x4a9641 mine placement constraint candidate scan, phase 10 0x4aab7e treasure-band scheduler, and 0x4aa354 reward value selection rebound from recovered rmg-template-catalog and objects.txt source rows; package adoption, 0x4aa1db reward object lookup, and guarding remain pending";
@@ -5547,6 +5604,8 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t mine_object_occupied_cell_mark_count = 0;
 	int32_t mine_template_selection_rng_call_count = 0;
 	int32_t mine_placement_rng_call_count = 0;
+	int32_t mine_guard_scaled_nonzero_count = 0;
+	int32_t mine_guard_scaled_value_total = 0;
 	int32_t treasure_band_field_count = 0;
 	int32_t positive_treasure_band_count = 0;
 	int32_t total_treasure_density_weight = 0;
@@ -5889,8 +5948,21 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 						}
 					}
 				}
-				helper_call["guard_base_value"] = mine_guard_base_value(field.subtype);
+				const int32_t guard_base_value = mine_guard_base_value(field.subtype);
+				const int32_t guard_source_strength_mode = h3maped_local_monster_strength_mode(source_zone.get("monster_strength", "avg"));
+				const int32_t guard_effective_strength_mode = h3maped_effective_monster_strength_mode_4a960a(normalized_config, source_zone);
+				const int32_t guard_scaled_value = h3maped_mine_guard_scaled_value_4a960a_4a65a5(normalized_config, source_zone, guard_base_value);
+				if (guard_scaled_value > 0) {
+					mine_guard_scaled_nonzero_count += 1;
+					mine_guard_scaled_value_total += guard_scaled_value;
+				}
+				helper_call["guard_base_value"] = guard_base_value;
+				helper_call["guard_source_strength_mode"] = guard_source_strength_mode;
+				helper_call["guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
+				helper_call["guard_effective_strength_mode"] = guard_effective_strength_mode;
+				helper_call["guard_scaled_value"] = guard_scaled_value;
 				helper_call["guard_adjustment_helpers"] = "0x4a960a -> 0x4a65a5";
+				helper_call["guard_scaling_status"] = "0x4a960a_0x4a65a5_guard_value_scaled_guard_object_pending";
 				helper_call["adjacent_resource_helper_address"] = "0x4a9e40";
 				helper_call["adjacent_resource_object_type_id"] = H3_RESOURCE_TYPE_ID;
 				helper_call["adjacent_resource_subtype"] = field.subtype;
@@ -6157,6 +6229,10 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["mine_placement_rng_call_count"] = mine_placement_rng_call_count;
 	report["mine_object_rng_state_before_0x4a9911_uint32"] = int64_t(mine_object_rng_state_before);
 	report["mine_object_rng_state_after_0x4a9911_0x4a9641_uint32"] = int64_t(mine_object_rng.state);
+	report["mine_guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
+	report["mine_guard_scaled_nonzero_count"] = mine_guard_scaled_nonzero_count;
+	report["mine_guard_scaled_value_total"] = mine_guard_scaled_value_total;
+	report["mine_guard_scaling_status"] = "0x4a960a_0x4a65a5_mine_guard_values_scaled_guard_objects_pending";
 	report["mine_density_scheduler_zone_call_count"] = zone_reports.size() - source_zone_missing_count;
 	report["mine_density_scheduler_status"] = "0x4a9c7c_positive_weight_schedule_recorded_actual_iterations_pending";
 	report["treasure_band_field_count"] = treasure_band_field_count;
@@ -6294,7 +6370,7 @@ Dictionary selected_template_payload(const Dictionary &template_record, const Di
 	Dictionary town_castle_placement = town_castle_placement_4a8d2c_4a8db2_report(active_zones, runtime_zones);
 	payload["object_category_placement_status"] = town_castle_placement.get("status", "");
 	payload["town_castle_placement"] = town_castle_placement;
-	Dictionary mine_reward_placement = mine_reward_placement_4a9d6a_4aab7e_report(active_zones, source_catalog_index, runtime_zones, town_castle_placement);
+	Dictionary mine_reward_placement = mine_reward_placement_4a9d6a_4aab7e_report(active_zones, source_catalog_index, runtime_zones, town_castle_placement, normalized_config);
 	mine_reward_placement["treasure_reward_dynamic_value_function_summary"] = h3maped_reward_dynamic_value_functions_49f95a_report(normalized_config);
 	payload["guard_reward_monster_placement_status"] = mine_reward_placement.get("status", "");
 	payload["guard_reward_monster_placement"] = mine_reward_placement;
@@ -6335,7 +6411,8 @@ Array clean_phase_ledger() {
 Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source);
 Array h3maped_town_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
 Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
-Array h3maped_connection_records_from_port(const Dictionary &payload);
+Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config);
+Dictionary h3maped_connection_payload_from_records(const Array &connection_records, const Dictionary &normalized_config);
 Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_records, const Array &mine_records);
 Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase);
 
@@ -6439,7 +6516,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
 		Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 		Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
-		Array connection_records = h3maped_connection_records_from_port(payload);
+		Array connection_records = h3maped_connection_records_from_port(payload, normalized_config);
+		payload["connection_payload"] = h3maped_connection_payload_from_records(connection_records, normalized_config);
 		Dictionary coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 		Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
 		const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", int64_t(next_state)))));
@@ -6892,7 +6970,7 @@ Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const 
 	return result;
 }
 
-Array h3maped_connection_records_from_port(const Dictionary &payload) {
+Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config) {
 	Array result;
 	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
 	Array link_seeds = runtime_build.get("link_seeds", Array());
@@ -6904,6 +6982,8 @@ Array h3maped_connection_records_from_port(const Dictionary &payload) {
 		const int32_t raw_guard_value = int32_t(seed.get("guard_value", 0));
 		const bool wide = bool(seed.get("wide", false));
 		const bool border_guard = bool(seed.get("border_guard", false));
+		const int32_t normal_guard_value_before_scaling = wide ? 0 : raw_guard_value;
+		const int32_t normal_guard_scaled_value = wide ? 0 : h3maped_strength_scaled_value_4a65a5(raw_guard_value, h3maped_global_monster_strength_mode(normalized_config));
 		Dictionary record;
 		record["connection_id"] = String("h3maped_small_connection_") + String::num_int64(index + 1);
 		record["link_index"] = seed.get("link_index", index);
@@ -6914,8 +6994,10 @@ Array h3maped_connection_records_from_port(const Dictionary &payload) {
 		record["raw_guard_value"] = raw_guard_value;
 		record["wide"] = wide;
 		record["border_guard"] = border_guard;
-		record["normal_guard_value_status"] = wide ? String("suppressed_by_link_plus_0x08_wide") : String("pending_0x4a65a5_value_scaling");
-		record["normal_guard_value_before_0x4a65a5"] = wide ? 0 : raw_guard_value;
+		record["normal_guard_value_status"] = wide ? String("suppressed_by_link_plus_0x08_wide") : String("0x4a65a5_value_scaled_guard_object_pending");
+		record["normal_guard_value_before_0x4a65a5"] = normal_guard_value_before_scaling;
+		record["normal_guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
+		record["normal_guard_scaled_value"] = normal_guard_scaled_value;
 		record["border_guard_status"] = border_guard ? String("pending_0x4a5e73_0x4a5a23_type_9_materialization") : String("not_a_border_guard_link");
 		record["geometry_status"] = "pending_0x4a61bc_0x4a696b_0x4a6cf2_0x4a7605_connection_geometry";
 		record["road_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -6927,7 +7009,7 @@ Array h3maped_connection_records_from_port(const Dictionary &payload) {
 	return result;
 }
 
-Dictionary h3maped_connection_payload_from_records(const Array &connection_records) {
+Dictionary h3maped_connection_payload_from_records(const Array &connection_records, const Dictionary &normalized_config) {
 	Dictionary connection_payload;
 	connection_payload["schema_id"] = "aurelion_h3maped_small_connection_payload_v1";
 	connection_payload["generation_status"] = "h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending";
@@ -6938,6 +7020,8 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t raw_guard_link_count = 0;
 	int32_t wide_suppressed_count = 0;
 	int32_t border_guard_count = 0;
+	int32_t normal_guard_scaled_nonzero_count = 0;
+	int32_t normal_guard_scaled_value_total = 0;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
 		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -6952,11 +7036,19 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		if (bool(record.get("border_guard", false))) {
 			border_guard_count += 1;
 		}
+		const int32_t scaled_value = int32_t(record.get("normal_guard_scaled_value", 0));
+		if (scaled_value > 0) {
+			normal_guard_scaled_nonzero_count += 1;
+			normal_guard_scaled_value_total += scaled_value;
+		}
 	}
 	connection_payload["raw_guard_link_count"] = raw_guard_link_count;
 	connection_payload["wide_suppressed_normal_guard_count"] = wide_suppressed_count;
 	connection_payload["border_guard_link_count"] = border_guard_count;
-	connection_payload["normal_guard_materialization_status"] = "pending_0x4a65a5_0x4a5e03";
+	connection_payload["normal_guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
+	connection_payload["normal_guard_scaled_nonzero_count"] = normal_guard_scaled_nonzero_count;
+	connection_payload["normal_guard_scaled_value_total"] = normal_guard_scaled_value_total;
+	connection_payload["normal_guard_materialization_status"] = "0x4a65a5_values_scaled_0x4a5e03_guard_object_pending";
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
 	connection_payload["road_materialization_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 	connection_payload["full_generation_status"] = "h3maped_connection_payload_known_geometry_roads_guards_pending";
@@ -8409,8 +8501,8 @@ Dictionary inspection_partial_materialized_payload_blocked(const Dictionary &nor
 	Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
 	Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
-	Array connection_records = h3maped_connection_records_from_port(payload);
-	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
+	Array connection_records = h3maped_connection_records_from_port(payload, normalized_config);
+	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records, normalized_config);
 	Dictionary road_coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 	Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
 	const int64_t rng_state_before_road_phase = int64_t(mine_reward_placement.get("treasure_reward_rng_state_after_0x4aa354_uint32", mine_reward_placement.get("mine_object_rng_state_after_0x4a9911_0x4a9641_uint32", runtime_build.get("rng_state_after_runtime_zone_build", 0))));

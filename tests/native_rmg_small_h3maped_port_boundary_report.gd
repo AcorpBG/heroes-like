@@ -81,6 +81,24 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
+	var connection_payload: Dictionary = selected_payload.get("connection_payload", {})
+	if int(connection_payload.get("connection_count", -1)) != 5 \
+			or String(connection_payload.get("normal_guard_materialization_status", "")) != "0x4a65a5_values_scaled_0x4a5e03_guard_object_pending":
+		_fail("0x4a79a3/0x4a65a5 connection guard scaling boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
+	if int(connection_payload.get("normal_guard_global_strength_mode", -1)) != 3 \
+			or int(connection_payload.get("normal_guard_scaled_nonzero_count", -1)) != 5 \
+			or int(connection_payload.get("normal_guard_scaled_value_total", -1)) != 16000:
+		_fail("0x4a65a5 connection guard values did not scale from raw link Value fields: %s" % JSON.stringify(connection_payload))
+		return
+	var connection_records: Array = connection_payload.get("connection_records", [])
+	if connection_records.size() != 5 \
+			or int(connection_records[0].get("raw_guard_value", -1)) != 3000 \
+			or int(connection_records[0].get("normal_guard_scaled_value", -1)) != 2000 \
+			or int(connection_records[3].get("raw_guard_value", -1)) != 6000 \
+			or int(connection_records[3].get("normal_guard_scaled_value", -1)) != 5000:
+		_fail("0x4a65a5 per-link scaled guard values drifted: %s" % JSON.stringify(connection_payload))
+		return
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
@@ -224,6 +242,12 @@ func _run() -> void:
 	if int(mine_reward_placement.get("total_minimum_mine_count", -1)) != 18 or int(mine_reward_placement.get("total_mine_density_weight", -1)) != 18:
 		_fail("0x4a9d6a total mine minimum count/density weight drifted from recovered source rows: %s" % JSON.stringify(mine_reward_placement))
 		return
+	if String(mine_reward_placement.get("mine_guard_scaling_status", "")) != "0x4a960a_0x4a65a5_mine_guard_values_scaled_guard_objects_pending" \
+			or int(mine_reward_placement.get("mine_guard_global_strength_mode", -1)) != 3 \
+			or int(mine_reward_placement.get("mine_guard_scaled_nonzero_count", -1)) != 10 \
+			or int(mine_reward_placement.get("mine_guard_scaled_value_total", -1)) != 59500:
+		_fail("0x4a960a/0x4a65a5 mine guard value scaling drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
 	if int(mine_reward_placement.get("mine_template_row_count", -1)) != 46 or int(mine_reward_placement.get("adjacent_resource_template_row_count", -1)) != 7:
 		_fail("0x4a9911/0x4a9e40 object template bucket row counts drifted from recovered objects.txt: %s" % JSON.stringify(mine_reward_placement))
 		return
@@ -271,6 +295,12 @@ func _run() -> void:
 		return
 	if int(helper_calls[0].get("guard_base_value", -1)) != 1500 or String(helper_calls[0].get("adjacent_resource_helper_address", "")) != "0x4a9e40" or int(helper_calls[0].get("adjacent_resource_object_type_id", -1)) != 79:
 		_fail("0x4a9911 first helper call guard/adjacent resource handoff drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(helper_calls[0].get("guard_scaling_status", "")) != "0x4a960a_0x4a65a5_guard_value_scaled_guard_object_pending" \
+			or int(helper_calls[0].get("guard_source_strength_mode", -1)) != 3 \
+			or int(helper_calls[0].get("guard_effective_strength_mode", -1)) != 3 \
+			or int(helper_calls[0].get("guard_scaled_value", -1)) != 0:
+		_fail("0x4a960a/0x4a65a5 first mine guard scaling drifted: %s" % JSON.stringify(helper_calls[0]))
 		return
 	if int(mine_reward_placement.get("treasure_band_field_count", -1)) != 18 or int(mine_reward_placement.get("positive_treasure_band_count", -1)) != 18:
 		_fail("0x4aab7e treasure band field ledger did not expose three eligible bands per active zone: %s" % JSON.stringify(mine_reward_placement))
@@ -1155,6 +1185,8 @@ func _run() -> void:
 		"object_record_random_tie_rng_call_count": town_castle_placement.get("object_record_random_tie_rng_call_count", 0),
 		"minimum_mine_count": mine_reward_placement.get("total_minimum_mine_count", 0),
 		"mine_density_weight": mine_reward_placement.get("total_mine_density_weight", 0),
+		"connection_guard_scaled_value_total": connection_payload.get("normal_guard_scaled_value_total", 0),
+		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
 		"treasure_band_density_weight": mine_reward_placement.get("total_treasure_density_weight", 0),
