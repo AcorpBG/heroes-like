@@ -230,6 +230,38 @@ func _run() -> void:
 			or bool(footprint_schedule.get("materializes_span_fill", true)):
 		_fail("Zone footprint scheduling must not materialize cells yet: %s" % JSON.stringify(footprint_schedule))
 		return
+	var polygon_seed: Dictionary = footprint_schedule.get("polygon_seed", {})
+	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
+	var polygon_edges: Array = polygon_seed.get("initial_edges", [])
+	if String(footprint_schedule.get("polygon_seed_status", "")) != "0x4cc788_initial_source_node_bounds_ported_inspection_only" \
+			or String(footprint_schedule.get("polygon_constructor_address", "")) != "0x4cc788" \
+			or String(footprint_schedule.get("polygon_split_address", "")) != "0x4ccb64" \
+			or String(footprint_schedule.get("polygon_finalize_address", "")) != "0x4ccdfc" \
+			or String(footprint_schedule.get("polygon_locator_address", "")) != "0x4cca55" \
+			or int(polygon_bounds.get("min_x", 0)) != -200 \
+			or int(polygon_bounds.get("min_y", 0)) != -200 \
+			or int(polygon_bounds.get("max_x", 0)) != 400 \
+			or int(polygon_bounds.get("max_y", 0)) != 400 \
+			or int(polygon_seed.get("initial_edge_count", -1)) != 4 \
+			or polygon_edges.size() != 4:
+		_fail("The 0x4cc788 source-node seed bounds drifted: %s" % JSON.stringify(footprint_schedule))
+		return
+	if bool(polygon_seed.get("materializes_project_grid", true)) \
+			or bool(polygon_seed.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("The 0x4cc788 seed report must remain inspection-only until split/finalize traversal is ported: %s" % JSON.stringify(polygon_seed))
+		return
+	var first_polygon_edge: Dictionary = polygon_edges[0]
+	var last_polygon_edge: Dictionary = polygon_edges[3]
+	if int(first_polygon_edge.get("from_x", 0)) != -200 \
+			or int(first_polygon_edge.get("from_y", 0)) != -200 \
+			or int(first_polygon_edge.get("to_x", 0)) != 400 \
+			or int(first_polygon_edge.get("to_y", 0)) != -200 \
+			or int(last_polygon_edge.get("from_x", 0)) != -200 \
+			or int(last_polygon_edge.get("from_y", 0)) != 400 \
+			or int(last_polygon_edge.get("to_x", 0)) != -200 \
+			or int(last_polygon_edge.get("to_y", 0)) != -200:
+		_fail("The 0x4cc788 initial source-node edge order drifted: %s" % JSON.stringify(polygon_seed))
+		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \
 			or Array(footprint_levels[0].get("matching_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
