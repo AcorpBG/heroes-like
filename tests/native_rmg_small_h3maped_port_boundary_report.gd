@@ -139,8 +139,22 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("source_range_overlap", "")) != "0x4a6d52..0x4a6ddc" \
 			or String(first_4a6cf2_overlap.get("source_range_candidate_scan", "")) != "0x4a6de2..0x4a6f4a" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_source", "")) != "generator+0x6a8" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_begin_offset", "")) != "generator+0x6a8" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_end_offset", "")) != "generator+0x6ac" \
+			or int(first_4a6cf2_overlap.get("candidate_shape_vector_pointer_stride_bytes", -1)) != 4 \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_status", "")) != "pending_generator_0x6a8_shape_list_port" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_selection_range", "")) != "0x4a6de2..0x4a6e0c" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_random_selector_address", "")) != "0x4e7276" \
 			or String(first_4a6cf2_overlap.get("validation_helper_address", "")) != "0x49aa93" \
+			or int(first_4a6cf2_overlap.get("best_candidate_vector_record_size_bytes", -1)) != 12 \
+			or String(first_4a6cf2_overlap.get("best_candidate_vector_clear_helper_address", "")) != "0x4ae52a" \
+			or String(first_4a6cf2_overlap.get("best_candidate_vector_append_helper_address", "")) != "0x4ae1fd" \
+			or String(first_4a6cf2_overlap.get("best_candidate_random_selection_range", "")) != "0x4a6f50..0x4a6f86" \
+			or String(first_4a6cf2_overlap.get("endpoint_record_allocator_address", "")) != "0x5044b1" \
+			or String(first_4a6cf2_overlap.get("endpoint_record_constructor_address", "")) != "0x49ba89" \
+			or String(first_4a6cf2_overlap.get("endpoint_record_commit_vfunc_slot", "")) != "generator_vtable+0x04" \
+			or String(first_4a6cf2_overlap.get("endpoint_vector_offset", "")) != "runtime_zone+0x404" \
+			or String(first_4a6cf2_overlap.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
 			or bool(first_4a6cf2_overlap.get("materializes_endpoint_coordinates", true)) \
 			or int(first_4a6cf2_overlap.get("endpoint_coordinate_materialized_count", -1)) != 0 \
 			or int(first_4a6cf2_overlap.get("overlap_cell_count", 0)) <= 0:
