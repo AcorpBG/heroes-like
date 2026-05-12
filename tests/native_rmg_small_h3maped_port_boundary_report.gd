@@ -786,6 +786,17 @@ func _run() -> void:
 		_fail("Selected-color runtime-zone owner mapping did not follow generator+0xee4: %s" % JSON.stringify(color_runtime_zones))
 		return
 
+	var identity: Dictionary = service.random_map_config_identity(config)
+	var identity_normalized: Dictionary = identity.get("normalized_config", {})
+	var h3maped_selection: Dictionary = identity_normalized.get("h3maped_template_selection", {})
+	if String(identity_normalized.get("template_selection_mode", "")) != "h3maped_exe_rng" \
+			or String(identity_normalized.get("template_id", "")) != "translated_rmg_template_019_v1" \
+			or String(identity_normalized.get("h3maped_source_template_id", "")) != "h3maped_template_018" \
+			or String(h3maped_selection.get("status", "")) != "h3maped_rng_selected" \
+			or int(h3maped_selection.get("selected_vector_index", -1)) != 2:
+		_fail("Small-map public config identity still used a non-h3maped template selector: %s" % JSON.stringify(identity))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -803,6 +814,12 @@ func _run() -> void:
 	if bool(explicit_generated.get("ok", true)) \
 			or String(explicit_generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready":
 		_fail("Explicit translated-template generation bypassed the reset gate: %s" % JSON.stringify(explicit_generated))
+		return
+	var explicit_normalized: Dictionary = explicit_generated.get("normalized_config", {})
+	if String(explicit_normalized.get("template_selection_mode", "")) != "h3maped_exe_rng" \
+			or String(explicit_normalized.get("template_id", "")) != "translated_rmg_template_019_v1" \
+			or not bool(explicit_normalized.get("explicit_template_request_overridden_by_h3maped_reset", false)):
+		_fail("Explicit translated-template request still decided small h3maped template identity: %s" % JSON.stringify(explicit_generated))
 		return
 
 	var medium_config := {

@@ -979,6 +979,10 @@ Dictionary template_to_dictionary(const TemplateEvidence &candidate) {
 	item["zone_count"] = candidate.zone_count;
 	item["connection_count"] = candidate.connection_count;
 	item["border_guard_edge_count"] = candidate.border_guard_edge_count;
+	item["adapted_template_id"] = candidate.adapted_template_id;
+	item["player_start_zone_count"] = candidate.player_start_zone_count;
+	item["treasure_zone_count"] = candidate.treasure_zone_count;
+	item["minimum_player_castles"] = candidate.minimum_player_castles;
 	return item;
 }
 
@@ -4194,6 +4198,80 @@ bool supports_scope(const Dictionary &normalized_config) {
 			&& String(normalized_config.get("water_mode", "land")) == "land";
 }
 
+Array accepted_templates_for_config(const Dictionary &normalized_config, int32_t score, int32_t human_count, int32_t player_count) {
+	Array accepted_templates;
+	if (!supports_scope(normalized_config)) {
+		return accepted_templates;
+	}
+	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
+		if (score < candidate.min_size_score || score > candidate.max_size_score) {
+			continue;
+		}
+		if (human_count < candidate.min_humans || human_count > candidate.max_humans
+				|| player_count < candidate.min_total_players || player_count > candidate.max_total_players
+				|| player_count < human_count) {
+			continue;
+		}
+		accepted_templates.append(template_to_dictionary(candidate));
+	}
+	return accepted_templates;
+}
+
+Dictionary selection_identity(const Dictionary &normalized_config) {
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	const int32_t human_count = int32_t(constraints.get("human_count", 1));
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	const int32_t score = size_score(normalized_config);
+	const bool supported = supports_scope(normalized_config);
+	Array accepted_templates = accepted_templates_for_config(normalized_config, score, human_count, player_count);
+
+	Dictionary result;
+	result["ok"] = false;
+	result["schema_id"] = "aurelion_native_rmg_small_h3maped_selection_identity_v1";
+	result["schema_version"] = 1;
+	result["scope"] = "small_36x36_surface_land_only";
+	result["supported_scope"] = supported;
+	result["template_selection_mode"] = "h3maped_exe_rng";
+	result["template_loader_address"] = "0x49f0cd";
+	result["rng_function_address"] = "0x4e7276";
+	result["accepted_template_count"] = accepted_templates.size();
+	result["requested_template_id_ignored"] = String(normalized_config.get("template_id", ""));
+	result["explicit_template_requests_bypass_reset"] = false;
+	if (!supported) {
+		result["status"] = "unsupported_scope";
+		return result;
+	}
+	if (accepted_templates.is_empty()) {
+		result["status"] = "h3maped_small_no_accepted_templates";
+		return result;
+	}
+
+	uint32_t seed_value = 0;
+	const String seed_text = String(normalized_config.get("normalized_seed", normalized_config.get("seed", "0")));
+	if (!parse_explicit_seed(seed_text, seed_value)) {
+		result["status"] = "blocked_until_numeric_h3maped_seed";
+		result["blocked_reason"] = "h3maped seed must be numeric; no replacement hash is allowed";
+		return result;
+	}
+
+	const uint32_t next_state = seed_value * 0x343fdu + 0x269ec3u;
+	const int32_t rng_value = int32_t((next_state >> 16U) & 0x7fffu);
+	const int32_t selected_index = rng_value % int32_t(accepted_templates.size());
+	Dictionary selected_template = accepted_templates[selected_index];
+	result["ok"] = true;
+	result["status"] = "h3maped_rng_selected";
+	result["seed_text"] = seed_text;
+	result["seed_value_uint32"] = int64_t(seed_value);
+	result["rng_state_after_selection_uint32"] = int64_t(next_state);
+	result["rng_first_value"] = rng_value;
+	result["selected_vector_index"] = selected_index;
+	result["source_template_id"] = selected_template.get("id", "");
+	result["source_catalog_index"] = selected_template.get("source_catalog_index", -1);
+	result["adapted_template_id"] = selected_template.get("adapted_template_id", "");
+	result["template_id"] = selected_template.get("adapted_template_id", "");
+	return result;
+}
+
 Dictionary inspect_port(const Dictionary &normalized_config) {
 	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
 	const int32_t human_count = int32_t(constraints.get("human_count", 1));
@@ -4201,20 +4279,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	const int32_t computer_count = int32_t(constraints.get("computer_count", std::max(0, player_count - human_count)));
 	const int32_t score = size_score(normalized_config);
 	const bool supported = supports_scope(normalized_config);
-
-	Array accepted_templates;
+	Array accepted_templates = accepted_templates_for_config(normalized_config, score, human_count, player_count);
 	const TemplateEvidence *selected_candidate = nullptr;
-	if (supported) {
+	Dictionary identity = selection_identity(normalized_config);
+	if (bool(identity.get("ok", false))) {
+		const int32_t source_catalog_index = int32_t(identity.get("source_catalog_index", -1));
 		for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
-			if (score < candidate.min_size_score || score > candidate.max_size_score) {
-				continue;
+			if (candidate.catalog_index == source_catalog_index) {
+				selected_candidate = &candidate;
+				break;
 			}
-			if (human_count < candidate.min_humans || human_count > candidate.max_humans
-					|| player_count < candidate.min_total_players || player_count > candidate.max_total_players
-					|| player_count < human_count) {
-				continue;
-			}
-			accepted_templates.append(template_to_dictionary(candidate));
 		}
 	}
 
@@ -4244,6 +4318,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["player_count"] = player_count;
 	report["accepted_template_count"] = accepted_templates.size();
 	report["accepted_templates"] = accepted_templates;
+	report["selection_identity"] = identity;
 	report["phase_ledger"] = clean_phase_ledger();
 	report["generation_phase_status"] = "blocked_until_clean_h3maped_phase_ports_materialize_map_cells";
 	report["runtime_generation_allowed"] = false;

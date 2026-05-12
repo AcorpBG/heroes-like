@@ -31,6 +31,7 @@ The active compact port currently supports inspection only:
 2. Selects accepted small-land templates from recovered h3maped template evidence.
 3. Uses numeric h3maped RNG `0x4e7269/0x4e7276`; non-numeric seed hashing is blocked.
 4. Resolves selected source template `h3maped_template_018` to adapted template `translated_rmg_template_019_v1` for seed `1`, 1 human, 3 total players.
+4a. Routes public small-map config identity through that h3maped selection result instead of the archived `native_catalog_auto` hash selector. `random_map_config_identity()` and blocked `generate_random_map()` payloads now report `template_selection_mode: h3maped_exe_rng`, preserve the h3maped source template id/catalog index, and mark explicit translated-template requests as overridden by the reset gate rather than authoritative.
 5. Ports player-slot assignment `0x4ac62a..0x4ac6ec` for inspection: source capability masks, `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`.
 6. Ports runtime-zone record setup `0x4a218c` for inspection: six active runtime-zone records for the seed-1 boundary case, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles.
 7. Ports early endpoint-placement schedule `0x4a1f3b` for inspection: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. This phase consumes only link endpoints; `Value`, `Wide`, and `Border Guard` are preserved for later `0x4a79a3`.
@@ -71,6 +72,7 @@ Supported small land generation currently returns:
 Out-of-scope generation currently returns `archived_legacy_native_rmg_disabled`.
 
 Explicit translated-template requests do not bypass the reset gate.
+For supported small land configs, public normalized identity is also h3maped-selected; the archived catalog-auto selector no longer decides the reset path's template id.
 
 ## Hard Rules
 
