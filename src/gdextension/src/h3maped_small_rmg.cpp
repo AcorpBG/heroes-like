@@ -781,6 +781,24 @@ Dictionary adapted_template_for_id(const String &adapted_template_id) {
 	return Dictionary();
 }
 
+Dictionary adapted_profile_for_template_id(const String &adapted_template_id) {
+	if (adapted_template_id.is_empty()) {
+		return Dictionary();
+	}
+	Dictionary catalog = load_json_dictionary(ADAPTED_CATALOG_PATH);
+	Array profiles = catalog.get("profiles", Array());
+	for (int64_t index = 0; index < profiles.size(); ++index) {
+		if (Variant(profiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = profiles[index];
+		if (String(candidate.get("template_id", "")) == adapted_template_id) {
+			return candidate;
+		}
+	}
+	return Dictionary();
+}
+
 bool player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_t total_count) {
 	return human_count >= int32_t(filter.get("min_human", 1))
 			&& human_count <= int32_t(filter.get("max_human", 8))
@@ -4141,12 +4159,34 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 }
 
 Dictionary selected_template_payload(const Dictionary &selected_template, const TemplateEvidence &candidate, const Dictionary &normalized_config, int32_t human_count, int32_t computer_count, uint32_t rng_state_after_template_selection) {
+	Dictionary template_record = adapted_template_for_id(String(candidate.adapted_template_id));
+	Dictionary profile_record = adapted_profile_for_template_id(String(candidate.adapted_template_id));
+	Dictionary import_provenance = template_record.get("import_provenance", Dictionary());
+	const bool adapted_template_loaded = !template_record.is_empty();
+	const bool adapted_profile_loaded = !profile_record.is_empty();
+	const int32_t adapted_source_index_one_based = int32_t(import_provenance.get("source_template_index", -1));
+	const int32_t expected_source_index_one_based = candidate.catalog_index + 1;
+	const int32_t adapted_source_index_zero_based = adapted_source_index_one_based > 0 ? adapted_source_index_one_based - 1 : -1;
+	const bool import_index_matches = adapted_template_loaded
+			&& adapted_source_index_one_based == expected_source_index_one_based;
 	Dictionary payload;
 	payload["source"] = "adapted project catalog resolved by import_provenance.source_template_index";
 	payload["source_catalog_index_zero_based"] = selected_template.get("source_catalog_index", candidate.catalog_index);
-	payload["imported_source_template_index_one_based"] = candidate.catalog_index + 1;
-	payload["status"] = String(candidate.adapted_template_id).is_empty() ? String("adapted_template_not_loaded_in_clean_restart") : String("adapted_template_found");
+	payload["imported_source_template_index_one_based"] = expected_source_index_one_based;
+	payload["status"] = (adapted_template_loaded && adapted_profile_loaded && import_index_matches) ? String("adapted_project_catalog_contract_verified") : String("adapted_project_catalog_contract_failed");
 	payload["adapted_template_id"] = candidate.adapted_template_id;
+	payload["adapted_template_loaded"] = adapted_template_loaded;
+	payload["adapted_profile_loaded"] = adapted_profile_loaded;
+	payload["adapted_profile_id"] = profile_record.get("id", "");
+	payload["adapted_profile_template_id"] = profile_record.get("template_id", "");
+	payload["adapted_import_source_template_index_one_based"] = adapted_source_index_one_based;
+	payload["expected_import_source_template_index_one_based"] = expected_source_index_one_based;
+	payload["adapted_import_source_template_index_zero_based"] = adapted_source_index_zero_based;
+	payload["expected_import_source_template_index_zero_based"] = candidate.catalog_index;
+	payload["adapted_import_source_index_matches"] = import_index_matches;
+	payload["adapted_catalog_contract"] = (adapted_template_loaded && adapted_profile_loaded && import_index_matches)
+			? String("project_template_and_profile_resolved_from_recovered_source_index")
+			: String("missing_or_mismatched_project_template_profile_bridge");
 	payload["zone_count"] = selected_template.get("zone_count", candidate.zone_count);
 	payload["link_count"] = selected_template.get("connection_count", candidate.connection_count);
 	payload["player_start_zone_count"] = candidate.player_start_zone_count;
@@ -4157,7 +4197,6 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary assignment = player_slot_assignment_report(candidate.human_capable_source_owner_mask, candidate.player_capable_source_owner_mask, selected_color_bitmap_from_normalized(normalized_config), human_count, computer_count);
 	payload["assignment_status"] = assignment.get("status", "");
 	payload["player_slot_assignment"] = assignment;
-	Dictionary template_record = adapted_template_for_id(String(candidate.adapted_template_id));
 	Dictionary runtime_zones = runtime_zone_record_setup_report(normalized_config, template_record, assignment, human_count, human_count + computer_count, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
