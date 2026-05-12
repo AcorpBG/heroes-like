@@ -382,16 +382,16 @@ func _run() -> void:
 	if String(footprint_schedule.get("real_span_fill_status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed" \
 			or int(real_span_fill.get("boundary_unique_cell_count", -1)) != 221 \
 			or int(real_span_fill.get("runtime_zone_fill_attempt_count", -1)) != 6 \
-			or int(real_span_fill.get("filled_zone_count", -1)) != 5 \
+			or int(real_span_fill.get("filled_zone_count", -1)) != 6 \
 			or int(real_span_fill.get("seed_blocked_count", -1)) != 1 \
 			or int(real_span_fill.get("missing_seed_count", -1)) != 0 \
-			or String(real_span_fill.get("seed_relocation_status", "")) != "0x4a32b2_relocation_ported_but_not_applicable_to_in_bounds_non_unassigned_seed" \
-			or int(real_span_fill.get("unique_filled_cell_count", -1)) != 706 \
-			or int(real_span_fill.get("total_boundary_or_filled_cell_count", -1)) != 927 \
-			or int(real_span_fill.get("remaining_unassigned_cell_count", -1)) != 369 \
-			or int(real_span_fill.get("reserved_flag_cell_count", -1)) != 927 \
-			or int(real_span_fill.get("pushed_span_count", -1)) != 70 \
-			or int(real_span_fill.get("popped_span_count", -1)) != 70 \
+			or String(real_span_fill.get("seed_relocation_status", "")) != "0x4a32b2_relocation_ported_not_needed_for_current_in_bounds_seed_span_scan" \
+			or int(real_span_fill.get("unique_filled_cell_count", -1)) != 890 \
+			or int(real_span_fill.get("total_boundary_or_filled_cell_count", -1)) != 1111 \
+			or int(real_span_fill.get("remaining_unassigned_cell_count", -1)) != 185 \
+			or int(real_span_fill.get("reserved_flag_cell_count", -1)) != 1111 \
+			or int(real_span_fill.get("pushed_span_count", -1)) != 88 \
+			or int(real_span_fill.get("popped_span_count", -1)) != 88 \
 			or int(real_span_fill.get("max_pending_span_count", -1)) != 4 \
 			or int(real_span_fill.get("out_of_bounds_span_count", -1)) != 0 \
 			or int(real_span_fill.get("blocked_initial_span_count", -1)) != 0 \
@@ -401,7 +401,7 @@ func _run() -> void:
 		return
 	if int(cells_by_zone_word.get("0", -1)) != 174 \
 			or int(cells_by_zone_word.get("1", -1)) != 112 \
-			or int(cells_by_zone_word.get("2", -1)) != 38 \
+			or int(cells_by_zone_word.get("2", -1)) != 222 \
 			or int(cells_by_zone_word.get("3", -1)) != 165 \
 			or int(cells_by_zone_word.get("4", -1)) != 206 \
 			or int(cells_by_zone_word.get("5", -1)) != 232:
@@ -410,9 +410,10 @@ func _run() -> void:
 	if zone_fill_reports.size() != 6 \
 			or int(zone_fill_reports[0].get("filled_cell_count", -1)) != 152 \
 			or int(zone_fill_reports[1].get("filled_cell_count", -1)) != 69 \
-			or String(zone_fill_reports[2].get("status", "")) != "0x4a325d_seed_reached_non_unassigned_boundary" \
+			or String(zone_fill_reports[2].get("status", "")) != "0x4a325d_span_fill_executed" \
 			or String(zone_fill_reports[2].get("seed_relocation_status", "")) != "0x4a325d_seed_in_bounds_relocation_not_used" \
 			or bool(zone_fill_reports[2].get("seed_unassigned_before_fill", true)) \
+			or int(zone_fill_reports[2].get("filled_cell_count", -1)) != 184 \
 			or int(zone_fill_reports[3].get("filled_cell_count", -1)) != 126 \
 			or int(zone_fill_reports[4].get("filled_cell_count", -1)) != 174 \
 			or int(zone_fill_reports[5].get("filled_cell_count", -1)) != 185:
