@@ -1481,6 +1481,21 @@ int32_t terrain_at_grid_index(const PackedInt32Array &terrain_code_u16, int32_t 
 	return terrain_code_u16[index];
 }
 
+bool set_terrain_at_grid_index(PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return false;
+	}
+	const int32_t index = level * level_tile_count + y * width + x;
+	if (index < 0 || index >= terrain_code_u16.size()) {
+		return false;
+	}
+	if (terrain_code_u16[index] == terrain_id) {
+		return false;
+	}
+	terrain_code_u16.set(index, terrain_id);
+	return true;
+}
+
 PackedInt32Array h3maped_same_terrain_mask_4bc74c(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
 	PackedInt32Array mask;
 	mask.resize(8);
@@ -1571,6 +1586,20 @@ bool h3maped_candidate_gate_4bc988(bool horizontal_pair_gate, bool vertical_pair
 	return toolkit_byte5_allows_same_class_gate && same_class_region_gate;
 }
 
+bool h3maped_candidate_gate_4bc988_grid(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return false;
+	}
+	const int32_t terrain_id = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y, -1);
+	if (terrain_id < 0) {
+		return false;
+	}
+	const bool horizontal_pair_gate = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	const bool vertical_pair_gate = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	const bool same_class_region_gate = h3maped_same_class_region_gate_4bc928(h3maped_same_terrain_mask_4bc74c(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id));
+	return h3maped_candidate_gate_4bc988(horizontal_pair_gate, vertical_pair_gate, h3maped_toolkit_byte5_allows_same_class_gate(terrain_id), same_class_region_gate);
+}
+
 String h3maped_candidate_gate_branch(bool horizontal_pair_gate, bool vertical_pair_gate, bool toolkit_byte5_allows_same_class_gate, bool same_class_region_gate, bool candidate_gate) {
 	if (horizontal_pair_gate) {
 		return "0x4bba13_0x4bc674_horizontal_pair_gate";
@@ -1584,9 +1613,233 @@ String h3maped_candidate_gate_branch(bool horizontal_pair_gate, bool vertical_pa
 	return candidate_gate ? String("0x4bc988_candidate_gate_true") : String("0x4bc988_candidate_gate_false");
 }
 
+Dictionary h3maped_retouch_target_record(const char *branch, int32_t from_x, int32_t from_y, int32_t target_x, int32_t target_y, int32_t terrain_id, bool changed) {
+	Dictionary record;
+	record["branch"] = branch;
+	record["from_x"] = from_x;
+	record["from_y"] = from_y;
+	record["target_x"] = target_x;
+	record["target_y"] = target_y;
+	record["terrain_id"] = terrain_id;
+	record["changed_terrain"] = changed;
+	return record;
+}
+
+int32_t h3maped_frontier_retouch_4bbd01(PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, Array *sample_records, int32_t sample_limit) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return 0;
+	}
+	const int32_t terrain_id = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y, -1);
+	if (terrain_id < 0) {
+		return 0;
+	}
+	int32_t changed_count = 0;
+	auto retouch = [&](const char *branch, int32_t target_x, int32_t target_y) {
+		const bool changed = set_terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, target_x, target_y, terrain_id);
+		if (changed) {
+			changed_count += 1;
+		}
+		if (sample_records != nullptr && sample_records->size() < sample_limit) {
+			sample_records->append(h3maped_retouch_target_record(branch, x, y, target_x, target_y, terrain_id, changed));
+		}
+	};
+	if (h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id)) {
+		const bool upper_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x, y - 1);
+		const bool lower_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x, y + 1);
+		bool choose_upper = upper_candidate;
+		if (!upper_candidate && !lower_candidate) {
+			const bool upper_horizontal_pair = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, terrain_id);
+			const bool lower_horizontal_pair = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, terrain_id);
+			choose_upper = !upper_horizontal_pair || lower_horizontal_pair;
+		}
+		retouch(choose_upper ? "0x4bbd01_vertical_upper" : "0x4bbd01_vertical_lower", x, choose_upper ? y - 1 : y + 1);
+	}
+	if (h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id)) {
+		const bool left_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x - 1, y);
+		const bool right_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x + 1, y);
+		bool choose_left = left_candidate;
+		if (!left_candidate && !right_candidate) {
+			const bool left_vertical_pair = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, terrain_id);
+			const bool right_vertical_pair = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, terrain_id);
+			choose_left = !left_vertical_pair || right_vertical_pair;
+		}
+		retouch(choose_left ? "0x4bbd01_horizontal_left" : "0x4bbd01_horizontal_right", choose_left ? x - 1 : x + 1, y);
+	}
+	const PackedInt32Array same_terrain_mask = h3maped_same_terrain_mask_4bc74c(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	if (h3maped_toolkit_byte5_allows_same_class_gate(terrain_id) && h3maped_same_class_region_gate_4bc928(same_terrain_mask)) {
+		int32_t start_zero = 0;
+		if (same_terrain_mask[0] != 0) {
+			do {
+				start_zero = (start_zero + 1) & 7;
+				if (start_zero == 0) {
+					return changed_count;
+				}
+			} while (same_terrain_mask[start_zero] != 0);
+		}
+		struct ZeroRun {
+			int32_t score = 0;
+			int32_t start = 0;
+			int32_t length = 0;
+		};
+		std::vector<ZeroRun> runs;
+		int32_t scan = start_zero;
+		while (true) {
+			scan = (scan + 1) & 7;
+			if (scan == start_zero) {
+				break;
+			}
+			if (same_terrain_mask[scan] != 0) {
+				continue;
+			}
+			ZeroRun run;
+			run.start = scan;
+			do {
+				run.score += (scan & 1) != 0 ? 1 : 2;
+				run.length += 1;
+				scan = (scan + 1) & 7;
+				if (scan == start_zero) {
+					break;
+				}
+			} while (same_terrain_mask[scan] == 0);
+			runs.push_back(run);
+			if (scan == start_zero) {
+				break;
+			}
+		}
+		if (!runs.empty()) {
+			const ZeroRun *best = &runs.front();
+			for (const ZeroRun &run : runs) {
+				if (run.score < best->score) {
+					best = &run;
+				}
+			}
+			static constexpr int32_t DX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+			static constexpr int32_t DY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+			int32_t slot = best->start;
+			const int32_t end = (best->start + best->length) & 7;
+			while (slot != end) {
+				const int32_t target_x = x + DX[slot];
+				const int32_t target_y = y + DY[slot];
+				const bool boundary_allowed = target_x >= 0 && target_y >= 0 && target_x < width && target_y < height;
+				if (boundary_allowed) {
+					retouch("0x4bbd01_same_class_zero_run", target_x, target_y);
+				}
+				slot = (slot + 1) & 7;
+			}
+		}
+	}
+	return changed_count;
+}
+
 void increment_bool_histogram(Dictionary &histogram, bool value) {
 	const String key = value ? "true" : "false";
 	histogram[key] = int32_t(histogram.get(key, 0)) + 1;
+}
+
+bool visual_row_bucket_exists_for_grid_cell(const TerrainVisualGridTables &tables, int32_t terrain_id, const TerrainClassResult &classified) {
+	const std::vector<TerrainVisualRow> &rows = visual_rows_for_terrain_id(tables, terrain_id);
+	if (terrain_id == 9) {
+		return !row_indices_for_class_flags(rows, classified.shape_class, classified.flag_a, classified.flag_b).empty();
+	}
+	if (classified.shape_class == 0) {
+		return !row_indices_for_class_group(rows, 0, 0).empty() || !row_indices_for_class_group(rows, 0, 1).empty();
+	}
+	return !row_indices_for_class(rows, classified.shape_class).empty();
+}
+
+TerrainClassResult classify_grid_cell(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t center) {
+	std::array<int32_t, 8> relations = {
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y - 1, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y + 1, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y + 1, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, center)),
+		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y - 1, center)),
+	};
+	return h3maped_classify_4bb075(relations);
+}
+
+Dictionary h3maped_queue_retouch_projection_report(const PackedInt32Array &terrain_code_u16, const TerrainVisualGridTables &tables, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4bbd01_missing_bucket_retouch_projection_inspection_only";
+	report["source"] = "applies the recovered 0x4bbd01 vertical/horizontal retouch decisions to a copy of the generated terrain grid for missing visual-row bucket cells only";
+	report["ported_addresses"] = Array::make("0x4bbd01", "0x4bc988", "0x4bc674", "0x4bc6e0", "0x4bb74b");
+	report["materializes_package_tiles"] = false;
+	report["adopts_into_runtime_grid"] = false;
+	PackedInt32Array retouched = terrain_code_u16;
+	const int32_t level_tile_count = width * height;
+	int32_t initial_missing_count = 0;
+	int32_t final_missing_count = 0;
+	int32_t retouched_cell_write_count = 0;
+	Array retouch_samples;
+	Dictionary missing_class_histogram_after;
+	for (int32_t pass = 0; pass < 4; ++pass) {
+		Array missing_cells;
+		for (int32_t level = 0; level < level_count; ++level) {
+			for (int32_t y = 0; y < height; ++y) {
+				for (int32_t x = 0; x < width; ++x) {
+					const int32_t index = level * level_tile_count + y * width + x;
+					if (index < 0 || index >= retouched.size()) {
+						continue;
+					}
+					const int32_t center = retouched[index];
+					const TerrainClassResult classified = classify_grid_cell(retouched, width, height, level_tile_count, level, x, y, center);
+					if (!visual_row_bucket_exists_for_grid_cell(tables, center, classified)) {
+						Dictionary cell;
+						cell["x"] = x;
+						cell["y"] = y;
+						cell["level"] = level;
+						cell["terrain_id"] = center;
+						cell["class"] = classified.shape_class;
+						missing_cells.append(cell);
+					}
+				}
+			}
+		}
+		if (pass == 0) {
+			initial_missing_count = missing_cells.size();
+		}
+		if (missing_cells.is_empty()) {
+			break;
+		}
+		int32_t pass_write_count = 0;
+		for (int64_t i = 0; i < missing_cells.size(); ++i) {
+			Dictionary cell = missing_cells[i];
+			pass_write_count += h3maped_frontier_retouch_4bbd01(retouched, width, height, level_tile_count, int32_t(cell.get("level", 0)), int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), &retouch_samples, 16);
+		}
+		retouched_cell_write_count += pass_write_count;
+		if (pass_write_count == 0) {
+			break;
+		}
+	}
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t index = level * level_tile_count + y * width + x;
+				if (index < 0 || index >= retouched.size()) {
+					continue;
+				}
+				const int32_t center = retouched[index];
+				const TerrainClassResult classified = classify_grid_cell(retouched, width, height, level_tile_count, level, x, y, center);
+				if (!visual_row_bucket_exists_for_grid_cell(tables, center, classified)) {
+					final_missing_count += 1;
+					const String class_key = String::num_int64(classified.shape_class);
+					missing_class_histogram_after[class_key] = int32_t(missing_class_histogram_after.get(class_key, 0)) + 1;
+				}
+			}
+		}
+	}
+	report["initial_missing_bucket_cell_count"] = initial_missing_count;
+	report["retouched_cell_write_count"] = retouched_cell_write_count;
+	report["post_retouch_missing_bucket_cell_count"] = final_missing_count;
+	report["post_retouch_full_grid_projection_complete"] = final_missing_count == 0;
+	report["post_retouch_missing_class_histogram"] = missing_class_histogram_after;
+	report["retouch_samples"] = retouch_samples;
+	report["retouched_terrain_code_u16"] = retouched;
+	report["blocked_next"] = "replace missing-bucket-only projection with the full 0x4bc5f0 set A/B queue drain seeded by actual 0x4bb74b repaint order before runtime adoption";
+	return report;
 }
 
 bool select_visual_row_for_grid_cell(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b, String &selector_address, String &selector_kind) {
@@ -1874,6 +2127,9 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	queue_frontier_report["blocked_next"] = "execute the full 0x4bc5f0 queue drain and 0x4bbd01 retouch updates instead of only reporting candidate gates";
 	report["terrain_queue_frontier_gap_report_status"] = queue_frontier_report["status"];
 	report["terrain_queue_frontier_gap_report"] = queue_frontier_report;
+	Dictionary queue_retouch_projection = h3maped_queue_retouch_projection_report(terrain_code_u16, tables, width, height, level_count);
+	report["terrain_queue_retouch_projection_status"] = queue_retouch_projection["status"];
+	report["terrain_queue_retouch_projection"] = queue_retouch_projection;
 	report["projected_cell_word_0x24_u32"] = projected_cell_word_0x24_u32;
 	report["projected_cell_word_0x28_u32"] = projected_cell_word_0x28_u32;
 	report["projected_tile_byte_1_terrain_art_u8"] = projected_tile_byte_1_terrain_art_u8;
