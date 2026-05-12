@@ -2609,6 +2609,92 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	return report;
 }
 
+Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &drained_visual_projection, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only";
+	report["source"] = "maps the copied 0x4bc5f0 drained-grid 0x49acf6 generated-cell words into 0x49b2b6 terrain tile-byte candidates without public package adoption";
+	report["ported_addresses"] = Array::make("0x4bc5f0", "0x49acf6", "0x49b2b6");
+	report["adopts_into_runtime_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	report["materializes_terrain_tile_bytes"] = true;
+	PackedInt32Array projected_cell_word_0x24_u32 = drained_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array());
+	PackedInt32Array projected_cell_word_0x28_u32 = drained_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array());
+	const int32_t tile_count = drained_terrain_code_u16.size();
+	PackedInt32Array tile_byte_0_terrain_id_u8;
+	PackedInt32Array tile_byte_1_terrain_art_u8;
+	PackedInt32Array tile_byte_2_river_type_u8;
+	PackedInt32Array tile_byte_3_river_art_u8;
+	PackedInt32Array tile_byte_4_road_type_u8;
+	PackedInt32Array tile_byte_5_road_art_u8;
+	PackedInt32Array tile_byte_6_flags_u8;
+	tile_byte_0_terrain_id_u8.resize(tile_count);
+	tile_byte_1_terrain_art_u8.resize(tile_count);
+	tile_byte_2_river_type_u8.resize(tile_count);
+	tile_byte_3_river_art_u8.resize(tile_count);
+	tile_byte_4_road_type_u8.resize(tile_count);
+	tile_byte_5_road_art_u8.resize(tile_count);
+	tile_byte_6_flags_u8.resize(tile_count);
+	int32_t nonzero_art_cell_count = 0;
+	int32_t terrain_flag_cell_count = 0;
+	int32_t terrain_mismatch_count = 0;
+	Array samples;
+	for (int32_t index = 0; index < tile_count; ++index) {
+		const uint32_t word_0x24 = index < projected_cell_word_0x24_u32.size() ? uint32_t(int32_t(projected_cell_word_0x24_u32[index])) : uint32_t(drained_terrain_code_u16[index] & 0x3f);
+		const uint32_t word_0x28 = index < projected_cell_word_0x28_u32.size() ? uint32_t(int32_t(projected_cell_word_0x28_u32[index])) : 0U;
+		const int32_t terrain_id = int32_t(word_0x24 & 0x3fU);
+		const int32_t art_id = int32_t((word_0x24 >> 6U) & 0xffU);
+		const int32_t terrain_flags = int32_t((word_0x28 >> 15U) & 0x03U);
+		tile_byte_0_terrain_id_u8.set(index, terrain_id);
+		tile_byte_1_terrain_art_u8.set(index, art_id);
+		tile_byte_2_river_type_u8.set(index, 0);
+		tile_byte_3_river_art_u8.set(index, 0);
+		tile_byte_4_road_type_u8.set(index, 0);
+		tile_byte_5_road_art_u8.set(index, 0);
+		tile_byte_6_flags_u8.set(index, terrain_flags);
+		if (art_id != 0) {
+			nonzero_art_cell_count += 1;
+		}
+		if (terrain_flags != 0) {
+			terrain_flag_cell_count += 1;
+		}
+		if (terrain_id != drained_terrain_code_u16[index]) {
+			terrain_mismatch_count += 1;
+		}
+		if (samples.size() < 8 && art_id != 0) {
+			Dictionary sample;
+			sample["index"] = index;
+			sample["x"] = width > 0 ? index % width : 0;
+			sample["y"] = width > 0 ? (index / width) % height : 0;
+			sample["level"] = width > 0 && height > 0 ? index / (width * height) : 0;
+			sample["generated_cell_word_0x24_u32"] = int64_t(word_0x24);
+			sample["generated_cell_word_0x28_u32"] = int64_t(word_0x28);
+			sample["tile_byte_0_terrain_id"] = terrain_id;
+			sample["tile_byte_1_terrain_art"] = art_id;
+			sample["tile_byte_6_terrain_flags"] = terrain_flags;
+			samples.append(sample);
+		}
+	}
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = tile_count;
+	report["projected_cell_word_0x24_count"] = projected_cell_word_0x24_u32.size();
+	report["projected_cell_word_0x28_count"] = projected_cell_word_0x28_u32.size();
+	report["terrain_mismatch_count"] = terrain_mismatch_count;
+	report["nonzero_art_cell_count"] = nonzero_art_cell_count;
+	report["terrain_flag_cell_count"] = terrain_flag_cell_count;
+	report["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
+	report["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
+	report["tile_byte_2_river_type_u8"] = tile_byte_2_river_type_u8;
+	report["tile_byte_3_river_art_u8"] = tile_byte_3_river_art_u8;
+	report["tile_byte_4_road_type_u8"] = tile_byte_4_road_type_u8;
+	report["tile_byte_5_road_art_u8"] = tile_byte_5_road_art_u8;
+	report["tile_byte_6_flags_u8"] = tile_byte_6_flags_u8;
+	report["sample_records"] = samples;
+	report["blocked_next"] = "adopt only after exact TerrainPlacement container/scratch feedback, roads/rivers, objects, towns, guards, rewards, and package writeout are ported";
+	return report;
+}
+
 Dictionary terrain_visual_static_table_contracts_report() {
 	Dictionary report;
 	report["status"] = "h3maped_exe_static_terrain_visual_tables_decoded";
@@ -5080,6 +5166,9 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary repaint_order_queue_drain = h3maped_repaint_order_queue_drain_projection_report(zone_words, selected_terrain_codes, terrain_code_u16, width, height, level_count, uint32_t(int64_t(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", rng_state_before_boundary))));
 	report["repaint_order_queue_drain_status"] = repaint_order_queue_drain.get("status", "");
 	report["repaint_order_queue_drain"] = repaint_order_queue_drain;
+	Dictionary drained_tile_writeback_candidate = h3maped_drained_tile_writeback_candidate_report(repaint_order_queue_drain.get("drained_terrain_code_u16", PackedInt32Array()), repaint_order_queue_drain.get("drained_visual_projection", Dictionary()), width, height, level_count);
+	report["drained_tile_writeback_candidate_status"] = drained_tile_writeback_candidate.get("status", "");
+	report["drained_tile_writeback_candidate"] = drained_tile_writeback_candidate;
 	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
 	report["tile_serializer_contract"] = tile_serializer_49b2b6_contract_report();
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
