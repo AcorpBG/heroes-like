@@ -92,6 +92,28 @@ struct SpanFillResult {
 	Array trace_preview;
 };
 
+struct ClipBounds {
+	int32_t min_x = 0;
+	int32_t min_y = 0;
+	int32_t max_x = 0;
+	int32_t max_y = 0;
+};
+
+struct ClipResult {
+	int32_t x = 0;
+	int32_t y = 0;
+	bool input_inside = false;
+	const char *branch = "";
+};
+
+struct LineWriteResult {
+	int32_t write_count = 0;
+	int32_t unique_cell_count = 0;
+	int32_t out_of_bounds_write_count = 0;
+	int32_t reserved_flag_write_count = 0;
+	Array trace_preview;
+};
+
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 constexpr uint32_t H3MAPED_ZONE_WORD_CLEAR_MASK = 0xff00ffffU;
 
@@ -203,6 +225,156 @@ SpanFillResult h3maped_span_fill_4a325d(std::vector<uint32_t> &zone_words, std::
 			result.blocked_initial_span_count += 1;
 		}
 	}
+	return result;
+}
+
+ClipResult h3maped_clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const ClipBounds &bounds) {
+	ClipResult result;
+	result.x = x1;
+	result.y = y1;
+	result.branch = "0x4a2b5d_fallback_current";
+	if (x1 >= bounds.min_x && x1 < bounds.max_x && y1 >= bounds.min_y && y1 < bounds.max_y) {
+		result.input_inside = true;
+		result.branch = "0x4a2b5d_input_inside";
+		return result;
+	}
+
+	int32_t clipped_x = x1;
+	int32_t clipped_y = y1;
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	auto accept_original_x = [&](const char *branch) {
+		result.x = x1;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+	auto accept_current = [&](const char *branch) {
+		result.x = clipped_x;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+
+	if (x1 < bounds.min_x && dx != 0) {
+		const int32_t delta = bounds.min_x - x1;
+		clipped_x = x1 + int32_t((int64_t(dx) * int64_t(delta)) / int64_t(dx));
+		clipped_y = y1 + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_original_x("0x4a2bb5_left_edge_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_original_x("0x4a2bb5_left_edge_crosses_max_y");
+		}
+	}
+	if (clipped_y < bounds.min_y && dy != 0) {
+		const int32_t delta = bounds.min_y - clipped_y;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_original_x("0x4a2bb5_min_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_original_x("0x4a2bb5_min_y_crosses_max_x");
+		}
+	}
+	if (clipped_x >= bounds.max_x && dx != 0) {
+		const int32_t delta = bounds.max_x - clipped_x - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dx));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_original_x("0x4a2bb5_max_x_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_original_x("0x4a2bb5_max_x_crosses_max_y");
+		}
+	}
+	if (clipped_y >= bounds.max_y && dy != 0) {
+		const int32_t delta = bounds.max_y - clipped_y - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_max_x");
+		}
+	}
+	return accept_current("0x4a2b5d_fallback_current");
+}
+
+void append_line_trace_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
+	if (trace_preview.size() >= 8) {
+		return;
+	}
+	Dictionary item;
+	item["x"] = x;
+	item["y"] = y;
+	item["level"] = level;
+	trace_preview.append(item);
+}
+
+int32_t h3maped_line_sign_4a261a(int32_t value) {
+	return value > 0 ? 1 : -1;
+}
+
+void h3maped_write_line_cell_4a261a(LineWriteResult &result, std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t x, int32_t y, int32_t level, int32_t zone_word_id) {
+	if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
+		result.out_of_bounds_write_count += 1;
+		return;
+	}
+	const int64_t index = h3maped_cell_index(width, height, x, y, level);
+	if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) != (uint32_t(zone_word_id & 0xff) << 16U)) {
+		result.unique_cell_count += 1;
+	}
+	zone_words[size_t(index)] = (zone_words[size_t(index)] & H3MAPED_ZONE_WORD_CLEAR_MASK) | (uint32_t(zone_word_id & 0xff) << 16U);
+	if (!(water_code == 2 && level != 1)) {
+		cell_flags[size_t(index)] = uint8_t(cell_flags[size_t(index)] | 0x10U);
+		result.reserved_flag_write_count += 1;
+	}
+	result.write_count += 1;
+	append_line_trace_preview(result.trace_preview, x, y, level);
+}
+
+LineWriteResult h3maped_line_writer_4a261a(std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t level, int32_t zone_word_id) {
+	LineWriteResult result;
+	if (x1 > x2) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	const int32_t abs_dy = std::abs(dy);
+	int32_t major = 0;
+	int32_t minor = 0;
+	int32_t simple_step_x = 0;
+	int32_t simple_step_y = 0;
+	const int32_t diagonal_step_y = h3maped_line_sign_4a261a(dy);
+	if (dx > abs_dy) {
+		major = dx;
+		minor = abs_dy;
+		simple_step_x = 1;
+	} else {
+		major = abs_dy;
+		minor = dx;
+		simple_step_y = h3maped_line_sign_4a261a(dy);
+	}
+	int32_t error = major / 2;
+	int32_t x = x1;
+	int32_t y = y1;
+	while (x != x2 || y != y2) {
+		h3maped_write_line_cell_4a261a(result, zone_words, cell_flags, width, height, level_count, water_code, x, y, level, zone_word_id);
+		error += minor;
+		if (error < major) {
+			x += simple_step_x;
+			y += simple_step_y;
+		} else {
+			error -= major;
+			x += 1;
+			y += diagonal_step_y;
+		}
+	}
+	h3maped_write_line_cell_4a261a(result, zone_words, cell_flags, width, height, level_count, water_code, x, y, level, zone_word_id);
 	return result;
 }
 
@@ -1463,6 +1635,92 @@ Dictionary span_fill_primitive_4a325d_report(const Dictionary &normalized_config
 	return report;
 }
 
+Dictionary boundary_helper_primitives_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2b33_clip_and_0x4a261a_line_writer_primitives_ported";
+	report["source"] = "h3maped 0x4a2777 dependencies: 0x4a2b33 integer point/segment clip helper and 0x4a261a deterministic map-cell zone-word line writer";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_writer_address"] = "0x4a261a";
+	report["uses_real_0x4a2777_source_node_walk"] = false;
+	report["materializes_project_grid"] = false;
+
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = int32_t(normalized_config.get("width", 36));
+	bounds.max_y = int32_t(normalized_config.get("height", 36));
+	Dictionary bounds_report;
+	bounds_report["min_x"] = bounds.min_x;
+	bounds_report["min_y"] = bounds.min_y;
+	bounds_report["max_x"] = bounds.max_x;
+	bounds_report["max_y"] = bounds.max_y;
+	report["clip_bounds"] = bounds_report;
+
+	auto clip_sample = [&](const char *id, int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+		ClipResult clipped = h3maped_clip_point_4a2b33(x1, y1, x2, y2, bounds);
+		Dictionary item;
+		item["id"] = id;
+		item["from_x"] = x1;
+		item["from_y"] = y1;
+		item["to_x"] = x2;
+		item["to_y"] = y2;
+		item["out_x"] = clipped.x;
+		item["out_y"] = clipped.y;
+		item["input_inside"] = clipped.input_inside;
+		item["branch"] = clipped.branch;
+		item["output_in_bounds"] = clipped.x >= bounds.min_x && clipped.x < bounds.max_x && clipped.y >= bounds.min_y && clipped.y < bounds.max_y;
+		return item;
+	};
+	Array clip_samples;
+	clip_samples.append(clip_sample("inside", 10, 10, 30, 30));
+	clip_samples.append(clip_sample("left_to_inside", -5, 10, 20, 10));
+	clip_samples.append(clip_sample("top_to_inside", 10, -5, 10, 20));
+	clip_samples.append(clip_sample("right_to_inside", bounds.max_x + 5, 12, 20, 12));
+	clip_samples.append(clip_sample("bottom_to_inside", 12, bounds.max_y + 5, 12, 20));
+	report["clip_sample_count"] = clip_samples.size();
+	report["clip_samples"] = clip_samples;
+
+	const int32_t sample_width = 12;
+	const int32_t sample_height = 8;
+	const int32_t level_count = 1;
+	const int32_t water_code = water_mode_code(normalized_config);
+	std::vector<uint32_t> zone_words(size_t(sample_width * sample_height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(sample_width * sample_height * level_count), 0);
+	LineWriteResult line = h3maped_line_writer_4a261a(zone_words, cell_flags, sample_width, sample_height, level_count, water_code, 2, 3, 8, 3, 0, 7);
+	int32_t zone_word_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	for (int32_t y = 0; y < sample_height; ++y) {
+		for (int32_t x = 0; x < sample_width; ++x) {
+			const int64_t index = h3maped_cell_index(sample_width, sample_height, x, y, 0);
+			if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == (uint32_t(7) << 16U)) {
+				zone_word_cell_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_cell_count += 1;
+			}
+		}
+	}
+	Dictionary line_sample;
+	line_sample["map_width"] = sample_width;
+	line_sample["map_height"] = sample_height;
+	line_sample["from_x"] = 2;
+	line_sample["from_y"] = 3;
+	line_sample["to_x"] = 8;
+	line_sample["to_y"] = 3;
+	line_sample["level"] = 0;
+	line_sample["zone_word_id"] = 7;
+	line_sample["write_count"] = line.write_count;
+	line_sample["unique_cell_count"] = line.unique_cell_count;
+	line_sample["zone_word_cell_count"] = zone_word_cell_count;
+	line_sample["reserved_flag_write_count"] = line.reserved_flag_write_count;
+	line_sample["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	line_sample["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	line_sample["trace_preview"] = line.trace_preview;
+	report["line_sample"] = line_sample;
+	report["blocked_next"] = "assemble 0x4a2777 source-node traversal from these helpers and the recovered polygon-node inputs";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -1560,6 +1818,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary span_fill = span_fill_primitive_4a325d_report(normalized_config);
 	footprint_schedule["span_fill_primitive_status"] = span_fill.get("status", "");
 	footprint_schedule["span_fill_primitive"] = span_fill;
+	Dictionary boundary_helpers = boundary_helper_primitives_report(normalized_config);
+	footprint_schedule["boundary_helper_primitives_status"] = boundary_helpers.get("status", "");
+	footprint_schedule["boundary_helper_primitives"] = boundary_helpers;
 	footprint_schedule["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
@@ -1603,7 +1864,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a325d, 0x4a3710", "active_schedule_span_primitive_and_small_land_finalizer_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a2b33, 0x4a261a, 0x4a325d, 0x4a3710", "active_schedule_boundary_helper_span_primitive_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },
