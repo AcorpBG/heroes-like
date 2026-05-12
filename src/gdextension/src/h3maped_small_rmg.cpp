@@ -5,6 +5,7 @@
 #include <godot_cpp/variant/string.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
@@ -36,30 +37,32 @@ struct TemplateEvidence {
 	int32_t player_start_zone_count;
 	int32_t treasure_zone_count;
 	int32_t minimum_player_castles;
+	uint8_t human_capable_source_owner_mask;
+	uint8_t player_capable_source_owner_mask;
 };
 
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
-	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0, "", 0, 0, 0 },
-	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0, "", 0, 0, 0 },
-	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, 0, "", 0, 0, 0 },
-	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, 0, "", 0, 0, 0 },
-	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, 0, "", 0, 0, 0 },
-	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, 0, "", 0, 0, 0 },
-	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, 0, "", 0, 0, 0 },
-	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, 0, "translated_rmg_template_019_v1", 4, 2, 4 },
-	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, 0, "", 0, 0, 0 },
-	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, 0, "", 0, 0, 0 },
-	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, 0, "", 0, 0, 0 },
-	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, 0, "", 0, 0, 0 },
-	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, 0, "", 0, 0, 0 },
-	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, 0, "", 0, 0, 0 },
-	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, 0, "", 0, 0, 0 },
-	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, 0, "", 0, 0, 0 },
+	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, 0, "translated_rmg_template_019_v1", 4, 2, 4, 0x0f, 0x0f },
+	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, 0, "", 0, 0, 0, 0, 0 },
+	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, 0, "", 0, 0, 0, 0, 0 },
 };
 
 int32_t water_mode_code(const Dictionary &normalized) {
@@ -145,7 +148,138 @@ Dictionary template_to_dictionary(const TemplateEvidence &candidate) {
 	return item;
 }
 
-Dictionary selected_template_payload(const Dictionary &selected_template, const TemplateEvidence &candidate) {
+Array bool_bitmap_report(const std::array<bool, 8> &bitmap) {
+	Array result;
+	for (bool enabled : bitmap) {
+		result.append(enabled);
+	}
+	return result;
+}
+
+Array source_owner_indices_from_mask(uint8_t mask) {
+	Array result;
+	for (int32_t index = 0; index < 8; ++index) {
+		if ((mask & (1U << index)) != 0) {
+			result.append(index);
+		}
+	}
+	return result;
+}
+
+std::array<bool, 8> bitmap_from_mask(uint8_t mask) {
+	std::array<bool, 8> bitmap = {};
+	for (int32_t index = 0; index < 8; ++index) {
+		bitmap[size_t(index)] = (mask & (1U << index)) != 0;
+	}
+	return bitmap;
+}
+
+std::array<bool, 8> selected_color_bitmap_from_normalized(const Dictionary &normalized_config) {
+	std::array<bool, 8> bitmap = {};
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	Array selected = constraints.get("selected_color_bitmap", Array());
+	for (int32_t index = 0; index < 8 && index < selected.size(); ++index) {
+		bitmap[size_t(index)] = bool(selected[index]);
+	}
+	return bitmap;
+}
+
+Dictionary player_slot_assignment_report(uint8_t human_capable_mask, uint8_t player_capable_mask, const std::array<bool, 8> &selected_color_bitmap, int32_t human_count, int32_t computer_count) {
+	Dictionary report;
+	std::array<int32_t, 9> raw_mapping = {};
+	raw_mapping.fill(-1);
+	std::array<bool, 8> human_capable = bitmap_from_mask(human_capable_mask);
+	std::array<bool, 8> player_capable = bitmap_from_mask(player_capable_mask);
+	std::array<int32_t, 8> color_order = {};
+	int32_t order_index = 0;
+	for (int32_t color = 0; color < 8; ++color) {
+		if (selected_color_bitmap[size_t(color)]) {
+			color_order[size_t(order_index++)] = color;
+		}
+	}
+	for (int32_t color = 0; color < 8; ++color) {
+		if (!selected_color_bitmap[size_t(color)]) {
+			color_order[size_t(order_index++)] = color;
+		}
+	}
+
+	Array color_order_report;
+	for (int32_t color : color_order) {
+		color_order_report.append(color);
+	}
+
+	Array assignments;
+	int32_t assigned_count = 0;
+	int32_t source_owner_scan = 0;
+	bool complete = true;
+	for (; assigned_count < human_count; ++assigned_count) {
+		while (source_owner_scan < 8 && !human_capable[size_t(source_owner_scan)]) {
+			++source_owner_scan;
+		}
+		if (source_owner_scan >= 8) {
+			complete = false;
+			break;
+		}
+		player_capable[size_t(source_owner_scan)] = false;
+		const int32_t actual_color = color_order[size_t(assigned_count)];
+		raw_mapping[size_t(source_owner_scan + 1)] = actual_color;
+		Dictionary assignment;
+		assignment["source_owner_index"] = source_owner_scan;
+		assignment["actual_player_color"] = actual_color;
+		assignment["player_type"] = "human";
+		assignments.append(assignment);
+		++source_owner_scan;
+	}
+
+	const int32_t desired_total = human_count + computer_count;
+	source_owner_scan = 0;
+	for (; assigned_count < desired_total; ++assigned_count) {
+		while (source_owner_scan < 8 && !player_capable[size_t(source_owner_scan)]) {
+			++source_owner_scan;
+		}
+		if (source_owner_scan >= 8) {
+			complete = false;
+			break;
+		}
+		const int32_t actual_color = color_order[size_t(assigned_count)];
+		raw_mapping[size_t(source_owner_scan + 1)] = actual_color;
+		Dictionary assignment;
+		assignment["source_owner_index"] = source_owner_scan;
+		assignment["actual_player_color"] = actual_color;
+		assignment["player_type"] = "computer";
+		assignments.append(assignment);
+		++source_owner_scan;
+	}
+
+	Array raw_slots;
+	for (int32_t value : raw_mapping) {
+		raw_slots.append(value);
+	}
+	Array colors_by_source_owner;
+	for (int32_t source_owner = 0; source_owner < 8; ++source_owner) {
+		colors_by_source_owner.append(raw_mapping[size_t(source_owner + 1)]);
+	}
+
+	report["status"] = complete ? String("0x4ac62a_player_slot_assignment_ported") : String("0x4ac62a_player_slot_assignment_incomplete");
+	report["source"] = "h3maped 0x4ac62a..0x4ac6ec using generator+0xed8 selected-color bitmap and source zone +0x04/+0x1c capability bitmaps";
+	report["selected_color_bitmap_offset"] = "generator+0xed8";
+	report["assignment_slots_offset"] = "generator+0xee0";
+	report["mapped_slots_offset"] = "generator+0xee4";
+	report["human_capable_source_owner_indices"] = source_owner_indices_from_mask(human_capable_mask);
+	report["player_capable_source_owner_indices"] = source_owner_indices_from_mask(player_capable_mask);
+	report["selected_color_bitmap"] = bool_bitmap_report(selected_color_bitmap);
+	report["selected_color_order"] = color_order_report;
+	report["raw_ee0_slots"] = raw_slots;
+	report["actual_colors_by_source_owner"] = colors_by_source_owner;
+	report["assignments"] = assignments;
+	report["assigned_count"] = assignments.size();
+	report["desired_human_count"] = human_count;
+	report["desired_computer_count"] = computer_count;
+	report["materializes_runtime_players"] = false;
+	return report;
+}
+
+Dictionary selected_template_payload(const Dictionary &selected_template, const TemplateEvidence &candidate, const Dictionary &normalized_config, int32_t human_count, int32_t computer_count) {
 	Dictionary payload;
 	payload["source"] = "adapted project catalog resolved by import_provenance.source_template_index";
 	payload["source_catalog_index_zero_based"] = selected_template.get("source_catalog_index", candidate.catalog_index);
@@ -157,6 +291,11 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	payload["player_start_zone_count"] = candidate.player_start_zone_count;
 	payload["treasure_zone_count"] = candidate.treasure_zone_count;
 	payload["minimum_player_castles_before_assignment"] = candidate.minimum_player_castles;
+	payload["human_capable_source_owner_indices"] = source_owner_indices_from_mask(candidate.human_capable_source_owner_mask);
+	payload["player_capable_source_owner_indices"] = source_owner_indices_from_mask(candidate.player_capable_source_owner_mask);
+	Dictionary assignment = player_slot_assignment_report(candidate.human_capable_source_owner_mask, candidate.player_capable_source_owner_mask, selected_color_bitmap_from_normalized(normalized_config), human_count, computer_count);
+	payload["assignment_status"] = assignment.get("status", "");
+	payload["player_slot_assignment"] = assignment;
 	payload["materialization_status"] = "blocked_until_next_executable_phase_port";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
@@ -171,7 +310,7 @@ Array clean_phase_ledger() {
 	};
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
-		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "pending" },
+		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c", "pending" },
 		{ "zone_footprint_placement", "0x4a3a03", "pending" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
@@ -284,7 +423,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		report["selected_template"] = selected_template;
 		report["h3maped_rng"] = rng;
 		if (selected_candidate != nullptr) {
-			report["selected_template_payload"] = selected_template_payload(selected_template, *selected_candidate);
+			report["selected_template_payload"] = selected_template_payload(selected_template, *selected_candidate, normalized_config, human_count, computer_count);
 		}
 	} else if (supported && !accepted_templates.is_empty()) {
 		Dictionary rng;
