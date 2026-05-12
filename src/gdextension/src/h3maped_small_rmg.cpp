@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <map>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -69,6 +70,12 @@ struct RuntimeZoneSeed {
 struct RuntimeLinkSeed {
 	int32_t runtime_a = -1;
 	int32_t runtime_b = -1;
+};
+
+struct TerrainVisualRow {
+	int32_t shape_class = -1;
+	int32_t flag_a = 0;
+	int32_t flag_b = 0;
 };
 
 struct CoordCandidate {
@@ -894,6 +901,184 @@ Dictionary tile_serializer_49b2b6_contract_report() {
 	report["sample_expected_tile_bytes"] = sample_bytes;
 	report["sample_expected_tile_byte_count"] = sample_bytes.size();
 	report["materializes_package_tiles"] = false;
+	return report;
+}
+
+int64_t h3maped_va_to_file_offset(int64_t va) {
+	return va - 0x400000;
+}
+
+bool read_h3maped_u8(Ref<FileAccess> &file, int64_t va, uint8_t &out_value) {
+	if (file.is_null() || !file->is_open()) {
+		return false;
+	}
+	const int64_t offset = h3maped_va_to_file_offset(va);
+	if (offset < 0 || offset >= file->get_length()) {
+		return false;
+	}
+	file->seek(offset);
+	out_value = uint8_t(file->get_8());
+	return true;
+}
+
+bool read_h3maped_u32_le(Ref<FileAccess> &file, int64_t va, uint32_t &out_value) {
+	uint8_t b0 = 0;
+	uint8_t b1 = 0;
+	uint8_t b2 = 0;
+	uint8_t b3 = 0;
+	if (!read_h3maped_u8(file, va, b0) || !read_h3maped_u8(file, va + 1, b1) || !read_h3maped_u8(file, va + 2, b2) || !read_h3maped_u8(file, va + 3, b3)) {
+		return false;
+	}
+	out_value = uint32_t(b0) | (uint32_t(b1) << 8U) | (uint32_t(b2) << 16U) | (uint32_t(b3) << 24U);
+	return true;
+}
+
+String compact_row_ranges(const std::vector<int32_t> &rows) {
+	if (rows.empty()) {
+		return "-";
+	}
+	String result;
+	int32_t start = rows[0];
+	int32_t previous = rows[0];
+	for (size_t index = 1; index < rows.size(); ++index) {
+		const int32_t current = rows[index];
+		if (current == previous + 1) {
+			previous = current;
+			continue;
+		}
+		if (!result.is_empty()) {
+			result += ",";
+		}
+		result += start == previous ? String::num_int64(start) : String::num_int64(start) + "-" + String::num_int64(previous);
+		start = current;
+		previous = current;
+	}
+	if (!result.is_empty()) {
+		result += ",";
+	}
+	result += start == previous ? String::num_int64(start) : String::num_int64(start) + "-" + String::num_int64(previous);
+	return result;
+}
+
+PackedInt32Array packed_rows(const std::vector<int32_t> &rows) {
+	PackedInt32Array packed;
+	for (int32_t row : rows) {
+		packed.append(row);
+	}
+	return packed;
+}
+
+Array class_range_records(const std::map<int32_t, std::vector<int32_t>> &rows_by_class) {
+	Array records;
+	for (const auto &entry : rows_by_class) {
+		Dictionary record;
+		record["class"] = entry.first;
+		record["row_count"] = int32_t(entry.second.size());
+		record["rows"] = packed_rows(entry.second);
+		record["compact_rows"] = compact_row_ranges(entry.second);
+		record["first_row"] = entry.second.empty() ? -1 : entry.second.front();
+		record["last_row"] = entry.second.empty() ? -1 : entry.second.back();
+		records.append(record);
+	}
+	return records;
+}
+
+Dictionary terrain_visual_table_contract(Ref<FileAccess> &file, const char *id, const char *terrain_ids, const char *address, int64_t table_va, int32_t row_count, bool include_flag_buckets) {
+	std::vector<TerrainVisualRow> rows;
+	rows.reserve(size_t(row_count));
+	std::map<int32_t, std::vector<int32_t>> rows_by_class;
+	std::map<std::array<int32_t, 3>, std::vector<int32_t>> rows_by_class_flags;
+	bool ok = true;
+	for (int32_t row_index = 0; row_index < row_count; ++row_index) {
+		const int64_t row_va = table_va + int64_t(row_index) * 8;
+		uint32_t shape_class = 0;
+		uint8_t flag_a = 0;
+		uint8_t flag_b = 0;
+		if (!read_h3maped_u32_le(file, row_va, shape_class) || !read_h3maped_u8(file, row_va + 4, flag_a) || !read_h3maped_u8(file, row_va + 5, flag_b)) {
+			ok = false;
+			break;
+		}
+		TerrainVisualRow row;
+		row.shape_class = int32_t(shape_class);
+		row.flag_a = int32_t(flag_a);
+		row.flag_b = int32_t(flag_b);
+		rows.push_back(row);
+		rows_by_class[row.shape_class].push_back(row_index);
+		if (include_flag_buckets) {
+			rows_by_class_flags[{ row.shape_class, row.flag_a, row.flag_b }].push_back(row_index);
+		}
+	}
+	Dictionary report;
+	report["id"] = id;
+	report["terrain_ids"] = terrain_ids;
+	report["table_address"] = address;
+	report["table_file_offset"] = h3maped_va_to_file_offset(table_va);
+	report["expected_row_count"] = row_count;
+	report["decoded_row_count"] = int32_t(rows.size());
+	report["status"] = ok && int32_t(rows.size()) == row_count ? String("decoded_from_h3maped_exe") : String("decode_failed");
+	report["row_stride_bytes"] = 8;
+	report["row_contract"] = "u32 class, u8 flag_a, u8 flag_b";
+	report["unique_class_count"] = int32_t(rows_by_class.size());
+	report["class_ranges"] = class_range_records(rows_by_class);
+	if (include_flag_buckets) {
+		Array flag_records;
+		for (const auto &entry : rows_by_class_flags) {
+			Dictionary flag_record;
+			flag_record["class"] = entry.first[0];
+			flag_record["flag_a"] = entry.first[1];
+			flag_record["flag_b"] = entry.first[2];
+			flag_record["row_count"] = int32_t(entry.second.size());
+			flag_record["rows"] = packed_rows(entry.second);
+			flag_record["compact_rows"] = compact_row_ranges(entry.second);
+			flag_records.append(flag_record);
+		}
+		report["class_flag_ranges"] = flag_records;
+	}
+	return report;
+}
+
+Dictionary terrain_visual_static_table_contracts_report() {
+	Dictionary report;
+	report["status"] = "h3maped_exe_static_terrain_visual_tables_decoded";
+	report["source"] = "direct decode from /root/Downloads/h3maped.exe static terrain row tables; file offset = VA - 0x400000 for these table addresses";
+	report["binary_path"] = BINARY_PATH;
+	report["binary_sha256_anchor"] = BINARY_SHA256;
+	report["normal_table_address"] = "0x543108";
+	report["dirt_table_address"] = "0x543380";
+	report["sand_table_address"] = "0x5434f0";
+	report["water_table_address"] = "0x5435b0";
+	report["rock_table_address"] = "0x542f88";
+	report["materializes_visual_records"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	if (!FileAccess::file_exists(BINARY_PATH)) {
+		report["status"] = "h3maped_exe_missing";
+		return report;
+	}
+	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		report["status"] = "h3maped_exe_unreadable";
+		return report;
+	}
+	Array tables;
+	tables.append(terrain_visual_table_contract(file, "normal_land_terrain_ids_2_7", "2,3,4,5,6,7", "0x543108", 0x543108, 79, false));
+	tables.append(terrain_visual_table_contract(file, "dirt_terrain_id_0", "0", "0x543380", 0x543380, 46, false));
+	tables.append(terrain_visual_table_contract(file, "sand_terrain_id_1", "1", "0x5434f0", 0x5434f0, 24, false));
+	tables.append(terrain_visual_table_contract(file, "water_terrain_id_8", "8", "0x5435b0", 0x5435b0, 33, false));
+	tables.append(terrain_visual_table_contract(file, "rock_terrain_id_9", "9", "0x542f88", 0x542f88, 48, true));
+	int32_t decoded_total = 0;
+	bool ok = true;
+	for (int64_t index = 0; index < tables.size(); ++index) {
+		Dictionary table = tables[index];
+		decoded_total += int32_t(table.get("decoded_row_count", 0));
+		ok = ok && String(table.get("status", "")) == "decoded_from_h3maped_exe";
+	}
+	report["table_count"] = tables.size();
+	report["decoded_total_row_count"] = decoded_total;
+	report["expected_total_row_count"] = 79 + 46 + 24 + 33 + 48;
+	report["tables"] = tables;
+	report["status"] = ok && decoded_total == int32_t(report["expected_total_row_count"])
+			? String("h3maped_exe_static_terrain_visual_tables_decoded")
+			: String("h3maped_exe_static_terrain_visual_table_decode_failed");
 	return report;
 }
 
@@ -3179,6 +3364,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	visual_classifier["complex_resolve_flow"] = "0x4ba938 reuses a previous nonzero visual id when valid, otherwise chooses common or alternate contiguous ranges at object+0x14/object+0x1c through 0x4e7276";
 	visual_classifier["simple_resolve_flow"] = "0x4baa94 reuses a previous nonzero visual id when valid, otherwise chooses from global range 0x5a4318/0x5a431c through 0x4e7276";
 	visual_classifier["static_range_lookup_contract"] = terrain_visual_static_range_lookup_contract_report();
+	visual_classifier["static_table_contracts"] = terrain_visual_static_table_contracts_report();
 	visual_classifier["materializes_visual_record"] = false;
 	visual_classifier["blocked_next"] = "port the toolkit static-table lookup bodies and feed their selected visual record into 0x4bad0f/0x49acf6";
 	changed_cell_update["visual_classifier"] = visual_classifier;
