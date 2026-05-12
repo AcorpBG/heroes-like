@@ -25117,6 +25117,11 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["map_package_extension"] = ".amap";
 	result["scenario_package_extension"] = ".ascenario";
 	result["capabilities"] = capabilities();
+	result["native_rmg_generation_authority"] = "h3maped_small_reset_only";
+	result["native_rmg_runtime_generation_allowed"] = false;
+	result["native_rmg_active_reset_slice_id"] = "native-rmg-small-h3maped-port-10184";
+	result["native_rmg_active_port_capability"] = "native_rmg_small_h3maped_port_boundary";
+	result["native_rmg_legacy_capability_policy"] = "inspection_debug_evidence_not_runtime_generation_authority";
 	result["status"] = "skeleton";
 	return result;
 }

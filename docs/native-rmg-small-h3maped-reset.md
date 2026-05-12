@@ -6,6 +6,8 @@ The previous native catalog-auto RMG implementation is archived as legacy eviden
 
 The public `MapPackageService.generate_random_map` entry point is intentionally narrowed to the reset gate: supported small land configs return the h3maped small-port not-ready result, and every out-of-scope config returns the archived-legacy-disabled result. The previous catalog-auto map assembly body is no longer present below that reset return.
 
+`MapPackageService.get_api_metadata()` also marks RMG generation authority as `h3maped_small_reset_only`, with runtime generation disabled and old native RMG capabilities retained only as inspection/debug evidence. The old capability names are not production generation authority.
+
 ## Source Anchor
 
 - Binary: `/root/Downloads/h3maped.exe`
@@ -33,6 +35,7 @@ The active compact port currently supports inspection only:
 4. Resolves selected source template `h3maped_template_018` to adapted template `translated_rmg_template_019_v1` for seed `1`, 1 human, 3 total players.
 4a. Routes public small-map config identity through that h3maped selection result instead of the archived `native_catalog_auto` hash selector. `random_map_config_identity()` and blocked `generate_random_map()` payloads now report `template_selection_mode: h3maped_exe_rng`, preserve the h3maped source template id/catalog index, and mark explicit translated-template requests as overridden by the reset gate rather than authoritative.
 4b. Keeps readiness metadata in the reset lane: small h3maped configs report `h3maped_small_clean_restart_generation_not_ready` / `h3maped_small_clean_restart_waiting_for_executable_phase_ports` and do not advertise translated-catalog structural support while runtime output remains blocked.
+4c. Marks the public API metadata boundary so legacy native RMG capability strings remain evidence/report surfaces only, not runtime generation authority.
 5. Ports player-slot assignment `0x4ac62a..0x4ac6ec` for inspection: source capability masks, `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`.
 6. Ports runtime-zone record setup `0x4a218c` for inspection: six active runtime-zone records for the seed-1 boundary case, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles.
 7. Ports early endpoint-placement schedule `0x4a1f3b` for inspection: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. This phase consumes only link endpoints; `Value`, `Wide`, and `Border Guard` are preserved for later `0x4a79a3`.
