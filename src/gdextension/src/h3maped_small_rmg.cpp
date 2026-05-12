@@ -1201,6 +1201,14 @@ uint32_t h3maped_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, i
 			| ((uint32_t(flag_b) & 0x01U) << 13U);
 }
 
+int32_t h3maped_scratch_terrain_id(uint32_t scratch_word) {
+	return int32_t((scratch_word >> 1U) & 0x0fU);
+}
+
+int32_t h3maped_scratch_art_id(uint32_t scratch_word) {
+	return int32_t((scratch_word >> 5U) & 0x7fU);
+}
+
 Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
 	const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, flag_a, flag_b);
 	const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU)
@@ -2170,6 +2178,126 @@ Dictionary h3maped_drained_scratch_feedback_projection_report(const PackedInt32A
 	return report;
 }
 
+Dictionary h3maped_scratch_neighbor_mask_projection_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &scratch_feedback_projection, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4bce6d_scratch_neighbor_mask_projection_inspection_only";
+	report["source"] = "projects the recovered 0x4bce6d cardinal scratch-neighbor mask over the full drained scratch grid; this records the exact mask dependency before live visual selection adoption";
+	report["ported_addresses"] = Array::make("0x4bcff5", "0x4bb5ce", "0x4bce6d", "0x4bcfc3", "0x4ba91d", "0x4ba938");
+	report["constructor_address"] = "0x4bb5ce";
+	report["terrainplacement_factory_address"] = "0x4bcff5";
+	report["neighbor_mask_address"] = "0x4bce6d";
+	report["visual_selector_address"] = "0x4bcfc3";
+	report["complex_neighbor_probe_vfunc_plus_0x08"] = "0x4ba91d";
+	report["complex_full_native_resolve_address"] = "0x4ba938";
+	report["rmg_initial_neighbor_mask"] = 4;
+	report["mask_shift_order"] = Array::make("west", "north", "east", "south");
+	report["adopts_into_visual_selection"] = false;
+	report["adopts_into_runtime_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	PackedInt32Array scratch_word_u16 = scratch_feedback_projection.get("scratch_word_u16", PackedInt32Array());
+	const int32_t level_tile_count = width * height;
+	const int32_t tile_count = drained_terrain_code_u16.size();
+	PackedInt32Array neighbor_mask_u8;
+	neighbor_mask_u8.resize(tile_count);
+	Dictionary mask_histogram;
+	int32_t full_native_cell_count = 0;
+	int32_t mask_below_initial_count = 0;
+	int32_t zero_mask_count = 0;
+	int32_t missing_scratch_cell_count = 0;
+	Array samples;
+	auto scratch_at = [&](int32_t index) -> uint32_t {
+		if (index < 0 || index >= scratch_word_u16.size()) {
+			missing_scratch_cell_count += 1;
+			return 0U;
+		}
+		return uint32_t(int32_t(scratch_word_u16[index]));
+	};
+	auto accept_neighbor = [&](int32_t neighbor_index, int32_t terrain_id) -> bool {
+		if (neighbor_index < 0 || neighbor_index >= tile_count) {
+			return false;
+		}
+		const uint32_t neighbor_scratch = scratch_at(neighbor_index);
+		if ((neighbor_scratch & 0x01U) == 0U) {
+			return false;
+		}
+		if (h3maped_scratch_terrain_id(neighbor_scratch) != terrain_id) {
+			return false;
+		}
+		const int32_t neighbor_art = h3maped_scratch_art_id(neighbor_scratch);
+		return neighbor_art != 0;
+	};
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t index = level * level_tile_count + y * width + x;
+				if (index < 0 || index >= tile_count) {
+					continue;
+				}
+				const int32_t terrain_id = drained_terrain_code_u16[index];
+				const TerrainClassResult classified = classify_grid_cell(drained_terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+				int32_t mask = 4;
+				const bool west_accept = x > 0 && accept_neighbor(index - 1, terrain_id);
+				if (west_accept) {
+					mask >>= 1;
+				}
+				const bool north_accept = y > 0 && accept_neighbor(index - width, terrain_id);
+				if (north_accept) {
+					mask >>= 1;
+				}
+				const bool east_accept = x + 1 < width && accept_neighbor(index + 1, terrain_id);
+				if (east_accept) {
+					mask >>= 1;
+				}
+				const bool south_accept = y + 1 < height && accept_neighbor(index + width, terrain_id);
+				if (south_accept) {
+					mask >>= 1;
+				}
+				neighbor_mask_u8.set(index, mask);
+				const String mask_key = String::num_int64(mask);
+				mask_histogram[mask_key] = int32_t(mask_histogram.get(mask_key, 0)) + 1;
+				if (classified.shape_class == 0) {
+					full_native_cell_count += 1;
+				}
+				if (mask < 4) {
+					mask_below_initial_count += 1;
+				}
+				if (mask == 0) {
+					zero_mask_count += 1;
+				}
+				if (samples.size() < 10 && (classified.shape_class == 0 || mask < 4)) {
+					Dictionary sample;
+					sample["index"] = index;
+					sample["x"] = x;
+					sample["y"] = y;
+					sample["level"] = level;
+					sample["terrain_id"] = terrain_id;
+					sample["class"] = classified.shape_class;
+					sample["neighbor_mask"] = mask;
+					sample["west_accepted"] = west_accept;
+					sample["north_accepted"] = north_accept;
+					sample["east_accepted"] = east_accept;
+					sample["south_accepted"] = south_accept;
+					samples.append(sample);
+				}
+			}
+		}
+	}
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = tile_count;
+	report["neighbor_mask_count"] = neighbor_mask_u8.size();
+	report["full_native_cell_count"] = full_native_cell_count;
+	report["mask_below_initial_count"] = mask_below_initial_count;
+	report["zero_mask_count"] = zero_mask_count;
+	report["missing_scratch_cell_count"] = missing_scratch_cell_count;
+	report["mask_histogram"] = mask_histogram;
+	report["neighbor_mask_u8"] = neighbor_mask_u8;
+	report["sample_records"] = samples;
+	report["blocked_next"] = "feed this 0x4bce6d mask into live 0x4bcfc3/0x4ba938 visual selection during the 0x4bc5f0 drain instead of using post-drain visual projection";
+	return report;
+}
+
 Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
 
 Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
@@ -2457,6 +2585,9 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	Dictionary scratch_feedback_projection = h3maped_drained_scratch_feedback_projection_report(drain_grid, drained_visual_projection, width, height, level_count);
 	report["scratch_feedback_projection_status"] = scratch_feedback_projection.get("status", "");
 	report["scratch_feedback_projection"] = scratch_feedback_projection;
+	Dictionary scratch_neighbor_mask_projection = h3maped_scratch_neighbor_mask_projection_report(drain_grid, scratch_feedback_projection, width, height, level_count);
+	report["scratch_neighbor_mask_projection_status"] = scratch_neighbor_mask_projection.get("status", "");
+	report["scratch_neighbor_mask_projection"] = scratch_neighbor_mask_projection;
 	report["blocked_next"] = "replace this copied terrain-only projection with live 0x4bad0f scratch-neighbor feedback sequencing and safe generated-cell/runtime adoption";
 	return report;
 }

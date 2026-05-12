@@ -504,6 +504,7 @@ func _run() -> void:
 	var queue_container_sample_order: Array = queue_container_contract.get("sample_order", [])
 	var drained_visual_projection: Dictionary = repaint_order_queue_drain.get("drained_visual_projection", {})
 	var scratch_feedback_projection: Dictionary = repaint_order_queue_drain.get("scratch_feedback_projection", {})
+	var scratch_neighbor_mask_projection: Dictionary = repaint_order_queue_drain.get("scratch_neighbor_mask_projection", {})
 	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var drained_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("drained_tile_writeback_candidate", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
@@ -690,6 +691,7 @@ func _run() -> void:
 			or String(repaint_order_queue_drain.get("drained_final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
 			or String(repaint_order_queue_drain.get("drained_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("scratch_feedback_projection_status", "")) != "0x4bad0f_drained_grid_scratch_word_projection_inspection_only" \
+			or String(repaint_order_queue_drain.get("scratch_neighbor_mask_projection_status", "")) != "0x4bce6d_scratch_neighbor_mask_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("queue_container_contract_status", "")) != "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported" \
 			or repaint_order_queue_drain_blocked_exact_dependencies != ["0x4bad0f_live_scratch_visual_state_feedback"] \
 			or Array(repaint_order_queue_drain.get("seed_samples", [])).is_empty() \
@@ -761,6 +763,25 @@ func _run() -> void:
 			or bool(scratch_feedback_projection.get("adopts_into_runtime_grid", true)) \
 			or bool(scratch_feedback_projection.get("materializes_package_tiles", true)):
 		_fail("The h3maped drained-grid scratch feedback projection drifted: %s" % JSON.stringify(scratch_feedback_projection))
+		return
+	if String(scratch_neighbor_mask_projection.get("status", "")) != "0x4bce6d_scratch_neighbor_mask_projection_inspection_only" \
+			or not Array(scratch_neighbor_mask_projection.get("ported_addresses", [])).has("0x4bce6d") \
+			or not Array(scratch_neighbor_mask_projection.get("ported_addresses", [])).has("0x4bcfc3") \
+			or not Array(scratch_neighbor_mask_projection.get("ported_addresses", [])).has("0x4ba91d") \
+			or not Array(scratch_neighbor_mask_projection.get("ported_addresses", [])).has("0x4ba938") \
+			or int(scratch_neighbor_mask_projection.get("rmg_initial_neighbor_mask", -1)) != 4 \
+			or Array(scratch_neighbor_mask_projection.get("mask_shift_order", [])) != ["west", "north", "east", "south"] \
+			or int(scratch_neighbor_mask_projection.get("tile_count", -1)) != 1296 \
+			or int(scratch_neighbor_mask_projection.get("neighbor_mask_count", -1)) != 1296 \
+			or int(scratch_neighbor_mask_projection.get("full_native_cell_count", -1)) <= 0 \
+			or int(scratch_neighbor_mask_projection.get("mask_below_initial_count", -1)) <= 0 \
+			or Dictionary(scratch_neighbor_mask_projection.get("mask_histogram", {})).is_empty() \
+			or PackedInt32Array(scratch_neighbor_mask_projection.get("neighbor_mask_u8", PackedInt32Array())).size() != 1296 \
+			or Array(scratch_neighbor_mask_projection.get("sample_records", [])).is_empty() \
+			or bool(scratch_neighbor_mask_projection.get("adopts_into_visual_selection", true)) \
+			or bool(scratch_neighbor_mask_projection.get("adopts_into_runtime_grid", true)) \
+			or bool(scratch_neighbor_mask_projection.get("materializes_package_tiles", true)):
+		_fail("The h3maped scratch-neighbor mask projection drifted: %s" % JSON.stringify(scratch_neighbor_mask_projection))
 		return
 	if String(drained_tile_writeback_candidate.get("status", "")) != "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only" \
 			or int(drained_tile_writeback_candidate.get("tile_count", -1)) != 1296 \
