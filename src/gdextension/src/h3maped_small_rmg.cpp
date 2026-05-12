@@ -1465,6 +1465,51 @@ Dictionary polygon_seed_4cc788_report() {
 	return report;
 }
 
+Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t total_polygon_split_calls) {
+	Dictionary report;
+	report["status"] = "0x4ccb64_split_insertion_gate_ported_inspection_only";
+	report["source"] = "h3maped 0x4ccb64 calls 0x4cca55 for each runtime-zone split point, rejects points equal to the located source-node endpoint or following endpoint, then inserts a 0x4cc955 node and runs bridge/crossing cleanup before 0x4ccdfc finalization";
+	report["function_address"] = "0x4ccb64";
+	report["locator_address"] = "0x4cca55";
+	report["node_constructor_address"] = "0x4cc955";
+	report["clone_bridge_address"] = "0x4ccb1f";
+	report["crossing_test_address"] = "0x4ccc7a";
+	report["intersection_helper_address"] = "0x4ccd69";
+	report["finalizer_address"] = "0x4ccdfc";
+	report["materializes_source_node_graph"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+	report["scheduled_split_call_count"] = total_polygon_split_calls;
+	report["locator_call_count"] = total_polygon_split_calls;
+	report["duplicate_endpoint_guard_address"] = "0x4ccb80..0x4ccba1";
+	report["duplicate_endpoint_guard_materialized"] = false;
+
+	Array scheduled_calls;
+	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
+		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary level = levels[level_index];
+		Array split_calls = level.get("polygon_split_calls", Array());
+		for (int64_t split_index = 0; split_index < split_calls.size(); ++split_index) {
+			if (Variant(split_calls[split_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary split = split_calls[split_index];
+			Dictionary item;
+			item["level_index"] = level.get("level_index", level_index);
+			item["runtime_zone_index"] = split.get("runtime_zone_index", -1);
+			item["x"] = split.get("x", 0);
+			item["y"] = split.get("y", 0);
+			item["locator_status"] = "scheduled_0x4cca55_not_materialized";
+			item["insertion_status"] = "pending_0x4ccb64_source_node_graph_materialization";
+			scheduled_calls.append(item);
+		}
+	}
+	report["scheduled_calls"] = scheduled_calls;
+	report["blocked_next"] = "materialize the 0x4cca55 located node and 0x4ccb64 insertion/cleanup graph before 0x4ccdfc finalized cycles can feed 0x4a2777";
+	return report;
+}
+
 Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_zone_footprint_schedule_ported";
@@ -1565,6 +1610,9 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["total_polygon_split_calls"] = total_polygon_split_calls;
 	report["appended_synthetic_runtime_zone_count"] = appended_synthetic_runtime_zone_count;
 	report["levels"] = levels;
+	Dictionary polygon_split = polygon_split_insertion_4ccb64_report(levels, total_polygon_split_calls);
+	report["polygon_split_status"] = polygon_split.get("status", "");
+	report["polygon_split"] = polygon_split;
 	report["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	return report;
 }

@@ -262,6 +262,23 @@ func _run() -> void:
 			or int(last_polygon_edge.get("to_y", 0)) != -200:
 		_fail("The 0x4cc788 initial source-node edge order drifted: %s" % JSON.stringify(polygon_seed))
 		return
+	var polygon_split: Dictionary = footprint_schedule.get("polygon_split", {})
+	if String(footprint_schedule.get("polygon_split_status", "")) != "0x4ccb64_split_insertion_gate_ported_inspection_only" \
+			or int(polygon_split.get("scheduled_split_call_count", -1)) != 6 \
+			or int(polygon_split.get("locator_call_count", -1)) != 6 \
+			or bool(polygon_split.get("duplicate_endpoint_guard_materialized", true)) \
+			or String(polygon_split.get("function_address", "")) != "0x4ccb64" \
+			or String(polygon_split.get("locator_address", "")) != "0x4cca55" \
+			or String(polygon_split.get("node_constructor_address", "")) != "0x4cc955" \
+			or String(polygon_split.get("crossing_test_address", "")) != "0x4ccc7a" \
+			or String(polygon_split.get("intersection_helper_address", "")) != "0x4ccd69" \
+			or Array(polygon_split.get("scheduled_calls", [])).size() != 6:
+		_fail("The 0x4ccb64 split insertion gate drifted: %s" % JSON.stringify(polygon_split))
+		return
+	if bool(polygon_split.get("materializes_source_node_graph", true)) \
+			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("The 0x4ccb64 split gate must remain inspection-only until source-node graph materialization is ported: %s" % JSON.stringify(polygon_split))
+		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \
 			or Array(footprint_levels[0].get("matching_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
