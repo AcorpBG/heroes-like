@@ -58,10 +58,11 @@ implementationTargets:
 - `ops/progress.json`
 - follow-up isolated small-map generator modules/tests/tools
 completionCriteria:
-- Current catalog-auto native RMG output is archived and disabled by default for production generation.
+- Current native RMG output is archived and disabled by default for production generation.
 - The replacement direction is documented as small-map-only and h3maped-derived.
 - Supported small-map template selection is derived from executable/spec behavior, not hash fallback.
 - Small land generation must not emit runtime packages until roads, blockers, rewards, guards, and final h3maped writeout phases are cleanly ported from h3maped; inspection-only reports may expose recovered intermediate ledgers.
+- Explicit translated-template requests must not bypass the reset gate or fall through to the archived native generator.
 - Roads serialize real route geometry, not disconnected visual clusters.
 - Zone links are physically guarded/blocked on the produced grid.
 - Player starts are placed at owned player towns.
@@ -76,7 +77,7 @@ nonGoals:
 validationResults:
 - Added isolated native reset module `src/gdextension/include/h3maped_small_rmg.hpp` / `src/gdextension/src/h3maped_small_rmg.cpp` and wired it into the GDExtension build.
 - `MapPackageService.inspect_h3maped_small_rmg_port` now routes to the clean small-map h3maped module instead of the previous mixed partial-port report in `map_package_service.cpp`.
-- Normal 36x36 one-level land `native_catalog_auto` generation now returns `h3maped_small_clean_restart_generation_not_ready` instead of a partial package; medium/large/XL and other out-of-scope catalog-auto generation returns `archived_legacy_native_rmg_disabled`. The archived native catalog-auto path is no longer reachable through a debug/evidence generation option.
+- Normal 36x36 one-level land generation now returns `h3maped_small_clean_restart_generation_not_ready` instead of a partial package, including explicit translated-template configs. Medium/large/XL and other out-of-scope generation returns `archived_legacy_native_rmg_disabled`. The archived native generator path is no longer reachable through `generate_random_map`, including explicit translated-template requests and old debug/evidence generation options.
 - The clean boundary verifies the local `/root/Downloads/h3maped.exe` reset anchor by file size and MZ header, records the reset SHA-256 `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`, and exposes the recovered h3maped source/spec paths.
 - The only ported behavior in the clean module is template acceptance/selection: h3maped size score, player-capacity filtering, numeric-seed `0x4e7269/0x4e7276` RNG selection, and adapted-catalog provenance lookup. Seed `1` with 1 human / 3 total players selects `h3maped_template_018` -> `translated_rmg_template_019_v1` with 6 active zones, 5 links, 4 player-start zones, 2 treasure zones, and 4 minimum player castles.
 - The clean module now ports player-slot assignment `0x4ac62a..0x4ac6ec` for inspection only: it builds source human/player capability bitmaps from zone `+0x04/+0x1c`, applies the selected-color bitmap as `generator+0xed8`, reports `generator+0xee0` assignment slots, and exposes mapped owner colors as `generator+0xee4`.

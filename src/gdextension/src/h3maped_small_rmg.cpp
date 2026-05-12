@@ -8609,10 +8609,10 @@ Dictionary archived_legacy_disabled_result(const Dictionary &normalized_config, 
 	result["generation_status"] = "archived_legacy_native_rmg_disabled";
 	result["full_generation_status"] = "archived_current_native_rmg_replaced_by_small_h3maped_port";
 	result["error_code"] = "archived_legacy_native_rmg_disabled";
-	result["message"] = "The previous native catalog-auto RMG path is archived as debug-only evidence. Production RMG work must use the small h3maped-derived port.";
+	result["message"] = "The previous native RMG implementation is archived as debug-only evidence. Production RMG work must use the small h3maped-derived port; out-of-scope map sizes and modes do not emit fallback maps.";
 	result["normalized_config"] = normalized_config;
 	result["runtime_policy_classification"] = runtime_policy_classification;
-	result["native_rmg_archive_status"] = "archived_legacy_catalog_auto_debug_only";
+	result["native_rmg_archive_status"] = "archived_legacy_native_rmg_debug_only";
 	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["h3maped_binary_path"] = BINARY_PATH;
 	result["h3maped_binary_sha256"] = BINARY_SHA256;

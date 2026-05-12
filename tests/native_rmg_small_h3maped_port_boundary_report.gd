@@ -1151,11 +1151,31 @@ func _run() -> void:
 	if String(blocked_port.get("status", "")) != "h3maped_small_clean_restart_template_selection_ready":
 		_fail("Blocked small generation must carry the h3maped inspection boundary forward: %s" % JSON.stringify(blocked_port))
 		return
+	var explicit_small_config := config.duplicate(true)
+	explicit_small_config["template_selection_mode"] = "catalog_explicit"
+	explicit_small_config["template_id"] = "translated_rmg_template_049_v1"
+	explicit_small_config["profile"] = {"id": "translated_rmg_profile_049_v1", "template_id": "translated_rmg_template_049_v1"}
+	var explicit_small: Dictionary = service.generate_random_map(explicit_small_config, {"startup_path": "h3maped_small_explicit_template_gate"})
+	if bool(explicit_small.get("ok", true)) \
+			or String(explicit_small.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
+			or String(explicit_small.get("error_code", "")) != "h3maped_phase_port_incomplete":
+		_fail("Explicit small translated-template generation must route to the h3maped reset gate, not the archived native generator: %s" % JSON.stringify(explicit_small))
+		return
 	var medium_config := config.duplicate(true)
 	medium_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
 	var medium: Dictionary = service.generate_random_map(medium_config, {"startup_path": "h3maped_medium_archived_gate"})
 	if bool(medium.get("ok", true)) or String(medium.get("status", "")) != "archived_legacy_native_rmg_disabled":
 		_fail("Out-of-scope native catalog-auto generation must route to archived legacy disabled: %s" % JSON.stringify(medium))
+		return
+	var explicit_medium_config := medium_config.duplicate(true)
+	explicit_medium_config["template_selection_mode"] = "catalog_explicit"
+	explicit_medium_config["template_id"] = "translated_rmg_template_002_v1"
+	explicit_medium_config["profile"] = {"id": "translated_rmg_profile_002_v1", "template_id": "translated_rmg_template_002_v1"}
+	var explicit_medium: Dictionary = service.generate_random_map(explicit_medium_config, {"startup_path": "h3maped_medium_explicit_template_archived_gate"})
+	if bool(explicit_medium.get("ok", true)) \
+			or String(explicit_medium.get("status", "")) != "archived_legacy_native_rmg_disabled" \
+			or String(explicit_medium.get("native_rmg_archive_status", "")) != "archived_legacy_native_rmg_debug_only":
+		_fail("Out-of-scope explicit translated-template generation must not reach the archived native generator: %s" % JSON.stringify(explicit_medium))
 		return
 	var medium_debug: Dictionary = service.generate_random_map(medium_config, {"startup_path": "h3maped_medium_archived_gate", "allow_archived_legacy_native_rmg": true})
 	if bool(medium_debug.get("ok", true)) or String(medium_debug.get("status", "")) != "archived_legacy_native_rmg_disabled":
