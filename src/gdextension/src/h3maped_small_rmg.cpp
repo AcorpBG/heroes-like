@@ -1929,6 +1929,170 @@ Dictionary connector_segment_4a2777_report(const Dictionary &normalized_config) 
 	return report;
 }
 
+Dictionary boundary_wrapping_continuation_4a2777_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2777_boundary_wrapping_continuation_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 continuation at 0x4a29f9..0x4a2b23; walks following source nodes, clips the next endpoint, wraps along rectangle borders through 0x4a2a5b..0x4a2af2, appends intermediate runtime_zone+0x3f4 vertices, and paints the final segment through 0x4a261a";
+	report["function_address"] = "0x4a2777";
+	report["continuation_address"] = "0x4a29f9..0x4a2b23";
+	report["boundary_wrap_address"] = "0x4a2a5b..0x4a2af2";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_writer_address"] = "0x4a261a";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["uses_real_source_node_walk"] = false;
+	report["materializes_project_grid"] = false;
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const int32_t min_x = bounds.min_x;
+	const int32_t min_y = bounds.min_y;
+	const int32_t max_x = bounds.max_x;
+	const int32_t max_y = bounds.max_y;
+	const int32_t right_x = std::max<int32_t>(min_x, max_x - 1);
+	const int32_t bottom_y = std::max<int32_t>(min_y, max_y - 1);
+	const int32_t source_x = min_x - 6;
+	const int32_t source_y = std::max<int32_t>(min_y, height / 2);
+	const int32_t next_source_x = max_x + 6;
+	const int32_t next_source_y = std::max<int32_t>(min_y, height - 7);
+	const int32_t zone_word_id = 8;
+	ClipResult clipped_current = h3maped_clip_point_4a2b33(source_x, source_y, next_source_x, next_source_y, bounds);
+	ClipResult clipped_target = h3maped_clip_point_4a2b33(next_source_x, next_source_y, source_x, source_y, bounds);
+	std::vector<uint32_t> zone_words(size_t(width * height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(width * height * level_count), 0);
+	Array segment_reports;
+	Array vertices;
+	int32_t total_write_count = 0;
+	int32_t total_unique_write_count = 0;
+	int32_t total_reserved_flag_write_count = 0;
+	int32_t total_out_of_bounds_count = 0;
+	int32_t wrap_segment_count = 0;
+	int32_t final_segment_count = 0;
+	auto append_vertex = [&](int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+	};
+	auto append_segment = [&](const char *id, const char *branch, int32_t x1, int32_t y1, int32_t x2, int32_t y2, bool wrap_segment) {
+		LineWriteResult line = h3maped_line_writer_4a261a(zone_words, cell_flags, width, height, level_count, water_code, x1, y1, x2, y2, 0, zone_word_id);
+		total_write_count += line.write_count;
+		total_unique_write_count += line.unique_cell_count;
+		total_reserved_flag_write_count += line.reserved_flag_write_count;
+		total_out_of_bounds_count += line.out_of_bounds_write_count;
+		Dictionary segment;
+		segment["id"] = id;
+		segment["branch"] = branch;
+		segment["from_x"] = x1;
+		segment["from_y"] = y1;
+		segment["to_x"] = x2;
+		segment["to_y"] = y2;
+		segment["write_count"] = line.write_count;
+		segment["unique_write_count"] = line.unique_cell_count;
+		segment["reserved_flag_write_count"] = line.reserved_flag_write_count;
+		segment["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+		segment_reports.append(segment);
+		append_vertex(x1, y1);
+		if (wrap_segment) {
+			wrap_segment_count += 1;
+		} else {
+			final_segment_count += 1;
+		}
+	};
+
+	int32_t current_x = clipped_current.x;
+	int32_t current_y = clipped_current.y;
+	const int32_t target_x = clipped_target.x;
+	const int32_t target_y = clipped_target.y;
+	bool loop_guard_exhausted = false;
+	for (int32_t guard = 0; guard < 8 && current_x != target_x && current_y != target_y; ++guard) {
+		int32_t next_x = current_x;
+		int32_t next_y = current_y;
+		const char *branch = "0x4a2aa7_bottom_edge_to_min_x";
+		if (current_x == min_x) {
+			if (current_y == min_y) {
+				next_x = right_x;
+				next_y = min_y;
+				branch = "0x4a2a91_top_edge_to_max_x_minus_one";
+			} else {
+				next_x = min_x;
+				next_y = min_y;
+				branch = "0x4a2a81_left_edge_to_min_y";
+			}
+		} else if (current_y == min_y) {
+			next_x = right_x;
+			next_y = min_y;
+			branch = "0x4a2a89_top_edge_to_max_x_minus_one";
+		} else if (current_x == right_x && current_y != bottom_y) {
+			next_x = right_x;
+			next_y = bottom_y;
+			branch = "0x4a2a98_right_edge_to_max_y_minus_one";
+		} else {
+			next_x = min_x;
+			next_y = bottom_y;
+			branch = "0x4a2aa7_bottom_edge_to_min_x";
+		}
+		append_segment("wrap", branch, current_x, current_y, next_x, next_y, true);
+		current_x = next_x;
+		current_y = next_y;
+		if (guard == 7 && current_x != target_x && current_y != target_y) {
+			loop_guard_exhausted = true;
+		}
+	}
+	if (current_x != target_x || current_y != target_y) {
+		append_segment("final", "0x4a2af2_final_segment_to_clipped_endpoint", current_x, current_y, target_x, target_y, false);
+	}
+
+	int32_t zone_word_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int64_t index = h3maped_cell_index(width, height, x, y, 0);
+			if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == (uint32_t(zone_word_id) << 16U)) {
+				zone_word_cell_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_cell_count += 1;
+			}
+		}
+	}
+
+	Dictionary input;
+	input["source_x"] = source_x;
+	input["source_y"] = source_y;
+	input["next_source_x"] = next_source_x;
+	input["next_source_y"] = next_source_y;
+	report["sample_input"] = input;
+	Dictionary clipped;
+	clipped["current_x"] = clipped_current.x;
+	clipped["current_y"] = clipped_current.y;
+	clipped["current_branch"] = clipped_current.branch;
+	clipped["target_x"] = clipped_target.x;
+	clipped["target_y"] = clipped_target.y;
+	clipped["target_branch"] = clipped_target.branch;
+	report["sample_clipped_continuation"] = clipped;
+	report["wrap_segment_count"] = wrap_segment_count;
+	report["final_segment_count"] = final_segment_count;
+	report["segments"] = segment_reports;
+	report["sample_appended_vertex_count"] = vertices.size();
+	report["sample_appended_vertices"] = vertices;
+	report["write_count"] = total_write_count;
+	report["unique_write_count"] = total_unique_write_count;
+	report["zone_word_cell_count"] = zone_word_cell_count;
+	report["reserved_flag_write_count"] = total_reserved_flag_write_count;
+	report["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	report["out_of_bounds_write_count"] = total_out_of_bounds_count;
+	report["loop_guard_exhausted"] = loop_guard_exhausted;
+	report["blocked_next"] = "replace this deterministic sample with the real 0x4a2777 source-node walk from runtime zone source-zone list payloads";
+	return report;
+}
+
 Dictionary randomized_line_writer_4a2413_report(const Dictionary &normalized_config) {
 	Dictionary report;
 	report["status"] = "0x4a2413_randomized_line_writer_ported_standalone";
@@ -2116,6 +2280,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary connector_segment = connector_segment_4a2777_report(normalized_config);
 	footprint_schedule["connector_segment_status"] = connector_segment.get("status", "");
 	footprint_schedule["connector_segment"] = connector_segment;
+	Dictionary boundary_wrapping = boundary_wrapping_continuation_4a2777_report(normalized_config);
+	footprint_schedule["boundary_wrapping_status"] = boundary_wrapping.get("status", "");
+	footprint_schedule["boundary_wrapping"] = boundary_wrapping;
 	Dictionary randomized_line_writer = randomized_line_writer_4a2413_report(normalized_config);
 	footprint_schedule["randomized_line_writer_status"] = randomized_line_writer.get("status", "");
 	footprint_schedule["randomized_line_writer"] = randomized_line_writer;
@@ -2162,7 +2329,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a2413, 0x4a2b33, 0x4a261a, 0x4a2777, 0x4a325d, 0x4a3710", "active_schedule_boundary_helpers_4a2777_standalone_branches_span_primitive_and_small_land_finalizer_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a2413, 0x4a2b33, 0x4a261a, 0x4a2777, 0x4a325d, 0x4a3710", "active_schedule_boundary_helpers_4a2777_standalone_branches_and_boundary_wrap_span_primitive_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },

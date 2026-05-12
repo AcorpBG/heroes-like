@@ -331,6 +331,31 @@ func _run() -> void:
 			or String(connector_segment.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone_not_dispatched_here":
 		_fail("The 0x4a2777 connector segment must stay standalone and not dispatch the flagged branch here: %s" % JSON.stringify(connector_segment))
 		return
+
+	var boundary_wrapping: Dictionary = footprint_schedule.get("boundary_wrapping", {})
+	var boundary_clipped: Dictionary = boundary_wrapping.get("sample_clipped_continuation", {})
+	if String(footprint_schedule.get("boundary_wrapping_status", "")) != "0x4a2777_boundary_wrapping_continuation_ported_standalone" \
+			or int(boundary_clipped.get("current_x", -1)) != 0 \
+			or int(boundary_clipped.get("current_y", -1)) != 19 \
+			or int(boundary_clipped.get("target_x", -1)) != 35 \
+			or int(boundary_clipped.get("target_y", -1)) != 28 \
+			or int(boundary_wrapping.get("wrap_segment_count", -1)) != 2 \
+			or int(boundary_wrapping.get("final_segment_count", -1)) != 1 \
+			or int(boundary_wrapping.get("sample_appended_vertex_count", -1)) != 3 \
+			or int(boundary_wrapping.get("write_count", -1)) != 85 \
+			or int(boundary_wrapping.get("unique_write_count", -1)) != 83 \
+			or int(boundary_wrapping.get("zone_word_cell_count", -1)) != 83 \
+			or int(boundary_wrapping.get("reserved_flag_write_count", -1)) != 85 \
+			or int(boundary_wrapping.get("reserved_flag_cell_count", -1)) != 83 \
+			or int(boundary_wrapping.get("out_of_bounds_write_count", -1)) != 0 \
+			or bool(boundary_wrapping.get("loop_guard_exhausted", true)):
+		_fail("The 0x4a2777 boundary wrapping continuation drifted: %s" % JSON.stringify(boundary_wrapping))
+		return
+	if bool(boundary_wrapping.get("uses_real_source_node_walk", true)) \
+			or bool(boundary_wrapping.get("materializes_project_grid", true)):
+		_fail("The 0x4a2777 boundary wrapping continuation must stay standalone until real source-node traversal is assembled: %s" % JSON.stringify(boundary_wrapping))
+		return
+
 	var randomized_line_writer: Dictionary = footprint_schedule.get("randomized_line_writer", {})
 	var randomized_sample: Dictionary = randomized_line_writer.get("sample_contract", {})
 	if String(footprint_schedule.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone" \
