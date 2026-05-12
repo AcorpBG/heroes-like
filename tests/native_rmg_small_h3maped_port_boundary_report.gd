@@ -238,6 +238,21 @@ func _run() -> void:
 			or Array(footprint_levels[0].get("helper_call_sequence", [])) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
 		_fail("The 0x4a3a03 per-level schedule drifted: %s" % JSON.stringify(footprint_schedule))
 		return
+	var footprint_finalizer: Dictionary = footprint_schedule.get("finalizer", {})
+	if String(footprint_schedule.get("finalizer_status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported" \
+			or int(footprint_finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 \
+			or int(footprint_finalizer.get("final_runtime_zone_count", -1)) != 6 \
+			or int(footprint_finalizer.get("appended_runtime_zone_count", -1)) != 0 \
+			or int(footprint_finalizer.get("zone_order_reset_call_count", -1)) != 6 \
+			or int(footprint_finalizer.get("per_zone_order_helper_call_count", -1)) != 6 \
+			or int(footprint_finalizer.get("materialized_adjacency_count", -1)) != 0:
+		_fail("The 0x4a3710 small-land finalizer drifted: %s" % JSON.stringify(footprint_finalizer))
+		return
+	if bool(footprint_finalizer.get("materializes_zone_cells", true)) \
+			or bool(footprint_finalizer.get("materializes_boundary_cells", true)) \
+			or bool(footprint_finalizer.get("materializes_span_fill", true)):
+		_fail("The 0x4a3710 finalizer must not paint cells: %s" % JSON.stringify(footprint_finalizer))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]

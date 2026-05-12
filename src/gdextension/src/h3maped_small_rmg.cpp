@@ -1188,7 +1188,76 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["total_polygon_split_calls"] = total_polygon_split_calls;
 	report["appended_synthetic_runtime_zone_count"] = appended_synthetic_runtime_zone_count;
 	report["levels"] = levels;
-	report["next_materialization_status"] = "pending_0x4a2777_0x4a325d_0x4a3710_zone_cell_materialization";
+	report["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
+	return report;
+}
+
+Dictionary footprint_finalizer_4a3710_report(const Dictionary &normalized_config, const Array &runtime_zone_records, int32_t original_same_level_runtime_zone_count) {
+	Dictionary report;
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const bool synthetic_branch_allowed = level_count > 1 || water_code != 0;
+	const int32_t final_runtime_zone_count = int32_t(runtime_zone_records.size());
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	report["status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	report["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	report["function_address"] = "0x4a3710";
+	report["call_site_address"] = "0x4a3efc..0x4a3f05";
+	report["call_site_start_index_source"] = "0x4a3a86..0x4a3a9a captures runtime-zone vector count before the synthetic branch and passes it at 0x4a3f02";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["zone_order_reset_address"] = "0x49b61b";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	report["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	report["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	report["final_runtime_zone_count"] = final_runtime_zone_count;
+	report["appended_runtime_zone_count"] = appended_runtime_zone_count;
+
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors only for appended synthetic zones");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	report["recovered_operations"] = recovered_operations;
+
+	Array phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(initial_insert_phase);
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	phases.append(order_reset_phase);
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(ordered_insert_phase);
+	report["phases"] = phases;
+	report["zone_order_reset_call_count"] = final_runtime_zone_count;
+	report["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	report["materialized_adjacency_count"] = 0;
+	report["materializes_zone_cells"] = false;
+	report["materializes_boundary_cells"] = false;
+	report["materializes_span_fill"] = false;
+	report["blocked_next"] = appended_runtime_zone_count == 0
+			? String("0x4a2777 boundary traversal and 0x4a325d span fill remain pending before terrain adoption")
+			: String("recover runtime_zone+0xc4 adjacency records before appended-zone finalizer output can be adopted");
 	return report;
 }
 
@@ -1283,6 +1352,10 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	report["terrain_selection_status"] = terrain_selection.get("status", "");
 	report["terrain_selection"] = terrain_selection;
 	Dictionary footprint_schedule = zone_footprint_schedule_report(normalized_config, records, coordinate_replay);
+	Dictionary finalizer = footprint_finalizer_4a3710_report(normalized_config, records, int32_t(footprint_schedule.get("total_matching_runtime_zones", 0)));
+	footprint_schedule["finalizer_status"] = finalizer.get("status", "");
+	footprint_schedule["finalizer"] = finalizer;
+	footprint_schedule["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
 	return report;
@@ -1325,7 +1398,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03", "active_schedule_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a3710", "active_schedule_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },
