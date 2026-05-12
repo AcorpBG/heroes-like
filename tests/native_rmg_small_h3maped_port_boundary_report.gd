@@ -341,6 +341,10 @@ func _run() -> void:
 			or int(polygon_finalizer.get("finalized_triplet_count", -1)) != 14 \
 			or int(polygon_finalizer.get("finalized_node_count", -1)) != 42 \
 			or int(polygon_finalizer.get("active_payload_node_count", -1)) != 28 \
+			or String(polygon_finalizer.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered" \
+			or int(polygon_finalizer.get("source_node_walk_count", -1)) != 6 \
+			or int(polygon_finalizer.get("source_node_walk_guard_exhausted_count", -1)) != 0 \
+			or int(polygon_finalizer.get("source_node_walk_finalized_coordinate_count", -1)) <= 0 \
 			or Array(polygon_finalizer.get("write_sequence", [])).size() != 6:
 		_fail("The 0x4ccdfc source-node finalizer gate drifted: %s" % JSON.stringify(polygon_finalizer))
 		return
