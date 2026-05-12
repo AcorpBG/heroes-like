@@ -37,6 +37,10 @@ func _run() -> void:
 	if bool(report.get("runtime_generation_allowed", true)):
 		_fail("Runtime generation must stay blocked until clean executable phase ports materialize map cells: %s" % JSON.stringify(report))
 		return
+	if bool(report.get("partial_materialized_payload_public_api", true)) \
+			or String(report.get("partial_materialized_payload_status", "")) != "archived_inspection_blocked_not_exported":
+		_fail("The reset boundary must not expose a public partial package-generation API: %s" % JSON.stringify(report))
+		return
 
 	var binary: Dictionary = report.get("h3maped_binary", {})
 	if not bool(binary.get("ok", false)) or String(binary.get("status", "")) != "verified_reset_anchor":
@@ -1216,6 +1220,7 @@ func _run() -> void:
 		"generation_status": generated.get("status", ""),
 		"generation_error_code": generated.get("error_code", ""),
 		"runtime_generation_allowed": Dictionary(generated.get("h3maped_small_port", {})).get("runtime_generation_allowed", true),
+		"partial_materialized_payload_status": report.get("partial_materialized_payload_status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)

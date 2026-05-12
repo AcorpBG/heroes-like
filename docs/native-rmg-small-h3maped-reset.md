@@ -74,6 +74,8 @@ The reset now has a new isolated native module:
 
 This module is the only active production-facing replacement path. The previous large `map_package_service.cpp` native catalog-auto implementation remains in the repository as archived debug/evidence code only. `native_catalog_auto` requests cannot fall through to it, including local debug/evidence calls.
 
+The reset module does not expose a public partial package-generation function. The earlier partial materialization helper is retained only as blocked inspection scaffolding inside the implementation and reports `runtime_generation_allowed: false` if reached; it is not declared in the public header and is not called by `MapPackageService.generate_random_map`.
+
 The clean restart boundary currently supports only 36x36 one-level land inspection. It verifies the local h3maped reset anchor by checking `/root/Downloads/h3maped.exe` file size and MZ header against the recorded reset SHA-256, then computes template acceptance from h3maped-derived size-score/player-capacity data. Numeric seeds use the recovered executable RNG step from `0x4e7269/0x4e7276`; non-numeric seeds are blocked rather than hashed.
 
 For seed `1`, 1 human, and 3 total players, the boundary reports:
@@ -139,6 +141,7 @@ For the seed `1` boundary case, normal generation currently reports:
 - `generation_status: h3maped_small_clean_restart_generation_not_ready`,
 - `error_code: h3maped_phase_port_incomplete`,
 - inspection report `runtime_generation_allowed: false`,
+- inspection report `partial_materialized_payload_status: archived_inspection_blocked_not_exported`,
 - out-of-scope `native_catalog_auto` requests still return `archived_legacy_native_rmg_disabled`.
 
 The inspection payload now also exposes the recovered `0x4aae7b` path-state update rule needed before road materialization can be ported:

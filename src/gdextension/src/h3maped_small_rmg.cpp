@@ -6408,6 +6408,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["phase_ledger"] = clean_phase_ledger();
 	report["generation_phase_status"] = "blocked_until_clean_h3maped_phase_ports_materialize_map_cells";
 	report["runtime_generation_allowed"] = false;
+	report["partial_materialized_payload_public_api"] = false;
+	report["partial_materialized_payload_status"] = "archived_inspection_blocked_not_exported";
 	report["normalized_config"] = normalized_config;
 
 	uint32_t seed_value = 0;
@@ -8390,7 +8392,7 @@ Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_record
 	return boundary;
 }
 
-Dictionary generate_materialized_payload(const Dictionary &normalized_config, const Dictionary &extension_profile) {
+Dictionary inspection_partial_materialized_payload_blocked(const Dictionary &normalized_config, const Dictionary &extension_profile) {
 	Dictionary port = inspect_port(normalized_config);
 	Dictionary result;
 	if (!bool(port.get("ok", false))) {
@@ -8459,11 +8461,12 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	metrics["connection_count"] = connection_records.size();
 	metrics["border_guard_link_count"] = connection_payload.get("border_guard_link_count", 0);
 
-	result["ok"] = true;
-	result["status"] = "h3maped_small_clean_restart_phase_package_adoption_partial";
-	result["generation_status"] = "h3maped_small_clean_restart_phase_package_adoption_partial";
+	result["ok"] = false;
+	result["status"] = "h3maped_small_clean_restart_inspection_partial_blocked";
+	result["generation_status"] = "h3maped_small_clean_restart_inspection_partial_blocked";
 	result["full_generation_status"] = "h3maped_small_phase_materialized_partial_roads_rewards_guards_pending";
-	result["adoption_status"] = "h3maped_terrain_town_and_mine_records_adopted_to_generated_package";
+	result["adoption_status"] = "archived_inspection_partial_payload_not_runtime_package";
+	result["error_code"] = "h3maped_partial_payload_not_exported";
 	result["schema_id"] = "aurelion_h3maped_small_materialized_payload_v1";
 	result["schema_version"] = 1;
 	result["normalized_config"] = normalized_config;
@@ -8483,12 +8486,12 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	result["river_network"] = Dictionary();
 	result["route_graph"] = Dictionary();
 	result["metrics"] = metrics;
-	result["runtime_generation_allowed"] = true;
+	result["runtime_generation_allowed"] = false;
 	result["native_runtime_authoritative"] = false;
 	result["full_parity_claim"] = false;
 	result["no_authored_writeback"] = true;
 	result["extension_profile"] = extension_profile;
-	result["materialization_gap"] = "Roads, connection blockers, rewards through 0x4aa354, guard stacks, monsters, and final h3maped writeout phases remain pending.";
+	result["materialization_gap"] = "Archived inspection-only partial payload: complete roads, connection blockers, rewards through 0x4aa354, guard stacks, monsters, and final h3maped writeout phases remain pending.";
 	return result;
 }
 
