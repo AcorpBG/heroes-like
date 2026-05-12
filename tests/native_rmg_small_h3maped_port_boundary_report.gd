@@ -86,7 +86,7 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a2777_0x4a325d_zone_cell_materialization_port":
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a325d_span_fill_zone_cell_materialization_port":
 		_fail("The clean restart must stop before zone cell materialization until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
@@ -352,6 +352,29 @@ func _run() -> void:
 			or not bool(polygon_finalizer.get("materializes_finalized_cycles", false)) \
 			or bool(polygon_finalizer.get("feeds_real_0x4a2777_boundary", true)):
 		_fail("The 0x4ccdfc finalizer must materialize finalized cycles but must not feed 0x4a2777 yet: %s" % JSON.stringify(polygon_finalizer))
+		return
+	var boundary_traversal: Dictionary = footprint_schedule.get("boundary_traversal", {})
+	if String(footprint_schedule.get("boundary_traversal_status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized" \
+			or int(boundary_traversal.get("runtime_zone_walk_count", -1)) != 6 \
+			or int(boundary_traversal.get("blocked_zone_count", -1)) != 0 \
+			or int(boundary_traversal.get("fallback_zone_count", -1)) != 0 \
+			or int(boundary_traversal.get("connector_segment_count", -1)) != 6 \
+			or int(boundary_traversal.get("final_segment_count", -1)) != 12 \
+			or int(boundary_traversal.get("wrap_segment_count", -1)) != 0 \
+			or int(boundary_traversal.get("appended_vertex_count", -1)) != 18 \
+			or int(boundary_traversal.get("flagged_writer_segment_count", -1)) != 6 \
+			or int(boundary_traversal.get("deterministic_writer_segment_count", -1)) != 12 \
+			or int(boundary_traversal.get("randomized_rng_call_count", -1)) != 101 \
+			or int(boundary_traversal.get("randomized_inserted_midpoint_count", -1)) != 130 \
+			or int(boundary_traversal.get("trace_write_count", -1)) != 293 \
+			or int(boundary_traversal.get("unique_cell_count", -1)) != 221 \
+			or int(boundary_traversal.get("reserved_flag_cell_count", -1)) != 221 \
+			or int(boundary_traversal.get("out_of_bounds_write_count", -1)) != 0 \
+			or bool(boundary_traversal.get("loop_guard_exhausted", true)) \
+			or not bool(boundary_traversal.get("uses_real_source_node_walk", false)) \
+			or bool(boundary_traversal.get("feeds_0x4a325d_span_fill", true)) \
+			or bool(boundary_traversal.get("materializes_project_grid", true)):
+		_fail("The real 0x4a2777 finalized-cycle boundary traversal drifted: %s" % JSON.stringify(boundary_traversal))
 		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \
