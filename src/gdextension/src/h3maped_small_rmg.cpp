@@ -2973,6 +2973,26 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	repaint_boundary["loop_arguments"] = "x, y, width, height passed through 0x4bd099 into 0x4bb681";
 	repaint_boundary["materializes_art_flip"] = false;
 	repaint_boundary["blocked_next"] = "recover 0x4bb74b/0x4bad0f/0x4bcfc3 and toolkit class tables before writing tile byte 1 or tile byte 6 terrain flip bits";
+	Dictionary changed_cell_update;
+	changed_cell_update["status"] = "0x4bb74b_changed_cell_update_boundary_recovered_no_art_flip_materialization";
+	changed_cell_update["entry_address"] = "0x4bb74b";
+	changed_cell_update["visual_record_resolve_address"] = "0x4bcfc3";
+	changed_cell_update["visual_record_table_address"] = "0x5436b8";
+	changed_cell_update["scratch_write_address"] = "0x4bad0f";
+	changed_cell_update["neighbor_validation_vertical_address"] = "0x4bba13";
+	changed_cell_update["neighbor_validation_horizontal_address"] = "0x4bba36";
+	changed_cell_update["neighbor_touch_address"] = "0x4bba59";
+	changed_cell_update["neighbor_mask_address"] = "0x4bf3f4";
+	changed_cell_update["fallback_neighbor_table_range"] = "0x5a5028..0x5a5068";
+	changed_cell_update["scratch_word_bit_0"] = "dirty/materialized flag set by 0x4bad0f";
+	changed_cell_update["scratch_word_bits_1_4"] = "terrain id from visual record byte 0 low nibble";
+	changed_cell_update["scratch_word_bits_5_11"] = "terrain art index from visual record byte 4 low seven bits";
+	changed_cell_update["scratch_word_bit_12"] = "terrain flag A from visual record byte 8 bit 0";
+	changed_cell_update["scratch_word_bit_13"] = "terrain flag B from visual record byte 9 bit 0";
+	changed_cell_update["materializes_tile_byte_1"] = false;
+	changed_cell_update["materializes_tile_byte_6_terrain_flags"] = false;
+	changed_cell_update["blocked_next"] = "recover visual record selection through 0x4bce6d and class-table vfunc +0x10 before copying scratch art/flag bits into generated cell+0x24/+0x28";
+	repaint_boundary["changed_cell_update"] = changed_cell_update;
 	art_flip_blocker["terrainplacement_repaint_boundary"] = repaint_boundary;
 	report["terrain_art_index_flip_blocker"] = art_flip_blocker;
 
