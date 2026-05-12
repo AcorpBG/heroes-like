@@ -2889,6 +2889,26 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_id_byte_packed_art_flip_pending";
 	report["tile_byte_writeout_source"] = "0x49b2b6 serializes generated cell+0x24 bits 0..5 to byte 0; terrain art byte 1 and terrain flip byte 6 bits 0..1 remain blocked until TerrainPlacement 0x4bcff5/0x4bd099 normalization is ported";
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
+	Array blocked_legacy_reasons;
+	blocked_legacy_reasons.append("legacy_h3maped_small_rmg_inspection_ledger uses positive_visual_hash frame selection");
+	blocked_legacy_reasons.append("scripts/core/TerrainPlacementRules.gd is project-side visual behavior, not an exact h3maped.exe TerrainPlacement classifier");
+	blocked_legacy_reasons.append("no custom art-index or flip heuristics are allowed in the clean h3maped reset path");
+	Array required_terrainplacement_addresses;
+	required_terrainplacement_addresses.append("0x4bcff5");
+	required_terrainplacement_addresses.append("0x4bd099");
+	required_terrainplacement_addresses.append("0x4bb681");
+	required_terrainplacement_addresses.append("0x49b2b6");
+	required_terrainplacement_addresses.append("0x543764");
+	required_terrainplacement_addresses.append("0x543780");
+	required_terrainplacement_addresses.append("0x54379c");
+	required_terrainplacement_addresses.append("0x5437dc");
+	Dictionary art_flip_blocker;
+	art_flip_blocker["status"] = "blocked_until_exact_h3maped_TerrainPlacement_classifier_recovered";
+	art_flip_blocker["legacy_visual_classifier_reuse_allowed"] = false;
+	art_flip_blocker["blocked_legacy_reasons"] = blocked_legacy_reasons;
+	art_flip_blocker["required_addresses"] = required_terrainplacement_addresses;
+	art_flip_blocker["serializer_bit_evidence"] = "0x49b2b6 packs cell+0x24 bits 6..13 into tile byte 1 and cell+0x28 bits 15..16 into tile byte 6 bits 0..1";
+	report["terrain_art_index_flip_blocker"] = art_flip_blocker;
 
 	Dictionary level_record;
 	level_record["level_index"] = 0;
