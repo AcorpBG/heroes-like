@@ -6998,6 +6998,8 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		record["normal_guard_value_before_0x4a65a5"] = normal_guard_value_before_scaling;
 		record["normal_guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
 		record["normal_guard_scaled_value"] = normal_guard_scaled_value;
+		record["normal_guard_object_helper_address"] = normal_guard_scaled_value > 0 ? String("0x4a5e03") : String("");
+		record["normal_guard_object_status"] = normal_guard_scaled_value > 0 ? String("0x4a5e03_guard_inputs_scaled_geometry_endpoint_coordinates_pending") : (wide ? String("suppressed_by_link_plus_0x08_wide") : String("no_scaled_guard_object"));
 		record["border_guard_status"] = border_guard ? String("pending_0x4a5e73_0x4a5a23_type_9_materialization") : String("not_a_border_guard_link");
 		record["geometry_status"] = "pending_0x4a61bc_0x4a696b_0x4a6cf2_0x4a7605_connection_geometry";
 		record["road_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -7022,6 +7024,7 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t border_guard_count = 0;
 	int32_t normal_guard_scaled_nonzero_count = 0;
 	int32_t normal_guard_scaled_value_total = 0;
+	Array normal_guard_spawn_intents;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
 		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -7040,6 +7043,23 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		if (scaled_value > 0) {
 			normal_guard_scaled_nonzero_count += 1;
 			normal_guard_scaled_value_total += scaled_value;
+			Dictionary intent;
+			intent["connection_id"] = record.get("connection_id", "");
+			intent["link_index"] = record.get("link_index", index);
+			intent["runtime_zone_a"] = record.get("runtime_zone_a", -1);
+			intent["runtime_zone_b"] = record.get("runtime_zone_b", -1);
+			intent["guard_value"] = scaled_value;
+			intent["raw_guard_value"] = record.get("raw_guard_value", 0);
+			intent["guard_object_helper_address"] = "0x4a5e03";
+			intent["monster_selector_helper_address"] = "0x4a5c07";
+			intent["commit_path"] = "generator_object_placement_vfunc";
+			intent["requires_endpoint_coordinates"] = true;
+			intent["endpoint_coordinate_source"] = "late_connection_geometry_helpers_0x4a61bc_0x4a696b_0x4a6cf2_0x4a7605_before_0x4a5e03";
+			intent["endpoint_call_count_status"] = "unknown_until_specific_connection_geometry_helper_is_ported";
+			intent["materializes_guard_object"] = false;
+			intent["blocked_reason"] = "connection geometry endpoint coordinates are not ported; synthetic guard coordinates are forbidden";
+			intent["status"] = "0x4a5e03_guard_inputs_scaled_geometry_endpoint_coordinates_pending";
+			normal_guard_spawn_intents.append(intent);
 		}
 	}
 	connection_payload["raw_guard_link_count"] = raw_guard_link_count;
@@ -7048,7 +7068,12 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["normal_guard_global_strength_mode"] = h3maped_global_monster_strength_mode(normalized_config);
 	connection_payload["normal_guard_scaled_nonzero_count"] = normal_guard_scaled_nonzero_count;
 	connection_payload["normal_guard_scaled_value_total"] = normal_guard_scaled_value_total;
-	connection_payload["normal_guard_materialization_status"] = "0x4a65a5_values_scaled_0x4a5e03_guard_object_pending";
+	connection_payload["normal_guard_spawn_intent_status"] = "0x4a5e03_guard_inputs_scaled_geometry_endpoint_coordinates_pending";
+	connection_payload["normal_guard_spawn_intent_count"] = normal_guard_spawn_intents.size();
+	connection_payload["normal_guard_spawn_materialized_count"] = 0;
+	connection_payload["normal_guard_spawn_intent_total_value"] = normal_guard_scaled_value_total;
+	connection_payload["normal_guard_spawn_intents"] = normal_guard_spawn_intents;
+	connection_payload["normal_guard_materialization_status"] = "0x4a65a5_values_scaled_0x4a5e03_guard_inputs_scaled_geometry_pending";
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
 	connection_payload["road_materialization_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 	connection_payload["full_generation_status"] = "h3maped_connection_payload_known_geometry_roads_guards_pending";
