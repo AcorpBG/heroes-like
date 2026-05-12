@@ -440,6 +440,7 @@ func _run() -> void:
 	var visual_classifier_vtables: Array = visual_classifier.get("toolkit_vtable_addresses", [])
 	var visual_classifier_static_tables: Array = visual_classifier.get("static_visual_table_addresses", [])
 	var visual_classifier_constructor_records: Array = visual_classifier.get("toolkit_constructor_records", [])
+	var visual_static_lookup_contract: Dictionary = visual_classifier.get("static_range_lookup_contract", {})
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
@@ -546,6 +547,22 @@ func _run() -> void:
 			or String(simple_toolkit_constructor.get("constructor_address", "")) != "0x4baa66" \
 			or String(simple_toolkit_constructor.get("table_address", "")) != "none":
 		_fail("The TerrainPlacement toolkit constructor inputs drifted: %s" % JSON.stringify(visual_classifier_constructor_records))
+		return
+	if String(visual_static_lookup_contract.get("status", "")) != "0x4ba868_0x4ba938_static_range_lookup_contract_ported_sample" \
+			or String(visual_static_lookup_contract.get("constructor_address", "")) != "0x4ba868" \
+			or String(visual_static_lookup_contract.get("resolve_address", "")) != "0x4ba938" \
+			or String(visual_static_lookup_contract.get("rng_address", "")) != "0x4e7276" \
+			or String(visual_static_lookup_contract.get("toolkit_object_address", "")) != "0x5a3988" \
+			or int(visual_static_lookup_contract.get("terrain_id", -1)) != 2 \
+			or int(visual_static_lookup_contract.get("constructor_row_count", -1)) != 0x4f \
+			or int(visual_static_lookup_contract.get("sample_neighbor_mask", -1)) != 8 \
+			or int(visual_static_lookup_contract.get("sample_probability_rng_value", -1)) != 41 \
+			or int(visual_static_lookup_contract.get("sample_probability_threshold", -1)) != 50 \
+			or not bool(visual_static_lookup_contract.get("sample_selected_alternate_range", false)) \
+			or int(visual_static_lookup_contract.get("sample_art_rng_value", -1)) != 18467 \
+			or int(visual_static_lookup_contract.get("sample_selected_art_index", -1)) != 60 \
+			or bool(visual_static_lookup_contract.get("materializes_full_terrain_art_grid", true)):
+		_fail("The TerrainPlacement static range lookup contract drifted: %s" % JSON.stringify(visual_static_lookup_contract))
 		return
 	if String(copyback_gate.get("status", "")) != "0x4bc988_TerrainPlacement_retouch_gate_recovered_copyback_pending" \
 			or String(copyback_gate.get("gate_address", "")) != "0x4bc988" \

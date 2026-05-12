@@ -875,6 +875,63 @@ Dictionary tile_serializer_49b2b6_contract_report() {
 	return report;
 }
 
+Dictionary terrain_visual_static_range_lookup_contract_report() {
+	const int32_t constructor_probability = 0x32;
+	const int32_t key0_start = 49;
+	const int32_t key0_count = 8;
+	const int32_t key1_start = 57;
+	const int32_t key1_count = 16;
+	const int32_t sample_neighbor_mask = 8;
+	H3MapedRng rng;
+	rng.state = 1;
+	const int32_t probability_rng_value = rng.next();
+	const int32_t threshold = (constructor_probability * sample_neighbor_mask) / 8;
+	const bool selected_alternate_range = (probability_rng_value % 100) < threshold;
+	const int32_t selected_start = selected_alternate_range ? key1_start : key0_start;
+	const int32_t selected_count = selected_alternate_range ? key1_count : key0_count;
+	const int32_t art_rng_value = rng.next();
+	const int32_t selected_art_index = (art_rng_value % selected_count) + selected_start;
+
+	Dictionary key0;
+	key0["key"] = 0;
+	key0["start"] = key0_start;
+	key0["count"] = key0_count;
+	Dictionary key1;
+	key1["key"] = 1;
+	key1["start"] = key1_start;
+	key1["count"] = key1_count;
+
+	Array materialized_ranges;
+	materialized_ranges.append(key0);
+	materialized_ranges.append(key1);
+
+	Dictionary report;
+	report["status"] = "0x4ba868_0x4ba938_static_range_lookup_contract_ported_sample";
+	report["constructor_address"] = "0x4ba868";
+	report["resolve_address"] = "0x4ba938";
+	report["rng_address"] = "0x4e7276";
+	report["toolkit_object_address"] = "0x5a3988";
+	report["toolkit_vtable_address"] = "0x543780";
+	report["terrain_id"] = 2;
+	report["static_table_address"] = "0x543108";
+	report["constructor_row_count"] = 0x4f;
+	report["constructor_probability"] = constructor_probability;
+	report["materialized_key_ranges"] = materialized_ranges;
+	report["sample_rng_seed_uint32"] = 1;
+	report["sample_neighbor_mask"] = sample_neighbor_mask;
+	report["sample_probability_rng_value"] = probability_rng_value;
+	report["sample_probability_threshold"] = threshold;
+	report["sample_selected_alternate_range"] = selected_alternate_range;
+	report["sample_art_rng_value"] = art_rng_value;
+	report["sample_selected_range_start"] = selected_start;
+	report["sample_selected_range_count"] = selected_count;
+	report["sample_selected_art_index"] = selected_art_index;
+	report["sample_rng_state_after_uint32"] = int64_t(rng.state);
+	report["materializes_full_terrain_art_grid"] = false;
+	report["source"] = "bounded executable contract for h3maped.exe 0x4ba868 range materialization and 0x4ba938 visual-art choice; full repaint-order integration remains separate";
+	return report;
+}
+
 int32_t h3maped_id_for_terrain(const String &terrain_id) {
 	if (terrain_id == "dirt") {
 		return 0;
@@ -3063,6 +3120,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	visual_classifier["selector_flow"] = "0x4bcfc3 calls 0x4bce6d, indexes terrain toolkit table 0x5436b8 by terrain id, then calls toolkit vfunc +0x10 with the reduced neighbor mask and previous art id -1";
 	visual_classifier["complex_resolve_flow"] = "0x4ba938 reuses a previous nonzero visual id when valid, otherwise chooses common or alternate contiguous ranges at object+0x14/object+0x1c through 0x4e7276";
 	visual_classifier["simple_resolve_flow"] = "0x4baa94 reuses a previous nonzero visual id when valid, otherwise chooses from global range 0x5a4318/0x5a431c through 0x4e7276";
+	visual_classifier["static_range_lookup_contract"] = terrain_visual_static_range_lookup_contract_report();
 	visual_classifier["materializes_visual_record"] = false;
 	visual_classifier["blocked_next"] = "port the toolkit static-table lookup bodies and feed their selected visual record into 0x4bad0f/0x49acf6";
 	changed_cell_update["visual_classifier"] = visual_classifier;
