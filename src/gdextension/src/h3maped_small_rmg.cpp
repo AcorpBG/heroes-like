@@ -1409,6 +1409,305 @@ Dictionary generated_grid_final_sweep_boundary_counter_report(const PackedInt32A
 	return report;
 }
 
+int32_t h3maped_terrain_relation_4bb039(int32_t center_terrain_id, int32_t neighbor_terrain_id);
+TerrainClassResult h3maped_classify_4bb075(const std::array<int32_t, 8> &relations);
+PackedInt32Array packed_relations(const std::array<int32_t, 8> &relations);
+
+struct TerrainVisualGridTables {
+	std::vector<TerrainVisualRow> dirt_rows;
+	std::vector<TerrainVisualRow> sand_rows;
+	std::vector<TerrainVisualRow> normal_rows;
+	std::vector<TerrainVisualRow> water_rows;
+	std::vector<TerrainVisualRow> rock_rows;
+};
+
+const std::vector<TerrainVisualRow> &visual_rows_for_terrain_id(const TerrainVisualGridTables &tables, int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return tables.dirt_rows;
+		case 1:
+			return tables.sand_rows;
+		case 8:
+			return tables.water_rows;
+		case 9:
+			return tables.rock_rows;
+		default:
+			return tables.normal_rows;
+	}
+}
+
+const char *visual_table_address_for_terrain_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "0x543380";
+		case 1:
+			return "0x5434f0";
+		case 8:
+			return "0x5435b0";
+		case 9:
+			return "0x542f88";
+		default:
+			return "0x543108";
+	}
+}
+
+int32_t constructor_probability_for_terrain_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+		case 2:
+			return 0x32;
+		case 1:
+			return 0x46;
+		case 6:
+			return 0x3c;
+		case 3:
+		case 4:
+		case 5:
+		case 7:
+			return 0x50;
+		default:
+			return 0x00;
+	}
+}
+
+int32_t terrain_at_grid_index(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t fallback_terrain_id) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return fallback_terrain_id;
+	}
+	const int32_t index = level * level_tile_count + y * width + x;
+	if (index < 0 || index >= terrain_code_u16.size()) {
+		return fallback_terrain_id;
+	}
+	return terrain_code_u16[index];
+}
+
+bool select_visual_row_for_grid_cell(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b, String &selector_address, String &selector_kind) {
+	std::vector<int32_t> bucket;
+	const bool rock_selector = terrain_id == 9;
+	if (rock_selector) {
+		selector_address = "0x4baabf";
+		selector_kind = "rock_class_flag_bucket";
+		bucket = row_indices_for_class_flags(rows, classified.shape_class, classified.flag_a, classified.flag_b);
+		out_flag_a = 0;
+		out_flag_b = 0;
+	} else if (classified.shape_class == 0) {
+		selector_address = "0x4ba938";
+		selector_kind = "full_native_special_frequency";
+		std::vector<int32_t> ordinary = row_indices_for_class_group(rows, 0, 0);
+		std::vector<int32_t> special = row_indices_for_class_group(rows, 0, 1);
+		const int32_t probability_rng_value = rng.next();
+		const int32_t probability_threshold = constructor_probability_for_terrain_id(terrain_id);
+		const bool selected_special_bucket = !special.empty() && (probability_rng_value % 100) < probability_threshold;
+		bucket = selected_special_bucket ? special : ordinary;
+		out_flag_a = 0;
+		out_flag_b = 0;
+	} else {
+		selector_address = "0x4ba989";
+		selector_kind = "transition_class_bucket";
+		bucket = row_indices_for_class(rows, classified.shape_class);
+		out_flag_a = classified.flag_a;
+		out_flag_b = classified.flag_b;
+	}
+	if (bucket.empty()) {
+		selected_row = -1;
+		return false;
+	}
+	const int32_t art_rng_value = rng.next();
+	selected_row = bucket[size_t(art_rng_value % int32_t(bucket.size()))];
+	return true;
+}
+
+Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
+	Dictionary report;
+	report["status"] = "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only";
+	report["source"] = "grid-wide inspection replay using recovered h3maped relation classifier, decoded static row tables, scratch word packing, and generated-cell bit projection; public tile-byte adoption remains blocked";
+	report["relation_address"] = "0x4bb039";
+	report["classifier_address"] = "0x4bb075";
+	report["row_selector_addresses"] = Array::make("0x4ba938", "0x4ba989", "0x4baabf");
+	report["scratch_write_address"] = "0x4bad0f";
+	report["generated_cell_write_address"] = "0x49acf6";
+	report["edge_neighbor_policy"] = "out-of-map neighbors use the center terrain id for this inspection replay";
+	report["replay_order"] = "row-major generated terrain grid after 0x4a3f27 byte-zero writeout";
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = terrain_code_u16.size();
+	report["rng_state_before_visual_selection_uint32"] = int64_t(rng_state_before_visual_selection);
+	report["adopts_into_tile_byte_arrays"] = false;
+	report["materializes_projected_generated_cell_words"] = true;
+	report["materializes_package_tiles"] = false;
+
+	if (!FileAccess::file_exists(BINARY_PATH)) {
+		report["status"] = "h3maped_exe_missing";
+		return report;
+	}
+	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		report["status"] = "h3maped_exe_unreadable";
+		return report;
+	}
+	TerrainVisualGridTables tables;
+	tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
+	tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
+	tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
+	tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
+	tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+	if (tables.dirt_rows.size() != 46 || tables.sand_rows.size() != 24 || tables.normal_rows.size() != 79 || tables.water_rows.size() != 33 || tables.rock_rows.size() != 48) {
+		report["status"] = "h3maped_visual_row_decode_failed";
+		return report;
+	}
+
+	const int32_t level_tile_count = width * height;
+	PackedInt32Array projected_cell_word_0x24_u32;
+	PackedInt32Array projected_cell_word_0x28_u32;
+	PackedInt32Array projected_tile_byte_1_terrain_art_u8;
+	PackedInt32Array projected_tile_byte_6_terrain_flags_u8;
+	projected_cell_word_0x24_u32.resize(terrain_code_u16.size());
+	projected_cell_word_0x28_u32.resize(terrain_code_u16.size());
+	projected_tile_byte_1_terrain_art_u8.resize(terrain_code_u16.size());
+	projected_tile_byte_6_terrain_flags_u8.resize(terrain_code_u16.size());
+
+	H3MapedRng rng{ rng_state_before_visual_selection };
+	Dictionary class_histogram;
+	Dictionary terrain_histogram;
+	Dictionary selected_row_histogram;
+	Dictionary table_histogram;
+	Array sample_records;
+	Array missing_bucket_samples;
+	int32_t projected_cell_count = 0;
+	int32_t missing_bucket_cell_count = 0;
+	int32_t boundary_cell_projected_count = 0;
+	int32_t zero_boundary_cell_projected_count = 0;
+	int32_t terrain_art_nonzero_cell_count = 0;
+	int32_t terrain_flag_cell_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t index = level * level_tile_count + y * width + x;
+				if (index < 0 || index >= terrain_code_u16.size()) {
+					continue;
+				}
+				const int32_t center = terrain_code_u16[index];
+				std::array<int32_t, 8> relations = {
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y - 1, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y + 1, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y + 1, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, center)),
+					h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y - 1, center)),
+				};
+				const TerrainClassResult classified = h3maped_classify_4bb075(relations);
+				int32_t selected_row = -1;
+				int32_t out_flag_a = 0;
+				int32_t out_flag_b = 0;
+				String selector_address;
+				String selector_kind;
+				const std::vector<TerrainVisualRow> &rows = visual_rows_for_terrain_id(tables, center);
+				const bool selected = select_visual_row_for_grid_cell(rows, center, classified, rng, selected_row, out_flag_a, out_flag_b, selector_address, selector_kind);
+				const String class_key = String::num_int64(classified.shape_class);
+				class_histogram[class_key] = int32_t(class_histogram.get(class_key, 0)) + 1;
+				const String terrain_key = String::num_int64(center);
+				terrain_histogram[terrain_key] = int32_t(terrain_histogram.get(terrain_key, 0)) + 1;
+				const String table_address = visual_table_address_for_terrain_id(center);
+				table_histogram[table_address] = int32_t(table_histogram.get(table_address, 0)) + 1;
+				if (!selected) {
+					missing_bucket_cell_count += 1;
+					if (missing_bucket_samples.size() < 8) {
+						Dictionary missing;
+						missing["index"] = index;
+						missing["x"] = x;
+						missing["y"] = y;
+						missing["level"] = level;
+						missing["terrain_id"] = center;
+						missing["boundary_count"] = index < boundary_counts.size() ? boundary_counts[index] : 0;
+						missing["relations_slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+						missing["relations"] = packed_relations(relations);
+						missing["class"] = classified.shape_class;
+						missing["flag_a"] = classified.flag_a;
+						missing["flag_b"] = classified.flag_b;
+						missing["visual_table_address"] = table_address;
+						missing["selector_address"] = selector_address;
+						missing["selector_kind"] = selector_kind;
+						missing["blocked_reason"] = "classified shape has no decoded h3maped visual row before queue/topology normalization";
+						missing_bucket_samples.append(missing);
+					}
+					continue;
+				}
+				const uint32_t generated_cell_word_0x24 = (uint32_t(center) & 0x3fU)
+						| ((uint32_t(selected_row) & 0xffU) << 6U);
+				const uint32_t generated_cell_word_0x28 = ((uint32_t(out_flag_a) & 0x01U) << 15U)
+						| ((uint32_t(out_flag_b) & 0x01U) << 16U);
+				projected_cell_word_0x24_u32.set(index, int32_t(generated_cell_word_0x24));
+				projected_cell_word_0x28_u32.set(index, int32_t(generated_cell_word_0x28));
+				projected_tile_byte_1_terrain_art_u8.set(index, selected_row);
+				projected_tile_byte_6_terrain_flags_u8.set(index, int32_t((generated_cell_word_0x28 >> 15U) & 0x03U));
+				const String row_key = String::num_int64(selected_row);
+				selected_row_histogram[row_key] = int32_t(selected_row_histogram.get(row_key, 0)) + 1;
+				projected_cell_count += 1;
+				if (selected_row != 0) {
+					terrain_art_nonzero_cell_count += 1;
+				}
+				if (((generated_cell_word_0x28 >> 15U) & 0x03U) != 0U) {
+					terrain_flag_cell_count += 1;
+				}
+				const int32_t boundary_count = index < boundary_counts.size() ? boundary_counts[index] : 0;
+				if (boundary_count > 0) {
+					boundary_cell_projected_count += 1;
+				} else {
+					zero_boundary_cell_projected_count += 1;
+				}
+				if (sample_records.size() < 8 && boundary_count > 0) {
+					Dictionary sample;
+					sample["index"] = index;
+					sample["x"] = x;
+					sample["y"] = y;
+					sample["level"] = level;
+					sample["terrain_id"] = center;
+					sample["boundary_count"] = boundary_count;
+					sample["relations_slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+					sample["relations"] = packed_relations(relations);
+					sample["class"] = classified.shape_class;
+					sample["flag_a"] = classified.flag_a;
+					sample["flag_b"] = classified.flag_b;
+					sample["selector_address"] = selector_address;
+					sample["selector_kind"] = selector_kind;
+					sample["visual_table_address"] = table_address;
+					sample["selected_row"] = selected_row;
+					sample["out_flag_a"] = out_flag_a;
+					sample["out_flag_b"] = out_flag_b;
+					sample["projected_cell_word_0x24_u32"] = int64_t(generated_cell_word_0x24);
+					sample["projected_cell_word_0x28_u32"] = int64_t(generated_cell_word_0x28);
+					sample_records.append(sample);
+				}
+			}
+		}
+	}
+
+	report["projected_cell_count"] = projected_cell_count;
+	report["missing_bucket_cell_count"] = missing_bucket_cell_count;
+	report["full_grid_projection_complete"] = missing_bucket_cell_count == 0;
+	report["queue_normalization_required_cell_count"] = missing_bucket_cell_count;
+	report["boundary_cell_projected_count"] = boundary_cell_projected_count;
+	report["zero_boundary_cell_projected_count"] = zero_boundary_cell_projected_count;
+	report["terrain_art_nonzero_cell_count"] = terrain_art_nonzero_cell_count;
+	report["terrain_flag_cell_count"] = terrain_flag_cell_count;
+	report["class_histogram"] = class_histogram;
+	report["terrain_histogram"] = terrain_histogram;
+	report["selected_row_histogram"] = selected_row_histogram;
+	report["table_histogram"] = table_histogram;
+	report["sample_records"] = sample_records;
+	report["missing_bucket_samples"] = missing_bucket_samples;
+	report["projected_cell_word_0x24_u32"] = projected_cell_word_0x24_u32;
+	report["projected_cell_word_0x28_u32"] = projected_cell_word_0x28_u32;
+	report["projected_tile_byte_1_terrain_art_u8"] = projected_tile_byte_1_terrain_art_u8;
+	report["projected_tile_byte_6_terrain_flags_u8"] = projected_tile_byte_6_terrain_flags_u8;
+	report["rng_state_after_visual_selection_uint32"] = int64_t(rng.state);
+	report["blocked_next"] = "replace this inspection replay with exact TerrainPlacement queue/repaint order adoption before writing tile bytes into public packages";
+	return report;
+}
+
 Dictionary terrain_visual_static_table_contracts_report() {
 	Dictionary report;
 	report["status"] = "h3maped_exe_static_terrain_visual_tables_decoded";
@@ -3871,6 +4170,9 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary final_sweep_boundary_counter = generated_grid_final_sweep_boundary_counter_report(terrain_code_u16, width, height, level_count);
 	report["final_sweep_boundary_counter_status"] = final_sweep_boundary_counter.get("status", "");
 	report["final_sweep_boundary_counter"] = final_sweep_boundary_counter;
+	Dictionary terrain_visual_projection = generated_grid_visual_projection_report(terrain_code_u16, final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array()), width, height, level_count, uint32_t(int64_t(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", rng_state_before_boundary))));
+	report["terrain_visual_projection_status"] = terrain_visual_projection.get("status", "");
+	report["terrain_visual_projection"] = terrain_visual_projection;
 	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
 	report["tile_serializer_contract"] = tile_serializer_49b2b6_contract_report();
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
@@ -4073,6 +4375,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	terrain_grid["levels"] = grid_levels;
 	terrain_grid["tile_byte_writeout_status"] = report.get("tile_byte_writeout_status", "");
 	terrain_grid["final_sweep_boundary_counter_status"] = final_sweep_boundary_counter.get("status", "");
+	terrain_grid["terrain_visual_projection_status"] = terrain_visual_projection.get("status", "");
 	terrain_grid["materialized_level_count"] = grid_levels.size();
 	report["terrain_grid_status"] = terrain_grid.get("generation_status", "");
 	report["terrain_grid"] = terrain_grid;
