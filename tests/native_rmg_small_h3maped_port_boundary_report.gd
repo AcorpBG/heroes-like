@@ -424,6 +424,9 @@ func _run() -> void:
 	var h3_terrain_counts: Dictionary = terrain_cell_writeout.get("h3_terrain_code_counts", {})
 	var terrain_grid: Dictionary = terrain_cell_writeout.get("terrain_grid", {})
 	var terrain_levels: Array = terrain_grid.get("levels", [])
+	var terrain_repaint_schedule: Dictionary = terrain_cell_writeout.get("terrain_repaint_schedule", {})
+	var repaint_cells_by_terrain_code: Dictionary = terrain_repaint_schedule.get("repaint_cells_by_terrain_code", {})
+	var per_zone_repaint_records: Array = terrain_repaint_schedule.get("per_zone_repaint_records", [])
 	var terrain_codes: PackedInt32Array = terrain_cell_writeout.get("terrain_code_u16", PackedInt32Array())
 	var generated_cell_0x24: PackedInt32Array = terrain_cell_writeout.get("generated_cell_word_0x24_u32", PackedInt32Array())
 	var generated_cell_0x28: PackedInt32Array = terrain_cell_writeout.get("generated_cell_word_0x28_u32", PackedInt32Array())
@@ -474,6 +477,22 @@ func _run() -> void:
 			or int(tile_serializer_contract.get("sample_expected_tile_byte_count", -1)) != 7 \
 			or bool(tile_serializer_contract.get("materializes_package_tiles", true)):
 		_fail("The 0x49b2b6 serializer bit contract drifted: %s" % JSON.stringify(tile_serializer_contract))
+		return
+	if String(terrain_repaint_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_inspection_only" \
+			or String(terrain_repaint_schedule.get("full_map_water_repaint_address", "")) != "0x4a4025" \
+			or String(terrain_repaint_schedule.get("per_zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(terrain_repaint_schedule.get("per_cell_repaint_call_address", "")) != "0x4a415a" \
+			or int(terrain_repaint_schedule.get("initial_water_terrain_id", -1)) != 8 \
+			or int(terrain_repaint_schedule.get("initial_water_full_map_cell_count", -1)) != 1296 \
+			or bool(terrain_repaint_schedule.get("two_level_rock_prefill_executed", true)) \
+			or int(terrain_repaint_schedule.get("single_cell_repaint_count", -1)) != 1111 \
+			or int(repaint_cells_by_terrain_code.get("0", -1)) != 492 \
+			or int(repaint_cells_by_terrain_code.get("2", -1)) != 165 \
+			or int(repaint_cells_by_terrain_code.get("3", -1)) != 222 \
+			or int(repaint_cells_by_terrain_code.get("5", -1)) != 232 \
+			or per_zone_repaint_records.size() != 6 \
+			or bool(terrain_repaint_schedule.get("materializes_visual_art", true)):
+		_fail("The 0x4a3f27 TerrainPlacement repaint schedule drifted: %s" % JSON.stringify(terrain_repaint_schedule))
 		return
 	if String(terrain_art_blocker.get("status", "")) != "blocked_until_exact_h3maped_TerrainPlacement_classifier_recovered" \
 			or bool(terrain_art_blocker.get("legacy_visual_classifier_reuse_allowed", true)) \

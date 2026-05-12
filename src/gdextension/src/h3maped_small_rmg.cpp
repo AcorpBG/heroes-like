@@ -2910,6 +2910,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary terrain_name_counts;
 	Dictionary h3_terrain_code_counts;
 	Dictionary cells_by_zone_word;
+	Dictionary repaint_cells_by_terrain_code;
+	Array per_zone_repaint_records;
 	PackedInt32Array terrain_code_u16;
 	PackedInt32Array tile_byte_0_terrain_id_u8;
 	PackedInt32Array tile_byte_1_terrain_art_u8;
@@ -2953,6 +2955,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 		}
 		if (h3_terrain_code != 8) {
 			non_water_terrain_cell_count += 1;
+			const String terrain_code_key = String::num_int64(h3_terrain_code);
+			repaint_cells_by_terrain_code[terrain_code_key] = int32_t(repaint_cells_by_terrain_code.get(terrain_code_key, 0)) + 1;
 		}
 		const uint32_t generated_cell_0x24 = uint32_t(h3_terrain_code) & 0x3fU;
 		const uint32_t generated_cell_0x28 = 0U;
@@ -2984,6 +2988,34 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["terrain_name_counts"] = terrain_name_counts;
 	report["h3_terrain_code_counts"] = h3_terrain_code_counts;
 	report["cells_by_zone_word"] = cells_by_zone_word;
+	for (int64_t zone_index = 0; zone_index < selected_terrain_codes.size(); ++zone_index) {
+		const int32_t zone_terrain_code = int32_t(selected_terrain_codes[zone_index]);
+		const String zone_key = String::num_int64(zone_index);
+		const int32_t repaint_cell_count = zone_terrain_code == 8 ? 0 : int32_t(cells_by_zone_word.get(zone_key, 0));
+		Dictionary zone_record;
+		zone_record["runtime_zone_index"] = int32_t(zone_index);
+		zone_record["terrain_code"] = zone_terrain_code;
+		zone_record["terrain_name"] = zone_index < selected_terrain_names.size() ? String(selected_terrain_names[zone_index]) : terrain_for_h3maped_id(zone_terrain_code);
+		zone_record["single_cell_repaint_count"] = repaint_cell_count;
+		zone_record["skipped_water_zone"] = zone_terrain_code == 8;
+		per_zone_repaint_records.append(zone_record);
+	}
+	Dictionary terrain_repaint_schedule;
+	terrain_repaint_schedule["status"] = "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_inspection_only";
+	terrain_repaint_schedule["full_map_water_repaint_address"] = "0x4a4025";
+	terrain_repaint_schedule["per_zone_repaint_loop_address"] = "0x4a4082";
+	terrain_repaint_schedule["per_cell_repaint_call_address"] = "0x4a415a";
+	terrain_repaint_schedule["initial_water_terrain_id"] = 8;
+	terrain_repaint_schedule["initial_water_full_map_cell_count"] = cell_count;
+	terrain_repaint_schedule["two_level_rock_prefill_address"] = "0x4a3f97";
+	terrain_repaint_schedule["two_level_rock_prefill_executed"] = level_count > 1;
+	terrain_repaint_schedule["reserved_flag_gate"] = "cell+0x28 top-nibble bit tested at 0x4a4150 before 1x1 zone repaint";
+	terrain_repaint_schedule["owner_byte_gate"] = "cell+0x20 signed owner byte compared with runtime zone index at 0x4a4142";
+	terrain_repaint_schedule["single_cell_repaint_count"] = non_water_terrain_cell_count;
+	terrain_repaint_schedule["repaint_cells_by_terrain_code"] = repaint_cells_by_terrain_code;
+	terrain_repaint_schedule["per_zone_repaint_records"] = per_zone_repaint_records;
+	terrain_repaint_schedule["materializes_visual_art"] = false;
+	report["terrain_repaint_schedule"] = terrain_repaint_schedule;
 	report["terrain_code_u16"] = terrain_code_u16;
 	report["generated_cell_word_0x24_u32"] = generated_cell_word_0x24_u32;
 	report["generated_cell_word_0x28_u32"] = generated_cell_word_0x28_u32;
