@@ -1816,6 +1816,70 @@ Dictionary rectangle_fallback_4a2777_report(const Dictionary &normalized_config)
 	return report;
 }
 
+Dictionary connector_segment_4a2777_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2777_connector_segment_deterministic_branch_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 non-fallback branch at 0x4a2911..0x4a29f9 for the deterministic 0x4a261a dispatch path: clip both segment endpoints, append the first clipped endpoint to runtime_zone+0x3f4, then paint the connector segment";
+	report["function_address"] = "0x4a2777";
+	report["address_range"] = "0x4a2911..0x4a29f9";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_writer_address"] = "0x4a261a";
+	report["randomized_line_writer_address"] = "0x4a2413";
+	report["randomized_line_writer_status"] = "pending_0x4a2413_flagged_branch";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["uses_real_source_node_walk"] = false;
+	report["materializes_project_grid"] = false;
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const int32_t from_x = -4;
+	const int32_t from_y = 7;
+	const int32_t to_x = width - 3;
+	const int32_t to_y = height - 9;
+	const int32_t zone_word_id = 6;
+	ClipResult clipped_from = h3maped_clip_point_4a2b33(from_x, from_y, to_x, to_y, bounds);
+	ClipResult clipped_to = h3maped_clip_point_4a2b33(to_x, to_y, from_x, from_y, bounds);
+	std::vector<uint32_t> zone_words(size_t(width * height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(width * height * level_count), 0);
+	LineWriteResult line = h3maped_line_writer_4a261a(zone_words, cell_flags, width, height, level_count, water_code, clipped_from.x, clipped_from.y, clipped_to.x, clipped_to.y, 0, zone_word_id);
+
+	Dictionary input;
+	input["from_x"] = from_x;
+	input["from_y"] = from_y;
+	input["to_x"] = to_x;
+	input["to_y"] = to_y;
+	report["sample_input"] = input;
+	Dictionary clipped;
+	clipped["from_x"] = clipped_from.x;
+	clipped["from_y"] = clipped_from.y;
+	clipped["from_branch"] = clipped_from.branch;
+	clipped["to_x"] = clipped_to.x;
+	clipped["to_y"] = clipped_to.y;
+	clipped["to_branch"] = clipped_to.branch;
+	report["sample_clipped_segment"] = clipped;
+	Array vertices;
+	Dictionary vertex;
+	vertex["x"] = clipped_from.x;
+	vertex["y"] = clipped_from.y;
+	vertices.append(vertex);
+	report["sample_appended_vertex_count"] = vertices.size();
+	report["sample_appended_vertices"] = vertices;
+	report["deterministic_write_count"] = line.write_count;
+	report["deterministic_unique_cell_count"] = line.unique_cell_count;
+	report["deterministic_reserved_flag_write_count"] = line.reserved_flag_write_count;
+	report["deterministic_out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	report["deterministic_trace_preview"] = line.trace_preview;
+	report["blocked_next"] = "wire this deterministic segment branch into the real 0x4a2777 source-node traversal and port 0x4a2413 for the flagged branch";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -1919,6 +1983,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary rectangle_fallback = rectangle_fallback_4a2777_report(normalized_config);
 	footprint_schedule["rectangle_fallback_status"] = rectangle_fallback.get("status", "");
 	footprint_schedule["rectangle_fallback"] = rectangle_fallback;
+	Dictionary connector_segment = connector_segment_4a2777_report(normalized_config);
+	footprint_schedule["connector_segment_status"] = connector_segment.get("status", "");
+	footprint_schedule["connector_segment"] = connector_segment;
 	footprint_schedule["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
@@ -1962,7 +2029,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a2b33, 0x4a261a, 0x4a2777, 0x4a325d, 0x4a3710", "active_schedule_boundary_helper_rectangle_fallback_span_primitive_and_small_land_finalizer_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a2b33, 0x4a261a, 0x4a2777, 0x4a325d, 0x4a3710", "active_schedule_boundary_helpers_4a2777_standalone_branches_span_primitive_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },

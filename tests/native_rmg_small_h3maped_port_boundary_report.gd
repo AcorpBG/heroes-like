@@ -312,6 +312,25 @@ func _run() -> void:
 			or bool(rectangle_fallback.get("materializes_project_grid", true)):
 		_fail("The 0x4a2777 rectangle fallback must remain standalone until real source-node traversal is ported: %s" % JSON.stringify(rectangle_fallback))
 		return
+	var connector_segment: Dictionary = footprint_schedule.get("connector_segment", {})
+	var connector_clipped: Dictionary = connector_segment.get("sample_clipped_segment", {})
+	if String(footprint_schedule.get("connector_segment_status", "")) != "0x4a2777_connector_segment_deterministic_branch_ported_standalone" \
+			or int(connector_clipped.get("from_x", -1)) != 0 \
+			or int(connector_clipped.get("from_y", -1)) != 9 \
+			or int(connector_clipped.get("to_x", -1)) != 33 \
+			or int(connector_clipped.get("to_y", -1)) != 27 \
+			or int(connector_segment.get("sample_appended_vertex_count", -1)) != 1 \
+			or int(connector_segment.get("deterministic_write_count", -1)) != 34 \
+			or int(connector_segment.get("deterministic_unique_cell_count", -1)) != 34 \
+			or int(connector_segment.get("deterministic_reserved_flag_write_count", -1)) != 34 \
+			or int(connector_segment.get("deterministic_out_of_bounds_write_count", -1)) != 0:
+		_fail("The 0x4a2777 deterministic connector segment branch drifted: %s" % JSON.stringify(connector_segment))
+		return
+	if bool(connector_segment.get("uses_real_source_node_walk", true)) \
+			or bool(connector_segment.get("materializes_project_grid", true)) \
+			or String(connector_segment.get("randomized_line_writer_status", "")) != "pending_0x4a2413_flagged_branch":
+		_fail("The 0x4a2777 connector segment must stay standalone and keep the flagged branch pending: %s" % JSON.stringify(connector_segment))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
