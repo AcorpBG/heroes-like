@@ -425,9 +425,12 @@ func _run() -> void:
 	var terrain_grid: Dictionary = terrain_cell_writeout.get("terrain_grid", {})
 	var terrain_levels: Array = terrain_grid.get("levels", [])
 	var terrain_codes: PackedInt32Array = terrain_cell_writeout.get("terrain_code_u16", PackedInt32Array())
+	var generated_cell_0x24: PackedInt32Array = terrain_cell_writeout.get("generated_cell_word_0x24_u32", PackedInt32Array())
+	var generated_cell_0x28: PackedInt32Array = terrain_cell_writeout.get("generated_cell_word_0x28_u32", PackedInt32Array())
 	var tile_byte_0: PackedInt32Array = terrain_cell_writeout.get("tile_byte_0_terrain_id_u8", PackedInt32Array())
 	var tile_byte_1: PackedInt32Array = terrain_cell_writeout.get("tile_byte_1_terrain_art_u8", PackedInt32Array())
 	var tile_byte_6: PackedInt32Array = terrain_cell_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())
+	var tile_serializer_contract: Dictionary = terrain_cell_writeout.get("tile_serializer_contract", {})
 	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
@@ -439,6 +442,7 @@ func _run() -> void:
 			or int(terrain_cell_writeout.get("reserved_flag_cell_count", -1)) != 1111 \
 			or int(terrain_cell_writeout.get("unassigned_water_cell_count", -1)) != 185 \
 			or String(terrain_cell_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
+			or String(terrain_cell_writeout.get("tile_serializer_contract_status", "")) != "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported" \
 			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout" \
 			or not bool(terrain_cell_writeout.get("materializes_project_grid", false)) \
 			or bool(terrain_cell_writeout.get("project_grid_public_runtime_adoption", true)) \
@@ -446,11 +450,20 @@ func _run() -> void:
 		_fail("The 0x4a3f27 terrain-cell writeout inspection drifted: %s" % JSON.stringify(terrain_cell_writeout))
 		return
 	if terrain_codes.size() != 1296 \
+			or generated_cell_0x24.size() != 1296 \
+			or generated_cell_0x28.size() != 1296 \
 			or tile_byte_0.size() != 1296 \
 			or tile_byte_1.size() != 1296 \
 			or tile_byte_6.size() != 1296 \
-			or tile_byte_0 != terrain_codes:
+			or tile_byte_0 != terrain_codes \
+			or generated_cell_0x24 != terrain_codes:
 		_fail("The 0x49b2b6 terrain byte-zero inspection arrays drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if String(tile_serializer_contract.get("status", "")) != "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported" \
+			or Array(tile_serializer_contract.get("sample_expected_tile_bytes", [])) != [7, 171, 12, 93, 9, 110, 91] \
+			or int(tile_serializer_contract.get("sample_expected_tile_byte_count", -1)) != 7 \
+			or bool(tile_serializer_contract.get("materializes_package_tiles", true)):
+		_fail("The 0x49b2b6 serializer bit contract drifted: %s" % JSON.stringify(tile_serializer_contract))
 		return
 	if String(terrain_art_blocker.get("status", "")) != "blocked_until_exact_h3maped_TerrainPlacement_classifier_recovered" \
 			or bool(terrain_art_blocker.get("legacy_visual_classifier_reuse_allowed", true)) \

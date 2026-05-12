@@ -834,6 +834,47 @@ String terrain_for_h3maped_id(int32_t terrain_id) {
 	}
 }
 
+Dictionary tile_serializer_49b2b6_contract_report() {
+	const uint32_t sample_cell_0x24 = (uint32_t(7) & 0x3fU)
+			| ((uint32_t(0xab) & 0xffU) << 6U)
+			| ((uint32_t(0x0c) & 0x0fU) << 14U)
+			| ((uint32_t(0x5d) & 0xffU) << 18U)
+			| ((uint32_t(0x09) & 0x0fU) << 26U);
+	const uint32_t sample_cell_0x28 = (uint32_t(0x6e) & 0xffU)
+			| ((uint32_t(0x5b) & 0x7fU) << 15U);
+	Array sample_bytes;
+	sample_bytes.append(int32_t(sample_cell_0x24 & 0x3fU));
+	sample_bytes.append(int32_t((sample_cell_0x24 >> 6U) & 0xffU));
+	sample_bytes.append(int32_t((sample_cell_0x24 >> 14U) & 0x0fU));
+	sample_bytes.append(int32_t((sample_cell_0x24 >> 18U) & 0xffU));
+	sample_bytes.append(int32_t((sample_cell_0x24 >> 26U) & 0x0fU));
+	sample_bytes.append(int32_t(sample_cell_0x28 & 0xffU));
+	sample_bytes.append(int32_t((sample_cell_0x28 >> 15U) & 0x7fU));
+
+	Dictionary bitfields;
+	bitfields["tile_byte_0"] = "cell+0x24 bits 0..5 terrain id";
+	bitfields["tile_byte_1"] = "cell+0x24 bits 6..13 terrain art index";
+	bitfields["tile_byte_2"] = "cell+0x24 bits 14..17 river type";
+	bitfields["tile_byte_3"] = "cell+0x24 bits 18..25 river art";
+	bitfields["tile_byte_4"] = "cell+0x24 bits 26..29 road type";
+	bitfields["tile_byte_5"] = "cell+0x28 bits 0..7 road art";
+	bitfields["tile_byte_6"] = "cell+0x28 bits 15..21 terrain/river/road flip flags";
+
+	Dictionary report;
+	report["status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
+	report["function_address"] = "0x49b2b6";
+	report["source"] = "direct disassembly of h3maped.exe 0x49b2b6; each generated cell writes seven one-byte tile fields through writer virtual slot +0x08";
+	report["cell_word_0x24_source"] = "generated cell +0x24";
+	report["cell_word_0x28_source"] = "generated cell +0x28";
+	report["bitfields"] = bitfields;
+	report["sample_cell_word_0x24_uint32"] = int64_t(sample_cell_0x24);
+	report["sample_cell_word_0x28_uint32"] = int64_t(sample_cell_0x28);
+	report["sample_expected_tile_bytes"] = sample_bytes;
+	report["sample_expected_tile_byte_count"] = sample_bytes.size();
+	report["materializes_package_tiles"] = false;
+	return report;
+}
+
 int32_t h3maped_id_for_terrain(const String &terrain_id) {
 	if (terrain_id == "dirt") {
 		return 0;
@@ -2820,6 +2861,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	PackedInt32Array tile_byte_4_road_type_u8;
 	PackedInt32Array tile_byte_5_road_art_u8;
 	PackedInt32Array tile_byte_6_flags_u8;
+	PackedInt32Array generated_cell_word_0x24_u32;
+	PackedInt32Array generated_cell_word_0x28_u32;
 	int32_t reserved_cell_count = 0;
 	int32_t unassigned_cell_count = 0;
 	int32_t non_water_terrain_cell_count = 0;
@@ -2832,6 +2875,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	tile_byte_4_road_type_u8.resize(cell_count);
 	tile_byte_5_road_art_u8.resize(cell_count);
 	tile_byte_6_flags_u8.resize(cell_count);
+	generated_cell_word_0x24_u32.resize(cell_count);
+	generated_cell_word_0x28_u32.resize(cell_count);
 	for (int32_t index = 0; index < cell_count; ++index) {
 		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
 		int32_t h3_terrain_code = 8;
@@ -2852,8 +2897,12 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 		if (h3_terrain_code != 8) {
 			non_water_terrain_cell_count += 1;
 		}
-		terrain_code_u16.set(index, h3_terrain_code & 0x3f);
-		tile_byte_0_terrain_id_u8.set(index, h3_terrain_code & 0x3f);
+		const uint32_t generated_cell_0x24 = uint32_t(h3_terrain_code) & 0x3fU;
+		const uint32_t generated_cell_0x28 = 0U;
+		generated_cell_word_0x24_u32.set(index, int32_t(generated_cell_0x24));
+		generated_cell_word_0x28_u32.set(index, int32_t(generated_cell_0x28));
+		terrain_code_u16.set(index, int32_t(generated_cell_0x24 & 0x3fU));
+		tile_byte_0_terrain_id_u8.set(index, int32_t(generated_cell_0x24 & 0x3fU));
 		tile_byte_1_terrain_art_u8.set(index, 0);
 		tile_byte_2_river_type_u8.set(index, 0);
 		tile_byte_3_river_art_u8.set(index, 0);
@@ -2879,6 +2928,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["h3_terrain_code_counts"] = h3_terrain_code_counts;
 	report["cells_by_zone_word"] = cells_by_zone_word;
 	report["terrain_code_u16"] = terrain_code_u16;
+	report["generated_cell_word_0x24_u32"] = generated_cell_word_0x24_u32;
+	report["generated_cell_word_0x28_u32"] = generated_cell_word_0x28_u32;
 	report["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
 	report["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
 	report["tile_byte_2_river_type_u8"] = tile_byte_2_river_type_u8;
@@ -2888,6 +2939,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["tile_byte_6_flags_u8"] = tile_byte_6_flags_u8;
 	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_id_byte_packed_art_flip_pending";
 	report["tile_byte_writeout_source"] = "0x49b2b6 serializes generated cell+0x24 bits 0..5 to byte 0; terrain art byte 1 and terrain flip byte 6 bits 0..1 remain blocked until TerrainPlacement 0x4bcff5/0x4bd099 normalization is ported";
+	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
+	report["tile_serializer_contract"] = tile_serializer_49b2b6_contract_report();
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
 	Array blocked_legacy_reasons;
 	blocked_legacy_reasons.append("legacy_h3maped_small_rmg_inspection_ledger uses positive_visual_hash frame selection");
@@ -2917,6 +2970,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	level_record["height"] = height;
 	level_record["tile_count"] = width * height;
 	level_record["terrain_code_u16"] = terrain_code_u16;
+	level_record["generated_cell_word_0x24_u32"] = generated_cell_word_0x24_u32;
+	level_record["generated_cell_word_0x28_u32"] = generated_cell_word_0x28_u32;
 	level_record["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
 	level_record["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
 	level_record["tile_byte_2_river_type_u8"] = tile_byte_2_river_type_u8;
