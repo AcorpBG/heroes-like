@@ -89,6 +89,51 @@ func _run() -> void:
 	if String(selected_payload.get("materialization_status", "")) != "blocked_until_next_executable_phase_port":
 		_fail("The clean restart must stop after template selection until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
+	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
+		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
+		return
+	var assignment: Dictionary = selected_payload.get("player_slot_assignment", {})
+	if String(assignment.get("source", "")).find("0x4ac62a..0x4ac6ec") == -1 \
+			or String(assignment.get("selected_color_bitmap_offset", "")) != "generator+0xed8" \
+			or String(assignment.get("assignment_slots_offset", "")) != "generator+0xee0" \
+			or String(assignment.get("mapped_slots_offset", "")) != "generator+0xee4":
+		_fail("The player-slot assignment report lost executable-derived field evidence: %s" % JSON.stringify(assignment))
+		return
+	if Array(assignment.get("human_capable_source_owner_indices", [])) != [0, 1, 2, 3] \
+			or Array(assignment.get("player_capable_source_owner_indices", [])) != [0, 1, 2, 3]:
+		_fail("The selected template source-owner capability bitmaps drifted: %s" % JSON.stringify(assignment))
+		return
+	if Array(assignment.get("selected_color_bitmap", [])) != [false, false, false, false, false, false, false, false] \
+			or Array(assignment.get("selected_color_order", [])) != [0, 1, 2, 3, 4, 5, 6, 7] \
+			or Array(assignment.get("actual_colors_by_source_owner", [])) != [0, 1, 2, -1, -1, -1, -1, -1]:
+		_fail("Default selected-color player assignment drifted: %s" % JSON.stringify(assignment))
+		return
+	var assignments: Array = assignment.get("assignments", [])
+	if assignments.size() != 3 \
+			or int(assignments[0].get("source_owner_index", -1)) != 0 \
+			or int(assignments[0].get("actual_player_color", -1)) != 0 \
+			or String(assignments[0].get("player_type", "")) != "human" \
+			or int(assignments[1].get("source_owner_index", -1)) != 1 \
+			or int(assignments[1].get("actual_player_color", -1)) != 1 \
+			or String(assignments[1].get("player_type", "")) != "computer" \
+			or int(assignments[2].get("source_owner_index", -1)) != 2 \
+			or int(assignments[2].get("actual_player_color", -1)) != 2 \
+			or String(assignments[2].get("player_type", "")) != "computer":
+		_fail("Default human/computer player assignment slots drifted: %s" % JSON.stringify(assignment))
+		return
+	if bool(assignment.get("materializes_runtime_players", true)):
+		_fail("Player-slot assignment must remain inspection-only until runtime-zone/player materialization is ported: %s" % JSON.stringify(assignment))
+		return
+
+	var color_config := config.duplicate(true)
+	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
+	var color_report: Dictionary = service.inspect_h3maped_small_rmg_port(color_config)
+	var color_assignment: Dictionary = Dictionary(color_report.get("selected_template_payload", {})).get("player_slot_assignment", {})
+	if Array(color_assignment.get("selected_color_bitmap", [])) != [false, false, true, false, false, false, false, false] \
+			or Array(color_assignment.get("selected_color_order", [])) != [2, 0, 1, 3, 4, 5, 6, 7] \
+			or Array(color_assignment.get("actual_colors_by_source_owner", [])) != [2, 0, 1, -1, -1, -1, -1, -1]:
+		_fail("Selected-color bitmap did not reorder h3maped assignment colors: %s" % JSON.stringify(color_assignment))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
