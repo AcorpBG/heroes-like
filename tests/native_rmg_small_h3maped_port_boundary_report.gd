@@ -479,6 +479,7 @@ func _run() -> void:
 	var tile_serializer_contract: Dictionary = terrain_cell_writeout.get("tile_serializer_contract", {})
 	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
+	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
 	var changed_cell_update: Dictionary = terrain_repaint_boundary.get("changed_cell_update", {})
 	var scratch_write_contract: Dictionary = changed_cell_update.get("scratch_write_contract", {})
@@ -553,6 +554,25 @@ func _run() -> void:
 			or not terrain_art_required_addresses.has("0x4bb681") \
 			or not terrain_art_required_addresses.has("0x49b2b6"):
 		_fail("The clean port must reject legacy hashed TerrainPlacement art/flip approximation: %s" % JSON.stringify(terrain_art_blocker))
+		return
+	var boundary_counter_sample: Dictionary = final_normalization_contract.get("boundary_counter_sample", {})
+	var boundary_counts: PackedInt32Array = boundary_counter_sample.get("boundary_counts_row_major", PackedInt32Array())
+	var zero_boundary_sample: Dictionary = final_normalization_contract.get("zero_boundary_full_native_sample", {})
+	var zero_boundary_counts: PackedInt32Array = zero_boundary_sample.get("boundary_counts_row_major", PackedInt32Array())
+	if String(final_normalization_contract.get("status", "")) != "0x4bc5f0_0x4bbd01_0x4bbfcc_queue_and_final_sweep_contract_ported_boundary_only" \
+			or String(final_normalization_contract.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(final_normalization_contract.get("frontier_processor_address", "")) != "0x4bbd01" \
+			or String(final_normalization_contract.get("final_sweep_address", "")) != "0x4bbfcc" \
+			or bool(final_normalization_contract.get("materializes_generated_cell_words", true)) \
+			or bool(final_normalization_contract.get("materializes_package_tiles", true)) \
+			or boundary_counts.size() != 9 \
+			or boundary_counts[4] != 8 \
+			or boundary_counts[0] != 1 \
+			or boundary_counts[1] != 1 \
+			or zero_boundary_counts.size() != 9 \
+			or zero_boundary_counts[4] != 0 \
+			or not bool(zero_boundary_sample.get("requires_full_native_normalization_even_with_zero_boundary", false)):
+		_fail("The TerrainPlacement queue/final-normalization boundary drifted: %s" % JSON.stringify(final_normalization_contract))
 		return
 	if String(terrain_repaint_boundary.get("status", "")) != "0x4bd099_0x4bb681_TerrainPlacement_repaint_rectangle_loop_recovered_boundary_only" \
 			or String(terrain_repaint_boundary.get("constructor_address", "")) != "0x4bb5ce" \
