@@ -487,6 +487,9 @@ func _run() -> void:
 	var projected_tile_byte_6: PackedInt32Array = terrain_visual_projection.get("projected_tile_byte_6_terrain_flags_u8", PackedInt32Array())
 	var visual_projection_samples: Array = terrain_visual_projection.get("sample_records", [])
 	var visual_projection_missing_samples: Array = terrain_visual_projection.get("missing_bucket_samples", [])
+	var missing_bucket_class_histogram: Dictionary = terrain_visual_projection.get("missing_bucket_class_histogram", {})
+	var missing_bucket_terrain_histogram: Dictionary = terrain_visual_projection.get("missing_bucket_terrain_histogram", {})
+	var missing_bucket_table_histogram: Dictionary = terrain_visual_projection.get("missing_bucket_table_histogram", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -582,6 +585,9 @@ func _run() -> void:
 			or int(terrain_visual_projection.get("boundary_cell_projected_count", -1)) <= 0 \
 			or int(terrain_visual_projection.get("zero_boundary_cell_projected_count", -1)) <= 0 \
 			or int(terrain_visual_projection.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or missing_bucket_class_histogram.is_empty() \
+			or missing_bucket_terrain_histogram.is_empty() \
+			or missing_bucket_table_histogram.is_empty() \
 			or projected_cell_0x24.size() != 1296 \
 			or projected_cell_0x28.size() != 1296 \
 			or projected_tile_byte_1.size() != 1296 \
