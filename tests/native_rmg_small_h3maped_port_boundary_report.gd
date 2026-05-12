@@ -439,6 +439,7 @@ func _run() -> void:
 	var visual_classifier_toolkit_objects: Array = visual_classifier.get("toolkit_object_addresses", [])
 	var visual_classifier_vtables: Array = visual_classifier.get("toolkit_vtable_addresses", [])
 	var visual_classifier_static_tables: Array = visual_classifier.get("static_visual_table_addresses", [])
+	var visual_classifier_constructor_records: Array = visual_classifier.get("toolkit_constructor_records", [])
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
@@ -529,6 +530,22 @@ func _run() -> void:
 			or not visual_classifier_static_tables.has("0x543380") \
 			or bool(visual_classifier.get("materializes_visual_record", true)):
 		_fail("The TerrainPlacement visual classifier selector evidence drifted: %s" % JSON.stringify(visual_classifier))
+		return
+	if visual_classifier_constructor_records.size() != 10:
+		_fail("The TerrainPlacement toolkit constructor record count drifted: %s" % JSON.stringify(visual_classifier_constructor_records))
+		return
+	var first_toolkit_constructor: Dictionary = visual_classifier_constructor_records[0]
+	var simple_toolkit_constructor: Dictionary = visual_classifier_constructor_records[9]
+	if String(first_toolkit_constructor.get("object_address", "")) != "0x5a4130" \
+			or String(first_toolkit_constructor.get("constructor_address", "")) != "0x4ba868" \
+			or int(first_toolkit_constructor.get("terrain_id", -1)) != 0 \
+			or int(first_toolkit_constructor.get("range_probability", -1)) != 0x32 \
+			or int(first_toolkit_constructor.get("row_count", -1)) != 0x2e \
+			or String(first_toolkit_constructor.get("table_address", "")) != "0x543380" \
+			or String(simple_toolkit_constructor.get("object_address", "")) != "0x5a4128" \
+			or String(simple_toolkit_constructor.get("constructor_address", "")) != "0x4baa66" \
+			or String(simple_toolkit_constructor.get("table_address", "")) != "none":
+		_fail("The TerrainPlacement toolkit constructor inputs drifted: %s" % JSON.stringify(visual_classifier_constructor_records))
 		return
 	if String(copyback_gate.get("status", "")) != "0x4bc988_TerrainPlacement_retouch_gate_recovered_copyback_pending" \
 			or String(copyback_gate.get("gate_address", "")) != "0x4bc988" \
