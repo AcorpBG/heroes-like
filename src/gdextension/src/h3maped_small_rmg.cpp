@@ -720,7 +720,7 @@ Dictionary binary_verification() {
 	report["expected_sha256"] = BINARY_SHA256;
 	report["expected_size_bytes"] = BINARY_SIZE_BYTES;
 	report["format"] = "PE32 GUI Intel 80386 Windows executable";
-	report["verification_policy"] = "local_file_size_and_mz_header_checked; expected SHA-256 is the recorded reset anchor";
+	report["verification_policy"] = "local_file_size_mz_header_and_sha256_checked_against_reset_anchor";
 	if (!FileAccess::file_exists(BINARY_PATH)) {
 		report["status"] = "missing";
 		report["ok"] = false;
@@ -736,9 +736,13 @@ Dictionary binary_verification() {
 	const int32_t byte_0 = file->get_8();
 	const int32_t byte_1 = file->get_8();
 	const bool mz = byte_0 == 'M' && byte_1 == 'Z';
+	const String actual_sha256 = FileAccess::get_sha256(BINARY_PATH);
+	const bool sha256_matches = actual_sha256 == String(BINARY_SHA256);
 	report["actual_size_bytes"] = size;
+	report["actual_sha256"] = actual_sha256;
+	report["sha256_matches"] = sha256_matches;
 	report["mz_header_present"] = mz;
-	report["ok"] = size == BINARY_SIZE_BYTES && mz;
+	report["ok"] = size == BINARY_SIZE_BYTES && mz && sha256_matches;
 	report["status"] = bool(report["ok"]) ? String("verified_reset_anchor") : String("mismatch");
 	return report;
 }
