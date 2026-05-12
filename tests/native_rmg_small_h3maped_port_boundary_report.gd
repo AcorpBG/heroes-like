@@ -796,6 +796,15 @@ func _run() -> void:
 			or int(h3maped_selection.get("selected_vector_index", -1)) != 2:
 		_fail("Small-map public config identity still used a non-h3maped template selector: %s" % JSON.stringify(identity))
 		return
+	var identity_policy: Dictionary = identity.get("runtime_policy_classification", {})
+	if String(identity.get("full_generation_status", "")) != "h3maped_small_clean_restart_waiting_for_executable_phase_ports" \
+			or bool(identity.get("translated_catalog_structural_profile_supported", true)) \
+			or String(identity_policy.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
+			or String(identity_policy.get("full_generation_status", "")) != "h3maped_small_clean_restart_waiting_for_executable_phase_ports" \
+			or String(identity_policy.get("template_family", "")) != "h3maped_small_reset_template" \
+			or not bool(identity_policy.get("h3maped_reset_scope", false)):
+		_fail("Small-map public config identity still carried old native RMG readiness classification: %s" % JSON.stringify(identity))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
