@@ -428,6 +428,8 @@ func _run() -> void:
 	var tile_byte_0: PackedInt32Array = terrain_cell_writeout.get("tile_byte_0_terrain_id_u8", PackedInt32Array())
 	var tile_byte_1: PackedInt32Array = terrain_cell_writeout.get("tile_byte_1_terrain_art_u8", PackedInt32Array())
 	var tile_byte_6: PackedInt32Array = terrain_cell_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())
+	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
+	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
@@ -449,6 +451,14 @@ func _run() -> void:
 			or tile_byte_6.size() != 1296 \
 			or tile_byte_0 != terrain_codes:
 		_fail("The 0x49b2b6 terrain byte-zero inspection arrays drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if String(terrain_art_blocker.get("status", "")) != "blocked_until_exact_h3maped_TerrainPlacement_classifier_recovered" \
+			or bool(terrain_art_blocker.get("legacy_visual_classifier_reuse_allowed", true)) \
+			or not terrain_art_required_addresses.has("0x4bcff5") \
+			or not terrain_art_required_addresses.has("0x4bd099") \
+			or not terrain_art_required_addresses.has("0x4bb681") \
+			or not terrain_art_required_addresses.has("0x49b2b6"):
+		_fail("The clean port must reject legacy hashed TerrainPlacement art/flip approximation: %s" % JSON.stringify(terrain_art_blocker))
 		return
 	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1" \
 			or String(terrain_grid.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only" \
