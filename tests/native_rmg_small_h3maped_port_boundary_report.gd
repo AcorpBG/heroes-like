@@ -83,7 +83,7 @@ func _run() -> void:
 		return
 	var connection_payload: Dictionary = selected_payload.get("connection_payload", {})
 	if int(connection_payload.get("connection_count", -1)) != 5 \
-			or String(connection_payload.get("normal_guard_materialization_status", "")) != "0x4a65a5_values_scaled_0x4a5e03_guard_object_pending":
+			or String(connection_payload.get("normal_guard_materialization_status", "")) != "0x4a65a5_values_scaled_0x4a5e03_guard_inputs_scaled_geometry_pending":
 		_fail("0x4a79a3/0x4a65a5 connection guard scaling boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
 	if int(connection_payload.get("normal_guard_global_strength_mode", -1)) != 3 \
@@ -98,6 +98,21 @@ func _run() -> void:
 			or int(connection_records[3].get("raw_guard_value", -1)) != 6000 \
 			or int(connection_records[3].get("normal_guard_scaled_value", -1)) != 5000:
 		_fail("0x4a65a5 per-link scaled guard values drifted: %s" % JSON.stringify(connection_payload))
+		return
+	if String(connection_payload.get("normal_guard_spawn_intent_status", "")) != "0x4a5e03_guard_inputs_scaled_geometry_endpoint_coordinates_pending" \
+			or int(connection_payload.get("normal_guard_spawn_intent_count", -1)) != 5 \
+			or int(connection_payload.get("normal_guard_spawn_materialized_count", -1)) != 0 \
+			or int(connection_payload.get("normal_guard_spawn_intent_total_value", -1)) != 16000:
+		_fail("0x4a5e03 normal guard spawn input boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
+	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
+	if guard_spawn_intents.size() != 5 \
+			or String(guard_spawn_intents[0].get("guard_object_helper_address", "")) != "0x4a5e03" \
+			or String(guard_spawn_intents[0].get("monster_selector_helper_address", "")) != "0x4a5c07" \
+			or int(guard_spawn_intents[0].get("guard_value", -1)) != 2000 \
+			or not bool(guard_spawn_intents[0].get("requires_endpoint_coordinates", false)) \
+			or bool(guard_spawn_intents[0].get("materializes_guard_object", true)):
+		_fail("0x4a5e03 guard spawn intent record did not preserve executable helper inputs and geometry block: %s" % JSON.stringify(connection_payload))
 		return
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
@@ -1206,6 +1221,7 @@ func _run() -> void:
 		"minimum_mine_count": mine_reward_placement.get("total_minimum_mine_count", 0),
 		"mine_density_weight": mine_reward_placement.get("total_mine_density_weight", 0),
 		"connection_guard_scaled_value_total": connection_payload.get("normal_guard_scaled_value_total", 0),
+		"connection_guard_spawn_intent_count": connection_payload.get("normal_guard_spawn_intent_count", 0),
 		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
