@@ -110,12 +110,13 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a79a3 connection geometry dispatch boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
-	if String(connection_payload.get("geometry_owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_pending" \
-			or String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_high_owner_channel_pending" \
+	if String(connection_payload.get("geometry_owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_partially_materialized" \
+			or String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending" \
 			or int(connection_payload.get("geometry_4a6cf2_overlap_link_count", -1)) != 5 \
 			or int(connection_payload.get("geometry_4a6cf2_nonempty_overlap_link_count", -1)) != 3 \
 			or int(connection_payload.get("geometry_4a6cf2_overlap_cell_total", -1)) != 502 \
-			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_sentinel_total", -1)) != 502 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_sentinel_total", -1)) != 30 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_materialized_total", -1)) != 472 \
 			or int(connection_payload.get("geometry_4a6cf2_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a6cf2 overlap/candidate-scan boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
@@ -148,8 +149,8 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
 			or String(first_4a6cf2_overlap.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
 			or String(first_4a6cf2_overlap.get("owner_high_byte_producer", "")) != "0x4a5767 reset plus 0x49a318 anchor/occupancy normalization" \
-			or String(first_4a6cf2_overlap.get("owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_pending" \
-			or String(first_4a6cf2_overlap.get("candidate_scan_status", "")) != "0x4a6de2_overlap_low_owner_score_scan_materialized_high_owner_channel_pending" \
+			or String(first_4a6cf2_overlap.get("owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_partially_materialized" \
+			or String(first_4a6cf2_overlap.get("candidate_scan_status", "")) != "0x4a6de2_overlap_low_high_owner_score_scan_materialized_shape_list_pending" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_selection_range", "")) != "0x4a6de2..0x4a6e0c" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_random_selector_address", "")) != "0x4e7276" \
 			or String(first_4a6cf2_overlap.get("validation_helper_address", "")) != "0x49aa93" \
@@ -164,8 +165,11 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
 			or bool(first_4a6cf2_overlap.get("materializes_endpoint_coordinates", true)) \
 			or int(first_4a6cf2_overlap.get("endpoint_coordinate_materialized_count", -1)) != 0 \
-			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != int(first_4a6cf2_overlap.get("overlap_cell_count", -2)) \
-			or int(first_4a6cf2_overlap.get("overlap_cell_count", 0)) <= 0:
+			or int(first_4a6cf2_overlap.get("overlap_cell_count", -1)) != 180 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_a_cell_count", -1)) != 85 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_b_cell_count", -1)) != 67 \
+			or int(first_4a6cf2_overlap.get("overlap_high_other_owner_cell_count", -1)) != 22 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != 6:
 		_fail("0x4a6cf2 overlap helper evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
 		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
@@ -773,13 +777,32 @@ func _run() -> void:
 			"zone_repaint_member_grid_u8": repaint_member_grid.size(),
 		}))
 		return
-	if String(terrain_fill.get("occupancy_reset_high_owner_status", "")) != "0x4a5767_reset_high_owner_sentinel_materialized_49a318_copy_pending" \
-			or String(terrain_fill.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
-			or String(terrain_fill.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
-			or int(terrain_fill.get("owner_high_byte_materialized_count", -1)) != 0 \
-			or int(terrain_fill.get("owner_high_byte_sentinel_count", -1)) != 1296:
-		_fail("0x4a5767/0x49a318 high owner-byte boundary drifted: %s" % JSON.stringify(terrain_fill))
-		return
+		var owner_high_normalization: Dictionary = terrain_fill.get("owner_high_byte_normalization", {}) if terrain_fill.get("owner_high_byte_normalization", {}) is Dictionary else {}
+		var owner_high_counts: Dictionary = terrain_fill.get("owner_high_byte_counts", {}) if terrain_fill.get("owner_high_byte_counts", {}) is Dictionary else {}
+		if String(terrain_fill.get("occupancy_reset_high_owner_status", "")) != "0x4a5767_49a318_high_owner_channel_materialized_inspection_only" \
+				or String(terrain_fill.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
+				or String(terrain_fill.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
+				or int(terrain_fill.get("owner_high_byte_materialized_count", -1)) != 1111 \
+				or int(terrain_fill.get("owner_high_byte_sentinel_count", -1)) != 185 \
+				or String(owner_high_normalization.get("function_address", "")) != "0x4a5767" \
+				or String(owner_high_normalization.get("propagation_helper_address", "")) != "0x49a318" \
+				or String(owner_high_normalization.get("cell_init_helper_address", "")) != "0x4a59e2" \
+				or not bool(owner_high_normalization.get("grid_available", false)) \
+				or bool(owner_high_normalization.get("complete_object_metadata_gate", true)) \
+				or int(owner_high_normalization.get("seed_attempt_count", -1)) != 6 \
+				or int(owner_high_normalization.get("seed_blocked_count", -1)) != 0 \
+				or int(owner_high_normalization.get("popped_cell_count", -1)) != 3539 \
+				or int(owner_high_normalization.get("same_owner_relax_count", -1)) != 1105 \
+				or int(owner_high_normalization.get("cross_owner_high_byte_write_count", -1)) != 2428 \
+				or int(owner_high_normalization.get("max_queue_size", -1)) != 71 \
+				or int(owner_high_counts.get(0, -1)) != 171 \
+				or int(owner_high_counts.get(1, -1)) != 201 \
+				or int(owner_high_counts.get(2, -1)) != 174 \
+				or int(owner_high_counts.get(3, -1)) != 262 \
+				or int(owner_high_counts.get(4, -1)) != 124 \
+				or int(owner_high_counts.get(5, -1)) != 179:
+			_fail("0x4a5767/0x49a318 high owner-byte boundary drifted: %s" % JSON.stringify(terrain_fill))
+			return
 	if String(terrain_fill.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_bytes_packed_overlay_bytes_pending":
 		_fail("0x49b2b6 terrain-byte packing status was not exposed: %s" % JSON.stringify(terrain_fill))
 		return
