@@ -272,6 +272,30 @@ func _run() -> void:
 			or bool(span_fill.get("materializes_project_grid", true)):
 		_fail("The 0x4a325d primitive must remain disconnected from runtime output until 0x4a2777 is ported: %s" % JSON.stringify(span_fill))
 		return
+	var boundary_helpers: Dictionary = footprint_schedule.get("boundary_helper_primitives", {})
+	var line_sample: Dictionary = boundary_helpers.get("line_sample", {})
+	if String(footprint_schedule.get("boundary_helper_primitives_status", "")) != "0x4a2b33_clip_and_0x4a261a_line_writer_primitives_ported" \
+			or int(boundary_helpers.get("clip_sample_count", -1)) != 5 \
+			or int(line_sample.get("write_count", -1)) != 7 \
+			or int(line_sample.get("unique_cell_count", -1)) != 7 \
+			or int(line_sample.get("zone_word_cell_count", -1)) != 7 \
+			or int(line_sample.get("reserved_flag_write_count", -1)) != 7 \
+			or int(line_sample.get("reserved_flag_cell_count", -1)) != 7 \
+			or int(line_sample.get("out_of_bounds_write_count", -1)) != 0:
+		_fail("The 0x4a2b33/0x4a261a boundary helper primitives drifted: %s" % JSON.stringify(boundary_helpers))
+		return
+	var clip_samples: Array = boundary_helpers.get("clip_samples", [])
+	if clip_samples.size() != 5 \
+			or int(clip_samples[1].get("out_x", -1)) != 0 \
+			or int(clip_samples[2].get("out_y", -1)) != 0 \
+			or int(clip_samples[3].get("out_x", -1)) != 35 \
+			or int(clip_samples[4].get("out_y", -1)) != 35:
+		_fail("The 0x4a2b33 sample clipping outputs drifted: %s" % JSON.stringify(boundary_helpers))
+		return
+	if bool(boundary_helpers.get("uses_real_0x4a2777_source_node_walk", true)) \
+			or bool(boundary_helpers.get("materializes_project_grid", true)):
+		_fail("Boundary helper primitives must remain disconnected from runtime output until 0x4a2777 is assembled: %s" % JSON.stringify(boundary_helpers))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
