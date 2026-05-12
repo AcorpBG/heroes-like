@@ -75,6 +75,7 @@ nonGoals:
 - No new one-off owner sample count fitting as runtime policy.
 - No HoMM3 copyrighted asset/DEF import.
 validationResults:
+- Reset entry-point cleanup on 2026-05-12: `MapPackageService.generate_random_map()` no longer carries the unreachable previous catalog-auto map assembly body after the reset return. The public native generation entry point now structurally routes only to `h3maped_small_clean_restart_generation_not_ready` for supported small land configs or `archived_legacy_native_rmg_disabled` for out-of-scope configs.
 - Reset correction on 2026-05-12: the previous oversized small h3maped inspection implementation was moved out of the active compile path to `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp`. That file is historical evidence only. Active production-facing reset work is limited to `src/gdextension/src/h3maped_small_rmg.cpp`.
 - The active compact port verifies `/root/Downloads/h3maped.exe`, performs h3maped-derived small-template acceptance/RNG selection, resolves seed `1` to `h3maped_template_018` -> `translated_rmg_template_019_v1`, and refuses runtime map generation.
 - The active compact port includes player-slot assignment `0x4ac62a..0x4ac6ec`: source capability bitmaps, `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`. It remains inspection-only and does not materialize runtime players.

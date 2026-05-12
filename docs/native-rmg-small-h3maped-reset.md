@@ -4,6 +4,8 @@ Status: active reset slice.
 
 The previous native catalog-auto RMG implementation is archived as legacy evidence/debug code. It is not the production random map generator path, and `MapPackageService.generate_random_map` must not fall back to it.
 
+The public `MapPackageService.generate_random_map` entry point is intentionally narrowed to the reset gate: supported small land configs return the h3maped small-port not-ready result, and every out-of-scope config returns the archived-legacy-disabled result. The previous catalog-auto map assembly body is no longer present below that reset return.
+
 ## Source Anchor
 
 - Binary: `/root/Downloads/h3maped.exe`
