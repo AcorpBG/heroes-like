@@ -1721,6 +1721,101 @@ Dictionary boundary_helper_primitives_report(const Dictionary &normalized_config
 	return report;
 }
 
+Dictionary rectangle_fallback_4a2777_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2777_rectangle_fallback_branch_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 fallback branch at 0x4a2847..0x4a290c; paints right/top/left/bottom rectangle bounds through 0x4a261a and appends four runtime_zone+0x3f4 footprint vertices";
+	report["function_address"] = "0x4a2777";
+	report["address_range"] = "0x4a2847..0x4a290c";
+	report["line_writer_address"] = "0x4a261a";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["uses_real_source_node_walk"] = false;
+	report["materializes_project_grid"] = false;
+
+	const int32_t sample_width = 12;
+	const int32_t sample_height = 9;
+	const int32_t level_count = 1;
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t min_x = 2;
+	const int32_t min_y = 2;
+	const int32_t max_x = 9;
+	const int32_t max_y = 6;
+	const int32_t zone_word_id = 5;
+	std::vector<uint32_t> zone_words(size_t(sample_width * sample_height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(sample_width * sample_height * level_count), 0);
+	Array edge_reports;
+	int32_t total_write_count = 0;
+	int32_t total_unique_write_count = 0;
+	int32_t total_out_of_bounds_count = 0;
+	auto append_edge = [&](const char *id, int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+		LineWriteResult line = h3maped_line_writer_4a261a(zone_words, cell_flags, sample_width, sample_height, level_count, water_code, x1, y1, x2, y2, 0, zone_word_id);
+		total_write_count += line.write_count;
+		total_unique_write_count += line.unique_cell_count;
+		total_out_of_bounds_count += line.out_of_bounds_write_count;
+		Dictionary edge;
+		edge["id"] = id;
+		edge["from_x"] = x1;
+		edge["from_y"] = y1;
+		edge["to_x"] = x2;
+		edge["to_y"] = y2;
+		edge["write_count"] = line.write_count;
+		edge["unique_write_count"] = line.unique_cell_count;
+		edge["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+		edge_reports.append(edge);
+	};
+	append_edge("right", max_x, max_y, max_x, min_y);
+	append_edge("top", min_x, max_y, max_x, max_y);
+	append_edge("left", min_x, min_y, min_x, max_y);
+	append_edge("bottom", max_x, min_y, min_x, min_y);
+
+	int32_t unique_zone_word_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	for (int32_t y = 0; y < sample_height; ++y) {
+		for (int32_t x = 0; x < sample_width; ++x) {
+			const int64_t index = h3maped_cell_index(sample_width, sample_height, x, y, 0);
+			if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == (uint32_t(zone_word_id) << 16U)) {
+				unique_zone_word_cell_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_cell_count += 1;
+			}
+		}
+	}
+	Array vertices;
+	auto append_vertex = [&](int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+	};
+	append_vertex(max_x, max_y);
+	append_vertex(max_x, min_y);
+	append_vertex(min_x, min_y);
+	append_vertex(min_x, max_y);
+
+	Dictionary sample;
+	sample["map_width"] = sample_width;
+	sample["map_height"] = sample_height;
+	sample["level_count"] = level_count;
+	sample["min_x"] = min_x;
+	sample["min_y"] = min_y;
+	sample["max_x"] = max_x;
+	sample["max_y"] = max_y;
+	sample["zone_word_id"] = zone_word_id;
+	sample["edge_call_count"] = edge_reports.size();
+	sample["edge_write_count"] = total_write_count;
+	sample["edge_unique_write_count"] = total_unique_write_count;
+	sample["unique_zone_word_cell_count"] = unique_zone_word_cell_count;
+	sample["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	sample["out_of_bounds_write_count"] = total_out_of_bounds_count;
+	sample["edges"] = edge_reports;
+	sample["footprint_vertex_count"] = vertices.size();
+	sample["footprint_vertices"] = vertices;
+	report["sample_contract"] = sample;
+	report["blocked_next"] = "replace standalone rectangle fallback with full 0x4a2777 source-node traversal for real runtime zones";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -1821,6 +1916,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary boundary_helpers = boundary_helper_primitives_report(normalized_config);
 	footprint_schedule["boundary_helper_primitives_status"] = boundary_helpers.get("status", "");
 	footprint_schedule["boundary_helper_primitives"] = boundary_helpers;
+	Dictionary rectangle_fallback = rectangle_fallback_4a2777_report(normalized_config);
+	footprint_schedule["rectangle_fallback_status"] = rectangle_fallback.get("status", "");
+	footprint_schedule["rectangle_fallback"] = rectangle_fallback;
 	footprint_schedule["next_materialization_status"] = "pending_0x4a2777_0x4a325d_boundary_and_span_fill";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
@@ -1864,7 +1962,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a2b33, 0x4a261a, 0x4a325d, 0x4a3710", "active_schedule_boundary_helper_span_primitive_and_small_land_finalizer_only" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4a2b33, 0x4a261a, 0x4a2777, 0x4a325d, 0x4a3710", "active_schedule_boundary_helper_rectangle_fallback_span_primitive_and_small_land_finalizer_only" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
 		{ "connection_guards_blockers", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a7605", "pending" },
