@@ -5131,6 +5131,63 @@ Array h3maped_reward_dynamic_constructor_sites_49f95a() {
 	return sites;
 }
 
+Array h3maped_reward_dynamic_record_skeletons_49f95a(const Dictionary &normalized_config) {
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const bool two_level_branch = level_count > 1;
+	const int32_t creature_loop_limit = two_level_branch ? 0x91 : 0x76;
+	const int32_t type17_loop_limit = two_level_branch ? 0x50 : 0x3a;
+	Array skeletons;
+	{
+		Dictionary skeleton;
+		skeleton["constructor_call_address"] = "0x49fa2a";
+		skeleton["insert_helper_address"] = "0x42d8d8";
+		skeleton["vtable_address"] = "0x540bc0";
+		skeleton["value_virtual_address"] = "0x49c64b";
+		skeleton["type_id"] = 6;
+		skeleton["subtype_source"] = "creature_table_index";
+		skeleton["weight"] = 3;
+		skeleton["loop_order"] = "descending creature index";
+		skeleton["loop_slot_count_for_current_level_mode"] = creature_loop_limit;
+		skeleton["materialization_condition"] = "creature_row+0x04 >= 0 from runtime table pointer 0x581298";
+		skeleton["known_unconditional_record_count"] = 0;
+		skeleton["record_count_status"] = "runtime_creature_table_pending";
+		skeletons.append(skeleton);
+	}
+	{
+		Dictionary skeleton;
+		skeleton["constructor_call_address"] = "0x4a043a";
+		skeleton["insert_helper_address"] = "0x40bb26";
+		skeleton["vtable_address"] = "0x540c00";
+		skeleton["value_virtual_address"] = "0x49c849";
+		skeleton["type_id"] = 17;
+		skeleton["subtype_source"] = "loop index";
+		skeleton["weight"] = 0x28;
+		skeleton["loop_order"] = "descending subtype index";
+		skeleton["loop_slot_count_for_current_level_mode"] = type17_loop_limit;
+		skeleton["materialization_condition"] = "unconditional";
+		skeleton["known_unconditional_record_count"] = type17_loop_limit;
+		skeleton["record_count_status"] = "skeleton_materialized_value_runtime_tables_pending";
+		skeletons.append(skeleton);
+	}
+	{
+		Dictionary skeleton;
+		skeleton["constructor_call_address"] = "0x4a0f54";
+		skeleton["insert_helper_address"] = "0x40bb26";
+		skeleton["vtable_address"] = "0x540c60";
+		skeleton["value_virtual_address"] = "0x49ca8b";
+		skeleton["type_id"] = 83;
+		skeleton["subtype_source"] = "generator+0x568 vector index";
+		skeleton["weight"] = 3;
+		skeleton["loop_order"] = "outer generator+0x568 vector, descending creature index";
+		skeleton["loop_slot_count_for_current_level_mode_per_outer_record"] = creature_loop_limit;
+		skeleton["materialization_condition"] = "generator+0x568 vector count and creature_row+0x04 >= 0 from runtime table pointer 0x581298";
+		skeleton["known_unconditional_record_count"] = 0;
+		skeleton["record_count_status"] = "generator_vector_and_runtime_creature_table_pending";
+		skeletons.append(skeleton);
+	}
+	return skeletons;
+}
+
 Dictionary h3maped_reward_dynamic_value_functions_49f95a_report(const Dictionary &normalized_config) {
 	Dictionary report;
 	report["source_binary_path"] = BINARY_PATH;
@@ -5182,6 +5239,17 @@ Dictionary h3maped_reward_dynamic_value_functions_49f95a_report(const Dictionary
 	report["functions"] = functions;
 	report["ported_formula_count"] = functions.size();
 	report["dynamic_constructor_site_count"] = h3maped_reward_dynamic_constructor_sites_49f95a().size();
+	Array dynamic_skeletons = h3maped_reward_dynamic_record_skeletons_49f95a(normalized_config);
+	report["dynamic_record_skeletons"] = dynamic_skeletons;
+	int32_t known_unconditional_dynamic_record_count = 0;
+	for (int64_t index = 0; index < dynamic_skeletons.size(); ++index) {
+		if (Variant(dynamic_skeletons[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		known_unconditional_dynamic_record_count += int32_t(Dictionary(dynamic_skeletons[index]).get("known_unconditional_record_count", 0));
+	}
+	report["known_unconditional_dynamic_record_count"] = known_unconditional_dynamic_record_count;
+	report["scan_ready_dynamic_record_count"] = 0;
 	report["candidate_expansion_status"] = "runtime_candidate_records_not_materialized_until_creature_table_and_generator_plus_0x568_vector_are_ported";
 	report["status"] = "0x49c64b_0x49c849_0x49ca8b_dynamic_value_formulas_ported_runtime_tables_pending";
 	return report;
