@@ -492,6 +492,9 @@ func _run() -> void:
 	var missing_bucket_table_histogram: Dictionary = terrain_visual_projection.get("missing_bucket_table_histogram", {})
 	var terrain_queue_frontier_gap_report: Dictionary = terrain_visual_projection.get("terrain_queue_frontier_gap_report", {})
 	var terrain_queue_frontier_addresses: Array = terrain_queue_frontier_gap_report.get("ported_addresses", [])
+	var terrain_queue_retouch_projection: Dictionary = terrain_visual_projection.get("terrain_queue_retouch_projection", {})
+	var terrain_queue_retouch_addresses: Array = terrain_queue_retouch_projection.get("ported_addresses", [])
+	var retouched_terrain_codes: PackedInt32Array = terrain_queue_retouch_projection.get("retouched_terrain_code_u16", PackedInt32Array())
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -585,6 +588,7 @@ func _run() -> void:
 			or bool(terrain_visual_projection.get("full_grid_projection_complete", true)) \
 			or int(terrain_visual_projection.get("queue_normalization_required_cell_count", -1)) != 20 \
 			or String(terrain_visual_projection.get("terrain_queue_frontier_gap_report_status", "")) != "0x4bc74c_0x4bc928_0x4bc674_0x4bc6e0_0x4bc988_missing_bucket_frontier_gates_ported_inspection_only" \
+			or String(terrain_visual_projection.get("terrain_queue_retouch_projection_status", "")) != "0x4bbd01_missing_bucket_retouch_projection_inspection_only" \
 			or int(terrain_visual_projection.get("boundary_cell_projected_count", -1)) <= 0 \
 			or int(terrain_visual_projection.get("zero_boundary_cell_projected_count", -1)) <= 0 \
 			or int(terrain_visual_projection.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
@@ -617,6 +621,21 @@ func _run() -> void:
 			or bool(terrain_queue_frontier_gap_report.get("materializes_queue_retouches", true)) \
 			or bool(terrain_queue_frontier_gap_report.get("materializes_package_tiles", true)):
 		_fail("The h3maped TerrainPlacement queue frontier gap report drifted: %s" % JSON.stringify(terrain_queue_frontier_gap_report))
+		return
+	if String(terrain_queue_retouch_projection.get("status", "")) != "0x4bbd01_missing_bucket_retouch_projection_inspection_only" \
+			or not terrain_queue_retouch_addresses.has("0x4bbd01") \
+			or not terrain_queue_retouch_addresses.has("0x4bc988") \
+			or not terrain_queue_retouch_addresses.has("0x4bb74b") \
+			or int(terrain_queue_retouch_projection.get("initial_missing_bucket_cell_count", -1)) != 20 \
+			or int(terrain_queue_retouch_projection.get("retouched_cell_write_count", -1)) <= 0 \
+			or int(terrain_queue_retouch_projection.get("post_retouch_missing_bucket_cell_count", -1)) != 0 \
+			or not bool(terrain_queue_retouch_projection.get("post_retouch_full_grid_projection_complete", false)) \
+			or not Dictionary(terrain_queue_retouch_projection.get("post_retouch_missing_class_histogram", {"unexpected": 1})).is_empty() \
+			or Array(terrain_queue_retouch_projection.get("retouch_samples", [])).is_empty() \
+			or retouched_terrain_codes.size() != 1296 \
+			or bool(terrain_queue_retouch_projection.get("adopts_into_runtime_grid", true)) \
+			or bool(terrain_queue_retouch_projection.get("materializes_package_tiles", true)):
+		_fail("The h3maped TerrainPlacement queue retouch projection drifted: %s" % JSON.stringify(terrain_queue_retouch_projection))
 		return
 	var first_missing_visual_projection: Dictionary = visual_projection_missing_samples[0]
 	if String(first_missing_visual_projection.get("same_terrain_mask_address", "")) != "0x4bc74c" \
