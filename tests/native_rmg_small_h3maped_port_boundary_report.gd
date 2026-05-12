@@ -480,6 +480,13 @@ func _run() -> void:
 	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
 	var final_sweep_boundary_counter: Dictionary = terrain_cell_writeout.get("final_sweep_boundary_counter", {})
 	var generated_boundary_counts: PackedInt32Array = final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array())
+	var terrain_visual_projection: Dictionary = terrain_cell_writeout.get("terrain_visual_projection", {})
+	var projected_cell_0x24: PackedInt32Array = terrain_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array())
+	var projected_cell_0x28: PackedInt32Array = terrain_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array())
+	var projected_tile_byte_1: PackedInt32Array = terrain_visual_projection.get("projected_tile_byte_1_terrain_art_u8", PackedInt32Array())
+	var projected_tile_byte_6: PackedInt32Array = terrain_visual_projection.get("projected_tile_byte_6_terrain_flags_u8", PackedInt32Array())
+	var visual_projection_samples: Array = terrain_visual_projection.get("sample_records", [])
+	var visual_projection_missing_samples: Array = terrain_visual_projection.get("missing_bucket_samples", [])
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -511,6 +518,7 @@ func _run() -> void:
 			or int(terrain_cell_writeout.get("unassigned_water_cell_count", -1)) != 185 \
 			or String(terrain_cell_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
 			or String(terrain_cell_writeout.get("final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(terrain_cell_writeout.get("terrain_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or String(terrain_cell_writeout.get("tile_serializer_contract_status", "")) != "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported" \
 			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout" \
 			or not bool(terrain_cell_writeout.get("materializes_project_grid", false)) \
@@ -555,6 +563,35 @@ func _run() -> void:
 			or bool(final_sweep_boundary_counter.get("materializes_full_terrain_art_grid", true)) \
 			or bool(final_sweep_boundary_counter.get("materializes_package_tiles", true)):
 		_fail("The generated-grid 0x4bbfcc boundary counter drifted: %s" % JSON.stringify(final_sweep_boundary_counter))
+		return
+	if String(terrain_visual_projection.get("status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
+			or String(terrain_visual_projection.get("relation_address", "")) != "0x4bb039" \
+			or String(terrain_visual_projection.get("classifier_address", "")) != "0x4bb075" \
+			or not Array(terrain_visual_projection.get("row_selector_addresses", [])).has("0x4ba938") \
+			or not Array(terrain_visual_projection.get("row_selector_addresses", [])).has("0x4ba989") \
+			or String(terrain_visual_projection.get("scratch_write_address", "")) != "0x4bad0f" \
+			or String(terrain_visual_projection.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or int(terrain_visual_projection.get("width", -1)) != 36 \
+			or int(terrain_visual_projection.get("height", -1)) != 36 \
+			or int(terrain_visual_projection.get("level_count", -1)) != 1 \
+			or int(terrain_visual_projection.get("tile_count", -1)) != 1296 \
+			or int(terrain_visual_projection.get("projected_cell_count", -1)) != 1276 \
+			or int(terrain_visual_projection.get("missing_bucket_cell_count", -1)) != 20 \
+			or bool(terrain_visual_projection.get("full_grid_projection_complete", true)) \
+			or int(terrain_visual_projection.get("queue_normalization_required_cell_count", -1)) != 20 \
+			or int(terrain_visual_projection.get("boundary_cell_projected_count", -1)) <= 0 \
+			or int(terrain_visual_projection.get("zero_boundary_cell_projected_count", -1)) <= 0 \
+			or int(terrain_visual_projection.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or projected_cell_0x24.size() != 1296 \
+			or projected_cell_0x28.size() != 1296 \
+			or projected_tile_byte_1.size() != 1296 \
+			or projected_tile_byte_6.size() != 1296 \
+			or visual_projection_samples.size() != 8 \
+			or visual_projection_missing_samples.size() != 8 \
+			or bool(terrain_visual_projection.get("adopts_into_tile_byte_arrays", true)) \
+			or not bool(terrain_visual_projection.get("materializes_projected_generated_cell_words", false)) \
+			or bool(terrain_visual_projection.get("materializes_package_tiles", true)):
+		_fail("The generated-grid TerrainPlacement projection drifted: %s" % JSON.stringify(terrain_visual_projection))
 		return
 	if String(terrain_repaint_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_inspection_only" \
 			or String(terrain_repaint_schedule.get("full_map_water_repaint_address", "")) != "0x4a4025" \
@@ -825,6 +862,7 @@ func _run() -> void:
 			or int(terrain_grid.get("level_count", -1)) != 1 \
 			or int(terrain_grid.get("tile_count", -1)) != 1296 \
 			or String(terrain_grid.get("final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(terrain_grid.get("terrain_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or terrain_levels.size() != 1:
 		_fail("The inspection terrain-grid adoption record drifted: %s" % JSON.stringify(terrain_grid))
 		return
