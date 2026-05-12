@@ -6411,7 +6411,7 @@ Array clean_phase_ledger() {
 Dictionary h3maped_path_state_seed_4aae7b_report(const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source);
 Array h3maped_town_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
 Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const Dictionary &payload);
-Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config);
+Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config, const Dictionary &terrain_fill);
 Dictionary h3maped_connection_payload_from_records(const Array &connection_records, const Dictionary &normalized_config);
 Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_records, const Array &mine_records);
 Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source, int64_t rng_state_before_road_phase);
@@ -6516,7 +6516,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
 		Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 		Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
-		Array connection_records = h3maped_connection_records_from_port(payload, normalized_config);
+		Array connection_records = h3maped_connection_records_from_port(payload, normalized_config, terrain_fill);
 		payload["connection_payload"] = h3maped_connection_payload_from_records(connection_records, normalized_config);
 		Dictionary coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 		Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
@@ -6970,7 +6970,132 @@ Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const 
 	return result;
 }
 
-Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config) {
+Dictionary h3maped_connection_geometry_4a6cf2_overlap_report(const Dictionary &seed, const Dictionary &terrain_fill) {
+	Dictionary report;
+	report["function_address"] = "0x4a6cf2";
+	report["source_range_overlap"] = "0x4a6d52..0x4a6ddc";
+	report["source_range_candidate_scan"] = "0x4a6de2..0x4a6f4a";
+	report["source_range_endpoint_record_write"] = "0x4a6f50..0x4a7073";
+	report["source_range_wide_read"] = "0x4a707b..0x4a709a";
+	report["source_range_block_cells"] = "0x4a70aa..0x4a7100";
+	report["source_range_guard_spawn"] = "0x4a72bd..0x4a72e8";
+	report["candidate_shape_vector_source"] = "generator+0x6a8";
+	report["candidate_shape_vector_status"] = "pending_generator_0x6a8_shape_list_port";
+	report["validation_helper_address"] = "0x49aa93";
+	report["materializes_endpoint_coordinates"] = false;
+	report["endpoint_coordinate_materialized_count"] = 0;
+	report["wide_geometry_role"] = "none_traced_wide_read_after_endpoint_geometry";
+
+	const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
+	const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
+	const int32_t map_width = int32_t(terrain_fill.get("width", 0));
+	const int32_t map_height = int32_t(terrain_fill.get("height", 0));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	PackedInt32Array owner_grid = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array());
+	Array zone_reports = terrain_fill.get("zones", Array());
+	Dictionary bbox_a;
+	Dictionary bbox_b;
+	for (int64_t zone_index = 0; zone_index < zone_reports.size(); ++zone_index) {
+		if (Variant(zone_reports[zone_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(zone_reports[zone_index]);
+		const int32_t runtime_index = int32_t(zone.get("runtime_zone_index", -1));
+		if (runtime_index == runtime_a) {
+			bbox_a = zone;
+		} else if (runtime_index == runtime_b) {
+			bbox_b = zone;
+		}
+	}
+	report["runtime_zone_a"] = runtime_a;
+	report["runtime_zone_b"] = runtime_b;
+	report["map_width"] = map_width;
+	report["map_height"] = map_height;
+	report["level_count"] = level_count;
+	if (bbox_a.is_empty() || bbox_b.is_empty() || map_width <= 0 || map_height <= 0 || owner_grid.size() < map_width * map_height * level_count) {
+		report["status"] = "0x4a6cf2_overlap_precheck_blocked_missing_generated_cell_inputs";
+		report["blocked_reason"] = "requires 0x4a2105 runtime-zone bboxes and generated-cell owner byte grid before candidate scan";
+		return report;
+	}
+
+	const int32_t level_a = int32_t(bbox_a.get("seed_level", 0));
+	const int32_t level_b = int32_t(bbox_b.get("seed_level", 0));
+	const int32_t min_x = std::max(int32_t(bbox_a.get("bbox_min_x_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_x_after_0x4a2105", 0)));
+	const int32_t min_y = std::max(int32_t(bbox_a.get("bbox_min_y_after_0x4a2105", 0)), int32_t(bbox_b.get("bbox_min_y_after_0x4a2105", 0)));
+	const int32_t max_x = std::min(int32_t(bbox_a.get("bbox_max_x_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_x_after_0x4a2105_exclusive", 0)));
+	const int32_t max_y = std::min(int32_t(bbox_a.get("bbox_max_y_after_0x4a2105_exclusive", 0)), int32_t(bbox_b.get("bbox_max_y_after_0x4a2105_exclusive", 0)));
+	const int32_t overlap_width = level_a == level_b ? std::max(0, max_x - min_x) : 0;
+	const int32_t overlap_height = level_a == level_b ? std::max(0, max_y - min_y) : 0;
+	const int32_t overlap_cell_count = overlap_width * overlap_height;
+	Dictionary bbox_summary_a;
+	bbox_summary_a["min_x"] = bbox_a.get("bbox_min_x_after_0x4a2105", 0);
+	bbox_summary_a["min_y"] = bbox_a.get("bbox_min_y_after_0x4a2105", 0);
+	bbox_summary_a["max_x_exclusive"] = bbox_a.get("bbox_max_x_after_0x4a2105_exclusive", 0);
+	bbox_summary_a["max_y_exclusive"] = bbox_a.get("bbox_max_y_after_0x4a2105_exclusive", 0);
+	bbox_summary_a["level"] = level_a;
+	Dictionary bbox_summary_b;
+	bbox_summary_b["min_x"] = bbox_b.get("bbox_min_x_after_0x4a2105", 0);
+	bbox_summary_b["min_y"] = bbox_b.get("bbox_min_y_after_0x4a2105", 0);
+	bbox_summary_b["max_x_exclusive"] = bbox_b.get("bbox_max_x_after_0x4a2105_exclusive", 0);
+	bbox_summary_b["max_y_exclusive"] = bbox_b.get("bbox_max_y_after_0x4a2105_exclusive", 0);
+	bbox_summary_b["level"] = level_b;
+	Dictionary overlap_rect;
+	overlap_rect["min_x"] = min_x;
+	overlap_rect["min_y"] = min_y;
+	overlap_rect["max_x_exclusive"] = max_x;
+	overlap_rect["max_y_exclusive"] = max_y;
+	overlap_rect["level"] = level_a;
+	overlap_rect["width"] = overlap_width;
+	overlap_rect["height"] = overlap_height;
+	report["bbox_a"] = bbox_summary_a;
+	report["bbox_b"] = bbox_summary_b;
+	report["overlap_rect"] = overlap_rect;
+	report["overlap_cell_count"] = overlap_cell_count;
+
+	int32_t owner_a_cell_count = 0;
+	int32_t owner_b_cell_count = 0;
+	int32_t other_owner_cell_count = 0;
+	int32_t unassigned_cell_count = 0;
+	int32_t low_word_sum = 0;
+	PackedInt32Array zone_word_low_grid = terrain_fill.get("zone_word_low_u16", PackedInt32Array());
+	if (overlap_cell_count > 0) {
+		for (int32_t y = min_y; y < max_y; ++y) {
+			for (int32_t x = min_x; x < max_x; ++x) {
+				const int32_t flat_index = level_a * map_width * map_height + y * map_width + x;
+				if (flat_index < 0 || flat_index >= owner_grid.size()) {
+					continue;
+				}
+				const int32_t owner = owner_grid[flat_index];
+				if (owner == runtime_a) {
+					owner_a_cell_count += 1;
+				} else if (owner == runtime_b) {
+					owner_b_cell_count += 1;
+				} else if (owner < 0) {
+					unassigned_cell_count += 1;
+				} else {
+					other_owner_cell_count += 1;
+				}
+				if (flat_index >= 0 && flat_index < zone_word_low_grid.size()) {
+					low_word_sum += int32_t(zone_word_low_grid[flat_index]);
+				}
+			}
+		}
+	}
+	report["overlap_owner_a_cell_count"] = owner_a_cell_count;
+	report["overlap_owner_b_cell_count"] = owner_b_cell_count;
+	report["overlap_other_owner_cell_count"] = other_owner_cell_count;
+	report["overlap_unassigned_cell_count"] = unassigned_cell_count;
+	report["overlap_low_word_score_sum"] = low_word_sum;
+	report["candidate_scan_status"] = overlap_cell_count > 0
+			? String("0x4a6de2_overlap_owner_score_scan_materialized_shape_list_pending")
+			: String("0x4a6cf2_returns_false_empty_overlap");
+	report["status"] = overlap_cell_count > 0
+			? String("0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending")
+			: String("0x4a6cf2_empty_overlap_no_endpoint_geometry");
+	return report;
+}
+
+Array h3maped_connection_records_from_port(const Dictionary &payload, const Dictionary &normalized_config, const Dictionary &terrain_fill) {
 	Array result;
 	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
 	Array link_seeds = runtime_build.get("link_seeds", Array());
@@ -7015,6 +7140,10 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		record["geometry_success_helper"] = "";
 		record["endpoint_coordinate_materialized"] = false;
 		record["endpoint_coordinate_blocker"] = "helper_success_path_geometry_not_ported";
+		Dictionary overlap_report = h3maped_connection_geometry_4a6cf2_overlap_report(seed, terrain_fill);
+		record["geometry_4a6cf2_overlap"] = overlap_report;
+		record["geometry_4a6cf2_status"] = overlap_report.get("status", "");
+		record["geometry_4a6cf2_overlap_cell_count"] = overlap_report.get("overlap_cell_count", 0);
 		record["road_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 		record["h3maped_phase"] = "0x4a79a3_link_payload_semantics";
 		record["h3maped_source"] = seed;
@@ -7038,6 +7167,9 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t normal_guard_scaled_nonzero_count = 0;
 	int32_t normal_guard_scaled_value_total = 0;
 	int32_t endpoint_coordinate_materialized_count = 0;
+	int32_t overlap_4a6cf2_link_count = 0;
+	int32_t overlap_4a6cf2_nonempty_link_count = 0;
+	int32_t overlap_4a6cf2_cell_total = 0;
 	Array normal_guard_spawn_intents;
 	Array geometry_dispatch_plan;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
@@ -7057,6 +7189,15 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		if (bool(record.get("endpoint_coordinate_materialized", false))) {
 			endpoint_coordinate_materialized_count += 1;
 		}
+		Dictionary overlap_4a6cf2 = record.get("geometry_4a6cf2_overlap", Dictionary());
+		if (!overlap_4a6cf2.is_empty()) {
+			overlap_4a6cf2_link_count += 1;
+			const int32_t overlap_cell_count = int32_t(overlap_4a6cf2.get("overlap_cell_count", 0));
+			overlap_4a6cf2_cell_total += overlap_cell_count;
+			if (overlap_cell_count > 0) {
+				overlap_4a6cf2_nonempty_link_count += 1;
+			}
+		}
 		Dictionary dispatch;
 		dispatch["connection_id"] = record.get("connection_id", "");
 		dispatch["link_index"] = record.get("link_index", index);
@@ -7068,6 +7209,7 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		dispatch["consumes_value_wide_border_guard"] = true;
 		dispatch["required_outputs_before_guard_spawn"] = "endpoint_coordinates_occupied_blocked_connection_cells_processed_marker";
 		dispatch["wide_geometry_role"] = "none_traced_wide_suppresses_normal_guard_after_geometry";
+		dispatch["helper_4a6cf2_overlap"] = overlap_4a6cf2;
 		dispatch["status"] = "dispatch_order_ported_success_path_geometry_pending";
 		geometry_dispatch_plan.append(dispatch);
 		const int32_t scaled_value = int32_t(record.get("normal_guard_scaled_value", 0));
@@ -7108,6 +7250,11 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_endpoint_geometry_pending";
 	connection_payload["geometry_dispatch_link_count"] = geometry_dispatch_plan.size();
 	connection_payload["geometry_endpoint_coordinate_materialized_count"] = endpoint_coordinate_materialized_count;
+	connection_payload["geometry_4a6cf2_overlap_status"] = "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending";
+	connection_payload["geometry_4a6cf2_overlap_link_count"] = overlap_4a6cf2_link_count;
+	connection_payload["geometry_4a6cf2_nonempty_overlap_link_count"] = overlap_4a6cf2_nonempty_link_count;
+	connection_payload["geometry_4a6cf2_overlap_cell_total"] = overlap_4a6cf2_cell_total;
+	connection_payload["geometry_4a6cf2_endpoint_coordinate_materialized_count"] = 0;
 	connection_payload["geometry_dispatch_plan"] = geometry_dispatch_plan;
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
 	connection_payload["road_materialization_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -8561,7 +8708,7 @@ Dictionary inspection_partial_materialized_payload_blocked(const Dictionary &nor
 	Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
 	Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
-	Array connection_records = h3maped_connection_records_from_port(payload, normalized_config);
+	Array connection_records = h3maped_connection_records_from_port(payload, normalized_config, terrain_fill);
 	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records, normalized_config);
 	Dictionary road_coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
 	Dictionary mine_reward_placement = payload.get("guard_reward_monster_placement", Dictionary());
