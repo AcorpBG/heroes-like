@@ -360,6 +360,20 @@ func _run() -> void:
 	if int(vector_construction.get("dynamic_constructor_site_pending_count", -1)) != 3:
 		_fail("0x49f95a dynamic constructor site gap drifted: %s" % JSON.stringify(vector_construction))
 		return
+	if String(vector_construction.get("dynamic_value_function_recovery_status", "")) != "0x49c64b_0x49c849_0x49ca8b_formulas_ported_runtime_tables_pending":
+		_fail("0x49f95a dynamic value-function formula recovery drifted: %s" % JSON.stringify(vector_construction))
+		return
+	var dynamic_values: Dictionary = mine_reward_placement.get("treasure_reward_dynamic_value_function_summary", {})
+	if String(dynamic_values.get("status", "")) != "0x49c64b_0x49c849_0x49ca8b_dynamic_value_formulas_ported_runtime_tables_pending" or int(dynamic_values.get("ported_formula_count", -1)) != 3:
+		_fail("0x49f95a dynamic value-function summary drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	if int(dynamic_values.get("0x49fa2a_creature_loop_limit", -1)) != 0x76 or int(dynamic_values.get("0x4a043a_type17_loop_limit", -1)) != 0x3a or int(dynamic_values.get("0x4a0f54_inner_creature_loop_limit", -1)) != 0x76:
+		_fail("0x49f95a one-level dynamic loop limits drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	var dynamic_functions: Array = dynamic_values.get("functions", [])
+	if dynamic_functions.size() != 3 or String(Dictionary(dynamic_functions[0]).get("address", "")) != "0x49c64b" or String(Dictionary(dynamic_functions[1]).get("address", "")) != "0x49c849" or String(Dictionary(dynamic_functions[2]).get("address", "")) != "0x49ca8b":
+		_fail("0x49f95a dynamic value-function addresses drifted: %s" % JSON.stringify(dynamic_values))
+		return
 	if int(mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", -1)) != 463 or int(mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", -1)) != 95948:
 		_fail("0x4a9f1c recovered materialized candidate scan totals drifted: %s" % JSON.stringify(mine_reward_placement))
 		return

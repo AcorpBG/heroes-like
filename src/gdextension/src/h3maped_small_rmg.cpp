@@ -5101,7 +5101,7 @@ Array h3maped_reward_dynamic_constructor_sites_49f95a() {
 		site["value_virtual_address"] = "0x49c64b";
 		site["type_source"] = "constructor sets type 6";
 		site["value_source"] = "dynamic creature-table ratio from 0x581298 and generator resource totals";
-		site["status"] = "dynamic_value_function_pending";
+		site["status"] = "dynamic_value_formula_ported_runtime_creature_table_pending";
 		sites.append(site);
 	}
 	{
@@ -5113,7 +5113,7 @@ Array h3maped_reward_dynamic_constructor_sites_49f95a() {
 		site["value_virtual_address"] = "0x49c849";
 		site["type_source"] = "constructor receives type 17 with loop-derived subtype";
 		site["value_source"] = "dynamic creature table value from 0x531cc4, 0x581298, and generator resource totals";
-		site["status"] = "dynamic_value_function_pending";
+		site["status"] = "dynamic_value_formula_ported_runtime_creature_table_pending";
 		sites.append(site);
 	}
 	{
@@ -5122,13 +5122,69 @@ Array h3maped_reward_dynamic_constructor_sites_49f95a() {
 		site["constructor_call_address"] = "0x4a0f54";
 		site["constructor_address"] = "0x49c5cd";
 		site["vtable_address"] = "0x540c60";
-		site["value_virtual_address"] = "0x49cac2";
+		site["value_virtual_address"] = "0x49ca8b";
 		site["type_source"] = "constructor patched to type 83 with loop-derived subtype";
 		site["value_source"] = "dynamic generator state calculation via 0x49c64b";
-		site["status"] = "dynamic_value_function_pending";
+		site["status"] = "dynamic_value_formula_ported_runtime_creature_table_pending";
 		sites.append(site);
 	}
 	return sites;
+}
+
+Dictionary h3maped_reward_dynamic_value_functions_49f95a_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["source_binary_path"] = BINARY_PATH;
+	report["creature_table_pointer_address"] = "0x581298";
+	report["creature_table_runtime_pointer_initial_value_address"] = "0x57cea0";
+	report["creature_value_table_address"] = "0x58dc08";
+	report["creature_remap_table_address"] = "0x531cc4";
+	report["generator_resource_total_offset"] = "generator+0xf60";
+	report["generator_resource_by_owner_offset"] = "generator+0xf64+owner*4";
+	report["runtime_zone_owner_offset"] = "zone_record+0x08";
+	report["runtime_generation_state_offset"] = "generator+0xf58";
+	report["runtime_generation_suppression_byte_offset"] = "generator+0x10b4";
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const bool two_level_branch = level_count > 1;
+	report["level_count"] = level_count;
+	report["generator_plus_0x08_modeled_as_two_level_flag"] = two_level_branch ? 1 : 0;
+	report["0x49fa2a_creature_loop_limit"] = two_level_branch ? 0x91 : 0x76;
+	report["0x4a043a_type17_loop_limit"] = two_level_branch ? 0x50 : 0x3a;
+	report["0x4a0f54_outer_vector_source"] = "generator+0x568..generator+0x56c";
+	report["0x4a0f54_inner_creature_loop_limit"] = two_level_branch ? 0x91 : 0x76;
+	Array functions;
+	{
+		Dictionary function;
+		function["address"] = "0x49c64b";
+		function["candidate_vtable"] = "0x540bc0";
+		function["used_by_constructor_site"] = "0x49fa2a";
+		function["formula"] = "if creature_row+0x00 != zone_record+0x08 return -1; base=(creature_row+0x40)*(candidate+0x18); if owner!=-1 and generator+0xf60>0 add ((generator+0xf64+owner*4)*base)/(generator+0xf60)";
+		function["runtime_data_dependency"] = "creature table loaded at runtime through pointer 0x581298; generator resource totals from active generation state";
+		functions.append(function);
+	}
+	{
+		Dictionary function;
+		function["address"] = "0x49c849";
+		function["candidate_vtable"] = "0x540c00";
+		function["used_by_constructor_site"] = "0x4a043a";
+		function["formula"] = "creature_index=table_0x531cc4[candidate+0x08]; if creature_row+0x00 != zone_record+0x08 return -1; scaled=(creature_row+0x44)*(creature_row+0x40); if generator+0xf60>0 add ((generator+0xf64+owner*4)*scaled)/(generator+0xf60); return scaled + trunc(((creature_row+0x40)*(generator+0xf64+owner*4))/2)";
+		function["runtime_data_dependency"] = "creature remap table 0x531cc4 plus runtime creature table pointer 0x581298 and generator resource totals";
+		functions.append(function);
+	}
+	{
+		Dictionary function;
+		function["address"] = "0x49ca8b";
+		function["candidate_vtable"] = "0x540c60";
+		function["used_by_constructor_site"] = "0x4a0f54";
+		function["formula"] = "if generator+0xf58 != candidate+0x08 or byte(generator+0x10b4)!=0 return -1; return ((2 * value_0x49c64b(candidate, zone, generator)) - 0xfa0) / 3";
+		function["runtime_data_dependency"] = "delegates to 0x49c64b and additionally depends on generator+0xf58 and generator+0x10b4";
+		functions.append(function);
+	}
+	report["functions"] = functions;
+	report["ported_formula_count"] = functions.size();
+	report["dynamic_constructor_site_count"] = h3maped_reward_dynamic_constructor_sites_49f95a().size();
+	report["candidate_expansion_status"] = "runtime_candidate_records_not_materialized_until_creature_table_and_generator_plus_0x568_vector_are_ported";
+	report["status"] = "0x49c64b_0x49c849_0x49ca8b_dynamic_value_formulas_ported_runtime_tables_pending";
+	return report;
 }
 
 Dictionary reward_vector_construction_49f95a_report() {
@@ -5156,7 +5212,8 @@ Dictionary reward_vector_construction_49f95a_report() {
 	report["dynamic_constructor_site_pending_count"] = h3maped_reward_dynamic_constructor_sites_49f95a().size();
 	report["dynamic_constructor_sites"] = h3maped_reward_dynamic_constructor_sites_49f95a();
 	report["uncovered_static_insert_site_count"] = int32_t(report["static_insert_site_count"]) - int32_t(report["current_materialized_record_count"]);
-	report["recovery_status"] = "0x49f95a_direct_and_literal_constructor_records_materialized_dynamic_value_sites_pending";
+	report["dynamic_value_function_recovery_status"] = "0x49c64b_0x49c849_0x49ca8b_formulas_ported_runtime_tables_pending";
+	report["recovery_status"] = "0x49f95a_direct_and_literal_constructor_records_materialized_dynamic_record_expansion_pending";
 	report["weighted_selection_gate"] = "blocked_until_complete_generator_plus_0x10f4_vector_parity";
 	return report;
 }
@@ -6161,6 +6218,7 @@ Dictionary selected_template_payload(const Dictionary &template_record, const Di
 	payload["object_category_placement_status"] = town_castle_placement.get("status", "");
 	payload["town_castle_placement"] = town_castle_placement;
 	Dictionary mine_reward_placement = mine_reward_placement_4a9d6a_4aab7e_report(active_zones, source_catalog_index, runtime_zones, town_castle_placement);
+	mine_reward_placement["treasure_reward_dynamic_value_function_summary"] = h3maped_reward_dynamic_value_functions_49f95a_report(normalized_config);
 	payload["guard_reward_monster_placement_status"] = mine_reward_placement.get("status", "");
 	payload["guard_reward_monster_placement"] = mine_reward_placement;
 	payload["zones"] = active_zones;
