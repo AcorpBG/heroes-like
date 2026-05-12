@@ -2531,6 +2531,84 @@ Dictionary boundary_traversal_4a2777_real_cycles_report(const Dictionary &normal
 	return report;
 }
 
+Dictionary seed_relocation_4a325d_report(const Dictionary &source_node_walk, const SpanRecord &seed, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4a325d_seed_in_bounds_relocation_not_used";
+	report["source"] = "h3maped 0x4a32b2..0x4a338e relocation branch: when runtime_zone+0x10 seed is outside map bounds, scan the source-node cycle for the interior node with maximum border clearance, then clip the original seed toward that node through 0x4a2b33";
+	report["function_address"] = "0x4a325d";
+	report["branch_address"] = "0x4a32b2..0x4a338e";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["seed_x"] = seed.x;
+	report["seed_y"] = seed.y;
+	report["seed_level"] = seed.level;
+	const bool seed_in_bounds = seed.x >= 0 && seed.x < width && seed.y >= 0 && seed.y < height && seed.level >= 0 && seed.level < level_count;
+	report["seed_in_bounds"] = seed_in_bounds;
+
+	Array candidates;
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_clearance = -1;
+	Array cycle_nodes = source_node_walk.get("cycle_nodes", Array());
+	for (int64_t node_index = 0; node_index < cycle_nodes.size(); ++node_index) {
+		if (Variant(cycle_nodes[node_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary node = cycle_nodes[node_index];
+		const int32_t x = int32_t(node.get("+0x00_x", node.get("+0x1c_finalized_x", 0)));
+		const int32_t y = int32_t(node.get("+0x04_y", node.get("+0x20_finalized_y", 0)));
+		Dictionary candidate;
+		candidate["node_id"] = node.get("node_id", "");
+		candidate["x"] = x;
+		candidate["y"] = y;
+		const bool interior = x >= 1 && x < width - 1 && y >= 1 && y < height - 1;
+		candidate["interior_by_0x4a32ca"] = interior;
+		int32_t clearance = -1;
+		if (interior) {
+			clearance = std::min<int32_t>(std::min<int32_t>(x, width - x - 1), std::min<int32_t>(y, height - y - 1));
+			if (clearance > best_clearance) {
+				best_clearance = clearance;
+				best_x = x;
+				best_y = y;
+			}
+		}
+		candidate["border_clearance"] = clearance;
+		candidates.append(candidate);
+	}
+	report["candidate_count"] = candidates.size();
+	report["candidates"] = candidates;
+	report["best_candidate_x"] = best_x;
+	report["best_candidate_y"] = best_y;
+	report["best_candidate_border_clearance"] = best_clearance;
+	if (seed_in_bounds) {
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	if (best_x < 0 || best_y < 0) {
+		report["status"] = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	ClipResult clipped = h3maped_clip_point_4a2b33(seed.x, seed.y, best_x, best_y, bounds);
+	report["status"] = "0x4a325d_seed_out_of_bounds_relocated_with_0x4a2b33";
+	report["relocated"] = true;
+	report["relocated_seed_x"] = clipped.x;
+	report["relocated_seed_y"] = clipped.y;
+	report["relocated_seed_level"] = seed.level;
+	report["clip_branch"] = clipped.branch;
+	return report;
+}
+
 Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary) {
 	Dictionary report;
 	report["status"] = "0x4a325d_real_0x4a2777_boundary_span_fill_executed";
@@ -2556,6 +2634,7 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 	report["boundary_unique_cell_count"] = boundary.get("unique_cell_count", 0);
 	report["boundary_trace_write_count"] = boundary.get("trace_write_count", 0);
 	report["boundary_rng_state_after_0x4a2777_uint32"] = boundary.get("rng_state_after_0x4a2777_uint32", 0);
+	Array source_node_walks = polygon_finalizer.get("source_node_walks", Array());
 
 	Dictionary split_by_runtime;
 	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
@@ -2602,19 +2681,44 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 		const int32_t seed_x = int32_t(split.get("x", 0));
 		const int32_t seed_y = int32_t(split.get("y", 0));
 		const int32_t seed_level = int32_t(split.get("level", 0));
+		SpanRecord seed{ seed_x, seed_y, seed_level };
 		zone_report["seed_x"] = seed_x;
 		zone_report["seed_y"] = seed_y;
 		zone_report["seed_level"] = seed_level;
 		zone_report["seed_source"] = "0x4a3a03 runtime-zone split call x/y/level after 0x4a19ed bbox rescale";
-		const bool seed_available = h3maped_cell_unassigned(zone_words, width, height, seed_x, seed_y, seed_level);
+
+		Dictionary matching_walk;
+		for (int64_t walk_index = 0; walk_index < source_node_walks.size(); ++walk_index) {
+			if (Variant(source_node_walks[walk_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary walk = source_node_walks[walk_index];
+			if (int32_t(walk.get("runtime_zone_index", -1)) == runtime_zone_index) {
+				matching_walk = walk;
+				break;
+			}
+		}
+		Dictionary relocation = seed_relocation_4a325d_report(matching_walk, seed, width, height, level_count);
+		zone_report["seed_relocation_status"] = relocation.get("status", "");
+		zone_report["seed_relocation"] = relocation;
+		if (bool(relocation.get("relocated", false))) {
+			seed.x = int32_t(relocation.get("relocated_seed_x", seed.x));
+			seed.y = int32_t(relocation.get("relocated_seed_y", seed.y));
+			seed.level = int32_t(relocation.get("relocated_seed_level", seed.level));
+		}
+		zone_report["effective_seed_x"] = seed.x;
+		zone_report["effective_seed_y"] = seed.y;
+		zone_report["effective_seed_level"] = seed.level;
+
+		const bool seed_available = h3maped_cell_unassigned(zone_words, width, height, seed.x, seed.y, seed.level);
 		zone_report["seed_unassigned_before_fill"] = seed_available;
 		if (!seed_available) {
 			seed_blocked_count += 1;
-			zone_report["status"] = "blocked_seed_not_unassigned_relocation_pending";
+			zone_report["status"] = "0x4a325d_seed_reached_non_unassigned_boundary";
 			zone_fill_reports.append(zone_report);
 			continue;
 		}
-		SpanFillResult fill = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, runtime_zone_index, SpanRecord{ seed_x, seed_y, seed_level });
+		SpanFillResult fill = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, runtime_zone_index, seed);
 		if (fill.filled_cell_count > 0) {
 			filled_zone_count += 1;
 		}
@@ -2660,7 +2764,7 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 	report["seed_blocked_count"] = seed_blocked_count;
 	report["missing_seed_count"] = missing_seed_count;
 	report["seed_relocation_count"] = 0;
-	report["seed_relocation_status"] = seed_blocked_count == 0 ? String("not_needed_all_current_seeds_unassigned") : String("pending_0x4a32b2_seed_relocation");
+	report["seed_relocation_status"] = seed_blocked_count == 0 ? String("not_needed_all_current_seeds_unassigned") : String("0x4a32b2_relocation_ported_but_not_applicable_to_in_bounds_non_unassigned_seed");
 	report["unique_filled_cell_count"] = total_filled_cell_count;
 	report["total_boundary_or_filled_cell_count"] = total_boundary_or_filled_cell_count;
 	report["remaining_unassigned_cell_count"] = remaining_unassigned_cell_count;

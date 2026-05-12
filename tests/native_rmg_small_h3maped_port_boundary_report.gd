@@ -385,7 +385,7 @@ func _run() -> void:
 			or int(real_span_fill.get("filled_zone_count", -1)) != 5 \
 			or int(real_span_fill.get("seed_blocked_count", -1)) != 1 \
 			or int(real_span_fill.get("missing_seed_count", -1)) != 0 \
-			or String(real_span_fill.get("seed_relocation_status", "")) != "pending_0x4a32b2_seed_relocation" \
+			or String(real_span_fill.get("seed_relocation_status", "")) != "0x4a32b2_relocation_ported_but_not_applicable_to_in_bounds_non_unassigned_seed" \
 			or int(real_span_fill.get("unique_filled_cell_count", -1)) != 706 \
 			or int(real_span_fill.get("total_boundary_or_filled_cell_count", -1)) != 927 \
 			or int(real_span_fill.get("remaining_unassigned_cell_count", -1)) != 369 \
@@ -410,7 +410,8 @@ func _run() -> void:
 	if zone_fill_reports.size() != 6 \
 			or int(zone_fill_reports[0].get("filled_cell_count", -1)) != 152 \
 			or int(zone_fill_reports[1].get("filled_cell_count", -1)) != 69 \
-			or String(zone_fill_reports[2].get("status", "")) != "blocked_seed_not_unassigned_relocation_pending" \
+			or String(zone_fill_reports[2].get("status", "")) != "0x4a325d_seed_reached_non_unassigned_boundary" \
+			or String(zone_fill_reports[2].get("seed_relocation_status", "")) != "0x4a325d_seed_in_bounds_relocation_not_used" \
 			or bool(zone_fill_reports[2].get("seed_unassigned_before_fill", true)) \
 			or int(zone_fill_reports[3].get("filled_cell_count", -1)) != 126 \
 			or int(zone_fill_reports[4].get("filled_cell_count", -1)) != 174 \
