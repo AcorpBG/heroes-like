@@ -50,6 +50,11 @@ func get_api_metadata() -> Dictionary:
 		"map_package_extension": MAP_PACKAGE_EXTENSION,
 		"scenario_package_extension": SCENARIO_PACKAGE_EXTENSION,
 		"capabilities": get_capabilities(),
+		"native_rmg_generation_authority": "h3maped_small_reset_only",
+		"native_rmg_runtime_generation_allowed": false,
+		"native_rmg_active_reset_slice_id": "native-rmg-small-h3maped-port-10184",
+		"native_rmg_active_port_capability": "native_rmg_small_h3maped_port_boundary",
+		"native_rmg_legacy_capability_policy": "inspection_debug_evidence_not_runtime_generation_authority",
 		"status": "skeleton",
 	}
 

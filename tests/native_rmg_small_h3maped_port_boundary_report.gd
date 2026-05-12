@@ -15,6 +15,12 @@ func _run() -> void:
 	if String(metadata.get("binding_kind", "")) != "native_gdextension" or not bool(metadata.get("native_extension_loaded", false)):
 		_fail("Native GDExtension metadata did not prove native load: %s" % JSON.stringify(metadata))
 		return
+	if String(metadata.get("native_rmg_generation_authority", "")) != "h3maped_small_reset_only" \
+			or bool(metadata.get("native_rmg_runtime_generation_allowed", true)) \
+			or String(metadata.get("native_rmg_active_reset_slice_id", "")) != "native-rmg-small-h3maped-port-10184" \
+			or String(metadata.get("native_rmg_legacy_capability_policy", "")) != "inspection_debug_evidence_not_runtime_generation_authority":
+		_fail("Native API metadata still leaves old RMG capabilities looking runtime-authoritative: %s" % JSON.stringify(metadata))
+		return
 	if not service.get_capabilities().has("native_rmg_small_h3maped_port_boundary"):
 		_fail("Native service does not expose the small h3maped port boundary capability.")
 		return
