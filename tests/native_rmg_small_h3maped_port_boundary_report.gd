@@ -481,6 +481,8 @@ func _run() -> void:
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
 	var changed_cell_update: Dictionary = terrain_repaint_boundary.get("changed_cell_update", {})
+	var scratch_write_contract: Dictionary = changed_cell_update.get("scratch_write_contract", {})
+	var scratch_write_samples: Array = scratch_write_contract.get("samples", [])
 	var visual_classifier: Dictionary = changed_cell_update.get("visual_classifier", {})
 	var visual_classifier_toolkit_objects: Array = visual_classifier.get("toolkit_object_addresses", [])
 	var visual_classifier_vtables: Array = visual_classifier.get("toolkit_vtable_addresses", [])
@@ -571,6 +573,27 @@ func _run() -> void:
 			or bool(changed_cell_update.get("materializes_tile_byte_1", true)) \
 			or bool(changed_cell_update.get("materializes_tile_byte_6_terrain_flags", true)):
 		_fail("The TerrainPlacement changed-cell update evidence drifted: %s" % JSON.stringify(changed_cell_update))
+		return
+	if String(scratch_write_contract.get("status", "")) != "0x4bad0f_scratch_word_and_0x49acf6_generated_cell_projection_ported_samples" \
+			or int(scratch_write_contract.get("sample_count", -1)) != 4 \
+			or bool(scratch_write_contract.get("materializes_generated_cell_words", true)) \
+			or bool(scratch_write_contract.get("materializes_package_tiles", true)):
+		_fail("The TerrainPlacement scratch/writeback sample contract drifted: %s" % JSON.stringify(scratch_write_contract))
+		return
+	var scratch_grass_full := _find_by_key(scratch_write_samples, "id", "grass_full_row_60_flags_0_0")
+	var scratch_grass_transition := _find_by_key(scratch_write_samples, "id", "grass_class_28_row_77_flags_1_0")
+	var scratch_water := _find_by_key(scratch_write_samples, "id", "water_class_16_row_20_flags_0_0")
+	var scratch_rock := _find_by_key(scratch_write_samples, "id", "rock_class_8_row_11_cleared_flags")
+	if int(scratch_grass_full.get("scratch_word_u16", -1)) != 1925 \
+			or int(scratch_grass_full.get("generated_cell_word_0x24_u32", -1)) != 3842 \
+			or int(scratch_grass_full.get("tile_byte_1_terrain_art", -1)) != 60 \
+			or int(scratch_grass_transition.get("scratch_word_u16", -1)) != 6565 \
+			or int(scratch_grass_transition.get("tile_byte_6_terrain_flags", -1)) != 1 \
+			or int(scratch_water.get("scratch_word_u16", -1)) != 657 \
+			or int(scratch_water.get("tile_byte_0_terrain_id", -1)) != 8 \
+			or int(scratch_rock.get("scratch_word_u16", -1)) != 371 \
+			or int(scratch_rock.get("tile_byte_6_terrain_flags", -1)) != 0:
+		_fail("The TerrainPlacement scratch/writeback sample values drifted: %s" % JSON.stringify(scratch_write_samples))
 		return
 	if String(visual_classifier.get("status", "")) != "0x4bcfc3_0x4bce6d_toolkit_visual_selector_recovered_boundary_only" \
 			or String(visual_classifier.get("selector_address", "")) != "0x4bcfc3" \
