@@ -2207,7 +2207,7 @@ Dictionary polygon_finalizer_4ccdfc_report(const Array &levels, int32_t total_po
 	return report;
 }
 
-Dictionary boundary_traversal_4a2777_real_cycles_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary) {
+Dictionary boundary_traversal_4a2777_real_cycles_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	report["status"] = "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized";
 	report["source"] = "h3maped 0x4a2777 over real 0x4cca55 source-node cycles: clip finalized +0x1c/+0x20 coordinates through 0x4a2b33 and paint boundary cells through 0x4a261a/0x4a2413";
@@ -2219,7 +2219,7 @@ Dictionary boundary_traversal_4a2777_real_cycles_report(const Dictionary &normal
 	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
 	report["uses_real_source_node_walk"] = true;
 	report["materializes_project_grid"] = false;
-	report["feeds_0x4a325d_span_fill"] = false;
+	report["feeds_0x4a325d_span_fill"] = zone_words_out != nullptr && cell_flags_out != nullptr;
 
 	const int32_t width = int32_t(normalized_config.get("width", 36));
 	const int32_t height = int32_t(normalized_config.get("height", 36));
@@ -2524,6 +2524,155 @@ Dictionary boundary_traversal_4a2777_real_cycles_report(const Dictionary &normal
 	report["loop_guard_exhausted"] = loop_guard_exhausted;
 	report["zone_reports"] = zone_reports;
 	report["blocked_next"] = "feed these real 0x4a2777 boundary cells into 0x4a325d span fill before project terrain/object materialization";
+	if (zone_words_out != nullptr && cell_flags_out != nullptr) {
+		*zone_words_out = zone_words;
+		*cell_flags_out = cell_flags;
+	}
+	return report;
+}
+
+Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &levels, const Dictionary &polygon_finalizer, uint32_t rng_state_before_boundary) {
+	Dictionary report;
+	report["status"] = "0x4a325d_real_0x4a2777_boundary_span_fill_executed";
+	report["source"] = "h3maped 0x4a325d executed against the real 0x4a2777 boundary buffer produced from finalized 0x4cca55 source-node cycles";
+	report["function_address"] = "0x4a325d";
+	report["boundary_source_address"] = "0x4a2777";
+	report["uses_real_0x4a2777_boundary"] = true;
+	report["materializes_project_grid"] = false;
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = int32_t(normalized_config.get("level_count", 1));
+	const int32_t water_code = water_mode_code(normalized_config);
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+
+	std::vector<uint32_t> zone_words;
+	std::vector<uint8_t> cell_flags;
+	Dictionary boundary = boundary_traversal_4a2777_real_cycles_report(normalized_config, runtime_zone_records, levels, polygon_finalizer, rng_state_before_boundary, &zone_words, &cell_flags);
+	report["boundary_status"] = boundary.get("status", "");
+	report["boundary_unique_cell_count"] = boundary.get("unique_cell_count", 0);
+	report["boundary_trace_write_count"] = boundary.get("trace_write_count", 0);
+	report["boundary_rng_state_after_0x4a2777_uint32"] = boundary.get("rng_state_after_0x4a2777_uint32", 0);
+
+	Dictionary split_by_runtime;
+	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
+		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary level = levels[level_index];
+		Array split_calls = level.get("polygon_split_calls", Array());
+		for (int64_t split_index = 0; split_index < split_calls.size(); ++split_index) {
+			if (Variant(split_calls[split_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary split = split_calls[split_index];
+			split_by_runtime[String::num_int64(int64_t(split.get("runtime_zone_index", -1)))] = split;
+		}
+	}
+
+	Array zone_fill_reports;
+	int32_t filled_zone_count = 0;
+	int32_t seed_blocked_count = 0;
+	int32_t missing_seed_count = 0;
+	int32_t total_filled_cell_count = 0;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+		if (Variant(runtime_zone_records[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime_zone = runtime_zone_records[runtime_index];
+		const int32_t runtime_zone_index = int32_t(runtime_zone.get("runtime_zone_index", runtime_index));
+		Dictionary split = split_by_runtime.get(String::num_int64(runtime_zone_index), Dictionary());
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = runtime_zone_index;
+		zone_report["zone_word_id"] = runtime_zone_index;
+		if (split.is_empty()) {
+			missing_seed_count += 1;
+			zone_report["status"] = "blocked_missing_0x4a3a03_split_seed";
+			zone_fill_reports.append(zone_report);
+			continue;
+		}
+		const int32_t seed_x = int32_t(split.get("x", 0));
+		const int32_t seed_y = int32_t(split.get("y", 0));
+		const int32_t seed_level = int32_t(split.get("level", 0));
+		zone_report["seed_x"] = seed_x;
+		zone_report["seed_y"] = seed_y;
+		zone_report["seed_level"] = seed_level;
+		zone_report["seed_source"] = "0x4a3a03 runtime-zone split call x/y/level after 0x4a19ed bbox rescale";
+		const bool seed_available = h3maped_cell_unassigned(zone_words, width, height, seed_x, seed_y, seed_level);
+		zone_report["seed_unassigned_before_fill"] = seed_available;
+		if (!seed_available) {
+			seed_blocked_count += 1;
+			zone_report["status"] = "blocked_seed_not_unassigned_relocation_pending";
+			zone_fill_reports.append(zone_report);
+			continue;
+		}
+		SpanFillResult fill = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, runtime_zone_index, SpanRecord{ seed_x, seed_y, seed_level });
+		if (fill.filled_cell_count > 0) {
+			filled_zone_count += 1;
+		}
+		total_filled_cell_count += fill.filled_cell_count;
+		pushed_span_count += fill.pushed_span_count;
+		popped_span_count += fill.popped_span_count;
+		max_pending_span_count = std::max(max_pending_span_count, fill.max_pending_span_count);
+		out_of_bounds_span_count += fill.out_of_bounds_span_count;
+		blocked_initial_span_count += fill.blocked_initial_span_count;
+		zone_report["status"] = fill.filled_cell_count > 0 ? String("0x4a325d_span_fill_executed") : String("0x4a325d_span_fill_no_cells_written");
+		zone_report["filled_cell_count"] = fill.filled_cell_count;
+		zone_report["pushed_span_count"] = fill.pushed_span_count;
+		zone_report["popped_span_count"] = fill.popped_span_count;
+		zone_report["max_pending_span_count"] = fill.max_pending_span_count;
+		zone_report["out_of_bounds_span_count"] = fill.out_of_bounds_span_count;
+		zone_report["blocked_initial_span_count"] = fill.blocked_initial_span_count;
+		zone_report["trace_preview"] = fill.trace_preview;
+		zone_fill_reports.append(zone_report);
+	}
+
+	const int32_t cell_count = int32_t(zone_words.size());
+	int32_t total_boundary_or_filled_cell_count = 0;
+	int32_t remaining_unassigned_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	Dictionary cells_by_zone_word;
+	for (int32_t index = 0; index < cell_count; ++index) {
+		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+		if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			remaining_unassigned_cell_count += 1;
+		} else {
+			total_boundary_or_filled_cell_count += 1;
+			const int32_t zone_word_id = int32_t((masked >> 16U) & 0xffU);
+			const String key = String::num_int64(zone_word_id);
+			cells_by_zone_word[key] = int32_t(cells_by_zone_word.get(key, 0)) + 1;
+		}
+		if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+			reserved_flag_cell_count += 1;
+		}
+	}
+
+	report["runtime_zone_fill_attempt_count"] = zone_fill_reports.size();
+	report["filled_zone_count"] = filled_zone_count;
+	report["seed_blocked_count"] = seed_blocked_count;
+	report["missing_seed_count"] = missing_seed_count;
+	report["seed_relocation_count"] = 0;
+	report["seed_relocation_status"] = seed_blocked_count == 0 ? String("not_needed_all_current_seeds_unassigned") : String("pending_0x4a32b2_seed_relocation");
+	report["unique_filled_cell_count"] = total_filled_cell_count;
+	report["total_boundary_or_filled_cell_count"] = total_boundary_or_filled_cell_count;
+	report["remaining_unassigned_cell_count"] = remaining_unassigned_cell_count;
+	report["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	report["pushed_span_count"] = pushed_span_count;
+	report["popped_span_count"] = popped_span_count;
+	report["max_pending_span_count"] = max_pending_span_count;
+	report["out_of_bounds_span_count"] = out_of_bounds_span_count;
+	report["blocked_initial_span_count"] = blocked_initial_span_count;
+	report["cells_by_zone_word"] = cells_by_zone_word;
+	report["zone_fill_reports"] = zone_fill_reports;
+	report["blocked_next"] = "adopt this h3maped zone-word buffer into 0x4a3f27 terrain/cell writeout, then towns, roads, blockers, guards, mines, rewards, and final package output";
 	return report;
 }
 
@@ -2640,7 +2789,13 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["boundary_unique_cell_count"] = boundary_traversal.get("unique_cell_count", 0);
 	report["boundary_trace_write_count"] = boundary_traversal.get("trace_write_count", 0);
 	report["boundary_loop_guard_exhausted"] = boundary_traversal.get("loop_guard_exhausted", false);
-	report["next_materialization_status"] = "pending_0x4a325d_span_fill_from_real_0x4a2777_boundary";
+	Dictionary real_span_fill = real_span_fill_4a325d_report(normalized_config, runtime_zone_records, levels, polygon_finalizer, uint32_t(int64_t(terrain_selection.get("rng_state_after_0x49b53d_uint32", coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0)))));
+	report["real_span_fill_status"] = real_span_fill.get("status", "");
+	report["real_span_fill"] = real_span_fill;
+	report["span_fill_unique_filled_cell_count"] = real_span_fill.get("unique_filled_cell_count", 0);
+	report["span_fill_total_boundary_or_filled_cell_count"] = real_span_fill.get("total_boundary_or_filled_cell_count", 0);
+	report["span_fill_remaining_unassigned_cell_count"] = real_span_fill.get("remaining_unassigned_cell_count", 0);
+	report["next_materialization_status"] = "pending_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
 	return report;
 }
 
@@ -3411,7 +3566,7 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary randomized_line_writer = randomized_line_writer_4a2413_report(normalized_config);
 	footprint_schedule["randomized_line_writer_status"] = randomized_line_writer.get("status", "");
 	footprint_schedule["randomized_line_writer"] = randomized_line_writer;
-	footprint_schedule["next_materialization_status"] = "pending_0x4a325d_span_fill_from_real_0x4a2777_boundary";
+	footprint_schedule["next_materialization_status"] = "pending_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
 	report["zone_footprint_schedule_status"] = footprint_schedule.get("status", "");
 	report["zone_footprint_schedule"] = footprint_schedule;
 	return report;
@@ -3438,7 +3593,7 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary runtime_zones = runtime_zone_record_setup_report(normalized_config, template_record, assignment, human_count, human_count + computer_count, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
-	payload["materialization_status"] = "blocked_until_0x4a325d_span_fill_zone_cell_materialization_port";
+	payload["materialization_status"] = "blocked_until_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
 }

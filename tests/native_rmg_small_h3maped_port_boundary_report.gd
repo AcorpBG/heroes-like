@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a325d_span_fill_zone_cell_materialization_port":
-		_fail("The clean restart must stop before zone cell materialization until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words":
+		_fail("The clean restart must stop before terrain/cell writeout until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -376,6 +376,47 @@ func _run() -> void:
 			or bool(boundary_traversal.get("materializes_project_grid", true)):
 		_fail("The real 0x4a2777 finalized-cycle boundary traversal drifted: %s" % JSON.stringify(boundary_traversal))
 		return
+	var real_span_fill: Dictionary = footprint_schedule.get("real_span_fill", {})
+	var cells_by_zone_word: Dictionary = real_span_fill.get("cells_by_zone_word", {})
+	var zone_fill_reports: Array = real_span_fill.get("zone_fill_reports", [])
+	if String(footprint_schedule.get("real_span_fill_status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed" \
+			or int(real_span_fill.get("boundary_unique_cell_count", -1)) != 221 \
+			or int(real_span_fill.get("runtime_zone_fill_attempt_count", -1)) != 6 \
+			or int(real_span_fill.get("filled_zone_count", -1)) != 5 \
+			or int(real_span_fill.get("seed_blocked_count", -1)) != 1 \
+			or int(real_span_fill.get("missing_seed_count", -1)) != 0 \
+			or String(real_span_fill.get("seed_relocation_status", "")) != "pending_0x4a32b2_seed_relocation" \
+			or int(real_span_fill.get("unique_filled_cell_count", -1)) != 706 \
+			or int(real_span_fill.get("total_boundary_or_filled_cell_count", -1)) != 927 \
+			or int(real_span_fill.get("remaining_unassigned_cell_count", -1)) != 369 \
+			or int(real_span_fill.get("reserved_flag_cell_count", -1)) != 927 \
+			or int(real_span_fill.get("pushed_span_count", -1)) != 70 \
+			or int(real_span_fill.get("popped_span_count", -1)) != 70 \
+			or int(real_span_fill.get("max_pending_span_count", -1)) != 4 \
+			or int(real_span_fill.get("out_of_bounds_span_count", -1)) != 0 \
+			or int(real_span_fill.get("blocked_initial_span_count", -1)) != 0 \
+			or not bool(real_span_fill.get("uses_real_0x4a2777_boundary", false)) \
+			or bool(real_span_fill.get("materializes_project_grid", true)):
+		_fail("The real 0x4a325d span fill over the 0x4a2777 boundary drifted: %s" % JSON.stringify(real_span_fill))
+		return
+	if int(cells_by_zone_word.get("0", -1)) != 174 \
+			or int(cells_by_zone_word.get("1", -1)) != 112 \
+			or int(cells_by_zone_word.get("2", -1)) != 38 \
+			or int(cells_by_zone_word.get("3", -1)) != 165 \
+			or int(cells_by_zone_word.get("4", -1)) != 206 \
+			or int(cells_by_zone_word.get("5", -1)) != 232:
+		_fail("The real 0x4a325d zone-word cell distribution drifted: %s" % JSON.stringify(real_span_fill))
+		return
+	if zone_fill_reports.size() != 6 \
+			or int(zone_fill_reports[0].get("filled_cell_count", -1)) != 152 \
+			or int(zone_fill_reports[1].get("filled_cell_count", -1)) != 69 \
+			or String(zone_fill_reports[2].get("status", "")) != "blocked_seed_not_unassigned_relocation_pending" \
+			or bool(zone_fill_reports[2].get("seed_unassigned_before_fill", true)) \
+			or int(zone_fill_reports[3].get("filled_cell_count", -1)) != 126 \
+			or int(zone_fill_reports[4].get("filled_cell_count", -1)) != 174 \
+			or int(zone_fill_reports[5].get("filled_cell_count", -1)) != 185:
+		_fail("The real 0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(real_span_fill))
+		return
 	var footprint_levels: Array = footprint_schedule.get("levels", [])
 	if footprint_levels.size() != 1 \
 			or Array(footprint_levels[0].get("matching_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
@@ -416,7 +457,7 @@ func _run() -> void:
 		return
 	if bool(span_fill.get("uses_real_0x4a2777_boundary", true)) \
 			or bool(span_fill.get("materializes_project_grid", true)):
-		_fail("The 0x4a325d primitive must remain disconnected from runtime output until 0x4a2777 is ported: %s" % JSON.stringify(span_fill))
+		_fail("The standalone 0x4a325d primitive sample must remain disconnected from project-grid output: %s" % JSON.stringify(span_fill))
 		return
 	var boundary_helpers: Dictionary = footprint_schedule.get("boundary_helper_primitives", {})
 	var line_sample: Dictionary = boundary_helpers.get("line_sample", {})
