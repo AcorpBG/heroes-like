@@ -127,6 +127,12 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_4a696b_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a696b same-level helper boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
+	if String(connection_payload.get("geometry_4a61bc_status", "")) != "0x4a61bc_same_level_transition_vector_helper_identified_all_links_endpoint_geometry_pending" \
+			or int(connection_payload.get("geometry_4a61bc_link_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a61bc_same_level_ready_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a61bc_endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a61bc same-level helper boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
 	var geometry_dispatch_plan: Array = connection_payload.get("geometry_dispatch_plan", [])
 	if geometry_dispatch_plan.size() != 5:
 		_fail("0x4a79a3 dispatch plan did not cover each selected connection: %s" % JSON.stringify(connection_payload))
@@ -221,6 +227,39 @@ func _run() -> void:
 			or bool(first_4a696b.get("materializes_endpoint_coordinates", true)) \
 			or int(first_4a696b.get("endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a696b same-level helper evidence drifted: %s" % JSON.stringify(first_4a696b))
+		return
+	var first_4a61bc: Dictionary = first_dispatch.get("helper_4a61bc", {})
+	if String(first_4a61bc.get("function_address", "")) != "0x4a61bc" \
+			or String(first_4a61bc.get("dispatch_call_range", "")) != "0x4a7be7..0x4a7bf5" \
+			or String(first_4a61bc.get("dispatch_input_vector_build_range", "")) != "0x4a79d8..0x4a7af9" \
+			or String(first_4a61bc.get("source_range_level_and_zone_type_gate", "")) != "0x4a6207..0x4a621c" \
+			or String(first_4a61bc.get("source_range_candidate_vector_scan", "")) != "0x4a6245..0x4a633e" \
+			or String(first_4a61bc.get("source_range_best_candidate_random_selection", "")) != "0x4a63e5..0x4a6417" \
+			or String(first_4a61bc.get("source_range_endpoint_write", "")) != "0x4a6479..0x4a64ce" \
+			or String(first_4a61bc.get("source_range_guard_spawn", "")) != "0x4a64e4..0x4a6578" \
+			or not bool(first_4a61bc.get("same_level_required", false)) \
+			or int(first_4a61bc.get("rejects_zone_type", -1)) != 8 \
+			or String(first_4a61bc.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
+			or String(first_4a61bc.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
+			or String(first_4a61bc.get("input_transition_vector_a", "")) != "dispatcher stack vector ebp-0x74 built by 0x42d8d8 from owner-transition source cells" \
+			or String(first_4a61bc.get("input_transition_vector_b", "")) != "dispatcher stack vector ebp-0x64 built by 0x4ae20e from destination-side transition coordinates" \
+			or int(first_4a61bc.get("input_transition_record_size_bytes", -1)) != 12 \
+			or String(first_4a61bc.get("candidate_vector_clear_helper_address", "")) != "0x4ae52a" \
+			or String(first_4a61bc.get("candidate_vector_append_helper_address", "")) != "0x4ae1fd" \
+			or String(first_4a61bc.get("best_candidate_random_selector_address", "")) != "0x4e7276" \
+			or String(first_4a61bc.get("neighbor_direction_table", "")) != "0x5a2658" \
+			or String(first_4a61bc.get("neighbor_direction_source_bits", "")) != "cell+0x28 bits 12..14" \
+			or String(first_4a61bc.get("low_word_score_source", "")) != "candidate cell+0x1c bits 16..31" \
+			or String(first_4a61bc.get("empty_neighbor_vector_gate_source", "")) != "cell+0x04/+0x08 object-vector span must be empty" \
+			or String(first_4a61bc.get("border_object_helper_address", "")) != "0x4a5a23" \
+			or String(first_4a61bc.get("border_guard_helper_address", "")) != "0x4a5e73" \
+			or String(first_4a61bc.get("normal_guard_helper_address", "")) != "0x4a5e03" \
+			or String(first_4a61bc.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
+			or String(first_4a61bc.get("candidate_scan_status", "")) != "0x4a61bc_transition_vector_candidate_scan_recovered_not_materialized" \
+			or String(first_4a61bc.get("status", "")) != "0x4a61bc_same_level_transition_vector_helper_identified_endpoint_geometry_pending" \
+			or bool(first_4a61bc.get("materializes_endpoint_coordinates", true)) \
+			or int(first_4a61bc.get("endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a61bc same-level helper evidence drifted: %s" % JSON.stringify(first_4a61bc))
 		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
 	if guard_spawn_intents.size() != 5 \
@@ -1369,6 +1408,7 @@ func _run() -> void:
 		"connection_guard_spawn_intent_count": connection_payload.get("normal_guard_spawn_intent_count", 0),
 		"connection_geometry_dispatch_link_count": connection_payload.get("geometry_dispatch_link_count", 0),
 		"connection_geometry_4a6cf2_overlap_cell_total": connection_payload.get("geometry_4a6cf2_overlap_cell_total", 0),
+		"connection_geometry_4a61bc_same_level_ready_count": connection_payload.get("geometry_4a61bc_same_level_ready_count", 0),
 		"connection_geometry_4a696b_same_level_ready_count": connection_payload.get("geometry_4a696b_same_level_ready_count", 0),
 		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
