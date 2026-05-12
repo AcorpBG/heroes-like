@@ -2714,9 +2714,6 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 		zone_report["seed_unassigned_before_fill"] = seed_available;
 		if (!seed_available) {
 			seed_blocked_count += 1;
-			zone_report["status"] = "0x4a325d_seed_reached_non_unassigned_boundary";
-			zone_fill_reports.append(zone_report);
-			continue;
 		}
 		SpanFillResult fill = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, runtime_zone_index, seed);
 		if (fill.filled_cell_count > 0) {
@@ -2764,7 +2761,7 @@ Dictionary real_span_fill_4a325d_report(const Dictionary &normalized_config, con
 	report["seed_blocked_count"] = seed_blocked_count;
 	report["missing_seed_count"] = missing_seed_count;
 	report["seed_relocation_count"] = 0;
-	report["seed_relocation_status"] = seed_blocked_count == 0 ? String("not_needed_all_current_seeds_unassigned") : String("0x4a32b2_relocation_ported_but_not_applicable_to_in_bounds_non_unassigned_seed");
+	report["seed_relocation_status"] = seed_blocked_count == 0 ? String("not_needed_all_current_seeds_unassigned") : String("0x4a32b2_relocation_ported_not_needed_for_current_in_bounds_seed_span_scan");
 	report["unique_filled_cell_count"] = total_filled_cell_count;
 	report["total_boundary_or_filled_cell_count"] = total_boundary_or_filled_cell_count;
 	report["remaining_unassigned_cell_count"] = remaining_unassigned_cell_count;
