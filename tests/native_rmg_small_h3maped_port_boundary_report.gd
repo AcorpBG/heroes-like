@@ -110,15 +110,16 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a79a3 connection geometry dispatch boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
-	if String(connection_payload.get("geometry_owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_partially_materialized" \
-			or String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending" \
+	if String(connection_payload.get("geometry_owner_channel_status", "")) != "0x4a61bc_0x4a696b_high_owner_channel_required_same_level_helpers" \
+			or String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_same_level_return_false_all_links" \
 			or int(connection_payload.get("geometry_4a6cf2_overlap_link_count", -1)) != 5 \
-			or int(connection_payload.get("geometry_4a6cf2_nonempty_overlap_link_count", -1)) != 3 \
-			or int(connection_payload.get("geometry_4a6cf2_overlap_cell_total", -1)) != 502 \
-			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_sentinel_total", -1)) != 30 \
-			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_materialized_total", -1)) != 472 \
+			or int(connection_payload.get("geometry_4a6cf2_same_level_return_false_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a6cf2_nonempty_overlap_link_count", -1)) != 0 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_cell_total", -1)) != 0 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_sentinel_total", -1)) != 0 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_high_owner_materialized_total", -1)) != 0 \
 			or int(connection_payload.get("geometry_4a6cf2_endpoint_coordinate_materialized_count", -1)) != 0:
-		_fail("0x4a6cf2 overlap/candidate-scan boundary drifted: %s" % JSON.stringify(connection_payload))
+		_fail("0x4a6cf2 same-level gate boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
 	var geometry_dispatch_plan: Array = connection_payload.get("geometry_dispatch_plan", [])
 	if geometry_dispatch_plan.size() != 5:
@@ -145,12 +146,20 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_begin_offset", "")) != "generator+0x6a8" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_end_offset", "")) != "generator+0x6ac" \
 			or int(first_4a6cf2_overlap.get("candidate_shape_vector_pointer_stride_bytes", -1)) != 4 \
-			or String(first_4a6cf2_overlap.get("candidate_shape_vector_status", "")) != "pending_generator_0x6a8_shape_list_port" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_bucket_offset", "")) != "generator+0x34+0x67*0x10" \
+			or int(first_4a6cf2_overlap.get("candidate_shape_vector_object_type", -1)) != 103 \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_object_type_name", "")) != "Subterranean Gate" \
+			or int(first_4a6cf2_overlap.get("candidate_shape_vector_template_count", -1)) != 1 \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_template_def_name", "")) != "AvTCave.def" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_status", "")) != "0x4a6cf2_type_103_subterranean_gate_bucket_identified" \
 			or String(first_4a6cf2_overlap.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
 			or String(first_4a6cf2_overlap.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
 			or String(first_4a6cf2_overlap.get("owner_high_byte_producer", "")) != "0x4a5767 reset plus 0x49a318 anchor/occupancy normalization" \
-			or String(first_4a6cf2_overlap.get("owner_channel_status", "")) != "0x4a5767_49a318_high_owner_channel_partially_materialized" \
-			or String(first_4a6cf2_overlap.get("candidate_scan_status", "")) != "0x4a6de2_overlap_low_high_owner_score_scan_materialized_shape_list_pending" \
+			or String(first_4a6cf2_overlap.get("same_level_return_false_range", "")) != "0x4a6d3d..0x4a6d40" \
+			or String(first_4a6cf2_overlap.get("source_zone_type_gate_range", "")) != "0x4a6d46..0x4a6d4c" \
+			or String(first_4a6cf2_overlap.get("owner_channel_status", "")) != "not_read_same_level_return_false" \
+			or String(first_4a6cf2_overlap.get("candidate_scan_status", "")) != "0x4a6cf2_skipped_same_level" \
+			or String(first_4a6cf2_overlap.get("status", "")) != "0x4a6cf2_same_level_return_false" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_selection_range", "")) != "0x4a6de2..0x4a6e0c" \
 			or String(first_4a6cf2_overlap.get("candidate_shape_vector_random_selector_address", "")) != "0x4e7276" \
 			or String(first_4a6cf2_overlap.get("validation_helper_address", "")) != "0x49aa93" \
@@ -165,12 +174,12 @@ func _run() -> void:
 			or String(first_4a6cf2_overlap.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
 			or bool(first_4a6cf2_overlap.get("materializes_endpoint_coordinates", true)) \
 			or int(first_4a6cf2_overlap.get("endpoint_coordinate_materialized_count", -1)) != 0 \
-			or int(first_4a6cf2_overlap.get("overlap_cell_count", -1)) != 180 \
-			or int(first_4a6cf2_overlap.get("overlap_high_owner_a_cell_count", -1)) != 85 \
-			or int(first_4a6cf2_overlap.get("overlap_high_owner_b_cell_count", -1)) != 67 \
-			or int(first_4a6cf2_overlap.get("overlap_high_other_owner_cell_count", -1)) != 22 \
-			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != 6:
-		_fail("0x4a6cf2 overlap helper evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
+			or int(first_4a6cf2_overlap.get("overlap_cell_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_a_cell_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_b_cell_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_high_other_owner_cell_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != 0:
+		_fail("0x4a6cf2 same-level gate evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
 		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
 	if guard_spawn_intents.size() != 5 \
