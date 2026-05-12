@@ -2131,7 +2131,79 @@ Dictionary polygon_finalizer_4ccdfc_report(const Array &levels, int32_t total_po
 	report["finalized_node_count"] = finalized_node_count;
 	report["active_payload_node_count"] = active_payload_node_count;
 	report["finalized_steps"] = finalized_steps;
-	report["blocked_next"] = "feed finalized 0x4ccdfc polygon coordinates into real 0x4a2777 boundary traversal and then 0x4a325d span fill";
+	Array source_node_walks;
+	int32_t source_node_walk_count = 0;
+	int32_t source_node_walk_guard_exhausted_count = 0;
+	int32_t source_node_walk_finalized_coordinate_count = 0;
+	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
+		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary level = levels[level_index];
+		Array split_calls = level.get("polygon_split_calls", Array());
+		for (int64_t split_index = 0; split_index < split_calls.size(); ++split_index) {
+			if (Variant(split_calls[split_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary split = split_calls[split_index];
+			Dictionary walk;
+			walk["runtime_zone_index"] = split.get("runtime_zone_index", -1);
+			walk["locator_address"] = "0x4cca55";
+			walk["consumer_address"] = "0x4a2777";
+			walk["start_x"] = split.get("x", 0);
+			walk["start_y"] = split.get("y", 0);
+			const int32_t located = split_graph.blocked ? -1 : split_graph.model.locate_4cca55(int32_t(split.get("x", 0)), int32_t(split.get("y", 0)));
+			walk["located_node_id"] = located >= 0 ? split_graph.model.nodes[size_t(located)].id : String();
+			Array cycle_nodes;
+			bool guard_exhausted = false;
+			int32_t finalized_coordinate_count = 0;
+			if (located >= 0) {
+				int32_t current = located;
+				for (int32_t guard = 0; guard < 96; ++guard) {
+					const PolygonModelNode &node = split_graph.model.nodes[size_t(current)];
+					Dictionary node_report;
+					node_report["node_id"] = node.id;
+					node_report["+0x00_x"] = node.x;
+					node_report["+0x04_y"] = node.y;
+					node_report["+0x08_payload"] = node.payload;
+					node_report["has_payload"] = node.has_payload;
+					node_report["+0x10_next"] = node.next >= 0 ? split_graph.model.nodes[size_t(node.next)].id : String();
+					node_report["+0x14_previous"] = node.previous >= 0 ? split_graph.model.nodes[size_t(node.previous)].id : String();
+					node_report["+0x1c_finalized_x"] = node.finalized_x;
+					node_report["+0x20_finalized_y"] = node.finalized_y;
+					node_report["finalized"] = node.finalized;
+					node_report["active"] = node.active;
+					cycle_nodes.append(node_report);
+					if (node.finalized) {
+						finalized_coordinate_count += 1;
+					}
+					current = node.next;
+					if (current == located) {
+						break;
+					}
+					if (guard == 95) {
+						guard_exhausted = true;
+					}
+				}
+			}
+			if (guard_exhausted) {
+				source_node_walk_guard_exhausted_count += 1;
+			}
+			source_node_walk_finalized_coordinate_count += finalized_coordinate_count;
+			walk["cycle_node_count"] = cycle_nodes.size();
+			walk["finalized_coordinate_count"] = finalized_coordinate_count;
+			walk["guard_exhausted"] = guard_exhausted;
+			walk["cycle_nodes"] = cycle_nodes;
+			source_node_walks.append(walk);
+			source_node_walk_count += 1;
+		}
+	}
+	report["source_node_walk_status"] = split_graph.blocked ? String("blocked_before_0x4cca55_source_node_walk") : String("0x4cca55_to_0x4a2777_source_node_cycles_recovered");
+	report["source_node_walk_count"] = source_node_walk_count;
+	report["source_node_walk_guard_exhausted_count"] = source_node_walk_guard_exhausted_count;
+	report["source_node_walk_finalized_coordinate_count"] = source_node_walk_finalized_coordinate_count;
+	report["source_node_walks"] = source_node_walks;
+	report["blocked_next"] = "feed finalized 0x4ccdfc polygon source-node cycles into real 0x4a2777 boundary traversal and then 0x4a325d span fill";
 	return report;
 }
 
