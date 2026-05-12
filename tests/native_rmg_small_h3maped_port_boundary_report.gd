@@ -110,6 +110,13 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a79a3 connection geometry dispatch boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
+	if String(connection_payload.get("geometry_4a6cf2_overlap_status", "")) != "0x4a6cf2_overlap_precheck_materialized_candidate_shape_list_pending" \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_link_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a6cf2_nonempty_overlap_link_count", -1)) != 3 \
+			or int(connection_payload.get("geometry_4a6cf2_overlap_cell_total", -1)) != 502 \
+			or int(connection_payload.get("geometry_4a6cf2_endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a6cf2 overlap/candidate-scan boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
 	var geometry_dispatch_plan: Array = connection_payload.get("geometry_dispatch_plan", [])
 	if geometry_dispatch_plan.size() != 5:
 		_fail("0x4a79a3 dispatch plan did not cover each selected connection: %s" % JSON.stringify(connection_payload))
@@ -126,6 +133,18 @@ func _run() -> void:
 			or String(second_pass_helpers[1]) != "0x4a7605" \
 			or String(first_dispatch.get("wide_geometry_role", "")) != "none_traced_wide_suppresses_normal_guard_after_geometry":
 		_fail("0x4a79a3 dispatch helper order or Wide semantics drifted: %s" % JSON.stringify(first_dispatch))
+		return
+	var first_4a6cf2_overlap: Dictionary = first_dispatch.get("helper_4a6cf2_overlap", {})
+	if String(first_4a6cf2_overlap.get("function_address", "")) != "0x4a6cf2" \
+			or String(first_4a6cf2_overlap.get("source_range_overlap", "")) != "0x4a6d52..0x4a6ddc" \
+			or String(first_4a6cf2_overlap.get("source_range_candidate_scan", "")) != "0x4a6de2..0x4a6f4a" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_source", "")) != "generator+0x6a8" \
+			or String(first_4a6cf2_overlap.get("candidate_shape_vector_status", "")) != "pending_generator_0x6a8_shape_list_port" \
+			or String(first_4a6cf2_overlap.get("validation_helper_address", "")) != "0x49aa93" \
+			or bool(first_4a6cf2_overlap.get("materializes_endpoint_coordinates", true)) \
+			or int(first_4a6cf2_overlap.get("endpoint_coordinate_materialized_count", -1)) != 0 \
+			or int(first_4a6cf2_overlap.get("overlap_cell_count", 0)) <= 0:
+		_fail("0x4a6cf2 overlap helper evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
 		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
 	if guard_spawn_intents.size() != 5 \
@@ -1245,6 +1264,7 @@ func _run() -> void:
 		"connection_guard_scaled_value_total": connection_payload.get("normal_guard_scaled_value_total", 0),
 		"connection_guard_spawn_intent_count": connection_payload.get("normal_guard_spawn_intent_count", 0),
 		"connection_geometry_dispatch_link_count": connection_payload.get("geometry_dispatch_link_count", 0),
+		"connection_geometry_4a6cf2_overlap_cell_total": connection_payload.get("geometry_4a6cf2_overlap_cell_total", 0),
 		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
