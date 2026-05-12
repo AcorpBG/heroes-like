@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a3a03_zone_footprint_port":
-		_fail("The clean restart must stop before zone footprint placement until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a2777_0x4a325d_zone_cell_materialization_port":
+		_fail("The clean restart must stop before zone cell materialization until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -215,6 +215,28 @@ func _run() -> void:
 		return
 	if Array(terrain_selection.get("selected_project_terrain_ids", [])) != ["dirt", "dirt", "snow", "grass", "dirt", "rough"]:
 		_fail("The selected runtime terrain sequence drifted: %s" % JSON.stringify(terrain_selection))
+		return
+	var footprint_schedule: Dictionary = runtime_zones.get("zone_footprint_schedule", {})
+	if String(runtime_zones.get("zone_footprint_schedule_status", "")) != "0x4a3a03_zone_footprint_schedule_ported" \
+			or int(footprint_schedule.get("level_count", -1)) != 1 \
+			or int(footprint_schedule.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(footprint_schedule.get("total_matching_runtime_zones", -1)) != 6 \
+			or int(footprint_schedule.get("total_polygon_split_calls", -1)) != 6 \
+			or int(footprint_schedule.get("appended_synthetic_runtime_zone_count", -1)) != 0:
+		_fail("The 0x4a3a03 zone footprint schedule drifted: %s" % JSON.stringify(footprint_schedule))
+		return
+	if bool(footprint_schedule.get("materializes_zone_cells", true)) \
+			or bool(footprint_schedule.get("materializes_boundary_cells", true)) \
+			or bool(footprint_schedule.get("materializes_span_fill", true)):
+		_fail("Zone footprint scheduling must not materialize cells yet: %s" % JSON.stringify(footprint_schedule))
+		return
+	var footprint_levels: Array = footprint_schedule.get("levels", [])
+	if footprint_levels.size() != 1 \
+			or Array(footprint_levels[0].get("matching_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
+			or bool(footprint_levels[0].get("synthetic_fallback_zone_allowed_by_0x4a3a9d", true)) \
+			or bool(footprint_levels[0].get("synthetic_fallback_zone_created", true)) \
+			or Array(footprint_levels[0].get("helper_call_sequence", [])) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
+		_fail("The 0x4a3a03 per-level schedule drifted: %s" % JSON.stringify(footprint_schedule))
 		return
 
 	var color_config := config.duplicate(true)
