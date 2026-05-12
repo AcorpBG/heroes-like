@@ -328,8 +328,27 @@ func _run() -> void:
 		return
 	if bool(connector_segment.get("uses_real_source_node_walk", true)) \
 			or bool(connector_segment.get("materializes_project_grid", true)) \
-			or String(connector_segment.get("randomized_line_writer_status", "")) != "pending_0x4a2413_flagged_branch":
-		_fail("The 0x4a2777 connector segment must stay standalone and keep the flagged branch pending: %s" % JSON.stringify(connector_segment))
+			or String(connector_segment.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone_not_dispatched_here":
+		_fail("The 0x4a2777 connector segment must stay standalone and not dispatch the flagged branch here: %s" % JSON.stringify(connector_segment))
+		return
+	var randomized_line_writer: Dictionary = footprint_schedule.get("randomized_line_writer", {})
+	var randomized_sample: Dictionary = randomized_line_writer.get("sample_contract", {})
+	if String(footprint_schedule.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone" \
+			or int(randomized_sample.get("write_count", -1)) != 64 \
+			or int(randomized_sample.get("unique_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("zone_word_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("reserved_flag_write_count", -1)) != 64 \
+			or int(randomized_sample.get("reserved_flag_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("out_of_bounds_write_count", -1)) != 0 \
+			or int(randomized_sample.get("rng_call_count", -1)) != 51 \
+			or int(randomized_sample.get("inserted_midpoint_count", -1)) != 63 \
+			or int(randomized_sample.get("max_pending_point_count", -1)) != 7 \
+			or int(randomized_sample.get("rng_state_after_uint32", -1)) != 3821795434:
+		_fail("The 0x4a2413 standalone randomized line writer drifted: %s" % JSON.stringify(randomized_line_writer))
+		return
+	if bool(randomized_line_writer.get("uses_real_source_node_walk", true)) \
+			or bool(randomized_line_writer.get("materializes_project_grid", true)):
+		_fail("The 0x4a2413 randomized writer must remain standalone until real source-node traversal is assembled: %s" % JSON.stringify(randomized_line_writer))
 		return
 
 	var color_config := config.duplicate(true)
