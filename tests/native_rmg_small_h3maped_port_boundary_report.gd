@@ -2,6 +2,27 @@ extends Node
 
 const REPORT_ID := "NATIVE_RMG_SMALL_H3MAPED_PORT_BOUNDARY_REPORT"
 
+func _find_by_key(records: Array, key: String, value: Variant) -> Dictionary:
+	for record: Variant in records:
+		if record is Dictionary and record.get(key) == value:
+			return record
+	return {}
+
+func _find_class_range(records: Array, shape_class: int) -> Dictionary:
+	for record: Variant in records:
+		if record is Dictionary and int(record.get("class", -1)) == shape_class:
+			return record
+	return {}
+
+func _find_class_flag_range(records: Array, shape_class: int, flag_a: int, flag_b: int) -> Dictionary:
+	for record: Variant in records:
+		if record is Dictionary \
+				and int(record.get("class", -1)) == shape_class \
+				and int(record.get("flag_a", -1)) == flag_a \
+				and int(record.get("flag_b", -1)) == flag_b:
+			return record
+	return {}
+
 func _ready() -> void:
 	call_deferred("_run")
 
@@ -466,6 +487,8 @@ func _run() -> void:
 	var visual_classifier_static_tables: Array = visual_classifier.get("static_visual_table_addresses", [])
 	var visual_classifier_constructor_records: Array = visual_classifier.get("toolkit_constructor_records", [])
 	var visual_static_lookup_contract: Dictionary = visual_classifier.get("static_range_lookup_contract", {})
+	var visual_static_table_contracts: Dictionary = visual_classifier.get("static_table_contracts", {})
+	var visual_static_tables_decoded: Array = visual_static_table_contracts.get("tables", [])
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
@@ -604,6 +627,41 @@ func _run() -> void:
 			or int(visual_static_lookup_contract.get("sample_selected_art_index", -1)) != 60 \
 			or bool(visual_static_lookup_contract.get("materializes_full_terrain_art_grid", true)):
 		_fail("The TerrainPlacement static range lookup contract drifted: %s" % JSON.stringify(visual_static_lookup_contract))
+		return
+	if String(visual_static_table_contracts.get("status", "")) != "h3maped_exe_static_terrain_visual_tables_decoded" \
+			or int(visual_static_table_contracts.get("table_count", -1)) != 5 \
+			or int(visual_static_table_contracts.get("decoded_total_row_count", -1)) != 230 \
+			or bool(visual_static_table_contracts.get("materializes_visual_records", true)) \
+			or bool(visual_static_table_contracts.get("materializes_full_terrain_art_grid", true)):
+		_fail("The TerrainPlacement static visual table decode drifted: %s" % JSON.stringify(visual_static_table_contracts))
+		return
+	var normal_visual_table := _find_by_key(visual_static_tables_decoded, "id", "normal_land_terrain_ids_2_7")
+	var dirt_visual_table := _find_by_key(visual_static_tables_decoded, "id", "dirt_terrain_id_0")
+	var sand_visual_table := _find_by_key(visual_static_tables_decoded, "id", "sand_terrain_id_1")
+	var water_visual_table := _find_by_key(visual_static_tables_decoded, "id", "water_terrain_id_8")
+	var rock_visual_table := _find_by_key(visual_static_tables_decoded, "id", "rock_terrain_id_9")
+	if int(normal_visual_table.get("decoded_row_count", -1)) != 79 \
+			or int(dirt_visual_table.get("decoded_row_count", -1)) != 46 \
+			or int(sand_visual_table.get("decoded_row_count", -1)) != 24 \
+			or int(water_visual_table.get("decoded_row_count", -1)) != 33 \
+			or int(rock_visual_table.get("decoded_row_count", -1)) != 48:
+		_fail("The h3maped TerrainPlacement visual table row counts drifted: %s" % JSON.stringify(visual_static_tables_decoded))
+		return
+	if String(_find_class_range(normal_visual_table.get("class_ranges", []), 0).get("compact_rows", "")) != "49-72" \
+			or String(_find_class_range(normal_visual_table.get("class_ranges", []), 27).get("compact_rows", "")) != "78" \
+			or String(_find_class_range(normal_visual_table.get("class_ranges", []), 28).get("compact_rows", "")) != "77" \
+			or String(_find_class_range(dirt_visual_table.get("class_ranges", []), 0).get("compact_rows", "")) != "21-44" \
+			or String(_find_class_range(dirt_visual_table.get("class_ranges", []), 24).get("compact_rows", "")) != "45" \
+			or String(_find_class_range(sand_visual_table.get("class_ranges", []), 0).get("compact_rows", "")) != "0-23" \
+			or String(_find_class_range(water_visual_table.get("class_ranges", []), 16).get("compact_rows", "")) != "20" \
+			or String(_find_class_range(water_visual_table.get("class_ranges", []), 0).get("compact_rows", "")) != "21-32":
+		_fail("The decoded h3maped TerrainPlacement class ranges drifted: %s" % JSON.stringify(visual_static_tables_decoded))
+		return
+	if String(_find_class_flag_range(rock_visual_table.get("class_flag_ranges", []), 8, 0, 0).get("compact_rows", "")) != "8-9" \
+			or String(_find_class_flag_range(rock_visual_table.get("class_flag_ranges", []), 8, 1, 0).get("compact_rows", "")) != "10-11" \
+			or String(_find_class_flag_range(rock_visual_table.get("class_flag_ranges", []), 8, 0, 1).get("compact_rows", "")) != "12-13" \
+			or String(_find_class_flag_range(rock_visual_table.get("class_flag_ranges", []), 8, 1, 1).get("compact_rows", "")) != "14-15":
+		_fail("The decoded h3maped rock visual flag buckets drifted: %s" % JSON.stringify(rock_visual_table))
 		return
 	if String(copyback_gate.get("status", "")) != "0x4bc988_TerrainPlacement_retouch_gate_recovered_copyback_pending" \
 			or String(copyback_gate.get("gate_address", "")) != "0x4bc988" \
