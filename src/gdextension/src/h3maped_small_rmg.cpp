@@ -1193,12 +1193,16 @@ Dictionary terrain_visual_row_selection_contract_report() {
 	return report;
 }
 
-Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
-	const uint32_t scratch_word = 1U
+uint32_t h3maped_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
+	return 1U
 			| ((uint32_t(terrain_id) & 0x0fU) << 1U)
 			| ((uint32_t(selected_row) & 0x7fU) << 5U)
 			| ((uint32_t(flag_a) & 0x01U) << 12U)
 			| ((uint32_t(flag_b) & 0x01U) << 13U);
+}
+
+Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
+	const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, flag_a, flag_b);
 	const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU)
 			| ((uint32_t(selected_row) & 0xffU) << 6U);
 	const uint32_t generated_cell_word_0x28 = ((uint32_t(flag_a) & 0x01U) << 15U)
@@ -2064,6 +2068,108 @@ Dictionary h3maped_queue_container_contract_report(int32_t level_count) {
 	return report;
 }
 
+Dictionary h3maped_drained_scratch_feedback_projection_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &drained_visual_projection, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4bad0f_drained_grid_scratch_word_projection_inspection_only";
+	report["source"] = "projects the copied 0x4bc5f0 drained-grid visual records into full-grid 0x4bad0f scratch words and round-trips those words back to 0x49acf6 generated-cell fields without live queue feedback adoption";
+	report["ported_addresses"] = Array::make("0x4bad0f", "0x49acf6", "0x49b2b6", "0x4bb74b", "0x4bcfc3", "0x4bce6d");
+	report["scratch_write_address"] = "0x4bad0f";
+	report["generated_cell_write_address"] = "0x49acf6";
+	report["changed_cell_update_address"] = "0x4bb74b";
+	report["visual_record_resolve_address"] = "0x4bcfc3";
+	report["neighbor_mask_address"] = "0x4bce6d";
+	report["scratch_word_contract"] = "bit0 dirty, bits1..4 terrain id, bits5..11 terrain art row, bit12 flag A, bit13 flag B";
+	report["requires_live_feedback_sequencing"] = true;
+	report["live_feedback_materialized"] = false;
+	report["adopts_into_runtime_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	PackedInt32Array projected_cell_word_0x24_u32 = drained_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array());
+	PackedInt32Array projected_cell_word_0x28_u32 = drained_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array());
+	const int32_t tile_count = drained_terrain_code_u16.size();
+	PackedInt32Array scratch_word_u16;
+	PackedInt32Array roundtrip_cell_word_0x24_u32;
+	PackedInt32Array roundtrip_cell_word_0x28_u32;
+	scratch_word_u16.resize(tile_count);
+	roundtrip_cell_word_0x24_u32.resize(tile_count);
+	roundtrip_cell_word_0x28_u32.resize(tile_count);
+	int32_t dirty_cell_count = 0;
+	int32_t nonzero_art_cell_count = 0;
+	int32_t terrain_flag_cell_count = 0;
+	int32_t terrain_mismatch_count = 0;
+	int32_t roundtrip_mismatch_count = 0;
+	int32_t missing_projection_cell_count = 0;
+	Array samples;
+	for (int32_t index = 0; index < tile_count; ++index) {
+		const bool has_projection = index < projected_cell_word_0x24_u32.size() && index < projected_cell_word_0x28_u32.size();
+		const uint32_t source_word_0x24 = has_projection ? uint32_t(int32_t(projected_cell_word_0x24_u32[index])) : uint32_t(drained_terrain_code_u16[index] & 0x3f);
+		const uint32_t source_word_0x28 = has_projection ? uint32_t(int32_t(projected_cell_word_0x28_u32[index])) : 0U;
+		if (!has_projection) {
+			missing_projection_cell_count += 1;
+		}
+		const int32_t terrain_id = int32_t(source_word_0x24 & 0x3fU);
+		const int32_t art_id = int32_t((source_word_0x24 >> 6U) & 0xffU);
+		const int32_t flag_a = int32_t((source_word_0x28 >> 15U) & 0x01U);
+		const int32_t flag_b = int32_t((source_word_0x28 >> 16U) & 0x01U);
+		const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, art_id, flag_a, flag_b);
+		const int32_t scratch_terrain_id = int32_t((scratch_word >> 1U) & 0x0fU);
+		const int32_t scratch_art_id = int32_t((scratch_word >> 5U) & 0x7fU);
+		const int32_t scratch_flag_a = int32_t((scratch_word >> 12U) & 0x01U);
+		const int32_t scratch_flag_b = int32_t((scratch_word >> 13U) & 0x01U);
+		const uint32_t roundtrip_word_0x24 = (uint32_t(scratch_terrain_id) & 0x3fU) | ((uint32_t(scratch_art_id) & 0xffU) << 6U);
+		const uint32_t roundtrip_word_0x28 = ((uint32_t(scratch_flag_a) & 0x01U) << 15U) | ((uint32_t(scratch_flag_b) & 0x01U) << 16U);
+		scratch_word_u16.set(index, int32_t(scratch_word));
+		roundtrip_cell_word_0x24_u32.set(index, int32_t(roundtrip_word_0x24));
+		roundtrip_cell_word_0x28_u32.set(index, int32_t(roundtrip_word_0x28));
+		if ((scratch_word & 0x01U) != 0U) {
+			dirty_cell_count += 1;
+		}
+		if (art_id != 0) {
+			nonzero_art_cell_count += 1;
+		}
+		if ((flag_a | flag_b) != 0) {
+			terrain_flag_cell_count += 1;
+		}
+		if (terrain_id != drained_terrain_code_u16[index]) {
+			terrain_mismatch_count += 1;
+		}
+		if (roundtrip_word_0x24 != source_word_0x24 || roundtrip_word_0x28 != (source_word_0x28 & (0x03U << 15U))) {
+			roundtrip_mismatch_count += 1;
+		}
+		if (samples.size() < 8 && art_id != 0) {
+			Dictionary sample;
+			sample["index"] = index;
+			sample["x"] = width > 0 ? index % width : 0;
+			sample["y"] = width > 0 ? (index / width) % height : 0;
+			sample["level"] = width > 0 && height > 0 ? index / (width * height) : 0;
+			sample["terrain_id"] = terrain_id;
+			sample["terrain_art"] = art_id;
+			sample["flag_a"] = flag_a;
+			sample["flag_b"] = flag_b;
+			sample["scratch_word_u16"] = int32_t(scratch_word);
+			sample["roundtrip_cell_word_0x24_u32"] = int64_t(roundtrip_word_0x24);
+			sample["roundtrip_cell_word_0x28_u32"] = int64_t(roundtrip_word_0x28);
+			samples.append(sample);
+		}
+	}
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = tile_count;
+	report["scratch_word_count"] = scratch_word_u16.size();
+	report["scratch_dirty_cell_count"] = dirty_cell_count;
+	report["nonzero_art_cell_count"] = nonzero_art_cell_count;
+	report["terrain_flag_cell_count"] = terrain_flag_cell_count;
+	report["terrain_mismatch_count"] = terrain_mismatch_count;
+	report["missing_projection_cell_count"] = missing_projection_cell_count;
+	report["scratch_roundtrip_mismatch_count"] = roundtrip_mismatch_count;
+	report["scratch_word_u16"] = scratch_word_u16;
+	report["roundtrip_cell_word_0x24_u32"] = roundtrip_cell_word_0x24_u32;
+	report["roundtrip_cell_word_0x28_u32"] = roundtrip_cell_word_0x28_u32;
+	report["sample_records"] = samples;
+	report["blocked_next"] = "port live 0x4bb74b/0x4bcfc3/0x4bce6d scratch-neighbor feedback during the 0x4bc5f0 queue drain before runtime adoption";
+	return report;
+}
+
 Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
 
 Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
@@ -2072,7 +2178,7 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape per 0x4a3f27 repaint over a copied terrain grid";
 	report["ported_addresses"] = Array::make("0x4bc5f0", "0x4bbd01", "0x4bc988", "0x4bb74b", "0x4bba59", "0x4bbfcc");
 	report["exact_drain_complete"] = false;
-	report["blocked_exact_dependencies"] = Array::make("0x4bad0f_scratch_visual_state_feedback");
+	report["blocked_exact_dependencies"] = Array::make("0x4bad0f_live_scratch_visual_state_feedback");
 	Dictionary queue_container_contract = h3maped_queue_container_contract_report(level_count);
 	report["queue_container_contract_status"] = queue_container_contract.get("status", "");
 	report["queue_container_contract"] = queue_container_contract;
@@ -2348,7 +2454,10 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	Dictionary drained_visual_projection = generated_grid_visual_projection_report(drain_grid, drained_final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array()), width, height, level_count, rng_state_before_visual_selection);
 	report["drained_visual_projection_status"] = drained_visual_projection.get("status", "");
 	report["drained_visual_projection"] = drained_visual_projection;
-	report["blocked_next"] = "replace this copied terrain-only projection with full 0x4bad0f scratch visual-state feedback and safe generated-cell/runtime adoption";
+	Dictionary scratch_feedback_projection = h3maped_drained_scratch_feedback_projection_report(drain_grid, drained_visual_projection, width, height, level_count);
+	report["scratch_feedback_projection_status"] = scratch_feedback_projection.get("status", "");
+	report["scratch_feedback_projection"] = scratch_feedback_projection;
+	report["blocked_next"] = "replace this copied terrain-only projection with live 0x4bad0f scratch-neighbor feedback sequencing and safe generated-cell/runtime adoption";
 	return report;
 }
 
