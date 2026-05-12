@@ -370,6 +370,12 @@ func _run() -> void:
 	if int(dynamic_values.get("0x49fa2a_creature_loop_limit", -1)) != 0x76 or int(dynamic_values.get("0x4a043a_type17_loop_limit", -1)) != 0x3a or int(dynamic_values.get("0x4a0f54_inner_creature_loop_limit", -1)) != 0x76:
 		_fail("0x49f95a one-level dynamic loop limits drifted: %s" % JSON.stringify(dynamic_values))
 		return
+	if String(dynamic_values.get("creature_table_loader_address", "")) != "0x40ce11" or int(dynamic_values.get("creature_table_loader_stride_bytes", -1)) != 0x74:
+		_fail("0x49f95a dynamic creature table loader evidence drifted: %s" % JSON.stringify(dynamic_values))
+		return
+	if String(dynamic_values.get("creature_table_loader_static_storage_base_address", "")) != "0x57cea0" or String(dynamic_values.get("creature_table_loader_numeric_copy_dest_range", "")) != "creature_row+0x20..+0x70":
+		_fail("0x49f95a dynamic creature table storage/copy evidence drifted: %s" % JSON.stringify(dynamic_values))
+		return
 	var dynamic_functions: Array = dynamic_values.get("functions", [])
 	if dynamic_functions.size() != 3 or String(Dictionary(dynamic_functions[0]).get("address", "")) != "0x49c64b" or String(Dictionary(dynamic_functions[1]).get("address", "")) != "0x49c849" or String(Dictionary(dynamic_functions[2]).get("address", "")) != "0x49ca8b":
 		_fail("0x49f95a dynamic value-function addresses drifted: %s" % JSON.stringify(dynamic_values))
