@@ -3,6 +3,7 @@
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/variant/packed_int32_array.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
@@ -2788,7 +2789,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["function_address"] = "0x4a3f27";
 	report["span_fill_source_address"] = "0x4a325d";
 	report["tile_serializer_address"] = "0x49b2b6";
-	report["materializes_project_grid"] = false;
+	report["materializes_project_grid"] = true;
+	report["project_grid_public_runtime_adoption"] = false;
 	report["materializes_package_tiles"] = false;
 
 	const int32_t width = int32_t(normalized_config.get("width", 36));
@@ -2810,9 +2812,26 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary terrain_name_counts;
 	Dictionary h3_terrain_code_counts;
 	Dictionary cells_by_zone_word;
+	PackedInt32Array terrain_code_u16;
+	PackedInt32Array tile_byte_0_terrain_id_u8;
+	PackedInt32Array tile_byte_1_terrain_art_u8;
+	PackedInt32Array tile_byte_2_river_type_u8;
+	PackedInt32Array tile_byte_3_river_art_u8;
+	PackedInt32Array tile_byte_4_road_type_u8;
+	PackedInt32Array tile_byte_5_road_art_u8;
+	PackedInt32Array tile_byte_6_flags_u8;
 	int32_t reserved_cell_count = 0;
 	int32_t unassigned_cell_count = 0;
+	int32_t non_water_terrain_cell_count = 0;
 	const int32_t cell_count = int32_t(zone_words.size());
+	terrain_code_u16.resize(cell_count);
+	tile_byte_0_terrain_id_u8.resize(cell_count);
+	tile_byte_1_terrain_art_u8.resize(cell_count);
+	tile_byte_2_river_type_u8.resize(cell_count);
+	tile_byte_3_river_art_u8.resize(cell_count);
+	tile_byte_4_road_type_u8.resize(cell_count);
+	tile_byte_5_road_art_u8.resize(cell_count);
+	tile_byte_6_flags_u8.resize(cell_count);
 	for (int32_t index = 0; index < cell_count; ++index) {
 		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
 		int32_t h3_terrain_code = 8;
@@ -2830,6 +2849,17 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 				h3_terrain_code = int32_t(selected_terrain_codes[zone_word_id]);
 			}
 		}
+		if (h3_terrain_code != 8) {
+			non_water_terrain_cell_count += 1;
+		}
+		terrain_code_u16.set(index, h3_terrain_code & 0x3f);
+		tile_byte_0_terrain_id_u8.set(index, h3_terrain_code & 0x3f);
+		tile_byte_1_terrain_art_u8.set(index, 0);
+		tile_byte_2_river_type_u8.set(index, 0);
+		tile_byte_3_river_art_u8.set(index, 0);
+		tile_byte_4_road_type_u8.set(index, 0);
+		tile_byte_5_road_art_u8.set(index, 0);
+		tile_byte_6_flags_u8.set(index, 0);
 		terrain_name_counts[terrain_name] = int32_t(terrain_name_counts.get(terrain_name, 0)) + 1;
 		const String code_key = String::num_int64(h3_terrain_code);
 		h3_terrain_code_counts[code_key] = int32_t(h3_terrain_code_counts.get(code_key, 0)) + 1;
@@ -2840,13 +2870,62 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 
 	report["cell_count"] = cell_count;
 	report["tile_byte_zero_terrain_cell_count"] = cell_count;
+	report["tile_byte_zero_non_water_terrain_cell_count"] = non_water_terrain_cell_count;
+	report["tile_byte_one_nonzero_art_cell_count"] = 0;
+	report["tile_byte_six_terrain_flip_cell_count"] = 0;
 	report["reserved_flag_cell_count"] = reserved_cell_count;
 	report["unassigned_water_cell_count"] = unassigned_cell_count;
 	report["terrain_name_counts"] = terrain_name_counts;
 	report["h3_terrain_code_counts"] = h3_terrain_code_counts;
 	report["cells_by_zone_word"] = cells_by_zone_word;
-	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x49b2b6_art_index_flip_writeout";
-	report["blocked_next"] = "adopt terrain code/art/index/flip bytes into project terrain grid, then place owned towns, roads, blockers, guards, mines, rewards, and final packages";
+	report["terrain_code_u16"] = terrain_code_u16;
+	report["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
+	report["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
+	report["tile_byte_2_river_type_u8"] = tile_byte_2_river_type_u8;
+	report["tile_byte_3_river_art_u8"] = tile_byte_3_river_art_u8;
+	report["tile_byte_4_road_type_u8"] = tile_byte_4_road_type_u8;
+	report["tile_byte_5_road_art_u8"] = tile_byte_5_road_art_u8;
+	report["tile_byte_6_flags_u8"] = tile_byte_6_flags_u8;
+	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_id_byte_packed_art_flip_pending";
+	report["tile_byte_writeout_source"] = "0x49b2b6 serializes generated cell+0x24 bits 0..5 to byte 0; terrain art byte 1 and terrain flip byte 6 bits 0..1 remain blocked until TerrainPlacement 0x4bcff5/0x4bd099 normalization is ported";
+	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
+
+	Dictionary level_record;
+	level_record["level_index"] = 0;
+	level_record["level_kind"] = "surface";
+	level_record["width"] = width;
+	level_record["height"] = height;
+	level_record["tile_count"] = width * height;
+	level_record["terrain_code_u16"] = terrain_code_u16;
+	level_record["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
+	level_record["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
+	level_record["tile_byte_2_river_type_u8"] = tile_byte_2_river_type_u8;
+	level_record["tile_byte_3_river_art_u8"] = tile_byte_3_river_art_u8;
+	level_record["tile_byte_4_road_type_u8"] = tile_byte_4_road_type_u8;
+	level_record["tile_byte_5_road_art_u8"] = tile_byte_5_road_art_u8;
+	level_record["tile_byte_6_flags_u8"] = tile_byte_6_flags_u8;
+	level_record["tile_byte_writeout_status"] = report.get("tile_byte_writeout_status", "");
+	level_record["terrain_counts"] = terrain_name_counts;
+	level_record["h3_terrain_code_counts"] = h3_terrain_code_counts;
+	Array grid_levels;
+	grid_levels.append(level_record);
+	Dictionary terrain_grid;
+	terrain_grid["schema_id"] = "aurelion_native_rmg_terrain_grid_v1";
+	terrain_grid["schema_version"] = 1;
+	terrain_grid["generation_status"] = "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only";
+	terrain_grid["public_runtime_adoption_status"] = "blocked_until_TerrainPlacement_art_index_flip_and_later_rmg_phases";
+	terrain_grid["width"] = width;
+	terrain_grid["height"] = height;
+	terrain_grid["level_count"] = level_count;
+	terrain_grid["tile_count"] = cell_count;
+	terrain_grid["terrain_counts"] = terrain_name_counts;
+	terrain_grid["h3_terrain_code_counts"] = h3_terrain_code_counts;
+	terrain_grid["levels"] = grid_levels;
+	terrain_grid["tile_byte_writeout_status"] = report.get("tile_byte_writeout_status", "");
+	terrain_grid["materialized_level_count"] = grid_levels.size();
+	report["terrain_grid_status"] = terrain_grid.get("generation_status", "");
+	report["terrain_grid"] = terrain_grid;
+	report["blocked_next"] = "port TerrainPlacement art/index/flip normalization, then place owned towns, roads, blockers, guards, mines, rewards, and final packages";
 	return report;
 }
 

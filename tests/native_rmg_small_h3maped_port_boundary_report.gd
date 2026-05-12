@@ -422,15 +422,43 @@ func _run() -> void:
 	var terrain_cell_writeout: Dictionary = footprint_schedule.get("terrain_cell_writeout", {})
 	var terrain_counts: Dictionary = terrain_cell_writeout.get("terrain_name_counts", {})
 	var h3_terrain_counts: Dictionary = terrain_cell_writeout.get("h3_terrain_code_counts", {})
+	var terrain_grid: Dictionary = terrain_cell_writeout.get("terrain_grid", {})
+	var terrain_levels: Array = terrain_grid.get("levels", [])
+	var terrain_codes: PackedInt32Array = terrain_cell_writeout.get("terrain_code_u16", PackedInt32Array())
+	var tile_byte_0: PackedInt32Array = terrain_cell_writeout.get("tile_byte_0_terrain_id_u8", PackedInt32Array())
+	var tile_byte_1: PackedInt32Array = terrain_cell_writeout.get("tile_byte_1_terrain_art_u8", PackedInt32Array())
+	var tile_byte_6: PackedInt32Array = terrain_cell_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
+			or int(terrain_cell_writeout.get("tile_byte_zero_non_water_terrain_cell_count", -1)) != 1111 \
+			or int(terrain_cell_writeout.get("tile_byte_one_nonzero_art_cell_count", -1)) != 0 \
+			or int(terrain_cell_writeout.get("tile_byte_six_terrain_flip_cell_count", -1)) != 0 \
 			or int(terrain_cell_writeout.get("reserved_flag_cell_count", -1)) != 1111 \
 			or int(terrain_cell_writeout.get("unassigned_water_cell_count", -1)) != 185 \
-			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x49b2b6_art_index_flip_writeout" \
-			or bool(terrain_cell_writeout.get("materializes_project_grid", true)) \
+			or String(terrain_cell_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
+			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout" \
+			or not bool(terrain_cell_writeout.get("materializes_project_grid", false)) \
+			or bool(terrain_cell_writeout.get("project_grid_public_runtime_adoption", true)) \
 			or bool(terrain_cell_writeout.get("materializes_package_tiles", true)):
 		_fail("The 0x4a3f27 terrain-cell writeout inspection drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if terrain_codes.size() != 1296 \
+			or tile_byte_0.size() != 1296 \
+			or tile_byte_1.size() != 1296 \
+			or tile_byte_6.size() != 1296 \
+			or tile_byte_0 != terrain_codes:
+		_fail("The 0x49b2b6 terrain byte-zero inspection arrays drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1" \
+			or String(terrain_grid.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only" \
+			or String(terrain_grid.get("public_runtime_adoption_status", "")) != "blocked_until_TerrainPlacement_art_index_flip_and_later_rmg_phases" \
+			or int(terrain_grid.get("width", -1)) != 36 \
+			or int(terrain_grid.get("height", -1)) != 36 \
+			or int(terrain_grid.get("level_count", -1)) != 1 \
+			or int(terrain_grid.get("tile_count", -1)) != 1296 \
+			or terrain_levels.size() != 1:
+		_fail("The inspection terrain-grid adoption record drifted: %s" % JSON.stringify(terrain_grid))
 		return
 	if int(terrain_counts.get("dirt", -1)) != 492 \
 			or int(terrain_counts.get("grass", -1)) != 165 \
