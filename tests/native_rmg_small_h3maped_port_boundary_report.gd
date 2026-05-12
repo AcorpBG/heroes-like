@@ -350,6 +350,13 @@ func _run() -> void:
 	if int(mine_reward_placement.get("treasure_reward_candidate_scan_count", -1)) != 42 or int(mine_reward_placement.get("treasure_reward_candidate_vector_proxy_backed_record_count", -1)) != 36:
 		_fail("0x4a9f1c recovered proxy-backed candidate-vector scan count drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
+	var vector_construction: Dictionary = mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})
+	if int(vector_construction.get("static_insert_site_count", -1)) != 126 or int(vector_construction.get("static_insert_helper_42d8d8_count", -1)) != 27 or int(vector_construction.get("static_insert_helper_40bb26_count", -1)) != 99:
+		_fail("0x49f95a reward vector construction-site summary drifted: %s" % JSON.stringify(vector_construction))
+		return
+	if int(vector_construction.get("current_proxy_backed_materialized_record_count", -1)) != 36 or int(vector_construction.get("uncovered_static_insert_site_count", -1)) != 90:
+		_fail("0x49f95a proxy-backed vector coverage gap drifted: %s" % JSON.stringify(vector_construction))
+		return
 	if int(mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", -1)) != 359 or int(mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", -1)) != 95740:
 		_fail("0x4a9f1c recovered proxy-backed candidate scan totals drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
@@ -384,6 +391,9 @@ func _run() -> void:
 		return
 	if String(first_candidate_scan.get("candidate_vector_constructor_address", "")) != "0x49f95a" or int(first_candidate_scan.get("candidate_vector_record_count", -1)) != 36 or bool(first_candidate_scan.get("complete_generator_candidate_vector_materialized", true)):
 		_fail("0x4a9f1c recovered proxy-backed vector scope drifted: %s" % JSON.stringify(first_candidate_scan))
+		return
+	if int(first_candidate_scan.get("candidate_vector_static_insert_site_count", -1)) != 126 or int(first_candidate_scan.get("candidate_vector_uncovered_static_site_count", -1)) != 90:
+		_fail("0x4a9f1c candidate scan lost the 0x49f95a full-vector construction gap: %s" % JSON.stringify(first_candidate_scan))
 		return
 	if int(first_candidate_scan.get("eligible_candidate_count", -1)) != 8 or int(first_candidate_scan.get("eligible_candidate_weight_total", -1)) != 410:
 		_fail("0x4a9f1c first proxy-backed candidate eligibility drifted: %s" % JSON.stringify(first_candidate_scan))
@@ -1117,6 +1127,8 @@ func _run() -> void:
 		"treasure_reward_candidate_scan_eligible_total": mine_reward_placement.get("treasure_reward_candidate_scan_eligible_total", 0),
 		"treasure_reward_candidate_scan_weight_total": mine_reward_placement.get("treasure_reward_candidate_scan_weight_total", 0),
 		"treasure_reward_candidate_vector_proxy_backed_record_count": mine_reward_placement.get("treasure_reward_candidate_vector_proxy_backed_record_count", 0),
+		"treasure_reward_candidate_vector_static_insert_site_count": Dictionary(mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})).get("static_insert_site_count", 0),
+		"treasure_reward_candidate_vector_uncovered_static_site_count": Dictionary(mine_reward_placement.get("treasure_reward_candidate_vector_static_construction_summary", {})).get("uncovered_static_insert_site_count", 0),
 		"treasure_reward_proxy_inventory_reward_reference_count": mine_reward_placement.get("treasure_reward_proxy_inventory_reward_reference_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),

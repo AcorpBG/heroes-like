@@ -4950,6 +4950,31 @@ std::vector<H3MapedRewardCandidate> h3maped_reward_proxy_backed_candidates_49f95
 	};
 }
 
+Dictionary reward_vector_construction_49f95a_report() {
+	Dictionary report;
+	report["function_address"] = "0x49f95a";
+	report["function_end_address"] = "0x4a1700";
+	report["source_binary_path"] = BINARY_PATH;
+	report["generator_candidate_vector_object_offset"] = "generator+0x10f0";
+	report["generator_candidate_vector_begin_offset"] = "generator+0x10f4";
+	report["generator_candidate_vector_end_offset"] = "generator+0x10f8";
+	report["allocator_function_address"] = "0x5044b1";
+	report["static_insert_site_count"] = 126;
+	report["static_insert_helper_42d8d8_count"] = 27;
+	report["static_insert_helper_40bb26_count"] = 99;
+	report["direct_field_assignment_site_count"] = 98;
+	report["constructor_49c523_site_count"] = 18;
+	report["constructor_49ccc1_site_count"] = 5;
+	report["constructor_49c5cd_site_count"] = 2;
+	report["constructor_49c9bf_site_count"] = 2;
+	report["constructor_49ca26_site_count"] = 1;
+	report["current_proxy_backed_materialized_record_count"] = int32_t(h3maped_reward_proxy_backed_candidates_49f95a().size());
+	report["uncovered_static_insert_site_count"] = int32_t(report["static_insert_site_count"]) - int32_t(report["current_proxy_backed_materialized_record_count"]);
+	report["recovery_status"] = "0x49f95a_static_construction_site_count_recovered_proxy_backed_subset_materialized_full_vector_pending";
+	report["weighted_selection_gate"] = "blocked_until_complete_generator_plus_0x10f4_vector_parity";
+	return report;
+}
+
 Dictionary reward_candidate_scan_4a9f1c_report(int32_t min_value, int32_t max_value, bool skip_metadata_gate, bool skip_visited_gate) {
 	Dictionary scan;
 	scan["phase"] = "0x4a9f1c_reward_candidate_scan";
@@ -4983,6 +5008,11 @@ Dictionary reward_candidate_scan_4a9f1c_report(int32_t min_value, int32_t max_va
 	scan["native_proxy_inventory_reward_reference_count"] = reward_proxy_reference_count();
 
 	const std::vector<H3MapedRewardCandidate> candidates = h3maped_reward_proxy_backed_candidates_49f95a();
+	Dictionary vector_construction = reward_vector_construction_49f95a_report();
+	scan["candidate_vector_static_construction_summary"] = vector_construction;
+	scan["candidate_vector_static_insert_site_count"] = int32_t(vector_construction.get("static_insert_site_count", 0));
+	scan["candidate_vector_current_static_site_coverage_count"] = int32_t(candidates.size());
+	scan["candidate_vector_uncovered_static_site_count"] = int32_t(vector_construction.get("uncovered_static_insert_site_count", 0));
 	Array eligible_preview;
 	int32_t eligible_count = 0;
 	int32_t total_weight = 0;
@@ -5833,6 +5863,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["treasure_reward_candidate_scan_eligible_total"] = treasure_reward_candidate_scan_eligible_total;
 	report["treasure_reward_candidate_scan_weight_total"] = treasure_reward_candidate_scan_weight_total;
 	report["treasure_reward_candidate_vector_proxy_backed_record_count"] = int32_t(h3maped_reward_proxy_backed_candidates_49f95a().size());
+	report["treasure_reward_candidate_vector_static_construction_summary"] = reward_vector_construction_49f95a_report();
 	report["treasure_reward_proxy_inventory_reward_reference_count"] = reward_proxy_inventory_count;
 	report["treasure_reward_object_lookup_candidate_execution_materialized"] = false;
 	report["guard_reward_monster_generation_status"] = "0x4a9911_0x4a9641_mine_scan_and_0x4aa354_reward_value_selection_executed_inspection_only_package_adoption_rewards_and_guarding_pending";
