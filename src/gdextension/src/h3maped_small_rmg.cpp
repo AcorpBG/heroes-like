@@ -76,6 +76,109 @@ struct CoordCandidate {
 	int32_t level = 0;
 };
 
+struct PolygonPoint {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct PolygonModelNode {
+	String id;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t payload = 0;
+	bool has_payload = false;
+	int32_t pair = -1;
+	int32_t next = -1;
+	int32_t previous = -1;
+	bool active = true;
+	bool finalized = false;
+	int32_t finalized_x = 0;
+	int32_t finalized_y = 0;
+};
+
+struct PolygonModel {
+	std::vector<PolygonModelNode> nodes;
+	int32_t root = -1;
+
+	int32_t add_pair(const String &prefix, int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload, bool from_has_payload = false, bool to_has_payload = false) {
+		const int32_t primary_index = int32_t(nodes.size());
+		const int32_t paired_index = primary_index + 1;
+		PolygonModelNode primary;
+		primary.id = prefix + String("_primary");
+		primary.x = from_x;
+		primary.y = from_y;
+		primary.payload = from_payload;
+		primary.has_payload = from_has_payload;
+		primary.pair = paired_index;
+		primary.next = primary_index;
+		primary.previous = primary_index;
+		PolygonModelNode paired;
+		paired.id = prefix + String("_paired");
+		paired.x = to_x;
+		paired.y = to_y;
+		paired.payload = to_payload;
+		paired.has_payload = to_has_payload;
+		paired.pair = primary_index;
+		paired.next = paired_index;
+		paired.previous = paired_index;
+		nodes.push_back(primary);
+		nodes.push_back(paired);
+		return primary_index;
+	}
+
+	void relink_4cc643(int32_t first, int32_t second) {
+		const int32_t first_next = nodes[size_t(first)].next;
+		const int32_t second_next = nodes[size_t(second)].next;
+		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
+		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const String &prefix) {
+		const PolygonModelNode &old_pair = nodes[size_t(nodes[size_t(old_node)].pair)];
+		const PolygonModelNode &target = nodes[size_t(target_node)];
+		const int32_t bridge_primary = add_pair(prefix, old_pair.x, old_pair.y, old_pair.payload, target.x, target.y, target.payload, old_pair.has_payload, target.has_payload);
+		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
+		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
+		return bridge_primary;
+	}
+
+	int64_t side_4cca55(int32_t from_node, int32_t to_node, int32_t x, int32_t y) const {
+		const PolygonModelNode &from = nodes[size_t(from_node)];
+		const PolygonModelNode &to = nodes[size_t(to_node)];
+		return int64_t(to.y - from.y) * int64_t(x - from.x) - int64_t(to.x - from.x) * int64_t(y - from.y);
+	}
+
+	int32_t locate_4cca55(int32_t x, int32_t y) const {
+		int32_t current = root;
+		for (int32_t guard = 0; guard < 512; ++guard) {
+			const PolygonModelNode &current_node = nodes[size_t(current)];
+			if (current_node.x == x && current_node.y == y) {
+				return current;
+			}
+			const int32_t paired = current_node.pair;
+			const PolygonModelNode &paired_node = nodes[size_t(paired)];
+			if (paired_node.x == x && paired_node.y == y) {
+				return paired;
+			}
+			if (side_4cca55(current, paired, x, y) > 0) {
+				current = paired;
+				continue;
+			}
+			const int32_t next = current_node.next;
+			if (side_4cca55(next, nodes[size_t(next)].pair, x, y) <= 0) {
+				current = next;
+				continue;
+			}
+			const int32_t nested = nodes[size_t(nodes[size_t(paired)].previous)].pair;
+			if (side_4cca55(nested, nodes[size_t(nested)].pair, x, y) > 0) {
+				return current;
+			}
+			current = nested;
+		}
+		return -1;
+	}
+};
+
 struct SpanRecord {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1465,10 +1568,25 @@ Dictionary polygon_seed_4cc788_report() {
 	return report;
 }
 
+PolygonModel initial_polygon_model_4cc788() {
+	PolygonModel model;
+	const int32_t p0 = model.add_pair("initial_pair_0", -200, -200, 0, 400, -200, 0);
+	const int32_t p1 = model.add_pair("initial_pair_1", 400, -200, 0, 400, 400, 0);
+	const int32_t p2 = model.add_pair("initial_pair_2", 400, 400, 0, -200, 400, 0);
+	const int32_t p3 = model.add_pair("initial_pair_3", -200, 400, 0, -200, -200, 0);
+	model.relink_4cc643(model.nodes[size_t(p0)].pair, p1);
+	model.relink_4cc643(model.nodes[size_t(p1)].pair, p2);
+	model.relink_4cc643(model.nodes[size_t(p2)].pair, p3);
+	model.relink_4cc643(model.nodes[size_t(p3)].pair, p0);
+	model.bridge_4ccb1f(p3, p2, "initial_bridge_pair_0");
+	model.root = p0;
+	return model;
+}
+
 Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t total_polygon_split_calls) {
 	Dictionary report;
-	report["status"] = "0x4ccb64_split_insertion_gate_ported_inspection_only";
-	report["source"] = "h3maped 0x4ccb64 calls 0x4cca55 for each runtime-zone split point, rejects points equal to the located source-node endpoint or following endpoint, then inserts a 0x4cc955 node and runs bridge/crossing cleanup before 0x4ccdfc finalization";
+	report["status"] = "0x4ccb64_first_locator_and_duplicate_guard_ported_inspection_only";
+	report["source"] = "h3maped 0x4ccb64 calls 0x4cca55 for each runtime-zone split point, rejects points equal to the located source-node endpoint or following endpoint, then inserts a 0x4cc955 node and runs bridge/crossing cleanup before 0x4ccdfc finalization; the compact port currently materializes only the first locator/duplicate guard against the real 0x4cc788 initial graph";
 	report["function_address"] = "0x4ccb64";
 	report["locator_address"] = "0x4cca55";
 	report["node_constructor_address"] = "0x4cc955";
@@ -1481,9 +1599,13 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	report["scheduled_split_call_count"] = total_polygon_split_calls;
 	report["locator_call_count"] = total_polygon_split_calls;
 	report["duplicate_endpoint_guard_address"] = "0x4ccb80..0x4ccba1";
-	report["duplicate_endpoint_guard_materialized"] = false;
+	report["duplicate_endpoint_guard_materialized"] = true;
+	report["locator_materialized_count"] = total_polygon_split_calls > 0 ? 1 : 0;
+	report["duplicate_skip_count"] = 0;
 
 	Array scheduled_calls;
+	PolygonModel initial_model = initial_polygon_model_4cc788();
+	bool first_locator_materialized = false;
 	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
 		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -1500,7 +1622,22 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 			item["runtime_zone_index"] = split.get("runtime_zone_index", -1);
 			item["x"] = split.get("x", 0);
 			item["y"] = split.get("y", 0);
-			item["locator_status"] = "scheduled_0x4cca55_not_materialized";
+			if (!first_locator_materialized) {
+				const int32_t located = initial_model.locate_4cca55(int32_t(split.get("x", 0)), int32_t(split.get("y", 0)));
+				item["locator_status"] = located >= 0 ? String("0x4cca55_initial_graph_locator_materialized") : String("0x4cca55_initial_graph_locator_failed");
+				item["located_node_id"] = located >= 0 ? initial_model.nodes[size_t(located)].id : String();
+				item["located_pair_id"] = located >= 0 ? initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].id : String();
+				const bool duplicates_located = located >= 0
+						&& ((initial_model.nodes[size_t(located)].x == int32_t(split.get("x", 0)) && initial_model.nodes[size_t(located)].y == int32_t(split.get("y", 0)))
+								|| (initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].x == int32_t(split.get("x", 0)) && initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].y == int32_t(split.get("y", 0))));
+				item["duplicate_endpoint_guard_result"] = duplicates_located ? String("0x4ccb64_duplicate_point_skipped") : String("0x4ccb64_not_duplicate_endpoint");
+				if (duplicates_located) {
+					report["duplicate_skip_count"] = int32_t(report.get("duplicate_skip_count", 0)) + 1;
+				}
+				first_locator_materialized = true;
+			} else {
+				item["locator_status"] = "pending_current_graph_after_0x4ccb64_mutation";
+			}
 			item["insertion_status"] = "pending_0x4ccb64_source_node_graph_materialization";
 			scheduled_calls.append(item);
 		}
