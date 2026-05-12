@@ -83,11 +83,22 @@ func _run() -> void:
 		return
 
 	var selected_payload: Dictionary = report.get("selected_template_payload", {})
-	if String(selected_payload.get("status", "")) != "adapted_template_found":
+	if String(selected_payload.get("status", "")) != "adapted_project_catalog_contract_verified":
 		_fail("The selected h3maped source template was not resolved through adapted-catalog provenance: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("adapted_template_id", "")) != "translated_rmg_template_019_v1":
 		_fail("The selected h3maped source template resolved to the wrong adapted template id: %s" % JSON.stringify(report))
+		return
+	if not bool(selected_payload.get("adapted_template_loaded", false)) \
+			or not bool(selected_payload.get("adapted_profile_loaded", false)) \
+			or String(selected_payload.get("adapted_profile_id", "")) != "translated_rmg_profile_019_v1" \
+			or String(selected_payload.get("adapted_profile_template_id", "")) != "translated_rmg_template_019_v1" \
+			or int(selected_payload.get("adapted_import_source_template_index_one_based", -1)) != 19 \
+			or int(selected_payload.get("expected_import_source_template_index_one_based", -1)) != 19 \
+			or int(selected_payload.get("adapted_import_source_template_index_zero_based", -1)) != 18 \
+			or int(selected_payload.get("expected_import_source_template_index_zero_based", -1)) != 18 \
+			or not bool(selected_payload.get("adapted_import_source_index_matches", false)):
+		_fail("The selected h3maped source template did not verify the project template/profile bridge: %s" % JSON.stringify(selected_payload))
 		return
 	if int(selected_payload.get("zone_count", -1)) != 6 or int(selected_payload.get("link_count", -1)) != 5:
 		_fail("The selected h3maped source template payload lost zone/link topology: %s" % JSON.stringify(report))
