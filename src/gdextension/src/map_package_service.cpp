@@ -25371,7 +25371,24 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["town_ids"] = town_ids;
 	result["global_monster_strength_mode"] = global_monster_strength_mode;
 	result["global_monster_strength_source"] = global_monster_strength_token;
-	if (template_id.is_empty()) {
+	if (h3maped_small_rmg::supports_scope(result)) {
+		Dictionary h3maped_selection = h3maped_small_rmg::selection_identity(result);
+		result["h3maped_template_selection"] = h3maped_selection;
+		result["requested_template_id_before_h3maped_selection"] = template_id;
+		if (bool(h3maped_selection.get("ok", false)) && !String(h3maped_selection.get("adapted_template_id", "")).is_empty()) {
+			template_id = String(h3maped_selection.get("adapted_template_id", ""));
+			result["template_id"] = template_id;
+			result["template_selection_mode"] = "h3maped_exe_rng";
+			result["h3maped_source_template_id"] = h3maped_selection.get("source_template_id", "");
+			result["h3maped_source_catalog_index"] = h3maped_selection.get("source_catalog_index", -1);
+			result["explicit_template_request_overridden_by_h3maped_reset"] = !String(result.get("requested_template_id_before_h3maped_selection", "")).is_empty();
+		} else {
+			result["template_selection_mode"] = String(h3maped_selection.get("status", "")) == "blocked_until_numeric_h3maped_seed"
+					? String("h3maped_exe_rng_blocked_until_numeric_seed")
+					: String("h3maped_exe_rng_unresolved");
+			result["explicit_template_request_overridden_by_h3maped_reset"] = !String(result.get("requested_template_id_before_h3maped_selection", "")).is_empty();
+		}
+	} else if (template_id.is_empty()) {
 		template_id = catalog_template_id_for_config(result);
 		result["template_id"] = template_id;
 		result["template_selection_mode"] = "native_catalog_auto";
