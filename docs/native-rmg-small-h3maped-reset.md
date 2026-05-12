@@ -33,8 +33,9 @@ The active compact port currently supports inspection only:
 6. Ports runtime-zone record setup `0x4a218c` for inspection: six active runtime-zone records for the seed-1 boundary case, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles.
 7. Ports early endpoint-placement schedule `0x4a1f3b` for inspection: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. This phase consumes only link endpoints; `Value`, `Wide`, and `Border Guard` are preserved for later `0x4a79a3`.
 8. Ports coordinate candidate replay `0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed` for inspection: seed `1` reports 18 placement steps, four town-choice RNG calls during `0x49b452`, 18 coordinate RNG calls during `0x4a1f3b`, 22 total replay RNG events, and bbox span `84` rescaled onto the 36-tile map.
+9. Ports runtime terrain selection `0x49b53d` for inspection: match-to-town zones use table `0x540908`, treasure zones use `0x4e7276` over source terrain flags `+0x85..+0x8c`, and seed `1` selects project terrains `[dirt, dirt, snow, grass, dirt, rough]` with two terrain RNG calls.
 
-The active port does not materialize terrain, map cells, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate replay is exposed as inspection data only and is not package generation.
+The active port does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate and terrain selection are exposed as inspection data only and are not package generation.
 
 ## Runtime Gate
 
@@ -63,8 +64,7 @@ Explicit translated-template requests do not bypass the reset gate.
 
 The next clean phases are:
 
-1. `0x49b53d` runtime terrain choice.
-2. `0x4a3a03` zone footprint placement.
-3. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
+1. `0x4a3a03` zone footprint placement.
+2. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
 
 Runtime generation remains blocked until these phases collectively produce authoritative cells and objects.

@@ -231,6 +231,67 @@ Array coordinate_candidate_report(const std::vector<CoordCandidate> &candidates,
 	return result;
 }
 
+String terrain_for_h3maped_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "dirt";
+		case 1:
+			return "sand";
+		case 2:
+			return "grass";
+		case 3:
+			return "snow";
+		case 4:
+			return "swamp";
+		case 5:
+			return "rough";
+		case 6:
+			return "underground";
+		case 7:
+			return "lava";
+		case 8:
+			return "water";
+		case 9:
+			return "rock";
+		default:
+			return String();
+	}
+}
+
+int32_t h3maped_id_for_terrain(const String &terrain_id) {
+	if (terrain_id == "dirt") {
+		return 0;
+	}
+	if (terrain_id == "sand") {
+		return 1;
+	}
+	if (terrain_id == "grass") {
+		return 2;
+	}
+	if (terrain_id == "snow") {
+		return 3;
+	}
+	if (terrain_id == "swamp") {
+		return 4;
+	}
+	if (terrain_id == "rough") {
+		return 5;
+	}
+	if (terrain_id == "underground" || terrain_id == "subterranean") {
+		return 6;
+	}
+	if (terrain_id == "lava") {
+		return 7;
+	}
+	if (terrain_id == "water") {
+		return 8;
+	}
+	if (terrain_id == "rock") {
+		return 9;
+	}
+	return -1;
+}
+
 Dictionary template_to_dictionary(const TemplateEvidence &candidate) {
 	Dictionary item;
 	item["id"] = candidate.id;
@@ -910,6 +971,131 @@ Dictionary coordinate_candidate_replay_report(const Dictionary &normalized_confi
 	return report;
 }
 
+Dictionary runtime_terrain_selection_report(const Array &runtime_zone_records, const Dictionary &coordinate_replay) {
+	Dictionary report;
+	report["status"] = "0x49b53d_runtime_terrain_selection_ported";
+	report["source"] = "h3maped 0x49b53d maps match-to-town runtime choices through table 0x540908, otherwise uses 0x4e7276 over source zone +0x85..+0x8c allowed terrain flags";
+	report["function_address"] = "0x49b53d";
+	report["town_to_terrain_table_address"] = "0x540908";
+	report["allowed_terrain_flags_source"] = "source_zone+0x85..0x8c";
+	report["rng_state_before_0x49b53d_uint32"] = coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0);
+	report["materializes_terrain_cells"] = false;
+	report["materializes_terrain_art"] = false;
+
+	const std::array<int32_t, 9> h3_town_to_terrain = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
+	Array town_table;
+	for (int32_t item : h3_town_to_terrain) {
+		town_table.append(item);
+	}
+	report["town_choice_to_terrain_table"] = town_table;
+
+	Array town_choice_by_runtime;
+	for (int64_t index = 0; index < runtime_zone_records.size(); ++index) {
+		town_choice_by_runtime.append(-1);
+	}
+	Array rng_events = coordinate_replay.get("rng_events", Array());
+	for (int64_t index = 0; index < rng_events.size(); ++index) {
+		if (Variant(rng_events[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary event = rng_events[index];
+		if (String(event.get("consumer", "")) != "0x49b3c1") {
+			continue;
+		}
+		const int32_t runtime_index = int32_t(event.get("runtime_zone_index", -1));
+		if (runtime_index >= 0 && runtime_index < town_choice_by_runtime.size()) {
+			town_choice_by_runtime[runtime_index] = int32_t(event.get("selected_index", -1));
+		}
+	}
+
+	H3MapedRng rng { uint32_t(int64_t(coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0))) };
+	Array selections;
+	int32_t rng_call_count = 0;
+	int32_t match_to_town_count = 0;
+	int32_t allowed_flag_choice_count = 0;
+	int32_t blank_allowed_mask_count = 0;
+	int32_t forced_subterranean_count = 0;
+	Array selected_ids;
+	Array selected_names;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zone_records.size(); ++runtime_index) {
+		if (Variant(runtime_zone_records[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zone_records[runtime_index];
+		Dictionary selection;
+		const int32_t zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+		const int32_t level = int32_t(runtime.get("level", 0));
+		const bool match_to_faction = bool(runtime.get("terrain_match_to_faction", false));
+		const int32_t town_choice_index = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
+		selection["runtime_zone_index"] = zone_index;
+		selection["level"] = level;
+		selection["terrain_match_to_faction"] = match_to_faction;
+		selection["town_choice_index"] = town_choice_index;
+		int32_t selected_terrain = -1;
+		String source;
+		if (match_to_faction && town_choice_index >= 0 && town_choice_index < int32_t(h3_town_to_terrain.size())) {
+			selected_terrain = h3_town_to_terrain[size_t(town_choice_index)];
+			source = "0x49b54c_0x49b55b_match_to_town_table_0x540908";
+			match_to_town_count += 1;
+		} else {
+			Array allowed = runtime.get("allowed_terrain_ids_for_49b53d", Array());
+			Array eligible_ids;
+			Array eligible_names;
+			for (int64_t allowed_index = 0; allowed_index < allowed.size(); ++allowed_index) {
+				const int32_t h3_id = h3maped_id_for_terrain(String(allowed[allowed_index]));
+				if (h3_id < 0 || h3_id > 7) {
+					continue;
+				}
+				if (h3_id == 6 && level != 1) {
+					continue;
+				}
+				eligible_ids.append(h3_id);
+				eligible_names.append(terrain_for_h3maped_id(h3_id));
+			}
+			if (eligible_ids.is_empty()) {
+				selected_terrain = 0;
+				source = "0x49b57d_0x49b584_no_eligible_flags_defaults_zero";
+				blank_allowed_mask_count += 1;
+			} else {
+				const int32_t rng_value = rng.next();
+				rng_call_count += 1;
+				const int32_t selected_ordinal = rng_value % int32_t(eligible_ids.size());
+				selected_terrain = int32_t(eligible_ids[selected_ordinal]);
+				source = "0x49b586_0x49b5b4_allowed_flag_rng_choice";
+				allowed_flag_choice_count += 1;
+				selection["rng_value"] = rng_value;
+				selection["rng_modulus"] = eligible_ids.size();
+				selection["selected_allowed_ordinal"] = selected_ordinal;
+			}
+			selection["eligible_h3maped_terrain_ids"] = eligible_ids;
+			selection["eligible_project_terrain_ids"] = eligible_names;
+		}
+		if (level == 1 && selected_terrain != 7) {
+			selected_terrain = 6;
+			forced_subterranean_count += 1;
+			selection["forced_subterranean_branch"] = "0x49b5b7_0x49b5c3_level_1_non_lava_forces_terrain_6";
+		}
+		selection["selected_h3maped_terrain_id"] = selected_terrain;
+		selection["selected_project_terrain_id"] = terrain_for_h3maped_id(selected_terrain);
+		selection["source"] = source;
+		selections.append(selection);
+		selected_ids.append(selected_terrain);
+		selected_names.append(terrain_for_h3maped_id(selected_terrain));
+	}
+	report["selection_count"] = selections.size();
+	report["selections"] = selections;
+	report["selected_h3maped_terrain_ids"] = selected_ids;
+	report["selected_project_terrain_ids"] = selected_names;
+	report["match_to_town_count"] = match_to_town_count;
+	report["allowed_flag_choice_count"] = allowed_flag_choice_count;
+	report["blank_allowed_mask_count"] = blank_allowed_mask_count;
+	report["forced_subterranean_count"] = forced_subterranean_count;
+	report["rng_call_count"] = rng_call_count;
+	report["rng_state_after_0x49b53d_uint32"] = int64_t(rng.state);
+	report["next_materialization_status"] = "pending_0x4a3a03_zone_footprint_placement";
+	return report;
+}
+
 Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config, const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported";
@@ -947,6 +1133,7 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
 		Dictionary player_towns = zone.get("player_towns", Dictionary());
 		Dictionary town_policy = zone.get("town_policy", Dictionary());
+		Dictionary terrain = zone.get("terrain", Dictionary());
 		const int32_t source_owner_index = int32_t(ownership.get("source_owner_index", -1));
 		const int32_t actual_owner_color = owner_color_for_source_owner(colors_by_source_owner, source_owner_index);
 		const String role = String(zone.get("role", zone.get("type", "")));
@@ -972,6 +1159,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 		record["source_bucket"] = grammar_source.get("source_bucket", -1);
 		record["source_base_size"] = zone.get("base_size", 0);
 		record["allowed_faction_ids_for_49b3c1"] = town_policy.get("allowed_faction_ids", Array());
+		record["terrain_match_to_faction"] = bool(terrain.get("match_to_faction", false));
+		record["allowed_terrain_ids_for_49b53d"] = terrain.get("allowed", Array());
+		record["terrain_source_mask_count"] = terrain.get("source_mask_count", 0);
 		record["minimum_player_castles"] = min_castles;
 		record["coordinate_status"] = "inspection_0x4a17f5_0x4a1701_replay_available";
 		record["terrain_status"] = "pending_0x49b53d";
@@ -993,6 +1183,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary coordinate_replay = coordinate_candidate_replay_report(normalized_config, records, endpoint_schedule.get("link_seeds", Array()), rng_state_after_template_selection);
 	report["coordinate_replay_status"] = coordinate_replay.get("status", "");
 	report["coordinate_replay"] = coordinate_replay;
+	Dictionary terrain_selection = runtime_terrain_selection_report(records, coordinate_replay);
+	report["terrain_selection_status"] = terrain_selection.get("status", "");
+	report["terrain_selection"] = terrain_selection;
 	return report;
 }
 
@@ -1017,7 +1210,7 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary runtime_zones = runtime_zone_record_setup_report(normalized_config, template_record, assignment, human_count, human_count + computer_count, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
-	payload["materialization_status"] = "blocked_until_0x49b53d_runtime_terrain_selection_port";
+	payload["materialization_status"] = "blocked_until_0x4a3a03_zone_footprint_port";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
 }
@@ -1032,7 +1225,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
-		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_record_setup_endpoint_schedule_and_coordinate_replay_only" },
+		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b53d", "active_record_setup_coordinate_replay_and_terrain_selection_only" },
 		{ "zone_footprint_placement", "0x4a3a03", "pending" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },

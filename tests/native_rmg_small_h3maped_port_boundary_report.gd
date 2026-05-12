@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x49b53d_runtime_terrain_selection_port":
-		_fail("The clean restart must stop before runtime terrain selection until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a3a03_zone_footprint_port":
+		_fail("The clean restart must stop before zone footprint placement until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -200,6 +200,21 @@ func _run() -> void:
 	if int(coordinate_bbox.get("selected_span_before_rescale", -1)) != 84 \
 			or int(coordinate_bbox.get("map_span", -1)) != 36:
 		_fail("The 0x4a19ed coordinate bbox rescale drifted: %s" % JSON.stringify(coordinate_replay))
+		return
+	var terrain_selection: Dictionary = runtime_zones.get("terrain_selection", {})
+	if String(runtime_zones.get("terrain_selection_status", "")) != "0x49b53d_runtime_terrain_selection_ported" \
+			or int(terrain_selection.get("selection_count", -1)) != 6 \
+			or int(terrain_selection.get("match_to_town_count", -1)) != 4 \
+			or int(terrain_selection.get("allowed_flag_choice_count", -1)) != 2 \
+			or int(terrain_selection.get("rng_call_count", -1)) != 2:
+		_fail("The 0x49b53d runtime terrain selection drifted: %s" % JSON.stringify(terrain_selection))
+		return
+	if bool(terrain_selection.get("materializes_terrain_cells", true)) \
+			or bool(terrain_selection.get("materializes_terrain_art", true)):
+		_fail("Runtime terrain selection must not paint cells or terrain art yet: %s" % JSON.stringify(terrain_selection))
+		return
+	if Array(terrain_selection.get("selected_project_terrain_ids", [])) != ["dirt", "dirt", "snow", "grass", "dirt", "rough"]:
+		_fail("The selected runtime terrain sequence drifted: %s" % JSON.stringify(terrain_selection))
 		return
 
 	var color_config := config.duplicate(true)

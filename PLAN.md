@@ -81,8 +81,9 @@ validationResults:
 - The active compact port includes runtime-zone record setup `0x4a218c`: six runtime records for seed `1`, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles. It does not materialize coordinates, terrain, or cells.
 - The active compact port includes early endpoint-placement scheduling `0x4a1f3b`: five link seeds, six creation calls, two stabilization passes, 18 total calls, 25 endpoint attempts, and three possible fallback candidates. It explicitly preserves `Value`, `Wide`, and `Border Guard` for later `0x4a79a3` and does not materialize guards.
 - The active compact port includes coordinate candidate replay `0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed`: seed `1` reports 18 placement steps, four town-choice RNG calls, 18 coordinate RNG calls, 22 total replay RNG events, and bbox span `84` rescaled onto the 36-tile map. This remains inspection-only and does not materialize terrain, cells, or footprints.
+- The active compact port includes runtime terrain selection `0x49b53d`: match-to-town zones use table `0x540908`, treasure zones choose from source terrain flags through `0x4e7276`, and seed `1` selects project terrains `[dirt, dirt, snow, grass, dirt, rough]` with two terrain RNG calls. This remains inspection-only and does not materialize cells or terrain art.
 - Normal 36x36 one-level land generation returns `h3maped_small_clean_restart_generation_not_ready`, including explicit translated-template configs. Medium/large/XL and other out-of-scope generation returns `archived_legacy_native_rmg_disabled`. Uploaded/generated `.h3m`, `.amap`, and `.ascenario` evidence remains untracked.
-- Pending before runtime generation: `0x49b53d` terrain choice, `0x4a3a03` zone footprints, owned towns, roads, blockers, guards, mines, rewards, and final writeout.
+- Pending before runtime generation: `0x4a3a03` zone footprints, terrain/cell writeout, owned towns, roads, blockers, guards, mines, rewards, and final writeout.
 
 
 Completed owner-requested editor inspection hotfix:
