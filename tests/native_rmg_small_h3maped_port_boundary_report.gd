@@ -253,6 +253,25 @@ func _run() -> void:
 			or bool(footprint_finalizer.get("materializes_span_fill", true)):
 		_fail("The 0x4a3710 finalizer must not paint cells: %s" % JSON.stringify(footprint_finalizer))
 		return
+	var span_fill: Dictionary = footprint_schedule.get("span_fill_primitive", {})
+	var span_sample: Dictionary = span_fill.get("sample_contract", {})
+	if String(footprint_schedule.get("span_fill_primitive_status", "")) != "0x4a325d_standalone_span_fill_primitive_ported_real_boundary_pending" \
+			or int(span_sample.get("boundary_cell_count", -1)) != 24 \
+			or int(span_sample.get("filled_cell_count", -1)) != 24 \
+			or int(span_sample.get("filled_zone_word_count", -1)) != 24 \
+			or int(span_sample.get("remaining_unassigned_cell_count", -1)) != 72 \
+			or int(span_sample.get("reserved_flag_cell_count", -1)) != 48 \
+			or int(span_sample.get("pushed_span_count", -1)) != 4 \
+			or int(span_sample.get("popped_span_count", -1)) != 4 \
+			or int(span_sample.get("max_pending_span_count", -1)) != 1 \
+			or int(span_sample.get("out_of_bounds_span_count", -1)) != 0 \
+			or int(span_sample.get("blocked_initial_span_count", -1)) != 0:
+		_fail("The 0x4a325d standalone span fill primitive drifted: %s" % JSON.stringify(span_fill))
+		return
+	if bool(span_fill.get("uses_real_0x4a2777_boundary", true)) \
+			or bool(span_fill.get("materializes_project_grid", true)):
+		_fail("The 0x4a325d primitive must remain disconnected from runtime output until 0x4a2777 is ported: %s" % JSON.stringify(span_fill))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
