@@ -121,6 +121,12 @@ func _run() -> void:
 			or int(connection_payload.get("geometry_4a6cf2_endpoint_coordinate_materialized_count", -1)) != 0:
 		_fail("0x4a6cf2 same-level gate boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
+	if String(connection_payload.get("geometry_4a696b_status", "")) != "0x4a696b_same_level_shipyard_lane_helper_identified_all_links_endpoint_geometry_pending" \
+			or int(connection_payload.get("geometry_4a696b_link_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a696b_same_level_ready_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_4a696b_endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a696b same-level helper boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
 	var geometry_dispatch_plan: Array = connection_payload.get("geometry_dispatch_plan", [])
 	if geometry_dispatch_plan.size() != 5:
 		_fail("0x4a79a3 dispatch plan did not cover each selected connection: %s" % JSON.stringify(connection_payload))
@@ -180,6 +186,41 @@ func _run() -> void:
 			or int(first_4a6cf2_overlap.get("overlap_high_other_owner_cell_count", -1)) != 0 \
 			or int(first_4a6cf2_overlap.get("overlap_high_owner_sentinel_cell_count", -1)) != 0:
 		_fail("0x4a6cf2 same-level gate evidence drifted: %s" % JSON.stringify(first_4a6cf2_overlap))
+		return
+	var first_4a696b: Dictionary = first_dispatch.get("helper_4a696b", {})
+	if String(first_4a696b.get("function_address", "")) != "0x4a696b" \
+			or String(first_4a696b.get("source_range_level_gate", "")) != "0x4a69b3..0x4a69bd" \
+			or String(first_4a696b.get("source_range_shape_vector", "")) != "0x4a69d3..0x4a6a05" \
+			or String(first_4a696b.get("source_range_candidate_scan", "")) != "0x4a6a21..0x4a6b10" \
+			or String(first_4a696b.get("source_range_endpoint_record_write", "")) != "0x4a6b2e..0x4a6c4c" \
+			or not bool(first_4a696b.get("same_level_required", false)) \
+			or String(first_4a696b.get("different_level_return_false_range", "")) != "0x4a69b3..0x4a69bd" \
+			or String(first_4a696b.get("candidate_shape_vector_source", "")) != "generator+0x5a8" \
+			or String(first_4a696b.get("candidate_shape_vector_begin_offset", "")) != "generator+0x5a8" \
+			or String(first_4a696b.get("candidate_shape_vector_end_offset", "")) != "generator+0x5ac" \
+			or String(first_4a696b.get("candidate_shape_vector_bucket_offset", "")) != "generator+0x34+0x57*0x10" \
+			or int(first_4a696b.get("candidate_shape_vector_object_type", -1)) != 87 \
+			or String(first_4a696b.get("candidate_shape_vector_object_type_name", "")) != "Shipyard" \
+			or int(first_4a696b.get("candidate_shape_vector_template_count", -1)) != 1 \
+			or String(first_4a696b.get("candidate_shape_vector_template_def_name", "")) != "AVXshyd0.def" \
+			or String(first_4a696b.get("candidate_shape_vector_status", "")) != "0x4a696b_type_87_shipyard_bucket_identified" \
+			or String(first_4a696b.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23" \
+			or String(first_4a696b.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31" \
+			or String(first_4a696b.get("object_presence_reject_source", "")) != "cell+0x28 bit 24" \
+			or String(first_4a696b.get("terrain_gate_source", "")) != "cell+0x24 bits 0..5 reject terrain 8" \
+			or String(first_4a696b.get("validation_helper_address", "")) != "0x49aa93" \
+			or String(first_4a696b.get("lane_helper_address", "")) != "0x4a6795" \
+			or String(first_4a696b.get("endpoint_record_allocator_address", "")) != "0x5044b1" \
+			or String(first_4a696b.get("endpoint_record_constructor_address", "")) != "0x49ba89" \
+			or String(first_4a696b.get("endpoint_record_vtable", "")) != "0x540ab0" \
+			or String(first_4a696b.get("road_coordinate_vector_offset", "")) != "generator+0x14b0" \
+			or String(first_4a696b.get("runtime_zone_endpoint_vector_offset", "")) != "runtime_zone+0x404" \
+			or String(first_4a696b.get("endpoint_vector_append_helper_address", "")) != "0x40bb15" \
+			or String(first_4a696b.get("candidate_scan_status", "")) != "0x4a696b_same_level_candidate_scan_recovered_not_materialized" \
+			or String(first_4a696b.get("status", "")) != "0x4a696b_same_level_shipyard_lane_helper_identified_endpoint_geometry_pending" \
+			or bool(first_4a696b.get("materializes_endpoint_coordinates", true)) \
+			or int(first_4a696b.get("endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a696b same-level helper evidence drifted: %s" % JSON.stringify(first_4a696b))
 		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
 	if guard_spawn_intents.size() != 5 \
@@ -1328,6 +1369,7 @@ func _run() -> void:
 		"connection_guard_spawn_intent_count": connection_payload.get("normal_guard_spawn_intent_count", 0),
 		"connection_geometry_dispatch_link_count": connection_payload.get("geometry_dispatch_link_count", 0),
 		"connection_geometry_4a6cf2_overlap_cell_total": connection_payload.get("geometry_4a6cf2_overlap_cell_total", 0),
+		"connection_geometry_4a696b_same_level_ready_count": connection_payload.get("geometry_4a696b_same_level_ready_count", 0),
 		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
