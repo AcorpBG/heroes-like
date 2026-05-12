@@ -1572,6 +1572,9 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	Dictionary terrain_histogram;
 	Dictionary selected_row_histogram;
 	Dictionary table_histogram;
+	Dictionary missing_bucket_class_histogram;
+	Dictionary missing_bucket_terrain_histogram;
+	Dictionary missing_bucket_table_histogram;
 	Array sample_records;
 	Array missing_bucket_samples;
 	int32_t projected_cell_count = 0;
@@ -1614,6 +1617,9 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 				table_histogram[table_address] = int32_t(table_histogram.get(table_address, 0)) + 1;
 				if (!selected) {
 					missing_bucket_cell_count += 1;
+					missing_bucket_class_histogram[class_key] = int32_t(missing_bucket_class_histogram.get(class_key, 0)) + 1;
+					missing_bucket_terrain_histogram[terrain_key] = int32_t(missing_bucket_terrain_histogram.get(terrain_key, 0)) + 1;
+					missing_bucket_table_histogram[table_address] = int32_t(missing_bucket_table_histogram.get(table_address, 0)) + 1;
 					if (missing_bucket_samples.size() < 8) {
 						Dictionary missing;
 						missing["index"] = index;
@@ -1697,6 +1703,9 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	report["terrain_histogram"] = terrain_histogram;
 	report["selected_row_histogram"] = selected_row_histogram;
 	report["table_histogram"] = table_histogram;
+	report["missing_bucket_class_histogram"] = missing_bucket_class_histogram;
+	report["missing_bucket_terrain_histogram"] = missing_bucket_terrain_histogram;
+	report["missing_bucket_table_histogram"] = missing_bucket_table_histogram;
 	report["sample_records"] = sample_records;
 	report["missing_bucket_samples"] = missing_bucket_samples;
 	report["projected_cell_word_0x24_u32"] = projected_cell_word_0x24_u32;
