@@ -86,8 +86,8 @@ func _run() -> void:
 			or int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost source roles: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x4a17f5_coordinate_candidate_port":
-		_fail("The clean restart must stop before coordinate candidate math until the next executable phase is ported: %s" % JSON.stringify(report))
+	if String(selected_payload.get("materialization_status", "")) != "blocked_until_0x49b53d_runtime_terrain_selection_port":
+		_fail("The clean restart must stop before runtime terrain selection until the next executable phase is ported: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported":
 		_fail("The h3maped player-slot assignment phase did not run: %s" % JSON.stringify(selected_payload))
@@ -125,7 +125,7 @@ func _run() -> void:
 		_fail("Player-slot assignment must remain inspection-only until runtime-zone/player materialization is ported: %s" % JSON.stringify(assignment))
 		return
 	var runtime_zones: Dictionary = selected_payload.get("runtime_zone_build", {})
-	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_record_setup_and_0x4a1f3b_endpoint_schedule_ported" \
+	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_record_setup_and_0x4a17f5_coordinate_replay_ported" \
 			or String(runtime_zones.get("owner_color_mapping_source", "")) != "generator+0xee4" \
 			or int(runtime_zones.get("runtime_zone_count", -1)) != 6 \
 			or int(runtime_zones.get("assigned_start_zone_count", -1)) != 3 \
@@ -149,7 +149,7 @@ func _run() -> void:
 			or int(runtime_records[0].get("actual_owner_color", -2)) != 0 \
 			or int(runtime_records[2].get("actual_owner_color", -2)) != -1 \
 			or String(runtime_records[2].get("role", "")) != "treasure" \
-			or String(runtime_records[0].get("coordinate_status", "")) != "pending_0x4a1f3b_0x4a17f5_0x4a1701":
+			or String(runtime_records[0].get("coordinate_status", "")) != "inspection_0x4a17f5_0x4a1701_replay_available":
 		_fail("Runtime-zone records lost selected-template/source-owner identity: %s" % JSON.stringify(runtime_zones))
 		return
 	var early_links: Dictionary = runtime_zones.get("early_link_placement", {})
@@ -182,6 +182,24 @@ func _run() -> void:
 			or Array(link_calls[4].get("available_endpoint_runtime_zones", [])) != [1, 3, 2] \
 			or String(link_calls[6].get("pass", "")) != "stabilization_1":
 		_fail("The 0x4a1f3b creation/stabilization call order drifted: %s" % JSON.stringify(early_links))
+		return
+	var coordinate_replay: Dictionary = runtime_zones.get("coordinate_replay", {})
+	if String(runtime_zones.get("coordinate_replay_status", "")) != "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported" \
+			or not bool(coordinate_replay.get("ok", false)) \
+			or int(coordinate_replay.get("placement_step_count", -1)) != 18 \
+			or int(coordinate_replay.get("town_rng_calls_during_0x49b452", -1)) != 4 \
+			or int(coordinate_replay.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
+			or int(coordinate_replay.get("rng_event_count", -1)) != 22:
+		_fail("The 0x4a17f5 coordinate replay drifted: %s" % JSON.stringify(coordinate_replay))
+		return
+	if bool(coordinate_replay.get("materializes_map_cells", true)) \
+			or bool(coordinate_replay.get("materializes_zone_footprints", true)):
+		_fail("Coordinate replay must not materialize cells or footprints: %s" % JSON.stringify(coordinate_replay))
+		return
+	var coordinate_bbox: Dictionary = coordinate_replay.get("bounding_box_rescale", {})
+	if int(coordinate_bbox.get("selected_span_before_rescale", -1)) != 84 \
+			or int(coordinate_bbox.get("map_span", -1)) != 36:
+		_fail("The 0x4a19ed coordinate bbox rescale drifted: %s" % JSON.stringify(coordinate_replay))
 		return
 
 	var color_config := config.duplicate(true)
