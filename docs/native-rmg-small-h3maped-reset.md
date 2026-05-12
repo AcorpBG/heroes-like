@@ -39,9 +39,10 @@ The active compact port currently supports inspection only:
 12. Ports the standalone `0x4a325d` span-fill primitive from disassembly for inspection: 12-byte span records, `0x00ff0000` unassigned zone-word scan, `cell+0x20` zone-byte writes, and `cell+0x2b |= 0x10` reserved-flag writes are covered by a bounded contract sample. This is not connected to runtime output until real `0x4a2777` boundary traversal feeds it.
 13. Ports standalone `0x4a2b33` clip and `0x4a261a` deterministic line-writer primitives for inspection: integer truncating segment clipping, max-bound-minus-one clipping, Bresenham-style cell writes, and `cell+0x20`/`cell+0x2b` mutation contracts are covered by bounded samples.
 14. Ports the standalone `0x4a2777` rectangle fallback branch for inspection: four `0x4a261a` edge writes and four `runtime_zone+0x3f4` footprint vertices are covered by a bounded sample. This remains disconnected from runtime output until the real source-node traversal branch is ported.
-15. Ports the deterministic `0x4a2777` non-fallback connector segment branch for inspection: both endpoints are clipped through `0x4a2b33`, the first clipped endpoint is appended as a `runtime_zone+0x3f4` footprint vertex, and the segment is painted through `0x4a261a`. The flagged `0x4a2413` randomized branch remains pending.
+15. Ports the deterministic `0x4a2777` non-fallback connector segment branch for inspection: both endpoints are clipped through `0x4a2b33`, the first clipped endpoint is appended as a `runtime_zone+0x3f4` footprint vertex, and the segment is painted through `0x4a261a`.
+16. Ports standalone `0x4a2413` randomized line-writer coverage for inspection: recursive subdivision, midpoint jitter through `0x4e7276`, terminal clamped cell writes, and `0x4a261a`-style cell mutation are covered by a bounded sample. This remains disconnected from the real `0x4a2777` source-node walk.
 
-The active port does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate, terrain, footprint scheduling, the small-land no-appended-zone finalizer boundary, standalone boundary/span helper primitives, and standalone `0x4a2777` branch samples are exposed as inspection data only and are not package generation.
+The active port does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or final map packages. Coordinate, terrain, footprint scheduling, the small-land no-appended-zone finalizer boundary, standalone boundary/span helper primitives, standalone `0x4a2777` branch samples, and standalone `0x4a2413` randomized writer coverage are exposed as inspection data only and are not package generation.
 
 ## Runtime Gate
 
@@ -70,7 +71,7 @@ Explicit translated-template requests do not bypass the reset gate.
 
 The next clean phases are:
 
-1. Assemble real `0x4a2777` boundary traversal from the recovered source-node walk plus the ported `0x4a2b33`/`0x4a261a` helpers, then wire its real boundary buffer into the ported `0x4a325d` span-fill primitive. Standalone rectangle/connector branch samples are not sufficient for runtime generation.
+1. Assemble real `0x4a2777` boundary traversal from the recovered source-node walk plus the ported `0x4a2b33`/`0x4a261a`/`0x4a2413` helpers, then wire its real boundary buffer into the ported `0x4a325d` span-fill primitive. Standalone rectangle/connector/writer samples are not sufficient for runtime generation.
 2. Terrain/cell writeout, owned town placement, roads, guards, blockers, mines, rewards, and final package adoption.
 
 Runtime generation remains blocked until these phases collectively produce authoritative cells and objects.
