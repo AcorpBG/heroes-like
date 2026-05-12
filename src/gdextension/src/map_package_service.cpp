@@ -9916,6 +9916,9 @@ int32_t native_rmg_generalized_town_spacing_floor_for_size(const Dictionary &nor
 }
 
 bool native_rmg_translated_catalog_structural_profile_supported(const Dictionary &normalized) {
+	if (h3maped_small_rmg::supports_scope(normalized)) {
+		return false;
+	}
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
@@ -9956,6 +9959,9 @@ bool native_rmg_full_parity_supported(const Dictionary &normalized) {
 }
 
 String native_rmg_generation_status_for_config(const Dictionary &normalized) {
+	if (h3maped_small_rmg::supports_scope(normalized)) {
+		return String("h3maped_small_clean_restart_generation_not_ready");
+	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_supported");
 	}
@@ -9969,6 +9975,9 @@ String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 }
 
 String native_rmg_full_generation_status_for_config(const Dictionary &normalized) {
+	if (h3maped_small_rmg::supports_scope(normalized)) {
+		return String("h3maped_small_clean_restart_waiting_for_executable_phase_ports");
+	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_not_full_parity");
 	}
@@ -11768,7 +11777,11 @@ Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized
 			+ String("|levels:") + String::num_int64(level_count)
 			+ String("|players:") + String::num_int64(player_count)
 			+ String("|water:") + water_mode;
-	classification["template_family"] = template_id.begins_with("translated_rmg_template_") ? "translated_recovered_template" : "legacy_or_foundation_template";
+	classification["template_family"] = h3maped_small_rmg::supports_scope(normalized)
+			? String("h3maped_small_reset_template")
+			: (template_id.begins_with("translated_rmg_template_") ? String("translated_recovered_template") : String("legacy_or_foundation_template"));
+	classification["reset_slice_id"] = h3maped_small_rmg::supports_scope(normalized) ? String("native-rmg-small-h3maped-port-10184") : String();
+	classification["h3maped_reset_scope"] = h3maped_small_rmg::supports_scope(normalized);
 	classification["size_class_id"] = size_class_id;
 	classification["water_mode"] = water_mode;
 	classification["level_count"] = level_count;
