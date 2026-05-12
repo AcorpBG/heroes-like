@@ -433,6 +433,7 @@ func _run() -> void:
 	var tile_serializer_contract: Dictionary = terrain_cell_writeout.get("tile_serializer_contract", {})
 	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
+	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
@@ -472,6 +473,15 @@ func _run() -> void:
 			or not terrain_art_required_addresses.has("0x4bb681") \
 			or not terrain_art_required_addresses.has("0x49b2b6"):
 		_fail("The clean port must reject legacy hashed TerrainPlacement art/flip approximation: %s" % JSON.stringify(terrain_art_blocker))
+		return
+	if String(terrain_repaint_boundary.get("status", "")) != "0x4bd099_0x4bb681_TerrainPlacement_repaint_rectangle_loop_recovered_boundary_only" \
+			or String(terrain_repaint_boundary.get("constructor_address", "")) != "0x4bb5ce" \
+			or String(terrain_repaint_boundary.get("wrapper_address", "")) != "0x4bd099" \
+			or String(terrain_repaint_boundary.get("rectangle_loop_address", "")) != "0x4bb681" \
+			or String(terrain_repaint_boundary.get("cell_ensure_address", "")) != "0x4bb71b" \
+			or String(terrain_repaint_boundary.get("changed_cell_update_address", "")) != "0x4bb74b" \
+			or bool(terrain_repaint_boundary.get("materializes_art_flip", true)):
+		_fail("The TerrainPlacement repaint boundary evidence drifted: %s" % JSON.stringify(terrain_repaint_boundary))
 		return
 	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1" \
 			or String(terrain_grid.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only" \

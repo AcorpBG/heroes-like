@@ -2961,6 +2961,19 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	art_flip_blocker["blocked_legacy_reasons"] = blocked_legacy_reasons;
 	art_flip_blocker["required_addresses"] = required_terrainplacement_addresses;
 	art_flip_blocker["serializer_bit_evidence"] = "0x49b2b6 packs cell+0x24 bits 6..13 into tile byte 1 and cell+0x28 bits 15..16 into tile byte 6 bits 0..1";
+	Dictionary repaint_boundary;
+	repaint_boundary["status"] = "0x4bd099_0x4bb681_TerrainPlacement_repaint_rectangle_loop_recovered_boundary_only";
+	repaint_boundary["constructor_address"] = "0x4bb5ce";
+	repaint_boundary["wrapper_address"] = "0x4bd099";
+	repaint_boundary["rectangle_loop_address"] = "0x4bb681";
+	repaint_boundary["cell_ensure_address"] = "0x4bb71b";
+	repaint_boundary["changed_cell_update_address"] = "0x4bb74b";
+	repaint_boundary["same_terrain_neighbor_touch_address"] = "0x4bad0f";
+	repaint_boundary["terrain_id_compare"] = "0x4bb6ba shifts ensured scratch byte right by 1, masks 0x0f, and compares it with the TerrainPlacement current terrain id at adapter+0x04";
+	repaint_boundary["loop_arguments"] = "x, y, width, height passed through 0x4bd099 into 0x4bb681";
+	repaint_boundary["materializes_art_flip"] = false;
+	repaint_boundary["blocked_next"] = "recover 0x4bb74b/0x4bad0f/0x4bcfc3 and toolkit class tables before writing tile byte 1 or tile byte 6 terrain flip bits";
+	art_flip_blocker["terrainplacement_repaint_boundary"] = repaint_boundary;
 	report["terrain_art_index_flip_blocker"] = art_flip_blocker;
 
 	Dictionary level_record;
