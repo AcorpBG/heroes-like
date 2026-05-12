@@ -486,6 +486,9 @@ func _run() -> void:
 	var visual_classifier_vtables: Array = visual_classifier.get("toolkit_vtable_addresses", [])
 	var visual_classifier_static_tables: Array = visual_classifier.get("static_visual_table_addresses", [])
 	var visual_classifier_constructor_records: Array = visual_classifier.get("toolkit_constructor_records", [])
+	var terrain_classifier_contract: Dictionary = visual_classifier.get("terrain_classifier_contract", {})
+	var terrain_classifier_relation_matrix: Array = terrain_classifier_contract.get("relation_matrix_terrain_ids_0_9", [])
+	var terrain_classifier_samples: Array = terrain_classifier_contract.get("representative_samples", [])
 	var visual_static_lookup_contract: Dictionary = visual_classifier.get("static_range_lookup_contract", {})
 	var visual_static_table_contracts: Dictionary = visual_classifier.get("static_table_contracts", {})
 	var visual_static_tables_decoded: Array = visual_static_table_contracts.get("tables", [])
@@ -595,6 +598,43 @@ func _run() -> void:
 			or not visual_classifier_static_tables.has("0x543380") \
 			or bool(visual_classifier.get("materializes_visual_record", true)):
 		_fail("The TerrainPlacement visual classifier selector evidence drifted: %s" % JSON.stringify(visual_classifier))
+		return
+	if String(terrain_classifier_contract.get("status", "")) != "0x4bb039_0x5436e0_0x4bb075_relation_classifier_ported_boundary_only" \
+			or String(terrain_classifier_contract.get("relation_function_address", "")) != "0x4bb039" \
+			or String(terrain_classifier_contract.get("orientation_table_address", "")) != "0x5436e0" \
+			or String(terrain_classifier_contract.get("classifier_address", "")) != "0x4bb075" \
+			or bool(terrain_classifier_contract.get("materializes_visual_records", true)) \
+			or bool(terrain_classifier_contract.get("materializes_full_terrain_art_grid", true)):
+		_fail("The TerrainPlacement relation/classifier contract drifted: %s" % JSON.stringify(terrain_classifier_contract))
+		return
+	if terrain_classifier_relation_matrix.size() != 10:
+		_fail("The TerrainPlacement relation matrix drifted: %s" % JSON.stringify(terrain_classifier_contract))
+		return
+	var dirt_relation_row: PackedInt32Array = terrain_classifier_relation_matrix[0]
+	var grass_relation_row: PackedInt32Array = terrain_classifier_relation_matrix[2]
+	var water_relation_row: PackedInt32Array = terrain_classifier_relation_matrix[8]
+	if dirt_relation_row[1] != 2 \
+			or dirt_relation_row[2] != 0 \
+			or grass_relation_row[0] != 1 \
+			or grass_relation_row[1] != 2 \
+			or grass_relation_row[8] != 2 \
+			or water_relation_row[0] != 2 \
+			or water_relation_row[8] != 0:
+		_fail("The TerrainPlacement 0x4bb039 relation values drifted: %s" % JSON.stringify(terrain_classifier_contract))
+		return
+	var classifier_class_0 := _find_by_key(terrain_classifier_samples, "id", "class_0_full_native")
+	var classifier_class_8 := _find_by_key(terrain_classifier_samples, "id", "class_8_relation2_corner")
+	var classifier_class_18 := _find_by_key(terrain_classifier_samples, "id", "class_18_transposed_block")
+	var classifier_class_28 := _find_by_key(terrain_classifier_samples, "id", "class_28_compound_junction")
+	if int(classifier_class_0.get("class", -1)) != 0 \
+			or int(classifier_class_8.get("class", -1)) != 8 \
+			or int(classifier_class_18.get("class", -1)) != 18 \
+			or int(classifier_class_18.get("flag_a", -1)) != 1 \
+			or int(classifier_class_18.get("flag_b", -1)) != 0 \
+			or int(classifier_class_28.get("class", -1)) != 28 \
+			or int(classifier_class_28.get("flag_a", -1)) != 1 \
+			or int(classifier_class_28.get("flag_b", -1)) != 0:
+		_fail("The TerrainPlacement 0x4bb075 representative classifier decisions drifted: %s" % JSON.stringify(terrain_classifier_samples))
 		return
 	if visual_classifier_constructor_records.size() != 10:
 		_fail("The TerrainPlacement toolkit constructor record count drifted: %s" % JSON.stringify(visual_classifier_constructor_records))
