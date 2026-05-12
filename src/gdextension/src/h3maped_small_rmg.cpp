@@ -5193,6 +5193,15 @@ Dictionary h3maped_reward_dynamic_value_functions_49f95a_report(const Dictionary
 	report["source_binary_path"] = BINARY_PATH;
 	report["creature_table_pointer_address"] = "0x581298";
 	report["creature_table_runtime_pointer_initial_value_address"] = "0x57cea0";
+	report["creature_table_loader_address"] = "0x40ce11";
+	report["creature_table_loader_stride_bytes"] = 0x74;
+	report["creature_table_loader_static_storage_base_address"] = "0x57cea0";
+	report["creature_table_loader_source_vector_offset"] = "loader_object+0x20";
+	report["creature_table_loader_source_row_pointer_offset"] = "source_row+0x04";
+	report["creature_table_loader_string_dest_offsets"] = Array::make("+0x14", "+0x18", "+0x1c");
+	report["creature_table_loader_numeric_copy_source_range"] = "source_row+0x08..+0x58";
+	report["creature_table_loader_numeric_copy_dest_range"] = "creature_row+0x20..+0x70";
+	report["creature_table_loader_cleanup_helpers"] = Array::make("0x40d0b6", "0x40d09f", "0x40d088");
 	report["creature_value_table_address"] = "0x58dc08";
 	report["creature_remap_table_address"] = "0x531cc4";
 	report["generator_resource_total_offset"] = "generator+0xf60";
