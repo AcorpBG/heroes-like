@@ -124,6 +124,34 @@ func _run() -> void:
 	if bool(assignment.get("materializes_runtime_players", true)):
 		_fail("Player-slot assignment must remain inspection-only until runtime-zone/player materialization is ported: %s" % JSON.stringify(assignment))
 		return
+	var runtime_zones: Dictionary = selected_payload.get("runtime_zone_build", {})
+	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_record_setup_ported" \
+			or String(runtime_zones.get("owner_color_mapping_source", "")) != "generator+0xee4" \
+			or int(runtime_zones.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zones.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zones.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zones.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zones.get("minimum_player_castles", -1)) != 4:
+		_fail("The 0x4a218c runtime-zone setup boundary drifted: %s" % JSON.stringify(runtime_zones))
+		return
+	if bool(runtime_zones.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zones.get("materializes_terrain", true)) \
+			or bool(runtime_zones.get("materializes_map_cells", true)):
+		_fail("Runtime-zone setup must not materialize coordinates, terrain, or cells yet: %s" % JSON.stringify(runtime_zones))
+		return
+	if Array(runtime_zones.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1]:
+		_fail("Runtime-zone owner-color mapping drifted from player assignment: %s" % JSON.stringify(runtime_zones))
+		return
+	var runtime_records: Array = runtime_zones.get("runtime_zone_records", [])
+	if runtime_records.size() != 6 \
+			or String(runtime_records[0].get("role", "")) != "human_start" \
+			or int(runtime_records[0].get("source_owner_index", -1)) != 0 \
+			or int(runtime_records[0].get("actual_owner_color", -2)) != 0 \
+			or int(runtime_records[2].get("actual_owner_color", -2)) != -1 \
+			or String(runtime_records[2].get("role", "")) != "treasure" \
+			or String(runtime_records[0].get("coordinate_status", "")) != "pending_0x4a1f3b_0x4a17f5_0x4a1701":
+		_fail("Runtime-zone records lost selected-template/source-owner identity: %s" % JSON.stringify(runtime_zones))
+		return
 
 	var color_config := config.duplicate(true)
 	color_config["player_constraints"]["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
@@ -133,6 +161,10 @@ func _run() -> void:
 			or Array(color_assignment.get("selected_color_order", [])) != [2, 0, 1, 3, 4, 5, 6, 7] \
 			or Array(color_assignment.get("actual_colors_by_source_owner", [])) != [2, 0, 1, -1, -1, -1, -1, -1]:
 		_fail("Selected-color bitmap did not reorder h3maped assignment colors: %s" % JSON.stringify(color_assignment))
+		return
+	var color_runtime_zones: Dictionary = Dictionary(color_report.get("selected_template_payload", {})).get("runtime_zone_build", {})
+	if Array(color_runtime_zones.get("actual_owner_colors_by_runtime_zone", [])) != [2, 0, -1, 1, -1, -1]:
+		_fail("Selected-color runtime-zone owner mapping did not follow generator+0xee4: %s" % JSON.stringify(color_runtime_zones))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config)

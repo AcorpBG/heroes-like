@@ -1,8 +1,10 @@
 #include "h3maped_small_rmg.hpp"
 
 #include <godot_cpp/classes/file_access.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
 #include <algorithm>
 #include <array>
@@ -130,6 +132,47 @@ Dictionary binary_verification() {
 	report["ok"] = size == BINARY_SIZE_BYTES && mz;
 	report["status"] = bool(report["ok"]) ? String("verified_reset_anchor") : String("mismatch");
 	return report;
+}
+
+Dictionary load_json_dictionary(const String &path) {
+	if (!FileAccess::file_exists(path)) {
+		return Dictionary();
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return Dictionary();
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	return Dictionary(parser->get_data());
+}
+
+Dictionary adapted_template_for_id(const String &adapted_template_id) {
+	if (adapted_template_id.is_empty()) {
+		return Dictionary();
+	}
+	Dictionary catalog = load_json_dictionary(ADAPTED_CATALOG_PATH);
+	Array templates = catalog.get("templates", Array());
+	for (int64_t index = 0; index < templates.size(); ++index) {
+		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = templates[index];
+		if (String(candidate.get("id", "")) == adapted_template_id) {
+			return candidate;
+		}
+	}
+	return Dictionary();
+}
+
+bool player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_t total_count) {
+	return human_count >= int32_t(filter.get("min_human", 1))
+			&& human_count <= int32_t(filter.get("max_human", 8))
+			&& total_count >= int32_t(filter.get("min_total", 2))
+			&& total_count <= int32_t(filter.get("max_total", 8));
 }
 
 Dictionary template_to_dictionary(const TemplateEvidence &candidate) {
@@ -279,6 +322,89 @@ Dictionary player_slot_assignment_report(uint8_t human_capable_mask, uint8_t pla
 	return report;
 }
 
+int32_t owner_color_for_source_owner(const Array &colors_by_source_owner, int32_t source_owner_index) {
+	if (source_owner_index < 0 || source_owner_index >= colors_by_source_owner.size()) {
+		return -1;
+	}
+	return int32_t(colors_by_source_owner[source_owner_index]);
+}
+
+Dictionary runtime_zone_record_setup_report(const Dictionary &template_record, const Dictionary &assignment, int32_t human_count, int32_t player_count) {
+	Dictionary report;
+	report["status"] = "0x4a218c_runtime_zone_record_setup_ported";
+	report["source"] = "h3maped 0x4a218c consumes 0x4ac62a generator+0xee4 owner-color mapping before coordinate, terrain, footprint, and object materialization";
+	report["runtime_zone_vector_source"] = "selected adapted-template active zones";
+	report["owner_color_mapping_source"] = "generator+0xee4";
+	report["materializes_runtime_zone_coordinates"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+
+	if (template_record.is_empty()) {
+		report["status"] = "0x4a218c_runtime_zone_record_setup_template_missing";
+		report["runtime_zone_records"] = Array();
+		report["runtime_zone_count"] = 0;
+		return report;
+	}
+
+	Array colors_by_source_owner = assignment.get("actual_colors_by_source_owner", Array());
+	Array records;
+	Array owner_colors;
+	int32_t assigned_start_zone_count = 0;
+	int32_t unassigned_start_zone_count = 0;
+	int32_t treasure_zone_count = 0;
+	int32_t minimum_player_castles = 0;
+	Array zones = template_record.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = zones[index];
+		if (!player_filter_accepts(zone.get("player_filter", Dictionary()), human_count, player_count)) {
+			continue;
+		}
+		Dictionary ownership = zone.get("ownership", Dictionary());
+		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
+		Dictionary player_towns = zone.get("player_towns", Dictionary());
+		const int32_t source_owner_index = int32_t(ownership.get("source_owner_index", -1));
+		const int32_t actual_owner_color = owner_color_for_source_owner(colors_by_source_owner, source_owner_index);
+		const String role = String(zone.get("role", zone.get("type", "")));
+		const int32_t min_castles = int32_t(player_towns.get("min_castles", 0));
+		minimum_player_castles += min_castles;
+		if (role == "human_start" || role == "computer_start") {
+			if (actual_owner_color >= 0) {
+				assigned_start_zone_count += 1;
+			} else {
+				unassigned_start_zone_count += 1;
+			}
+		} else if (role == "treasure") {
+			treasure_zone_count += 1;
+		}
+
+		Dictionary record;
+		record["runtime_zone_index"] = records.size();
+		record["role"] = role;
+		record["source_owner_index"] = source_owner_index;
+		record["actual_owner_color"] = actual_owner_color;
+		record["source_row"] = grammar_source.get("source_row", -1);
+		record["source_bucket"] = grammar_source.get("source_bucket", -1);
+		record["minimum_player_castles"] = min_castles;
+		record["coordinate_status"] = "pending_0x4a1f3b_0x4a17f5_0x4a1701";
+		record["terrain_status"] = "pending_0x49b53d";
+		record["footprint_status"] = "pending_0x4a3a03";
+		records.append(record);
+		owner_colors.append(actual_owner_color);
+	}
+
+	report["runtime_zone_count"] = records.size();
+	report["assigned_start_zone_count"] = assigned_start_zone_count;
+	report["unassigned_start_zone_count"] = unassigned_start_zone_count;
+	report["treasure_zone_count"] = treasure_zone_count;
+	report["minimum_player_castles"] = minimum_player_castles;
+	report["actual_owner_colors_by_runtime_zone"] = owner_colors;
+	report["runtime_zone_records"] = records;
+	return report;
+}
+
 Dictionary selected_template_payload(const Dictionary &selected_template, const TemplateEvidence &candidate, const Dictionary &normalized_config, int32_t human_count, int32_t computer_count) {
 	Dictionary payload;
 	payload["source"] = "adapted project catalog resolved by import_provenance.source_template_index";
@@ -296,6 +422,10 @@ Dictionary selected_template_payload(const Dictionary &selected_template, const 
 	Dictionary assignment = player_slot_assignment_report(candidate.human_capable_source_owner_mask, candidate.player_capable_source_owner_mask, selected_color_bitmap_from_normalized(normalized_config), human_count, computer_count);
 	payload["assignment_status"] = assignment.get("status", "");
 	payload["player_slot_assignment"] = assignment;
+	Dictionary template_record = adapted_template_for_id(String(candidate.adapted_template_id));
+	Dictionary runtime_zones = runtime_zone_record_setup_report(template_record, assignment, human_count, human_count + computer_count);
+	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
+	payload["runtime_zone_build"] = runtime_zones;
 	payload["materialization_status"] = "blocked_until_next_executable_phase_port";
 	payload["runtime_generation_allowed"] = false;
 	return payload;
@@ -311,7 +441,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "active_clean_port" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_clean_port" },
-		{ "runtime_zone_build", "0x4a218c", "pending" },
+		{ "runtime_zone_build", "0x4a218c", "active_record_setup_only" },
 		{ "zone_footprint_placement", "0x4a3a03", "pending" },
 		{ "town_and_object_placement", "0x4a8d2c, 0x4a93a2, 0x49aa93", "pending" },
 		{ "roads", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243", "pending" },
