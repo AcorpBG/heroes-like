@@ -478,6 +478,8 @@ func _run() -> void:
 	var tile_byte_6: PackedInt32Array = terrain_cell_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())
 	var tile_serializer_contract: Dictionary = terrain_cell_writeout.get("tile_serializer_contract", {})
 	var terrain_art_blocker: Dictionary = terrain_cell_writeout.get("terrain_art_index_flip_blocker", {})
+	var final_sweep_boundary_counter: Dictionary = terrain_cell_writeout.get("final_sweep_boundary_counter", {})
+	var generated_boundary_counts: PackedInt32Array = final_sweep_boundary_counter.get("boundary_counts_u8", PackedInt32Array())
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -508,6 +510,7 @@ func _run() -> void:
 			or int(terrain_cell_writeout.get("reserved_flag_cell_count", -1)) != 1111 \
 			or int(terrain_cell_writeout.get("unassigned_water_cell_count", -1)) != 185 \
 			or String(terrain_cell_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
+			or String(terrain_cell_writeout.get("final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
 			or String(terrain_cell_writeout.get("tile_serializer_contract_status", "")) != "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported" \
 			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout" \
 			or not bool(terrain_cell_writeout.get("materializes_project_grid", false)) \
@@ -530,6 +533,28 @@ func _run() -> void:
 			or int(tile_serializer_contract.get("sample_expected_tile_byte_count", -1)) != 7 \
 			or bool(tile_serializer_contract.get("materializes_package_tiles", true)):
 		_fail("The 0x49b2b6 serializer bit contract drifted: %s" % JSON.stringify(tile_serializer_contract))
+		return
+	if String(final_sweep_boundary_counter.get("status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(final_sweep_boundary_counter.get("final_sweep_address", "")) != "0x4bbfcc" \
+			or String(final_sweep_boundary_counter.get("boundary_counter_branch_address", "")) != "0x4bc3dd..0x4bc566" \
+			or Array(final_sweep_boundary_counter.get("adjacency_directions", [])) != ["E", "S", "SE", "SW"] \
+			or int(final_sweep_boundary_counter.get("width", -1)) != 36 \
+			or int(final_sweep_boundary_counter.get("height", -1)) != 36 \
+			or int(final_sweep_boundary_counter.get("level_count", -1)) != 1 \
+			or int(final_sweep_boundary_counter.get("expected_tile_count", -1)) != 1296 \
+			or int(final_sweep_boundary_counter.get("tile_count", -1)) != 1296 \
+			or not bool(final_sweep_boundary_counter.get("input_matches_expected_tile_count", false)) \
+			or generated_boundary_counts.size() != 1296 \
+			or int(final_sweep_boundary_counter.get("boundary_cell_count", -1)) <= 0 \
+			or int(final_sweep_boundary_counter.get("zero_boundary_cell_count", -1)) <= 0 \
+			or int(final_sweep_boundary_counter.get("max_boundary_count", -1)) <= 0 \
+			or int(final_sweep_boundary_counter.get("max_boundary_count", -1)) > 8 \
+			or int(final_sweep_boundary_counter.get("boundary_adjacency_count", -1)) <= 0 \
+			or int(final_sweep_boundary_counter.get("total_boundary_increments", -1)) != int(final_sweep_boundary_counter.get("boundary_adjacency_count", -1)) * 2 \
+			or bool(final_sweep_boundary_counter.get("materializes_visual_records", true)) \
+			or bool(final_sweep_boundary_counter.get("materializes_full_terrain_art_grid", true)) \
+			or bool(final_sweep_boundary_counter.get("materializes_package_tiles", true)):
+		_fail("The generated-grid 0x4bbfcc boundary counter drifted: %s" % JSON.stringify(final_sweep_boundary_counter))
 		return
 	if String(terrain_repaint_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_inspection_only" \
 			or String(terrain_repaint_schedule.get("full_map_water_repaint_address", "")) != "0x4a4025" \
@@ -799,6 +824,7 @@ func _run() -> void:
 			or int(terrain_grid.get("height", -1)) != 36 \
 			or int(terrain_grid.get("level_count", -1)) != 1 \
 			or int(terrain_grid.get("tile_count", -1)) != 1296 \
+			or String(terrain_grid.get("final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
 			or terrain_levels.size() != 1:
 		_fail("The inspection terrain-grid adoption record drifted: %s" % JSON.stringify(terrain_grid))
 		return
