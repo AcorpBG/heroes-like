@@ -264,11 +264,15 @@ func _run() -> void:
 		return
 	var polygon_split: Dictionary = footprint_schedule.get("polygon_split", {})
 	var polygon_split_calls: Array = polygon_split.get("scheduled_calls", [])
-	if String(footprint_schedule.get("polygon_split_status", "")) != "0x4ccb64_first_locator_and_duplicate_guard_ported_inspection_only" \
+	if String(footprint_schedule.get("polygon_split_status", "")) != "0x4ccb64_locator_insertion_cleanup_ported_inspection_only" \
 			or int(polygon_split.get("scheduled_split_call_count", -1)) != 6 \
 			or int(polygon_split.get("locator_call_count", -1)) != 6 \
-			or int(polygon_split.get("locator_materialized_count", -1)) != 1 \
+			or int(polygon_split.get("locator_materialized_count", -1)) != 6 \
+			or int(polygon_split.get("locator_guard_failed_count", -1)) != 0 \
 			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
+			or int(polygon_split.get("executed_split_call_count", -1)) != 6 \
+			or int(polygon_split.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(polygon_split.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
 			or int(polygon_split.get("first_pre_crossing_insertion_count", -1)) != 1 \
 			or int(polygon_split.get("first_pre_crossing_bridge_pair_count", -1)) <= 0 \
 			or int(polygon_split.get("first_post_pre_crossing_allocated_node_pair_count", -1)) <= 5 \
@@ -277,7 +281,15 @@ func _run() -> void:
 			or int(polygon_split.get("first_post_crossing_cleanup_active_node_pair_count", -1)) <= 5 \
 			or int(polygon_split.get("first_crossing_cleanup_scan_count", -1)) <= 0 \
 			or bool(polygon_split.get("first_crossing_cleanup_guard_exhausted", true)) \
+			or int(polygon_split.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 23 \
+			or int(polygon_split.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(polygon_split.get("crossing_cleanup_scan_count", -1)) != 34 \
+			or int(polygon_split.get("crossing_test_count", -1)) != 24 \
+			or int(polygon_split.get("crossing_collapse_count", -1)) != 8 \
+			or bool(polygon_split.get("crossing_cleanup_guard_exhausted", true)) \
+			or String(polygon_split.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_all_scheduled_crossing_cleanup_materialized" \
 			or not bool(polygon_split.get("duplicate_endpoint_guard_materialized", false)) \
+			or not bool(polygon_split.get("materializes_source_node_graph", false)) \
 			or not bool(polygon_split.get("materializes_first_source_node_graph_mutation", false)) \
 			or not bool(polygon_split.get("materializes_first_crossing_cleanup", false)) \
 			or String(polygon_split.get("function_address", "")) != "0x4ccb64" \
@@ -295,19 +307,21 @@ func _run() -> void:
 			or String(first_polygon_split_call.get("insertion_status", "")) != "0x4ccb64_first_split_pre_crossing_inserted" \
 			or int(first_polygon_split_call.get("bridge_pair_count", -1)) <= 0 \
 			or bool(first_polygon_split_call.get("bridge_loop_guard_exhausted", true)) \
-			or String(first_polygon_split_call.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_first_crossing_cleanup_materialized" \
+			or String(first_polygon_split_call.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_materialized" \
 			or int(first_polygon_split_call.get("crossing_cleanup_scan_count", -1)) <= 0 \
 			or int(first_polygon_split_call.get("allocated_node_pair_count_after_crossing_cleanup", -1)) <= 5 \
 			or int(first_polygon_split_call.get("active_node_pair_count_after_crossing_cleanup", -1)) <= 5 \
 			or bool(first_polygon_split_call.get("crossing_cleanup_guard_exhausted", true)) \
 			or String(first_polygon_split_call.get("located_node_id", "")) == "" \
 			or String(first_polygon_split_call.get("located_pair_id", "")) == "" \
-			or String(second_polygon_split_call.get("locator_status", "")) != "pending_current_graph_after_0x4ccb64_mutation":
-		_fail("The first 0x4cca55 locator materialization drifted: %s" % JSON.stringify(polygon_split))
+			or String(second_polygon_split_call.get("locator_status", "")) != "0x4cca55_current_graph_locator_materialized" \
+			or String(second_polygon_split_call.get("insertion_status", "")) != "0x4ccb64_split_pre_crossing_inserted" \
+			or int(second_polygon_split_call.get("crossing_cleanup_scan_count", -1)) <= 0 \
+			or bool(second_polygon_split_call.get("crossing_cleanup_guard_exhausted", true)):
+		_fail("The 0x4cca55/0x4ccb64 locator and cleanup materialization drifted: %s" % JSON.stringify(polygon_split))
 		return
-	if bool(polygon_split.get("materializes_source_node_graph", true)) \
-			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
-		_fail("The 0x4ccb64 split gate must remain inspection-only until source-node graph materialization is ported: %s" % JSON.stringify(polygon_split))
+	if bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("The 0x4ccb64 split graph must not feed 0x4a2777 until finalizer traversal is ported: %s" % JSON.stringify(polygon_split))
 		return
 	var polygon_finalizer: Dictionary = footprint_schedule.get("polygon_finalizer", {})
 	if String(footprint_schedule.get("polygon_finalizer_status", "")) != "0x4ccdfc_source_node_finalizer_gate_ported_inspection_only" \

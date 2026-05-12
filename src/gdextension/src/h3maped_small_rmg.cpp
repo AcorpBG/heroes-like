@@ -1672,8 +1672,8 @@ PolygonModel initial_polygon_model_4cc788() {
 
 Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t total_polygon_split_calls) {
 	Dictionary report;
-	report["status"] = "0x4ccb64_first_locator_and_duplicate_guard_ported_inspection_only";
-	report["source"] = "h3maped 0x4ccb64 calls 0x4cca55 for each runtime-zone split point, rejects points equal to the located source-node endpoint or following endpoint, then inserts a 0x4cc955 node and runs bridge/crossing cleanup before 0x4ccdfc finalization; the compact port currently materializes only the first locator/duplicate guard against the real 0x4cc788 initial graph";
+	report["status"] = "0x4ccb64_locator_insertion_cleanup_ported_inspection_only";
+	report["source"] = "h3maped 0x4ccb64 calls 0x4cca55 for each runtime-zone split point, rejects points equal to the located source-node endpoint or following endpoint, then inserts a 0x4cc955 node and runs bridge/crossing cleanup before 0x4ccdfc finalization; the compact port now materializes the scheduled small-land locator/insertion/cleanup passes against the mutated 0x4cc788 source-node graph";
 	report["function_address"] = "0x4ccb64";
 	report["locator_address"] = "0x4cca55";
 	report["node_constructor_address"] = "0x4cc955";
@@ -1681,7 +1681,7 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	report["crossing_test_address"] = "0x4ccc7a";
 	report["intersection_helper_address"] = "0x4ccd69";
 	report["finalizer_address"] = "0x4ccdfc";
-	report["materializes_source_node_graph"] = false;
+	report["materializes_source_node_graph"] = total_polygon_split_calls > 0;
 	report["materializes_first_source_node_graph_mutation"] = total_polygon_split_calls > 0;
 	report["materializes_first_crossing_cleanup"] = total_polygon_split_calls > 0;
 	report["feeds_real_0x4a2777_boundary"] = false;
@@ -1689,15 +1689,20 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	report["locator_call_count"] = total_polygon_split_calls;
 	report["duplicate_endpoint_guard_address"] = "0x4ccb80..0x4ccba1";
 	report["duplicate_endpoint_guard_materialized"] = true;
-	report["locator_materialized_count"] = total_polygon_split_calls > 0 ? 1 : 0;
 
 	Array scheduled_calls;
-	PolygonModel initial_model = initial_polygon_model_4cc788();
-	bool first_locator_materialized = false;
+	PolygonModel model = initial_polygon_model_4cc788();
+	bool blocked = false;
+	int32_t locator_materialized_count = 0;
+	int32_t locator_guard_failed_count = 0;
 	int32_t duplicate_skip_count = 0;
+	int32_t executed_split_count = 0;
 	int32_t first_insertion_count = 0;
+	int32_t total_insertion_count = 0;
 	int32_t first_bridge_pair_count = 0;
+	int32_t total_bridge_pair_count = 0;
 	int32_t first_edge_removal_count = 0;
+	int32_t edge_removal_count = 0;
 	int32_t first_pre_crossing_allocated_node_pair_count = 0;
 	int32_t first_pre_crossing_active_node_pair_count = 0;
 	int32_t first_post_crossing_allocated_node_pair_count = 0;
@@ -1706,13 +1711,23 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	int32_t first_crossing_test_count = 0;
 	int32_t first_crossing_collapse_count = 0;
 	bool first_crossing_cleanup_guard_exhausted = false;
+	int32_t crossing_cleanup_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
+	bool crossing_cleanup_guard_exhausted = false;
 	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
+		if (blocked) {
+			break;
+		}
 		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
 		Dictionary level = levels[level_index];
 		Array split_calls = level.get("polygon_split_calls", Array());
 		for (int64_t split_index = 0; split_index < split_calls.size(); ++split_index) {
+			if (blocked) {
+				break;
+			}
 			if (Variant(split_calls[split_index]).get_type() != Variant::DICTIONARY) {
 				continue;
 			}
@@ -1722,74 +1737,85 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 			item["runtime_zone_index"] = split.get("runtime_zone_index", -1);
 			item["x"] = split.get("x", 0);
 			item["y"] = split.get("y", 0);
-			if (!first_locator_materialized) {
-				const int32_t located = initial_model.locate_4cca55(int32_t(split.get("x", 0)), int32_t(split.get("y", 0)));
-				item["locator_status"] = located >= 0 ? String("0x4cca55_initial_graph_locator_materialized") : String("0x4cca55_initial_graph_locator_failed");
-				item["located_node_id"] = located >= 0 ? initial_model.nodes[size_t(located)].id : String();
-				item["located_pair_id"] = located >= 0 ? initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].id : String();
-				const bool duplicates_located = located >= 0
-						&& ((initial_model.nodes[size_t(located)].x == int32_t(split.get("x", 0)) && initial_model.nodes[size_t(located)].y == int32_t(split.get("y", 0)))
-								|| (initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].x == int32_t(split.get("x", 0)) && initial_model.nodes[size_t(initial_model.nodes[size_t(located)].pair)].y == int32_t(split.get("y", 0))));
+			const int32_t x = int32_t(split.get("x", 0));
+			const int32_t y = int32_t(split.get("y", 0));
+			const int32_t runtime_zone_index = int32_t(split.get("runtime_zone_index", -1));
+			int32_t located = model.locate_4cca55(x, y);
+			if (located < 0) {
+				item["locator_status"] = "0x4cca55_current_graph_locator_failed";
+				locator_guard_failed_count += 1;
+				blocked = true;
+			} else {
+				locator_materialized_count += 1;
+				item["locator_status"] = locator_materialized_count == 1 ? String("0x4cca55_initial_graph_locator_materialized") : String("0x4cca55_current_graph_locator_materialized");
+				item["located_node_id"] = model.nodes[size_t(located)].id;
+				item["located_pair_id"] = model.nodes[size_t(model.nodes[size_t(located)].pair)].id;
+				const bool duplicates_located =
+						(model.nodes[size_t(located)].x == x && model.nodes[size_t(located)].y == y)
+						|| (model.nodes[size_t(model.nodes[size_t(located)].pair)].x == x && model.nodes[size_t(model.nodes[size_t(located)].pair)].y == y);
 				item["duplicate_endpoint_guard_result"] = duplicates_located ? String("0x4ccb64_duplicate_point_skipped") : String("0x4ccb64_not_duplicate_endpoint");
 				if (duplicates_located) {
 					duplicate_skip_count += 1;
-				} else if (located >= 0) {
+					item["insertion_status"] = "0x4ccb64_duplicate_point_skipped";
+				} else {
 					int32_t insertion_anchor = located;
-					if (initial_model.edge_side_test_4cc6f2(insertion_anchor, int32_t(split.get("x", 0)), int32_t(split.get("y", 0)))) {
-						item["edge_removal_branch"] = true;
-						insertion_anchor = initial_model.nodes[size_t(insertion_anchor)].previous;
-						const int32_t erased = initial_model.nodes[size_t(insertion_anchor)].next;
-						item["edge_removal_status"] = "0x4cc9cc_vector_erase_branch_ported_for_first_split";
-						item["edge_removal_anchor_node_id"] = initial_model.nodes[size_t(insertion_anchor)].id;
-						item["edge_removed_node_id"] = initial_model.nodes[size_t(erased)].id;
-						initial_model.erase_edge_4cc9cc(erased);
-						first_edge_removal_count += 1;
-					} else {
-						item["edge_removal_branch"] = false;
+					bool removed_edge = false;
+					if (model.edge_side_test_4cc6f2(insertion_anchor, x, y)) {
+						removed_edge = true;
+						insertion_anchor = model.nodes[size_t(insertion_anchor)].previous;
+						const int32_t erased = model.nodes[size_t(insertion_anchor)].next;
+						item["edge_removal_status"] = total_insertion_count == 0 ? String("0x4cc9cc_vector_erase_branch_ported_for_first_split") : String("0x4cc9cc_vector_erase_branch_ported");
+						item["edge_removal_anchor_node_id"] = model.nodes[size_t(insertion_anchor)].id;
+						item["edge_removed_node_id"] = model.nodes[size_t(erased)].id;
+						model.erase_edge_4cc9cc(erased);
+						edge_removal_count += 1;
 					}
-					const PolygonModelNode &anchor_node = initial_model.nodes[size_t(insertion_anchor)];
-					const int32_t split_primary = initial_model.add_pair(
-							String("split_") + String::num_int64(int64_t(split.get("runtime_zone_index", -1))),
+					item["edge_removal_branch"] = removed_edge;
+					const PolygonModelNode &anchor_node = model.nodes[size_t(insertion_anchor)];
+					const int32_t split_primary = model.add_pair(
+							String("split_") + String::num_int64(runtime_zone_index),
 							anchor_node.x,
 							anchor_node.y,
 							anchor_node.payload,
-							int32_t(split.get("x", 0)),
-							int32_t(split.get("y", 0)),
-							int32_t(split.get("runtime_zone_index", -1)),
+							x,
+							y,
+							runtime_zone_index,
 							anchor_node.has_payload,
 							true);
-					initial_model.relink_4cc643(split_primary, insertion_anchor);
-					initial_model.root = split_primary;
-					first_insertion_count += 1;
-					item["insertion_status"] = "0x4ccb64_first_split_pre_crossing_inserted";
-					item["inserted_primary_node_id"] = initial_model.nodes[size_t(split_primary)].id;
-					item["inserted_paired_node_id"] = initial_model.nodes[size_t(initial_model.nodes[size_t(split_primary)].pair)].id;
+					model.relink_4cc643(split_primary, insertion_anchor);
+					model.root = split_primary;
+					total_insertion_count += 1;
+					executed_split_count += 1;
+					item["insertion_status"] = total_insertion_count == 1 ? String("0x4ccb64_first_split_pre_crossing_inserted") : String("0x4ccb64_split_pre_crossing_inserted");
+					item["inserted_primary_node_id"] = model.nodes[size_t(split_primary)].id;
+					item["inserted_paired_node_id"] = model.nodes[size_t(model.nodes[size_t(split_primary)].pair)].id;
 					int32_t current_bridge = split_primary;
 					int32_t bridge_source = insertion_anchor;
 					int32_t bridge_pair_count = 0;
 					bool bridge_loop_guard_exhausted = false;
 					for (int32_t guard = 0; guard < 64; ++guard) {
-						current_bridge = initial_model.bridge_4ccb1f(
+						current_bridge = model.bridge_4ccb1f(
 								bridge_source,
-								initial_model.nodes[size_t(current_bridge)].pair,
-								String("split_") + String::num_int64(int64_t(split.get("runtime_zone_index", -1))) + "_bridge_" + String::num_int64(bridge_pair_count));
+								model.nodes[size_t(current_bridge)].pair,
+								String("split_") + String::num_int64(runtime_zone_index) + "_bridge_" + String::num_int64(bridge_pair_count));
 						bridge_pair_count += 1;
-						bridge_source = initial_model.nodes[size_t(current_bridge)].previous;
-						const int32_t bridge_source_pair = initial_model.nodes[size_t(bridge_source)].pair;
-						if (initial_model.nodes[size_t(bridge_source_pair)].previous == initial_model.root) {
+						bridge_source = model.nodes[size_t(current_bridge)].previous;
+						const int32_t bridge_source_pair = model.nodes[size_t(bridge_source)].pair;
+						if (model.nodes[size_t(bridge_source_pair)].previous == model.root) {
 							break;
 						}
 						if (guard == 63) {
 							bridge_loop_guard_exhausted = true;
+							blocked = true;
 						}
 					}
-					first_bridge_pair_count += bridge_pair_count;
+					total_bridge_pair_count += bridge_pair_count;
 					item["bridge_pair_count"] = bridge_pair_count;
 					item["bridge_loop_guard_exhausted"] = bridge_loop_guard_exhausted;
-					first_pre_crossing_allocated_node_pair_count = int32_t(initial_model.nodes.size() / 2);
-					first_pre_crossing_active_node_pair_count = initial_model.active_node_pair_count();
-					item["allocated_node_pair_count_after_pre_crossing"] = first_pre_crossing_allocated_node_pair_count;
-					item["active_node_pair_count_after_pre_crossing"] = first_pre_crossing_active_node_pair_count;
+					const int32_t pre_crossing_allocated = int32_t(model.nodes.size() / 2);
+					const int32_t pre_crossing_active = model.active_node_pair_count();
+					item["allocated_node_pair_count_after_pre_crossing"] = pre_crossing_allocated;
+					item["active_node_pair_count_after_pre_crossing"] = pre_crossing_active;
 					int32_t cleanup_scan_count = 0;
 					int32_t cleanup_test_count = 0;
 					int32_t cleanup_collapse_count = 0;
@@ -1797,44 +1823,55 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 					bool cleanup_guard_exhausted = false;
 					for (int32_t guard = 0; guard < 256; ++guard) {
 						cleanup_scan_count += 1;
-						if (initial_model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
-							const PolygonModelNode &cursor = initial_model.nodes[size_t(cleanup_cursor)];
-							const PolygonModelNode &previous_pair = initial_model.nodes[size_t(initial_model.nodes[size_t(cursor.previous)].pair)];
-							const PolygonModelNode &paired = initial_model.nodes[size_t(cursor.pair)];
+						crossing_cleanup_scan_count += 1;
+						if (model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
+							const PolygonModelNode &cursor = model.nodes[size_t(cleanup_cursor)];
+							const PolygonModelNode &previous_pair = model.nodes[size_t(model.nodes[size_t(cursor.previous)].pair)];
+							const PolygonModelNode &paired = model.nodes[size_t(cursor.pair)];
 							cleanup_test_count += 1;
-							if (initial_model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, int32_t(split.get("x", 0)), int32_t(split.get("y", 0)))) {
-								initial_model.crossing_collapse_4cc68e(cleanup_cursor);
+							crossing_test_count += 1;
+							if (model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, x, y)) {
+								model.crossing_collapse_4cc68e(cleanup_cursor);
 								cleanup_collapse_count += 1;
-								cleanup_cursor = initial_model.nodes[size_t(cleanup_cursor)].previous;
+								crossing_collapse_count += 1;
+								cleanup_cursor = model.nodes[size_t(cleanup_cursor)].previous;
 								continue;
 							}
 						}
-						cleanup_cursor = initial_model.nodes[size_t(cleanup_cursor)].next;
-						if (cleanup_cursor == initial_model.root) {
+						cleanup_cursor = model.nodes[size_t(cleanup_cursor)].next;
+						if (cleanup_cursor == model.root) {
 							break;
 						}
-						cleanup_cursor = initial_model.nodes[size_t(initial_model.nodes[size_t(cleanup_cursor)].next)].pair;
+						cleanup_cursor = model.nodes[size_t(model.nodes[size_t(cleanup_cursor)].next)].pair;
 						if (guard == 255) {
 							cleanup_guard_exhausted = true;
+							crossing_cleanup_guard_exhausted = true;
+							blocked = true;
 						}
 					}
-					first_crossing_cleanup_scan_count = cleanup_scan_count;
-					first_crossing_test_count = cleanup_test_count;
-					first_crossing_collapse_count = cleanup_collapse_count;
-					first_crossing_cleanup_guard_exhausted = cleanup_guard_exhausted;
-					item["crossing_cleanup_status"] = "0x4ccc7a_0x4cc68e_first_crossing_cleanup_materialized";
+					item["crossing_cleanup_status"] = cleanup_guard_exhausted ? String("0x4ccb64_crossing_cleanup_guard_failed") : String("0x4ccc7a_0x4cc68e_crossing_cleanup_materialized");
 					item["crossing_cleanup_scan_count"] = cleanup_scan_count;
 					item["crossing_test_count"] = cleanup_test_count;
 					item["crossing_collapse_count"] = cleanup_collapse_count;
 					item["crossing_cleanup_guard_exhausted"] = cleanup_guard_exhausted;
-					first_post_crossing_allocated_node_pair_count = int32_t(initial_model.nodes.size() / 2);
-					first_post_crossing_active_node_pair_count = initial_model.active_node_pair_count();
-					item["allocated_node_pair_count_after_crossing_cleanup"] = first_post_crossing_allocated_node_pair_count;
-					item["active_node_pair_count_after_crossing_cleanup"] = first_post_crossing_active_node_pair_count;
+					const int32_t post_crossing_allocated = int32_t(model.nodes.size() / 2);
+					const int32_t post_crossing_active = model.active_node_pair_count();
+					item["allocated_node_pair_count_after_crossing_cleanup"] = post_crossing_allocated;
+					item["active_node_pair_count_after_crossing_cleanup"] = post_crossing_active;
+					if (total_insertion_count == 1) {
+						first_insertion_count = 1;
+						first_edge_removal_count = removed_edge ? 1 : 0;
+						first_bridge_pair_count = bridge_pair_count;
+						first_pre_crossing_allocated_node_pair_count = pre_crossing_allocated;
+						first_pre_crossing_active_node_pair_count = pre_crossing_active;
+						first_crossing_cleanup_scan_count = cleanup_scan_count;
+						first_crossing_test_count = cleanup_test_count;
+						first_crossing_collapse_count = cleanup_collapse_count;
+						first_crossing_cleanup_guard_exhausted = cleanup_guard_exhausted;
+						first_post_crossing_allocated_node_pair_count = post_crossing_allocated;
+						first_post_crossing_active_node_pair_count = post_crossing_active;
+					}
 				}
-				first_locator_materialized = true;
-			} else {
-				item["locator_status"] = "pending_current_graph_after_0x4ccb64_mutation";
 			}
 			if (!item.has("insertion_status")) {
 				item["insertion_status"] = "pending_0x4ccb64_source_node_graph_materialization";
@@ -1842,9 +1879,15 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 			scheduled_calls.append(item);
 		}
 	}
+	report["locator_materialized_count"] = locator_materialized_count;
+	report["locator_guard_failed_count"] = locator_guard_failed_count;
 	report["duplicate_skip_count"] = duplicate_skip_count;
+	report["executed_split_call_count"] = executed_split_count;
+	report["pre_crossing_inserted_node_pair_count"] = total_insertion_count;
+	report["pre_crossing_inserted_bridge_pair_count"] = total_bridge_pair_count;
 	report["first_pre_crossing_insertion_count"] = first_insertion_count;
 	report["first_edge_removal_branch_count"] = first_edge_removal_count;
+	report["edge_removal_branch_count"] = edge_removal_count;
 	report["first_pre_crossing_bridge_pair_count"] = first_bridge_pair_count;
 	report["first_post_pre_crossing_allocated_node_pair_count"] = first_pre_crossing_allocated_node_pair_count;
 	report["first_post_pre_crossing_active_node_pair_count"] = first_pre_crossing_active_node_pair_count;
@@ -1854,8 +1897,16 @@ Dictionary polygon_split_insertion_4ccb64_report(const Array &levels, int32_t to
 	report["first_crossing_test_count"] = first_crossing_test_count;
 	report["first_crossing_collapse_count"] = first_crossing_collapse_count;
 	report["first_crossing_cleanup_guard_exhausted"] = first_crossing_cleanup_guard_exhausted;
+	report["crossing_cleanup_scan_count"] = crossing_cleanup_scan_count;
+	report["crossing_test_count"] = crossing_test_count;
+	report["crossing_collapse_count"] = crossing_collapse_count;
+	report["crossing_cleanup_guard_exhausted"] = crossing_cleanup_guard_exhausted;
+	report["post_crossing_cleanup_allocated_node_pair_count"] = int32_t(model.nodes.size() / 2);
+	report["post_crossing_cleanup_active_node_pair_count"] = model.active_node_pair_count();
+	report["root_node_id_after_crossing_cleanup"] = model.root >= 0 ? model.nodes[size_t(model.root)].id : String();
+	report["crossing_cleanup_status"] = blocked ? String("blocked_during_0x4ccb64_cleanup") : String("0x4ccc7a_0x4cc68e_all_scheduled_crossing_cleanup_materialized");
 	report["scheduled_calls"] = scheduled_calls;
-	report["blocked_next"] = "run later 0x4cca55 locators and 0x4ccb64 insertion/cleanup passes against the mutated graph before 0x4ccdfc finalized cycles can feed 0x4a2777";
+	report["blocked_next"] = "materialize 0x4ccdfc finalized source-node cycles from the mutated graph before real 0x4a2777 boundary traversal can feed 0x4a325d";
 	return report;
 }
 
