@@ -105,6 +105,28 @@ func _run() -> void:
 			or int(connection_payload.get("normal_guard_spawn_intent_total_value", -1)) != 16000:
 		_fail("0x4a5e03 normal guard spawn input boundary drifted: %s" % JSON.stringify(connection_payload))
 		return
+	if String(connection_payload.get("geometry_dispatch_status", "")) != "0x4a79a3_first_and_second_pass_helper_order_ported_endpoint_geometry_pending" \
+			or int(connection_payload.get("geometry_dispatch_link_count", -1)) != 5 \
+			or int(connection_payload.get("geometry_endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a79a3 connection geometry dispatch boundary drifted: %s" % JSON.stringify(connection_payload))
+		return
+	var geometry_dispatch_plan: Array = connection_payload.get("geometry_dispatch_plan", [])
+	if geometry_dispatch_plan.size() != 5:
+		_fail("0x4a79a3 dispatch plan did not cover each selected connection: %s" % JSON.stringify(connection_payload))
+		return
+	var first_dispatch: Dictionary = geometry_dispatch_plan[0]
+	var first_pass_helpers: Array = first_dispatch.get("first_pass_helpers", [])
+	var second_pass_helpers: Array = first_dispatch.get("second_pass_helpers", [])
+	if first_pass_helpers.size() != 3 \
+			or String(first_pass_helpers[0]) != "0x4a61bc" \
+			or String(first_pass_helpers[1]) != "0x4a696b" \
+			or String(first_pass_helpers[2]) != "0x4a6cf2" \
+			or second_pass_helpers.size() != 2 \
+			or String(second_pass_helpers[0]) != "0x4a696b" \
+			or String(second_pass_helpers[1]) != "0x4a7605" \
+			or String(first_dispatch.get("wide_geometry_role", "")) != "none_traced_wide_suppresses_normal_guard_after_geometry":
+		_fail("0x4a79a3 dispatch helper order or Wide semantics drifted: %s" % JSON.stringify(first_dispatch))
+		return
 	var guard_spawn_intents: Array = connection_payload.get("normal_guard_spawn_intents", [])
 	if guard_spawn_intents.size() != 5 \
 			or String(guard_spawn_intents[0].get("guard_object_helper_address", "")) != "0x4a5e03" \
@@ -1222,6 +1244,7 @@ func _run() -> void:
 		"mine_density_weight": mine_reward_placement.get("total_mine_density_weight", 0),
 		"connection_guard_scaled_value_total": connection_payload.get("normal_guard_scaled_value_total", 0),
 		"connection_guard_spawn_intent_count": connection_payload.get("normal_guard_spawn_intent_count", 0),
+		"connection_geometry_dispatch_link_count": connection_payload.get("geometry_dispatch_link_count", 0),
 		"mine_guard_scaled_value_total": mine_reward_placement.get("mine_guard_scaled_value_total", 0),
 		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
 		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),

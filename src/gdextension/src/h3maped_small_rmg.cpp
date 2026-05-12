@@ -6984,6 +6984,13 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		const bool border_guard = bool(seed.get("border_guard", false));
 		const int32_t normal_guard_value_before_scaling = wide ? 0 : raw_guard_value;
 		const int32_t normal_guard_scaled_value = wide ? 0 : h3maped_strength_scaled_value_4a65a5(raw_guard_value, h3maped_global_monster_strength_mode(normalized_config));
+		Array first_pass_helpers;
+		first_pass_helpers.append("0x4a61bc");
+		first_pass_helpers.append("0x4a696b");
+		first_pass_helpers.append("0x4a6cf2");
+		Array second_pass_helpers;
+		second_pass_helpers.append("0x4a696b");
+		second_pass_helpers.append("0x4a7605");
 		Dictionary record;
 		record["connection_id"] = String("h3maped_small_connection_") + String::num_int64(index + 1);
 		record["link_index"] = seed.get("link_index", index);
@@ -7001,7 +7008,13 @@ Array h3maped_connection_records_from_port(const Dictionary &payload, const Dict
 		record["normal_guard_object_helper_address"] = normal_guard_scaled_value > 0 ? String("0x4a5e03") : String("");
 		record["normal_guard_object_status"] = normal_guard_scaled_value > 0 ? String("0x4a5e03_guard_inputs_scaled_geometry_endpoint_coordinates_pending") : (wide ? String("suppressed_by_link_plus_0x08_wide") : String("no_scaled_guard_object"));
 		record["border_guard_status"] = border_guard ? String("pending_0x4a5e73_0x4a5a23_type_9_materialization") : String("not_a_border_guard_link");
-		record["geometry_status"] = "pending_0x4a61bc_0x4a696b_0x4a6cf2_0x4a7605_connection_geometry";
+		record["geometry_status"] = "0x4a79a3_dispatch_plan_ported_endpoint_geometry_pending";
+		record["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_no_endpoint_coordinates";
+		record["geometry_first_pass_helpers"] = first_pass_helpers;
+		record["geometry_second_pass_helpers"] = second_pass_helpers;
+		record["geometry_success_helper"] = "";
+		record["endpoint_coordinate_materialized"] = false;
+		record["endpoint_coordinate_blocker"] = "helper_success_path_geometry_not_ported";
 		record["road_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 		record["h3maped_phase"] = "0x4a79a3_link_payload_semantics";
 		record["h3maped_source"] = seed;
@@ -7024,7 +7037,9 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	int32_t border_guard_count = 0;
 	int32_t normal_guard_scaled_nonzero_count = 0;
 	int32_t normal_guard_scaled_value_total = 0;
+	int32_t endpoint_coordinate_materialized_count = 0;
 	Array normal_guard_spawn_intents;
+	Array geometry_dispatch_plan;
 	for (int64_t index = 0; index < connection_records.size(); ++index) {
 		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -7039,6 +7054,22 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 		if (bool(record.get("border_guard", false))) {
 			border_guard_count += 1;
 		}
+		if (bool(record.get("endpoint_coordinate_materialized", false))) {
+			endpoint_coordinate_materialized_count += 1;
+		}
+		Dictionary dispatch;
+		dispatch["connection_id"] = record.get("connection_id", "");
+		dispatch["link_index"] = record.get("link_index", index);
+		dispatch["first_pass_range"] = "0x4a7b96..0x4a7c3d";
+		dispatch["first_pass_helpers"] = record.get("geometry_first_pass_helpers", Array());
+		dispatch["second_pass_range"] = "0x4a7c8f..0x4a7e71";
+		dispatch["second_pass_helpers"] = record.get("geometry_second_pass_helpers", Array());
+		dispatch["consumes_raw_link_pointer"] = true;
+		dispatch["consumes_value_wide_border_guard"] = true;
+		dispatch["required_outputs_before_guard_spawn"] = "endpoint_coordinates_occupied_blocked_connection_cells_processed_marker";
+		dispatch["wide_geometry_role"] = "none_traced_wide_suppresses_normal_guard_after_geometry";
+		dispatch["status"] = "dispatch_order_ported_success_path_geometry_pending";
+		geometry_dispatch_plan.append(dispatch);
 		const int32_t scaled_value = int32_t(record.get("normal_guard_scaled_value", 0));
 		if (scaled_value > 0) {
 			normal_guard_scaled_nonzero_count += 1;
@@ -7074,6 +7105,10 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	connection_payload["normal_guard_spawn_intent_total_value"] = normal_guard_scaled_value_total;
 	connection_payload["normal_guard_spawn_intents"] = normal_guard_spawn_intents;
 	connection_payload["normal_guard_materialization_status"] = "0x4a65a5_values_scaled_0x4a5e03_guard_inputs_scaled_geometry_pending";
+	connection_payload["geometry_dispatch_status"] = "0x4a79a3_first_and_second_pass_helper_order_ported_endpoint_geometry_pending";
+	connection_payload["geometry_dispatch_link_count"] = geometry_dispatch_plan.size();
+	connection_payload["geometry_endpoint_coordinate_materialized_count"] = endpoint_coordinate_materialized_count;
+	connection_payload["geometry_dispatch_plan"] = geometry_dispatch_plan;
 	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
 	connection_payload["road_materialization_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
 	connection_payload["full_generation_status"] = "h3maped_connection_payload_known_geometry_roads_guards_pending";
