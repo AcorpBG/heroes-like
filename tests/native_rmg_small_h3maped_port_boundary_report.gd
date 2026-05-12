@@ -436,6 +436,7 @@ func _run() -> void:
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
 	var changed_cell_update: Dictionary = terrain_repaint_boundary.get("changed_cell_update", {})
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
+	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
@@ -503,6 +504,17 @@ func _run() -> void:
 			or String(copyback_gate.get("container_lookup_address", "")) != "0x4bd3c5" \
 			or bool(copyback_gate.get("copyback_to_generated_cell_0x24_0x28", true)):
 		_fail("The TerrainPlacement copyback gate evidence drifted: %s" % JSON.stringify(copyback_gate))
+		return
+	if String(adapter_writeback.get("status", "")) != "0x49acc5_0x49acf6_type_random_map_terrain_writeback_recovered_not_materialized" \
+			or String(adapter_writeback.get("adapter_vtable_address", "")) != "0x540a14" \
+			or String(adapter_writeback.get("adapter_constructor_address", "")) != "0x499f60" \
+			or String(adapter_writeback.get("virtual_write_entry_address", "")) != "0x49acc5" \
+			or String(adapter_writeback.get("cell_write_helper_address", "")) != "0x49acf6" \
+			or String(adapter_writeback.get("read_full_record_address", "")) != "0x49ad83" \
+			or String(adapter_writeback.get("read_terrain_id_address", "")) != "0x49adde" \
+			or String(adapter_writeback.get("read_terrain_art_address", "")) != "0x49ae01" \
+			or bool(adapter_writeback.get("materializes_generated_cell_words", true)):
+		_fail("The type_random_map terrain writeback evidence drifted: %s" % JSON.stringify(adapter_writeback))
 		return
 	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1" \
 			or String(terrain_grid.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_adopted_inspection_only" \
