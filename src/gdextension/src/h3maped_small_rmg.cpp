@@ -78,6 +78,13 @@ struct TerrainVisualRow {
 	int32_t flag_b = 0;
 };
 
+struct TerrainClassResult {
+	int32_t shape_class = 0;
+	int32_t flag_a = 0;
+	int32_t flag_b = 0;
+	const char *trigger = "no classed relation";
+};
+
 struct CoordCandidate {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1079,6 +1086,263 @@ Dictionary terrain_visual_static_table_contracts_report() {
 	report["status"] = ok && decoded_total == int32_t(report["expected_total_row_count"])
 			? String("h3maped_exe_static_terrain_visual_tables_decoded")
 			: String("h3maped_exe_static_terrain_visual_table_decode_failed");
+	return report;
+}
+
+int32_t terrain_trait_flag4(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+			return 1;
+		default:
+			return 0;
+	}
+}
+
+int32_t h3maped_terrain_relation_4bb039(int32_t center_terrain_id, int32_t neighbor_terrain_id) {
+	if (center_terrain_id == neighbor_terrain_id) {
+		return 0;
+	}
+	if (center_terrain_id == 1) {
+		return 0;
+	}
+	if (terrain_trait_flag4(center_terrain_id) == 0) {
+		return 2;
+	}
+	if (terrain_trait_flag4(neighbor_terrain_id) == 0) {
+		return 2;
+	}
+	return center_terrain_id != 0 ? 1 : 0;
+}
+
+int32_t orientation_slot_5436e0(int32_t flag_a, int32_t flag_b, int32_t slot, bool transposed_index = false) {
+	static constexpr int32_t ORIENTATION[4][8] = {
+		{ 0, 1, 2, 3, 4, 5, 6, 7 },
+		{ 4, 3, 2, 1, 0, 7, 6, 5 },
+		{ 0, 7, 6, 5, 4, 3, 2, 1 },
+		{ 4, 5, 6, 7, 0, 1, 2, 3 },
+	};
+	const int32_t table_index = transposed_index ? flag_a + flag_b * 2 : flag_b + flag_a * 2;
+	if (table_index < 0 || table_index >= 4 || slot < 0 || slot >= 8) {
+		return slot;
+	}
+	return ORIENTATION[table_index][slot];
+}
+
+int32_t relation_at_oriented(const std::array<int32_t, 8> &relations, int32_t flag_a, int32_t flag_b, int32_t slot, bool transposed_index = false) {
+	return relations[size_t(orientation_slot_5436e0(flag_a, flag_b, slot, transposed_index))];
+}
+
+TerrainClassResult h3maped_classify_4bb075(const std::array<int32_t, 8> &relations) {
+	static constexpr std::array<std::array<int32_t, 2>, 4> FLAGS = { { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } } };
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(2) == 1 && r(4) == 1) {
+			if (r(1) == 2 && r(5) == 2) {
+				return { 0x1c, a, b, "E=1,S=1,NE=2,SW=2" };
+			}
+			if (r(3) == 2) {
+				return { 0x1b, a, b, "E=1,S=1,SE=2" };
+			}
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(0) == 1 && r(6) == 1 && r(3) != 0) {
+			return { r(3) == 1 ? 0x17 : 0x19, a, b, "N=1,W=1,SE!=0" };
+		}
+		if (r(0) == 2 && r(6) == 2 && r(3) != 0) {
+			return { r(3) == 1 ? 0x1a : 0x18, a, b, "N=2,W=2,SE!=0" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(2) == 2 && r(4) == 1 && r(5) == 2) {
+			return { 0x08, 1 - a, 1 - b, "E=2,S=1,SW=2; output flags inverted" };
+		}
+		if (r(2) == 1 && r(4) == 2 && r(1) == 2) {
+			return { 0x08, 1 - a, 1 - b, "E=1,S=2,NE=2; output flags inverted" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot, true); };
+		if (r(2) == 1 && r(4) == 1) {
+			if (r(5) == 2) {
+				return { 0x11, a, b, "E=1,S=1,SW=2" };
+			}
+			if (r(1) == 2) {
+				return { 0x12, a, b, "E=1,S=1,NE=2" };
+			}
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(0) == 1 && r(6) == 1) {
+			return { 0x02, a, b, "N=1,W=1" };
+		}
+		if (r(0) == 2 && r(6) == 2) {
+			return { 0x08, a, b, "N=2,W=2" };
+		}
+		if (r(2) == 1 && r(5) == 2) {
+			return { 0x11, a, b, "E=1,SW=2" };
+		}
+		if (r(4) == 1 && r(1) == 2) {
+			return { 0x12, a, b, "S=1,NE=2" };
+		}
+		if (r(2) == 2 && r(5) == 1) {
+			return { 0x15, a, b, "E=2,SW=1" };
+		}
+		if (r(4) == 2 && r(1) == 1) {
+			return { 0x16, a, b, "S=2,NE=1" };
+		}
+		if (r(6) == 1 && r(1) == 1) {
+			return { 0x02, a, b, "W=1,NE=1" };
+		}
+		if (r(0) == 1 && r(5) == 1) {
+			return { 0x02, a, b, "N=1,SW=1" };
+		}
+		if (r(6) == 2 && r(1) == 2) {
+			return { 0x08, a, b, "W=2,NE=2" };
+		}
+		if (r(0) == 2 && r(5) == 2) {
+			return { 0x08, a, b, "N=2,SW=2" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(2) == 1 && r(3) == 2) {
+			return { 0x13, a, b, "E=1,SE=2" };
+		}
+		if (r(4) == 1 && r(3) == 2) {
+			return { 0x14, a, b, "S=1,SE=2" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(0) == 1) {
+			return { 0x04, a, b, "N=1" };
+		}
+		if (r(0) == 2) {
+			return { 0x0a, a, b, "N=2" };
+		}
+		if (r(6) == 1) {
+			return { 0x03, a, b, "W=1" };
+		}
+		if (r(6) == 2) {
+			return { 0x09, a, b, "W=2" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(7) == 1 && r(3) == 1) {
+			return { 0x0e, a, b, "NW=1,SE=1" };
+		}
+		if (r(7) == 1 && r(3) == 2) {
+			return { 0x0f, a, b, "NW=1,SE=2" };
+		}
+		if (r(7) == 2 && r(3) == 2) {
+			return { 0x10, a, b, "NW=2,SE=2" };
+		}
+	}
+	for (const auto &flags : FLAGS) {
+		const int32_t a = flags[0];
+		const int32_t b = flags[1];
+		auto r = [&](int32_t slot) { return relation_at_oriented(relations, a, b, slot); };
+		if (r(3) == 1) {
+			return { 0x05, a, b, "SE=1" };
+		}
+		if (r(3) == 2) {
+			return { 0x0b, a, b, "SE=2" };
+		}
+	}
+	return { 0x00, 0, 0, "no classed relation" };
+}
+
+PackedInt32Array packed_relations(const std::array<int32_t, 8> &relations) {
+	PackedInt32Array packed;
+	for (int32_t value : relations) {
+		packed.append(value);
+	}
+	return packed;
+}
+
+Dictionary classifier_sample_record(const char *id, const std::array<int32_t, 8> &relations) {
+	const TerrainClassResult classified = h3maped_classify_4bb075(relations);
+	Dictionary record;
+	record["id"] = id;
+	record["relations_slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+	record["relations"] = packed_relations(relations);
+	record["class"] = classified.shape_class;
+	record["flag_a"] = classified.flag_a;
+	record["flag_b"] = classified.flag_b;
+	record["trigger"] = classified.trigger;
+	return record;
+}
+
+Dictionary terrain_classifier_contract_report() {
+	Dictionary report;
+	report["status"] = "0x4bb039_0x5436e0_0x4bb075_relation_classifier_ported_boundary_only";
+	report["relation_function_address"] = "0x4bb039";
+	report["orientation_table_address"] = "0x5436e0";
+	report["classifier_address"] = "0x4bb075";
+	report["relations_slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+	report["materializes_visual_records"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+
+	Array relation_matrix;
+	for (int32_t center = 0; center < 10; ++center) {
+		PackedInt32Array row;
+		for (int32_t neighbor = 0; neighbor < 10; ++neighbor) {
+			row.append(h3maped_terrain_relation_4bb039(center, neighbor));
+		}
+		relation_matrix.append(row);
+	}
+	report["relation_matrix_terrain_ids_0_9"] = relation_matrix;
+
+	Array orientation_rows;
+	for (int32_t flag_a = 0; flag_a <= 1; ++flag_a) {
+		for (int32_t flag_b = 0; flag_b <= 1; ++flag_b) {
+			Dictionary row;
+			row["flag_a"] = flag_a;
+			row["flag_b"] = flag_b;
+			PackedInt32Array slots;
+			for (int32_t slot = 0; slot < 8; ++slot) {
+				slots.append(orientation_slot_5436e0(flag_a, flag_b, slot));
+			}
+			row["slot_permutation"] = slots;
+			orientation_rows.append(row);
+		}
+	}
+	report["orientation_rows"] = orientation_rows;
+
+	Array samples;
+	samples.append(classifier_sample_record("class_0_full_native", { 0, 0, 0, 0, 0, 0, 0, 0 }));
+	samples.append(classifier_sample_record("class_8_relation2_corner", { 2, 0, 0, 0, 0, 0, 2, 0 }));
+	samples.append(classifier_sample_record("class_18_transposed_block", { 0, 0, 0, 0, 1, 0, 0, 2 }));
+	samples.append(classifier_sample_record("class_28_compound_junction", { 0, 0, 0, 2, 1, 0, 1, 2 }));
+	report["representative_samples"] = samples;
+	report["blocked_next"] = "feed classified class/flags through exact normal or rock row selection, then 0x4bad0f and 0x49acf6 writeback";
 	return report;
 }
 
@@ -3363,6 +3627,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	visual_classifier["selector_flow"] = "0x4bcfc3 calls 0x4bce6d, indexes terrain toolkit table 0x5436b8 by terrain id, then calls toolkit vfunc +0x10 with the reduced neighbor mask and previous art id -1";
 	visual_classifier["complex_resolve_flow"] = "0x4ba938 reuses a previous nonzero visual id when valid, otherwise chooses common or alternate contiguous ranges at object+0x14/object+0x1c through 0x4e7276";
 	visual_classifier["simple_resolve_flow"] = "0x4baa94 reuses a previous nonzero visual id when valid, otherwise chooses from global range 0x5a4318/0x5a431c through 0x4e7276";
+	visual_classifier["terrain_classifier_contract"] = terrain_classifier_contract_report();
 	visual_classifier["static_range_lookup_contract"] = terrain_visual_static_range_lookup_contract_report();
 	visual_classifier["static_table_contracts"] = terrain_visual_static_table_contracts_report();
 	visual_classifier["materializes_visual_record"] = false;
