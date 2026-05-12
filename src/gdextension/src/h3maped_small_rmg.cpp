@@ -1481,6 +1481,114 @@ int32_t terrain_at_grid_index(const PackedInt32Array &terrain_code_u16, int32_t 
 	return terrain_code_u16[index];
 }
 
+PackedInt32Array h3maped_same_terrain_mask_4bc74c(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	PackedInt32Array mask;
+	mask.resize(8);
+	const auto same = [&](int32_t nx, int32_t ny) -> bool {
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+			return false;
+		}
+		const int32_t index = level * level_tile_count + ny * width + nx;
+		return index >= 0 && index < terrain_code_u16.size() && terrain_code_u16[index] == terrain_id;
+	};
+	const bool north = same(x, y - 1);
+	const bool south = same(x, y + 1);
+	const bool west = same(x - 1, y);
+	const bool east = same(x + 1, y);
+	mask.set(0, north ? 1 : 0);
+	mask.set(4, south ? 1 : 0);
+	mask.set(6, west ? 1 : 0);
+	mask.set(2, east ? 1 : 0);
+	mask.set(7, (north || west) && same(x - 1, y - 1) ? 1 : 0);
+	mask.set(1, (north || east) && same(x + 1, y - 1) ? 1 : 0);
+	mask.set(5, (south || west) && same(x - 1, y + 1) ? 1 : 0);
+	mask.set(3, (south || east) && same(x + 1, y + 1) ? 1 : 0);
+	return mask;
+}
+
+bool h3maped_same_class_region_gate_4bc928(const PackedInt32Array &mask) {
+	if (mask.size() != 8) {
+		return false;
+	}
+	int32_t cursor = 0;
+	if (mask[0] != 0) {
+		do {
+			cursor = (cursor + 1) & 7;
+			if (cursor == 0) {
+				return false;
+			}
+		} while (mask[cursor] != 0);
+	}
+	const int32_t start_zero = cursor;
+	int32_t scan = (cursor + 1) & 7;
+	while (scan != start_zero && mask[scan] == 0) {
+		scan = (scan + 1) & 7;
+	}
+	if (scan == start_zero) {
+		return false;
+	}
+	do {
+		scan = (scan + 1) & 7;
+		if (scan == start_zero) {
+			return false;
+		}
+	} while (mask[scan] != 0);
+	do {
+		scan = (scan + 1) & 7;
+		if (scan == start_zero) {
+			return false;
+		}
+	} while (mask[scan] == 0);
+	return true;
+}
+
+bool h3maped_horizontal_pair_gate_4bc674(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	if (x <= 0 || x >= width - 1 || y < 0 || y >= height) {
+		return false;
+	}
+	const int32_t west = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, terrain_id);
+	const int32_t east = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, terrain_id);
+	return west != terrain_id && east != terrain_id;
+}
+
+bool h3maped_vertical_pair_gate_4bc6e0(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	if (y <= 0 || y >= height - 1 || x < 0 || x >= width) {
+		return false;
+	}
+	const int32_t north = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, terrain_id);
+	const int32_t south = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, terrain_id);
+	return north != terrain_id && south != terrain_id;
+}
+
+bool h3maped_toolkit_byte5_allows_same_class_gate(int32_t terrain_id) {
+	return terrain_id == 8 || terrain_id == 9;
+}
+
+bool h3maped_candidate_gate_4bc988(bool horizontal_pair_gate, bool vertical_pair_gate, bool toolkit_byte5_allows_same_class_gate, bool same_class_region_gate) {
+	if (horizontal_pair_gate || vertical_pair_gate) {
+		return true;
+	}
+	return toolkit_byte5_allows_same_class_gate && same_class_region_gate;
+}
+
+String h3maped_candidate_gate_branch(bool horizontal_pair_gate, bool vertical_pair_gate, bool toolkit_byte5_allows_same_class_gate, bool same_class_region_gate, bool candidate_gate) {
+	if (horizontal_pair_gate) {
+		return "0x4bba13_0x4bc674_horizontal_pair_gate";
+	}
+	if (vertical_pair_gate) {
+		return "0x4bba36_0x4bc6e0_vertical_pair_gate";
+	}
+	if (toolkit_byte5_allows_same_class_gate && same_class_region_gate) {
+		return "0x4bc928_same_class_region_gate";
+	}
+	return candidate_gate ? String("0x4bc988_candidate_gate_true") : String("0x4bc988_candidate_gate_false");
+}
+
+void increment_bool_histogram(Dictionary &histogram, bool value) {
+	const String key = value ? "true" : "false";
+	histogram[key] = int32_t(histogram.get(key, 0)) + 1;
+}
+
 bool select_visual_row_for_grid_cell(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b, String &selector_address, String &selector_kind) {
 	std::vector<int32_t> bucket;
 	const bool rock_selector = terrain_id == 9;
@@ -1575,10 +1683,16 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	Dictionary missing_bucket_class_histogram;
 	Dictionary missing_bucket_terrain_histogram;
 	Dictionary missing_bucket_table_histogram;
+	Dictionary queue_frontier_horizontal_pair_gate_histogram;
+	Dictionary queue_frontier_vertical_pair_gate_histogram;
+	Dictionary queue_frontier_same_class_region_gate_histogram;
+	Dictionary queue_frontier_candidate_gate_histogram;
+	Dictionary queue_frontier_branch_histogram;
 	Array sample_records;
 	Array missing_bucket_samples;
 	int32_t projected_cell_count = 0;
 	int32_t missing_bucket_cell_count = 0;
+	int32_t queue_frontier_candidate_gate_true_count = 0;
 	int32_t boundary_cell_projected_count = 0;
 	int32_t zero_boundary_cell_projected_count = 0;
 	int32_t terrain_art_nonzero_cell_count = 0;
@@ -1620,6 +1734,21 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 					missing_bucket_class_histogram[class_key] = int32_t(missing_bucket_class_histogram.get(class_key, 0)) + 1;
 					missing_bucket_terrain_histogram[terrain_key] = int32_t(missing_bucket_terrain_histogram.get(terrain_key, 0)) + 1;
 					missing_bucket_table_histogram[table_address] = int32_t(missing_bucket_table_histogram.get(table_address, 0)) + 1;
+					const PackedInt32Array same_terrain_mask = h3maped_same_terrain_mask_4bc74c(terrain_code_u16, width, height, level_tile_count, level, x, y, center);
+					const bool horizontal_pair_gate = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y, center);
+					const bool vertical_pair_gate = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x, y, center);
+					const bool toolkit_byte5_allows_same_class_gate = h3maped_toolkit_byte5_allows_same_class_gate(center);
+					const bool same_class_region_gate = h3maped_same_class_region_gate_4bc928(same_terrain_mask);
+					const bool candidate_gate = h3maped_candidate_gate_4bc988(horizontal_pair_gate, vertical_pair_gate, toolkit_byte5_allows_same_class_gate, same_class_region_gate);
+					const String queue_branch = h3maped_candidate_gate_branch(horizontal_pair_gate, vertical_pair_gate, toolkit_byte5_allows_same_class_gate, same_class_region_gate, candidate_gate);
+					increment_bool_histogram(queue_frontier_horizontal_pair_gate_histogram, horizontal_pair_gate);
+					increment_bool_histogram(queue_frontier_vertical_pair_gate_histogram, vertical_pair_gate);
+					increment_bool_histogram(queue_frontier_same_class_region_gate_histogram, same_class_region_gate);
+					increment_bool_histogram(queue_frontier_candidate_gate_histogram, candidate_gate);
+					queue_frontier_branch_histogram[queue_branch] = int32_t(queue_frontier_branch_histogram.get(queue_branch, 0)) + 1;
+					if (candidate_gate) {
+						queue_frontier_candidate_gate_true_count += 1;
+					}
 					if (missing_bucket_samples.size() < 8) {
 						Dictionary missing;
 						missing["index"] = index;
@@ -1637,6 +1766,19 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 						missing["selector_address"] = selector_address;
 						missing["selector_kind"] = selector_kind;
 						missing["blocked_reason"] = "classified shape has no decoded h3maped visual row before queue/topology normalization";
+						missing["same_terrain_mask_address"] = "0x4bc74c";
+						missing["same_terrain_mask_slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+						missing["same_terrain_mask"] = same_terrain_mask;
+						missing["horizontal_pair_gate_address"] = "0x4bc674";
+						missing["horizontal_pair_gate"] = horizontal_pair_gate;
+						missing["vertical_pair_gate_address"] = "0x4bc6e0";
+						missing["vertical_pair_gate"] = vertical_pair_gate;
+						missing["toolkit_byte5_allows_same_class_gate"] = toolkit_byte5_allows_same_class_gate;
+						missing["same_class_region_gate_address"] = "0x4bc928";
+						missing["same_class_region_gate"] = same_class_region_gate;
+						missing["candidate_gate_address"] = "0x4bc988";
+						missing["candidate_gate"] = candidate_gate;
+						missing["candidate_gate_branch"] = queue_branch;
 						missing_bucket_samples.append(missing);
 					}
 					continue;
@@ -1708,6 +1850,30 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	report["missing_bucket_table_histogram"] = missing_bucket_table_histogram;
 	report["sample_records"] = sample_records;
 	report["missing_bucket_samples"] = missing_bucket_samples;
+	Dictionary queue_frontier_report;
+	queue_frontier_report["status"] = "0x4bc74c_0x4bc928_0x4bc674_0x4bc6e0_0x4bc988_missing_bucket_frontier_gates_ported_inspection_only";
+	queue_frontier_report["source"] = "bounded port of h3maped TerrainPlacement queue/candidate gate helpers over the cells that still lack decoded visual-row buckets";
+	queue_frontier_report["ported_addresses"] = Array::make("0x4bc74c", "0x4bc928", "0x4bc674", "0x4bc6e0", "0x4bc988", "0x4bbd01");
+	queue_frontier_report["frontier_processor_address"] = "0x4bbd01";
+	queue_frontier_report["candidate_gate_address"] = "0x4bc988";
+	queue_frontier_report["same_terrain_mask_address"] = "0x4bc74c";
+	queue_frontier_report["same_class_region_gate_address"] = "0x4bc928";
+	queue_frontier_report["horizontal_pair_gate_address"] = "0x4bc674";
+	queue_frontier_report["vertical_pair_gate_address"] = "0x4bc6e0";
+	queue_frontier_report["slot_order"] = "N,NE,E,SE,S,SW,W,NW";
+	queue_frontier_report["reported_missing_bucket_cell_count"] = missing_bucket_cell_count;
+	queue_frontier_report["candidate_gate_true_cell_count"] = queue_frontier_candidate_gate_true_count;
+	queue_frontier_report["candidate_gate_false_cell_count"] = missing_bucket_cell_count - queue_frontier_candidate_gate_true_count;
+	queue_frontier_report["horizontal_pair_gate_histogram"] = queue_frontier_horizontal_pair_gate_histogram;
+	queue_frontier_report["vertical_pair_gate_histogram"] = queue_frontier_vertical_pair_gate_histogram;
+	queue_frontier_report["same_class_region_gate_histogram"] = queue_frontier_same_class_region_gate_histogram;
+	queue_frontier_report["candidate_gate_histogram"] = queue_frontier_candidate_gate_histogram;
+	queue_frontier_report["branch_histogram"] = queue_frontier_branch_histogram;
+	queue_frontier_report["materializes_queue_retouches"] = false;
+	queue_frontier_report["materializes_package_tiles"] = false;
+	queue_frontier_report["blocked_next"] = "execute the full 0x4bc5f0 queue drain and 0x4bbd01 retouch updates instead of only reporting candidate gates";
+	report["terrain_queue_frontier_gap_report_status"] = queue_frontier_report["status"];
+	report["terrain_queue_frontier_gap_report"] = queue_frontier_report;
 	report["projected_cell_word_0x24_u32"] = projected_cell_word_0x24_u32;
 	report["projected_cell_word_0x28_u32"] = projected_cell_word_0x28_u32;
 	report["projected_tile_byte_1_terrain_art_u8"] = projected_tile_byte_1_terrain_art_u8;
