@@ -510,6 +510,16 @@ func _run() -> void:
 			or String(visual_classifier.get("simple_toolkit_zero_constructor_address", "")) != "0x4baa66" \
 			or String(visual_classifier.get("neighbor_probe_vfunc_offset", "")) != "+0x08" \
 			or String(visual_classifier.get("visual_record_resolve_vfunc_offset", "")) != "+0x10" \
+			or String(visual_classifier.get("complex_toolkit_vtable_address", "")) != "0x543780" \
+			or String(visual_classifier.get("complex_neighbor_probe_vfunc_plus_0x08", "")) != "0x4ba91d" \
+			or String(visual_classifier.get("complex_direct_record_reader_vfunc_plus_0x0c", "")) != "0x4ba92b" \
+			or String(visual_classifier.get("complex_visual_resolve_vfunc_plus_0x10", "")) != "0x4ba938" \
+			or String(visual_classifier.get("complex_visual_writeback_vfunc_plus_0x14", "")) != "0x4ba989" \
+			or String(visual_classifier.get("simple_toolkit_vtable_address", "")) != "0x54379c" \
+			or String(visual_classifier.get("simple_neighbor_probe_vfunc_plus_0x08", "")) != "0x4baa81" \
+			or String(visual_classifier.get("simple_direct_record_reader_vfunc_plus_0x0c", "")) != "0x4baa86" \
+			or String(visual_classifier.get("simple_visual_resolve_vfunc_plus_0x10", "")) != "0x4baa94" \
+			or String(visual_classifier.get("simple_visual_writeback_vfunc_plus_0x14", "")) != "0x4baabf" \
 			or visual_classifier_toolkit_objects.size() != 10 \
 			or not visual_classifier_toolkit_objects.has("0x5a4130") \
 			or not visual_classifier_toolkit_objects.has("0x5a4128") \
