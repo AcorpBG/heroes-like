@@ -39,6 +39,76 @@ func _run() -> void:
 	if report.has("small_generation_state") or report.has("private_generation_context"):
 		_fail("Fresh-start boundary still exposes the old private phase ledger: %s" % JSON.stringify(report))
 		return
+	var active_state: Dictionary = report.get("active_generation_state", {})
+	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
+			or String(active_state.get("status", "")) != "runtime_zone_records_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"] \
+			or bool(active_state.get("runtime_generation_allowed", true)) \
+			or bool(active_state.get("materializes_runtime_players", true)) \
+			or bool(active_state.get("materializes_map_cells", true)) \
+			or bool(active_state.get("materializes_public_output", true)) \
+			or String(active_state.get("blocked_next", "")) != "coordinate_replay_and_zone_footprints_0x4a1f3b":
+		_fail("Fresh active generation state did not stop at runtime-zone records: %s" % JSON.stringify(active_state))
+		return
+	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
+	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
+			or String(player_phase.get("status", "")) != "active_internal_state" \
+			or String(player_phase.get("selected_color_bitmap_offset", "")) != "generator+0xed8" \
+			or String(player_phase.get("assignment_slots_offset", "")) != "generator+0xee0" \
+			or String(player_phase.get("mapped_slots_offset", "")) != "generator+0xee4" \
+			or int(player_phase.get("human_capable_source_owner_mask", -1)) != 15 \
+			or int(player_phase.get("player_capable_source_owner_mask", -1)) != 15 \
+			or Array(player_phase.get("raw_ee0_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or Array(player_phase.get("mapped_ee4_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or int(player_phase.get("assigned_player_count", -1)) != 3:
+		_fail("h3maped player-slot phase drifted: %s" % JSON.stringify(player_phase))
+		return
+	var assignments: Array = player_phase.get("assignment_records", [])
+	if assignments.size() != 3 \
+			or String(assignments[0].get("player_type", "")) != "human" \
+			or int(assignments[0].get("source_owner_index", -1)) != 0 \
+			or int(assignments[0].get("actual_player_color", -1)) != 0 \
+			or String(assignments[1].get("player_type", "")) != "computer" \
+			or int(assignments[1].get("source_owner_index", -1)) != 1 \
+			or int(assignments[1].get("actual_player_color", -1)) != 1 \
+			or String(assignments[2].get("player_type", "")) != "computer" \
+			or int(assignments[2].get("source_owner_index", -1)) != 2 \
+			or int(assignments[2].get("actual_player_color", -1)) != 2:
+		_fail("h3maped player-slot assignments drifted: %s" % JSON.stringify(assignments))
+		return
+	var runtime_zone_phase: Dictionary = active_state.get("runtime_zone_records", {})
+	if String(runtime_zone_phase.get("h3maped_anchor", "")) != "0x4a218c" \
+			or String(runtime_zone_phase.get("initializer_anchor", "")) != "0x49b452" \
+			or String(runtime_zone_phase.get("status", "")) != "active_internal_state" \
+			or int(runtime_zone_phase.get("runtime_zone_record_size_bytes", -1)) != 0x414 \
+			or int(runtime_zone_phase.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zone_phase.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zone_phase.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zone_phase.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zone_phase.get("minimum_player_castles", -1)) != 4 \
+			or int(runtime_zone_phase.get("minimum_source_base_size", -1)) != 11 \
+			or Array(runtime_zone_phase.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1] \
+			or bool(runtime_zone_phase.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zone_phase.get("materializes_terrain", true)) \
+			or bool(runtime_zone_phase.get("materializes_map_cells", true)) \
+			or bool(runtime_zone_phase.get("materializes_public_output", true)):
+		_fail("h3maped runtime-zone records drifted: %s" % JSON.stringify(runtime_zone_phase))
+		return
+	var runtime_records: Array = runtime_zone_phase.get("runtime_zone_records", [])
+	if runtime_records.size() != 6 \
+			or String(runtime_records[0].get("role", "")) != "human_start" \
+			or int(runtime_records[0].get("source_owner_index", -1)) != 0 \
+			or int(runtime_records[0].get("actual_owner_color", -1)) != 0 \
+			or int(runtime_records[0].get("min_player_castles", -1)) != 1 \
+			or String(runtime_records[2].get("role", "")) != "treasure" \
+			or int(runtime_records[2].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[2].get("terrain_policy", "")) != "all_land_h3" \
+			or int(runtime_records[2].get("minimum_rare_mines", -1)) != 5 \
+			or int(runtime_records[4].get("source_owner_index", -1)) != 3 \
+			or int(runtime_records[4].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[5].get("role", "")) != "treasure":
+		_fail("h3maped runtime-zone records changed: %s" % JSON.stringify(runtime_records))
+		return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -75,7 +145,9 @@ func _run() -> void:
 			or String(backlog[0].get("id", "")) != "template_selection" \
 			or String(backlog[0].get("status", "")) != "active_boundary" \
 			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
-			or String(backlog[1].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[1].get("status", "")) != "active_internal_state" \
+			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
+			or String(backlog[2].get("status", "")) != "active_internal_state" \
 			or String(backlog[7].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[8].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
