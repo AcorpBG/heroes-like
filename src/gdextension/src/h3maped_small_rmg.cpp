@@ -448,6 +448,62 @@ Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
 	return result;
 }
 
+Dictionary h3_cell_dictionary(int32_t x, int32_t y, int32_t level) {
+	Dictionary cell;
+	cell["x"] = x;
+	cell["y"] = y;
+	cell["level"] = level;
+	return cell;
+}
+
+String h3_slot_id_2(int32_t slot) {
+	if (slot >= 0 && slot < 10) {
+		return String("0") + String::num_int64(slot);
+	}
+	return String::num_int64(slot);
+}
+
+Array project_default_faction_pool() {
+	return Array::make("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake");
+}
+
+String project_town_for_faction(const String &faction_id) {
+	if (faction_id == "faction_mireclaw") {
+		return "town_duskfen";
+	}
+	if (faction_id == "faction_sunvault") {
+		return "town_prismhearth";
+	}
+	if (faction_id == "faction_thornwake") {
+		return "town_thornwake_graftroot_caravan";
+	}
+	if (faction_id == "faction_brasshollow") {
+		return "town_brasshollow_orevein_gantry";
+	}
+	if (faction_id == "faction_veilmourn") {
+		return "town_veilmourn_bellwake_harbor";
+	}
+	return "town_riverwatch";
+}
+
+String project_faction_for_player_slot(const Dictionary &normalized_config, int32_t player_slot) {
+	Array faction_ids = normalized_config.get("faction_ids", Array());
+	if (faction_ids.is_empty()) {
+		faction_ids = project_default_faction_pool();
+	}
+	if (faction_ids.is_empty()) {
+		return "faction_embercourt";
+	}
+	const int64_t index = std::max(0, player_slot - 1) % faction_ids.size();
+	return String(faction_ids[index]);
+}
+
+String project_player_type_for_slot(const Dictionary &normalized_config, int32_t player_slot) {
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	const int32_t human_count = std::max(1, int32_t(constraints.get("human_count", 1)));
+	return player_slot <= human_count ? "human" : "computer";
+}
+
 void append_span_fill_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
 	if (trace_preview.size() >= 8) {
 		return;
@@ -6168,7 +6224,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	return report;
 }
 
-Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, const Dictionary &coordinate_replay, const Dictionary &terrain_selection, const Dictionary &terrain_cell_writeout) {
+Dictionary town_castle_phase_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay, const Dictionary &terrain_selection, const Dictionary &terrain_cell_writeout) {
 	Dictionary report;
 	report["status"] = "0x4a8d2c_0x4a8db2_town_castle_phase_schedule_inspection_only";
 	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle pass, 0x4a8db2 weighted continuation, 0x4a93a2 direct object helper, 0x4a901a weighted/fallback helper, 0x49b3c1 town type chooser, and 0x49ba89 object record constructor";
@@ -6611,6 +6667,146 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 		direct_stamping_records.append(record);
 	}
 
+	Array project_town_records;
+	Array project_player_starts;
+	Array project_owner_slots;
+	int32_t synchronized_start_count = 0;
+	int32_t project_town_record_candidate_count = 0;
+	for (int64_t index = 0; index < direct_stamping_records.size(); ++index) {
+		if (Variant(direct_stamping_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary h3_record = direct_stamping_records[index];
+		if (String(h3_record.get("object_record_projection_status", "")) != "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption") {
+			continue;
+		}
+		const int32_t owner_color = int32_t(h3_record.get("owner_color", -1));
+		if (owner_color < 0) {
+			continue;
+		}
+		const int32_t player_slot = owner_color + 1;
+		const String slot_id = h3_slot_id_2(player_slot);
+		const String faction_id = project_faction_for_player_slot(normalized_config, player_slot);
+		const String town_id = project_town_for_faction(faction_id);
+		const String player_type = project_player_type_for_slot(normalized_config, player_slot);
+		const int32_t x = int32_t(h3_record.get("selected_x", -1));
+		const int32_t y = int32_t(h3_record.get("selected_y", -1));
+		const int32_t level = int32_t(h3_record.get("selected_level", 0));
+		const int32_t runtime_index = int32_t(h3_record.get("runtime_zone_index", -1));
+		Dictionary runtime;
+		for (int64_t runtime_record_index = 0; runtime_record_index < runtime_zone_records.size(); ++runtime_record_index) {
+			if (Variant(runtime_zone_records[runtime_record_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary candidate_runtime = runtime_zone_records[runtime_record_index];
+			if (int32_t(candidate_runtime.get("runtime_zone_index", -1)) == runtime_index) {
+				runtime = candidate_runtime;
+				break;
+			}
+		}
+
+		Array body_tiles;
+		for (const H3MaskPoint &point : town_body_points) {
+			body_tiles.append(h3_cell_dictionary(x + point.dx, y + point.dy, level));
+		}
+		Array approach_tiles;
+		for (const H3MaskPoint &point : town_action_points) {
+			approach_tiles.append(h3_cell_dictionary(x + point.dx, y + point.dy, level));
+		}
+		Dictionary footprint;
+		footprint["source"] = "objects.txt AVCcasx0.def type 98 subtype 0";
+		footprint["passability_mask"] = town_passability_mask;
+		footprint["action_mask"] = town_action_mask;
+		footprint["body_tiles"] = body_tiles;
+		footprint["approach_tiles"] = approach_tiles;
+		footprint["body_tile_count"] = body_tiles.size();
+		footprint["approach_tile_count"] = approach_tiles.size();
+
+		Dictionary town_record;
+		town_record["placement_id"] = "native_rmg_town_start_" + slot_id;
+		town_record["record_type"] = "player_start_town";
+		town_record["kind"] = "town";
+		town_record["town_id"] = town_id;
+		town_record["family_id"] = "town_primary";
+		town_record["object_family_id"] = "town_primary";
+		town_record["type_id"] = "town";
+		town_record["faction_id"] = faction_id;
+		town_record["owner"] = player_slot == 1 ? String("player") : String("enemy");
+		town_record["owner_slot"] = player_slot;
+		town_record["player_slot"] = player_slot;
+		town_record["player_type"] = player_type;
+		town_record["team_id"] = "team_" + slot_id;
+		town_record["zone_id"] = runtime.get("source_zone_key", h3_record.get("source_zone_key", ""));
+		town_record["zone_role"] = runtime.get("role", "");
+		town_record["runtime_zone_index"] = runtime_index;
+		town_record["x"] = x;
+		town_record["y"] = y;
+		town_record["level"] = level;
+		town_record["primary_tile"] = h3_cell_dictionary(x, y, level);
+		town_record["body_tiles"] = body_tiles;
+		town_record["approach_tiles"] = approach_tiles;
+		town_record["visit_tile"] = approach_tiles.is_empty() ? h3_cell_dictionary(x, y, level) : Dictionary(approach_tiles[0]);
+		town_record["footprint"] = footprint;
+		town_record["runtime_footprint"] = "h3maped_objects_txt_AVCcasx0_town_footprint";
+		town_record["is_start_town"] = true;
+		town_record["is_capital"] = true;
+		town_record["is_castle"] = bool(h3_record.get("has_castle", true));
+		town_record["settlement_category"] = "castle";
+		town_record["capital_role"] = "player_start";
+		town_record["start_anchor"] = true;
+		town_record["materialization_state"] = "h3maped_private_town_record_candidate_no_public_package_adoption";
+		town_record["source_algorithm"] = "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89";
+		town_record["h3maped_owner_color"] = owner_color;
+		town_record["h3maped_record_status"] = h3_record.get("status", "");
+		town_record["h3maped_record_projection_status"] = h3_record.get("object_record_projection_status", "");
+		town_record["h3maped_selected_from_random_tie"] = h3_record.get("selected_from_random_tie", false);
+		project_town_records.append(town_record);
+
+		Dictionary start_record;
+		start_record["start_id"] = "player_start_" + String::num_int64(player_slot);
+		start_record["player_slot"] = player_slot;
+		start_record["owner_slot"] = player_slot;
+		start_record["player_type"] = player_type;
+		start_record["team_id"] = "team_" + slot_id;
+		start_record["faction_id"] = faction_id;
+		start_record["town_id"] = town_id;
+		start_record["town_placement_id"] = town_record.get("placement_id", "");
+		start_record["zone_id"] = town_record.get("zone_id", "");
+		start_record["zone_role"] = town_record.get("zone_role", "");
+		start_record["x"] = x;
+		start_record["y"] = y;
+		start_record["level"] = level;
+		start_record["bounds_status"] = "h3maped_footprint_checked";
+		start_record["spacing_model"] = "h3maped_runtime_zone_anchor_and_0x49aa93_footprint_gate";
+		start_record["primary_town_anchor_status"] = "materialized_as_h3maped_town_record_candidate";
+		start_record["start_contract_source"] = "h3maped_0x4a93a2_town_record_candidate";
+		project_player_starts.append(start_record);
+		project_owner_slots.append(player_slot);
+		if (int32_t(start_record.get("x", -999)) == int32_t(town_record.get("x", -1))
+				&& int32_t(start_record.get("y", -999)) == int32_t(town_record.get("y", -1))
+				&& int32_t(start_record.get("level", -999)) == int32_t(town_record.get("level", -1))) {
+			synchronized_start_count += 1;
+		}
+		project_town_record_candidate_count += 1;
+	}
+
+	Dictionary project_town_adoption_candidate;
+	project_town_adoption_candidate["schema_id"] = "aurelion_native_rmg_town_placement_v1";
+	project_town_adoption_candidate["schema_version"] = 1;
+	project_town_adoption_candidate["status"] = "h3maped_project_town_adoption_candidate_inspection_only";
+	project_town_adoption_candidate["source"] = "private bridge from h3maped 0x49ba89 town records into project town/player-start schemas; public package adoption remains blocked until later executable phases are ported";
+	project_town_adoption_candidate["public_package_adoption"] = false;
+	project_town_adoption_candidate["runtime_grid_adoption"] = false;
+	project_town_adoption_candidate["town_record_count"] = project_town_records.size();
+	project_town_adoption_candidate["player_start_count"] = project_player_starts.size();
+	Dictionary normalized_constraints = normalized_config.get("player_constraints", Dictionary());
+	project_town_adoption_candidate["expected_player_count"] = int32_t(normalized_constraints.get("player_count", project_player_starts.size()));
+	project_town_adoption_candidate["synchronized_player_start_count"] = synchronized_start_count;
+	project_town_adoption_candidate["owner_slots"] = project_owner_slots;
+	project_town_adoption_candidate["town_records"] = project_town_records;
+	project_town_adoption_candidate["player_starts"] = project_player_starts;
+	project_town_adoption_candidate["blocked_next"] = "adopt these records into the runtime package only after roads, guards, blockers, mines, rewards, and final h3maped writeout are ported";
+
 	Dictionary direct_stamping;
 	direct_stamping["status"] = "0x4a93a2_0x49ba89_direct_town_object_stamping_projection_inspection_only";
 	direct_stamping["source"] = "h3maped 0x4a93a2 scans matching generated-cell zone/source bytes, chooses closest candidates to the runtime-zone anchor with 0x4e7276 tie selection, then constructs 0x540a9c records through 0x49ba89";
@@ -6639,10 +6835,13 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 	direct_stamping["runtime_package_adoption"] = false;
 	direct_stamping["stamps_generated_cell_state"] = false;
 	direct_stamping["records"] = direct_stamping_records;
-	direct_stamping["blocked_next"] = "port full 0x49aa93 object template footprint/collision gate and safe project town package adoption";
+	direct_stamping["blocked_next"] = "port roads, guards, blockers, mines, rewards, and final h3maped writeout before public package adoption";
 	report["direct_stamping_projection_status"] = direct_stamping.get("status", "");
 	report["direct_stamping_projection"] = direct_stamping;
-	report["next_materialization_status"] = "pending_full_0x49aa93_footprint_collision_gate_and_safe_town_package_adoption";
+	report["project_town_adoption_candidate_status"] = project_town_adoption_candidate.get("status", "");
+	report["project_town_adoption_candidate"] = project_town_adoption_candidate;
+	report["project_town_record_candidate_count"] = project_town_record_candidate_count;
+	report["next_materialization_status"] = "pending_roads_guards_blockers_mines_rewards_and_final_h3maped_writeout_before_public_package_adoption";
 	return report;
 }
 
@@ -6770,7 +6969,7 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["terrain_cell_writeout"] = terrain_cell_writeout;
 	report["terrain_cell_count"] = terrain_cell_writeout.get("cell_count", 0);
 	report["terrain_unassigned_water_cell_count"] = terrain_cell_writeout.get("unassigned_water_cell_count", 0);
-	Dictionary town_castle_phase = town_castle_phase_schedule_report(runtime_zone_records, coordinate_replay, terrain_selection, terrain_cell_writeout);
+	Dictionary town_castle_phase = town_castle_phase_schedule_report(normalized_config, runtime_zone_records, coordinate_replay, terrain_selection, terrain_cell_writeout);
 	report["town_castle_phase_schedule_status"] = town_castle_phase.get("status", "");
 	report["town_castle_phase_schedule"] = town_castle_phase;
 	report["next_materialization_status"] = "pending_TerrainPlacement_art_index_flip_and_project_grid_adoption";
