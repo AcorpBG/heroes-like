@@ -110,7 +110,7 @@ func _run() -> void:
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
+			or String(small_state.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("Small h3maped generation state did not stop at the object-vector prerequisite boundary: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
@@ -891,6 +891,8 @@ func _run() -> void:
 				or String(object_vector_phase.get("h3maped_mine_phase_address", "")) != "0x4a9d6a" \
 				or String(object_vector_phase.get("h3maped_mine_template_selector_address", "")) != "0x4a9911" \
 				or String(object_vector_phase.get("h3maped_mine_constraint_address", "")) != "0x4a9641" \
+				or String(object_vector_phase.get("h3maped_footprint_gate_address", "")) != "0x49a09c" \
+				or String(object_vector_phase.get("h3maped_cell_validity_address", "")) != "0x49a1d8" \
 				or String(object_vector_phase.get("h3maped_treasure_phase_address", "")) != "0x4aab7e" \
 				or bool(object_vector_phase.get("complete_coordinate_vector_claim", true)) \
 				or not bool(object_vector_phase.get("materializes_private_object_coordinate_records", false)) \
@@ -898,21 +900,24 @@ func _run() -> void:
 				or bool(object_vector_phase.get("public_package_output_allowed", true)) \
 				or int(object_vector_phase.get("materialized_town_coordinate_record_count", -1)) != 3 \
 				or int(object_vector_phase.get("mine_minimum_record_count", -1)) != 18 \
-				or int(object_vector_phase.get("materialized_private_mine_coordinate_record_count", -1)) != 16 \
-				or int(object_vector_phase.get("partial_coordinate_record_count", -1)) != 19 \
+				or int(object_vector_phase.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
+				or String(object_vector_phase.get("mine_placement_constraint_gate_model", "")) != "0x49a09c circular mask scan with one-extra wrap step and 0x49a1d8-style cell validity" \
+				or int(object_vector_phase.get("partial_coordinate_record_count", -1)) != 21 \
 				or int(object_vector_phase.get("mine_placement_scan_call_count", -1)) != 18 \
-				or int(object_vector_phase.get("mine_placement_selected_count", -1)) != 16 \
-				or int(object_vector_phase.get("mine_placement_rejected_special_distance_count", -1)) != 22 \
-				or int(object_vector_phase.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2198482029 \
+				or int(object_vector_phase.get("mine_placement_selected_count", -1)) != 18 \
+				or int(object_vector_phase.get("mine_placement_candidate_total", -1)) != 1870 \
+				or int(object_vector_phase.get("mine_placement_rejected_49aa93_count", -1)) != 1574 \
+				or int(object_vector_phase.get("mine_placement_rejected_special_distance_count", -1)) != 135 \
+				or int(object_vector_phase.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2346411599 \
 				or int(object_vector_phase.get("mine_density_weight_total", -1)) != 18 \
 				or int(object_vector_phase.get("eligible_reward_band_count", -1)) != 18 \
 				or int(object_vector_phase.get("reward_band_weight_total", -1)) != 96 \
-				or String(object_vector_phase.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
+				or String(object_vector_phase.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
-				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 16 \
+				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("mine_density_weight_total", -1)) != 18 \
 				or int(known_vector_gap.get("eligible_reward_band_count", -1)) != 18 \
 				or int(known_vector_gap.get("reward_band_weight_total", -1)) != 96 \
@@ -932,7 +937,7 @@ func _run() -> void:
 				or bool(roads_phase.get("materializes_package_tiles", true)) \
 				or bool(roads_phase.get("public_package_output_allowed", true)) \
 				or bool(roads_phase.get("complete_coordinate_vector_claim", true)) \
-				or String(roads_phase.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
+				or String(roads_phase.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("h3maped roads/rivers boundary should be blocked until complete object vector: %s" % JSON.stringify(roads_phase))
 		return
 
