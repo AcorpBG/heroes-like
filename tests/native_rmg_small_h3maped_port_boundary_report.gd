@@ -429,6 +429,84 @@ func _run() -> void:
 		_fail("Strict h3maped terrain cell writeout port drifted: %s" % JSON.stringify(terrain_cell))
 		return
 
+	var terrainplacement_visual: Dictionary = report.get("terrainplacement_visual_tables", {})
+	var visual_tables: Array = terrainplacement_visual.get("tables", [])
+	var toolkit_records: Array = terrainplacement_visual.get("toolkit_constructor_records", [])
+	var visual_samples: Array = terrainplacement_visual.get("visual_row_selection_samples", [])
+	var scratch_samples: Array = terrainplacement_visual.get("scratch_write_samples", [])
+	if String(terrainplacement_visual.get("phase_id", "")) != "terrainplacement_visual_tables" \
+			or String(terrainplacement_visual.get("status", "")) != "active_strict_executable_port" \
+			or String(terrainplacement_visual.get("h3maped_anchor", "")) != "0x4bcff5" \
+			or String(terrainplacement_visual.get("source_range", "")) != "0x4bcff5/0x4bb5ce/0x4bd099/0x4bb74b/0x4bc5f0/0x4bcfc3/0x4bce6d/0x543108/0x543380/0x5434f0/0x5435b0/0x542f88" \
+			or String(terrainplacement_visual.get("binary_byte_prefix_0x4bcff5", "")) != "b8 8a ba 52 00 e8 d1 90 02 00 83 ec 28 56 8b f1" \
+			or String(terrainplacement_visual.get("binary_byte_prefix_0x4bb74b", "")) != "55 8b ec 83 ec 28 53 56 8b f1 57 8b 7d 08 ff 76" \
+			or String(terrainplacement_visual.get("binary_byte_prefix_0x4bc5f0", "")) != "55 8b ec 83 ec 10 53 56 57 8b f1 33 db 39 5e 20" \
+			or String(terrainplacement_visual.get("binary_byte_prefix_0x4bcfc3", "")) != "56 8b 74 24 0c 56 ff 74 24 0c e8 9b fe ff ff 8b" \
+			or String(terrainplacement_visual.get("binary_byte_prefix_0x4bce6d", "")) != "55 8b ec 83 ec 0c 53 56 57 8b 75 08 8b f9 8b 47" \
+			or int(terrainplacement_visual.get("visual_table_count", -1)) != 5 \
+			or int(terrainplacement_visual.get("total_visual_row_count", -1)) != 230 \
+			or int(terrainplacement_visual.get("expected_total_row_count", -1)) != 230 \
+			or int(terrainplacement_visual.get("toolkit_constructor_record_count", -1)) != 10 \
+			or int(terrainplacement_visual.get("visual_row_selection_sample_count", -1)) != 4 \
+			or int(terrainplacement_visual.get("scratch_write_sample_count", -1)) != 4 \
+			or bool(terrainplacement_visual.get("terrain_art_hash_fallback_allowed", true)) \
+			or bool(terrainplacement_visual.get("materializes_visual_record", true)) \
+			or bool(terrainplacement_visual.get("materializes_visual_records", true)) \
+			or bool(terrainplacement_visual.get("materializes_full_terrain_art_grid", true)) \
+			or bool(terrainplacement_visual.get("materializes_package_tiles", true)) \
+			or bool(terrainplacement_visual.get("materializes_public_output", true)) \
+			or bool(terrainplacement_visual.get("public_package_output_allowed", true)) \
+			or String(terrainplacement_visual.get("blocked_next", "")) != "terrainplacement_live_feedback_0x4bb74b_0x4bc5f0":
+		_fail("Strict TerrainPlacement visual-table port drifted: %s" % JSON.stringify(terrainplacement_visual))
+		return
+	if visual_tables.size() != 5 \
+			or String(visual_tables[0].get("table_address", "")) != "0x543108" \
+			or int(visual_tables[0].get("expected_row_count", -1)) != 79 \
+			or int(visual_tables[0].get("decoded_row_count", -1)) != 79 \
+			or String(visual_tables[1].get("table_address", "")) != "0x543380" \
+			or int(visual_tables[1].get("decoded_row_count", -1)) != 46 \
+			or String(visual_tables[2].get("table_address", "")) != "0x5434f0" \
+			or int(visual_tables[2].get("decoded_row_count", -1)) != 24 \
+			or String(visual_tables[3].get("table_address", "")) != "0x5435b0" \
+			or int(visual_tables[3].get("decoded_row_count", -1)) != 33 \
+			or String(visual_tables[4].get("table_address", "")) != "0x542f88" \
+			or int(visual_tables[4].get("decoded_row_count", -1)) != 48:
+		_fail("TerrainPlacement visual table decode rows drifted: %s" % JSON.stringify(visual_tables))
+		return
+	if toolkit_records.size() != 10 \
+			or String(toolkit_records[0].get("object_address", "")) != "0x5a4130" \
+			or String(toolkit_records[0].get("constructor_address", "")) != "0x4ba868" \
+			or int(toolkit_records[0].get("terrain_id", -1)) != 0 \
+			or String(toolkit_records[0].get("table_address", "")) != "0x543380" \
+			or String(toolkit_records[9].get("object_address", "")) != "0x5a4128" \
+			or String(toolkit_records[9].get("constructor_address", "")) != "0x4baa66" \
+			or int(toolkit_records[9].get("terrain_id", -1)) != 9 \
+			or String(toolkit_records[9].get("table_address", "")) != "none":
+		_fail("TerrainPlacement toolkit constructor records drifted: %s" % JSON.stringify(toolkit_records))
+		return
+	if visual_samples.size() != 4 \
+			or int(visual_samples[0].get("selected_row", -1)) != 60 \
+			or int(visual_samples[1].get("selected_row", -1)) != 77 \
+			or int(visual_samples[2].get("selected_row", -1)) != 20 \
+			or int(visual_samples[3].get("selected_row", -1)) != 11 \
+			or not bool(visual_samples[0].get("selected_special_bucket", false)) \
+			or int(visual_samples[0].get("probability_rng_value", -1)) != 41 \
+			or int(visual_samples[0].get("art_rng_value", -1)) != 18467:
+		_fail("TerrainPlacement visual selector samples drifted: %s" % JSON.stringify(visual_samples))
+		return
+	if scratch_samples.size() != 4 \
+			or int(scratch_samples[0].get("scratch_word_u16", -1)) != 1925 \
+			or int(scratch_samples[1].get("scratch_word_u16", -1)) != 6565 \
+			or int(scratch_samples[2].get("scratch_word_u16", -1)) != 657 \
+			or int(scratch_samples[3].get("scratch_word_u16", -1)) != 371 \
+			or int(scratch_samples[0].get("generated_cell_word_0x24_u32", -1)) != 3842 \
+			or int(scratch_samples[1].get("generated_cell_word_0x24_u32", -1)) != 4930 \
+			or int(scratch_samples[2].get("generated_cell_word_0x24_u32", -1)) != 1288 \
+			or int(scratch_samples[3].get("generated_cell_word_0x24_u32", -1)) != 713 \
+			or int(scratch_samples[1].get("generated_cell_word_0x28_u32", -1)) != 32768:
+		_fail("TerrainPlacement scratch/writeback samples drifted: %s" % JSON.stringify(scratch_samples))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -436,19 +514,19 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "terrainplacement_visual_tables_0x4bcff5":
+			or String(strict_state.get("next_required_port", "")) != "terrainplacement_live_feedback_0x4bb74b_0x4bc5f0":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 5 \
-			or not pending_ports.has("terrainplacement:0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6") \
+			or not pending_ports.has("terrainplacement_live_feedback:0x4bb74b_0x4bc5f0_0x49b2b6") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 16 \
+	if backlog.size() != 17 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -459,10 +537,11 @@ func _run() -> void:
 			or String(backlog[7].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[10].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[10].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[11].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[12].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[13].get("status", "")) != "pending_runtime_port":
+			or String(backlog[13].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[14].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
