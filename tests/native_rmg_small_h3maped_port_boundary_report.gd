@@ -1153,6 +1153,34 @@ func _run() -> void:
 		_fail("h3maped candidate value-vfunc boundary drifted: %s" % JSON.stringify(value_vfuncs))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
+				or String(generic_selector.get("materialized_static_candidate_boundary_status", "")) != "static_candidate_records_materialized_dynamic_loops_pending":
+		_fail("h3maped materialized static candidate boundary status drifted: %s" % JSON.stringify(generic_selector))
+		return
+	var static_materialization: Dictionary = generic_selector.get("materialized_static_candidate_boundary", {})
+	var materialized_static_records: Array = static_materialization.get("records", [])
+	if String(static_materialization.get("status", "")) != "static_candidate_records_materialized_dynamic_loops_pending" \
+				or int(static_materialization.get("materialized_static_candidate_record_count", -1)) != 110 \
+				or materialized_static_records.size() != 110 \
+				or String(materialized_static_records[0].get("source_address", "")) != "0x49f97b" \
+				or int(materialized_static_records[0].get("candidate_vector_index", -1)) != 0 \
+				or not bool(materialized_static_records[0].get("materialized_candidate_record", false)) \
+				or String(materialized_static_records[2].get("source_address", "")) != "0x49fa63" \
+				or int(materialized_static_records[2].get("candidate_vector_index", -1)) != 2 \
+				or String(materialized_static_records[20].get("source_address", "")) != "0x4a00d8" \
+				or int(materialized_static_records[20].get("candidate_vector_index", -1)) != 20 \
+				or String(materialized_static_records[81].get("source_address", "")) != "0x4a1194" \
+				or int(materialized_static_records[81].get("candidate_vector_index", -1)) != 81 \
+				or String(materialized_static_records[109].get("source_address", "")) != "0x4a16d7" \
+				or int(materialized_static_records[109].get("candidate_vector_index", -1)) != 109 \
+				or bool(static_materialization.get("dynamic_monster_loop_materialized", true)) \
+				or bool(static_materialization.get("dynamic_artifact_pool_loop_materialized", true)) \
+				or bool(static_materialization.get("dynamic_type17_loop_materialized", true)) \
+				or bool(static_materialization.get("dynamic_terrain_vector_loop_materialized", true)) \
+				or bool(static_materialization.get("complete_candidate_vector", true)) \
+				or bool(static_materialization.get("create_vfuncs_materialized", true)):
+		_fail("h3maped materialized static candidate boundary drifted: %s" % JSON.stringify(static_materialization))
+		return
+	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("mine_density_weight_total", -1)) != 18 \
