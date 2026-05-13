@@ -33,8 +33,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v7":
-		_fail("Small h3maped inspection did not use the v7 clean restart boundary: %s" % JSON.stringify(report))
+	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v8":
+		_fail("Small h3maped inspection did not use the v8 clean restart boundary: %s" % JSON.stringify(report))
 		return
 	if String(report.get("status", "")) != "h3maped_small_clean_boundary_ready":
 		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
@@ -327,6 +327,41 @@ func _run() -> void:
 			or int(randomized_trace[7].get("x", -1)) != 5 \
 			or int(randomized_trace[7].get("y", -1)) != 4:
 		_fail("0x4a2413 randomized line writer sample drifted: %s" % JSON.stringify(randomized_sample))
+		return
+
+	var source_node_rectangle: Dictionary = report.get("source_node_rectangle_4cc788", {})
+	if String(source_node_rectangle.get("status", "")) != "0x4cc788_initial_source_node_bounds_ported_inspection_only" \
+			or String(source_node_rectangle.get("function_address", "")) != "0x4cc788" \
+			or String(source_node_rectangle.get("node_constructor_address", "")) != "0x4cc955" \
+			or String(source_node_rectangle.get("splitter_address", "")) != "0x4ccb64" \
+			or String(source_node_rectangle.get("locator_address", "")) != "0x4cca55" \
+			or String(source_node_rectangle.get("finalizer_address", "")) != "0x4ccdfc":
+		_fail("0x4cc788 source-node rectangle boundary drifted: %s" % JSON.stringify(source_node_rectangle))
+		return
+	if bool(source_node_rectangle.get("materializes_boundaries", true)) \
+			or bool(source_node_rectangle.get("materializes_span_fill", true)) \
+			or bool(source_node_rectangle.get("materializes_terrain", true)) \
+			or bool(source_node_rectangle.get("materializes_map_cells", true)) \
+			or bool(source_node_rectangle.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("0x4cc788 source-node rectangle must not feed generated output yet: %s" % JSON.stringify(source_node_rectangle))
+		return
+	var source_node_bounds: Dictionary = source_node_rectangle.get("initial_bounds", {})
+	var source_node_edges: Array = source_node_rectangle.get("initial_edges", [])
+	if int(source_node_bounds.get("min_x", 0)) != -200 \
+			or int(source_node_bounds.get("min_y", 0)) != -200 \
+			or int(source_node_bounds.get("max_x", 0)) != 400 \
+			or int(source_node_bounds.get("max_y", 0)) != 400 \
+			or String(source_node_bounds.get("constant_min_hex", "")) != "0xffffff38" \
+			or String(source_node_bounds.get("constant_max_hex", "")) != "0x190" \
+			or int(source_node_rectangle.get("initial_edge_count", -1)) != 4 \
+			or source_node_edges.size() != 4 \
+			or String(source_node_edges[0].get("id", "")) != "top" \
+			or int(source_node_edges[0].get("from_x", 0)) != -200 \
+			or int(source_node_edges[0].get("to_x", 0)) != 400 \
+			or String(source_node_edges[3].get("id", "")) != "left" \
+			or int(source_node_edges[3].get("from_y", 0)) != 400 \
+			or int(source_node_edges[3].get("to_y", 0)) != -200:
+		_fail("0x4cc788 source-node rectangle constants drifted: %s" % JSON.stringify(source_node_rectangle))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)
