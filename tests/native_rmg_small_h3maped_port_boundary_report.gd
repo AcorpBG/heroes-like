@@ -83,7 +83,9 @@ func _run() -> void:
 			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
 			or String(backlog[1].get("status", "")) != "active_runtime_state_ready" \
 			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
-			or String(backlog[2].get("status", "")) != "pending_strict_port" \
+			or String(backlog[2].get("status", "")) != "active_runtime_state_ready" \
+			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
+			or String(backlog[3].get("status", "")) != "pending_strict_port" \
 			or String(backlog[5].get("id", "")) != "town_object_placement" \
 			or String(backlog[5].get("status", "")) != "pending_strict_port" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
@@ -96,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "player_slot_assignment_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"] \
-			or int(small_state.get("completed_phase_count", -1)) != 2 \
+			or String(small_state.get("status", "")) != "runtime_zone_records_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"] \
+			or int(small_state.get("completed_phase_count", -1)) != 3 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "runtime_zone_records_0x4a218c":
-		_fail("Small h3maped generation state did not stop after player assignment: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "coordinate_replay_and_zone_footprints_0x4a1f3b":
+		_fail("Small h3maped generation state did not stop after runtime-zone setup: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -136,6 +138,43 @@ func _run() -> void:
 			or int(assignments[2].get("actual_player_color", -1)) != 2:
 		_fail("h3maped player-slot assignments drifted: %s" % JSON.stringify(assignments))
 		return
+	var runtime_zone_phase: Dictionary = small_state.get("runtime_zone_records", {})
+	if String(runtime_zone_phase.get("h3maped_anchor", "")) != "0x4a218c" \
+			or String(runtime_zone_phase.get("initializer_anchor", "")) != "0x49b452" \
+			or String(runtime_zone_phase.get("status", "")) != "active_runtime_state_ready" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_begin_offset", "")) != "generator+0x10e0" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_end_offset", "")) != "generator+0x10e4" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_capacity_offset", "")) != "generator+0x10e8" \
+			or int(runtime_zone_phase.get("runtime_zone_record_size_bytes", -1)) != 0x414 \
+			or int(runtime_zone_phase.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zone_phase.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zone_phase.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zone_phase.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zone_phase.get("minimum_player_castles", -1)) != 4 \
+			or int(runtime_zone_phase.get("minimum_source_base_size", -1)) != 11 \
+			or Array(runtime_zone_phase.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1] \
+			or bool(runtime_zone_phase.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zone_phase.get("materializes_terrain", true)) \
+			or bool(runtime_zone_phase.get("materializes_map_cells", true)) \
+			or bool(runtime_zone_phase.get("materializes_runtime_players", true)) \
+			or bool(runtime_zone_phase.get("materializes_public_output", true)):
+		_fail("h3maped runtime-zone phase drifted: %s" % JSON.stringify(runtime_zone_phase))
+		return
+	var runtime_records: Array = runtime_zone_phase.get("runtime_zone_records", [])
+	if runtime_records.size() != 6 \
+			or String(runtime_records[0].get("role", "")) != "human_start" \
+			or int(runtime_records[0].get("source_owner_index", -1)) != 0 \
+			or int(runtime_records[0].get("actual_owner_color", -1)) != 0 \
+			or int(runtime_records[0].get("min_player_castles", -1)) != 1 \
+			or String(runtime_records[2].get("role", "")) != "treasure" \
+			or int(runtime_records[2].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[2].get("terrain_policy", "")) != "all_land_h3" \
+			or int(runtime_records[2].get("minimum_rare_mines", -1)) != 5 \
+			or int(runtime_records[4].get("source_owner_index", -1)) != 3 \
+			or int(runtime_records[4].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[5].get("role", "")) != "treasure":
+		_fail("h3maped runtime-zone records drifted: %s" % JSON.stringify(runtime_records))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
@@ -144,8 +183,8 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"]:
-		_fail("Blocked generation result did not carry the small player-assignment state: %s" % JSON.stringify(generated))
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"]:
+		_fail("Blocked generation result did not carry the small runtime-zone state: %s" % JSON.stringify(generated))
 		return
 
 	var explicit_template_config := config.duplicate(true)

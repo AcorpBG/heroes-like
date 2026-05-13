@@ -1,9 +1,11 @@
 #include "h3maped_small_rmg.hpp"
 
 #include <godot_cpp/classes/file_access.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
 #include <algorithm>
 #include <cerrno>
@@ -18,6 +20,7 @@ constexpr const char *BINARY_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa4
 constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
 constexpr const char *CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
+constexpr const char *PROJECT_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *ARCHIVED_OVERGROWN_ACTIVE_PATH = "src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp";
 constexpr const char *ARCHIVED_PHASE_LEDGER_PATH = "src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp";
 constexpr const char *ARCHIVED_ACTIVE_BOUNDARY_PATH = "src/gdextension/src/archived_h3maped_small_rmg_active_boundary_20260513.cpp";
@@ -181,6 +184,58 @@ Array source_owner_indices_from_mask(uint8_t mask) {
 	return indices;
 }
 
+Dictionary load_json_dictionary(const String &path) {
+	Dictionary result;
+	result["ok"] = false;
+	result["path"] = path;
+	if (!FileAccess::file_exists(path)) {
+		result["status"] = "missing_json_file";
+		return result;
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		result["status"] = "unreadable_json_file";
+		return result;
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		result["status"] = "invalid_json_dictionary";
+		return result;
+	}
+	result["ok"] = true;
+	result["status"] = "loaded";
+	result["data"] = Dictionary(parser->get_data());
+	return result;
+}
+
+Dictionary find_project_template_record(const String &adapted_template_id, Dictionary &load_status) {
+	load_status = load_json_dictionary(PROJECT_TEMPLATE_CATALOG_PATH);
+	if (!bool(load_status.get("ok", false))) {
+		return Dictionary();
+	}
+	Dictionary catalog = load_status.get("data", Dictionary());
+	if (Variant(catalog.get("templates", Variant())).get_type() != Variant::ARRAY) {
+		load_status["ok"] = false;
+		load_status["status"] = "missing_templates_array";
+		return Dictionary();
+	}
+	Array templates = catalog.get("templates", Array());
+	for (int64_t index = 0; index < templates.size(); ++index) {
+		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = templates[index];
+		if (String(candidate.get("id", "")) == adapted_template_id) {
+			return candidate;
+		}
+	}
+	load_status["ok"] = false;
+	load_status["status"] = "adapted_template_not_found";
+	load_status["adapted_template_id"] = adapted_template_id;
+	return Dictionary();
+}
+
 Array accepted_templates(const Dictionary &normalized_config) {
 	Array records;
 	if (!supports_scope(normalized_config)) {
@@ -276,6 +331,108 @@ Dictionary player_slot_assignment_phase(const TemplateEvidence &selected_templat
 	return phase;
 }
 
+Dictionary runtime_zone_records_phase(const Dictionary &selection, const Dictionary &player_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "runtime_zone_records";
+	phase["status"] = "blocked_missing_project_template_catalog";
+	phase["h3maped_anchor"] = "0x4a218c";
+	phase["initializer_anchor"] = "0x49b452";
+	phase["runtime_zone_vector_begin_offset"] = "generator+0x10e0";
+	phase["runtime_zone_vector_end_offset"] = "generator+0x10e4";
+	phase["runtime_zone_vector_capacity_offset"] = "generator+0x10e8";
+	phase["runtime_zone_record_size_bytes"] = 0x414;
+	phase["materializes_runtime_zone_coordinates"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_runtime_players"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
+
+	Dictionary catalog_load;
+	const String adapted_template_id = String(selection.get("adapted_template_id", ""));
+	Dictionary template_record = find_project_template_record(adapted_template_id, catalog_load);
+	phase["project_catalog_load"] = catalog_load;
+	phase["project_template_id"] = adapted_template_id;
+	if (template_record.is_empty() || Variant(template_record.get("zones", Variant())).get_type() != Variant::ARRAY) {
+		return phase;
+	}
+
+	Array mapped_slots = player_phase.get("mapped_ee4_slots", Array());
+	Array zones = template_record.get("zones", Array());
+	Array runtime_records;
+	Array actual_owner_colors;
+	int32_t assigned_start_zone_count = 0;
+	int32_t unassigned_start_zone_count = 0;
+	int32_t treasure_zone_count = 0;
+	int32_t minimum_player_castles = 0;
+	int32_t minimum_source_base_size = 0x7fffffff;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = zones[index];
+		Dictionary ownership = zone.get("ownership", Dictionary());
+		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
+		Dictionary player_towns = zone.get("player_towns", Dictionary());
+		Dictionary mine_requirements = zone.get("mine_requirements", Dictionary());
+		Dictionary minimum_by_category = mine_requirements.get("minimum_by_category", Dictionary());
+		const int32_t source_owner = int32_t(ownership.get("source_owner_index", -2));
+		int32_t actual_owner = -1;
+		if (source_owner >= 0 && source_owner < mapped_slots.size()) {
+			actual_owner = int32_t(mapped_slots[source_owner]);
+		}
+		const String role = String(zone.get("role", zone.get("type", "")));
+		if (role == "human_start") {
+			if (actual_owner >= 0) {
+				assigned_start_zone_count += 1;
+			} else {
+				unassigned_start_zone_count += 1;
+			}
+		} else if (role == "treasure") {
+			treasure_zone_count += 1;
+		}
+		const int32_t min_castles = int32_t(player_towns.get("min_castles", 0));
+		minimum_player_castles += min_castles;
+		const int32_t base_size = int32_t(zone.get("base_size", 0));
+		if (base_size > 0) {
+			minimum_source_base_size = std::min(minimum_source_base_size, base_size);
+		}
+
+		Dictionary record;
+		record["runtime_index"] = runtime_records.size();
+		record["source_zone_id"] = zone.get("source_zone_id", zone.get("id", int32_t(index + 1)));
+		record["role"] = role;
+		record["source_bucket"] = grammar_source.get("source_bucket", -1);
+		record["source_owner_index"] = source_owner;
+		record["actual_owner_color"] = actual_owner;
+		record["source_base_size"] = base_size;
+		record["min_player_castles"] = min_castles;
+		record["terrain_match_to_town"] = bool(Dictionary(zone.get("terrain", Dictionary())).get("match_to_faction", false));
+		record["terrain_policy"] = Array(Dictionary(zone.get("terrain", Dictionary())).get("allowed", Array())).is_empty() ? String("match_to_player_town") : String("all_land_h3");
+		record["monster_strength"] = Dictionary(zone.get("monster_policy", Dictionary())).get("strength", "");
+		record["minimum_ore_mines"] = minimum_by_category.get("ore", 0);
+		record["minimum_wood_mines"] = minimum_by_category.get("timber", 0);
+		record["minimum_rare_mines"] = int32_t(minimum_by_category.get("gold", 0)) + int32_t(minimum_by_category.get("quicksilver", 0)) + int32_t(minimum_by_category.get("ember_salt", 0)) + int32_t(minimum_by_category.get("lens_crystal", 0)) + int32_t(minimum_by_category.get("cut_gems", 0));
+		runtime_records.append(record);
+		actual_owner_colors.append(actual_owner);
+	}
+	if (minimum_source_base_size == 0x7fffffff) {
+		minimum_source_base_size = 0;
+	}
+
+	phase["status"] = "active_runtime_state_ready";
+	phase["source"] = "res://content/random_map_template_catalog.json imported from recovered h3maped template catalog";
+	phase["runtime_zone_count"] = runtime_records.size();
+	phase["runtime_zone_records"] = runtime_records;
+	phase["actual_owner_colors_by_runtime_zone"] = actual_owner_colors;
+	phase["assigned_start_zone_count"] = assigned_start_zone_count;
+	phase["unassigned_start_zone_count"] = unassigned_start_zone_count;
+	phase["treasure_zone_count"] = treasure_zone_count;
+	phase["minimum_player_castles"] = minimum_player_castles;
+	phase["minimum_source_base_size"] = minimum_source_base_size;
+	return phase;
+}
+
 Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_generation_state_v1";
@@ -308,11 +465,16 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	completed_phases.append("template_selection");
 	Dictionary player_phase = player_slot_assignment_phase(*selected_template, normalized_config);
 	completed_phases.append("player_slot_assignment");
-	state["status"] = "player_slot_assignment_active_runtime_state_ready";
+	Dictionary runtime_zone_phase = runtime_zone_records_phase(selection, player_phase);
+	if (String(runtime_zone_phase.get("status", "")) == "active_runtime_state_ready") {
+		completed_phases.append("runtime_zone_records");
+	}
+	state["status"] = completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready");
 	state["completed_phase_ids"] = completed_phases;
 	state["completed_phase_count"] = completed_phases.size();
 	state["player_slot_assignment"] = player_phase;
-	state["blocked_next"] = "runtime_zone_records_0x4a218c";
+	state["runtime_zone_records"] = runtime_zone_phase;
+	state["blocked_next"] = completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c");
 	return state;
 }
 
@@ -346,9 +508,9 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : (index == 1 ? String("active_runtime_state_ready") : String("pending_strict_port"));
+		phase["status"] = index == 0 ? String("active_boundary_only") : (index <= 2 ? String("active_runtime_state_ready") : String("pending_strict_port"));
 		phase["materializes_public_output"] = false;
-		phase["requires_exe_derived_implementation_before_runtime"] = index > 1;
+		phase["requires_exe_derived_implementation_before_runtime"] = index > 2;
 		phases.append(phase);
 	}
 	return phases;
