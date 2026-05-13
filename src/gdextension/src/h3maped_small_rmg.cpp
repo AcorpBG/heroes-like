@@ -93,6 +93,254 @@ struct RuntimeLinkSeed {
 	int32_t runtime_b = -1;
 };
 
+struct PolygonPoint {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct H3MapedPolygonModelNode {
+	String id;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t payload = 0;
+	bool has_payload = false;
+	int32_t pair = -1;
+	int32_t next = -1;
+	int32_t previous = -1;
+	bool active = true;
+	bool finalized = false;
+	int32_t finalized_x = 0;
+	int32_t finalized_y = 0;
+};
+
+struct H3MapedPolygonModel {
+	std::vector<H3MapedPolygonModelNode> nodes;
+	int32_t root = -1;
+
+	int32_t add_pair(const String &prefix, int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload, bool from_has_payload = false, bool to_has_payload = false) {
+		const int32_t primary_index = int32_t(nodes.size());
+		const int32_t paired_index = primary_index + 1;
+		H3MapedPolygonModelNode primary;
+		primary.id = prefix + String("_primary");
+		primary.x = from_x;
+		primary.y = from_y;
+		primary.payload = from_payload;
+		primary.has_payload = from_has_payload;
+		primary.pair = paired_index;
+		primary.next = primary_index;
+		primary.previous = primary_index;
+		H3MapedPolygonModelNode paired;
+		paired.id = prefix + String("_paired");
+		paired.x = to_x;
+		paired.y = to_y;
+		paired.payload = to_payload;
+		paired.has_payload = to_has_payload;
+		paired.pair = primary_index;
+		paired.next = paired_index;
+		paired.previous = paired_index;
+		nodes.push_back(primary);
+		nodes.push_back(paired);
+		return primary_index;
+	}
+
+	void relink_4cc643(int32_t first, int32_t second) {
+		const int32_t first_next = nodes[size_t(first)].next;
+		const int32_t second_next = nodes[size_t(second)].next;
+		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
+		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	void edge_swap_4cc670(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		relink_4cc643(node_index, nodes[size_t(node_index)].previous);
+		relink_4cc643(paired, paired_previous);
+	}
+
+	void crossing_collapse_4cc68e(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t previous = nodes[size_t(node_index)].previous;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		edge_swap_4cc670(node_index);
+		const int32_t previous_pair = nodes[size_t(previous)].pair;
+		nodes[size_t(node_index)].payload = nodes[size_t(previous_pair)].payload;
+		nodes[size_t(node_index)].has_payload = nodes[size_t(previous_pair)].has_payload;
+		nodes[size_t(node_index)].x = nodes[size_t(previous_pair)].x;
+		nodes[size_t(node_index)].y = nodes[size_t(previous_pair)].y;
+		const int32_t paired_previous_pair = nodes[size_t(paired_previous)].pair;
+		nodes[size_t(paired)].payload = nodes[size_t(paired_previous_pair)].payload;
+		nodes[size_t(paired)].has_payload = nodes[size_t(paired_previous_pair)].has_payload;
+		nodes[size_t(paired)].x = nodes[size_t(paired_previous_pair)].x;
+		nodes[size_t(paired)].y = nodes[size_t(paired_previous_pair)].y;
+		relink_4cc643(node_index, nodes[size_t(previous_pair)].previous);
+		relink_4cc643(paired, nodes[size_t(paired_previous_pair)].previous);
+	}
+
+	void erase_edge_4cc9cc(int32_t node_index) {
+		edge_swap_4cc670(node_index);
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		nodes[size_t(node_index)].active = false;
+		nodes[size_t(paired)].active = false;
+	}
+
+	int32_t active_node_pair_count() const {
+		int32_t count = 0;
+		for (int32_t index = 0; index < int32_t(nodes.size()); index += 2) {
+			if (nodes[size_t(index)].active || nodes[size_t(index + 1)].active) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+
+	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const String &prefix) {
+		const H3MapedPolygonModelNode &old_pair = nodes[size_t(nodes[size_t(old_node)].pair)];
+		const H3MapedPolygonModelNode &target = nodes[size_t(target_node)];
+		const int32_t bridge_primary = add_pair(prefix, old_pair.x, old_pair.y, old_pair.payload, target.x, target.y, target.payload, old_pair.has_payload, target.has_payload);
+		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
+		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
+		return bridge_primary;
+	}
+
+	int64_t side_4cca55(int32_t from_node, int32_t to_node, int32_t x, int32_t y) const {
+		const H3MapedPolygonModelNode &from = nodes[size_t(from_node)];
+		const H3MapedPolygonModelNode &to = nodes[size_t(to_node)];
+		return int64_t(to.y - from.y) * int64_t(x - from.x) - int64_t(to.x - from.x) * int64_t(y - from.y);
+	}
+
+	int32_t locate_4cca55(int32_t x, int32_t y) const {
+		int32_t current = root;
+		for (int32_t guard = 0; guard < 512; ++guard) {
+			const H3MapedPolygonModelNode &current_node = nodes[size_t(current)];
+			if (current_node.x == x && current_node.y == y) {
+				return current;
+			}
+			const int32_t paired = current_node.pair;
+			const H3MapedPolygonModelNode &paired_node = nodes[size_t(paired)];
+			if (paired_node.x == x && paired_node.y == y) {
+				return paired;
+			}
+			if (side_4cca55(current, paired, x, y) > 0) {
+				current = paired;
+				continue;
+			}
+			const int32_t next = current_node.next;
+			if (side_4cca55(next, nodes[size_t(next)].pair, x, y) <= 0) {
+				current = next;
+				continue;
+			}
+			const int32_t nested = nodes[size_t(nodes[size_t(paired)].previous)].pair;
+			if (side_4cca55(nested, nodes[size_t(nested)].pair, x, y) > 0) {
+				return current;
+			}
+			current = nested;
+		}
+		return -1;
+	}
+
+	bool edge_side_test_4cc6f2(int32_t node_index, int32_t x, int32_t y) const {
+		const H3MapedPolygonModelNode &node = nodes[size_t(node_index)];
+		const H3MapedPolygonModelNode &paired = nodes[size_t(node.pair)];
+		const int64_t edge_dx = int64_t(node.x) - int64_t(paired.x);
+		const int64_t edge_dy = int64_t(node.y) - int64_t(paired.y);
+		const int64_t edge_distance_sq = edge_dx * edge_dx + edge_dy * edge_dy;
+		const int64_t node_dx = int64_t(x) - int64_t(node.x);
+		const int64_t node_dy = int64_t(y) - int64_t(node.y);
+		if (node_dx * node_dx + node_dy * node_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t paired_dx = int64_t(x) - int64_t(paired.x);
+		const int64_t paired_dy = int64_t(y) - int64_t(paired.y);
+		if (paired_dx * paired_dx + paired_dy * paired_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t expression = int64_t(node.y) * int64_t(paired.x - node.x)
+				- int64_t(node.x) * int64_t(paired.y - node.y)
+				- int64_t(y) * int64_t(paired.x - node.x)
+				+ int64_t(x) * int64_t(paired.y - node.y);
+		return expression == 0;
+	}
+
+	bool crossing_test_4ccc7a(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, int32_t x4, int32_t y4) const {
+		const __int128 v1 = __int128(y4 - y2) * __int128(x3 - x2) - __int128(x4 - x2) * __int128(y3 - y2);
+		const __int128 v2 = __int128(x2 - x1) * __int128(y3 - y1) - __int128(y2 - y1) * __int128(x3 - x1);
+		const __int128 v3 = __int128(y4 - y1) * __int128(x3 - x1) - __int128(x4 - x1) * __int128(y3 - y1);
+		const __int128 v4 = __int128(y4 - y1) * __int128(x2 - x1) - __int128(x4 - x1) * __int128(y2 - y1);
+		const __int128 p1 = __int128(x1) * __int128(x1) + __int128(y1) * __int128(y1);
+		const __int128 p2 = __int128(x2) * __int128(x2) + __int128(y2) * __int128(y2);
+		const __int128 p3 = __int128(x3) * __int128(x3) + __int128(y3) * __int128(y3);
+		const __int128 p4 = __int128(x4) * __int128(x4) + __int128(y4) * __int128(y4);
+		return (p1 * v1 - p4 * v2 - p2 * v3 + p3 * v4) > 0;
+	}
+
+	bool crossing_orientation_gate_4ccb64(int32_t node_index) const {
+		const H3MapedPolygonModelNode &node = nodes[size_t(node_index)];
+		const H3MapedPolygonModelNode &paired = nodes[size_t(node.pair)];
+		const H3MapedPolygonModelNode &previous_pair = nodes[size_t(nodes[size_t(node.previous)].pair)];
+		const int64_t value = int64_t(paired.y - node.y) * int64_t(previous_pair.x - node.x)
+				- int64_t(paired.x - node.x) * int64_t(previous_pair.y - node.y);
+		return value > 0;
+	}
+
+	static int64_t idiv_truncate(int64_t numerator, int64_t denominator) {
+		if (denominator == 0) {
+			return 0;
+		}
+		return numerator / denominator;
+	}
+
+	static int32_t half_truncate_4ccd69(int64_t value) {
+		return int32_t(value / 2);
+	}
+
+	static PolygonPoint intersection_4ccd69(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3) {
+		const int64_t term = int64_t(y3 - y2) * int64_t(y1 - y3) + int64_t(x1 - x3) * int64_t(x3 - x2);
+		const int64_t denominator = int64_t(x1 - x3) * int64_t(y1 - y2) + int64_t(y1 - y3) * int64_t(x2 - x1);
+		const int64_t x_adjust = idiv_truncate(int64_t(y1 - y2) * term, denominator);
+		const int64_t y_adjust = idiv_truncate(int64_t(x2 - x1) * term, denominator);
+		return PolygonPoint{
+			x1 + half_truncate_4ccd69(int64_t(x2 - x1) + x_adjust),
+			y1 + half_truncate_4ccd69(int64_t(y2 - y1) + y_adjust),
+		};
+	}
+
+	void write_finalized_4ccdfc(int32_t node_index, const PolygonPoint &point) {
+		nodes[size_t(node_index)].finalized_x = point.x;
+		nodes[size_t(node_index)].finalized_y = point.y;
+		nodes[size_t(node_index)].finalized = true;
+	}
+
+	int32_t finalize_4ccdfc(Array *finalized_steps = nullptr) {
+		int32_t finalized_triplets = 0;
+		for (int32_t index = 0; index < int32_t(nodes.size()); ++index) {
+			H3MapedPolygonModelNode &node = nodes[size_t(index)];
+			if (!node.active || !node.has_payload || node.finalized) {
+				continue;
+			}
+			const int32_t next_pair = nodes[size_t(node.next)].pair;
+			const H3MapedPolygonModelNode &paired = nodes[size_t(node.pair)];
+			const H3MapedPolygonModelNode &next_pair_node = nodes[size_t(next_pair)];
+			const PolygonPoint point = intersection_4ccd69(node.x, node.y, paired.x, paired.y, next_pair_node.x, next_pair_node.y);
+			write_finalized_4ccdfc(index, point);
+			write_finalized_4ccdfc(next_pair, point);
+			const int32_t nested = nodes[size_t(next_pair)].next;
+			const int32_t nested_pair = nodes[size_t(nested)].pair;
+			write_finalized_4ccdfc(nested_pair, point);
+			finalized_triplets += 1;
+			if (finalized_steps != nullptr) {
+				Dictionary step;
+				step["source_node_id"] = node.id;
+				step["fan_node_id"] = nodes[size_t(next_pair)].id;
+				step["nested_fan_node_id"] = nodes[size_t(nested_pair)].id;
+				step["x"] = point.x;
+				step["y"] = point.y;
+				finalized_steps->append(step);
+			}
+		}
+		return finalized_triplets;
+	}
+};
+
 struct H3MapedRng {
 	uint32_t state = 0;
 
@@ -1006,6 +1254,284 @@ Dictionary source_node_rectangle_context(const Dictionary &zone_footprint_contex
 	return context;
 }
 
+Dictionary polygon_split_model_context(const Dictionary &normalized_config, const Dictionary &coordinate_context, const Dictionary &source_node_rectangle) {
+	Dictionary context;
+	context["phase_id"] = "polygon_split_model";
+	context["h3maped_anchor"] = "0x4ccb64";
+	context["locator_anchor"] = "0x4cca55";
+	context["splitter_anchor"] = "0x4ccb64";
+	context["node_constructor_anchor"] = "0x4cc955";
+	context["node_relink_anchor"] = "0x4cc643";
+	context["edge_side_test_anchor"] = "0x4cc6f2";
+	context["edge_erase_anchor"] = "0x4cc9cc";
+	context["bridge_anchor"] = "0x4ccb1f";
+	context["crossing_test_anchor"] = "0x4ccc7a";
+	context["crossing_collapse_anchor"] = "0x4cc68e";
+	context["intersection_writer_anchor"] = "0x4ccd69";
+	context["finalizer_anchor"] = "0x4ccdfc";
+	context["status"] = "blocked_until_source_node_rectangle";
+	context["materializes_source_node_graph"] = true;
+	context["materializes_boundaries"] = false;
+	context["materializes_span_fill"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_map_cells"] = false;
+	context["materializes_public_output"] = false;
+	context["feeds_real_0x4a2777_boundary"] = false;
+	context["blocked_next"] = "source_node_cycles_to_0x4a2777_boundary_traversal";
+	if (String(source_node_rectangle.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+	if (int32_t(normalized_config.get("level_count", 1)) != 1) {
+		context["status"] = "unsupported_until_two_level_polygon_split_model_ported";
+		return context;
+	}
+
+	std::vector<RuntimeZoneSeed> zones;
+	Array scaled = coordinate_context.get("scaled_zone_coordinates", Array());
+	for (int64_t index = 0; index < scaled.size(); ++index) {
+		Dictionary item = scaled[index];
+		RuntimeZoneSeed zone;
+		zone.runtime_index = int32_t(item.get("runtime_zone_index", index));
+		zone.x = int32_t(item.get("x_after_bbox_rescale", 0));
+		zone.y = int32_t(item.get("y_after_bbox_rescale", 0));
+		zone.level = int32_t(item.get("level", 0));
+		zones.push_back(zone);
+	}
+
+	H3MapedPolygonModel model;
+	const int32_t p0 = model.add_pair("initial_pair_0", -200, -200, 0, 400, -200, 0);
+	const int32_t p1 = model.add_pair("initial_pair_1", 400, -200, 0, 400, 400, 0);
+	const int32_t p2 = model.add_pair("initial_pair_2", 400, 400, 0, -200, 400, 0);
+	const int32_t p3 = model.add_pair("initial_pair_3", -200, 400, 0, -200, -200, 0);
+	model.relink_4cc643(model.nodes[size_t(p0)].pair, p1);
+	model.relink_4cc643(model.nodes[size_t(p1)].pair, p2);
+	model.relink_4cc643(model.nodes[size_t(p2)].pair, p3);
+	model.relink_4cc643(model.nodes[size_t(p3)].pair, p0);
+	model.bridge_4ccb1f(p3, p2, "initial_bridge_pair_0");
+	model.root = p0;
+
+	Array split_steps;
+	int32_t executed_split_count = 0;
+	int32_t skipped_duplicate_count = 0;
+	int32_t edge_removal_count = 0;
+	int32_t inserted_node_pair_count = 0;
+	int32_t inserted_bridge_pair_count = 0;
+	int32_t crossing_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
+	bool blocked = false;
+	for (const RuntimeZoneSeed &zone : zones) {
+		if (zone.level != 0) {
+			continue;
+		}
+		Dictionary step;
+		step["runtime_zone_index"] = zone.runtime_index;
+		step["x"] = zone.x;
+		step["y"] = zone.y;
+		int32_t located = model.locate_4cca55(zone.x, zone.y);
+		if (located < 0) {
+			step["status"] = "0x4cca55_locator_guard_failed";
+			blocked = true;
+			split_steps.append(step);
+			break;
+		}
+		step["located_node_id"] = model.nodes[size_t(located)].id;
+		step["located_pair_id"] = model.nodes[size_t(model.nodes[size_t(located)].pair)].id;
+		if ((model.nodes[size_t(located)].x == zone.x && model.nodes[size_t(located)].y == zone.y)
+				|| (model.nodes[size_t(model.nodes[size_t(located)].pair)].x == zone.x && model.nodes[size_t(model.nodes[size_t(located)].pair)].y == zone.y)) {
+			step["status"] = "0x4ccb64_duplicate_point_skipped";
+			skipped_duplicate_count += 1;
+			split_steps.append(step);
+			continue;
+		}
+		if (model.edge_side_test_4cc6f2(located, zone.x, zone.y)) {
+			step["edge_removal_branch"] = true;
+			located = model.nodes[size_t(located)].previous;
+			const int32_t erased = model.nodes[size_t(located)].next;
+			step["edge_removal_status"] = "0x4cc9cc_vector_erase_branch_ported";
+			step["edge_removed_node_id"] = model.nodes[size_t(erased)].id;
+			model.erase_edge_4cc9cc(erased);
+			edge_removal_count += 1;
+		} else {
+			step["edge_removal_branch"] = false;
+		}
+		const H3MapedPolygonModelNode &located_node = model.nodes[size_t(located)];
+		const int32_t split_primary = model.add_pair(String("split_") + String::num_int64(zone.runtime_index), located_node.x, located_node.y, located_node.payload, zone.x, zone.y, zone.runtime_index, located_node.has_payload, true);
+		model.relink_4cc643(split_primary, located);
+		model.root = split_primary;
+		inserted_node_pair_count += 1;
+		executed_split_count += 1;
+		step["inserted_primary_node_id"] = model.nodes[size_t(split_primary)].id;
+		step["inserted_paired_node_id"] = model.nodes[size_t(model.nodes[size_t(split_primary)].pair)].id;
+		int32_t bridge_pair_count = 0;
+		int32_t current_bridge = split_primary;
+		int32_t bridge_source = located;
+		for (int32_t guard = 0; guard < 64; ++guard) {
+			current_bridge = model.bridge_4ccb1f(bridge_source, model.nodes[size_t(current_bridge)].pair, String("split_") + String::num_int64(zone.runtime_index) + "_bridge_" + String::num_int64(bridge_pair_count));
+			bridge_pair_count += 1;
+			inserted_bridge_pair_count += 1;
+			bridge_source = model.nodes[size_t(current_bridge)].previous;
+			const int32_t bridge_source_pair = model.nodes[size_t(bridge_source)].pair;
+			if (model.nodes[size_t(bridge_source_pair)].previous == model.root) {
+				break;
+			}
+			if (guard == 63) {
+				step["status"] = "0x4ccb64_bridge_loop_guard_failed";
+				blocked = true;
+			}
+		}
+		step["bridge_pair_count"] = bridge_pair_count;
+		step["allocated_node_pair_count_after_pre_crossing"] = int32_t(model.nodes.size() / 2);
+		step["active_node_pair_count_after_pre_crossing"] = model.active_node_pair_count();
+		int32_t cleanup_scan_count = 0;
+		int32_t cleanup_test_count = 0;
+		int32_t cleanup_collapse_count = 0;
+		int32_t cleanup_cursor = bridge_source;
+		for (int32_t guard = 0; guard < 256; ++guard) {
+			cleanup_scan_count += 1;
+			crossing_scan_count += 1;
+			if (model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
+				const H3MapedPolygonModelNode &cursor = model.nodes[size_t(cleanup_cursor)];
+				const H3MapedPolygonModelNode &previous_pair = model.nodes[size_t(model.nodes[size_t(cursor.previous)].pair)];
+				const H3MapedPolygonModelNode &paired = model.nodes[size_t(cursor.pair)];
+				cleanup_test_count += 1;
+				crossing_test_count += 1;
+				if (model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, zone.x, zone.y)) {
+					model.crossing_collapse_4cc68e(cleanup_cursor);
+					cleanup_collapse_count += 1;
+					crossing_collapse_count += 1;
+					cleanup_cursor = model.nodes[size_t(cleanup_cursor)].previous;
+					continue;
+				}
+			}
+			cleanup_cursor = model.nodes[size_t(cleanup_cursor)].next;
+			if (cleanup_cursor == model.root) {
+				break;
+			}
+			cleanup_cursor = model.nodes[size_t(model.nodes[size_t(cleanup_cursor)].next)].pair;
+			if (guard == 255) {
+				step["status"] = "0x4ccb64_crossing_cleanup_guard_failed";
+				blocked = true;
+			}
+		}
+		step["crossing_cleanup_scan_count"] = cleanup_scan_count;
+		step["crossing_test_count"] = cleanup_test_count;
+		step["crossing_collapse_count"] = cleanup_collapse_count;
+		step["allocated_node_pair_count_after_crossing_cleanup"] = int32_t(model.nodes.size() / 2);
+		step["active_node_pair_count_after_crossing_cleanup"] = model.active_node_pair_count();
+		step["status"] = blocked ? String("0x4ccb64_bridge_loop_guard_failed") : String("0x4ccb64_pre_crossing_inserted");
+		split_steps.append(step);
+		if (blocked) {
+			break;
+		}
+	}
+
+	Array finalized_steps;
+	const int32_t finalized_triplet_count = blocked ? 0 : model.finalize_4ccdfc(&finalized_steps);
+	int32_t finalized_node_count = 0;
+	int32_t active_payload_node_count = 0;
+	for (const H3MapedPolygonModelNode &node : model.nodes) {
+		if (!node.active) {
+			continue;
+		}
+		if (node.has_payload) {
+			active_payload_node_count += 1;
+		}
+		if (node.finalized) {
+			finalized_node_count += 1;
+		}
+	}
+
+	Array source_node_walks;
+	int32_t source_node_walk_count = 0;
+	int32_t source_node_walk_guard_exhausted_count = 0;
+	for (const RuntimeZoneSeed &zone : zones) {
+		if (zone.level != 0) {
+			continue;
+		}
+		Dictionary walk;
+		walk["runtime_zone_index"] = zone.runtime_index;
+		walk["locator_anchor"] = "0x4cca55";
+		walk["consumer_anchor"] = "0x4a2777";
+		walk["start_x"] = zone.x;
+		walk["start_y"] = zone.y;
+		const int32_t located = blocked ? -1 : model.locate_4cca55(zone.x, zone.y);
+		walk["located_node_id"] = located >= 0 ? model.nodes[size_t(located)].id : String();
+		Array cycle_nodes;
+		bool guard_exhausted = false;
+		int32_t finalized_coordinate_count = 0;
+		if (located >= 0) {
+			int32_t current = located;
+			for (int32_t guard = 0; guard < 96; ++guard) {
+				const H3MapedPolygonModelNode &node = model.nodes[size_t(current)];
+				Dictionary node_report;
+				node_report["node_id"] = node.id;
+				node_report["+0x00_x"] = node.x;
+				node_report["+0x04_y"] = node.y;
+				node_report["+0x08_payload"] = node.payload;
+				node_report["has_payload"] = node.has_payload;
+				node_report["+0x10_next"] = node.next >= 0 ? model.nodes[size_t(node.next)].id : String();
+				node_report["+0x14_previous"] = node.previous >= 0 ? model.nodes[size_t(node.previous)].id : String();
+				node_report["+0x1c_finalized_x"] = node.finalized_x;
+				node_report["+0x20_finalized_y"] = node.finalized_y;
+				node_report["finalized"] = node.finalized;
+				node_report["active"] = node.active;
+				cycle_nodes.append(node_report);
+				if (node.finalized) {
+					finalized_coordinate_count += 1;
+				}
+				current = node.next;
+				if (current == located) {
+					break;
+				}
+				if (guard == 95) {
+					guard_exhausted = true;
+				}
+			}
+		}
+		if (guard_exhausted) {
+			source_node_walk_guard_exhausted_count += 1;
+		}
+		walk["cycle_node_count"] = cycle_nodes.size();
+		walk["finalized_coordinate_count"] = finalized_coordinate_count;
+		walk["guard_exhausted"] = guard_exhausted;
+		walk["cycle_nodes"] = cycle_nodes;
+		source_node_walks.append(walk);
+		source_node_walk_count += 1;
+	}
+
+	context["status"] = blocked ? String("blocked_during_polygon_split_model") : String("private_context_ready");
+	context["source"] = "h3maped 0x4ccb64 insertion/bridge/crossing-cleanup loop and 0x4ccdfc source-node finalizer over 0x4a19ed scaled runtime-zone coordinates";
+	context["split_steps"] = split_steps;
+	context["runtime_split_point_count"] = int32_t(zones.size());
+	context["executed_split_call_count"] = executed_split_count;
+	context["duplicate_skip_count"] = skipped_duplicate_count;
+	context["edge_removal_branch_count"] = edge_removal_count;
+	context["pre_crossing_inserted_node_pair_count"] = inserted_node_pair_count;
+	context["pre_crossing_inserted_bridge_pair_count"] = inserted_bridge_pair_count;
+	context["crossing_cleanup_scan_count"] = crossing_scan_count;
+	context["crossing_test_count"] = crossing_test_count;
+	context["crossing_collapse_count"] = crossing_collapse_count;
+	context["initial_node_pair_count"] = 5;
+	context["post_crossing_cleanup_allocated_node_pair_count"] = int32_t(model.nodes.size() / 2);
+	context["post_crossing_cleanup_allocated_node_count"] = int32_t(model.nodes.size());
+	context["post_crossing_cleanup_active_node_pair_count"] = model.active_node_pair_count();
+	context["post_crossing_cleanup_active_node_count"] = model.active_node_pair_count() * 2;
+	context["root_node_id_after_crossing_cleanup"] = model.root >= 0 ? model.nodes[size_t(model.root)].id : String();
+	context["crossing_cleanup_status"] = blocked ? String("blocked_during_crossing_cleanup") : String("0x4ccc7a_0x4cc68e_crossing_cleanup_ported");
+	context["finalizer_status"] = blocked ? String("blocked_before_0x4ccdfc") : String("0x4ccdfc_finalized_node_fanout_ported");
+	context["finalized_triplet_count"] = finalized_triplet_count;
+	context["finalized_node_count"] = finalized_node_count;
+	context["active_payload_node_count"] = active_payload_node_count;
+	context["finalized_steps"] = finalized_steps;
+	context["source_node_walk_status"] = blocked ? String("blocked_before_0x4cca55_source_node_walk") : String("0x4cca55_to_0x4a2777_source_node_cycles_recovered_private_only");
+	context["source_node_walk_count"] = source_node_walk_count;
+	context["source_node_walk_guard_exhausted_count"] = source_node_walk_guard_exhausted_count;
+	context["source_node_walks"] = source_node_walks;
+	context["blocked_next"] = "feed_finalized_0x4ccdfc_source_node_cycles_into_real_0x4a2777_traversal";
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -1030,6 +1556,7 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 		const Dictionary coordinate_context = coordinate_replay_context(normalized_config, runtime_zone_context, link_context, uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0))));
 		const Dictionary zone_footprint_context = zone_footprint_phase_context(normalized_config, runtime_zone_context, coordinate_context);
 		const Dictionary source_node_rectangle = source_node_rectangle_context(zone_footprint_context);
+		const Dictionary polygon_split_context = polygon_split_model_context(normalized_config, coordinate_context, source_node_rectangle);
 		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
 		context["runtime_zone_context"] = runtime_zone_context;
@@ -1047,8 +1574,15 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 						context["source_node_rectangle"] = source_node_rectangle;
 						if (String(source_node_rectangle.get("status", "")) == "private_context_ready") {
 							completed_phases.append("source_node_rectangle");
-							context["status"] = "source_node_rectangle_private_context_ready";
-							context["blocked_next"] = "polygon_split_model_0x4ccb64_0x4ccdfc";
+							context["polygon_split_context"] = polygon_split_context;
+							if (String(polygon_split_context.get("status", "")) == "private_context_ready") {
+								completed_phases.append("polygon_split_model");
+								context["status"] = "polygon_split_model_private_context_ready";
+								context["blocked_next"] = "source_node_cycles_to_0x4a2777_boundary_traversal";
+							} else {
+								context["status"] = "source_node_rectangle_private_context_ready";
+								context["blocked_next"] = "polygon_split_model_0x4ccb64_0x4ccdfc";
+							}
 						} else {
 							context["status"] = "zone_footprint_phase_private_context_ready";
 							context["blocked_next"] = "source_node_rectangle_0x4cc788";
