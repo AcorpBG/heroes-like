@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "terrainplacement_visual_tables_4bcff5_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5"] \
-			or int(small_state.get("completed_phase_count", -1)) != 14 \
+			or String(small_state.get("status", "")) != "terrainplacement_live_feedback_4bb74b_4bc5f0_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0"] \
+			or int(small_state.get("completed_phase_count", -1)) != 15 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback":
-		_fail("Small h3maped generation state did not stop after TerrainPlacement visual tables: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
+		_fail("Small h3maped generation state did not stop after TerrainPlacement live feedback: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -707,6 +707,69 @@ func _run() -> void:
 		_fail("h3maped TerrainPlacement scratch samples drifted: %s" % JSON.stringify(scratch_samples))
 		return
 
+	var live_feedback_phase: Dictionary = small_state.get("terrainplacement_live_feedback_4bb74b_4bc5f0", {})
+	var live_selector_histogram: Dictionary = live_feedback_phase.get("selector_kind_histogram", {})
+	var live_neighbor_histogram: Dictionary = live_feedback_phase.get("neighbor_mask_histogram", {})
+	var live_seed_samples: Array = live_feedback_phase.get("seed_samples", [])
+	var live_drain_samples: Array = live_feedback_phase.get("drain_samples", [])
+	var live_sample_records: Array = live_feedback_phase.get("sample_records", [])
+	if String(live_feedback_phase.get("phase_id", "")) != "terrainplacement_live_feedback_4bb74b_4bc5f0" \
+			or String(live_feedback_phase.get("h3maped_anchor", "")) != "0x4bb74b/0x4bc5f0" \
+			or String(live_feedback_phase.get("full_water_repaint_address", "")) != "0x4a4025" \
+			or String(live_feedback_phase.get("zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(live_feedback_phase.get("single_cell_repaint_address", "")) != "0x4a415a" \
+			or String(live_feedback_phase.get("changed_cell_update_address", "")) != "0x4bb74b" \
+			or String(live_feedback_phase.get("neighbor_seed_address", "")) != "0x4bba59" \
+			or String(live_feedback_phase.get("frontier_retouch_address", "")) != "0x4bbd01" \
+			or String(live_feedback_phase.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(live_feedback_phase.get("candidate_gate_address", "")) != "0x4bc988" \
+			or String(live_feedback_phase.get("visual_selector_address", "")) != "0x4bcfc3" \
+			or String(live_feedback_phase.get("neighbor_mask_address", "")) != "0x4bce6d" \
+			or String(live_feedback_phase.get("scratch_write_address", "")) != "0x4bad0f" \
+			or String(live_feedback_phase.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or String(live_feedback_phase.get("status", "")) != "active_runtime_state_ready" \
+			or not bool(live_feedback_phase.get("visual_tables_decoded", false)) \
+			or not bool(live_feedback_phase.get("uses_live_scratch_neighbor_mask", false)) \
+			or not bool(live_feedback_phase.get("materializes_private_generated_cell_words", false)) \
+			or bool(live_feedback_phase.get("materializes_package_tiles", true)) \
+			or bool(live_feedback_phase.get("project_grid_public_runtime_adoption", true)) \
+			or bool(live_feedback_phase.get("public_package_output_allowed", true)) \
+			or not bool(live_feedback_phase.get("exact_queue_drain_complete", false)) \
+			or not bool(live_feedback_phase.get("live_feedback_materialized", false)) \
+			or int(live_feedback_phase.get("tile_count", -1)) != 1296 \
+			or int(live_feedback_phase.get("live_visual_attempt_count", -1)) != 2845 \
+			or int(live_feedback_phase.get("live_visual_write_count", -1)) != 2845 \
+			or int(live_feedback_phase.get("live_visual_missing_bucket_count", -1)) != 0 \
+			or int(live_feedback_phase.get("live_initial_water_attempt_count", -1)) != 1296 \
+			or int(live_feedback_phase.get("live_repaint_attempt_count", -1)) != 942 \
+			or int(live_feedback_phase.get("live_queue_attempt_count", -1)) != 607 \
+			or int(live_feedback_phase.get("live_dirty_cell_count", -1)) != 1296 \
+			or int(live_feedback_phase.get("live_roundtrip_mismatch_count", -1)) != 0 \
+			or int(live_feedback_phase.get("live_terrain_mismatch_count", -1)) != 0 \
+			or int(live_feedback_phase.get("live_full_native_cell_count", -1)) != 1326 \
+			or int(live_feedback_phase.get("live_terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or int(live_feedback_phase.get("live_terrain_flag_cell_count", -1)) <= 0 \
+			or int(live_feedback_phase.get("post_queue_terrain_difference_count", -1)) != 181 \
+			or int(live_feedback_phase.get("set_a_drain_count", -1)) != 176 \
+			or int(live_feedback_phase.get("set_b_drain_count", -1)) != 10522 \
+			or int(live_feedback_phase.get("set_b_candidate_true_count", -1)) != 386 \
+			or int(live_feedback_phase.get("retouched_cell_write_count", -1)) != 221 \
+			or int(live_feedback_phase.get("drain_guard_limit", -1)) != 32768 \
+			or bool(live_feedback_phase.get("drain_guard_exhausted", true)) \
+			or String(live_feedback_phase.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
+		_fail("h3maped TerrainPlacement live feedback boundary drifted: %s" % JSON.stringify(live_feedback_phase))
+		return
+	if int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1326 \
+			or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1519 \
+			or int(live_neighbor_histogram.get("1", 0)) <= 0 \
+			or int(live_neighbor_histogram.get("2", 0)) <= 0 \
+			or int(live_neighbor_histogram.get("4", 0)) <= 0 \
+			or live_seed_samples.size() != 12 \
+			or live_drain_samples.size() != 24 \
+			or live_sample_records.size() != 16:
+		_fail("h3maped TerrainPlacement live feedback samples drifted: %s" % JSON.stringify(live_feedback_phase))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -714,7 +777,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
