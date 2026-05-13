@@ -668,6 +668,100 @@ func _run() -> void:
 		_fail("0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(span_zones))
 		return
 
+	var terrain_writeout: Dictionary = report.get("terrain_cell_writeout_4a3f27", {})
+	if String(terrain_writeout.get("status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
+			or String(terrain_writeout.get("function_address", "")) != "0x4a3f27" \
+			or String(terrain_writeout.get("full_map_water_repaint_address", "")) != "0x4a4025" \
+			or String(terrain_writeout.get("per_zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(terrain_writeout.get("per_cell_repaint_call_address", "")) != "0x4a415a" \
+			or String(terrain_writeout.get("owner_byte_gate_address", "")) != "0x4a4142" \
+			or String(terrain_writeout.get("reserved_flag_gate_address", "")) != "0x4a4150" \
+			or String(terrain_writeout.get("span_fill_source_address", "")) != "0x4a325d" \
+			or String(terrain_writeout.get("tile_serializer_address", "")) != "0x49b2b6":
+		_fail("0x4a3f27 terrain writeout identity drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+	if not bool(terrain_writeout.get("materializes_private_generated_cell_words", false)) \
+			or bool(terrain_writeout.get("materializes_terrain_art", true)) \
+			or bool(terrain_writeout.get("materializes_roads", true)) \
+			or bool(terrain_writeout.get("materializes_objects", true)) \
+			or bool(terrain_writeout.get("materializes_package_tiles", true)) \
+			or bool(terrain_writeout.get("project_grid_public_runtime_adoption", true)) \
+			or bool(terrain_writeout.get("public_package_output_allowed", true)):
+		_fail("0x4a3f27 terrain writeout must stay private and stop before art/package output: %s" % JSON.stringify(terrain_writeout))
+		return
+	if int(terrain_writeout.get("cell_count", -1)) != 1296 \
+			or int(terrain_writeout.get("map_width", -1)) != 36 \
+			or int(terrain_writeout.get("map_height", -1)) != 36 \
+			or int(terrain_writeout.get("level_count", -1)) != 1 \
+			or int(terrain_writeout.get("span_fill_total_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("span_fill_remaining_unassigned_cell_count", -1)) != 189 \
+			or int(terrain_writeout.get("span_fill_reserved_flag_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
+			or int(terrain_writeout.get("tile_byte_zero_non_water_terrain_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("tile_byte_one_nonzero_art_cell_count", -1)) != 0 \
+			or int(terrain_writeout.get("tile_byte_six_terrain_flip_cell_count", -1)) != 0 \
+			or int(terrain_writeout.get("reserved_flag_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("unassigned_water_cell_count", -1)) != 189:
+		_fail("0x4a3f27 terrain writeout counts drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+	var terrain_counts: Dictionary = terrain_writeout.get("terrain_name_counts", {})
+	if int(terrain_counts.get("water", -1)) != 189 \
+			or int(terrain_counts.get("grass", -1)) != 177 \
+			or int(terrain_counts.get("dirt", -1)) != 91 \
+			or int(terrain_counts.get("lava", -1)) != 403 \
+			or int(terrain_counts.get("swamp", -1)) != 207 \
+			or int(terrain_counts.get("rough", -1)) != 229:
+		_fail("0x4a3f27 terrain-name distribution drifted: %s" % JSON.stringify(terrain_counts))
+		return
+	var terrain_code_counts: Dictionary = terrain_writeout.get("h3_terrain_code_counts", {})
+	if int(terrain_code_counts.get("8", -1)) != 189 \
+			or int(terrain_code_counts.get("2", -1)) != 177 \
+			or int(terrain_code_counts.get("0", -1)) != 91 \
+			or int(terrain_code_counts.get("7", -1)) != 403 \
+			or int(terrain_code_counts.get("4", -1)) != 207 \
+			or int(terrain_code_counts.get("5", -1)) != 229:
+		_fail("0x4a3f27 h3 terrain-code distribution drifted: %s" % JSON.stringify(terrain_code_counts))
+		return
+	var repaint_schedule: Dictionary = terrain_writeout.get("terrain_repaint_schedule", {})
+	if String(repaint_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_inspection_only" \
+			or int(repaint_schedule.get("initial_water_terrain_id", -1)) != 8 \
+			or int(repaint_schedule.get("initial_water_full_map_cell_count", -1)) != 1296 \
+			or bool(repaint_schedule.get("two_level_rock_prefill_executed", true)) \
+			or int(repaint_schedule.get("single_cell_repaint_count", -1)) != 1107 \
+			or bool(repaint_schedule.get("materializes_visual_art", true)):
+		_fail("0x4a3f27 repaint schedule drifted: %s" % JSON.stringify(repaint_schedule))
+		return
+	var repaint_by_code: Dictionary = repaint_schedule.get("repaint_cells_by_terrain_code", {})
+	var per_zone_repaint: Array = repaint_schedule.get("per_zone_repaint_records", [])
+	if int(repaint_by_code.get("2", -1)) != 177 \
+			or int(repaint_by_code.get("0", -1)) != 91 \
+			or int(repaint_by_code.get("7", -1)) != 403 \
+			or int(repaint_by_code.get("4", -1)) != 207 \
+			or int(repaint_by_code.get("5", -1)) != 229 \
+			or per_zone_repaint.size() != 6 \
+			or int(per_zone_repaint[0].get("terrain_code", -1)) != 2 \
+			or int(per_zone_repaint[0].get("single_cell_repaint_count", -1)) != 177 \
+			or int(per_zone_repaint[1].get("terrain_code", -1)) != 0 \
+			or int(per_zone_repaint[1].get("single_cell_repaint_count", -1)) != 91 \
+			or int(per_zone_repaint[2].get("terrain_code", -1)) != 7 \
+			or int(per_zone_repaint[2].get("single_cell_repaint_count", -1)) != 226 \
+			or int(per_zone_repaint[3].get("terrain_code", -1)) != 7 \
+			or int(per_zone_repaint[3].get("single_cell_repaint_count", -1)) != 177 \
+			or int(per_zone_repaint[4].get("terrain_code", -1)) != 4 \
+			or int(per_zone_repaint[4].get("single_cell_repaint_count", -1)) != 207 \
+			or int(per_zone_repaint[5].get("terrain_code", -1)) != 5 \
+			or int(per_zone_repaint[5].get("single_cell_repaint_count", -1)) != 229:
+		_fail("0x4a3f27 per-zone repaint records drifted: %s" % JSON.stringify(repaint_schedule))
+		return
+	if PackedInt32Array(terrain_writeout.get("terrain_code_u16", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("tile_byte_0_terrain_id_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("tile_byte_1_terrain_art_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())).size() != 1296 \
+			or String(terrain_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
+			or String(terrain_writeout.get("next_materialization_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout":
+		_fail("0x4a3f27 terrain arrays/writeout status drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+
 	var finalizer: Dictionary = report.get("footprint_finalizer_4a3710", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
 			or String(finalizer.get("function_address", "")) != "0x4a3710" \
@@ -734,8 +828,8 @@ func _run() -> void:
 		_fail("Coordinate replay should be active only as inspection evidence: %s" % JSON.stringify(backlog))
 		return
 	if String(backlog[4].get("phase_id", "")) != "zone_footprints_and_terrain" \
-			or String(backlog[4].get("status", "")) != "active_phase_boundary_only":
-		_fail("Zone-footprint phase should be active only as a h3maped phase boundary: %s" % JSON.stringify(backlog))
+			or String(backlog[4].get("status", "")) != "active_inspection_only":
+		_fail("Zone-footprint and terrain phase should be active only as h3maped inspection evidence: %s" % JSON.stringify(backlog))
 		return
 	for index in range(5, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_h3maped_port":
