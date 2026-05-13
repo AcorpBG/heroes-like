@@ -43,12 +43,13 @@ The compiled active module now only:
 - ports the `0x4ccb64` source-node split loop and `0x4ccdfc` finalizer as private inspection-only graph evidence over the current scaled runtime-zone points;
 - ports real `0x4a2777` source-node cycle traversal as a private boundary-buffer report using `0x4a2b33`, `0x4a261a`, and `0x4a2413`; it reports six consumed runtime-zone cycles, 326 private trace writes, and 262 unique private boundary cells, but does not feed span fill, terrain, map cells, or public package output;
 - ports `0x4a325d` span fill over that private `0x4a2777` boundary buffer as private inspection-only evidence; it reports six fill attempts, 762 filled interior cells, 1024 boundary-or-filled private cells, and 272 remaining unassigned cells, but does not feed terrain, map cells, or public package output;
+- ports the small-land `0x4a3710` finalizer as private inspection-only evidence; with no appended synthetic runtime zones, both adjacency insertion phases skip and only six `0x49b61b` ordering resets plus six `0x4a3554` ordering rebuild calls are scheduled;
 - records a strict restart backlog for the required executable phase ports;
 - refuses runtime generation.
 
 Seed `1`, one human, three total players currently selects `h3maped_template_018` at source catalog index `18`, adapted to `translated_rmg_template_019_v1`. Its recovered source-owner masks are `0x0f` for human-capable owners and `0x0f` for player-capable owners; default color ordering maps source owners `0,1,2` to actual colors `0,1,2`. Runtime-zone setup reports six source zones, owner colors `[0,1,-1,2,-1,-1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles. Link seed setup reports five source-zone links: `1-4`, `2-5`, `4-5`, `3-5`, and `6-4`. Coordinate replay reports 18 placement steps, 18 coordinate RNG calls, final replay RNG state `316395082`, bbox span `85`, and scaled zone centers `(30,16)`, `(8,13)`, `(4,21)`, `(23,21)`, `(13,21)`, and `(18,13)`.
 
-The active module materializes private inspection-only zone boundary buffers for `0x4a2777` and private inspection-only span-fill buffers for `0x4a325d`, but does not materialize map cells, terrain art, runtime players, towns, roads, blockers, guards, mines, rewards, or packages.
+The active module materializes private inspection-only zone boundary buffers for `0x4a2777`, private inspection-only span-fill buffers for `0x4a325d`, and private `0x4a3710` small-land finalizer scheduling evidence, but does not materialize map cells, terrain art, runtime players, towns, roads, blockers, guards, mines, rewards, or packages.
 
 ## Runtime Gate
 
@@ -70,7 +71,7 @@ The restart must port these phases from `h3maped.exe` before public package outp
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
 2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active inspection only; no runtime player materialization).
 3. Runtime-zone records: `0x4a218c` (active inspection only; no coordinates, terrain, cells, or runtime players).
-4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d`, and `0x4a3710` (`0x4a1f3b` link endpoint seeds, one-level coordinate replay, `0x4a3a03` helper-input queue, `0x4cc788` initial rectangle, `0x4a2b33` clip helper, `0x4a261a` deterministic line writer, `0x4a2413` randomized line writer, `0x4ccb64` split insertion/cleanup, `0x4ccdfc` finalization, real `0x4a2777` traversal, and `0x4a325d` span fill active inspection only; `0x4a3710` and cell materialization pending strict port).
+4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d`, and `0x4a3710` (`0x4a1f3b` link endpoint seeds, one-level coordinate replay, `0x4a3a03` helper-input queue, `0x4cc788` initial rectangle, `0x4a2b33` clip helper, `0x4a261a` deterministic line writer, `0x4a2413` randomized line writer, `0x4ccb64` split insertion/cleanup, `0x4ccdfc` finalization, real `0x4a2777` traversal, `0x4a325d` span fill, and small-land `0x4a3710` active inspection only; cell materialization pending strict port).
 5. Terrain writeout: `0x4a3f27` (pending strict port).
 6. Town object placement: `0x4a8d2c`, `0x4a93a2`, `0x49ba89`.
 7. Roads and rivers: `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`.

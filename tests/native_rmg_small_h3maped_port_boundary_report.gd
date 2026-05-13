@@ -627,6 +627,51 @@ func _run() -> void:
 		_fail("0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(span_zones))
 		return
 
+	var finalizer: Dictionary = report.get("footprint_finalizer_4a3710", {})
+	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
+			or String(finalizer.get("function_address", "")) != "0x4a3710" \
+			or String(finalizer.get("call_site_address", "")) != "0x4a3efc..0x4a3f05" \
+			or String(finalizer.get("polygon_locator_address", "")) != "0x4cca55" \
+			or String(finalizer.get("clip_helper_address", "")) != "0x4a2b33" \
+			or String(finalizer.get("zone_order_reset_address", "")) != "0x49b61b" \
+			or String(finalizer.get("per_zone_order_helper_address", "")) != "0x4a3554" \
+			or String(finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" \
+			or String(finalizer.get("ordering_vector_offset", "")) != "runtime_zone+0x3e8":
+		_fail("0x4a3710 finalizer identity drifted: %s" % JSON.stringify(finalizer))
+		return
+	if int(finalizer.get("level_count", -1)) != 1 \
+			or int(finalizer.get("h3maped_water_mode_code", -1)) != 0 \
+			or bool(finalizer.get("synthetic_branch_allowed_by_0x4a3a9d", true)) \
+			or int(finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 \
+			or int(finalizer.get("final_runtime_zone_count", -1)) != 6 \
+			or int(finalizer.get("appended_runtime_zone_count", -1)) != 0 \
+			or int(finalizer.get("zone_order_reset_call_count", -1)) != 6 \
+			or int(finalizer.get("per_zone_order_helper_call_count", -1)) != 6 \
+			or int(finalizer.get("materialized_adjacency_count", -1)) != 0:
+		_fail("0x4a3710 small-land finalizer counts drifted: %s" % JSON.stringify(finalizer))
+		return
+	if bool(finalizer.get("materializes_zone_cells", true)) \
+			or bool(finalizer.get("materializes_boundary_cells", true)) \
+			or bool(finalizer.get("materializes_span_fill", true)) \
+			or bool(finalizer.get("materializes_terrain", true)) \
+			or bool(finalizer.get("materializes_map_cells", true)) \
+			or bool(finalizer.get("public_package_output_allowed", true)):
+		_fail("0x4a3710 finalizer must not materialize output: %s" % JSON.stringify(finalizer))
+		return
+	var finalizer_phases: Array = finalizer.get("phases", [])
+	if finalizer_phases.size() != 3 \
+			or String(finalizer_phases[0].get("status", "")) != "skipped_no_appended_runtime_zones" \
+			or int(finalizer_phases[0].get("start_index", -1)) != 6 \
+			or int(finalizer_phases[0].get("end_index", -1)) != 6 \
+			or int(finalizer_phases[0].get("materialized_adjacency_insert_count", -1)) != 0 \
+			or String(finalizer_phases[1].get("status", "")) != "0x49b61b_reset_and_0x4a3554_rebuild_scheduled" \
+			or int(finalizer_phases[1].get("zone_order_reset_call_count", -1)) != 6 \
+			or int(finalizer_phases[1].get("per_zone_order_helper_call_count", -1)) != 6 \
+			or String(finalizer_phases[2].get("status", "")) != "skipped_no_appended_runtime_zones" \
+			or int(finalizer_phases[2].get("materialized_adjacency_insert_count", -1)) != 0:
+		_fail("0x4a3710 finalizer phases drifted: %s" % JSON.stringify(finalizer_phases))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
