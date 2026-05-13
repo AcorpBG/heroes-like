@@ -24,9 +24,15 @@ Medium, large, XL, water, islands, and underground generation are out of scope f
 
 ## Current Boundary
 
-The active module is intentionally small again after the 2026-05-13 owner-directed restart correction. The overgrown active port was moved out of the build to `src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp`; the previous phase ledger remains archived at `src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp`. Older archived ledgers remain evidence only.
+2026-05-13 correction: the report-treadmill active implementation was archived out of the build to `src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp`. The compiled active module is now a thin h3maped executable boundary only: binary verification, 36x36 one-level land scope gate, recovered size/water score, h3maped RNG template selection, explicit phase backlog, and runtime generation refusal.
 
-The compiled active module now only:
+The earlier overgrown active port remains archived at `src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp`; the previous phase ledger remains archived at `src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp`. Older archived ledgers remain evidence only.
+
+The active module must not expose `small_generation_state`, `private_generation_context`, private terrain/town/object ledgers, or partial package payloads. Player slots, runtime zones, physical zone fills, terrain, towns, roads, blockers, guards, mines, rewards, and final writeout are pending runtime ports.
+
+Historical note: the section below describes the archived report-treadmill state before the correction above. It is preserved as failure evidence, not the active implementation contract.
+
+The archived report-treadmill module used to:
 
 - verifies `/root/Downloads/h3maped.exe` by size, MZ header, and SHA-256;
 - accepts only small 36x36 one-level land configs;
