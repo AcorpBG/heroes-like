@@ -504,6 +504,23 @@ String project_player_type_for_slot(const Dictionary &normalized_config, int32_t
 	return player_slot <= human_count ? "human" : "computer";
 }
 
+int32_t h3maped_guard_scaled_value_4a65a5(int32_t raw_value, int32_t mode) {
+	static constexpr int32_t THRESHOLD_1[] = { 50000, 2500, 1500, 1000, 500, 0 };
+	static constexpr int32_t THRESHOLD_2[] = { 50000, 7500, 7500, 7500, 5000, 5000 };
+	static constexpr int32_t SLOPE_1[] = { 0, 2, 3, 4, 6, 6 };
+	static constexpr int32_t SLOPE_2[] = { 0, 2, 3, 4, 4, 6 };
+	const int32_t clamped_mode = std::max(0, std::min(5, mode));
+	const int32_t base = std::max(0, raw_value);
+	int32_t value = 0;
+	if (base > THRESHOLD_1[clamped_mode]) {
+		value += ((base - THRESHOLD_1[clamped_mode]) * SLOPE_1[clamped_mode]) / 4;
+	}
+	if (base > THRESHOLD_2[clamped_mode]) {
+		value += ((base - THRESHOLD_2[clamped_mode]) * SLOPE_2[clamped_mode]) / 4;
+	}
+	return value < 2000 ? 0 : value;
+}
+
 void append_span_fill_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
 	if (trace_preview.size() >= 8) {
 		return;
@@ -4367,6 +4384,93 @@ Dictionary early_link_placement_schedule_report(const Dictionary &template_recor
 	return report;
 }
 
+Dictionary late_link_payload_postprocess_report(const Dictionary &normalized_config, const Array &link_seeds) {
+	Dictionary report;
+	report["status"] = "0x4a79a3_late_connection_payload_postprocess_inspection_only";
+	report["source"] = "h3maped cleanup 0x4a8c15 calls 0x4a79a3; raw reciprocal 0x1c link records are marked through +0x0a and late helpers consume Value(+0x04), Wide(+0x08), and Border Guard(+0x09)";
+	report["cleanup_phase_address"] = "0x4a8c15";
+	report["raw_link_postprocessor_address"] = "0x4a79a3";
+	report["reciprocal_finder_address"] = "0x49b3fb";
+	report["processed_marker_offset"] = "+0x0a";
+	report["helper_addresses"] = Array::make("0x4a61bc", "0x4a696b", "0x4a6cf2", "0x4a7605", "0x4a65a5", "0x4a5e03", "0x4a5e73", "0x4a5a23");
+	report["payload_offsets"] = Array::make("+0x04 Value", "+0x08 Wide", "+0x09 Border Guard");
+	report["materializes_connection_geometry"] = false;
+	report["materializes_connection_guards"] = false;
+	report["guard_records_candidate_only"] = true;
+	report["wide_semantics"] = "Wide suppresses normal guard value; recovered 0x4a6cf2 reads it after endpoint/corridor geometry, so it is not used as a corridor-width input in this chain";
+	report["border_guard_semantics"] = "Border Guard enables special type 9 Border Guard subtype 0..7 marker/object handling through 0x4a5e73/0x4a5a23";
+
+	const int32_t global_mode = std::max(0, std::min(5, int32_t(normalized_config.get("global_monster_strength_mode", 3))));
+	Array records;
+	Array raw_values;
+	Array scaled_values;
+	int32_t normal_guard_candidate_count = 0;
+	int32_t normal_guard_scaled_positive_count = 0;
+	int32_t normal_guard_suppressed_by_wide_count = 0;
+	int32_t border_guard_special_count = 0;
+	int32_t zero_scaled_guard_count = 0;
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = link_seeds[index];
+		const int32_t raw_value = int32_t(link.get("guard_value", 0));
+		const bool wide = bool(link.get("wide", false));
+		const bool border_guard = bool(link.get("border_guard", false));
+		const int32_t scaled_value = wide ? 0 : h3maped_guard_scaled_value_4a65a5(raw_value, global_mode);
+		raw_values.append(raw_value);
+		scaled_values.append(scaled_value);
+		if (wide) {
+			normal_guard_suppressed_by_wide_count += 1;
+		} else if (!border_guard) {
+			normal_guard_candidate_count += 1;
+			if (scaled_value > 0) {
+				normal_guard_scaled_positive_count += 1;
+			} else {
+				zero_scaled_guard_count += 1;
+			}
+		}
+		if (border_guard) {
+			border_guard_special_count += 1;
+		}
+
+		Dictionary record;
+		record["link_index"] = link.get("link_index", index);
+		record["source_from_zone_key"] = link.get("source_from_zone_key", "");
+		record["source_to_zone_key"] = link.get("source_to_zone_key", "");
+		record["runtime_zone_a"] = link.get("runtime_zone_a", -1);
+		record["runtime_zone_b"] = link.get("runtime_zone_b", -1);
+		record["link_value_offset_0x04_raw_guard_value"] = raw_value;
+		record["link_wide_offset_0x08"] = wide;
+		record["link_border_guard_offset_0x09"] = border_guard;
+		record["global_monster_strength_mode_generator_0x10bc"] = global_mode;
+		record["scaled_guard_value_0x4a65a5"] = scaled_value;
+		record["normal_guard_value_source"] = wide ? String("wide_forces_zero") : String("0x4a65a5_link_value_and_global_strength");
+		record["normal_guard_candidate_status"] = scaled_value > 0 && !border_guard ? String("candidate_0x4a5e03_normal_guard_no_materialization") : String("no_normal_guard_materialization");
+		record["wide_suppresses_normal_guard"] = wide;
+		record["border_guard_special_mode"] = border_guard;
+		record["border_guard_object_type_id"] = border_guard ? 9 : -1;
+		record["border_guard_subtype_range"] = border_guard ? String("0..7") : String();
+		record["processed_marker_write_status"] = "unique_link_and_reciprocal_marked_inspection_only";
+		records.append(record);
+	}
+
+	report["global_monster_strength_mode"] = global_mode;
+	report["unique_link_count"] = records.size();
+	report["reciprocal_link_record_count"] = records.size() * 2;
+	report["processed_marker_write_count"] = records.size() * 2;
+	report["raw_guard_values"] = raw_values;
+	report["scaled_guard_values"] = scaled_values;
+	report["normal_guard_candidate_count"] = normal_guard_candidate_count;
+	report["normal_guard_scaled_positive_count"] = normal_guard_scaled_positive_count;
+	report["normal_guard_suppressed_by_wide_count"] = normal_guard_suppressed_by_wide_count;
+	report["border_guard_special_count"] = border_guard_special_count;
+	report["zero_scaled_guard_count"] = zero_scaled_guard_count;
+	report["records"] = records;
+	report["blocked_next"] = "port 0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605 geometry endpoints and 0x4a5e03/0x4a5e73 guard object placement before runtime guard adoption";
+	return report;
+}
+
 Dictionary coordinate_candidate_replay_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &link_seeds, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported";
@@ -7725,6 +7829,9 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary endpoint_schedule = early_link_placement_schedule_report(template_record, records, human_count, player_count);
 	report["early_link_placement_status"] = endpoint_schedule.get("status", "");
 	report["early_link_placement"] = endpoint_schedule;
+	Dictionary late_link_payload = late_link_payload_postprocess_report(normalized_config, endpoint_schedule.get("link_seeds", Array()));
+	report["late_link_payload_postprocess_status"] = late_link_payload.get("status", "");
+	report["late_link_payload_postprocess"] = late_link_payload;
 	Dictionary coordinate_replay = coordinate_candidate_replay_report(normalized_config, records, endpoint_schedule.get("link_seeds", Array()), rng_state_after_template_selection);
 	report["coordinate_replay_status"] = coordinate_replay.get("status", "");
 	report["coordinate_replay"] = coordinate_replay;

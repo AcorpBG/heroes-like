@@ -226,6 +226,33 @@ func _run() -> void:
 			or String(link_calls[6].get("pass", "")) != "stabilization_1":
 		_fail("The 0x4a1f3b creation/stabilization call order drifted: %s" % JSON.stringify(early_links))
 		return
+	var late_link_payload: Dictionary = runtime_zones.get("late_link_payload_postprocess", {})
+	if String(runtime_zones.get("late_link_payload_postprocess_status", "")) != "0x4a79a3_late_connection_payload_postprocess_inspection_only" \
+			or int(late_link_payload.get("unique_link_count", -1)) != 5 \
+			or int(late_link_payload.get("reciprocal_link_record_count", -1)) != 10 \
+			or int(late_link_payload.get("processed_marker_write_count", -1)) != 10 \
+			or int(late_link_payload.get("global_monster_strength_mode", -1)) != 3 \
+			or Array(late_link_payload.get("raw_guard_values", [])) != [3000, 3000, 3000, 6000, 6000] \
+			or Array(late_link_payload.get("scaled_guard_values", [])) != [2000, 2000, 2000, 5000, 5000] \
+			or int(late_link_payload.get("normal_guard_candidate_count", -1)) != 5 \
+			or int(late_link_payload.get("normal_guard_scaled_positive_count", -1)) != 5 \
+			or int(late_link_payload.get("normal_guard_suppressed_by_wide_count", -1)) != 0 \
+			or int(late_link_payload.get("border_guard_special_count", -1)) != 0:
+		_fail("The 0x4a79a3 late link payload/guard semantics drifted: %s" % JSON.stringify(late_link_payload))
+		return
+	if bool(late_link_payload.get("materializes_connection_geometry", true)) \
+			or bool(late_link_payload.get("materializes_connection_guards", true)) \
+			or not bool(late_link_payload.get("guard_records_candidate_only", false)):
+		_fail("Late link payload processing must remain inspection-only until geometry and guard placement are ported: %s" % JSON.stringify(late_link_payload))
+		return
+	var late_link_records: Array = late_link_payload.get("records", [])
+	if late_link_records.size() != 5 \
+			or String(late_link_records[0].get("normal_guard_candidate_status", "")) != "candidate_0x4a5e03_normal_guard_no_materialization" \
+			or int(late_link_records[3].get("scaled_guard_value_0x4a65a5", -1)) != 5000 \
+			or String(late_link_payload.get("wide_semantics", "")).find("not used as a corridor-width input") == -1 \
+			or String(late_link_payload.get("border_guard_semantics", "")).find("type 9 Border Guard") == -1:
+		_fail("The late link payload records lost executable-derived guard evidence: %s" % JSON.stringify(late_link_payload))
+		return
 	var coordinate_replay: Dictionary = runtime_zones.get("coordinate_replay", {})
 	if String(runtime_zones.get("coordinate_replay_status", "")) != "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported" \
 			or not bool(coordinate_replay.get("ok", false)) \
