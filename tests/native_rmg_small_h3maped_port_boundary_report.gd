@@ -439,6 +439,70 @@ func _run() -> void:
 		_fail("0x4a2413 randomized line-writer sample contract drifted: %s" % JSON.stringify(randomized_line_writer))
 		return
 
+	var polygon_split: Dictionary = report.get("polygon_split_model_4ccb64", {})
+	if String(polygon_split.get("status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_finalizer_ported_inspection_only" \
+			or String(polygon_split.get("locator_address", "")) != "0x4cca55" \
+			or String(polygon_split.get("splitter_address", "")) != "0x4ccb64" \
+			or String(polygon_split.get("node_constructor_address", "")) != "0x4cc955" \
+			or String(polygon_split.get("node_relink_address", "")) != "0x4cc643" \
+			or String(polygon_split.get("edge_side_test_address", "")) != "0x4cc6f2" \
+			or String(polygon_split.get("edge_erase_address", "")) != "0x4cc9cc" \
+			or String(polygon_split.get("bridge_address", "")) != "0x4ccb1f" \
+			or String(polygon_split.get("crossing_test_address", "")) != "0x4ccc7a" \
+			or String(polygon_split.get("crossing_collapse_address", "")) != "0x4cc68e" \
+			or String(polygon_split.get("intersection_writer_address", "")) != "0x4ccd69" \
+			or String(polygon_split.get("finalizer_address", "")) != "0x4ccdfc":
+		_fail("0x4ccb64 polygon split/finalizer boundary drifted: %s" % JSON.stringify(polygon_split))
+		return
+	if not bool(polygon_split.get("materializes_source_node_graph", false)) \
+			or bool(polygon_split.get("materializes_boundaries", true)) \
+			or bool(polygon_split.get("materializes_span_fill", true)) \
+			or bool(polygon_split.get("materializes_terrain", true)) \
+			or bool(polygon_split.get("materializes_map_cells", true)) \
+			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("0x4ccb64 polygon split model must remain private and not feed generated output yet: %s" % JSON.stringify(polygon_split))
+		return
+	if int(polygon_split.get("runtime_split_point_count", -1)) != 6 \
+			or int(polygon_split.get("executed_split_call_count", -1)) != 6 \
+			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
+			or int(polygon_split.get("edge_removal_branch_count", -1)) != 1 \
+			or int(polygon_split.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(polygon_split.get("pre_crossing_inserted_bridge_pair_count", -1)) != 13 \
+			or int(polygon_split.get("crossing_cleanup_scan_count", -1)) != 31 \
+			or int(polygon_split.get("crossing_test_count", -1)) != 24 \
+			or int(polygon_split.get("crossing_collapse_count", -1)) != 6 \
+			or int(polygon_split.get("initial_node_pair_count", -1)) != 5 \
+			or int(polygon_split.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 24 \
+			or int(polygon_split.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(polygon_split.get("post_crossing_cleanup_active_node_count", -1)) != 46 \
+			or String(polygon_split.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported" \
+			or String(polygon_split.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported" \
+			or int(polygon_split.get("finalized_triplet_count", -1)) != 14 \
+			or int(polygon_split.get("finalized_node_count", -1)) != 42 \
+			or int(polygon_split.get("active_payload_node_count", -1)) != 28 \
+			or String(polygon_split.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered_inspection_only" \
+			or int(polygon_split.get("source_node_walk_count", -1)) != 6 \
+			or int(polygon_split.get("source_node_walk_guard_exhausted_count", -1)) != 0:
+		_fail("0x4ccb64 polygon split/finalizer counts drifted: %s" % JSON.stringify(polygon_split))
+		return
+	var split_steps: Array = polygon_split.get("split_steps", [])
+	var source_walks: Array = polygon_split.get("source_node_walks", [])
+	var finalized_steps: Array = polygon_split.get("finalized_steps", [])
+	if split_steps.size() != 6 \
+			or source_walks.size() != 6 \
+			or finalized_steps.size() != 14 \
+			or int(split_steps[0].get("runtime_zone_index", -1)) != 0 \
+			or int(split_steps[0].get("x", -1)) != 30 \
+			or int(split_steps[0].get("y", -1)) != 16 \
+			or not bool(split_steps[4].get("edge_removal_branch", false)) \
+			or int(split_steps[4].get("bridge_pair_count", -1)) != 3 \
+			or int(split_steps[5].get("crossing_collapse_count", -1)) != 2 \
+			or int(source_walks[0].get("cycle_node_count", -1)) != 5 \
+			or int(source_walks[1].get("cycle_node_count", -1)) != 4 \
+			or int(source_walks[5].get("finalized_coordinate_count", -1)) != 5:
+		_fail("0x4ccb64 split steps/source-node walks drifted: %s" % JSON.stringify(polygon_split))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
