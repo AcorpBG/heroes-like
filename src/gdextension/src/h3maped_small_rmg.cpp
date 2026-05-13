@@ -3313,17 +3313,12 @@ Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terra
 	return report;
 }
 
-Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &drained_visual_projection, int32_t width, int32_t height, int32_t level_count) {
+Dictionary h3maped_tile_writeback_candidate_from_generated_words_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &projected_cell_word_0x24_u32, const PackedInt32Array &projected_cell_word_0x28_u32, int32_t width, int32_t height, int32_t level_count) {
 	Dictionary report;
-	report["status"] = "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only";
-	report["source"] = "maps the copied 0x4bc5f0 drained-grid 0x49acf6 generated-cell words into 0x49b2b6 terrain tile-byte candidates without public package adoption";
-	report["ported_addresses"] = Array::make("0x4bc5f0", "0x49acf6", "0x49b2b6");
 	report["adopts_into_runtime_grid"] = false;
 	report["materializes_package_tiles"] = false;
 	report["materializes_terrain_tile_bytes"] = true;
-	PackedInt32Array projected_cell_word_0x24_u32 = drained_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array());
-	PackedInt32Array projected_cell_word_0x28_u32 = drained_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array());
-	const int32_t tile_count = drained_terrain_code_u16.size();
+	const int32_t tile_count = terrain_code_u16.size();
 	PackedInt32Array tile_byte_0_terrain_id_u8;
 	PackedInt32Array tile_byte_1_terrain_art_u8;
 	PackedInt32Array tile_byte_2_river_type_u8;
@@ -3343,7 +3338,7 @@ Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Arra
 	int32_t terrain_mismatch_count = 0;
 	Array samples;
 	for (int32_t index = 0; index < tile_count; ++index) {
-		const uint32_t word_0x24 = index < projected_cell_word_0x24_u32.size() ? uint32_t(int32_t(projected_cell_word_0x24_u32[index])) : uint32_t(drained_terrain_code_u16[index] & 0x3f);
+		const uint32_t word_0x24 = index < projected_cell_word_0x24_u32.size() ? uint32_t(int32_t(projected_cell_word_0x24_u32[index])) : uint32_t(terrain_code_u16[index] & 0x3f);
 		const uint32_t word_0x28 = index < projected_cell_word_0x28_u32.size() ? uint32_t(int32_t(projected_cell_word_0x28_u32[index])) : 0U;
 		const int32_t terrain_id = int32_t(word_0x24 & 0x3fU);
 		const int32_t art_id = int32_t((word_0x24 >> 6U) & 0xffU);
@@ -3361,7 +3356,7 @@ Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Arra
 		if (terrain_flags != 0) {
 			terrain_flag_cell_count += 1;
 		}
-		if (terrain_id != drained_terrain_code_u16[index]) {
+		if (terrain_id != terrain_code_u16[index]) {
 			terrain_mismatch_count += 1;
 		}
 		if (samples.size() < 8 && art_id != 0) {
@@ -3395,7 +3390,52 @@ Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Arra
 	report["tile_byte_5_road_art_u8"] = tile_byte_5_road_art_u8;
 	report["tile_byte_6_flags_u8"] = tile_byte_6_flags_u8;
 	report["sample_records"] = samples;
+	return report;
+}
+
+Dictionary h3maped_drained_tile_writeback_candidate_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &drained_visual_projection, int32_t width, int32_t height, int32_t level_count) {
+	PackedInt32Array projected_cell_word_0x24_u32 = drained_visual_projection.get("projected_cell_word_0x24_u32", PackedInt32Array());
+	PackedInt32Array projected_cell_word_0x28_u32 = drained_visual_projection.get("projected_cell_word_0x28_u32", PackedInt32Array());
+	Dictionary report = h3maped_tile_writeback_candidate_from_generated_words_report(drained_terrain_code_u16, projected_cell_word_0x24_u32, projected_cell_word_0x28_u32, width, height, level_count);
+	report["status"] = "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only";
+	report["source"] = "maps the copied 0x4bc5f0 drained-grid 0x49acf6 generated-cell words into 0x49b2b6 terrain tile-byte candidates without public package adoption";
+	report["ported_addresses"] = Array::make("0x4bc5f0", "0x49acf6", "0x49b2b6");
 	report["blocked_next"] = "adopt only after exact TerrainPlacement container/scratch feedback, roads/rivers, objects, towns, guards, rewards, and package writeout are ported";
+	return report;
+}
+
+Dictionary h3maped_live_tile_writeback_candidate_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &live_scratch_visual_feedback_projection, const Dictionary &drained_tile_writeback_candidate, int32_t width, int32_t height, int32_t level_count) {
+	PackedInt32Array live_cell_word_0x24_u32 = live_scratch_visual_feedback_projection.get("generated_cell_word_0x24_u32", PackedInt32Array());
+	PackedInt32Array live_cell_word_0x28_u32 = live_scratch_visual_feedback_projection.get("generated_cell_word_0x28_u32", PackedInt32Array());
+	Dictionary report = h3maped_tile_writeback_candidate_from_generated_words_report(drained_terrain_code_u16, live_cell_word_0x24_u32, live_cell_word_0x28_u32, width, height, level_count);
+	report["status"] = "0x49b2b6_live_generated_cell_tile_byte_candidate_inspection_only";
+	report["source"] = "maps live 0x4bb74b / 0x4bc5f0 scratch-feedback 0x49acf6 generated-cell words into private 0x49b2b6 tile-byte candidates without public package adoption";
+	report["ported_addresses"] = Array::make("0x4bb74b", "0x4bc5f0", "0x4bad0f", "0x49acf6", "0x49b2b6");
+	report["generated_cell_source_status"] = live_scratch_visual_feedback_projection.get("status", "");
+	report["live_feedback_materialized"] = bool(live_scratch_visual_feedback_projection.get("live_feedback_materialized", false));
+	PackedInt32Array live_art = report.get("tile_byte_1_terrain_art_u8", PackedInt32Array());
+	PackedInt32Array live_flags = report.get("tile_byte_6_flags_u8", PackedInt32Array());
+	PackedInt32Array drained_art = drained_tile_writeback_candidate.get("tile_byte_1_terrain_art_u8", PackedInt32Array());
+	PackedInt32Array drained_flags = drained_tile_writeback_candidate.get("tile_byte_6_flags_u8", PackedInt32Array());
+	int32_t live_vs_drained_art_delta_count = 0;
+	int32_t live_vs_drained_flag_delta_count = 0;
+	const int32_t compare_count = std::min(live_art.size(), drained_art.size());
+	for (int32_t index = 0; index < compare_count; ++index) {
+		if (int32_t(live_art[index]) != int32_t(drained_art[index])) {
+			live_vs_drained_art_delta_count += 1;
+		}
+	}
+	const int32_t flag_compare_count = std::min(live_flags.size(), drained_flags.size());
+	for (int32_t index = 0; index < flag_compare_count; ++index) {
+		if (int32_t(live_flags[index]) != int32_t(drained_flags[index])) {
+			live_vs_drained_flag_delta_count += 1;
+		}
+	}
+	report["live_vs_drained_tile_art_delta_count"] = live_vs_drained_art_delta_count;
+	report["live_vs_drained_tile_flag_delta_count"] = live_vs_drained_flag_delta_count;
+	report["adopts_into_runtime_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	report["blocked_next"] = "package adoption remains blocked until road/rivers, objects, towns, guards, rewards, and final h3maped writeout phases are executable-derived";
 	return report;
 }
 
@@ -5873,6 +5913,9 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	Dictionary drained_tile_writeback_candidate = h3maped_drained_tile_writeback_candidate_report(repaint_order_queue_drain.get("drained_terrain_code_u16", PackedInt32Array()), repaint_order_queue_drain.get("drained_visual_projection", Dictionary()), width, height, level_count);
 	report["drained_tile_writeback_candidate_status"] = drained_tile_writeback_candidate.get("status", "");
 	report["drained_tile_writeback_candidate"] = drained_tile_writeback_candidate;
+	Dictionary live_tile_writeback_candidate = h3maped_live_tile_writeback_candidate_report(repaint_order_queue_drain.get("drained_terrain_code_u16", PackedInt32Array()), repaint_order_queue_drain.get("live_scratch_visual_feedback_projection", Dictionary()), drained_tile_writeback_candidate, width, height, level_count);
+	report["live_tile_writeback_candidate_status"] = live_tile_writeback_candidate.get("status", "");
+	report["live_tile_writeback_candidate"] = live_tile_writeback_candidate;
 	report["tile_serializer_contract_status"] = "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported";
 	report["tile_serializer_contract"] = tile_serializer_49b2b6_contract_report();
 	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
