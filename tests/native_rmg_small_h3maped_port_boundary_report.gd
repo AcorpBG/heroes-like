@@ -682,9 +682,14 @@ func _run() -> void:
 	if String(footprint_schedule.get("late_connection_overlap_geometry_status", "")) != "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only" \
 			or int(late_connection_overlap.get("link_count", -1)) != 5 \
 			or int(late_connection_overlap.get("overlap_available_count", -1)) != 3 \
+			or int(late_connection_overlap.get("fallback_required_count", -1)) != 2 \
+			or Array(late_connection_overlap.get("overlap_available_link_indices", [])) != [0, 3, 4] \
+			or Array(late_connection_overlap.get("fallback_required_link_indices", [])) != [1, 2] \
 			or int(late_connection_overlap.get("overlap_cell_total", -1)) != 472 \
 			or int(late_connection_overlap.get("overlap_zone_a_cell_total", -1)) != 184 \
 			or int(late_connection_overlap.get("overlap_zone_b_cell_total", -1)) != 278 \
+			or Array(late_connection_overlap.get("first_pass_helper_sequence", [])) != ["0x4a61bc", "0x4a696b", "0x4a6cf2"] \
+			or Array(late_connection_overlap.get("second_pass_helper_sequence_if_unprocessed", [])) != ["0x4a696b", "0x4a7605"] \
 			or bool(late_connection_overlap.get("materializes_connection_geometry", true)) \
 			or bool(late_connection_overlap.get("materializes_connection_guards", true)):
 		_fail("The 0x4a6cf2 overlap-rectangle connection precondition drifted: %s" % JSON.stringify(late_connection_overlap))
@@ -698,6 +703,8 @@ func _run() -> void:
 			or bool(late_connection_records[2].get("overlap_exists", true)) \
 			or int(late_connection_records[3].get("overlap_cell_count", -1)) != 132 \
 			or int(late_connection_records[4].get("overlap_cell_count", -1)) != 166 \
+			or String(late_connection_records[0].get("helper_resolution_precondition", "")) != "first_pass_0x4a6cf2_geometry_precondition_available" \
+			or String(late_connection_records[1].get("helper_resolution_precondition", "")) != "first_pass_0x4a6cf2_overlap_missing_second_pass_0x4a7605_or_other_helper_required" \
 			or String(late_connection_overlap.get("wide_read_order", "")).find("after overlap rectangle") == -1:
 		_fail("The 0x4a6cf2 per-link overlap evidence drifted: %s" % JSON.stringify(late_connection_overlap))
 		return

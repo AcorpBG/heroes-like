@@ -4481,6 +4481,9 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	report["shape_list_source_pending"] = "generator+0x6a8";
 	report["candidate_validation_pending"] = "0x49aa93";
 	report["wide_read_order"] = "after overlap rectangle and candidate endpoint geometry";
+	report["first_pass_helper_sequence"] = Array::make("0x4a61bc", "0x4a696b", "0x4a6cf2");
+	report["second_pass_helper_sequence_if_unprocessed"] = Array::make("0x4a696b", "0x4a7605");
+	report["processed_marker_policy"] = "0x4a79a3 marks link+0x0a and reciprocal link+0x0a only after a late helper resolves the pair";
 
 	PackedInt32Array zone_word_u32 = terrain_cell_writeout.get("zone_word_u32", PackedInt32Array());
 	const int32_t width = int32_t(terrain_cell_writeout.get("map_width", 0));
@@ -4563,6 +4566,8 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	}
 
 	Array records;
+	Array overlap_available_link_indices;
+	Array fallback_required_link_indices;
 	int32_t overlap_available_count = 0;
 	int32_t overlap_cell_total = 0;
 	int32_t overlap_zone_a_cell_total = 0;
@@ -4583,10 +4588,14 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 		record["wide"] = link.get("wide", false);
 		record["border_guard"] = link.get("border_guard", false);
 		record["guard_value"] = link.get("guard_value", 0);
+		record["first_pass_helper_sequence"] = report.get("first_pass_helper_sequence", Array());
+		record["second_pass_helper_sequence_if_unprocessed"] = report.get("second_pass_helper_sequence_if_unprocessed", Array());
 		if (runtime_a < 0 || runtime_b < 0 || runtime_a >= int32_t(bounds.size()) || runtime_b >= int32_t(bounds.size())
 				|| !bounds[size_t(runtime_a)].seen || !bounds[size_t(runtime_b)].seen) {
 			record["status"] = "0x4a6cf2_missing_runtime_zone_bounds";
 			record["overlap_exists"] = false;
+			record["helper_resolution_precondition"] = "missing_bounds_requires_later_fallback_or_failure";
+			fallback_required_link_indices.append(link.get("link_index", index));
 			records.append(record);
 			continue;
 		}
@@ -4638,6 +4647,9 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 				}
 			}
 			overlap_available_count += 1;
+			overlap_available_link_indices.append(link.get("link_index", index));
+		} else {
+			fallback_required_link_indices.append(link.get("link_index", index));
 		}
 		record["overlap_cell_count"] = overlap_cell_count;
 		record["overlap_zone_a_cell_count"] = zone_a_cell_count;
@@ -4647,6 +4659,9 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 		record["status"] = overlap_exists
 				? String("0x4a6cf2_overlap_rect_available_pending_shape_list_0x6a8_and_0x49aa93_validation")
 				: String("0x4a6cf2_no_overlap_rect_later_helpers_or_fallback_required");
+		record["helper_resolution_precondition"] = overlap_exists
+				? String("first_pass_0x4a6cf2_geometry_precondition_available")
+				: String("first_pass_0x4a6cf2_overlap_missing_second_pass_0x4a7605_or_other_helper_required");
 		overlap_cell_total += overlap_cell_count;
 		overlap_zone_a_cell_total += zone_a_cell_count;
 		overlap_zone_b_cell_total += zone_b_cell_count;
@@ -4656,6 +4671,9 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	report["runtime_zone_bounds"] = bounds_report;
 	report["link_count"] = records.size();
 	report["overlap_available_count"] = overlap_available_count;
+	report["overlap_available_link_indices"] = overlap_available_link_indices;
+	report["fallback_required_link_indices"] = fallback_required_link_indices;
+	report["fallback_required_count"] = fallback_required_link_indices.size();
 	report["overlap_cell_total"] = overlap_cell_total;
 	report["overlap_zone_a_cell_total"] = overlap_zone_a_cell_total;
 	report["overlap_zone_b_cell_total"] = overlap_zone_b_cell_total;
