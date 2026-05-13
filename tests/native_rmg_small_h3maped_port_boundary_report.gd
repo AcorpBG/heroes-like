@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "polygon_split_model_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"] \
-			or int(small_state.get("completed_phase_count", -1)) != 8 \
+			or String(small_state.get("status", "")) != "source_node_boundary_traversal_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"] \
+			or int(small_state.get("completed_phase_count", -1)) != 9 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "source_node_boundary_traversal_0x4a2777":
-		_fail("Small h3maped generation state did not stop after polygon split/finalizer setup: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "span_fill_4a325d":
+		_fail("Small h3maped generation state did not stop after source-node boundary traversal: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -356,6 +356,56 @@ func _run() -> void:
 		_fail("h3maped source-node walks drifted: %s" % JSON.stringify(source_node_walks))
 		return
 
+	var boundary_phase: Dictionary = small_state.get("source_node_boundary_traversal", {})
+	var boundary_zone_reports: Array = boundary_phase.get("zone_reports", [])
+	if String(boundary_phase.get("phase_id", "")) != "source_node_boundary_traversal" \
+			or String(boundary_phase.get("h3maped_anchor", "")) != "0x4a2777" \
+			or String(boundary_phase.get("caller_anchor", "")) != "0x4a3e58..0x4a3e8c" \
+			or String(boundary_phase.get("clip_helper_anchor", "")) != "0x4a2b33" \
+			or String(boundary_phase.get("deterministic_line_writer_anchor", "")) != "0x4a261a" \
+			or String(boundary_phase.get("flagged_line_writer_anchor", "")) != "0x4a2413" \
+			or String(boundary_phase.get("runtime_vertex_vector_offset", "")) != "runtime_zone+0x3f4" \
+			or String(boundary_phase.get("status", "")) != "active_runtime_state_ready" \
+			or int(boundary_phase.get("map_width", -1)) != 36 \
+			or int(boundary_phase.get("map_height", -1)) != 36 \
+			or int(boundary_phase.get("level_count", -1)) != 1 \
+			or int(boundary_phase.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(boundary_phase.get("rng_state_before_0x4a2777_uint32", -1)) != 255755822 \
+			or int(boundary_phase.get("runtime_zone_walk_count", -1)) != 6 \
+			or int(boundary_phase.get("blocked_zone_count", -1)) != 0 \
+			or int(boundary_phase.get("fallback_zone_count", -1)) != 0 \
+			or int(boundary_phase.get("connector_segment_count", -1)) != 6 \
+			or int(boundary_phase.get("wrap_segment_count", -1)) != 0 \
+			or int(boundary_phase.get("final_segment_count", -1)) != 12 \
+			or int(boundary_phase.get("appended_vertex_count", -1)) != 18 \
+			or int(boundary_phase.get("skipped_unfinalized_node_count", -1)) != 0 \
+			or int(boundary_phase.get("skipped_out_of_bounds_clip_count", -1)) != 12 \
+			or int(boundary_phase.get("flagged_writer_segment_count", -1)) != 6 \
+			or int(boundary_phase.get("deterministic_writer_segment_count", -1)) != 12 \
+			or int(boundary_phase.get("randomized_rng_call_count", -1)) != 106 \
+			or int(boundary_phase.get("randomized_inserted_midpoint_count", -1)) != 138 \
+			or int(boundary_phase.get("rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
+			or int(boundary_phase.get("trace_write_count", -1)) != 301 \
+			or int(boundary_phase.get("unique_cell_count", -1)) != 238 \
+			or int(boundary_phase.get("out_of_bounds_write_count", -1)) != 0 \
+			or bool(boundary_phase.get("loop_guard_exhausted", true)) \
+			or not bool(boundary_phase.get("materializes_boundaries", false)) \
+			or bool(boundary_phase.get("materializes_span_fill", true)) \
+			or bool(boundary_phase.get("materializes_terrain", true)) \
+			or bool(boundary_phase.get("materializes_map_cells", true)) \
+			or bool(boundary_phase.get("materializes_public_output", true)) \
+			or String(boundary_phase.get("blocked_next", "")) != "span_fill_4a325d" \
+			or boundary_zone_reports.size() != 6:
+		_fail("h3maped source-node boundary traversal drifted: %s" % JSON.stringify(boundary_phase))
+		return
+	if int(boundary_zone_reports[0].get("runtime_zone_index", -1)) != 0 \
+			or String(boundary_zone_reports[0].get("status", "")) != "0x4a2777_real_source_cycle_consumed" \
+			or int(boundary_zone_reports[0].get("segment_count", -1)) != 3 \
+			or int(boundary_zone_reports[5].get("runtime_zone_index", -1)) != 5 \
+			or int(boundary_zone_reports[5].get("segment_count", -1)) != 4:
+		_fail("h3maped boundary zone reports drifted: %s" % JSON.stringify(boundary_zone_reports))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -363,7 +413,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
