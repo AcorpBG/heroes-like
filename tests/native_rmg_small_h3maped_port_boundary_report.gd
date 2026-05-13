@@ -519,11 +519,13 @@ func _run() -> void:
 			or String(object_vector_phase.get("candidate_selector_anchor", "")) != "0x4a9f1c" \
 			or String(object_vector_phase.get("reward_coordinate_anchor", "")) != "0x4aa9b7" \
 			or not bool(object_vector_phase.get("materializes_private_object_vector_prerequisites", false)) \
-			or bool(object_vector_phase.get("materializes_private_mine_records", true)) \
+			or not bool(object_vector_phase.get("materializes_private_mine_records", false)) \
 			or bool(object_vector_phase.get("materializes_private_reward_coordinate_records", true)) \
 			or bool(object_vector_phase.get("materializes_public_objects", true)) \
 			or bool(object_vector_phase.get("adopts_into_runtime_grid", true)) \
 			or bool(object_vector_phase.get("public_package_output_allowed", true)) \
+			or int(object_vector_phase.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
+			or int(object_vector_phase.get("partial_coordinate_record_count", -1)) != 21 \
 			or int(object_vector_phase.get("candidate_vector_single_level_total_count", -1)) != 704 \
 			or int(object_vector_phase.get("candidate_vector_materialized_static_subset_count", -1)) != 110 \
 			or int(object_vector_phase.get("candidate_vector_materialized_monster_count", -1)) != 118 \
@@ -553,7 +555,11 @@ func _run() -> void:
 			or int(density_by_category.get("wood", -1)) != 4 \
 			or int(density_by_category.get("ore", -1)) != 4 \
 			or int(density_by_category.get("gold", -1)) != 2 \
-			or bool(mine_boundary.get("private_coordinate_attempts_materialized", true)):
+			or not bool(mine_boundary.get("private_coordinate_attempts_materialized", false)) \
+			or int(mine_boundary.get("mine_template_row_count", -1)) != 46 \
+			or int(mine_boundary.get("mine_placement_scan_call_count", -1)) != 18 \
+			or int(mine_boundary.get("mine_placement_selected_count", -1)) != 18 \
+			or int(mine_boundary.get("materialized_private_mine_coordinate_record_count", -1)) != 18:
 		_fail("h3maped mine prerequisite boundary drifted: %s" % JSON.stringify(mine_boundary))
 		return
 	var reward_scheduler: Dictionary = object_vector_phase.get("reward_scheduler_boundary", {})
