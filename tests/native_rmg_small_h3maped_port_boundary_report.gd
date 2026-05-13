@@ -180,6 +180,63 @@ func _run() -> void:
 		_fail("Recovered template 18 link seed endpoints drifted: %s" % JSON.stringify(seed_records))
 		return
 
+	var coordinate_replay: Dictionary = report.get("coordinate_replay", {})
+	if String(coordinate_replay.get("status", "")) != "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported_inspection_only" \
+			or not bool(coordinate_replay.get("ok", false)) \
+			or String(coordinate_replay.get("distance_validation_address", "")) != "0x4a1701" \
+			or String(coordinate_replay.get("candidate_prune_address", "")) != "0x4a1ad8" \
+			or String(coordinate_replay.get("bbox_rescale_address", "")) != "0x4a19ed":
+		_fail("h3maped coordinate replay boundary drifted: %s" % JSON.stringify(coordinate_replay))
+		return
+	if bool(coordinate_replay.get("materializes_map_cells", true)) \
+			or bool(coordinate_replay.get("materializes_zone_footprints", true)) \
+			or String(coordinate_replay.get("next_materialization_status", "")) != "pending_0x4ccb64_source_node_split_insertion":
+		_fail("Coordinate replay must not materialize map cells or zone footprints: %s" % JSON.stringify(coordinate_replay))
+		return
+	if int(coordinate_replay.get("placement_step_count", -1)) != 18 \
+			or int(coordinate_replay.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
+			or int(coordinate_replay.get("rng_event_count", -1)) != 18 \
+			or int(coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 316395082:
+		_fail("Coordinate replay RNG schedule drifted: %s" % JSON.stringify(coordinate_replay))
+		return
+	var bbox: Dictionary = coordinate_replay.get("bounding_box_rescale", {})
+	if int(bbox.get("min_y_before_rescale", 0)) != -11 \
+			or int(bbox.get("min_x_before_rescale", 0)) != -67 \
+			or int(bbox.get("max_y_before_rescale", 0)) != 30 \
+			or int(bbox.get("max_x_before_rescale", 0)) != 18 \
+			or int(bbox.get("height_before_rescale", 0)) != 41 \
+			or int(bbox.get("width_before_rescale", 0)) != 85 \
+			or int(bbox.get("selected_span_before_rescale", 0)) != 85 \
+			or int(bbox.get("map_span", 0)) != 36 \
+			or int(bbox.get("offset_y", 0)) != -33 \
+			or int(bbox.get("offset_x", 0)) != -67:
+		_fail("Coordinate replay bbox rescale drifted: %s" % JSON.stringify(bbox))
+		return
+	var scaled: Array = coordinate_replay.get("scaled_zone_coordinates", [])
+	if scaled.size() != 6 \
+			or int(scaled[0].get("x_after_bbox_rescale", -1)) != 30 \
+			or int(scaled[0].get("y_after_bbox_rescale", -1)) != 16 \
+			or int(scaled[1].get("x_after_bbox_rescale", -1)) != 8 \
+			or int(scaled[1].get("y_after_bbox_rescale", -1)) != 13 \
+			or int(scaled[2].get("x_after_bbox_rescale", -1)) != 4 \
+			or int(scaled[2].get("y_after_bbox_rescale", -1)) != 21 \
+			or int(scaled[3].get("x_after_bbox_rescale", -1)) != 23 \
+			or int(scaled[3].get("y_after_bbox_rescale", -1)) != 21 \
+			or int(scaled[4].get("x_after_bbox_rescale", -1)) != 13 \
+			or int(scaled[4].get("y_after_bbox_rescale", -1)) != 21 \
+			or int(scaled[5].get("x_after_bbox_rescale", -1)) != 18 \
+			or int(scaled[5].get("y_after_bbox_rescale", -1)) != 13:
+		_fail("Coordinate replay scaled zone coordinates drifted: %s" % JSON.stringify(scaled))
+		return
+	var placement_steps: Array = coordinate_replay.get("placement_steps", [])
+	if placement_steps.size() != 18 \
+			or String(placement_steps[0].get("pass", "")) != "0x4a2226_initial_runtime_zone_insertion" \
+			or int(placement_steps[0].get("runtime_zone_index", -1)) != 0 \
+			or int(placement_steps[0].get("selected_candidate", {}).get("x", -1)) != 0 \
+			or int(placement_steps[0].get("selected_candidate", {}).get("y", -1)) != 0:
+		_fail("Coordinate replay placement-step schedule drifted: %s" % JSON.stringify(placement_steps))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
@@ -197,8 +254,8 @@ func _run() -> void:
 		_fail("Runtime-zone records should be active only as inspection evidence: %s" % JSON.stringify(backlog))
 		return
 	if String(backlog[3].get("phase_id", "")) != "coordinate_replay" \
-			or String(backlog[3].get("status", "")) != "active_link_seed_boundary_only":
-		_fail("Coordinate replay phase should expose only link endpoint seeds so far: %s" % JSON.stringify(backlog))
+			or String(backlog[3].get("status", "")) != "active_inspection_only":
+		_fail("Coordinate replay should be active only as inspection evidence: %s" % JSON.stringify(backlog))
 		return
 	for index in range(4, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_h3maped_port":
