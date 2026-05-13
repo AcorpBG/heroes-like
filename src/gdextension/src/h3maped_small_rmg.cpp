@@ -2413,6 +2413,95 @@ Dictionary span_fill_4a325d_context(const Dictionary &normalized_config, const D
 	return context;
 }
 
+Dictionary footprint_finalizer_4a3710_context(const Dictionary &normalized_config, const Dictionary &runtime_zone_context, const Dictionary &zone_footprint_context, const Dictionary &span_fill_context) {
+	Dictionary context;
+	context["phase_id"] = "footprint_finalizer_4a3710";
+	context["h3maped_anchor"] = "0x4a3710";
+	context["call_site_anchor"] = "0x4a3efc..0x4a3f05";
+	context["call_site_start_index_source"] = "0x4a3a86..0x4a3a9a captures runtime-zone vector count before the synthetic branch and passes it at 0x4a3f02";
+	context["polygon_locator_anchor"] = "0x4cca55";
+	context["clip_helper_anchor"] = "0x4a2b33";
+	context["zone_order_reset_anchor"] = "0x49b61b";
+	context["per_zone_order_helper_anchor"] = "0x4a3554";
+	context["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	context["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	context["status"] = "blocked_until_span_fill";
+	context["materializes_zone_cells"] = false;
+	context["materializes_boundary_cells"] = false;
+	context["materializes_span_fill"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_map_cells"] = false;
+	context["public_package_output_allowed"] = false;
+	context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+	if (String(span_fill_context.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const bool synthetic_branch_allowed = level_count > 1 || water_code != 0;
+	Array runtime_zone_records = runtime_zone_context.get("runtime_zone_records", Array());
+	Array per_level = zone_footprint_context.get("per_level", Array());
+	int32_t original_same_level_runtime_zone_count = int32_t(zone_footprint_context.get("total_collected_runtime_zone_count", runtime_zone_records.size()));
+	if (per_level.size() > 0) {
+		Dictionary level_record = per_level[0];
+		Array collected = level_record.get("collected_runtime_zone_indices", Array());
+		original_same_level_runtime_zone_count = int32_t(collected.size());
+	}
+	const int32_t final_runtime_zone_count = int32_t(runtime_zone_records.size());
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	context["status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported_private")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	context["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	context["level_count"] = level_count;
+	context["h3maped_water_mode_code"] = water_code;
+	context["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	context["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	context["final_runtime_zone_count"] = final_runtime_zone_count;
+	context["appended_runtime_zone_count"] = appended_runtime_zone_count;
+
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors only for appended synthetic zones");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	context["recovered_operations"] = recovered_operations;
+
+	Array phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(initial_insert_phase);
+
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	phases.append(order_reset_phase);
+
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(ordered_insert_phase);
+	context["phases"] = phases;
+	context["zone_order_reset_call_count"] = final_runtime_zone_count;
+	context["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	context["materialized_adjacency_count"] = 0;
+	context["blocked_next"] = appended_runtime_zone_count == 0
+			? String("0x4a3f27_terrain_cell_writeout")
+			: String("runtime_zone_0xc4_appended_adjacency_records");
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -2442,6 +2531,7 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 		std::vector<uint8_t> boundary_cell_flags;
 		const Dictionary boundary_traversal_context = source_node_boundary_traversal_context(normalized_config, coordinate_context, polygon_split_context, &boundary_zone_words, &boundary_cell_flags);
 		const Dictionary span_fill_context = span_fill_4a325d_context(normalized_config, coordinate_context, polygon_split_context, boundary_traversal_context, boundary_zone_words, boundary_cell_flags);
+		const Dictionary footprint_finalizer_context = footprint_finalizer_4a3710_context(normalized_config, runtime_zone_context, zone_footprint_context, span_fill_context);
 		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
 		context["runtime_zone_context"] = runtime_zone_context;
@@ -2468,8 +2558,15 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 									context["span_fill_context"] = span_fill_context;
 									if (String(span_fill_context.get("status", "")) == "private_context_ready") {
 										completed_phases.append("span_fill_4a325d");
-										context["status"] = "span_fill_private_context_ready";
-										context["blocked_next"] = "0x4a3710_ordering_finalizer";
+										context["footprint_finalizer_context"] = footprint_finalizer_context;
+										if (String(footprint_finalizer_context.get("status", "")) == "0x4a3710_small_land_no_appended_zone_finalizer_ported_private") {
+											completed_phases.append("footprint_finalizer_4a3710");
+											context["status"] = "footprint_finalizer_private_context_ready";
+											context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+										} else {
+											context["status"] = "span_fill_private_context_ready";
+											context["blocked_next"] = "0x4a3710_ordering_finalizer";
+										}
 									} else {
 										context["status"] = "source_node_boundary_private_context_ready";
 										context["blocked_next"] = "0x4a325d_span_fill";
