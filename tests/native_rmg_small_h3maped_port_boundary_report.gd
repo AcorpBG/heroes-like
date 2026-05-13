@@ -705,6 +705,88 @@ func _run() -> void:
 		_fail("Town/player-start synchronization drifted: %s / %s" % [JSON.stringify(town_records), JSON.stringify(player_starts)])
 		return
 
+	var object_vector: Dictionary = report.get("mines_rewards_and_object_vector", {})
+	var mine_boundary: Dictionary = object_vector.get("mine_requirements_boundary", {})
+	var reward_boundary: Dictionary = object_vector.get("reward_scheduler_boundary", {})
+	var selector_boundary: Dictionary = object_vector.get("candidate_selector_boundary", {})
+	var vector_boundary: Dictionary = object_vector.get("candidate_vector_order_boundary", {})
+	var monster_boundary: Dictionary = object_vector.get("single_level_monster_candidate_boundary", {})
+	if String(object_vector.get("phase_id", "")) != "mines_rewards_and_object_vector" \
+			or String(object_vector.get("status", "")) != "active_strict_executable_port" \
+			or String(object_vector.get("h3maped_anchor", "")) != "0x4a9d6a/0x4a9911/0x4a9641/0x4a9c7c/0x4aab7e/0x4aa354/0x4a9f1c/0x4aa9b7" \
+			or String(object_vector.get("source_range", "")) != "0x4a9d6a/0x4a9911/0x4a9641/0x4a9c7c/0x4aab7e/0x4aa354/0x4a9f1c/0x4aa9b7/0x49f95a" \
+			or String(object_vector.get("binary_byte_prefix_0x4a9d6a", "")) != "55 8b ec 83 ec 14 83 65 ec 00 53 56 57 8b f9 8b" \
+			or String(object_vector.get("binary_byte_prefix_0x4a9911", "")) != "b8 ac aa 52 00 e8 b5 c7 03 00 83 ec 40 8a 45 0f" \
+			or String(object_vector.get("binary_byte_prefix_0x4a9641", "")) != "b8 84 aa 52 00 e8 85 ca 03 00 83 ec 58 8b 45 08" \
+			or String(object_vector.get("binary_byte_prefix_0x4a9c7c", "")) != "55 8b ec 83 ec 4c 8b 45 08 53 56 57 8b 00 89 4d" \
+			or String(object_vector.get("binary_byte_prefix_0x4aab7e", "")) != "b8 07 ab 52 00 e8 48 b5 03 00 81 ec 90 00 00 00" \
+			or String(object_vector.get("binary_byte_prefix_0x4aa354", "")) != "55 8b ec 53 8b 5d 0c 56 57 8b f9 8b cb e8 fe 2a" \
+			or String(object_vector.get("binary_byte_prefix_0x4a9f1c", "")) != "b8 dc aa 52 00 e8 aa c1 03 00 83 ec 3c 53 56 57" \
+			or String(object_vector.get("binary_byte_prefix_0x4aa9b7", "")) != "b8 f0 aa 52 00 e8 0f b7 03 00 83 ec 44 89 4d f0" \
+			or String(object_vector.get("binary_byte_prefix_0x49f95a", "")) != "55 8b ec 83 ec 3c 53 56 57 6a 14 5f 89 4d f0 57" \
+			or not bool(object_vector.get("grid_available", false)) \
+			or not bool(object_vector.get("materializes_private_object_vector_prerequisites", false)) \
+			or not bool(object_vector.get("materializes_private_mine_records", false)) \
+			or bool(object_vector.get("materializes_private_reward_coordinate_records", true)) \
+			or bool(object_vector.get("materializes_public_objects", true)) \
+			or bool(object_vector.get("adopts_into_runtime_grid", true)) \
+			or bool(object_vector.get("public_package_output_allowed", true)) \
+			or int(object_vector.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
+			or int(object_vector.get("partial_coordinate_record_count", -1)) != 21 \
+			or int(object_vector.get("candidate_vector_single_level_total_count", -1)) != 704 \
+			or int(object_vector.get("candidate_vector_materialized_static_subset_count", -1)) != 110 \
+			or int(object_vector.get("candidate_vector_materialized_monster_count", -1)) != 118 \
+			or int(object_vector.get("candidate_vector_type10_count", -1)) != 40 \
+			or int(object_vector.get("candidate_vector_type17_count", -1)) != 58 \
+			or int(object_vector.get("candidate_vector_type53_count", -1)) != 378 \
+			or int(object_vector.get("selector_global_limit_override_count", -1)) != 30 \
+			or int(object_vector.get("selector_per_zone_limit_override_count", -1)) != 24 \
+			or int(object_vector.get("reward_scheduler_preview_attempt_count", -1)) != 18 \
+			or int(object_vector.get("reward_value_preview_rng_call_count", -1)) != 18 \
+			or int(object_vector.get("reward_scheduler_budget_argument_total", -1)) != 300 \
+			or int(object_vector.get("reward_object_lookup_count", -1)) != 18 \
+			or int(object_vector.get("reward_object_lookup_selected_count", -1)) != 18 \
+			or int(object_vector.get("reward_object_lookup_rng_call_count", -1)) != 18 \
+			or int(object_vector.get("reward_candidate_scan_count", -1)) != 18 \
+			or int(object_vector.get("reward_candidate_scan_eligible_total", -1)) != 154 \
+			or int(object_vector.get("reward_candidate_scan_weight_total", -1)) != 35090 \
+			or bool(object_vector.get("reward_coordinate_commit_materialized", true)) \
+			or int(object_vector.get("project_object_adoption_candidate_count", -1)) != 0 \
+			or String(object_vector.get("blocked_next", "")) != "private_mine_reward_coordinate_filter_and_mutation_0x4aa603_0x4aa3e9":
+		_fail("Strict mines/rewards/object-vector phase port drifted: %s" % JSON.stringify(object_vector))
+		return
+	if int(mine_boundary.get("total_minimum_mine_count", -1)) != 18 \
+			or int(mine_boundary.get("total_density_weight", -1)) != 18 \
+			or int(mine_boundary.get("mine_template_row_count", -1)) != 46 \
+			or int(mine_boundary.get("mine_template_selection_rng_call_count", -1)) != 18 \
+			or int(mine_boundary.get("mine_placement_rng_call_count", -1)) != 18 \
+			or int(mine_boundary.get("mine_placement_scan_call_count", -1)) != 18 \
+			or int(mine_boundary.get("mine_placement_candidate_total", -1)) != 1864 \
+			or int(mine_boundary.get("mine_placement_selected_count", -1)) != 18 \
+			or int(mine_boundary.get("mine_placement_rejected_owner_count", -1)) != 2795 \
+			or int(mine_boundary.get("mine_placement_rejected_49aa93_count", -1)) != 1580 \
+			or int(mine_boundary.get("mine_placement_rejected_special_distance_count", -1)) != 135 \
+			or int(mine_boundary.get("mine_placement_marked_body_cell_count", -1)) != 79 \
+			or int(mine_boundary.get("object_rng_state_before_0x4a9911_uint32", -1)) != 811474043 \
+			or int(mine_boundary.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2346411599 \
+			or int(reward_boundary.get("total_treasure_band_count", -1)) != 18 \
+			or int(reward_boundary.get("eligible_reward_band_count", -1)) != 18 \
+			or int(reward_boundary.get("eligible_reward_density_sum", -1)) != 96 \
+			or int(reward_boundary.get("budget_base", -1)) != 800 \
+			or int(reward_boundary.get("scheduler_zone_count", -1)) != 6 \
+			or int(reward_boundary.get("scheduler_total_density_sum", -1)) != 96 \
+			or int(reward_boundary.get("preview_rng_state_before_0x4aa354_uint32", -1)) != 2346411599 \
+			or int(reward_boundary.get("preview_rng_state_after_0x4aa354_uint32", -1)) != 2283988067 \
+			or String(selector_boundary.get("status", "")) != "selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending" \
+			or int(selector_boundary.get("global_limit_override_count", -1)) != 30 \
+			or int(selector_boundary.get("per_zone_limit_override_count", -1)) != 24 \
+			or int(vector_boundary.get("single_level_total_candidate_record_count", -1)) != 704 \
+			or Array(vector_boundary.get("segments", [])).size() != 9 \
+			or String(monster_boundary.get("load_status", "")) != "loaded" \
+			or int(monster_boundary.get("candidate_record_count", -1)) != 118:
+		_fail("Mines/rewards/object-vector nested boundaries drifted: %s / %s" % [JSON.stringify(mine_boundary), JSON.stringify(reward_boundary)])
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -712,13 +794,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "mines_rewards_and_object_vector_0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7":
+			or String(strict_state.get("next_required_port", "")) != "private_reward_filter_and_mutation_0x4aa603_0x4aa3e9":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 3 \
-			or not pending_ports.has("mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7") \
+			or not pending_ports.has("private_reward_filter_and_mutation:0x4aa603_0x4aa3e9") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -742,7 +824,8 @@ func _run() -> void:
 			or String(backlog[12].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[13].get("id", "")) != "town_object_placement" \
 			or String(backlog[13].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[14].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[14].get("id", "")) != "mines_rewards_and_object_vector" \
+			or String(backlog[14].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[15].get("status", "")) != "pending_runtime_port" \
 			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
 			or String(backlog[17].get("status", "")) != "pending_runtime_port":
