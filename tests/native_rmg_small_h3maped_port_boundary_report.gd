@@ -114,12 +114,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "span_fill_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d"] \
-			or int(private_context.get("completed_phase_count", -1)) != 10 \
+			or String(private_context.get("status", "")) != "footprint_finalizer_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710"] \
+			or int(private_context.get("completed_phase_count", -1)) != 11 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped span-fill phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped footprint finalizer phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -536,13 +536,55 @@ func _run() -> void:
 		_fail("h3maped span-fill zone reports drifted: %s" % JSON.stringify(zone_fill_reports))
 		return
 
+	var footprint_finalizer: Dictionary = private_context.get("footprint_finalizer_context", {})
+	if String(footprint_finalizer.get("phase_id", "")) != "footprint_finalizer_4a3710" \
+			or String(footprint_finalizer.get("h3maped_anchor", "")) != "0x4a3710" \
+			or String(footprint_finalizer.get("call_site_anchor", "")) != "0x4a3efc..0x4a3f05" \
+			or String(footprint_finalizer.get("polygon_locator_anchor", "")) != "0x4cca55" \
+			or String(footprint_finalizer.get("clip_helper_anchor", "")) != "0x4a2b33" \
+			or String(footprint_finalizer.get("zone_order_reset_anchor", "")) != "0x49b61b" \
+			or String(footprint_finalizer.get("per_zone_order_helper_anchor", "")) != "0x4a3554" \
+			or String(footprint_finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" \
+			or String(footprint_finalizer.get("ordering_vector_offset", "")) != "runtime_zone+0x3e8" \
+			or String(footprint_finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
+			or int(footprint_finalizer.get("level_count", -1)) != 1 \
+			or int(footprint_finalizer.get("h3maped_water_mode_code", -1)) != 0 \
+			or bool(footprint_finalizer.get("synthetic_branch_allowed_by_0x4a3a9d", true)) \
+			or int(footprint_finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 \
+			or int(footprint_finalizer.get("final_runtime_zone_count", -1)) != 6 \
+			or int(footprint_finalizer.get("appended_runtime_zone_count", -1)) != 0:
+		_fail("h3maped footprint finalizer identity drifted: %s" % JSON.stringify(footprint_finalizer))
+		return
+	if int(footprint_finalizer.get("zone_order_reset_call_count", -1)) != 6 \
+			or int(footprint_finalizer.get("per_zone_order_helper_call_count", -1)) != 6 \
+			or int(footprint_finalizer.get("materialized_adjacency_count", -1)) != 0 \
+			or bool(footprint_finalizer.get("materializes_zone_cells", true)) \
+			or bool(footprint_finalizer.get("materializes_boundary_cells", true)) \
+			or bool(footprint_finalizer.get("materializes_span_fill", true)) \
+			or bool(footprint_finalizer.get("materializes_terrain", true)) \
+			or bool(footprint_finalizer.get("materializes_map_cells", true)) \
+			or bool(footprint_finalizer.get("public_package_output_allowed", true)) \
+			or String(footprint_finalizer.get("blocked_next", "")) != "0x4a3f27_terrain_cell_writeout":
+		_fail("h3maped footprint finalizer counts drifted: %s" % JSON.stringify(footprint_finalizer))
+		return
+	var finalizer_phases: Array = footprint_finalizer.get("phases", [])
+	if finalizer_phases.size() != 3 \
+			or String(finalizer_phases[0].get("address_range", "")) != "0x4a3735..0x4a3874" \
+			or String(finalizer_phases[0].get("status", "")) != "skipped_no_appended_runtime_zones" \
+			or String(finalizer_phases[1].get("address_range", "")) != "0x4a3879..0x4a38be" \
+			or int(finalizer_phases[1].get("zone_order_reset_call_count", -1)) != 6 \
+			or int(finalizer_phases[1].get("per_zone_order_helper_call_count", -1)) != 6 \
+			or String(finalizer_phases[2].get("status", "")) != "skipped_no_appended_runtime_zones":
+		_fail("h3maped footprint finalizer phase reports drifted: %s" % JSON.stringify(finalizer_phases))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
