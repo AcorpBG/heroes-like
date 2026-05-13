@@ -1026,14 +1026,15 @@ func _run() -> void:
 				or bool(materialized_monsters.get("extended_monster_loop_materialized", true)) \
 				or int(materialized_monster_records[0].get("candidate_vector_index", -1)) != 2 \
 				or int(materialized_monster_records[0].get("monster_table_index", -1)) != 117 \
-				or String(materialized_monster_records[0].get("monster_name", "")) != "Diamond Golem" \
+				or int(materialized_monster_records[0].get("crtraits_source_row_index", -1)) != 143 \
+				or not bool(materialized_monster_records[0].get("crtraits_name_fields_omitted", false)) \
 				or int(materialized_monster_records[0].get("candidate_record_field_0x18", -1)) != 25 \
 				or int(materialized_monster_records[113].get("monster_table_index", -1)) != 4 \
-				or String(materialized_monster_records[113].get("monster_name", "")) != "Griffin" \
+				or int(materialized_monster_records[113].get("crtraits_source_row_index", -1)) != 6 \
 				or int(materialized_monster_records[113].get("candidate_record_field_0x18", -1)) != 25 \
 				or int(materialized_monster_records[117].get("candidate_vector_index", -1)) != 119 \
 				or int(materialized_monster_records[117].get("monster_table_index", -1)) != 0 \
-				or String(materialized_monster_records[117].get("monster_name", "")) != "Pikeman" \
+				or int(materialized_monster_records[117].get("crtraits_source_row_index", -1)) != 2 \
 				or int(materialized_monster_records[117].get("candidate_record_field_0x18", -1)) != 60:
 		_fail("h3maped materialized monster candidate boundary drifted: %s" % JSON.stringify(materialized_monsters))
 		return
