@@ -762,6 +762,84 @@ func _run() -> void:
 		_fail("0x4a3f27 terrain arrays/writeout status drifted: %s" % JSON.stringify(terrain_writeout))
 		return
 
+	var terrainplacement: Dictionary = report.get("terrainplacement_visual_tables_4bcff5", {})
+	if String(terrainplacement.get("status", "")) != "0x4bcff5_terrainplacement_visual_tables_toolkit_ported_inspection_only" \
+			or String(terrainplacement.get("terrainplacement_factory_address", "")) != "0x4bcff5" \
+			or String(terrainplacement.get("terrainplacement_constructor_address", "")) != "0x4bb5ce" \
+			or String(terrainplacement.get("terrainplacement_wrapper_address", "")) != "0x4bd099" \
+			or String(terrainplacement.get("changed_cell_update_address", "")) != "0x4bb74b" \
+			or String(terrainplacement.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(terrainplacement.get("visual_selector_address", "")) != "0x4bcfc3" \
+			or String(terrainplacement.get("neighbor_mask_address", "")) != "0x4bce6d" \
+			or String(terrainplacement.get("toolkit_table_address", "")) != "0x5436b8":
+		_fail("TerrainPlacement visual-table identity drifted: %s" % JSON.stringify(terrainplacement))
+		return
+	if bool(terrainplacement.get("terrain_art_hash_fallback_allowed", true)) \
+			or bool(terrainplacement.get("materializes_visual_record", true)) \
+			or bool(terrainplacement.get("materializes_full_terrain_art_grid", true)) \
+			or bool(terrainplacement.get("materializes_package_tiles", true)) \
+			or bool(terrainplacement.get("project_grid_public_runtime_adoption", true)):
+		_fail("TerrainPlacement visual-table boundary must stay executable anchored and inspection only: %s" % JSON.stringify(terrainplacement))
+		return
+	var toolkit_records: Array = terrainplacement.get("toolkit_constructor_records", [])
+	if toolkit_records.size() != 10 \
+			or int(toolkit_records[0].get("terrain_id", -1)) != 0 \
+			or String(toolkit_records[0].get("table_address", "")) != "0x543380" \
+			or int(toolkit_records[2].get("terrain_id", -1)) != 2 \
+			or String(toolkit_records[2].get("object_address", "")) != "0x5a3988" \
+			or String(toolkit_records[2].get("table_address", "")) != "0x543108" \
+			or int(toolkit_records[8].get("terrain_id", -1)) != 8 \
+			or String(toolkit_records[8].get("table_address", "")) != "0x5435b0" \
+			or int(toolkit_records[9].get("terrain_id", -1)) != 9 \
+			or String(toolkit_records[9].get("constructor_address", "")) != "0x4baa66":
+		_fail("TerrainPlacement toolkit constructor records drifted: %s" % JSON.stringify(toolkit_records))
+		return
+	var static_tables: Dictionary = terrainplacement.get("static_table_contracts", {})
+	if String(static_tables.get("status", "")) != "h3maped_exe_static_terrain_visual_tables_decoded" \
+			or String(static_tables.get("normal_table_address", "")) != "0x543108" \
+			or String(static_tables.get("dirt_table_address", "")) != "0x543380" \
+			or String(static_tables.get("sand_table_address", "")) != "0x5434f0" \
+			or String(static_tables.get("water_table_address", "")) != "0x5435b0" \
+			or String(static_tables.get("rock_table_address", "")) != "0x542f88" \
+			or int(static_tables.get("table_count", -1)) != 5 \
+			or int(static_tables.get("decoded_total_row_count", -1)) != 230 \
+			or int(static_tables.get("expected_total_row_count", -1)) != 230:
+		_fail("TerrainPlacement static visual table decode drifted: %s" % JSON.stringify(static_tables))
+		return
+	var tables: Array = static_tables.get("tables", [])
+	if tables.size() != 5 \
+			or int(tables[0].get("decoded_row_count", -1)) != 79 \
+			or int(tables[1].get("decoded_row_count", -1)) != 46 \
+			or int(tables[2].get("decoded_row_count", -1)) != 24 \
+			or int(tables[3].get("decoded_row_count", -1)) != 33 \
+			or int(tables[4].get("decoded_row_count", -1)) != 48:
+		_fail("TerrainPlacement static visual table row counts drifted: %s" % JSON.stringify(tables))
+		return
+	var row_selection: Dictionary = terrainplacement.get("visual_row_selection_contract", {})
+	var row_samples: Array = row_selection.get("samples", [])
+	if String(row_selection.get("status", "")) != "0x4ba938_0x4ba989_0x4baabf_visual_row_selection_ported_samples" \
+			or String(row_selection.get("full_native_selector_address", "")) != "0x4ba938" \
+			or String(row_selection.get("normal_transition_selector_address", "")) != "0x4ba989" \
+			or String(row_selection.get("rock_selector_address", "")) != "0x4baabf" \
+			or int(row_selection.get("sample_count", -1)) != 4 \
+			or row_samples.size() != 4:
+		_fail("TerrainPlacement row-selection contract drifted: %s" % JSON.stringify(row_selection))
+		return
+	if String(row_samples[0].get("id", "")) != "normal_full_grass_seed_1" \
+			or int(row_samples[0].get("selected_row", -1)) != 60 \
+			or int(row_samples[0].get("probability_rng_value", -1)) != 41 \
+			or int(row_samples[0].get("art_rng_value", -1)) != 18467 \
+			or String(row_samples[1].get("id", "")) != "normal_transition_class_28_seed_1" \
+			or int(row_samples[1].get("selected_row", -1)) != 77 \
+			or String(row_samples[2].get("id", "")) != "water_transition_class_16_seed_1" \
+			or int(row_samples[2].get("selected_row", -1)) != 20 \
+			or String(row_samples[3].get("id", "")) != "rock_class_8_flag_1_0_seed_1" \
+			or int(row_samples[3].get("selected_row", -1)) != 11 \
+			or int(row_samples[3].get("out_flag_a", -1)) != 0 \
+			or int(row_samples[3].get("out_flag_b", -1)) != 0:
+		_fail("TerrainPlacement row-selection samples drifted: %s" % JSON.stringify(row_samples))
+		return
+
 	var finalizer: Dictionary = report.get("footprint_finalizer_4a3710", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
 			or String(finalizer.get("function_address", "")) != "0x4a3710" \

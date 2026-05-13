@@ -53,6 +53,12 @@ struct H3MapedRng {
 	}
 };
 
+struct TerrainVisualRow {
+	int32_t shape_class = 0;
+	int32_t flag_a = 0;
+	int32_t flag_b = 0;
+};
+
 struct CoordCandidate {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -482,6 +488,391 @@ Dictionary binary_verification() {
 	report["sha256_matches"] = sha_ok;
 	report["ok"] = actual_size == BINARY_SIZE_BYTES && mz && sha_ok;
 	report["status"] = bool(report["ok"]) ? String("verified_reset_anchor") : String("mismatch");
+	return report;
+}
+
+int64_t h3maped_va_to_file_offset(int64_t va) {
+	return va - 0x400000;
+}
+
+bool read_h3maped_u8(Ref<FileAccess> &file, int64_t va, uint8_t &out_value) {
+	if (file.is_null() || !file->is_open()) {
+		return false;
+	}
+	const int64_t offset = h3maped_va_to_file_offset(va);
+	if (offset < 0 || offset >= file->get_length()) {
+		return false;
+	}
+	file->seek(offset);
+	out_value = uint8_t(file->get_8());
+	return true;
+}
+
+bool read_h3maped_u32_le(Ref<FileAccess> &file, int64_t va, uint32_t &out_value) {
+	uint8_t b0 = 0;
+	uint8_t b1 = 0;
+	uint8_t b2 = 0;
+	uint8_t b3 = 0;
+	if (!read_h3maped_u8(file, va, b0) || !read_h3maped_u8(file, va + 1, b1) || !read_h3maped_u8(file, va + 2, b2) || !read_h3maped_u8(file, va + 3, b3)) {
+		return false;
+	}
+	out_value = uint32_t(b0) | (uint32_t(b1) << 8U) | (uint32_t(b2) << 16U) | (uint32_t(b3) << 24U);
+	return true;
+}
+
+String compact_row_ranges(const std::vector<int32_t> &rows) {
+	if (rows.empty()) {
+		return "-";
+	}
+	String result;
+	int32_t start = rows[0];
+	int32_t previous = rows[0];
+	for (size_t index = 1; index < rows.size(); ++index) {
+		const int32_t current = rows[index];
+		if (current == previous + 1) {
+			previous = current;
+			continue;
+		}
+		if (!result.is_empty()) {
+			result += ",";
+		}
+		result += start == previous ? String::num_int64(start) : String::num_int64(start) + "-" + String::num_int64(previous);
+		start = current;
+		previous = current;
+	}
+	if (!result.is_empty()) {
+		result += ",";
+	}
+	result += start == previous ? String::num_int64(start) : String::num_int64(start) + "-" + String::num_int64(previous);
+	return result;
+}
+
+PackedInt32Array packed_rows(const std::vector<int32_t> &rows) {
+	PackedInt32Array packed;
+	for (int32_t row : rows) {
+		packed.append(row);
+	}
+	return packed;
+}
+
+Array class_range_records(const std::map<int32_t, std::vector<int32_t>> &rows_by_class) {
+	Array records;
+	for (const auto &entry : rows_by_class) {
+		Dictionary record;
+		record["class"] = entry.first;
+		record["row_count"] = int32_t(entry.second.size());
+		record["rows"] = packed_rows(entry.second);
+		record["compact_rows"] = compact_row_ranges(entry.second);
+		record["first_row"] = entry.second.empty() ? -1 : entry.second.front();
+		record["last_row"] = entry.second.empty() ? -1 : entry.second.back();
+		records.append(record);
+	}
+	return records;
+}
+
+Dictionary terrain_visual_table_contract(Ref<FileAccess> &file, const char *id, const char *terrain_ids, const char *address, int64_t table_va, int32_t row_count, bool include_flag_buckets) {
+	std::map<int32_t, std::vector<int32_t>> rows_by_class;
+	std::map<std::array<int32_t, 3>, std::vector<int32_t>> rows_by_class_flags;
+	bool ok = true;
+	int32_t decoded_count = 0;
+	for (int32_t row_index = 0; row_index < row_count; ++row_index) {
+		const int64_t row_va = table_va + int64_t(row_index) * 8;
+		uint32_t shape_class = 0;
+		uint8_t flag_a = 0;
+		uint8_t flag_b = 0;
+		if (!read_h3maped_u32_le(file, row_va, shape_class) || !read_h3maped_u8(file, row_va + 4, flag_a) || !read_h3maped_u8(file, row_va + 5, flag_b)) {
+			ok = false;
+			break;
+		}
+		rows_by_class[int32_t(shape_class)].push_back(row_index);
+		if (include_flag_buckets) {
+			rows_by_class_flags[{ int32_t(shape_class), int32_t(flag_a), int32_t(flag_b) }].push_back(row_index);
+		}
+		decoded_count += 1;
+	}
+	Dictionary report;
+	report["id"] = id;
+	report["terrain_ids"] = terrain_ids;
+	report["table_address"] = address;
+	report["table_file_offset"] = h3maped_va_to_file_offset(table_va);
+	report["expected_row_count"] = row_count;
+	report["decoded_row_count"] = decoded_count;
+	report["status"] = ok && decoded_count == row_count ? String("decoded_from_h3maped_exe") : String("decode_failed");
+	report["row_stride_bytes"] = 8;
+	report["row_contract"] = "u32 class, u8 flag_a, u8 flag_b";
+	report["unique_class_count"] = int32_t(rows_by_class.size());
+	report["class_ranges"] = class_range_records(rows_by_class);
+	if (include_flag_buckets) {
+		Array flag_records;
+		for (const auto &entry : rows_by_class_flags) {
+			Dictionary flag_record;
+			flag_record["class"] = entry.first[0];
+			flag_record["flag_a"] = entry.first[1];
+			flag_record["flag_b"] = entry.first[2];
+			flag_record["row_count"] = int32_t(entry.second.size());
+			flag_record["rows"] = packed_rows(entry.second);
+			flag_record["compact_rows"] = compact_row_ranges(entry.second);
+			flag_records.append(flag_record);
+		}
+		report["class_flag_ranges"] = flag_records;
+	}
+	return report;
+}
+
+std::vector<TerrainVisualRow> decode_terrain_visual_rows(Ref<FileAccess> &file, int64_t table_va, int32_t row_count) {
+	std::vector<TerrainVisualRow> rows;
+	rows.reserve(size_t(row_count));
+	for (int32_t row_index = 0; row_index < row_count; ++row_index) {
+		const int64_t row_va = table_va + int64_t(row_index) * 8;
+		uint32_t shape_class = 0;
+		uint8_t flag_a = 0;
+		uint8_t flag_b = 0;
+		if (!read_h3maped_u32_le(file, row_va, shape_class) || !read_h3maped_u8(file, row_va + 4, flag_a) || !read_h3maped_u8(file, row_va + 5, flag_b)) {
+			return {};
+		}
+		TerrainVisualRow row;
+		row.shape_class = int32_t(shape_class);
+		row.flag_a = int32_t(flag_a);
+		row.flag_b = int32_t(flag_b);
+		rows.push_back(row);
+	}
+	return rows;
+}
+
+std::vector<int32_t> row_indices_for_class(const std::vector<TerrainVisualRow> &rows, int32_t shape_class) {
+	std::vector<int32_t> indices;
+	for (int32_t index = 0; index < int32_t(rows.size()); ++index) {
+		if (rows[size_t(index)].shape_class == shape_class) {
+			indices.push_back(index);
+		}
+	}
+	return indices;
+}
+
+std::vector<int32_t> row_indices_for_class_group(const std::vector<TerrainVisualRow> &rows, int32_t shape_class, int32_t group_flag) {
+	std::vector<int32_t> indices;
+	for (int32_t index = 0; index < int32_t(rows.size()); ++index) {
+		if (rows[size_t(index)].shape_class == shape_class && rows[size_t(index)].flag_a == group_flag) {
+			indices.push_back(index);
+		}
+	}
+	return indices;
+}
+
+std::vector<int32_t> row_indices_for_class_flags(const std::vector<TerrainVisualRow> &rows, int32_t shape_class, int32_t flag_a, int32_t flag_b) {
+	std::vector<int32_t> indices;
+	for (int32_t index = 0; index < int32_t(rows.size()); ++index) {
+		const TerrainVisualRow &row = rows[size_t(index)];
+		if (row.shape_class == shape_class && row.flag_a == flag_a && row.flag_b == flag_b) {
+			indices.push_back(index);
+		}
+	}
+	return indices;
+}
+
+Dictionary terrain_row_selection_sample(const char *id, const char *selector_address, const char *table_address, const char *selector_kind, const std::vector<TerrainVisualRow> &rows, int32_t shape_class, int32_t flag_a, int32_t flag_b, int32_t constructor_probability, bool full_native, bool rock_selector, uint32_t seed) {
+	H3MapedRng rng;
+	rng.state = seed;
+	std::vector<int32_t> bucket;
+	int32_t probability_rng_value = -1;
+	int32_t probability_threshold = -1;
+	bool selected_special_bucket = false;
+	if (rock_selector) {
+		bucket = row_indices_for_class_flags(rows, shape_class, flag_a, flag_b);
+	} else if (full_native) {
+		const std::vector<int32_t> ordinary = row_indices_for_class_group(rows, 0, 0);
+		const std::vector<int32_t> special = row_indices_for_class_group(rows, 0, 1);
+		probability_rng_value = rng.next();
+		probability_threshold = constructor_probability;
+		selected_special_bucket = !special.empty() && (probability_rng_value % 100) < probability_threshold;
+		bucket = selected_special_bucket ? special : ordinary;
+	} else {
+		bucket = row_indices_for_class(rows, shape_class);
+	}
+	if (bucket.empty()) {
+		Dictionary failed;
+		failed["id"] = id;
+		failed["status"] = "missing_visual_row_bucket";
+		failed["selector_address"] = selector_address;
+		failed["table_address"] = table_address;
+		failed["selector_kind"] = selector_kind;
+		failed["class"] = shape_class;
+		failed["flag_a"] = flag_a;
+		failed["flag_b"] = flag_b;
+		return failed;
+	}
+	const int32_t art_rng_value = rng.next();
+	const int32_t selected_row = bucket[size_t(art_rng_value % int32_t(bucket.size()))];
+	Dictionary report;
+	report["id"] = id;
+	report["status"] = "visual_row_selected_from_decoded_h3maped_table";
+	report["selector_address"] = selector_address;
+	report["table_address"] = table_address;
+	report["selector_kind"] = selector_kind;
+	report["class"] = shape_class;
+	report["flag_a"] = flag_a;
+	report["flag_b"] = flag_b;
+	report["old_index"] = -1;
+	report["old_index_reused"] = false;
+	report["rng_seed_uint32"] = int64_t(seed);
+	report["probability_rng_value"] = probability_rng_value;
+	report["probability_threshold"] = probability_threshold;
+	report["selected_special_bucket"] = selected_special_bucket;
+	report["art_rng_value"] = art_rng_value;
+	report["bucket_count"] = int32_t(bucket.size());
+	report["bucket_rows"] = packed_rows(bucket);
+	report["bucket_compact_rows"] = compact_row_ranges(bucket);
+	report["selected_row"] = selected_row;
+	report["out_flag_a"] = rock_selector ? 0 : flag_a;
+	report["out_flag_b"] = rock_selector ? 0 : flag_b;
+	report["rng_state_after_uint32"] = int64_t(rng.state);
+	return report;
+}
+
+Dictionary terrain_visual_static_table_contracts_report() {
+	Dictionary report;
+	report["status"] = "h3maped_exe_static_terrain_visual_tables_decoded";
+	report["source"] = "direct decode from /root/Downloads/h3maped.exe static terrain row tables; file offset = VA - 0x400000 for these table addresses";
+	report["binary_path"] = BINARY_PATH;
+	report["binary_sha256_anchor"] = BINARY_SHA256;
+	report["normal_table_address"] = "0x543108";
+	report["dirt_table_address"] = "0x543380";
+	report["sand_table_address"] = "0x5434f0";
+	report["water_table_address"] = "0x5435b0";
+	report["rock_table_address"] = "0x542f88";
+	report["materializes_visual_records"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	if (!FileAccess::file_exists(BINARY_PATH)) {
+		report["status"] = "h3maped_exe_missing";
+		return report;
+	}
+	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		report["status"] = "h3maped_exe_unreadable";
+		return report;
+	}
+	Array tables;
+	tables.append(terrain_visual_table_contract(file, "normal_land_terrain_ids_2_7", "2,3,4,5,6,7", "0x543108", 0x543108, 79, false));
+	tables.append(terrain_visual_table_contract(file, "dirt_terrain_id_0", "0", "0x543380", 0x543380, 46, false));
+	tables.append(terrain_visual_table_contract(file, "sand_terrain_id_1", "1", "0x5434f0", 0x5434f0, 24, false));
+	tables.append(terrain_visual_table_contract(file, "water_terrain_id_8", "8", "0x5435b0", 0x5435b0, 33, false));
+	tables.append(terrain_visual_table_contract(file, "rock_terrain_id_9", "9", "0x542f88", 0x542f88, 48, true));
+	int32_t decoded_total = 0;
+	bool ok = true;
+	for (int64_t index = 0; index < tables.size(); ++index) {
+		Dictionary table = tables[index];
+		decoded_total += int32_t(table.get("decoded_row_count", 0));
+		ok = ok && String(table.get("status", "")) == "decoded_from_h3maped_exe";
+	}
+	report["table_count"] = tables.size();
+	report["decoded_total_row_count"] = decoded_total;
+	report["expected_total_row_count"] = 79 + 46 + 24 + 33 + 48;
+	report["tables"] = tables;
+	report["status"] = ok && decoded_total == int32_t(report["expected_total_row_count"])
+			? String("h3maped_exe_static_terrain_visual_tables_decoded")
+			: String("h3maped_exe_static_terrain_visual_table_decode_failed");
+	return report;
+}
+
+Dictionary terrain_visual_row_selection_contract_report() {
+	Dictionary report;
+	report["status"] = "0x4ba938_0x4ba989_0x4baabf_visual_row_selection_ported_samples";
+	report["source"] = "bounded row-selection samples using static terrain visual tables decoded from /root/Downloads/h3maped.exe";
+	report["full_native_selector_address"] = "0x4ba938";
+	report["normal_transition_selector_address"] = "0x4ba989";
+	report["rock_selector_address"] = "0x4baabf";
+	report["rng_address"] = "0x4e7276";
+	report["materializes_visual_records"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	if (!FileAccess::file_exists(BINARY_PATH)) {
+		report["status"] = "h3maped_exe_missing";
+		return report;
+	}
+	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		report["status"] = "h3maped_exe_unreadable";
+		return report;
+	}
+	const std::vector<TerrainVisualRow> normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
+	const std::vector<TerrainVisualRow> water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
+	const std::vector<TerrainVisualRow> rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+	if (normal_rows.size() != 79 || water_rows.size() != 33 || rock_rows.size() != 48) {
+		report["status"] = "h3maped_visual_row_decode_failed";
+		return report;
+	}
+	Array samples;
+	samples.append(terrain_row_selection_sample("normal_full_grass_seed_1", "0x4ba938", "0x543108", "normal_full_native_special_frequency", normal_rows, 0, 0, 0, 0x32, true, false, 1));
+	samples.append(terrain_row_selection_sample("normal_transition_class_28_seed_1", "0x4ba989", "0x543108", "normal_transition_class_bucket", normal_rows, 28, 1, 0, 0x50, false, false, 1));
+	samples.append(terrain_row_selection_sample("water_transition_class_16_seed_1", "0x4ba989", "0x5435b0", "water_normal_trait_transition_class_bucket", water_rows, 16, 0, 0, 0x00, false, false, 1));
+	samples.append(terrain_row_selection_sample("rock_class_8_flag_1_0_seed_1", "0x4baabf", "0x542f88", "rock_class_flag_bucket", rock_rows, 8, 1, 0, 0x00, false, true, 1));
+	report["sample_count"] = samples.size();
+	report["samples"] = samples;
+	report["blocked_next"] = "feed selected visual rows into 0x4bad0f and 0x49acf6 during the live 0x4bb74b/0x4bc5f0 sequence";
+	return report;
+}
+
+Dictionary terrainplacement_visual_tables_4bcff5_report() {
+	Dictionary report;
+	report["status"] = "0x4bcff5_terrainplacement_visual_tables_toolkit_ported_inspection_only";
+	report["source"] = "h3maped TerrainPlacement visual table and toolkit boundary decoded from /root/Downloads/h3maped.exe; no hash art approximation or public package adoption";
+	report["terrainplacement_factory_address"] = "0x4bcff5";
+	report["terrainplacement_constructor_address"] = "0x4bb5ce";
+	report["terrainplacement_wrapper_address"] = "0x4bd099";
+	report["changed_cell_update_address"] = "0x4bb74b";
+	report["queue_drain_address"] = "0x4bc5f0";
+	report["visual_selector_address"] = "0x4bcfc3";
+	report["neighbor_mask_address"] = "0x4bce6d";
+	report["toolkit_table_address"] = "0x5436b8";
+	report["complex_toolkit_vtable_address"] = "0x543780";
+	report["simple_toolkit_vtable_address"] = "0x54379c";
+	report["complex_visual_resolve_vfunc_plus_0x10"] = "0x4ba938";
+	report["complex_visual_writeback_vfunc_plus_0x14"] = "0x4ba989";
+	report["simple_visual_resolve_vfunc_plus_0x10"] = "0x4baa94";
+	report["simple_visual_writeback_vfunc_plus_0x14"] = "0x4baabf";
+	report["terrain_art_hash_fallback_allowed"] = false;
+	report["materializes_visual_record"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	report["project_grid_public_runtime_adoption"] = false;
+	Array terrain_toolkit_objects;
+	terrain_toolkit_objects.append("0x5a4130");
+	terrain_toolkit_objects.append("0x5a3d58");
+	terrain_toolkit_objects.append("0x5a3988");
+	terrain_toolkit_objects.append("0x5a3b70");
+	terrain_toolkit_objects.append("0x5a3f40");
+	terrain_toolkit_objects.append("0x5a46b8");
+	terrain_toolkit_objects.append("0x5a4c70");
+	terrain_toolkit_objects.append("0x5a4a88");
+	terrain_toolkit_objects.append("0x5a48a0");
+	terrain_toolkit_objects.append("0x5a4128");
+	report["toolkit_object_addresses"] = terrain_toolkit_objects;
+	Array constructor_records;
+	const auto append_toolkit_record = [&constructor_records](const char *object_address, const char *constructor_address, int32_t terrain_id, int32_t arg_flag_a, int32_t arg_flag_b, int32_t range_probability, int32_t row_count, const char *table_address) {
+		Dictionary record;
+		record["object_address"] = object_address;
+		record["constructor_address"] = constructor_address;
+		record["terrain_id"] = terrain_id;
+		record["arg_flag_a"] = arg_flag_a;
+		record["arg_flag_b"] = arg_flag_b;
+		record["range_probability"] = range_probability;
+		record["row_count"] = row_count;
+		record["table_address"] = table_address;
+		constructor_records.append(record);
+	};
+	append_toolkit_record("0x5a4130", "0x4ba868", 0, 1, 1, 0x32, 0x2e, "0x543380");
+	append_toolkit_record("0x5a3d58", "0x4ba868", 1, 0, 1, 0x46, 0x18, "0x5434f0");
+	append_toolkit_record("0x5a3988", "0x4ba868", 2, 1, 1, 0x32, 0x4f, "0x543108");
+	append_toolkit_record("0x5a3b70", "0x4ba868", 3, 1, 1, 0x50, 0x4f, "0x543108");
+	append_toolkit_record("0x5a3f40", "0x4ba868", 4, 1, 1, 0x50, 0x4f, "0x543108");
+	append_toolkit_record("0x5a46b8", "0x4ba868", 5, 1, 1, 0x50, 0x4f, "0x543108");
+	append_toolkit_record("0x5a4c70", "0x4ba868", 6, 1, 1, 0x3c, 0x4f, "0x543108");
+	append_toolkit_record("0x5a4a88", "0x4ba868", 7, 1, 1, 0x50, 0x4f, "0x543108");
+	append_toolkit_record("0x5a48a0", "0x4ba868", 8, 0, 0, 0x00, 0x21, "0x5435b0");
+	append_toolkit_record("0x5a4128", "0x4baa66", 9, 0, 0, 0x00, 0x00, "none");
+	report["toolkit_constructor_records"] = constructor_records;
+	report["static_table_contracts"] = terrain_visual_static_table_contracts_report();
+	report["visual_row_selection_contract"] = terrain_visual_row_selection_contract_report();
+	report["blocked_next"] = "port live 0x4bb74b/0x4bc5f0 TerrainPlacement scratch feedback and copy selected rows into generated-cell art/flag words before any public package output";
 	return report;
 }
 
@@ -3304,6 +3695,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["real_source_node_cycle_traversal_4a2777"] = real_source_node_cycle_traversal_4a2777_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 			report["real_boundary_span_fill_4a325d"] = real_boundary_span_fill_4a325d_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 			report["terrain_cell_writeout_4a3f27"] = terrain_cell_writeout_4a3f27_report(normalized_config, report["coordinate_replay"], polygon_split_model, report["runtime_terrain_selection_49b53d"]);
+			report["terrainplacement_visual_tables_4bcff5"] = terrainplacement_visual_tables_4bcff5_report();
 			report["footprint_finalizer_4a3710"] = footprint_finalizer_4a3710_report(normalized_config, report["runtime_zone_record_setup"], report["zone_footprint_phase_boundary"]);
 		}
 	}
