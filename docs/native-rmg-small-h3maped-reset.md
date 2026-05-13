@@ -35,6 +35,8 @@ The compiled active module now only:
 - ports runtime-zone record setup `0x4a218c` as inspection-only evidence from the recovered template catalog, including runtime vector offsets `generator+0x10e0/+0x10e4/+0x10e8` and `0x414`-byte record size;
 - ports `0x4a1f3b` source-zone link endpoint seeds as inspection-only evidence, preserving `Value`, `Wide`, and `Border Guard` payloads for later `0x4a79a3`;
 - ports one-level coordinate candidate replay `0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed` as inspection-only evidence;
+- ports the `0x4a3a03` zone-footprint phase boundary as inspection-only evidence: one level collects the six runtime zones, queues six `0x4a2777` helper inputs, small one-level land appends no synthetic `0xd4` source zone, and helper materialization remains pending;
+- ports the `0x4cc788` initial source-node rectangle as inspection-only evidence, including constants `0xffffff38` / `0x190` and the four initial `0x4cc955` edges that later `0x4ccb64` split insertion must mutate before real `0x4a2777` traversal;
 - records a strict restart backlog for the required executable phase ports;
 - refuses runtime generation.
 
@@ -62,7 +64,7 @@ The restart must port these phases from `h3maped.exe` before public package outp
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
 2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active inspection only; no runtime player materialization).
 3. Runtime-zone records: `0x4a218c` (active inspection only; no coordinates, terrain, cells, or runtime players).
-4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a325d`, and `0x4a3710` (`0x4a1f3b` link endpoint seeds and one-level coordinate replay active inspection only; source-node split insertion, zone-footprint geometry, span-fill, and cell materialization pending strict port).
+4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a325d`, and `0x4a3710` (`0x4a1f3b` link endpoint seeds, one-level coordinate replay, `0x4a3a03` helper-input queue, and `0x4cc788` initial rectangle active inspection only; source-node split insertion, real `0x4a2777` traversal, span-fill, and cell materialization pending strict port).
 5. Terrain writeout: `0x4a3f27` (pending strict port).
 6. Town object placement: `0x4a8d2c`, `0x4a93a2`, `0x49ba89`.
 7. Roads and rivers: `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`.

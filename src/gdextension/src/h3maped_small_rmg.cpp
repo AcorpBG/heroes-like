@@ -465,6 +465,8 @@ Dictionary restart_backlog() {
 			phase["status"] = "active_inspection_only";
 		} else if (index == 3) {
 			phase["status"] = "active_inspection_only";
+		} else if (index == 4) {
+			phase["status"] = "active_phase_boundary_only";
 		} else {
 			phase["status"] = "pending_strict_h3maped_port";
 		}
@@ -981,6 +983,113 @@ Dictionary coordinate_replay_report(const Dictionary &normalized_config, const D
 	return report;
 }
 
+Dictionary zone_footprint_phase_boundary_report(const Dictionary &normalized_config, const Dictionary &runtime_zone_setup) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_zone_footprint_phase_boundary_ported_inspection_only";
+	report["source"] = "h3maped 0x4a3a03 runs once per level, collects matching runtime zones, may append synthetic source 0xd4 for water/level cases, then calls 0x4a2777 -> 0x4a325d -> 0x4a3710";
+	report["phase_address"] = "0x4a3a03";
+	report["helper_sequence"] = "0x4a2777 -> 0x4a325d -> 0x4a3710";
+	report["synthetic_source_zone_id"] = "0xd4";
+	report["synthetic_triplets"] = "0xa0=100,0xa4=1000,0xa8=5,0xac=2000,0xb0=6000,0xb4=1";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array runtime_records = runtime_zone_setup.get("runtime_zone_records", Array());
+	Array levels;
+	int32_t total_collected = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array zone_indices;
+		Array helper_call_inputs;
+		for (int64_t index = 0; index < runtime_records.size(); ++index) {
+			if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary record = runtime_records[index];
+			if (int32_t(record.get("level", 0)) != level) {
+				continue;
+			}
+			const Variant runtime_index = record.get("runtime_zone_index", index);
+			zone_indices.append(runtime_index);
+			Dictionary helper_input;
+			helper_input["call_order"] = helper_call_inputs.size();
+			helper_input["helper_address"] = "0x4a2777";
+			helper_input["runtime_zone_index"] = runtime_index;
+			helper_input["source_zone_id"] = record.get("source_zone_id", -1);
+			helper_input["level"] = level;
+			helper_input["input_status"] = "queued_for_0x4a2777_no_boundary_materialization";
+			helper_call_inputs.append(helper_input);
+		}
+		total_collected += zone_indices.size();
+		Dictionary level_record;
+		level_record["level"] = level;
+		level_record["collected_runtime_zone_indices"] = zone_indices;
+		level_record["collected_runtime_zone_count"] = zone_indices.size();
+		level_record["helper_call_inputs"] = helper_call_inputs;
+		level_record["helper_call_input_count"] = helper_call_inputs.size();
+		level_record["synthetic_zone_appended"] = false;
+		level_record["synthetic_zone_status"] = water_code == 0 && level_count == 1 ? String("not_applicable_small_one_level_land") : String("pending_water_or_multilevel_rule_port");
+		level_record["helper_status"] = "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending";
+		levels.append(level_record);
+	}
+
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["per_level"] = levels;
+	report["total_collected_runtime_zone_count"] = total_collected;
+	report["synthetic_zone_appended_count"] = 0;
+	return report;
+}
+
+Dictionary source_node_rectangle_4cc788_report() {
+	Dictionary report;
+	report["status"] = "0x4cc788_initial_source_node_bounds_ported_inspection_only";
+	report["source"] = "h3maped 0x4cc788 constructs the initial polygon source-node rectangle from constants 0xffffff38 (-200) and 0x190 (400), then links four 0x4cc955 nodes before 0x4ccb64 runtime-zone split insertions";
+	report["function_address"] = "0x4cc788";
+	report["node_constructor_address"] = "0x4cc955";
+	report["splitter_address"] = "0x4ccb64";
+	report["locator_address"] = "0x4cca55";
+	report["finalizer_address"] = "0x4ccdfc";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["constant_min_hex"] = "0xffffff38";
+	bounds["constant_max_hex"] = "0x190";
+	report["initial_bounds"] = bounds;
+
+	Array edges;
+	auto edge = [&](const char *id, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, const char *next) {
+		Dictionary item;
+		item["id"] = id;
+		item["from_x"] = from_x;
+		item["from_y"] = from_y;
+		item["to_x"] = to_x;
+		item["to_y"] = to_y;
+		item["next"] = next;
+		item["constructor"] = "0x4cc955";
+		return item;
+	};
+	edges.append(edge("top", -200, -200, 400, -200, "right"));
+	edges.append(edge("right", 400, -200, 400, 400, "bottom"));
+	edges.append(edge("bottom", 400, 400, -200, 400, "left"));
+	edges.append(edge("left", -200, 400, -200, -200, "top"));
+	report["initial_edge_count"] = edges.size();
+	report["initial_edges"] = edges;
+	report["blocked_next"] = "port 0x4ccb64 split insertion and 0x4ccdfc source-node finalization before feeding real cycles into 0x4a2777";
+	return report;
+}
+
 } // namespace
 
 bool supports_scope(const Dictionary &normalized_config) {
@@ -1081,6 +1190,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			Dictionary link_seed_setup = link_seed_setup_report(source_template_record, runtime_zone_setup, human_count, player_count);
 			report["link_seed_setup"] = link_seed_setup;
 			report["coordinate_replay"] = coordinate_replay_report(normalized_config, runtime_zone_setup, link_seed_setup, uint32_t(int64_t(identity.get("rng_state_after_selection_uint32", 0))));
+			report["zone_footprint_phase_boundary"] = zone_footprint_phase_boundary_report(normalized_config, runtime_zone_setup);
+			report["source_node_rectangle_4cc788"] = source_node_rectangle_4cc788_report();
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
