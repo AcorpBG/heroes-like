@@ -790,6 +790,55 @@ func _run() -> void:
 		_fail("0x4bbfcc generated-grid boundary counter drifted: %s" % JSON.stringify(final_sweep_counter))
 		return
 
+	var live_repaint_feedback: Dictionary = terrain_writeout.get("repaint_live_visual_feedback", {})
+	var live_mask_histogram: Dictionary = live_repaint_feedback.get("neighbor_mask_histogram", {})
+	var live_selector_histogram: Dictionary = live_repaint_feedback.get("selector_kind_histogram", {})
+	var live_samples: Array = live_repaint_feedback.get("sample_records", [])
+	if String(terrain_writeout.get("repaint_live_visual_feedback_status", "")) != "0x4a4025_0x4bb74b_repaint_live_scratch_visual_feedback_boundary_only" \
+			or String(live_repaint_feedback.get("status", "")) != "0x4a4025_0x4bb74b_repaint_live_scratch_visual_feedback_boundary_only" \
+			or not bool(live_repaint_feedback.get("visual_tables_decoded", false)) \
+			or bool(live_repaint_feedback.get("exact_queue_drain_complete", true)) \
+			or bool(live_repaint_feedback.get("adopts_into_runtime_grid", true)) \
+			or bool(live_repaint_feedback.get("materializes_package_tiles", true)) \
+			or not bool(live_repaint_feedback.get("live_feedback_materialized", false)) \
+			or not bool(live_repaint_feedback.get("uses_live_scratch_neighbor_mask", false)) \
+			or int(live_repaint_feedback.get("tile_count", -1)) != 1296 \
+			or int(live_repaint_feedback.get("live_visual_attempt_count", -1)) != 2403 \
+			or int(live_repaint_feedback.get("live_visual_write_count", -1)) != 2403 \
+			or int(live_repaint_feedback.get("live_visual_missing_bucket_count", -1)) != 0 \
+			or int(live_repaint_feedback.get("live_initial_water_attempt_count", -1)) != 1296 \
+			or int(live_repaint_feedback.get("live_repaint_attempt_count", -1)) != 1107 \
+			or int(live_repaint_feedback.get("live_dirty_cell_count", -1)) != 1296 \
+			or int(live_repaint_feedback.get("live_roundtrip_mismatch_count", -1)) != 0 \
+			or int(live_repaint_feedback.get("live_terrain_mismatch_count", -1)) != 0 \
+			or int(live_repaint_feedback.get("live_full_native_cell_count", -1)) != 1297 \
+			or int(live_repaint_feedback.get("live_terrain_art_nonzero_cell_count", -1)) != 2392 \
+			or int(live_repaint_feedback.get("live_terrain_flag_cell_count", -1)) != 1023 \
+			or int(live_repaint_feedback.get("rng_state_after_live_visual_selection_uint32", -1)) != 2994722404 \
+			or int(live_mask_histogram.get("1", -1)) != 2015 \
+			or int(live_mask_histogram.get("2", -1)) != 317 \
+			or int(live_mask_histogram.get("4", -1)) != 71 \
+			or int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1297 \
+			or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1106 \
+			or PackedInt32Array(live_repaint_feedback.get("scratch_word_u16", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_repaint_feedback.get("generated_cell_word_0x24_u32", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_repaint_feedback.get("generated_cell_word_0x28_u32", PackedInt32Array())).size() != 1296 \
+			or live_samples.size() != 16:
+		_fail("0x4a4025/0x4bb74b repaint live visual feedback drifted: %s" % JSON.stringify(live_repaint_feedback))
+		return
+	if String(live_samples[0].get("source_branch", "")) != "0x4a4025_initial_water_repaint" \
+			or int(live_samples[0].get("terrain_id", -1)) != 8 \
+			or int(live_samples[0].get("class", -1)) != 0 \
+			or int(live_samples[0].get("neighbor_mask", -1)) != 4 \
+			or String(live_samples[0].get("selector_address", "")) != "0x4ba938" \
+			or String(live_samples[0].get("selector_kind", "")) != "full_native_special_frequency_masked_by_0x4bce6d" \
+			or int(live_samples[0].get("selected_row", -1)) != 25 \
+			or int(live_samples[0].get("scratch_word_u16", -1)) != 817 \
+			or int(live_samples[0].get("generated_cell_word_0x24_u32", -1)) != 1608 \
+			or int(live_samples[0].get("generated_cell_word_0x28_u32", -1)) != 0:
+		_fail("0x4a4025/0x4bb74b repaint live visual sample drifted: %s" % JSON.stringify(live_samples))
+		return
+
 	var terrainplacement: Dictionary = report.get("terrainplacement_visual_tables_4bcff5", {})
 	if String(terrainplacement.get("status", "")) != "0x4bcff5_terrainplacement_visual_tables_toolkit_ported_inspection_only" \
 			or String(terrainplacement.get("terrainplacement_factory_address", "")) != "0x4bcff5" \
