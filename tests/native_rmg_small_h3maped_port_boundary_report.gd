@@ -123,10 +123,48 @@ func _run() -> void:
 			or String(backlog[1].get("status", "")) != "active_inspection_only":
 		_fail("Player-slot assignment should be the only active h3maped inspection phase after selection: %s" % JSON.stringify(backlog))
 		return
-	for index in range(2, backlog.size()):
+	if String(backlog[2].get("phase_id", "")) != "runtime_zone_records" \
+			or String(backlog[2].get("status", "")) != "active_inspection_only":
+		_fail("Runtime-zone records should be the active h3maped inspection phase after player assignment: %s" % JSON.stringify(backlog))
+		return
+	for index in range(3, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
+
+	var runtime_zones: Dictionary = report.get("runtime_zone_record_setup", {})
+	if String(runtime_zones.get("status", "")) != "0x4a218c_runtime_zone_record_setup_ported_inspection_only" \
+			or String(runtime_zones.get("runtime_zone_vector_offsets", "")) != "generator+0x10e0/+0x10e4/+0x10e8" \
+			or int(runtime_zones.get("runtime_zone_record_size_bytes", -1)) != 0x414 \
+			or String(runtime_zones.get("owner_color_mapping_source", "")) != "generator+0xee4":
+		_fail("h3maped runtime-zone setup boundary drifted: %s" % JSON.stringify(runtime_zones))
+		return
+	if int(runtime_zones.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zones.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zones.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zones.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zones.get("minimum_player_castles", -1)) != 4 \
+			or int(runtime_zones.get("minimum_source_base_size", -1)) != 11 \
+			or Array(runtime_zones.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1]:
+		_fail("h3maped runtime-zone record counts drifted from recovered template 18: %s" % JSON.stringify(runtime_zones))
+		return
+	if bool(runtime_zones.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zones.get("materializes_terrain", true)) \
+			or bool(runtime_zones.get("materializes_map_cells", true)) \
+			or bool(runtime_zones.get("materializes_runtime_players", true)):
+		_fail("Runtime-zone setup must not materialize runtime output yet: %s" % JSON.stringify(runtime_zones))
+		return
+	var zone_records: Array = runtime_zones.get("runtime_zone_records", [])
+	if zone_records.size() != 6 \
+			or String(zone_records[0].get("role", "")) != "human_start" \
+			or int(zone_records[0].get("actual_owner_color", -1)) != 0 \
+			or String(zone_records[2].get("role", "")) != "treasure" \
+			or int(zone_records[2].get("actual_owner_color", 0)) != -1 \
+			or String(zone_records[4].get("role", "")) != "human_start" \
+			or int(zone_records[4].get("source_owner_index", -1)) != 3 \
+			or int(zone_records[4].get("actual_owner_color", 0)) != -1:
+		_fail("Runtime-zone record projection drifted: %s" % JSON.stringify(zone_records))
+		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)
 	if bool(generation_result.get("ok", true)) \
