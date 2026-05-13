@@ -1062,8 +1062,27 @@ func _run() -> void:
 				or int(artifact_loop.get("candidate_records_per_artifact", -1)) != 5 \
 				or Array(artifact_loop.get("values", [])) != [5000, 7500, 10000, 15000, 20000] \
 				or int(artifact_loop.get("weight", -1)) != 10 \
+				or not bool(artifact_loop.get("record_shape_materialized", false)) \
+				or not bool(artifact_loop.get("candidate_record_values_materialized", false)) \
+				or bool(artifact_loop.get("candidate_pool_count_materialized", true)) \
+				or String(artifact_loop.get("candidate_pool_count_blocker", "")) != "generator+0xd8..+0xdc producer not ported" \
 				or bool(artifact_loop.get("materialized_candidate_records", true)):
 		_fail("h3maped artifact pool candidate loop boundary drifted: %s" % JSON.stringify(artifact_loop))
+		return
+	var artifact_blocker: Dictionary = generic_selector.get("candidate_builder_artifact_pool_materialization_blocker", {})
+	if String(generic_selector.get("candidate_builder_artifact_pool_materialization_blocker_status", "")) != "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported" \
+				or String(artifact_blocker.get("consumer_source_range", "")) != "0x49ff59..0x4a00c7" \
+				or String(artifact_blocker.get("consumer_pool_count_formula", "")) != "(generator+0xdc - generator+0xd8) / 4" \
+				or int(artifact_blocker.get("consumer_records_per_pool_entry", -1)) != 5 \
+				or Array(artifact_blocker.get("consumer_record_values", [])) != [5000, 7500, 10000, 15000, 20000] \
+				or String(artifact_blocker.get("selection_state_helper_address", "")) != "0x48d21c" \
+				or String(artifact_blocker.get("selection_state_buffer_offset", "")) != "generator+0x1104" \
+				or String(artifact_blocker.get("value_vfunc_address", "")) != "0x49cd97" \
+				or not bool(artifact_blocker.get("producer_required_before_materialization", false)) \
+				or not bool(artifact_blocker.get("known_consumer_record_shape_safe", false)) \
+				or bool(artifact_blocker.get("known_pool_contents_safe", true)) \
+				or bool(artifact_blocker.get("materialized_candidate_records", true)):
+		_fail("h3maped artifact pool materialization blocker drifted: %s" % JSON.stringify(artifact_blocker))
 		return
 	var type17_loop: Dictionary = generic_selector.get("candidate_builder_type17_loop", {})
 	if String(generic_selector.get("candidate_builder_type17_loop_status", "")) != "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending" \
