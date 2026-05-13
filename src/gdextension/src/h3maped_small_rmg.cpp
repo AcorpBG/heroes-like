@@ -1065,7 +1065,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_strict_executable_port"));
 	backlog.append(phase_record("zone_footprint_source_nodes", "0x4a3a03, 0x4cc788, 0x4cc955, 0x4ccb64, 0x4ccdfc", "active_strict_executable_port"));
 	backlog.append(phase_record("zone_boundary_and_span_fill", "0x4a2777, 0x4a2b33, 0x4a261a, 0x4a2413, 0x4a325d", "active_strict_executable_port"));
-	backlog.append(phase_record("zone_footprint_finalizer", "0x4a3710", "pending_strict_executable_port"));
+	backlog.append(phase_record("zone_footprint_finalizer", "0x4a3710, 0x49b61b, 0x4a3554", "active_strict_executable_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_strict_executable_port"));
@@ -1077,10 +1077,10 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, and source-node geometry");
+	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, and the small-land footprint finalizer");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a3710 footprint ordering/finalizer over the private span-fill output, not terrain or object expansion");
+	gaps.append("next implementation step is a narrow executable port of 0x49b53d runtime terrain selection over the finalized footprint output, not terrain cell writeout or object expansion");
 	return gaps;
 }
 
@@ -1106,9 +1106,10 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"link_seed_setup:0x4a1f3b",
 			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
 			"zone_footprint_source_nodes:0x4a3a03_0x4cc788_0x4cc955_0x4ccb64_0x4ccdfc",
-			"zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d");
+			"zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d",
+			"zone_footprint_finalizer:0x4a3710_0x49b61b_0x4a3554");
 	state["pending_strict_ports"] = Array::make(
-			"zone_footprint_finalizer:0x4a3710",
+			"runtime_terrain_selection:0x49b53d",
 			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
@@ -1120,7 +1121,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "zone_footprint_finalizer_0x4a3710";
+	state["next_required_port"] = "runtime_terrain_selection_0x49b53d";
 	return state;
 }
 
@@ -2931,6 +2932,88 @@ Dictionary zone_boundary_and_span_fill_phase(const Dictionary &normalized_config
 	phase["materializes_private_zone_cell_buffer"] = true;
 	phase["materializes_boundary_trace"] = true;
 	phase["materializes_span_fill"] = true;
+	return phase;
+}
+
+Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &source_node_phase, const Dictionary &span_fill_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "zone_footprint_finalizer";
+	phase["status"] = "blocked_until_span_fill";
+	phase["h3maped_anchor"] = "0x4a3710";
+	phase["call_site_anchor"] = "0x4a3efc..0x4a3f05";
+	phase["polygon_locator_anchor"] = "0x4cca55";
+	phase["clip_helper_anchor"] = "0x4a2b33";
+	phase["zone_order_reset_anchor"] = "0x49b61b";
+	phase["per_zone_order_helper_anchor"] = "0x4a3554";
+	phase["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	phase["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	phase["strict_port_scope"] = "small-land no-appended-zone footprint finalizer: skip appended adjacency insertion, schedule zone ordering reset and per-zone rebuild only";
+	phase["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	phase["materializes_adjacency"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_runtime_players"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "runtime_terrain_selection_0x49b53d";
+	if (String(span_fill_phase.get("status", "")) != "active_strict_executable_port") {
+		return phase;
+	}
+
+	Array runtime_zone_records = runtime_zone_phase.get("runtime_zone_records", Array());
+	const int32_t original_same_level_runtime_zone_count = int32_t(source_node_phase.get("total_matching_runtime_zones", runtime_zone_records.size()));
+	const int32_t final_runtime_zone_count = runtime_zone_records.size();
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	const bool synthetic_branch_allowed = level_count(normalized_config) > 1 || water_mode_code(normalized_config) != 0;
+
+	phase["status"] = appended_runtime_zone_count == 0
+			? String("active_strict_executable_port")
+			: String("blocked_appended_zone_adjacency_schema_pending");
+	phase["h3maped_status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	phase["level_count"] = level_count(normalized_config);
+	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
+	phase["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	phase["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	phase["final_runtime_zone_count"] = final_runtime_zone_count;
+	phase["appended_runtime_zone_count"] = appended_runtime_zone_count;
+
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors only for appended synthetic zones");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	phase["recovered_operations"] = recovered_operations;
+
+	Array finalizer_phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	finalizer_phases.append(initial_insert_phase);
+
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	finalizer_phases.append(order_reset_phase);
+
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	finalizer_phases.append(ordered_insert_phase);
+
+	phase["phases"] = finalizer_phases;
+	phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	phase["materialized_adjacency_count"] = 0;
 	return phase;
 }
 
@@ -6322,6 +6405,15 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	zone_boundary_span["binary_byte_prefix_0x4a2413"] = "b8 68 a7 52 00 e8 b3 3c 04 00 83 ec 30 8a 45 1f";
 	zone_boundary_span["binary_byte_prefix_0x4a325d"] = "b8 a4 a7 52 00 e8 69 2e 04 00 83 ec 60 8b 45 08";
 	report["zone_boundary_and_span_fill"] = zone_boundary_span;
+	Dictionary zone_finalizer = zone_footprint_finalizer_phase(normalized_config, runtime_zones, zone_source_nodes, zone_boundary_span);
+	zone_finalizer["source_range"] = "0x4a3710/0x4a3efc/0x4a3f05/0x4cca55/0x49b61b/0x4a3554";
+	zone_finalizer["binary_byte_prefix_0x4a3710"] = "55 8b ec 83 ec 70 53 8b d9 83 65 ac 00 83 65 b0";
+	zone_finalizer["binary_byte_prefix_0x4a3efc"] = "8d 45 90 8b ce 50 ff 75 d4 e8 06 f8 ff ff 83 4d";
+	zone_finalizer["binary_byte_prefix_0x4a3f05"] = "e8 06 f8 ff ff 83 4d fc ff 8d 4d 90 e8 08 8a 02";
+	zone_finalizer["binary_byte_prefix_0x4cca55"] = "55 8b ec 51 51 8b 01 53 56 57 8b 08 8b 50 04 39";
+	zone_finalizer["binary_byte_prefix_0x49b61b"] = "55 8b ec 51 83 65 fc 00 56 57 8b 7d 08 8b f1 8d";
+	zone_finalizer["binary_byte_prefix_0x4a3554"] = "b8 c0 a7 52 00 e8 72 2b 04 00 83 ec 40 8a 45 0b";
+	report["zone_footprint_finalizer"] = zone_finalizer;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
