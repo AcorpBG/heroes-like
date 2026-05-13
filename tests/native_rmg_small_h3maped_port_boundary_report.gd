@@ -503,6 +503,69 @@ func _run() -> void:
 		_fail("0x4ccb64 split steps/source-node walks drifted: %s" % JSON.stringify(polygon_split))
 		return
 
+	var real_traversal: Dictionary = report.get("real_source_node_cycle_traversal_4a2777", {})
+	if String(real_traversal.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_buffer_private" \
+			or String(real_traversal.get("function_address", "")) != "0x4a2777" \
+			or String(real_traversal.get("source_node_cycle_source", "")) != "polygon_split_model_4ccb64.source_node_walks from 0x4cca55 after 0x4ccdfc finalization" \
+			or String(real_traversal.get("clip_helper_address", "")) != "0x4a2b33" \
+			or String(real_traversal.get("deterministic_line_writer_address", "")) != "0x4a261a" \
+			or String(real_traversal.get("flagged_line_writer_address", "")) != "0x4a2413":
+		_fail("0x4a2777 real source-node traversal identity drifted: %s" % JSON.stringify(real_traversal))
+		return
+	if not bool(real_traversal.get("materializes_boundaries", false)) \
+			or bool(real_traversal.get("materializes_span_fill", true)) \
+			or bool(real_traversal.get("materializes_terrain", true)) \
+			or bool(real_traversal.get("materializes_map_cells", true)) \
+			or bool(real_traversal.get("public_package_output_allowed", true)) \
+			or int(real_traversal.get("project_materialized_cell_count", -1)) != 0:
+		_fail("0x4a2777 traversal must remain a private boundary buffer only: %s" % JSON.stringify(real_traversal))
+		return
+	if int(real_traversal.get("runtime_zone_walk_count", -1)) != 6 \
+			or int(real_traversal.get("blocked_zone_count", -1)) != 0 \
+			or int(real_traversal.get("fallback_zone_count", -1)) != 0 \
+			or int(real_traversal.get("connector_segment_count", -1)) != 6 \
+			or int(real_traversal.get("wrap_segment_count", -1)) != 1 \
+			or int(real_traversal.get("final_segment_count", -1)) != 13 \
+			or int(real_traversal.get("appended_vertex_count", -1)) != 20 \
+			or int(real_traversal.get("skipped_unfinalized_node_count", -1)) != 0 \
+			or int(real_traversal.get("skipped_out_of_bounds_clip_count", -1)) != 12 \
+			or int(real_traversal.get("flagged_writer_segment_count", -1)) != 6 \
+			or int(real_traversal.get("deterministic_writer_segment_count", -1)) != 14 \
+			or int(real_traversal.get("randomized_rng_call_count", -1)) != 114 \
+			or int(real_traversal.get("randomized_inserted_midpoint_count", -1)) != 140 \
+			or int(real_traversal.get("randomized_max_pending_point_count", -1)) != 8 \
+			or int(real_traversal.get("rng_state_before_0x4a2777_uint32", -1)) != 316395082 \
+			or int(real_traversal.get("rng_state_after_0x4a2777_uint32", -1)) != 3257732100 \
+			or int(real_traversal.get("trace_write_count", -1)) != 326 \
+			or int(real_traversal.get("unique_cell_count", -1)) != 262 \
+			or int(real_traversal.get("out_of_bounds_write_count", -1)) != 0 \
+			or bool(real_traversal.get("loop_guard_exhausted", true)):
+		_fail("0x4a2777 traversal counts drifted: %s" % JSON.stringify(real_traversal))
+		return
+	var traversal_zones: Array = real_traversal.get("zone_reports", [])
+	if traversal_zones.size() != 6 \
+			or String(traversal_zones[0].get("status", "")) != "0x4a2777_real_source_cycle_consumed" \
+			or int(traversal_zones[0].get("selected_segment_index", -1)) != 3 \
+			or int(traversal_zones[0].get("connector_from_x", -1)) != 35 \
+			or int(traversal_zones[0].get("connector_from_y", -1)) != 32 \
+			or int(traversal_zones[0].get("connector_to_x", -1)) != 23 \
+			or int(traversal_zones[0].get("connector_to_y", -1)) != 15 \
+			or int(traversal_zones[0].get("appended_vertex_count", -1)) != 2 \
+			or int(traversal_zones[1].get("selected_segment_index", -1)) != 0 \
+			or int(traversal_zones[1].get("connector_from_x", -1)) != 13 \
+			or int(traversal_zones[1].get("connector_from_y", -1)) != 15 \
+			or int(traversal_zones[1].get("connector_to_x", -1)) != 8 \
+			or int(traversal_zones[1].get("connector_to_y", -1)) != 18 \
+			or int(traversal_zones[1].get("appended_vertex_count", -1)) != 5 \
+			or int(traversal_zones[1].get("segment_count", -1)) != 5 \
+			or int(traversal_zones[5].get("connector_from_x", -1)) != 23 \
+			or int(traversal_zones[5].get("connector_from_y", -1)) != 15 \
+			or int(traversal_zones[5].get("connector_to_x", -1)) != 18 \
+			or int(traversal_zones[5].get("connector_to_y", -1)) != 18 \
+			or int(traversal_zones[5].get("appended_vertex_count", -1)) != 4:
+		_fail("0x4a2777 traversal zone cycle reports drifted: %s" % JSON.stringify(traversal_zones))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))

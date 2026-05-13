@@ -13,6 +13,7 @@
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
+#include <map>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -88,7 +89,16 @@ struct ClipResult {
 	const char *branch = "";
 };
 
+struct LineCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
 struct LineWriteResult {
+	std::vector<LineCellWrite> trace;
 	int32_t write_count = 0;
 	int32_t unique_cell_count = 0;
 	int32_t out_of_bounds_write_count = 0;
@@ -600,6 +610,13 @@ void h3maped_write_line_cell_4a261a(LineWriteResult &result, std::vector<uint32_
 		cell_flags[size_t(index)] = uint8_t(cell_flags[size_t(index)] | 0x10U);
 		result.reserved_flag_write_count += 1;
 	}
+	LineCellWrite write;
+	write.x = x;
+	write.y = y;
+	write.level = level;
+	write.zone_id = zone_word_id & 0xff;
+	write.reserved = !(water_code == 2 && level != 1);
+	result.trace.push_back(write);
 	result.write_count += 1;
 	append_line_trace_preview(result.trace_preview, x, y, level);
 }
@@ -1764,6 +1781,329 @@ Dictionary randomized_line_writer_4a2413_report(const Dictionary &normalized_con
 	return report;
 }
 
+bool h3maped_point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bounds) {
+	return point.x >= bounds.min_x && point.x < bounds.max_x && point.y >= bounds.min_y && point.y < bounds.max_y;
+}
+
+void merge_line_write_result_4a2777(const LineWriteResult &line, std::map<int64_t, bool> &unique_cells, int32_t &trace_write_count, int32_t &out_of_bounds_write_count, int32_t width, int32_t height) {
+	for (const LineCellWrite &write : line.trace) {
+		const int64_t key = (int64_t(write.level) * int64_t(height) + int64_t(write.y)) * int64_t(width) + int64_t(write.x);
+		unique_cells[key] = true;
+	}
+	trace_write_count += int32_t(line.trace.size());
+	out_of_bounds_write_count += line.out_of_bounds_write_count;
+}
+
+Dictionary segment_report_4a2777(const String &id, const String &branch, const String &writer, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, const LineWriteResult &line) {
+	Dictionary segment;
+	segment["id"] = id;
+	segment["branch"] = branch;
+	segment["writer"] = writer;
+	segment["from_x"] = from_x;
+	segment["from_y"] = from_y;
+	segment["to_x"] = to_x;
+	segment["to_y"] = to_y;
+	segment["trace_write_count"] = int32_t(line.trace.size());
+	segment["unique_cell_count"] = line.unique_cell_count;
+	segment["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	return segment;
+}
+
+Dictionary real_source_node_cycle_traversal_4a2777_report(const Dictionary &normalized_config, const Dictionary &coordinate_replay, const Dictionary &split_model) {
+	Dictionary report;
+	report["status"] = "0x4a2777_real_source_node_cycle_traversal_ported_boundary_buffer_private";
+	report["source"] = "h3maped 0x4a2777 over real 0x4cca55 source-node cycles: clips finalized +0x1c/+0x20 coordinates through 0x4a2b33, appends runtime_zone+0x3f4 vertices, and paints private boundary cells through 0x4a261a/0x4a2413 before span fill";
+	report["function_address"] = "0x4a2777";
+	report["caller_address"] = "0x4a3e58..0x4a3e8c";
+	report["source_node_cycle_source"] = "polygon_split_model_4ccb64.source_node_walks from 0x4cca55 after 0x4ccdfc finalization";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["deterministic_line_writer_address"] = "0x4a261a";
+	report["flagged_line_writer_address"] = "0x4a2413";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["materializes_boundaries"] = true;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["project_materialized_cell_count"] = 0;
+	report["public_package_output_allowed"] = false;
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = int32_t(normalized_config.get("level_count", 1));
+	const int32_t water_code = water_mode_code(normalized_config);
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	const Dictionary replay_bbox = coordinate_replay.get("bounding_box_rescale", Dictionary());
+	report["rng_state_before_0x4a2777_uint32"] = coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0);
+
+	std::vector<RuntimeZoneSeed> zones;
+	Array scaled = coordinate_replay.get("scaled_zone_coordinates", Array());
+	for (int64_t index = 0; index < scaled.size(); ++index) {
+		if (Variant(scaled[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary item = scaled[index];
+		RuntimeZoneSeed zone;
+		zone.runtime_index = int32_t(item.get("runtime_zone_index", index));
+		zone.x = int32_t(item.get("x_after_bbox_rescale", 0));
+		zone.y = int32_t(item.get("y_after_bbox_rescale", 0));
+		zone.level = int32_t(item.get("level", 0));
+		zone.scaled_size = int32_t(item.get("runtime_size_after_bbox_rescale", 1));
+		zones.push_back(zone);
+	}
+
+	std::vector<uint32_t> zone_words(size_t(std::max(0, width * height * std::max(1, level_count))), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(std::max(0, width * height * std::max(1, level_count))), 0);
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	Array walks = split_model.get("source_node_walks", Array());
+	Array zone_reports;
+	std::map<int64_t, bool> unique_cells;
+	int32_t trace_write_count = 0;
+	int32_t out_of_bounds_write_count = 0;
+	int32_t runtime_zone_walk_count = 0;
+	int32_t blocked_zone_count = 0;
+	int32_t fallback_zone_count = 0;
+	int32_t connector_segment_count = 0;
+	int32_t wrap_segment_count = 0;
+	int32_t final_segment_count = 0;
+	int32_t appended_vertex_count = 0;
+	int32_t skipped_unfinalized_node_count = 0;
+	int32_t skipped_out_of_bounds_clip_count = 0;
+	int32_t flagged_writer_segment_count = 0;
+	int32_t deterministic_writer_segment_count = 0;
+	int32_t randomized_rng_call_count = 0;
+	int32_t randomized_inserted_midpoint_count = 0;
+	int32_t randomized_max_pending_point_count = 0;
+	bool loop_guard_exhausted = false;
+	H3MapedRng rng;
+	rng.state = uint32_t(int64_t(coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0)));
+
+	auto append_vertex = [&](Array &vertices, int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+		appended_vertex_count += 1;
+	};
+
+	auto append_segment = [&](Array &segments, const String &id, const String &branch, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_word, int32_t level, bool randomized, int32_t random_span_limit) {
+		LineWriteResult line;
+		if (randomized) {
+			line = h3maped_randomized_line_writer_4a2413(zone_words, cell_flags, width, height, level_count, water_code, x1, y1, x2, y2, level, zone_word, random_span_limit, rng, randomized_rng_call_count, randomized_inserted_midpoint_count, randomized_max_pending_point_count);
+			flagged_writer_segment_count += 1;
+		} else {
+			line = h3maped_line_writer_4a261a(zone_words, cell_flags, width, height, level_count, water_code, x1, y1, x2, y2, level, zone_word);
+			deterministic_writer_segment_count += 1;
+		}
+		merge_line_write_result_4a2777(line, unique_cells, trace_write_count, out_of_bounds_write_count, width, height);
+		segments.append(segment_report_4a2777(id, branch, randomized ? String("0x4a2413") : String("0x4a261a"), x1, y1, x2, y2, line));
+	};
+
+	auto point_on_clip_border = [&](int32_t x, int32_t y) {
+		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
+	};
+
+	for (int64_t walk_index = 0; walk_index < walks.size(); ++walk_index) {
+		if (Variant(walks[walk_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary walk = Dictionary(walks[walk_index]);
+		const int32_t runtime_zone_index = int32_t(walk.get("runtime_zone_index", -1));
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = runtime_zone_index;
+		zone_report["status"] = "blocked_before_cycle_consumption";
+		if (runtime_zone_index < 0 || runtime_zone_index >= int32_t(zones.size())) {
+			blocked_zone_count += 1;
+			zone_reports.append(zone_report);
+			continue;
+		}
+		const RuntimeZoneSeed &zone = zones[size_t(runtime_zone_index)];
+		const int32_t zone_word = std::max(0, zone.runtime_index);
+		const int32_t level = zone.level;
+		const bool flagged_branch = !(level_count == 2 && level != 1);
+		const int32_t random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : 1);
+		Array cycle_nodes = walk.get("cycle_nodes", Array());
+		std::vector<PolygonPoint> finalized_points;
+		Array point_reports;
+		for (int64_t node_index = 0; node_index < cycle_nodes.size(); ++node_index) {
+			if (Variant(cycle_nodes[node_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary node = Dictionary(cycle_nodes[node_index]);
+			if (!bool(node.get("finalized", false))) {
+				skipped_unfinalized_node_count += 1;
+				continue;
+			}
+			const int32_t x = int32_t(node.get("+0x1c_finalized_x", 0));
+			const int32_t y = int32_t(node.get("+0x20_finalized_y", 0));
+			finalized_points.push_back(PolygonPoint{ x, y });
+			Dictionary point;
+			point["node_id"] = node.get("node_id", "");
+			point["x"] = x;
+			point["y"] = y;
+			point_reports.append(point);
+		}
+		zone_report["finalized_point_count"] = int32_t(finalized_points.size());
+		zone_report["finalized_points"] = point_reports;
+		zone_report["flagged_branch_from_0x4a3e69"] = flagged_branch;
+		zone_report["random_span_limit_runtime_size"] = random_span_limit;
+		if (finalized_points.size() < 2) {
+			blocked_zone_count += 1;
+			zone_report["status"] = "blocked_no_finalized_cycle_segments";
+			zone_reports.append(zone_report);
+			continue;
+		}
+
+		int32_t selected_segment_index = -1;
+		ClipResult clipped_current;
+		ClipResult clipped_target;
+		for (int32_t index = 0; index < int32_t(finalized_points.size()); ++index) {
+			const PolygonPoint from = finalized_points[size_t(index)];
+			const PolygonPoint to = finalized_points[size_t((index + 1) % int32_t(finalized_points.size()))];
+			if (from.x == to.x && from.y == to.y) {
+				continue;
+			}
+			ClipResult candidate_current = h3maped_clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
+			ClipResult candidate_target = h3maped_clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!h3maped_point_inside_bounds_4a2777(candidate_current, bounds)) {
+				skipped_out_of_bounds_clip_count += 1;
+				continue;
+			}
+			if (candidate_current.x == candidate_target.x && candidate_current.y == candidate_target.y) {
+				continue;
+			}
+			selected_segment_index = index;
+			clipped_current = candidate_current;
+			clipped_target = candidate_target;
+			break;
+		}
+		if (selected_segment_index < 0) {
+			fallback_zone_count += 1;
+			zone_report["status"] = "0x4a2777_rectangle_fallback_required_for_cycle";
+			zone_reports.append(zone_report);
+			continue;
+		}
+
+		Array segments;
+		Array vertices;
+		append_vertex(vertices, clipped_current.x, clipped_current.y);
+		append_segment(segments, "connector", "0x4a2911_connector_segment_from_real_source_cycle", clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
+		connector_segment_count += 1;
+		int32_t current_x = clipped_target.x;
+		int32_t current_y = clipped_target.y;
+		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+		int32_t source_index = (selected_segment_index + 1) % int32_t(finalized_points.size());
+		for (int32_t guard = 0; guard < int32_t(finalized_points.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(finalized_points.size());
+			if (source_index == selected_segment_index) {
+				break;
+			}
+			const PolygonPoint from = finalized_points[size_t(source_index)];
+			const PolygonPoint to = finalized_points[size_t(next_source_index)];
+			source_index = next_source_index;
+			if (from.x == to.x && from.y == to.y) {
+				continue;
+			}
+			const ClipResult next_clip = h3maped_clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!h3maped_point_inside_bounds_4a2777(next_clip, bounds)) {
+				skipped_out_of_bounds_clip_count += 1;
+				continue;
+			}
+			int32_t wrap_guard = 0;
+			while (current_x != next_clip.x && current_y != next_clip.y && point_on_clip_border(current_x, current_y) && point_on_clip_border(next_clip.x, next_clip.y) && wrap_guard < 8) {
+				int32_t border_x = current_x;
+				int32_t border_y = current_y;
+				String branch = "0x4a2aa7_bottom_edge_to_min_x";
+				if (current_x == bounds.min_x) {
+					if (current_y == bounds.min_y) {
+						border_x = right_x;
+						border_y = bounds.min_y;
+						branch = "0x4a2a91_top_edge_to_max_x_minus_one";
+					} else {
+						border_x = bounds.min_x;
+						border_y = bounds.min_y;
+						branch = "0x4a2a81_left_edge_to_min_y";
+					}
+				} else if (current_y == bounds.min_y) {
+					border_x = right_x;
+					border_y = bounds.min_y;
+					branch = "0x4a2a89_top_edge_to_max_x_minus_one";
+				} else if (current_x == right_x && current_y != bottom_y) {
+					border_x = right_x;
+					border_y = bottom_y;
+					branch = "0x4a2a98_right_edge_to_max_y_minus_one";
+				} else {
+					border_x = bounds.min_x;
+					border_y = bottom_y;
+					branch = "0x4a2aa7_bottom_edge_to_min_x";
+				}
+				append_segment(segments, "wrap", branch, current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
+				append_vertex(vertices, current_x, current_y);
+				current_x = border_x;
+				current_y = border_y;
+				wrap_segment_count += 1;
+				wrap_guard += 1;
+			}
+			if (wrap_guard >= 8 && current_x != next_clip.x && current_y != next_clip.y) {
+				loop_guard_exhausted = true;
+				break;
+			}
+			if (current_x != next_clip.x || current_y != next_clip.y) {
+				append_segment(segments, "final", "0x4a2af2_final_segment_to_real_cycle_endpoint", current_x, current_y, next_clip.x, next_clip.y, zone_word, level, false, random_span_limit);
+				append_vertex(vertices, current_x, current_y);
+				final_segment_count += 1;
+				current_x = next_clip.x;
+				current_y = next_clip.y;
+			}
+			if (source_index == selected_segment_index) {
+				break;
+			}
+		}
+		runtime_zone_walk_count += 1;
+		zone_report["status"] = "0x4a2777_real_source_cycle_consumed";
+		zone_report["selected_segment_index"] = selected_segment_index;
+		zone_report["connector_from_x"] = clipped_current.x;
+		zone_report["connector_from_y"] = clipped_current.y;
+		zone_report["connector_to_x"] = clipped_target.x;
+		zone_report["connector_to_y"] = clipped_target.y;
+		zone_report["appended_vertex_count"] = vertices.size();
+		zone_report["appended_vertices"] = vertices;
+		zone_report["segment_count"] = segments.size();
+		zone_report["segments"] = segments;
+		zone_reports.append(zone_report);
+	}
+
+	report["runtime_zone_walk_count"] = runtime_zone_walk_count;
+	report["blocked_zone_count"] = blocked_zone_count;
+	report["fallback_zone_count"] = fallback_zone_count;
+	report["connector_segment_count"] = connector_segment_count;
+	report["wrap_segment_count"] = wrap_segment_count;
+	report["final_segment_count"] = final_segment_count;
+	report["appended_vertex_count"] = appended_vertex_count;
+	report["skipped_unfinalized_node_count"] = skipped_unfinalized_node_count;
+	report["skipped_out_of_bounds_clip_count"] = skipped_out_of_bounds_clip_count;
+	report["flagged_writer_segment_count"] = flagged_writer_segment_count;
+	report["deterministic_writer_segment_count"] = deterministic_writer_segment_count;
+	report["randomized_rng_call_count"] = randomized_rng_call_count;
+	report["randomized_inserted_midpoint_count"] = randomized_inserted_midpoint_count;
+	report["randomized_max_pending_point_count"] = randomized_max_pending_point_count;
+	report["rng_state_after_0x4a2777_uint32"] = int64_t(rng.state);
+	report["trace_write_count"] = trace_write_count;
+	report["unique_cell_count"] = int32_t(unique_cells.size());
+	report["out_of_bounds_write_count"] = out_of_bounds_write_count;
+	report["loop_guard_exhausted"] = loop_guard_exhausted;
+	report["zone_reports"] = zone_reports;
+	report["blocked_next"] = "feed private 0x4a2777 boundary cells into 0x4a325d span fill before terrain/object materialization";
+	return report;
+}
+
 Dictionary polygon_split_model_4ccb64_report(const Dictionary &normalized_config, const Dictionary &coordinate_replay) {
 	Dictionary report;
 	report["status"] = "0x4ccb64_insertion_bridge_crossing_cleanup_and_finalizer_ported_inspection_only";
@@ -2143,7 +2483,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["clip_helper_4a2b33"] = clip_helper_4a2b33_report(normalized_config);
 			report["line_writer_4a261a"] = line_writer_4a261a_report(normalized_config);
 			report["randomized_line_writer_4a2413"] = randomized_line_writer_4a2413_report(normalized_config);
-			report["polygon_split_model_4ccb64"] = polygon_split_model_4ccb64_report(normalized_config, report["coordinate_replay"]);
+			Dictionary polygon_split_model = polygon_split_model_4ccb64_report(normalized_config, report["coordinate_replay"]);
+			report["polygon_split_model_4ccb64"] = polygon_split_model;
+			report["real_source_node_cycle_traversal_4a2777"] = real_source_node_cycle_traversal_4a2777_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
