@@ -2435,6 +2435,88 @@ Dictionary real_boundary_span_fill_4a325d_report(const Dictionary &normalized_co
 	return report;
 }
 
+Dictionary footprint_finalizer_4a3710_report(const Dictionary &normalized_config, const Dictionary &runtime_zone_setup, const Dictionary &footprint_boundary) {
+	Dictionary report;
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const bool synthetic_branch_allowed = level_count > 1 || water_code != 0;
+	Array runtime_zone_records = runtime_zone_setup.get("runtime_zone_records", Array());
+	Array per_level = footprint_boundary.get("per_level", Array());
+	int32_t original_same_level_runtime_zone_count = int32_t(footprint_boundary.get("total_collected_runtime_zone_count", runtime_zone_records.size()));
+	if (per_level.size() > 0 && Variant(per_level[0]).get_type() == Variant::DICTIONARY) {
+		Dictionary level_record = per_level[0];
+		Array collected = level_record.get("collected_runtime_zone_indices", Array());
+		original_same_level_runtime_zone_count = int32_t(collected.size());
+	}
+	const int32_t final_runtime_zone_count = int32_t(runtime_zone_records.size());
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	report["status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported_private")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	report["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	report["function_address"] = "0x4a3710";
+	report["call_site_address"] = "0x4a3efc..0x4a3f05";
+	report["call_site_start_index_source"] = "0x4a3a86..0x4a3a9a captures runtime-zone vector count before the synthetic branch and passes it at 0x4a3f02";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["zone_order_reset_address"] = "0x49b61b";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	report["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	report["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	report["final_runtime_zone_count"] = final_runtime_zone_count;
+	report["appended_runtime_zone_count"] = appended_runtime_zone_count;
+
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors only for appended synthetic zones");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	report["recovered_operations"] = recovered_operations;
+
+	Array phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(initial_insert_phase);
+
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	phases.append(order_reset_phase);
+
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	phases.append(ordered_insert_phase);
+	report["phases"] = phases;
+	report["zone_order_reset_call_count"] = final_runtime_zone_count;
+	report["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	report["materialized_adjacency_count"] = 0;
+	report["materializes_zone_cells"] = false;
+	report["materializes_boundary_cells"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["public_package_output_allowed"] = false;
+	report["blocked_next"] = appended_runtime_zone_count == 0
+			? String("port 0x4a3f27 terrain/cell writeout over the private 0x4a325d buffer before project package output")
+			: String("recover runtime_zone+0xc4 adjacency records before appended-zone finalizer output can be adopted");
+	return report;
+}
+
 Dictionary polygon_split_model_4ccb64_report(const Dictionary &normalized_config, const Dictionary &coordinate_replay) {
 	Dictionary report;
 	report["status"] = "0x4ccb64_insertion_bridge_crossing_cleanup_and_finalizer_ported_inspection_only";
@@ -2818,6 +2900,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["polygon_split_model_4ccb64"] = polygon_split_model;
 			report["real_source_node_cycle_traversal_4a2777"] = real_source_node_cycle_traversal_4a2777_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 			report["real_boundary_span_fill_4a325d"] = real_boundary_span_fill_4a325d_report(normalized_config, report["coordinate_replay"], polygon_split_model);
+			report["footprint_finalizer_4a3710"] = footprint_finalizer_4a3710_report(normalized_config, report["runtime_zone_record_setup"], report["zone_footprint_phase_boundary"]);
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
