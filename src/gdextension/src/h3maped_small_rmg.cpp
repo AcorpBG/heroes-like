@@ -1100,8 +1100,7 @@ Dictionary h3_materialized_monster_candidate_record(int32_t candidate_vector_ind
 	record["constructor_address"] = "0x49c5cd";
 	record["monster_table_index"] = monster_index;
 	record["crtraits_source_row_index"] = crtraits_row_index;
-	record["monster_name"] = crtraits_row.size() > 0 ? crtraits_row[0] : String();
-	record["monster_plural_name"] = crtraits_row.size() > 1 ? crtraits_row[1] : String();
+	record["crtraits_name_fields_omitted"] = true;
 	record["monster_terrain_id"] = terrain_id;
 	record["monster_tier_index"] = tier_index;
 	record["monster_ai_value"] = ai_value;
