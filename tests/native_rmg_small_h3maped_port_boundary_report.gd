@@ -84,6 +84,45 @@ func _run() -> void:
 		_fail("Strict h3maped player-slot records drifted: %s" % JSON.stringify(assignments))
 		return
 
+	var runtime_zone_phase: Dictionary = report.get("runtime_zone_records", {})
+	if String(runtime_zone_phase.get("status", "")) != "active_strict_executable_port" \
+			or String(runtime_zone_phase.get("source_range", "")) != "0x4a218c/0x49b452" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_begin_offset", "")) != "generator+0x10e0" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_end_offset", "")) != "generator+0x10e4" \
+			or String(runtime_zone_phase.get("runtime_zone_vector_capacity_offset", "")) != "generator+0x10e8" \
+			or int(runtime_zone_phase.get("runtime_zone_record_size_bytes", -1)) != 0x414 \
+			or String(runtime_zone_phase.get("binary_byte_prefix_0x4a218c", "")) != "55 8b ec 83 ec 28 53 8b d9 56 57 ff b3 e8 10 00" \
+			or String(runtime_zone_phase.get("binary_byte_prefix_0x49b452", "")) != "55 8b ec 53 56 8b f1 33 db 8a 4d 0b 57 8d 86 e4" \
+			or int(runtime_zone_phase.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zone_phase.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zone_phase.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zone_phase.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zone_phase.get("minimum_player_castles", -1)) != 4 \
+			or int(runtime_zone_phase.get("minimum_source_base_size", -1)) != 11 \
+			or Array(runtime_zone_phase.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1] \
+			or bool(runtime_zone_phase.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zone_phase.get("materializes_terrain", true)) \
+			or bool(runtime_zone_phase.get("materializes_map_cells", true)) \
+			or bool(runtime_zone_phase.get("materializes_runtime_players", true)) \
+			or bool(runtime_zone_phase.get("materializes_public_output", true)):
+		_fail("Strict h3maped runtime-zone record port drifted: %s" % JSON.stringify(runtime_zone_phase))
+		return
+	var runtime_records: Array = runtime_zone_phase.get("runtime_zone_records", [])
+	if runtime_records.size() != 6 \
+			or String(runtime_records[0].get("role", "")) != "human_start" \
+			or int(runtime_records[0].get("source_owner_index", -1)) != 0 \
+			or int(runtime_records[0].get("actual_owner_color", -1)) != 0 \
+			or int(runtime_records[0].get("min_player_castles", -1)) != 1 \
+			or String(runtime_records[2].get("role", "")) != "treasure" \
+			or int(runtime_records[2].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[2].get("terrain_policy", "")) != "all_land_h3" \
+			or int(runtime_records[2].get("minimum_rare_mines", -1)) != 5 \
+			or int(runtime_records[4].get("source_owner_index", -1)) != 3 \
+			or int(runtime_records[4].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[5].get("role", "")) != "treasure":
+		_fail("Strict h3maped runtime-zone records changed: %s" % JSON.stringify(runtime_records))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -91,13 +130,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "runtime_zone_records_0x4a218c_0x49b452":
+			or String(strict_state.get("next_required_port", "")) != "link_seed_setup_0x4a1f3b":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 9 \
-			or not pending_ports.has("runtime_zone_records:0x4a218c_0x49b452") \
+	if pending_ports.size() != 8 \
+			or not pending_ports.has("link_seed_setup:0x4a1f3b") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -106,6 +145,7 @@ func _run() -> void:
 	if backlog.size() != 12 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
