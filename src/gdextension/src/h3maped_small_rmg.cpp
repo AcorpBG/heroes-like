@@ -845,6 +845,83 @@ Dictionary h3_static_candidate_record(const char *source_address, const char *vt
 	return record;
 }
 
+Dictionary h3_extended_candidate_record(const char *source_address, const char *vtable_address, int32_t record_size_bytes, int32_t type_id, int32_t subtype, int32_t value, int32_t weight, int32_t field_0x14, int32_t field_0x18, int32_t field_0x1c) {
+	Dictionary record = h3_static_candidate_record(source_address, vtable_address, type_id, subtype, value, weight);
+	record["record_size_bytes"] = record_size_bytes;
+	record["field_0x14"] = field_0x14;
+	if (field_0x18 >= 0) {
+		record["field_0x18"] = field_0x18;
+	}
+	if (field_0x1c >= 0) {
+		record["field_0x1c"] = field_0x1c;
+	}
+	return record;
+}
+
+Dictionary h3_monster_candidate_loop_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x49f9ed..0x49fa54";
+	boundary["table_pointer_address"] = "0x581298";
+	boundary["table_address"] = "0x57cea0";
+	boundary["record_stride_bytes"] = 0x74;
+	boundary["active_gate_offset"] = "+0x04";
+	boundary["active_gate_condition"] = "signed_value_greater_equal_zero";
+	boundary["single_level_iteration_count"] = 0x76;
+	boundary["extended_iteration_count"] = 0x91;
+	boundary["single_level_active_count"] = 118;
+	boundary["extended_active_count"] = 141;
+	boundary["iteration_order"] = "descending_index";
+	boundary["allocation_size_bytes"] = 0x1c;
+	boundary["constructor_address"] = "0x49c5cd";
+	boundary["constructor_vtable_address"] = "0x540bc0";
+	boundary["constructor_type_id"] = 6;
+	boundary["constructor_subtype_field"] = "+0x14 monster_table_index";
+	boundary["constructor_value_field"] = "+0x18 scaled_monster_value";
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
+Array h3_fixed_type6_value_band_records() {
+	return Array::make(
+			h3_extended_candidate_record("0x49fa63", "0x540bd0", 0x18, 6, 0, 6000, 20, 5000, -1, -1),
+			h3_extended_candidate_record("0x49faa5", "0x540bd0", 0x18, 6, 0, 12000, 20, 10000, -1, -1),
+			h3_extended_candidate_record("0x49fae7", "0x540bd0", 0x18, 6, 0, 18000, 20, 15000, -1, -1),
+			h3_extended_candidate_record("0x49fb29", "0x540bd0", 0x18, 6, 0, 24000, 20, 20000, -1, -1),
+			h3_extended_candidate_record("0x49fb6b", "0x540be0", 0x18, 6, 0, 5000, 5, 5000, -1, -1),
+			h3_extended_candidate_record("0x49fbaa", "0x540be0", 0x18, 6, 0, 10000, 5, 10000, -1, -1),
+			h3_extended_candidate_record("0x49fbe9", "0x540be0", 0x18, 6, 0, 15000, 5, 15000, -1, -1),
+			h3_extended_candidate_record("0x49fc28", "0x540be0", 0x18, 6, 0, 20000, 5, 20000, -1, -1),
+			h3_extended_candidate_record("0x49fc6c", "0x540bf0", 0x20, 6, 0, 5000, 2, 1, 1, 15),
+			h3_extended_candidate_record("0x49fcb7", "0x540bf0", 0x20, 6, 0, 7500, 2, 2, 2, 15),
+			h3_extended_candidate_record("0x49fcfe", "0x540bf0", 0x20, 6, 0, 10000, 2, 3, 3, 15),
+			h3_extended_candidate_record("0x49fd49", "0x540bf0", 0x20, 6, 0, 12500, 2, 4, 4, 15),
+			h3_extended_candidate_record("0x49fd94", "0x540bf0", 0x20, 6, 0, 15000, 2, 5, 5, 15),
+			h3_extended_candidate_record("0x49fddf", "0x540bf0", 0x20, 6, 0, 15000, 2, 1, 5, 1),
+			h3_extended_candidate_record("0x49fe2a", "0x540bf0", 0x20, 6, 0, 15000, 2, 1, 5, 2),
+			h3_extended_candidate_record("0x49fe75", "0x540bf0", 0x20, 6, 0, 15000, 2, 1, 5, 4),
+			h3_extended_candidate_record("0x49fec5", "0x540bf0", 0x20, 6, 0, 15000, 2, 1, 5, 8),
+			h3_extended_candidate_record("0x49ff15", "0x540bf0", 0x20, 6, 0, 30000, 2, 1, 5, 15));
+}
+
+Dictionary h3_artifact_pool_candidate_loop_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x49ff59..0x4a00c7";
+	boundary["artifact_pool_vector_offset"] = "generator+0xd8..+0xdc";
+	boundary["selection_state_offset"] = "generator+0x1100";
+	boundary["selection_state_buffer_offset"] = "generator+0x1104";
+	boundary["selection_state_helper_address"] = "0x48d21c";
+	boundary["allocation_size_bytes"] = 0x14;
+	boundary["vtable_address"] = "0x540ca0";
+	boundary["type_id"] = 10;
+	boundary["subtype_source"] = "artifact_pool_index";
+	boundary["values"] = Array::make(5000, 7500, 10000, 15000, 20000);
+	boundary["weight"] = 10;
+	boundary["candidate_records_per_artifact"] = 5;
+	boundary["iteration_order"] = "descending_artifact_pool_index";
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
 Dictionary h3maped_generic_value_selector_boundary() {
 	static constexpr H3ObjectLimitOverride GLOBAL_LIMIT_OVERRIDES[] = {
 		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
@@ -895,8 +972,15 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_prefix_records"] = Array::make(
 			h3_static_candidate_record("0x49f97b", "0x540ba0", 2, 0, 100, 20),
 			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50));
+	boundary["candidate_builder_monster_loop_status"] = "0x49f9ed_0x49fa54_monster_table_loop_recovered_not_materialized";
+	boundary["candidate_builder_monster_loop"] = h3_monster_candidate_loop_boundary();
+	boundary["candidate_builder_fixed_type6_value_band_status"] = "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized";
+	boundary["candidate_builder_fixed_type6_value_band_count"] = 18;
+	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
+	boundary["candidate_builder_artifact_pool_loop_status"] = "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized";
+	boundary["candidate_builder_artifact_pool_loop"] = h3_artifact_pool_candidate_loop_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("0x581298 monster table loop", "generator+0xd8..+0xdc artifact pool loop", "type 6 value-band extended candidates", "remaining fixed/static value-band candidates");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "remaining fixed/static candidate tail after 0x4a00cc");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = false;
