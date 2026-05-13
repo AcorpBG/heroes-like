@@ -296,7 +296,8 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("template_selection", "0x49f0cd, 0x4ac597, 0x4e7276", "active_boundary"));
 	backlog.append(phase_record("player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_internal_state"));
 	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_internal_state"));
-	backlog.append(phase_record("coordinate_replay_and_zone_footprints", "0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x4a3a03", "pending_runtime_port"));
+	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_internal_state"));
+	backlog.append(phase_record("coordinate_replay_and_zone_footprints", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x4a3a03", "pending_runtime_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x4a3f27, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_runtime_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_runtime_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_runtime_port"));
@@ -308,8 +309,8 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, and runtime-zone record setup");
-	gaps.append("physical zone fills, terrain, towns, roads, blockers, guards, mines, rewards, and writeout are not implemented in the fresh active module");
+	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, and link-seed setup");
+	gaps.append("coordinate replay, physical zone fills, terrain, towns, roads, blockers, guards, mines, rewards, and writeout are not implemented in the fresh active module");
 	gaps.append("all earlier private phase ledgers were archived because they were report growth, not usable map generation");
 	gaps.append("small maps remain blocked from runtime package output until executable-derived phases are ported as actual generation state");
 	return gaps;
@@ -534,10 +535,84 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 	return phase;
 }
 
+bool player_filter_allows(const Dictionary &filter, int32_t humans, int32_t players) {
+	return humans >= int32_t(filter.get("min_human", 0))
+			&& humans <= int32_t(filter.get("max_human", 8))
+			&& players >= int32_t(filter.get("min_total", 0))
+			&& players <= int32_t(filter.get("max_total", 8));
+}
+
+Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary &selection, const Dictionary &runtime_zone_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "link_seed_setup";
+	phase["status"] = "blocked_until_runtime_zone_records";
+	phase["h3maped_anchor"] = "0x4a1f3b";
+	phase["candidate_generator_anchor"] = "0x4a17f5";
+	phase["distance_validation_anchor"] = "0x4a1701";
+	phase["late_payload_consumer_anchor"] = "0x4a79a3";
+	phase["materializes_coordinates"] = false;
+	phase["materializes_connection_guards"] = false;
+	phase["materializes_roads"] = false;
+	phase["materializes_blockers"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "coordinate_replay_0x4a17f5_0x4a1701";
+	if (String(runtime_zone_phase.get("status", "")) != "active_internal_state") {
+		return phase;
+	}
+
+	Dictionary catalog_load;
+	Dictionary adapted_template = find_project_template_record(String(selection.get("adapted_template_id", "")), catalog_load);
+	phase["project_catalog_load"] = catalog_load;
+	if (adapted_template.is_empty() || Variant(adapted_template.get("links", Variant())).get_type() != Variant::ARRAY) {
+		phase["status"] = "blocked_missing_project_template_links";
+		return phase;
+	}
+
+	const int32_t humans = human_count(normalized_config);
+	const int32_t players = player_count(normalized_config);
+	Array links = adapted_template.get("links", Array());
+	Array seeds;
+	for (int64_t index = 0; index < links.size(); ++index) {
+		if (Variant(links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = links[index];
+		if (!player_filter_allows(link.get("player_filter", Dictionary()), humans, players)) {
+			continue;
+		}
+		Dictionary endpoints = link.get("source_endpoints", Dictionary());
+		const int32_t source_zone_a = int32_t(endpoints.get("zone1", 0));
+		const int32_t source_zone_b = int32_t(endpoints.get("zone2", 0));
+		if (source_zone_a <= 0 || source_zone_b <= 0) {
+			continue;
+		}
+		Dictionary seed;
+		seed["link_index"] = seeds.size();
+		seed["source_row"] = Dictionary(link.get("grammar_source", Dictionary())).get("source_row", -1);
+		seed["source_zone_a"] = source_zone_a;
+		seed["source_zone_b"] = source_zone_b;
+		seed["runtime_zone_a"] = source_zone_a - 1;
+		seed["runtime_zone_b"] = source_zone_b - 1;
+		seed["guard_value"] = link.get("guard_value", Dictionary(link.get("guard", Dictionary())).get("value", 0));
+		seed["wide"] = bool(link.get("wide", false));
+		seed["border_guard"] = bool(link.get("border_guard", false));
+		seed["early_consumer"] = "0x4a1f3b_endpoint_only";
+		seed["late_payload_consumer"] = "0x4a79a3";
+		seeds.append(seed);
+	}
+
+	phase["status"] = "active_internal_state";
+	phase["source"] = "res://content/random_map_template_catalog.json recovered link rows consumed through h3maped 0x4a1f3b";
+	phase["link_seed_count"] = seeds.size();
+	phase["link_seeds"] = seeds;
+	return phase;
+}
+
 Dictionary active_generation_state(const Dictionary &normalized_config) {
 	Dictionary selection = selection_identity(normalized_config);
 	Dictionary player_phase = player_slot_assignment_phase(normalized_config, selection);
 	Dictionary runtime_zone_phase = runtime_zone_records_phase(selection, player_phase);
+	Dictionary link_phase = link_seed_phase(normalized_config, selection, runtime_zone_phase);
 	Array completed;
 	completed.append("template_selection");
 	if (String(player_phase.get("status", "")) == "active_internal_state") {
@@ -546,9 +621,12 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	if (String(runtime_zone_phase.get("status", "")) == "active_internal_state") {
 		completed.append("runtime_zone_records");
 	}
+	if (String(link_phase.get("status", "")) == "active_internal_state") {
+		completed.append("link_seed_setup");
+	}
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_active_generation_state_v1";
-	state["status"] = completed.size() >= 3 ? String("runtime_zone_records_active_internal_state") : String("blocked_before_runtime_zone_records");
+	state["status"] = completed.size() >= 4 ? String("link_seed_setup_active_internal_state") : String("blocked_before_link_seed_setup");
 	state["completed_phase_ids"] = completed;
 	state["completed_phase_count"] = completed.size();
 	state["runtime_generation_allowed"] = false;
@@ -558,6 +636,7 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	state["selection_identity"] = selection;
 	state["player_slot_assignment"] = player_phase;
 	state["runtime_zone_records"] = runtime_zone_phase;
+	state["link_seed_setup"] = link_phase;
 	state["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
 	return state;
 }
