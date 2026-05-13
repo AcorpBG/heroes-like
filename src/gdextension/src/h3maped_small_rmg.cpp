@@ -872,6 +872,173 @@ Dictionary terrain_scratch_write_contract_report() {
 	return report;
 }
 
+PackedInt32Array final_sweep_boundary_counts_sample(const std::array<int32_t, 9> &owners) {
+	PackedInt32Array counts;
+	for (int32_t index = 0; index < 9; ++index) {
+		counts.append(0);
+	}
+	auto owner_at = [&owners](int32_t x, int32_t y) -> int32_t {
+		return owners[size_t(y * 3 + x)];
+	};
+	auto increment_if_different = [&](int32_t x, int32_t y, int32_t nx, int32_t ny) {
+		if (nx < 0 || ny < 0 || nx >= 3 || ny >= 3) {
+			return;
+		}
+		if (owner_at(x, y) == owner_at(nx, ny)) {
+			return;
+		}
+		const int32_t index = y * 3 + x;
+		const int32_t neighbor_index = ny * 3 + nx;
+		counts.set(index, counts[index] + 1);
+		counts.set(neighbor_index, counts[neighbor_index] + 1);
+	};
+	for (int32_t y = 0; y < 3; ++y) {
+		for (int32_t x = 0; x < 3; ++x) {
+			increment_if_different(x, y, x + 1, y);
+			increment_if_different(x, y, x, y + 1);
+			increment_if_different(x, y, x + 1, y + 1);
+			increment_if_different(x, y, x - 1, y + 1);
+		}
+	}
+	return counts;
+}
+
+PackedInt32Array packed_grid_3x3(const std::array<int32_t, 9> &values) {
+	PackedInt32Array packed;
+	for (int32_t value : values) {
+		packed.append(value);
+	}
+	return packed;
+}
+
+Dictionary terrain_final_normalization_contract_report() {
+	Dictionary report;
+	report["status"] = "0x4bc5f0_0x4bbd01_0x4bbfcc_queue_and_final_sweep_contract_ported_boundary_only";
+	report["queue_drain_address"] = "0x4bc5f0";
+	report["frontier_processor_address"] = "0x4bbd01";
+	report["candidate_gate_address"] = "0x4bc988";
+	report["final_sweep_address"] = "0x4bbfcc";
+	report["boundary_counter_branch_address"] = "0x4bc3dd..0x4bc566";
+	report["set_a_offset"] = "this+0x14";
+	report["set_a_count_offset"] = "this+0x20";
+	report["set_b_offset"] = "this+0x24";
+	report["set_b_count_offset"] = "this+0x30";
+	report["drain_order"] = Array::make("drain set A with 0x4bbd01", "drain set B through 0x4bc988 and 0x4bb74b", "repeat until set A remains empty", "run 0x4bbfcc final whole-map sweep");
+	report["set_a_semantics"] = "frontier/topology constraints consumed by 0x4bbd01";
+	report["set_b_semantics"] = "candidate rewrites gated by 0x4bc988";
+	report["final_sweep_adjacency_directions"] = Array::make("E", "S", "SE", "SW");
+	report["final_correction_classes"] = Array::make("2->6", "8->12", "5->7", "11->13");
+	report["zero_boundary_branch"] = "0x4bbfcc still normalizes full/native art and clears flags when boundary_count[cell] == 0";
+	report["restricted_terrain_queue_invariant"] = "water/rock trait +5 == 0 uses topology queue repair so relation-only class 24 and rock class 16 do not reach stable final normalization";
+	report["materializes_generated_cell_words"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	report["materializes_package_tiles"] = false;
+	const std::array<int32_t, 9> island_grid = { 0, 0, 0, 0, 2, 0, 0, 0, 0 };
+	const std::array<int32_t, 9> flat_grid = { 2, 2, 2, 2, 2, 2, 2, 2, 2 };
+	PackedInt32Array island_counts = final_sweep_boundary_counts_sample(island_grid);
+	PackedInt32Array flat_counts = final_sweep_boundary_counts_sample(flat_grid);
+	Dictionary sample;
+	sample["owner_grid_row_major"] = packed_grid_3x3(island_grid);
+	sample["boundary_counts_row_major"] = island_counts;
+	sample["center_boundary_count"] = island_counts[4];
+	sample["edge_neighbor_boundary_count"] = island_counts[1];
+	sample["corner_neighbor_boundary_count"] = island_counts[0];
+	sample["directions_scanned"] = report["final_sweep_adjacency_directions"];
+	report["boundary_counter_sample"] = sample;
+	Dictionary zero_sample;
+	zero_sample["owner_grid_row_major"] = packed_grid_3x3(flat_grid);
+	zero_sample["boundary_counts_row_major"] = flat_counts;
+	zero_sample["requires_full_native_normalization_even_with_zero_boundary"] = true;
+	report["zero_boundary_full_native_sample"] = zero_sample;
+	report["blocked_next"] = "port queue drain and final sweep over the generated terrain grid before adopting terrain art/flag bytes";
+	return report;
+}
+
+Dictionary generated_grid_final_sweep_boundary_counter_report(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only";
+	report["final_sweep_address"] = "0x4bbfcc";
+	report["boundary_counter_branch_address"] = "0x4bc3dd..0x4bc566";
+	report["adjacency_directions"] = Array::make("E", "S", "SE", "SW");
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["materializes_visual_records"] = false;
+	report["materializes_full_terrain_art_grid"] = false;
+	report["materializes_package_tiles"] = false;
+
+	const int32_t level_tile_count = width * height;
+	const int32_t expected_tile_count = level_tile_count * level_count;
+	const int32_t tile_count = terrain_code_u16.size();
+	report["expected_tile_count"] = expected_tile_count;
+	report["tile_count"] = tile_count;
+	report["input_matches_expected_tile_count"] = tile_count == expected_tile_count;
+
+	PackedInt32Array boundary_counts;
+	boundary_counts.resize(tile_count);
+	int32_t boundary_adjacency_count = 0;
+	int32_t total_boundary_increments = 0;
+	auto terrain_at = [&terrain_code_u16](int32_t index) -> int32_t {
+		if (index < 0 || index >= terrain_code_u16.size()) {
+			return -1;
+		}
+		return terrain_code_u16[index];
+	};
+	auto increment_if_different = [&](int32_t base, int32_t x, int32_t y, int32_t nx, int32_t ny) {
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+			return;
+		}
+		const int32_t index = base + y * width + x;
+		const int32_t neighbor_index = base + ny * width + nx;
+		if (terrain_at(index) == terrain_at(neighbor_index)) {
+			return;
+		}
+		boundary_counts.set(index, boundary_counts[index] + 1);
+		boundary_counts.set(neighbor_index, boundary_counts[neighbor_index] + 1);
+		boundary_adjacency_count += 1;
+		total_boundary_increments += 2;
+	};
+
+	for (int32_t level = 0; level < level_count; ++level) {
+		const int32_t base = level * level_tile_count;
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				increment_if_different(base, x, y, x + 1, y);
+				increment_if_different(base, x, y, x, y + 1);
+				increment_if_different(base, x, y, x + 1, y + 1);
+				increment_if_different(base, x, y, x - 1, y + 1);
+			}
+		}
+	}
+
+	int32_t boundary_cell_count = 0;
+	int32_t zero_boundary_cell_count = 0;
+	int32_t max_boundary_count = 0;
+	Dictionary boundary_count_histogram;
+	for (int32_t index = 0; index < boundary_counts.size(); ++index) {
+		const int32_t count = boundary_counts[index];
+		const String key = String::num_int64(count);
+		boundary_count_histogram[key] = int32_t(boundary_count_histogram.get(key, 0)) + 1;
+		if (count > 0) {
+			boundary_cell_count += 1;
+		} else {
+			zero_boundary_cell_count += 1;
+		}
+		if (count > max_boundary_count) {
+			max_boundary_count = count;
+		}
+	}
+	report["boundary_counts_u8"] = boundary_counts;
+	report["boundary_cell_count"] = boundary_cell_count;
+	report["zero_boundary_cell_count"] = zero_boundary_cell_count;
+	report["max_boundary_count"] = max_boundary_count;
+	report["boundary_adjacency_count"] = boundary_adjacency_count;
+	report["total_boundary_increments"] = total_boundary_increments;
+	report["boundary_count_histogram"] = boundary_count_histogram;
+	report["blocked_next"] = "run the recovered classifier/row selection/writeback over these generated-grid counters after queue normalization is ported";
+	return report;
+}
+
 int32_t terrain_trait_flag4(int32_t terrain_id) {
 	switch (terrain_id) {
 		case 0:
@@ -1191,6 +1358,7 @@ Dictionary terrainplacement_visual_tables_4bcff5_report() {
 	report["static_table_contracts"] = terrain_visual_static_table_contracts_report();
 	report["visual_row_selection_contract"] = terrain_visual_row_selection_contract_report();
 	report["scratch_write_contract"] = terrain_scratch_write_contract_report();
+	report["final_normalization_contract"] = terrain_final_normalization_contract_report();
 	report["terrain_classifier_contract"] = terrain_classifier_contract_report();
 	report["blocked_next"] = "port live 0x4bb74b/0x4bc5f0 TerrainPlacement scratch feedback and copy selected rows into generated-cell art/flag words before any public package output";
 	return report;
@@ -3541,6 +3709,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["h3_terrain_code_counts"] = h3_terrain_code_counts;
 	report["cells_by_zone_word"] = cells_by_zone_word;
 	report["terrain_repaint_schedule"] = terrain_repaint_schedule;
+	report["final_sweep_boundary_counter_status"] = "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only";
+	report["final_sweep_boundary_counter"] = generated_grid_final_sweep_boundary_counter_report(terrain_code_u16, width, height, level_count);
 	report["tile_byte_writeout_status"] = "0x49b2b6_terrain_id_byte_packed_art_flip_pending";
 	report["tile_byte_writeout_source"] = "0x49b2b6 serializes generated cell+0x24 bits 0..5 to terrain byte 0; terrain art byte 1 and terrain flip byte 6 bits 0..1 remain blocked until TerrainPlacement is ported";
 	report["next_materialization_status"] = "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";

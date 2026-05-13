@@ -761,6 +761,34 @@ func _run() -> void:
 			or String(terrain_writeout.get("next_materialization_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout":
 		_fail("0x4a3f27 terrain arrays/writeout status drifted: %s" % JSON.stringify(terrain_writeout))
 		return
+	var final_sweep_counter: Dictionary = terrain_writeout.get("final_sweep_boundary_counter", {})
+	var final_sweep_counts := PackedInt32Array(final_sweep_counter.get("boundary_counts_u8", PackedInt32Array()))
+	var final_sweep_histogram: Dictionary = final_sweep_counter.get("boundary_count_histogram", {})
+	var final_sweep_histogram_total := 0
+	for key in final_sweep_histogram.keys():
+		final_sweep_histogram_total += int(final_sweep_histogram[key])
+	if String(terrain_writeout.get("final_sweep_boundary_counter_status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(final_sweep_counter.get("status", "")) != "0x4bbfcc_generated_grid_boundary_counter_applied_inspection_only" \
+			or String(final_sweep_counter.get("final_sweep_address", "")) != "0x4bbfcc" \
+			or String(final_sweep_counter.get("boundary_counter_branch_address", "")) != "0x4bc3dd..0x4bc566" \
+			or int(final_sweep_counter.get("width", -1)) != 36 \
+			or int(final_sweep_counter.get("height", -1)) != 36 \
+			or int(final_sweep_counter.get("level_count", -1)) != 1 \
+			or int(final_sweep_counter.get("expected_tile_count", -1)) != 1296 \
+			or int(final_sweep_counter.get("tile_count", -1)) != 1296 \
+			or not bool(final_sweep_counter.get("input_matches_expected_tile_count", false)) \
+			or final_sweep_counts.size() != 1296 \
+			or int(final_sweep_counter.get("boundary_cell_count", -1)) <= 0 \
+			or int(final_sweep_counter.get("zero_boundary_cell_count", -1)) <= 0 \
+			or int(final_sweep_counter.get("boundary_cell_count", 0)) + int(final_sweep_counter.get("zero_boundary_cell_count", 0)) != 1296 \
+			or int(final_sweep_counter.get("total_boundary_increments", -1)) != int(final_sweep_counter.get("boundary_adjacency_count", -2)) * 2 \
+			or int(final_sweep_counter.get("max_boundary_count", -1)) <= 0 \
+			or final_sweep_histogram_total != 1296 \
+			or bool(final_sweep_counter.get("materializes_visual_records", true)) \
+			or bool(final_sweep_counter.get("materializes_full_terrain_art_grid", true)) \
+			or bool(final_sweep_counter.get("materializes_package_tiles", true)):
+		_fail("0x4bbfcc generated-grid boundary counter drifted: %s" % JSON.stringify(final_sweep_counter))
+		return
 
 	var terrainplacement: Dictionary = report.get("terrainplacement_visual_tables_4bcff5", {})
 	if String(terrainplacement.get("status", "")) != "0x4bcff5_terrainplacement_visual_tables_toolkit_ported_inspection_only" \
@@ -870,6 +898,37 @@ func _run() -> void:
 			or int(scratch_samples[3].get("tile_byte_1_terrain_art", -1)) != 11 \
 			or int(scratch_samples[3].get("tile_byte_6_terrain_flags", -1)) != 0:
 		_fail("TerrainPlacement scratch/writeback samples drifted: %s" % JSON.stringify(scratch_samples))
+		return
+
+	var final_normalization: Dictionary = terrainplacement.get("final_normalization_contract", {})
+	var drain_order: Array = final_normalization.get("drain_order", [])
+	var final_directions: Array = final_normalization.get("final_sweep_adjacency_directions", [])
+	var final_corrections: Array = final_normalization.get("final_correction_classes", [])
+	var boundary_sample: Dictionary = final_normalization.get("boundary_counter_sample", {})
+	var sample_counts := PackedInt32Array(boundary_sample.get("boundary_counts_row_major", PackedInt32Array()))
+	var zero_sample: Dictionary = final_normalization.get("zero_boundary_full_native_sample", {})
+	var zero_counts := PackedInt32Array(zero_sample.get("boundary_counts_row_major", PackedInt32Array()))
+	if String(final_normalization.get("status", "")) != "0x4bc5f0_0x4bbd01_0x4bbfcc_queue_and_final_sweep_contract_ported_boundary_only" \
+			or String(final_normalization.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(final_normalization.get("frontier_processor_address", "")) != "0x4bbd01" \
+			or String(final_normalization.get("candidate_gate_address", "")) != "0x4bc988" \
+			or String(final_normalization.get("final_sweep_address", "")) != "0x4bbfcc" \
+			or String(final_normalization.get("boundary_counter_branch_address", "")) != "0x4bc3dd..0x4bc566" \
+			or String(final_normalization.get("set_a_offset", "")) != "this+0x14" \
+			or String(final_normalization.get("set_b_offset", "")) != "this+0x24" \
+			or drain_order.size() != 4 \
+			or final_directions != ["E", "S", "SE", "SW"] \
+			or final_corrections != ["2->6", "8->12", "5->7", "11->13"] \
+			or bool(final_normalization.get("materializes_generated_cell_words", true)) \
+			or bool(final_normalization.get("materializes_full_terrain_art_grid", true)) \
+			or bool(final_normalization.get("materializes_package_tiles", true)) \
+			or sample_counts != PackedInt32Array([1, 1, 1, 1, 8, 1, 1, 1, 1]) \
+			or int(boundary_sample.get("center_boundary_count", -1)) != 8 \
+			or int(boundary_sample.get("edge_neighbor_boundary_count", -1)) != 1 \
+			or int(boundary_sample.get("corner_neighbor_boundary_count", -1)) != 1 \
+			or zero_counts != PackedInt32Array([0, 0, 0, 0, 0, 0, 0, 0, 0]) \
+			or not bool(zero_sample.get("requires_full_native_normalization_even_with_zero_boundary", false)):
+		_fail("TerrainPlacement final-normalization contract drifted: %s" % JSON.stringify(final_normalization))
 		return
 
 	var terrain_classifier: Dictionary = terrainplacement.get("terrain_classifier_contract", {})
