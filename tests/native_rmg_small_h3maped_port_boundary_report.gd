@@ -147,6 +147,45 @@ func _run() -> void:
 		_fail("Strict h3maped link-seed setup drifted: %s" % JSON.stringify(link_phase))
 		return
 
+	var coordinate_phase: Dictionary = report.get("coordinate_replay", {})
+	var bbox: Dictionary = coordinate_phase.get("bounding_box_rescale", {})
+	var scaled_coords: Array = coordinate_phase.get("scaled_zone_coordinates", [])
+	if String(coordinate_phase.get("status", "")) != "active_strict_executable_port" \
+			or String(coordinate_phase.get("source_range", "")) != "0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed" \
+			or String(coordinate_phase.get("binary_byte_prefix_0x4a17f5", "")) != "55 8b ec 83 ec 38 8b 45 08 53 56 57 8b 5d 0c 8d" \
+			or String(coordinate_phase.get("binary_byte_prefix_0x4a1701", "")) != "55 8b ec 83 ec 34 8b 55 08 53 56 57 8d 72 10 8d" \
+			or String(coordinate_phase.get("binary_byte_prefix_0x4a1ad8", "")) != "55 8b ec 83 ec 40 83 65 f0 00 83 79 20 01 53 8b" \
+			or String(coordinate_phase.get("binary_byte_prefix_0x4a19ed", "")) != "55 8b ec 83 ec 14 8b 55 10 53 8b 5d 08 8b c1 8b" \
+			or int(coordinate_phase.get("placement_step_count", -1)) != 18 \
+			or int(coordinate_phase.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
+			or int(coordinate_phase.get("town_choice_rng_calls_during_0x4a218c", -1)) != 4 \
+			or int(coordinate_phase.get("total_interleaved_rng_calls_during_0x4a218c", -1)) != 22 \
+			or int(coordinate_phase.get("rng_event_count", -1)) != 22 \
+			or int(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 255755822 \
+			or int(bbox.get("selected_span_before_rescale", -1)) != 84 \
+			or scaled_coords.size() != 6 \
+			or bool(coordinate_phase.get("materializes_zone_footprints", true)) \
+			or bool(coordinate_phase.get("materializes_terrain", true)) \
+			or bool(coordinate_phase.get("materializes_map_cells", true)) \
+			or bool(coordinate_phase.get("materializes_public_output", true)):
+		_fail("Strict h3maped coordinate replay drifted: %s" % JSON.stringify(coordinate_phase))
+		return
+	var expected_coords := [
+		{"x": 23, "y": 11},
+		{"x": 21, "y": 22},
+		{"x": 12, "y": 23},
+		{"x": 18, "y": 4},
+		{"x": 18, "y": 30},
+		{"x": 12, "y": 11},
+	]
+	for coord_index in expected_coords.size():
+		if int(scaled_coords[coord_index].get("runtime_zone_index", -1)) != coord_index \
+				or int(scaled_coords[coord_index].get("x_after_bbox_rescale", -1)) != int(expected_coords[coord_index]["x"]) \
+				or int(scaled_coords[coord_index].get("y_after_bbox_rescale", -1)) != int(expected_coords[coord_index]["y"]) \
+				or int(scaled_coords[coord_index].get("level", -1)) != 0:
+			_fail("Strict h3maped scaled coordinate replay changed: %s" % JSON.stringify(scaled_coords))
+			return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -154,13 +193,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "coordinate_replay_0x4a17f5_0x4a1701":
+			or String(strict_state.get("next_required_port", "")) != "zone_footprints_0x4a3a03_0x4cc788":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 7 \
-			or not pending_ports.has("coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed") \
+	if pending_ports.size() != 6 \
+			or not pending_ports.has("zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -171,6 +210,7 @@ func _run() -> void:
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[3].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[4].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
