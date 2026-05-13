@@ -1061,7 +1061,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("template_selection", "0x49f0cd, 0x4ac597, 0x4e7276", "active_strict_boundary"));
 	backlog.append(phase_record("player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_strict_executable_port"));
 	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_strict_executable_port"));
-	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "pending_strict_executable_port"));
+	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_strict_executable_port"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "pending_strict_executable_port"));
 	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
@@ -1078,7 +1078,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, and h3maped RNG template-selection evidence only");
 	gaps.append("old private player-slot, zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a1f3b link-seed setup over the selected template runtime-zone records, not broad report expansion");
+	gaps.append("next implementation step is a narrow executable port of 0x4a17f5/0x4a1701 coordinate candidate selection over the link seeds, not broad report expansion");
 	return gaps;
 }
 
@@ -1100,9 +1100,9 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"size_water_score_boundary:0x49f0cd",
 			"template_rng_selection_boundary:0x4e7269_0x4e7276",
 			"player_slot_assignment:0x4ac62a..0x4ac6ec",
-			"runtime_zone_records:0x4a218c_0x49b452");
+			"runtime_zone_records:0x4a218c_0x49b452",
+			"link_seed_setup:0x4a1f3b");
 	state["pending_strict_ports"] = Array::make(
-			"link_seed_setup:0x4a1f3b",
 			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
 			"zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710",
 			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
@@ -1116,7 +1116,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "link_seed_setup_0x4a1f3b";
+	state["next_required_port"] = "coordinate_replay_0x4a17f5_0x4a1701";
 	return state;
 }
 
@@ -1364,7 +1364,8 @@ Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary
 	phase["materializes_blockers"] = false;
 	phase["materializes_public_output"] = false;
 	phase["blocked_next"] = "coordinate_replay_0x4a17f5_0x4a1701";
-	if (String(runtime_zone_phase.get("status", "")) != "active_internal_state") {
+	const String runtime_status = String(runtime_zone_phase.get("status", ""));
+	if (runtime_status != "active_internal_state" && runtime_status != "active_strict_executable_port") {
 		return phase;
 	}
 
@@ -6145,6 +6146,12 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	runtime_zones["binary_byte_prefix_0x49b452"] = "55 8b ec 53 56 8b f1 33 db 8a 4d 0b 57 8d 86 e4";
 	runtime_zones["strict_port_scope"] = "generator+0x10e0/+0x10e4/+0x10e8 runtime-zone vector records only";
 	report["runtime_zone_records"] = runtime_zones;
+	Dictionary link_seeds = link_seed_phase(normalized_config, selection, runtime_zones);
+	link_seeds["status"] = String(link_seeds.get("status", "")) == "active_internal_state" ? String("active_strict_executable_port") : String(link_seeds.get("status", ""));
+	link_seeds["source_range"] = "0x4a1f3b";
+	link_seeds["binary_byte_prefix_0x4a1f3b"] = "b8 54 a7 52 00 e8 8b 41 04 00 83 ec 2c 8a 45 0b";
+	link_seeds["strict_port_scope"] = "link endpoint seed records only; no coordinates, guards, roads, blockers, or public output";
+	report["link_seed_setup"] = link_seeds;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();

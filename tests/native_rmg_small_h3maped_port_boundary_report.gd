@@ -123,6 +123,30 @@ func _run() -> void:
 		_fail("Strict h3maped runtime-zone records changed: %s" % JSON.stringify(runtime_records))
 		return
 
+	var link_phase: Dictionary = report.get("link_seed_setup", {})
+	var link_seeds: Array = link_phase.get("link_seeds", [])
+	if String(link_phase.get("status", "")) != "active_strict_executable_port" \
+			or String(link_phase.get("source_range", "")) != "0x4a1f3b" \
+			or String(link_phase.get("binary_byte_prefix_0x4a1f3b", "")) != "b8 54 a7 52 00 e8 8b 41 04 00 83 ec 2c 8a 45 0b" \
+			or String(link_phase.get("candidate_generator_anchor", "")) != "0x4a17f5" \
+			or String(link_phase.get("distance_validation_anchor", "")) != "0x4a1701" \
+			or String(link_phase.get("late_payload_consumer_anchor", "")) != "0x4a79a3" \
+			or int(link_phase.get("link_seed_count", -1)) != 5 \
+			or link_seeds.size() != 5 \
+			or int(link_seeds[0].get("source_zone_a", -1)) != 1 \
+			or int(link_seeds[0].get("source_zone_b", -1)) != 4 \
+			or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 \
+			or int(link_seeds[0].get("runtime_zone_b", -1)) != 3 \
+			or int(link_seeds[0].get("guard_value", -1)) != 3000 \
+			or int(link_seeds[3].get("guard_value", -1)) != 6000 \
+			or bool(link_phase.get("materializes_coordinates", true)) \
+			or bool(link_phase.get("materializes_connection_guards", true)) \
+			or bool(link_phase.get("materializes_roads", true)) \
+			or bool(link_phase.get("materializes_blockers", true)) \
+			or bool(link_phase.get("materializes_public_output", true)):
+		_fail("Strict h3maped link-seed setup drifted: %s" % JSON.stringify(link_phase))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -130,13 +154,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "link_seed_setup_0x4a1f3b":
+			or String(strict_state.get("next_required_port", "")) != "coordinate_replay_0x4a17f5_0x4a1701":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 8 \
-			or not pending_ports.has("link_seed_setup:0x4a1f3b") \
+	if pending_ports.size() != 7 \
+			or not pending_ports.has("coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -146,6 +170,7 @@ func _run() -> void:
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[3].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
