@@ -41,14 +41,14 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "coordinate_replay_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay"] \
+			or String(active_state.get("status", "")) != "zone_footprints_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "zone_footprint_source_nodes_0x4a3a03_0x4cc788":
-		_fail("Fresh active generation state did not stop at runtime-zone records: %s" % JSON.stringify(active_state))
+			or String(active_state.get("blocked_next", "")) != "terrain_cell_writeout_0x4a3f27":
+		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -170,6 +170,61 @@ func _run() -> void:
 				or int(scaled_coords[coord_index].get("level", -1)) != 0:
 			_fail("h3maped scaled coordinate replay changed: %s" % JSON.stringify(scaled_coords))
 			return
+	var footprint_phase: Dictionary = active_state.get("zone_footprints", {})
+	var cells_by_zone_word: Array = footprint_phase.get("cells_by_zone_word", [])
+	if String(footprint_phase.get("h3maped_anchor", "")) != "0x4a3a03" \
+			or String(footprint_phase.get("polygon_constructor_anchor", "")) != "0x4cc788" \
+			or String(footprint_phase.get("polygon_split_anchor", "")) != "0x4ccb64" \
+			or String(footprint_phase.get("polygon_finalize_anchor", "")) != "0x4ccdfc" \
+			or String(footprint_phase.get("boundary_traversal_anchor", "")) != "0x4a2777" \
+			or String(footprint_phase.get("span_fill_anchor", "")) != "0x4a325d" \
+			or String(footprint_phase.get("small_land_finalizer_anchor", "")) != "0x4a3710" \
+			or String(footprint_phase.get("status", "")) != "active_internal_state" \
+			or int(footprint_phase.get("level_count", -1)) != 1 \
+			or int(footprint_phase.get("h3maped_water_mode_code", -1)) != 0 \
+			or bool(footprint_phase.get("synthetic_fallback_zone_allowed_by_0x4a3a9d", true)) \
+			or int(footprint_phase.get("appended_synthetic_runtime_zone_count", -1)) != 0 \
+			or int(footprint_phase.get("initial_bounds_min_x", 0)) != -200 \
+			or int(footprint_phase.get("initial_bounds_min_y", 0)) != -200 \
+			or int(footprint_phase.get("initial_bounds_max_x", 0)) != 400 \
+			or int(footprint_phase.get("initial_bounds_max_y", 0)) != 400 \
+			or int(footprint_phase.get("initial_node_pair_count", -1)) != 5 \
+			or int(footprint_phase.get("total_matching_runtime_zones", -1)) != 6 \
+			or int(footprint_phase.get("total_polygon_split_calls", -1)) != 6 \
+			or int(footprint_phase.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(footprint_phase.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
+			or int(footprint_phase.get("crossing_cleanup_scan_count", -1)) != 34 \
+			or int(footprint_phase.get("crossing_test_count", -1)) != 24 \
+			or int(footprint_phase.get("crossing_collapse_count", -1)) != 8 \
+			or int(footprint_phase.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(footprint_phase.get("finalized_triplet_count", -1)) != 14 \
+			or int(footprint_phase.get("finalized_node_count", -1)) != 42 \
+			or int(footprint_phase.get("source_node_walk_count", -1)) != 6 \
+			or int(footprint_phase.get("source_node_walk_guard_exhausted_count", -1)) != 0 \
+			or String(footprint_phase.get("boundary_traversal_status", "")) != "0x4a2777_private_boundary_materialized" \
+			or int(footprint_phase.get("boundary_runtime_zone_walk_count", -1)) != 6 \
+			or int(footprint_phase.get("boundary_trace_write_count", -1)) != 301 \
+			or int(footprint_phase.get("boundary_unique_cell_count", -1)) != 238 \
+			or bool(footprint_phase.get("boundary_loop_guard_exhausted", true)) \
+			or String(footprint_phase.get("span_fill_status", "")) != "0x4a325d_private_span_fill_materialized" \
+			or int(footprint_phase.get("span_fill_filled_zone_count", -1)) != 6 \
+			or int(footprint_phase.get("span_fill_unique_filled_cell_count", -1)) != 869 \
+			or int(footprint_phase.get("span_fill_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(footprint_phase.get("span_fill_remaining_unassigned_cell_count", -1)) != 189 \
+			or int(footprint_phase.get("reserved_cell_count", -1)) != 1107 \
+			or cells_by_zone_word.size() != 6 \
+			or not bool(footprint_phase.get("materializes_private_zone_cell_buffer", false)) \
+			or bool(footprint_phase.get("materializes_terrain", true)) \
+			or bool(footprint_phase.get("materializes_map_cells", true)) \
+			or bool(footprint_phase.get("materializes_public_output", true)):
+		_fail("h3maped zone-footprint phase drifted: %s" % JSON.stringify(footprint_phase))
+		return
+	var expected_zone_cells := [177, 91, 226, 177, 207, 229]
+	for zone_index in expected_zone_cells.size():
+		if int(cells_by_zone_word[zone_index].get("zone_word_id", -1)) != zone_index \
+				or int(cells_by_zone_word[zone_index].get("cell_count", -1)) != expected_zone_cells[zone_index]:
+			_fail("h3maped zone cell ownership counts changed: %s" % JSON.stringify(cells_by_zone_word))
+			return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -214,7 +269,7 @@ func _run() -> void:
 			or String(backlog[4].get("id", "")) != "coordinate_replay" \
 			or String(backlog[4].get("status", "")) != "active_internal_state" \
 			or String(backlog[5].get("id", "")) != "zone_footprints" \
-			or String(backlog[5].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[5].get("status", "")) != "active_internal_state" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
