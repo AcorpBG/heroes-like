@@ -257,6 +257,8 @@ Dictionary restart_backlog() {
 			phase["status"] = "active_inspection_only";
 		} else if (index == 2) {
 			phase["status"] = "active_inspection_only";
+		} else if (index == 3) {
+			phase["status"] = "active_link_seed_boundary_only";
 		} else {
 			phase["status"] = "pending_strict_h3maped_port";
 		}
@@ -505,6 +507,60 @@ Dictionary runtime_zone_record_setup_report(const TemplateEvidence &candidate, c
 	return report;
 }
 
+Dictionary link_seed_setup_report(const Dictionary &source_template_record, const Dictionary &runtime_zone_setup, int32_t human_count, int32_t total_players) {
+	Dictionary report;
+	report["status"] = "0x4a1f3b_endpoint_link_seeds_ported_inspection_only";
+	report["source"] = "h3maped 0x4a1f3b consumes source-zone link endpoints for coordinate candidate generation; Value/Wide/Border Guard payloads are preserved for later 0x4a79a3";
+	report["link_endpoint_consumer_address"] = "0x4a1f3b";
+	report["candidate_generator_address"] = "0x4a17f5";
+	report["distance_validation_address"] = "0x4a1701";
+	report["late_payload_consumer_address"] = "0x4a79a3";
+	report["materializes_coordinates"] = false;
+	report["materializes_connection_guards"] = false;
+	report["materializes_roads"] = false;
+	report["materializes_blockers"] = false;
+
+	Dictionary runtime_index_by_source_zone_id;
+	Array runtime_records = runtime_zone_setup.get("runtime_zone_records", Array());
+	for (int64_t index = 0; index < runtime_records.size(); ++index) {
+		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_records[index];
+		runtime_index_by_source_zone_id[String::num_int64(int64_t(runtime.get("source_zone_id", -1)))] = runtime.get("runtime_zone_index", index);
+	}
+
+	Array link_seeds;
+	Array connections = source_template_record.get("connections", Array());
+	for (int64_t index = 0; index < connections.size(); ++index) {
+		if (Variant(connections[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary connection = connections[index];
+		if (!player_filter_accepts(connection.get("player_filter", Dictionary()), human_count, total_players)) {
+			continue;
+		}
+		const int32_t source_zone_a = int32_t(connection.get("zone1", -1));
+		const int32_t source_zone_b = int32_t(connection.get("zone2", -1));
+		Dictionary seed;
+		seed["link_index"] = link_seeds.size();
+		seed["source_zone_a"] = source_zone_a;
+		seed["source_zone_b"] = source_zone_b;
+		seed["runtime_zone_a"] = runtime_index_by_source_zone_id.get(String::num_int64(source_zone_a), -1);
+		seed["runtime_zone_b"] = runtime_index_by_source_zone_id.get(String::num_int64(source_zone_b), -1);
+		seed["guard_value"] = connection.get("value", 0);
+		seed["wide"] = bool(connection.get("wide", false));
+		seed["border_guard"] = bool(connection.get("border_guard", false));
+		seed["early_consumer"] = "0x4a1f3b_endpoint_only";
+		seed["late_payload_consumer"] = "0x4a79a3";
+		link_seeds.append(seed);
+	}
+
+	report["link_seed_count"] = link_seeds.size();
+	report["link_seeds"] = link_seeds;
+	return report;
+}
+
 } // namespace
 
 bool supports_scope(const Dictionary &normalized_config) {
@@ -599,7 +655,10 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			const int32_t computer_count = int32_t(constraints.get("computer_count", std::max(0, player_count - human_count)));
 			Dictionary assignment = player_slot_assignment_report(*selected, normalized_config, human_count, computer_count);
 			report["player_slot_assignment"] = assignment;
-			report["runtime_zone_record_setup"] = runtime_zone_record_setup_report(*selected, source_template_record_for_catalog_index(selected->catalog_index), assignment, human_count, player_count);
+			Dictionary source_template_record = source_template_record_for_catalog_index(selected->catalog_index);
+			Dictionary runtime_zone_setup = runtime_zone_record_setup_report(*selected, source_template_record, assignment, human_count, player_count);
+			report["runtime_zone_record_setup"] = runtime_zone_setup;
+			report["link_seed_setup"] = link_seed_setup_report(source_template_record, runtime_zone_setup, human_count, player_count);
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
