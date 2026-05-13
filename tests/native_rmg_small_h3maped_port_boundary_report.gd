@@ -33,8 +33,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v5":
-		_fail("Small h3maped inspection did not use the v5 clean restart boundary: %s" % JSON.stringify(report))
+	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v6":
+		_fail("Small h3maped inspection did not use the v6 clean restart boundary: %s" % JSON.stringify(report))
 		return
 	if String(report.get("status", "")) != "h3maped_small_clean_boundary_ready":
 		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
@@ -248,6 +248,43 @@ func _run() -> void:
 			or int(clip_samples[4].get("out_x", -1)) != 12 \
 			or int(clip_samples[4].get("out_y", -1)) != 35:
 		_fail("0x4a2b33 clip helper samples drifted: %s" % JSON.stringify(clip_samples))
+		return
+
+	var line_writer: Dictionary = report.get("line_writer_4a261a", {})
+	if String(line_writer.get("status", "")) != "0x4a261a_deterministic_line_writer_ported_inspection_only" \
+			or String(line_writer.get("function_address", "")) != "0x4a261a" \
+			or String(line_writer.get("caller_address", "")) != "0x4a2777" \
+			or String(line_writer.get("zone_word_mask", "")) != "0x00ff0000" \
+			or String(line_writer.get("reserved_flag_mask", "")) != "0x10":
+		_fail("0x4a261a line writer boundary drifted: %s" % JSON.stringify(line_writer))
+		return
+	if bool(line_writer.get("materializes_boundaries", true)) \
+			or bool(line_writer.get("materializes_span_fill", true)) \
+			or bool(line_writer.get("materializes_terrain", true)) \
+			or bool(line_writer.get("materializes_map_cells", true)):
+		_fail("0x4a261a line writer must not materialize generated output: %s" % JSON.stringify(line_writer))
+		return
+	var line_sample: Dictionary = line_writer.get("sample_contract", {})
+	var trace_preview: Array = line_sample.get("trace_preview", [])
+	if int(line_sample.get("map_width", -1)) != 12 \
+			or int(line_sample.get("map_height", -1)) != 8 \
+			or int(line_sample.get("from_x", -1)) != 2 \
+			or int(line_sample.get("from_y", -1)) != 3 \
+			or int(line_sample.get("to_x", -1)) != 8 \
+			or int(line_sample.get("to_y", -1)) != 3 \
+			or int(line_sample.get("zone_word_id", -1)) != 7 \
+			or int(line_sample.get("write_count", -1)) != 7 \
+			or int(line_sample.get("unique_cell_count", -1)) != 7 \
+			or int(line_sample.get("zone_word_cell_count", -1)) != 7 \
+			or int(line_sample.get("reserved_flag_write_count", -1)) != 7 \
+			or int(line_sample.get("reserved_flag_cell_count", -1)) != 7 \
+			or int(line_sample.get("out_of_bounds_write_count", -1)) != 0 \
+			or trace_preview.size() != 7 \
+			or int(trace_preview[0].get("x", -1)) != 2 \
+			or int(trace_preview[0].get("y", -1)) != 3 \
+			or int(trace_preview[6].get("x", -1)) != 8 \
+			or int(trace_preview[6].get("y", -1)) != 3:
+		_fail("0x4a261a line writer sample drifted: %s" % JSON.stringify(line_sample))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)
