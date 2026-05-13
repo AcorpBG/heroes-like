@@ -1283,6 +1283,50 @@ Dictionary h3_type17_generator_loop_boundary() {
 	return boundary;
 }
 
+Dictionary h3_materialized_type17_candidate_record(int32_t relative_loop_index, int32_t subtype) {
+	Dictionary record = h3_static_candidate_record("0x4a0402", "0x540c00", 0x11, subtype, -1, 0x28);
+	record["relative_loop_index"] = relative_loop_index;
+	record["source_group"] = "0x4a0402_0x4a045a_single_level_type17_loop";
+	record["materialized_candidate_record"] = true;
+	record["constructor_address"] = "0x49c523";
+	record["constructor_vtable_address"] = "0x540ba0";
+	record["overridden_vtable_address"] = "0x540c00";
+	record["record_size_bytes"] = 0x14;
+	record["candidate_vector_index_materialized"] = false;
+	record["candidate_vector_index_blocker"] = "artifact_pool_loop_and_pre_type17_static_tail_order_not_materialized";
+	record["value_vfunc_reconstructed"] = true;
+	record["create_vfunc_materialized"] = false;
+	return record;
+}
+
+Dictionary h3_materialized_single_level_type17_candidate_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "single_level_type17_candidate_loop_materialized_vector_index_pending";
+	boundary["source_range"] = "0x4a0402..0x4a045a";
+	boundary["constructor_address"] = "0x49c523";
+	boundary["constructor_vtable_address"] = "0x540ba0";
+	boundary["overridden_vtable_address"] = "0x540c00";
+	boundary["record_size_bytes"] = 0x14;
+	boundary["type_id"] = 0x11;
+	boundary["value"] = -1;
+	boundary["weight"] = 0x28;
+	boundary["single_level_iteration_count"] = 0x3a;
+	boundary["extended_iteration_count"] = 0x50;
+	boundary["loop_iteration_order"] = "descending_subtype";
+	boundary["first_subtype"] = 0x39;
+	boundary["last_subtype"] = 0;
+	boundary["candidate_vector_indices_materialized"] = false;
+	boundary["candidate_vector_index_blocker"] = "artifact_pool_loop_and_pre_type17_static_tail_order_not_materialized";
+	boundary["extended_type17_loop_materialized"] = false;
+	Array records;
+	for (int32_t subtype = 0x3a - 1; subtype >= 0; --subtype) {
+		records.append(h3_materialized_type17_candidate_record(int32_t(records.size()), subtype));
+	}
+	boundary["candidate_record_count"] = records.size();
+	boundary["records"] = records;
+	return boundary;
+}
+
 Array h3_terrain_specialized_fixed_value_records() {
 	return Array::make(
 			h3_extended_candidate_record("0x4a0f8e", "0x540c70", 0x18, 0x53, -1, 0x7d0, 0x0a, 0x1388, -1, -1),
@@ -1581,8 +1625,10 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
 	boundary["candidate_builder_artifact_pool_loop_status"] = "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized";
 	boundary["candidate_builder_artifact_pool_loop"] = h3_artifact_pool_candidate_loop_boundary();
-	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_type17_loop_recovered_not_materialized";
+	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending";
 	boundary["candidate_builder_type17_loop"] = h3_type17_generator_loop_boundary();
+	boundary["materialized_single_level_type17_candidate_boundary_status"] = "single_level_type17_candidate_loop_materialized_vector_index_pending";
+	boundary["materialized_single_level_type17_candidate_boundary"] = h3_materialized_single_level_type17_candidate_boundary();
 	boundary["candidate_builder_static_tail_status"] = "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_tail_count"] = 61;
 	boundary["candidate_builder_static_tail_records"] = h3_static_tail_after_artifact_pool_records();
@@ -1597,7 +1643,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_loops_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "artifact/type17/terrain-vector dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "artifact/terrain-vector dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = true;
