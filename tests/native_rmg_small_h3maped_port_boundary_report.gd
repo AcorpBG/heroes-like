@@ -914,7 +914,8 @@ func _run() -> void:
 				or int(object_vector_phase.get("mine_density_weight_total", -1)) != 18 \
 				or int(object_vector_phase.get("eligible_reward_band_count", -1)) != 18 \
 				or int(object_vector_phase.get("reward_band_weight_total", -1)) != 96 \
-				or String(object_vector_phase.get("reward_scheduler_model", "")) != "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 commit not materialized" \
+				or String(object_vector_phase.get("reward_scheduler_model", "")) != "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 coordinate scan boundary materialized" \
+				or not bool(object_vector_phase.get("reward_coordinate_commit_boundary_materialized", false)) \
 				or int(object_vector_phase.get("reward_scheduler_budget_base", -1)) != 800 \
 				or int(object_vector_phase.get("reward_scheduler_preview_zone_count", -1)) != 6 \
 				or int(object_vector_phase.get("reward_scheduler_total_density_sum", -1)) != 96 \
@@ -923,10 +924,33 @@ func _run() -> void:
 				or int(object_vector_phase.get("reward_value_preview_rng_call_count", -1)) != 18 \
 				or int(object_vector_phase.get("materialized_private_reward_coordinate_record_count", -1)) != 0 \
 				or not bool(object_vector_phase.get("reward_commit_helper_pending", false)) \
+				or not bool(object_vector_phase.get("reward_commit_private_records_pending", false)) \
 				or int(object_vector_phase.get("reward_preview_rng_state_before_0x4aab7e_uint32", -1)) != 2346411599 \
 				or int(object_vector_phase.get("reward_preview_rng_state_after_0x4aa354_uint32", -1)) != 2380015889 \
 				or String(object_vector_phase.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
+		return
+	var reward_commit_boundary: Dictionary = object_vector_phase.get("reward_coordinate_commit_boundary", {})
+	if String(reward_commit_boundary.get("status", "")) != "0x4aa9b7_coordinate_scan_and_random_pick_boundary_materialized_private_record_pending" \
+				or String(reward_commit_boundary.get("source_range", "")) != "0x4aa9b7..0x4aab7b" \
+				or String(reward_commit_boundary.get("scheduler_caller_range", "")) != "0x4aab7e..0x4aad20" \
+				or String(reward_commit_boundary.get("generated_cell_base_offset", "")) != "generator+0x14" \
+				or String(reward_commit_boundary.get("generated_cell_score_word_offset", "")) != "+0x20" \
+				or int(reward_commit_boundary.get("candidate_coordinate_record_size_bytes", -1)) != 12 \
+				or String(reward_commit_boundary.get("scan_loop_range", "")) != "0x4aaa2d..0x4aab0a" \
+				or String(reward_commit_boundary.get("owner_byte_gate_range", "")) != "0x4aaa71..0x4aaa86" \
+				or String(reward_commit_boundary.get("score_threshold_gate_range", "")) != "0x4aaa8a..0x4aaa98" \
+				or String(reward_commit_boundary.get("footprint_filter_helper", "")) != "0x4aa603" \
+				or String(reward_commit_boundary.get("coordinate_append_helper", "")) != "0x4ae1fd" \
+				or String(reward_commit_boundary.get("coordinate_vector_clear_helper", "")) != "0x4ae52a" \
+				or String(reward_commit_boundary.get("final_object_commit_helper", "")) != "0x4aa3e9" \
+				or String(reward_commit_boundary.get("weighted_rng_address", "")) != "0x4e7276" \
+				or not bool(reward_commit_boundary.get("materializes_scan_boundary", false)) \
+				or bool(reward_commit_boundary.get("materializes_private_reward_coordinate_records", true)) \
+				or bool(reward_commit_boundary.get("materializes_public_reward_objects", true)) \
+				or bool(reward_commit_boundary.get("public_package_output_allowed", true)) \
+				or String(reward_commit_boundary.get("remaining_blocker", "")) != "port_0x4aa603_filter_and_0x4aa3e9_object_commit_against_project_object_templates":
+		_fail("h3maped reward coordinate commit boundary drifted: %s" % JSON.stringify(reward_commit_boundary))
 		return
 	var generic_selector: Dictionary = object_vector_phase.get("generic_value_selector_boundary", {})
 	if String(generic_selector.get("phase", "")) != "0x4a9f1c_generic_value_banded_selector_boundary" \
@@ -955,7 +979,7 @@ func _run() -> void:
 				or not bool(generic_selector.get("candidate_vector_order_reconstructed", false)) \
 				or not bool(generic_selector.get("value_vfuncs_reconstructed", false)) \
 				or not bool(generic_selector.get("selector_scan_materialized", false)) \
-				or String(generic_selector.get("selector_materialization_status", "")) != "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_pending" \
+				or String(generic_selector.get("selector_materialization_status", "")) != "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending" \
 				or bool(generic_selector.get("materializes_reward_object", true)):
 		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
 		return
@@ -1332,7 +1356,7 @@ func _run() -> void:
 		return
 	var selector_materialization: Dictionary = generic_selector.get("selector_materialization_boundary", {})
 	var selector_gates: Array = selector_materialization.get("gates", [])
-	if String(selector_materialization.get("status", "")) != "selector_scan_weighted_choice_materialized_coordinate_commit_pending" \
+	if String(selector_materialization.get("status", "")) != "selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending" \
 				or String(selector_materialization.get("source_range", "")) != "0x4a9f1c..0x4aa192" \
 				or String(selector_materialization.get("loop_range", "")) != "0x4a9f6a..0x4aa0ef" \
 				or String(selector_materialization.get("weighted_choice_range", "")) != "0x4aa0fc..0x4aa168" \
@@ -1346,14 +1370,21 @@ func _run() -> void:
 				or not bool(selector_materialization.get("selector_materialized", false)) \
 				or not bool(selector_materialization.get("weighted_choice_materialized", false)) \
 				or not bool(selector_materialization.get("create_call_materialized", false)) \
+				or not bool(selector_materialization.get("runtime_reward_coordinate_commit_boundary_materialized", false)) \
 				or bool(selector_materialization.get("runtime_reward_coordinate_commit_materialized", true)) \
 				or bool(selector_materialization.get("public_object_materialization_allowed", true)) \
 				or selector_gates.size() != 8 \
 				or String(selector_gates[0].get("gate", "")) != "metadata_primary_secondary" \
 				or String(selector_gates[4].get("gate", "")) != "value_range" \
 				or String(selector_gates[7].get("gate", "")) != "footprint_weight_window" \
-				or String(selector_materialization.get("remaining_blocker", "")) != "port_0x4aa9b7_coordinate_commit_and_reward_object_adoption":
+				or String(selector_materialization.get("remaining_blocker", "")) != "materialize_private_reward_coordinate_records_and_reward_object_adoption":
 		_fail("h3maped selector materialization boundary drifted: %s" % JSON.stringify(selector_materialization))
+		return
+	var selector_reward_commit_boundary: Dictionary = selector_materialization.get("reward_coordinate_commit_boundary", {})
+	if String(selector_reward_commit_boundary.get("source_range", "")) != "0x4aa9b7..0x4aab7b" \
+				or String(selector_reward_commit_boundary.get("scan_loop_range", "")) != "0x4aaa2d..0x4aab0a" \
+				or String(selector_reward_commit_boundary.get("final_commit_call_range", "")) != "0x4aab63..0x4aab6f":
+		_fail("h3maped selector reward commit boundary drifted: %s" % JSON.stringify(selector_reward_commit_boundary))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or String(generic_selector.get("materialized_static_candidate_boundary_status", "")) != "static_candidate_records_materialized_dynamic_subset_pending":
@@ -1423,6 +1454,7 @@ func _run() -> void:
 				or int(known_vector_gap.get("reward_scheduler_preview_zone_count", -1)) != 6 \
 				or int(known_vector_gap.get("reward_scheduler_preview_attempt_count", -1)) != 18 \
 				or int(known_vector_gap.get("reward_value_preview_rng_call_count", -1)) != 18 \
+				or not bool(known_vector_gap.get("reward_coordinate_commit_boundary_materialized", false)) \
 				or int(known_vector_gap.get("materialized_private_reward_coordinate_record_count", -1)) != 0 \
 				or not bool(known_vector_gap.get("reward_commit_helper_pending", false)) \
 				or bool(known_vector_gap.get("current_road_vector_only_has_towns", true)) \
