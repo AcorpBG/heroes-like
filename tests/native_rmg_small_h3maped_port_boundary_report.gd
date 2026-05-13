@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "town_castle_phase_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback", "terrain_tile_byte_writeback", "town_castle_phase"] \
+			or String(active_state.get("status", "")) != "object_vector_prerequisite_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback", "terrain_tile_byte_writeback", "town_castle_phase", "mines_rewards_and_object_vector"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "object_vector_prerequisite_phase_4a9d6a_4aab7e":
+			or String(active_state.get("blocked_next", "")) != "private_mine_reward_coordinate_filter_and_mutation_0x4aa603_0x4aa3e9":
 		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -509,6 +509,88 @@ func _run() -> void:
 				or int(player_starts[town_index].get("y", -1)) != int(expected["y"]):
 			_fail("h3maped town/start coordinates drifted: %s / %s" % [JSON.stringify(town_records), JSON.stringify(player_starts)])
 			return
+	var object_vector_phase: Dictionary = active_state.get("mines_rewards_and_object_vector", {})
+	if String(object_vector_phase.get("phase_id", "")) != "mines_rewards_and_object_vector" \
+			or String(object_vector_phase.get("status", "")) != "active_internal_state" \
+			or String(object_vector_phase.get("mine_phase_anchor", "")) != "0x4a9d6a" \
+			or String(object_vector_phase.get("mine_coordinate_attempt_anchor", "")) != "0x4a9911/0x4a9641" \
+			or String(object_vector_phase.get("reward_scheduler_anchor", "")) != "0x4aab7e/0x4aa354" \
+			or String(object_vector_phase.get("candidate_vector_builder_anchor", "")) != "0x49f95a..0x4a1701" \
+			or String(object_vector_phase.get("candidate_selector_anchor", "")) != "0x4a9f1c" \
+			or String(object_vector_phase.get("reward_coordinate_anchor", "")) != "0x4aa9b7" \
+			or not bool(object_vector_phase.get("materializes_private_object_vector_prerequisites", false)) \
+			or bool(object_vector_phase.get("materializes_private_mine_records", true)) \
+			or bool(object_vector_phase.get("materializes_private_reward_coordinate_records", true)) \
+			or bool(object_vector_phase.get("materializes_public_objects", true)) \
+			or bool(object_vector_phase.get("adopts_into_runtime_grid", true)) \
+			or bool(object_vector_phase.get("public_package_output_allowed", true)) \
+			or int(object_vector_phase.get("candidate_vector_single_level_total_count", -1)) != 704 \
+			or int(object_vector_phase.get("candidate_vector_materialized_static_subset_count", -1)) != 110 \
+			or int(object_vector_phase.get("candidate_vector_materialized_monster_count", -1)) != 118 \
+			or int(object_vector_phase.get("candidate_vector_type10_count", -1)) != 40 \
+			or int(object_vector_phase.get("candidate_vector_type17_count", -1)) != 58 \
+			or int(object_vector_phase.get("candidate_vector_type53_count", -1)) != 378 \
+			or int(object_vector_phase.get("selector_global_limit_override_count", -1)) != 30 \
+			or int(object_vector_phase.get("selector_per_zone_limit_override_count", -1)) != 24 \
+			or bool(object_vector_phase.get("reward_coordinate_commit_materialized", true)) \
+			or int(object_vector_phase.get("project_object_adoption_candidate_count", -1)) != 0 \
+			or String(object_vector_phase.get("blocked_next", "")) != "private_mine_reward_coordinate_filter_and_mutation_0x4aa603_0x4aa3e9":
+		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
+		return
+	var mine_boundary: Dictionary = object_vector_phase.get("mine_requirements_boundary", {})
+	var min_by_category: Dictionary = mine_boundary.get("minimum_by_category", {})
+	var density_by_category: Dictionary = mine_boundary.get("density_by_category", {})
+	if int(mine_boundary.get("runtime_zone_record_count", -1)) != 6 \
+			or int(mine_boundary.get("total_minimum_mine_count", -1)) != 18 \
+			or int(mine_boundary.get("total_density_weight", -1)) != 18 \
+			or int(min_by_category.get("wood", -1)) != 4 \
+			or int(min_by_category.get("ore", -1)) != 4 \
+			or int(min_by_category.get("gold", -1)) != 2 \
+			or int(min_by_category.get("mercury", -1)) != 2 \
+			or int(min_by_category.get("sulfur", -1)) != 2 \
+			or int(min_by_category.get("crystal", -1)) != 2 \
+			or int(min_by_category.get("gems", -1)) != 2 \
+			or int(density_by_category.get("wood", -1)) != 4 \
+			or int(density_by_category.get("ore", -1)) != 4 \
+			or int(density_by_category.get("gold", -1)) != 2 \
+			or bool(mine_boundary.get("private_coordinate_attempts_materialized", true)):
+		_fail("h3maped mine prerequisite boundary drifted: %s" % JSON.stringify(mine_boundary))
+		return
+	var reward_scheduler: Dictionary = object_vector_phase.get("reward_scheduler_boundary", {})
+	if String(reward_scheduler.get("status", "")) != "0x4aab7e_per_zone_reward_band_scheduler_preview_private" \
+			or int(reward_scheduler.get("total_treasure_band_count", -1)) != 18 \
+			or int(reward_scheduler.get("eligible_reward_band_count", -1)) != 18 \
+			or int(reward_scheduler.get("eligible_reward_density_sum", -1)) != 96 \
+			or String(reward_scheduler.get("coordinate_commit_anchor", "")) != "0x4aa9b7" \
+			or String(reward_scheduler.get("coordinate_filter_anchor", "")) != "0x4aa603" \
+			or String(reward_scheduler.get("final_object_commit_anchor", "")) != "0x4aa3e9" \
+			or bool(reward_scheduler.get("materializes_private_reward_coordinate_records", true)) \
+			or bool(reward_scheduler.get("materializes_public_reward_objects", true)):
+		_fail("h3maped reward scheduler boundary drifted: %s" % JSON.stringify(reward_scheduler))
+		return
+	var vector_order: Dictionary = object_vector_phase.get("candidate_vector_order_boundary", {})
+	if String(vector_order.get("status", "")) != "single_level_candidate_vector_order_materialized_public_commit_pending" \
+			or int(vector_order.get("single_level_total_candidate_record_count", -1)) != 704 \
+			or int(vector_order.get("first_type10_candidate_vector_index", -1)) != 138 \
+			or int(vector_order.get("first_type17_candidate_vector_index", -1)) != 192 \
+			or int(vector_order.get("first_type53_candidate_vector_index", -1)) != 297 \
+			or int(vector_order.get("last_type53_candidate_vector_index", -1)) != 674 \
+			or not bool(vector_order.get("candidate_vector_indices_materialized", false)) \
+			or bool(vector_order.get("candidate_records_fully_materialized", true)) \
+			or bool(vector_order.get("public_coordinate_commit_materialized", true)):
+		_fail("h3maped candidate-vector order boundary drifted: %s" % JSON.stringify(vector_order))
+		return
+	var monster_boundary: Dictionary = object_vector_phase.get("single_level_monster_candidate_boundary", {})
+	if String(monster_boundary.get("status", "")) != "single_level_monster_candidate_loop_materialized_from_crtraits_and_static_table" \
+			or String(monster_boundary.get("load_status", "")) != "loaded" \
+			or int(monster_boundary.get("candidate_record_count", -1)) != 118 \
+			or int(monster_boundary.get("first_candidate_vector_index", -1)) != 2 \
+			or int(monster_boundary.get("last_candidate_vector_index", -1)) != 119 \
+			or int(monster_boundary.get("missing_source_row_count", -1)) != 0 \
+			or int(monster_boundary.get("inactive_gate_count", -1)) != 0 \
+			or int(monster_boundary.get("invalid_ai_value_count", -1)) != 0:
+		_fail("h3maped monster candidate boundary drifted: %s" % JSON.stringify(monster_boundary))
+		return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -558,6 +640,8 @@ func _run() -> void:
 			or String(backlog[6].get("status", "")) != "terrain_tile_byte_writeback_active_internal_state" \
 			or String(backlog[7].get("id", "")) != "town_object_placement" \
 			or String(backlog[7].get("status", "")) != "active_internal_state_private_candidates" \
+			or String(backlog[8].get("id", "")) != "mines_rewards_and_object_vector" \
+			or String(backlog[8].get("status", "")) != "active_internal_state_private_prerequisite_boundary" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
