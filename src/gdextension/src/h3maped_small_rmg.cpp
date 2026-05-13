@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <map>
 #include <set>
+#include <utility>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -27,6 +28,7 @@ constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifac
 constexpr const char *CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
 constexpr const char *OBJECT_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json";
 constexpr const char *OBJECT_METADATA_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json";
+constexpr const char *CRTRAITS_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_bmp/raw/crtraits.txt";
 constexpr const char *PROJECT_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *ARCHIVED_OVERGROWN_ACTIVE_PATH = "src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp";
 constexpr const char *ARCHIVED_PHASE_LEDGER_PATH = "src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp";
@@ -685,6 +687,109 @@ bool read_h3maped_u32_le(Ref<FileAccess> &file, int64_t va, uint32_t &out_value)
 	return true;
 }
 
+bool read_h3maped_i32_le(Ref<FileAccess> &file, int64_t va, int32_t &out_value) {
+	uint32_t raw_value = 0;
+	if (!read_h3maped_u32_le(file, va, raw_value)) {
+		return false;
+	}
+	out_value = int32_t(raw_value);
+	return true;
+}
+
+std::vector<std::vector<String>> parse_h3maped_tsv(const String &text) {
+	std::vector<std::vector<String>> rows;
+	std::vector<String> row;
+	String field;
+	bool quoted = false;
+	for (int64_t index = 0; index < text.length(); ++index) {
+		const char32_t ch = text[index];
+		if (ch == '"') {
+			if (quoted && index + 1 < text.length() && text[index + 1] == '"') {
+				field += String::chr('"');
+				++index;
+			} else {
+				quoted = !quoted;
+			}
+			continue;
+		}
+		if (!quoted && ch == '\t') {
+			row.push_back(field);
+			field = String();
+			continue;
+		}
+		if (!quoted && (ch == '\n' || ch == '\r')) {
+			if (ch == '\r' && index + 1 < text.length() && text[index + 1] == '\n') {
+				++index;
+			}
+			row.push_back(field);
+			rows.push_back(row);
+			row.clear();
+			field = String();
+			continue;
+		}
+		field += String::chr(ch);
+	}
+	if (field.length() > 0 || !row.empty()) {
+		row.push_back(field);
+		rows.push_back(row);
+	}
+	return rows;
+}
+
+bool parse_int_field(const String &value, int32_t &out_value) {
+	const String stripped = value.strip_edges();
+	if (stripped.is_empty()) {
+		return false;
+	}
+	const CharString utf8 = stripped.utf8();
+	char *end = nullptr;
+	errno = 0;
+	const long parsed = std::strtol(utf8.get_data(), &end, 10);
+	if (errno != 0 || end == utf8.get_data() || *end != '\0') {
+		return false;
+	}
+	out_value = int32_t(parsed);
+	return true;
+}
+
+std::vector<std::pair<int32_t, int32_t>> h3maped_crtraits_monster_row_walk() {
+	static constexpr int32_t GROUP_COUNTS[] = { 14, 14, 14, 14, 14, 14, 14, 14, 6, 14, 13 };
+	std::vector<std::pair<int32_t, int32_t>> rows;
+	int32_t monster_index = 0;
+	int32_t source_row_index = 2;
+	for (const int32_t group_count : GROUP_COUNTS) {
+		for (int32_t index = 0; index < group_count; ++index) {
+			rows.push_back(std::make_pair(monster_index, source_row_index));
+			++monster_index;
+			++source_row_index;
+		}
+		source_row_index += 3;
+	}
+	for (int32_t index = 0; index < 5; ++index) {
+		rows.push_back(std::make_pair(monster_index, source_row_index));
+		++monster_index;
+		++source_row_index;
+	}
+	return rows;
+}
+
+Array h3_monster_power_table() {
+	return Array::make(5000, 7000, 9000, 12000, 16000, 21000, 27000);
+}
+
+int32_t h3_monster_candidate_quantity_bucket(int32_t raw_value) {
+	if (raw_value > 50) {
+		return ((raw_value + 5) / 10) * 10;
+	}
+	if (raw_value > 12) {
+		return ((raw_value + 2) / 5) * 5;
+	}
+	if (raw_value > 5) {
+		return ((raw_value + 1) / 2) * 2;
+	}
+	return raw_value;
+}
+
 Dictionary template_to_dictionary(const TemplateEvidence &template_evidence) {
 	Dictionary record;
 	record["id"] = template_evidence.id;
@@ -956,6 +1061,8 @@ Dictionary h3_monster_table_initializer_field(const char *field_offset, const ch
 Dictionary h3_monster_table_initializer_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x40ce11..0x40d0c8";
+	boundary["crtraits_loader_address"] = "0x40cc46";
+	boundary["crtraits_source_path"] = CRTRAITS_SOURCE_PATH;
 	boundary["initializer_address"] = "0x40ce11";
 	boundary["table_pointer_address"] = "0x581298";
 	boundary["table_address"] = "0x57cea0";
@@ -982,6 +1089,115 @@ Dictionary h3_monster_table_initializer_boundary() {
 			h3_monster_table_initializer_field("+0x44", "0x40cf70..0x40cf7b", "parsed_row+0x2c", "monster table value field"),
 			h3_monster_table_initializer_field("+0x48", "0x40cf7e..0x40cf89", "parsed_row+0x30", "monster table value field"),
 			h3_monster_table_initializer_field("+0x4c..+0x70", "0x40cf8c..0x40d06b", "parsed_row+0x34..+0x58", "remaining monster table numeric fields"));
+	return boundary;
+}
+
+Dictionary h3_materialized_monster_candidate_record(int32_t candidate_vector_index, int32_t monster_index, int32_t crtraits_row_index, const std::vector<String> &crtraits_row, int32_t terrain_id, int32_t tier_index, int32_t ai_value, int32_t raw_quantity, int32_t quantity_bucket) {
+	Dictionary record = h3_extended_candidate_record("0x49f9ed", "0x540bc0", 0x1c, 6, 0, -1, 3, monster_index, quantity_bucket, -1);
+	record["candidate_vector_index"] = candidate_vector_index;
+	record["source_group"] = "0x49f9ed_0x49fa54_single_level_monster_loop";
+	record["materialized_candidate_record"] = true;
+	record["constructor_address"] = "0x49c5cd";
+	record["monster_table_index"] = monster_index;
+	record["crtraits_source_row_index"] = crtraits_row_index;
+	record["monster_name"] = crtraits_row.size() > 0 ? crtraits_row[0] : String();
+	record["monster_plural_name"] = crtraits_row.size() > 1 ? crtraits_row[1] : String();
+	record["monster_terrain_id"] = terrain_id;
+	record["monster_tier_index"] = tier_index;
+	record["monster_ai_value"] = ai_value;
+	record["raw_quantity_division"] = raw_quantity;
+	record["quantity_bucket_formula"] = "0x49c608..0x49c642 rounded by >50 nearest 10, >12 nearest 5, >5 nearest 2";
+	record["candidate_record_field_0x18"] = quantity_bucket;
+	record["value_vfunc_reconstructed"] = true;
+	record["create_vfunc_materialized"] = false;
+	return record;
+}
+
+Dictionary h3_materialized_single_level_monster_candidate_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "single_level_monster_candidate_loop_materialized_from_crtraits_and_static_table";
+	boundary["source_range"] = "0x49f9ed..0x49fa54";
+	boundary["crtraits_loader_address"] = "0x40cc46";
+	boundary["table_initializer_address"] = "0x40ce11";
+	boundary["constructor_address"] = "0x49c5cd";
+	boundary["table_address"] = "0x57cea0";
+	boundary["table_pointer_address"] = "0x581298";
+	boundary["record_stride_bytes"] = 0x74;
+	boundary["source_crtraits_path"] = CRTRAITS_SOURCE_PATH;
+	boundary["source_crtraits_lod"] = "H3ab_bmp.lod";
+	boundary["loop_iteration_order"] = "descending_monster_index";
+	boundary["single_level_iteration_count"] = 0x76;
+	boundary["first_candidate_vector_index"] = 2;
+	boundary["power_table_address"] = "0x58dc08";
+	boundary["power_table"] = h3_monster_power_table();
+	boundary["extended_monster_loop_materialized"] = false;
+	Array records;
+	if (!FileAccess::file_exists(CRTRAITS_SOURCE_PATH)) {
+		boundary["load_status"] = "missing_crtraits_source";
+		boundary["candidate_record_count"] = 0;
+		boundary["records"] = records;
+		return boundary;
+	}
+	if (!FileAccess::file_exists(BINARY_PATH)) {
+		boundary["load_status"] = "missing_h3maped_binary";
+		boundary["candidate_record_count"] = 0;
+		boundary["records"] = records;
+		return boundary;
+	}
+	Ref<FileAccess> crtraits_file = FileAccess::open(CRTRAITS_SOURCE_PATH, FileAccess::READ);
+	Ref<FileAccess> binary_file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+	if (crtraits_file.is_null() || !crtraits_file->is_open() || binary_file.is_null() || !binary_file->is_open()) {
+		boundary["load_status"] = "unreadable_source";
+		boundary["candidate_record_count"] = 0;
+		boundary["records"] = records;
+		return boundary;
+	}
+	const std::vector<std::vector<String>> crtraits_rows = parse_h3maped_tsv(crtraits_file->get_as_text());
+	const std::vector<std::pair<int32_t, int32_t>> row_walk = h3maped_crtraits_monster_row_walk();
+	static constexpr int32_t POWER_TABLE[] = { 5000, 7000, 9000, 12000, 16000, 21000, 27000 };
+	int32_t missing_source_row_count = 0;
+	int32_t inactive_gate_count = 0;
+	int32_t invalid_ai_value_count = 0;
+	for (int32_t loop_index = 0x76 - 1; loop_index >= 0; --loop_index) {
+		if (loop_index >= int32_t(row_walk.size())) {
+			++missing_source_row_count;
+			continue;
+		}
+		const int32_t monster_index = row_walk[size_t(loop_index)].first;
+		const int32_t source_row_index = row_walk[size_t(loop_index)].second;
+		if (source_row_index < 0 || source_row_index >= int32_t(crtraits_rows.size())) {
+			++missing_source_row_count;
+			continue;
+		}
+		int32_t terrain_id = -1;
+		int32_t tier_index = -1;
+		const int64_t table_va = 0x57cea0 + int64_t(monster_index) * 0x74;
+		if (!read_h3maped_i32_le(binary_file, table_va, terrain_id) || !read_h3maped_i32_le(binary_file, table_va + 0x04, tier_index)) {
+			++missing_source_row_count;
+			continue;
+		}
+		if (tier_index < 0) {
+			++inactive_gate_count;
+			continue;
+		}
+		int32_t ai_value = 0;
+		if (crtraits_rows[size_t(source_row_index)].size() <= 10 || !parse_int_field(crtraits_rows[size_t(source_row_index)][10], ai_value) || ai_value <= 0 || tier_index >= int32_t(sizeof(POWER_TABLE) / sizeof(POWER_TABLE[0]))) {
+			++invalid_ai_value_count;
+			continue;
+		}
+		const int32_t raw_quantity = POWER_TABLE[tier_index] / ai_value;
+		const int32_t quantity_bucket = h3_monster_candidate_quantity_bucket(raw_quantity);
+		records.append(h3_materialized_monster_candidate_record(2 + int32_t(records.size()), monster_index, source_row_index, crtraits_rows[size_t(source_row_index)], terrain_id, tier_index, ai_value, raw_quantity, quantity_bucket));
+	}
+	boundary["load_status"] = "loaded";
+	boundary["crtraits_csv_row_count"] = int32_t(crtraits_rows.size());
+	boundary["crtraits_monster_row_walk_count"] = int32_t(row_walk.size());
+	boundary["candidate_record_count"] = records.size();
+	boundary["missing_source_row_count"] = missing_source_row_count;
+	boundary["inactive_gate_count"] = inactive_gate_count;
+	boundary["invalid_ai_value_count"] = invalid_ai_value_count;
+	boundary["last_candidate_vector_index"] = records.is_empty() ? -1 : 2 + int32_t(records.size()) - 1;
+	boundary["records"] = records;
 	return boundary;
 }
 
@@ -1355,10 +1571,12 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_prefix_records"] = Array::make(
 			h3_static_candidate_record("0x49f97b", "0x540ba0", 2, 0, 100, 20),
 			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50));
-	boundary["candidate_builder_monster_loop_status"] = "0x49f9ed_0x49fa54_monster_table_loop_recovered_not_materialized";
+	boundary["candidate_builder_monster_loop_status"] = "0x49f9ed_0x49fa54_single_level_monster_loop_materialized_extended_pending";
 	boundary["candidate_builder_monster_loop"] = h3_monster_candidate_loop_boundary();
 	boundary["candidate_builder_monster_table_initializer_status"] = "0x40ce11_monster_table_initializer_required_before_dynamic_monster_loop_materialization";
 	boundary["candidate_builder_monster_table_initializer"] = h3_monster_table_initializer_boundary();
+	boundary["materialized_single_level_monster_candidate_boundary_status"] = "single_level_monster_candidate_loop_materialized_from_crtraits_and_static_table";
+	boundary["materialized_single_level_monster_candidate_boundary"] = h3_materialized_single_level_monster_candidate_boundary();
 	boundary["candidate_builder_fixed_type6_value_band_status"] = "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized";
 	boundary["candidate_builder_fixed_type6_value_band_count"] = 18;
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
@@ -1380,7 +1598,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_loops_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("0x40ce11 monster table initializer", "dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "artifact/type17/terrain-vector dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = true;
