@@ -114,12 +114,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "polygon_split_model_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"] \
-			or int(private_context.get("completed_phase_count", -1)) != 8 \
+			or String(private_context.get("status", "")) != "source_node_boundary_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"] \
+			or int(private_context.get("completed_phase_count", -1)) != 9 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped source-node rectangle phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped boundary traversal phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -419,13 +419,69 @@ func _run() -> void:
 		_fail("h3maped polygon finalized source-node walks drifted: %s" % JSON.stringify(source_node_walks))
 		return
 
+	var boundary_traversal: Dictionary = private_context.get("boundary_traversal_context", {})
+	if String(boundary_traversal.get("phase_id", "")) != "source_node_boundary_traversal" \
+			or String(boundary_traversal.get("h3maped_anchor", "")) != "0x4a2777" \
+			or String(boundary_traversal.get("caller_anchor", "")) != "0x4a3e58..0x4a3e8c" \
+			or String(boundary_traversal.get("source_node_cycle_source", "")) != "polygon_split_model.source_node_walks_from_0x4cca55_after_0x4ccdfc_finalization" \
+			or String(boundary_traversal.get("clip_helper_anchor", "")) != "0x4a2b33" \
+			or String(boundary_traversal.get("deterministic_line_writer_anchor", "")) != "0x4a261a" \
+			or String(boundary_traversal.get("flagged_line_writer_anchor", "")) != "0x4a2413" \
+			or String(boundary_traversal.get("runtime_vertex_vector_offset", "")) != "runtime_zone+0x3f4" \
+			or String(boundary_traversal.get("status", "")) != "private_context_ready" \
+			or not bool(boundary_traversal.get("materializes_boundaries", false)) \
+			or bool(boundary_traversal.get("materializes_span_fill", true)) \
+			or bool(boundary_traversal.get("materializes_terrain", true)) \
+			or bool(boundary_traversal.get("materializes_map_cells", true)) \
+			or bool(boundary_traversal.get("materializes_public_output", true)) \
+			or int(boundary_traversal.get("project_materialized_cell_count", -1)) != 0 \
+			or int(boundary_traversal.get("map_width", -1)) != 36 \
+			or int(boundary_traversal.get("map_height", -1)) != 36 \
+			or int(boundary_traversal.get("level_count", -1)) != 1 \
+			or int(boundary_traversal.get("h3maped_water_mode_code", -1)) != 0:
+		_fail("h3maped source-node boundary traversal identity drifted: %s" % JSON.stringify(boundary_traversal))
+		return
+	if int(boundary_traversal.get("rng_state_before_0x4a2777_uint32", -1)) != 255755822 \
+			or int(boundary_traversal.get("runtime_zone_walk_count", -1)) != 6 \
+			or int(boundary_traversal.get("blocked_zone_count", -1)) != 0 \
+			or int(boundary_traversal.get("fallback_zone_count", -1)) != 0 \
+			or int(boundary_traversal.get("connector_segment_count", -1)) != 6 \
+			or int(boundary_traversal.get("wrap_segment_count", -1)) != 0 \
+			or int(boundary_traversal.get("final_segment_count", -1)) != 12 \
+			or int(boundary_traversal.get("appended_vertex_count", -1)) != 18 \
+			or int(boundary_traversal.get("skipped_unfinalized_node_count", -1)) != 0 \
+			or int(boundary_traversal.get("skipped_out_of_bounds_clip_count", -1)) != 12 \
+			or int(boundary_traversal.get("flagged_writer_segment_count", -1)) != 6 \
+			or int(boundary_traversal.get("deterministic_writer_segment_count", -1)) != 12 \
+			or int(boundary_traversal.get("randomized_rng_call_count", -1)) != 106 \
+			or int(boundary_traversal.get("randomized_inserted_midpoint_count", -1)) != 138 \
+			or int(boundary_traversal.get("randomized_max_pending_point_count", -1)) != 8 \
+			or int(boundary_traversal.get("rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
+			or int(boundary_traversal.get("trace_write_count", -1)) != 301 \
+			or int(boundary_traversal.get("unique_cell_count", -1)) != 238 \
+			or int(boundary_traversal.get("out_of_bounds_write_count", -1)) != 0 \
+			or bool(boundary_traversal.get("loop_guard_exhausted", true)) \
+			or String(boundary_traversal.get("blocked_next", "")) != "0x4a325d_span_fill":
+		_fail("h3maped source-node boundary traversal counts drifted: %s" % JSON.stringify(boundary_traversal))
+		return
+	var zone_reports: Array = boundary_traversal.get("zone_reports", [])
+	if zone_reports.size() != 6 \
+			or String(zone_reports[0].get("status", "")) != "0x4a2777_real_source_cycle_consumed" \
+			or int(zone_reports[0].get("runtime_zone_index", -1)) != 0 \
+			or int(zone_reports[0].get("segment_count", -1)) != 3 \
+			or int(zone_reports[1].get("runtime_zone_index", -1)) != 1 \
+			or int(zone_reports[1].get("segment_count", -1)) != 4 \
+			or int(zone_reports[5].get("runtime_zone_index", -1)) != 5:
+		_fail("h3maped source-node boundary traversal zone reports drifted: %s" % JSON.stringify(zone_reports))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
