@@ -32,12 +32,13 @@ The compiled active module now only:
 - accepts only small 36x36 one-level land configs;
 - computes the recovered h3maped size/water score boundary;
 - selects from the recovered small-land template vector using h3maped RNG `0x4e7269/0x4e7276`;
-- reports the strict executable-port backlog with every phase after template selection marked `pending_strict_port`;
+- builds active non-public player-slot state from `0x4ac62a..0x4ac6ec` source-owner masks and `generator+0xed8/+0xee0/+0xee4` slot arrays;
+- reports the strict executable-port backlog with every phase after player-slot assignment marked `pending_strict_port`;
 - refuses runtime generation and any partial public package payload.
 
 Seed `1`, one human, three total players currently selects `h3maped_template_018` at source catalog index `18`, adapted to `translated_rmg_template_019_v1`, through the h3maped RNG first value `41` and selected vector index `2`. Accepted small-land templates for that profile remain `13`.
 
-The active module no longer exposes the old top-level player-slot, runtime-zone, coordinate, terrain, town, road, blocker, guard, mine, reward, final-writeout records, or the private phase ledger. Older detailed records were archived because they encouraged incremental report growth without a usable generated map. Future phases must be reintroduced as actual runtime generator implementation derived from `h3maped.exe`, not as broad inspection-ledger expansion.
+The active module no longer exposes the old top-level runtime-zone, coordinate, terrain, town, road, blocker, guard, mine, reward, final-writeout records, or the private phase ledger. The only active generation state beyond template selection is player-slot assignment, which materializes no runtime players, map cells, package tiles, or public output. Older detailed records were archived because they encouraged incremental report growth without a usable generated map. Future phases must be reintroduced as actual runtime generator implementation derived from `h3maped.exe`, not as broad inspection-ledger expansion.
 
 ## Runtime Gate
 
@@ -57,7 +58,7 @@ Explicit translated-template requests do not bypass the reset gate.
 The restart must port these phases from `h3maped.exe` before public package output is allowed:
 
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
-2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (pending strict runtime implementation; no private ledger claim).
+2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active non-public generation state; no runtime player/package materialization).
 3. Runtime-zone records and terrain selectors: `0x4a218c`, `0x49b3c1`, `0x49b53d` (pending strict runtime implementation).
 4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d`, and `0x4a3710` (pending strict runtime implementation).
 5. Terrain writeout and TerrainPlacement: `0x4a3f27`, `0x4bcff5`, `0x4bd099`, `0x4bb74b`, `0x4bc5f0`, `0x4bcfc3`, `0x4bce6d`, `0x4ba938`, `0x4ba989`, `0x4baa94`, `0x4baabf`, `0x4bad0f`, `0x49acf6`, `0x4bbd01`, `0x4bc988`, and `0x4bbfcc` (pending strict runtime implementation and package adoption).
