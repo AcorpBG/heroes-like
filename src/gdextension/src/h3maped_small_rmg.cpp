@@ -1,8 +1,10 @@
 #include "h3maped_small_rmg.hpp"
 
 #include <godot_cpp/classes/file_access.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
 #include <algorithm>
 #include <array>
@@ -98,6 +100,22 @@ bool parse_numeric_h3maped_seed(const String &seed_text, uint32_t &seed_value) {
 	}
 	seed_value = uint32_t(parsed);
 	return true;
+}
+
+Dictionary load_json_dictionary(const String &path) {
+	if (!FileAccess::file_exists(path)) {
+		return Dictionary();
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return Dictionary();
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	return Dictionary(parser->get_data());
 }
 
 Dictionary binary_verification() {
@@ -287,6 +305,133 @@ Dictionary player_slot_assignment_report(const TemplateEvidence &candidate, cons
 	return report;
 }
 
+bool player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_t total_players) {
+	if (filter.is_empty()) {
+		return true;
+	}
+	return human_count >= int32_t(filter.get("min_human", 0))
+			&& human_count <= int32_t(filter.get("max_human", 8))
+			&& total_players >= int32_t(filter.get("min_total", 0))
+			&& total_players <= int32_t(filter.get("max_total", 8));
+}
+
+int32_t owner_color_for_source_owner(const Array &colors_by_source_owner, int32_t source_owner_index) {
+	if (source_owner_index < 0 || source_owner_index >= colors_by_source_owner.size()) {
+		return -1;
+	}
+	return int32_t(colors_by_source_owner[source_owner_index]);
+}
+
+Dictionary source_template_record_for_catalog_index(int32_t source_catalog_index) {
+	Dictionary catalog = load_json_dictionary(CATALOG_SOURCE_PATH);
+	Array templates = catalog.get("templates", Array());
+	if (source_catalog_index < 0 || source_catalog_index >= templates.size() || Variant(templates[source_catalog_index]).get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	return Dictionary(templates[source_catalog_index]);
+}
+
+Dictionary runtime_zone_record_setup_report(const TemplateEvidence &candidate, const Dictionary &source_template_record, const Dictionary &assignment, int32_t human_count, int32_t total_players) {
+	Dictionary report;
+	report["status"] = "0x4a218c_runtime_zone_record_setup_ported_inspection_only";
+	report["source"] = "h3maped 0x4a218c consumes generator+0xee4 owner-color mapping, clears generator+0x10e0/+0x10e4/+0x10e8, allocates 0x414-byte runtime-zone records, and initializes through 0x49b452";
+	report["runtime_zone_vector_offsets"] = "generator+0x10e0/+0x10e4/+0x10e8";
+	report["runtime_zone_record_size_bytes"] = 0x414;
+	report["source_zone_pointer_offset"] = "runtime_zone+0x00";
+	report["chosen_town_offset"] = "runtime_zone+0x04";
+	report["chosen_terrain_offset"] = "runtime_zone+0x0c";
+	report["owner_color_mapping_source"] = "generator+0xee4";
+	report["materializes_runtime_zone_coordinates"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["materializes_runtime_players"] = false;
+	report["source_template_id"] = candidate.id;
+	report["source_catalog_index"] = candidate.catalog_index;
+
+	if (source_template_record.is_empty()) {
+		report["status"] = "0x4a218c_runtime_zone_record_setup_source_template_missing";
+		report["runtime_zone_count"] = 0;
+		report["runtime_zone_records"] = Array();
+		return report;
+	}
+
+	Array colors_by_source_owner = assignment.get("actual_colors_by_source_owner", Array());
+	Array zones = source_template_record.get("zones", Array());
+	Array records;
+	Array owner_colors;
+	int32_t assigned_start_zone_count = 0;
+	int32_t unassigned_start_zone_count = 0;
+	int32_t treasure_zone_count = 0;
+	int32_t minimum_player_castles = 0;
+	int32_t minimum_source_base_size = 0;
+	bool has_base_size = false;
+
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = zones[index];
+		if (!player_filter_accepts(zone.get("player_filter", Dictionary()), human_count, total_players)) {
+			continue;
+		}
+		const String role = String(zone.get("type", ""));
+		const int32_t source_owner_index = int32_t(zone.get("ownership", -1));
+		const int32_t actual_owner_color = owner_color_for_source_owner(colors_by_source_owner, source_owner_index);
+		Dictionary player_towns = zone.get("player_towns", Dictionary());
+		Dictionary neutral_towns = zone.get("neutral_towns", Dictionary());
+		const int32_t source_base_size = int32_t(zone.get("base_size", 0));
+		if (!has_base_size || source_base_size < minimum_source_base_size) {
+			minimum_source_base_size = source_base_size;
+			has_base_size = true;
+		}
+
+		const int32_t min_castles = int32_t(player_towns.get("min_castles", 0));
+		minimum_player_castles += min_castles;
+		if (role == "human_start" || role == "computer_start") {
+			if (actual_owner_color >= 0) {
+				assigned_start_zone_count += 1;
+			} else {
+				unassigned_start_zone_count += 1;
+			}
+		} else if (role == "treasure") {
+			treasure_zone_count += 1;
+		}
+
+		Dictionary record;
+		record["runtime_zone_index"] = records.size();
+		record["source_zone_id"] = zone.get("id", -1);
+		record["role"] = role;
+		record["source_bucket"] = zone.get("bucket", -1);
+		record["source_owner_index"] = source_owner_index;
+		record["actual_owner_color"] = actual_owner_color;
+		record["source_base_size"] = source_base_size;
+		record["player_min_towns"] = player_towns.get("min_towns", 0);
+		record["player_min_castles"] = min_castles;
+		record["player_town_density"] = player_towns.get("town_density", 0);
+		record["player_castle_density"] = player_towns.get("castle_density", 0);
+		record["neutral_min_towns"] = neutral_towns.get("min_towns", 0);
+		record["neutral_min_castles"] = neutral_towns.get("min_castles", 0);
+		record["neutral_town_density"] = neutral_towns.get("town_density", 0);
+		record["neutral_castle_density"] = neutral_towns.get("castle_density", 0);
+		record["coordinate_status"] = "pending_0x4a17f5_0x4a1701";
+		record["terrain_status"] = "pending_0x49b53d";
+		record["footprint_status"] = "pending_0x4a3a03";
+		records.append(record);
+		owner_colors.append(actual_owner_color);
+	}
+
+	report["source_template_name"] = source_template_record.get("name", "");
+	report["runtime_zone_count"] = records.size();
+	report["assigned_start_zone_count"] = assigned_start_zone_count;
+	report["unassigned_start_zone_count"] = unassigned_start_zone_count;
+	report["treasure_zone_count"] = treasure_zone_count;
+	report["minimum_player_castles"] = minimum_player_castles;
+	report["minimum_source_base_size"] = has_base_size ? minimum_source_base_size : 0;
+	report["actual_owner_colors_by_runtime_zone"] = owner_colors;
+	report["runtime_zone_records"] = records;
+	return report;
+}
+
 Array accepted_templates_for_config(const Dictionary &normalized_config, int32_t score, int32_t human_count, int32_t player_count) {
 	Array accepted_templates;
 	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
@@ -327,6 +472,8 @@ Array restart_phase_backlog() {
 		if (phase.id == String("template_selection")) {
 			record["status"] = "active_boundary_only";
 		} else if (phase.id == String("player_slot_assignment")) {
+			record["status"] = "active_inspection_only";
+		} else if (phase.id == String("runtime_zone_records")) {
 			record["status"] = "active_inspection_only";
 		} else {
 			record["status"] = "pending_strict_port";
@@ -451,7 +598,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		const int32_t selected_catalog_index = int32_t(identity.get("source_catalog_index", -1));
 		for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
 			if (candidate.catalog_index == selected_catalog_index) {
-				report["player_slot_assignment"] = player_slot_assignment_report(candidate, normalized_config, human_count, computer_count);
+				Dictionary assignment = player_slot_assignment_report(candidate, normalized_config, human_count, computer_count);
+				report["player_slot_assignment"] = assignment;
+				report["runtime_zone_record_setup"] = runtime_zone_record_setup_report(candidate, source_template_record_for_catalog_index(selected_catalog_index), assignment, human_count, player_count);
 				break;
 			}
 		}
