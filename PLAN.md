@@ -75,6 +75,8 @@ nonGoals:
 - No new one-off owner sample count fitting as runtime policy.
 - No HoMM3 copyrighted asset/DEF import.
 validationResults:
+- `0x4a2777` helper input queue on 2026-05-13: the active clean h3maped reset now records the first helper-call inputs from the `0x4a3a03` per-level phase. The focused report asserts six queued `0x4a2777` inputs for runtime-zone indices `[0,1,2,3,4,5]` / source-zone ids `[1,2,3,4,5,6]`, with `0x4a325d` and `0x4a3710` materialization still pending and no boundary/cell output.
+- Validated on 2026-05-13 with cmake native rebuild, focused native h3maped boundary report, `jq empty ops/progress.json`, `git diff --check`, and `python3 tests/validate_repo.py` after adding the `0x4a2777` helper input queue.
 - Validated on 2026-05-13 with cmake native rebuild, focused native h3maped boundary report, `jq empty ops/progress.json`, `git diff --check`, and `python3 tests/validate_repo.py` after adding the `0x4a3a03` zone-footprint phase boundary.
 - Zone-footprint phase boundary on 2026-05-13: the active clean h3maped reset now ports the `0x4a3a03` per-level phase boundary as inspection-only evidence. The focused report asserts one level, six collected runtime-zone indices `[0,1,2,3,4,5]`, no synthetic `0xd4` source-zone append for small one-level land, helper sequence `0x4a2777 -> 0x4a325d -> 0x4a3710`, and no boundary, span-fill, terrain, map-cell, runtime-player, or package materialization.
 - Validated on 2026-05-13 with cmake native rebuild, focused native h3maped boundary report, `jq empty ops/progress.json`, `git diff --check`, and `python3 tests/validate_repo.py` after adding the `0x4a218c` runtime-zone setup inspection boundary.
