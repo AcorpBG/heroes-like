@@ -970,7 +970,7 @@ func _run() -> void:
 		_fail("h3maped generic selector static prefix drifted: %s" % JSON.stringify(static_prefix))
 		return
 	var monster_loop: Dictionary = generic_selector.get("candidate_builder_monster_loop", {})
-	if String(generic_selector.get("candidate_builder_monster_loop_status", "")) != "0x49f9ed_0x49fa54_monster_table_loop_recovered_not_materialized" \
+	if String(generic_selector.get("candidate_builder_monster_loop_status", "")) != "0x49f9ed_0x49fa54_single_level_monster_loop_materialized_extended_pending" \
 				or String(monster_loop.get("table_pointer_address", "")) != "0x581298" \
 				or String(monster_loop.get("table_address", "")) != "0x57cea0" \
 				or int(monster_loop.get("record_stride_bytes", -1)) != 0x74 \
@@ -1006,6 +1006,36 @@ func _run() -> void:
 				or String(monster_initializer_fields[8].get("source_range", "")) != "0x40cf65..0x40cf6d" \
 				or String(monster_initializer_fields[8].get("source", "")) != "parsed_row+0x28":
 		_fail("h3maped monster table initializer boundary drifted: %s" % JSON.stringify(monster_initializer))
+		return
+	var materialized_monsters: Dictionary = generic_selector.get("materialized_single_level_monster_candidate_boundary", {})
+	var materialized_monster_records: Array = materialized_monsters.get("records", [])
+	if String(generic_selector.get("materialized_single_level_monster_candidate_boundary_status", "")) != "single_level_monster_candidate_loop_materialized_from_crtraits_and_static_table" \
+				or String(materialized_monsters.get("status", "")) != "single_level_monster_candidate_loop_materialized_from_crtraits_and_static_table" \
+				or String(materialized_monsters.get("source_crtraits_path", "")) != "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_bmp/raw/crtraits.txt" \
+				or String(materialized_monsters.get("crtraits_loader_address", "")) != "0x40cc46" \
+				or String(materialized_monsters.get("table_initializer_address", "")) != "0x40ce11" \
+				or String(materialized_monsters.get("constructor_address", "")) != "0x49c5cd" \
+				or int(materialized_monsters.get("single_level_iteration_count", -1)) != 0x76 \
+				or int(materialized_monsters.get("first_candidate_vector_index", -1)) != 2 \
+				or int(materialized_monsters.get("last_candidate_vector_index", -1)) != 119 \
+				or int(materialized_monsters.get("candidate_record_count", -1)) != 118 \
+				or materialized_monster_records.size() != 118 \
+				or int(materialized_monsters.get("missing_source_row_count", -1)) != 0 \
+				or int(materialized_monsters.get("inactive_gate_count", -1)) != 0 \
+				or int(materialized_monsters.get("invalid_ai_value_count", -1)) != 0 \
+				or bool(materialized_monsters.get("extended_monster_loop_materialized", true)) \
+				or int(materialized_monster_records[0].get("candidate_vector_index", -1)) != 2 \
+				or int(materialized_monster_records[0].get("monster_table_index", -1)) != 117 \
+				or String(materialized_monster_records[0].get("monster_name", "")) != "Diamond Golem" \
+				or int(materialized_monster_records[0].get("candidate_record_field_0x18", -1)) != 25 \
+				or int(materialized_monster_records[113].get("monster_table_index", -1)) != 4 \
+				or String(materialized_monster_records[113].get("monster_name", "")) != "Griffin" \
+				or int(materialized_monster_records[113].get("candidate_record_field_0x18", -1)) != 25 \
+				or int(materialized_monster_records[117].get("candidate_vector_index", -1)) != 119 \
+				or int(materialized_monster_records[117].get("monster_table_index", -1)) != 0 \
+				or String(materialized_monster_records[117].get("monster_name", "")) != "Pikeman" \
+				or int(materialized_monster_records[117].get("candidate_record_field_0x18", -1)) != 60:
+		_fail("h3maped materialized monster candidate boundary drifted: %s" % JSON.stringify(materialized_monsters))
 		return
 	var value_bands: Array = generic_selector.get("candidate_builder_fixed_type6_value_band_records", [])
 	if String(generic_selector.get("candidate_builder_fixed_type6_value_band_status", "")) != "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized" \
