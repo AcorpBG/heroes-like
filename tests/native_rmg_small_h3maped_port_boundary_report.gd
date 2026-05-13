@@ -110,7 +110,7 @@ func _run() -> void:
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "port_0x4a9911_0x4a9641_mine_records_and_0x4aab7e_reward_records_before_0x4ab52a":
+			or String(small_state.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
 		_fail("Small h3maped generation state did not stop at the object-vector prerequisite boundary: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
@@ -893,24 +893,31 @@ func _run() -> void:
 				or String(object_vector_phase.get("h3maped_mine_constraint_address", "")) != "0x4a9641" \
 				or String(object_vector_phase.get("h3maped_treasure_phase_address", "")) != "0x4aab7e" \
 				or bool(object_vector_phase.get("complete_coordinate_vector_claim", true)) \
-				or bool(object_vector_phase.get("materializes_private_object_coordinate_records", true)) \
+				or not bool(object_vector_phase.get("materializes_private_object_coordinate_records", false)) \
 				or bool(object_vector_phase.get("materializes_public_objects", true)) \
 				or bool(object_vector_phase.get("public_package_output_allowed", true)) \
 				or int(object_vector_phase.get("materialized_town_coordinate_record_count", -1)) != 3 \
 				or int(object_vector_phase.get("mine_minimum_record_count", -1)) != 18 \
+				or int(object_vector_phase.get("materialized_private_mine_coordinate_record_count", -1)) != 16 \
+				or int(object_vector_phase.get("partial_coordinate_record_count", -1)) != 19 \
+				or int(object_vector_phase.get("mine_placement_scan_call_count", -1)) != 18 \
+				or int(object_vector_phase.get("mine_placement_selected_count", -1)) != 16 \
+				or int(object_vector_phase.get("mine_placement_rejected_special_distance_count", -1)) != 22 \
+				or int(object_vector_phase.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2198482029 \
 				or int(object_vector_phase.get("mine_density_weight_total", -1)) != 18 \
 				or int(object_vector_phase.get("eligible_reward_band_count", -1)) != 18 \
 				or int(object_vector_phase.get("reward_band_weight_total", -1)) != 96 \
-				or String(object_vector_phase.get("blocked_next", "")) != "port_0x4a9911_0x4a9641_mine_records_and_0x4aab7e_reward_records_before_0x4ab52a":
+				or String(object_vector_phase.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
 		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
+				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 16 \
 				or int(known_vector_gap.get("mine_density_weight_total", -1)) != 18 \
 				or int(known_vector_gap.get("eligible_reward_band_count", -1)) != 18 \
 				or int(known_vector_gap.get("reward_band_weight_total", -1)) != 96 \
-				or not bool(known_vector_gap.get("current_road_vector_only_has_towns", false)) \
-				or not bool(known_vector_gap.get("roads_must_not_be_publicly_adopted_from_town_only_vector", false)):
+				or bool(known_vector_gap.get("current_road_vector_only_has_towns", true)) \
+				or not bool(known_vector_gap.get("roads_must_not_be_publicly_adopted_from_partial_vector", false)):
 		_fail("h3maped known coordinate-vector gap drifted: %s" % JSON.stringify(known_vector_gap))
 		return
 	var roads_phase: Dictionary = small_state.get("roads_and_rivers_phase_4ab52a", {})
@@ -925,7 +932,7 @@ func _run() -> void:
 				or bool(roads_phase.get("materializes_package_tiles", true)) \
 				or bool(roads_phase.get("public_package_output_allowed", true)) \
 				or bool(roads_phase.get("complete_coordinate_vector_claim", true)) \
-				or String(roads_phase.get("blocked_next", "")) != "port_0x4a9911_0x4a9641_mine_records_and_0x4aab7e_reward_records_before_0x4ab52a":
+				or String(roads_phase.get("blocked_next", "")) != "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a":
 		_fail("h3maped roads/rivers boundary should be blocked until complete object vector: %s" % JSON.stringify(roads_phase))
 		return
 
