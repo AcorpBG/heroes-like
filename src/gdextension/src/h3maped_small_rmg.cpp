@@ -2023,6 +2023,10 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 	return phase;
 }
 
+#if 0
+// Archived overgrown phase code. The same recovery evidence remains in the
+// archived 20260513 files; live code reintroduces each phase only as a narrow
+// strict executable port.
 int64_t cell_key_4a325d(int32_t map_width, int32_t map_height, int32_t x, int32_t y, int32_t level) {
 	return int64_t(level) * int64_t(map_width) * int64_t(map_height) + int64_t(y) * int64_t(map_width) + int64_t(x);
 }
@@ -6044,6 +6048,7 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	state["blocked_next"] = completed.size() >= 12 ? String("private_mine_reward_coordinate_filter_and_mutation_0x4aa603_0x4aa3e9") : String(completed.size() >= 11 ? "object_vector_prerequisite_phase_4a9d6a_4aab7e" : String(completed.size() >= 10 ? "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2" : String(completed.size() >= 9 ? "private_0x49b2b6_tile_byte_writeback_candidate" : String(completed.size() >= 8 ? "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback" : String(completed.size() >= 7 ? "terrainplacement_visual_tables_0x4bcff5" : String(completed.size() >= 6 ? "terrain_cell_writeout_0x4a3f27" : "zone_footprint_source_nodes_0x4a3a03_0x4cc788"))))));
 	return state;
 }
+#endif
 
 } // namespace
 
