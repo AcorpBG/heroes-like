@@ -974,6 +974,47 @@ Dictionary h3_type17_generator_loop_boundary() {
 	return boundary;
 }
 
+Array h3_terrain_specialized_fixed_value_records() {
+	return Array::make(
+			h3_extended_candidate_record("0x4a0f8e", "0x540c70", 0x18, 0x53, -1, 0x7d0, 0x0a, 0x1388, -1, -1),
+			h3_extended_candidate_record("0x4a0fce", "0x540c70", 0x18, 0x53, -1, 0x14d5, 0x0a, 0x2710, -1, -1),
+			h3_extended_candidate_record("0x4a100e", "0x540c70", 0x18, 0x53, -1, 0x21da, 0x0a, 0x3a98, -1, -1),
+			h3_extended_candidate_record("0x4a104e", "0x540c70", 0x18, 0x53, -1, 0x2ee0, 0x0a, 0x4e20, -1, -1),
+			h3_extended_candidate_record("0x4a108e", "0x540c80", 0x18, 0x53, -1, 0x7d0, 0x0a, 0x1388, -1, -1),
+			h3_extended_candidate_record("0x4a10ce", "0x540c80", 0x18, 0x53, -1, 0x14d5, 0x0a, 0x2710, -1, -1),
+			h3_extended_candidate_record("0x4a110e", "0x540c80", 0x18, 0x53, -1, 0x21da, 0x0a, 0x3a98, -1, -1),
+			h3_extended_candidate_record("0x4a114e", "0x540c80", 0x18, 0x53, -1, 0x2ee0, 0x0a, 0x4e20, -1, -1));
+}
+
+Dictionary h3_terrain_specialized_candidate_loop_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x4a0eeb..0x4a1194";
+	boundary["terrain_vector_offset"] = "generator+0x568..+0x56c";
+	boundary["terrain_vector_stride_bytes"] = 0x04;
+	boundary["outer_iteration_order"] = "ascending_vector_index";
+	boundary["outer_index_field"] = "+0x08 subtype";
+	boundary["allocation_size_bytes"] = 0x1c;
+	boundary["monster_table_pointer_address"] = "0x581298";
+	boundary["monster_table_address"] = "0x57cea0";
+	boundary["monster_table_stride_bytes"] = 0x74;
+	boundary["monster_active_gate_offset"] = "+0x04";
+	boundary["single_level_monster_iteration_count"] = 0x76;
+	boundary["extended_monster_iteration_count"] = 0x91;
+	boundary["single_level_active_monster_count_per_terrain"] = 118;
+	boundary["extended_active_monster_count_per_terrain"] = 141;
+	boundary["monster_constructor_address"] = "0x49c5cd";
+	boundary["monster_constructor_vtable_address"] = "0x540bc0";
+	boundary["overridden_monster_vtable_address"] = "0x540c60";
+	boundary["type_id"] = 0x53;
+	boundary["subtype_source"] = "terrain_vector_index";
+	boundary["monster_subtype_field"] = "+0x14 monster_table_index";
+	boundary["monster_value_field"] = "+0x18 scaled_monster_value";
+	boundary["fixed_records_per_terrain_count"] = 8;
+	boundary["fixed_records_per_terrain"] = h3_terrain_specialized_fixed_value_records();
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
 Array h3_static_tail_after_artifact_pool_records() {
 	static constexpr H3CandidateSpec TAIL_RECORDS[] = {
 		{ "0x4a00d8", "0x540ba0", 0x14, 7, 0, 8000, 20 },
@@ -1103,8 +1144,10 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_tail_status"] = "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_tail_count"] = 61;
 	boundary["candidate_builder_static_tail_records"] = h3_static_tail_after_artifact_pool_records();
+	boundary["candidate_builder_terrain_specialized_loop_status"] = "0x4a0eeb_0x4a1194_generator_plus_0x568_loop_recovered_not_materialized";
+	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "generator+0x568 terrain-specialized loop after 0x4a0eeb");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "static constructor tail after 0x4a1194");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = false;
