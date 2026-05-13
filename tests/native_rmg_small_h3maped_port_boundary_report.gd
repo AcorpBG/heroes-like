@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "terrainplacement_live_feedback_4bb74b_4bc5f0_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0"] \
-			or int(small_state.get("completed_phase_count", -1)) != 15 \
+			or String(small_state.get("status", "")) != "terrain_tile_byte_writeback_49b2b6_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6"] \
+			or int(small_state.get("completed_phase_count", -1)) != 16 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
-		_fail("Small h3maped generation state did not stop after TerrainPlacement live feedback: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
+		_fail("Small h3maped generation state did not stop after terrain tile-byte writeback: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -770,6 +770,36 @@ func _run() -> void:
 		_fail("h3maped TerrainPlacement live feedback samples drifted: %s" % JSON.stringify(live_feedback_phase))
 		return
 
+	var tile_writeback_phase: Dictionary = small_state.get("terrain_tile_byte_writeback_49b2b6", {})
+	var terrain_byte_histogram: Dictionary = tile_writeback_phase.get("tile_byte_0_histogram", {})
+	var art_byte_histogram: Dictionary = tile_writeback_phase.get("tile_byte_1_art_histogram", {})
+	var flag_byte_histogram: Dictionary = tile_writeback_phase.get("tile_byte_6_flag_histogram", {})
+	var sample_tile_records: Array = tile_writeback_phase.get("sample_tile_byte_records", [])
+	if String(tile_writeback_phase.get("phase_id", "")) != "terrain_tile_byte_writeback_49b2b6" \
+			or String(tile_writeback_phase.get("h3maped_anchor", "")) != "0x49b2b6" \
+			or String(tile_writeback_phase.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or String(tile_writeback_phase.get("status", "")) != "active_runtime_state_ready" \
+			or not bool(tile_writeback_phase.get("materializes_private_tile_byte_candidates", false)) \
+			or bool(tile_writeback_phase.get("materializes_package_tiles", true)) \
+			or bool(tile_writeback_phase.get("project_grid_public_runtime_adoption", true)) \
+			or bool(tile_writeback_phase.get("public_package_output_allowed", true)) \
+			or bool(tile_writeback_phase.get("road_river_bytes_materialized", true)) \
+			or bool(tile_writeback_phase.get("object_bytes_materialized", true)) \
+			or int(tile_writeback_phase.get("tile_count", -1)) != 1296 \
+			or int(tile_writeback_phase.get("terrain_byte_candidate_count", -1)) != 1296 \
+			or int(tile_writeback_phase.get("terrain_byte_mismatch_count", -1)) != 0 \
+			or int(tile_writeback_phase.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or int(tile_writeback_phase.get("terrain_flag_nonzero_cell_count", -1)) <= 0 \
+			or int(tile_writeback_phase.get("road_river_nonzero_byte_count", -1)) != 0 \
+			or int(tile_writeback_phase.get("sample_tile_byte_record_count", -1)) != 16 \
+			or sample_tile_records.size() != 16 \
+			or int(terrain_byte_histogram.get("8", 0)) <= 0 \
+			or int(art_byte_histogram.get("0", -1)) < 0 \
+			or int(flag_byte_histogram.get("0", -1)) < 0 \
+			or String(tile_writeback_phase.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
+		_fail("h3maped terrain tile-byte writeback boundary drifted: %s" % JSON.stringify(tile_writeback_phase))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -777,7 +807,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
