@@ -9,6 +9,7 @@
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
+#include <iterator>
 
 namespace godot::h3maped_small_rmg {
 namespace {
@@ -37,6 +38,24 @@ struct TemplateEvidence {
 	const char *adapted_template_id;
 	uint8_t human_capable_source_owner_mask;
 	uint8_t player_capable_source_owner_mask;
+};
+
+struct SourceZoneEvidence {
+	int32_t template_catalog_index;
+	int32_t source_zone_id;
+	const char *role;
+	int32_t source_bucket;
+	int32_t source_owner_index;
+	int32_t base_size;
+	int32_t min_player_castles;
+	bool terrain_match_to_town;
+	const char *terrain_policy;
+	const char *monster_strength;
+	int32_t allowed_town_count;
+	int32_t allowed_terrain_count;
+	int32_t minimum_ore_mines;
+	int32_t minimum_wood_mines;
+	int32_t minimum_rare_mines;
 };
 
 struct H3MapedRng {
@@ -70,6 +89,15 @@ const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, "", 0x07, 0x1f },
 	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, "", 0x07, 0x1f },
 	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "", 0x3f, 0x7f },
+};
+
+const SourceZoneEvidence TEMPLATE_018_SOURCE_ZONES[] = {
+	{ 18, 1, "human_start", 0, 0, 11, 1, true, "match_to_player_town", "average", 9, 0, 1, 1, 0 },
+	{ 18, 2, "human_start", 0, 1, 11, 1, true, "match_to_player_town", "average", 9, 0, 1, 1, 0 },
+	{ 18, 3, "treasure", 2, -2, 11, 0, false, "all_land_h3", "strong", 0, 8, 0, 0, 5 },
+	{ 18, 4, "human_start", 0, 2, 11, 1, true, "match_to_player_town", "average", 9, 0, 1, 1, 0 },
+	{ 18, 5, "human_start", 0, 3, 11, 1, true, "match_to_player_town", "average", 9, 0, 1, 1, 0 },
+	{ 18, 6, "treasure", 2, -2, 11, 0, false, "all_land_h3", "strong", 0, 8, 0, 0, 5 },
 };
 
 int32_t water_mode_code(const Dictionary &normalized_config) {
@@ -250,6 +278,97 @@ Dictionary player_slot_assignment_context(const TemplateEvidence &selected_templ
 	return context;
 }
 
+Dictionary runtime_zone_records_context(const TemplateEvidence &selected_template, const Dictionary &player_context) {
+	Dictionary context;
+	context["phase_id"] = "runtime_zone_records";
+	context["h3maped_anchor"] = "0x4a218c";
+	context["initializer_anchor"] = "0x49b452";
+	context["status"] = "pending_source_zone_evidence_for_selected_template";
+	context["runtime_zone_vector_begin_offset"] = "generator+0x10e0";
+	context["runtime_zone_vector_end_offset"] = "generator+0x10e4";
+	context["runtime_zone_vector_capacity_offset"] = "generator+0x10e8";
+	context["runtime_zone_record_size_bytes"] = 0x414;
+	context["source_zone_pointer_offset"] = "runtime_zone+0x00";
+	context["chosen_town_offset"] = "runtime_zone+0x04";
+	context["chosen_terrain_offset"] = "runtime_zone+0x0c";
+	context["owner_mapping_source_offset"] = "generator+0xee4";
+	context["materializes_runtime_zone_coordinates"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_map_cells"] = false;
+	context["materializes_runtime_players"] = false;
+	context["materializes_public_output"] = false;
+	context["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
+
+	if (selected_template.catalog_index != 18) {
+		return context;
+	}
+
+	const Array mapped_slots = player_context.get("mapped_ee4_slots", Array());
+	Array records;
+	Array actual_owner_colors_by_runtime_zone;
+	int32_t assigned_start_zone_count = 0;
+	int32_t unassigned_start_zone_count = 0;
+	int32_t treasure_zone_count = 0;
+	int32_t minimum_player_castles = 0;
+	int32_t minimum_source_base_size = 0;
+	for (int32_t index = 0; index < int32_t(std::size(TEMPLATE_018_SOURCE_ZONES)); ++index) {
+		const SourceZoneEvidence &source_zone = TEMPLATE_018_SOURCE_ZONES[index];
+		int32_t actual_owner_color = -1;
+		if (source_zone.source_owner_index >= 0 && source_zone.source_owner_index < mapped_slots.size()) {
+			actual_owner_color = int32_t(mapped_slots[source_zone.source_owner_index]);
+		}
+
+		Dictionary record;
+		record["runtime_zone_index"] = index;
+		record["source_template_catalog_index"] = source_zone.template_catalog_index;
+		record["source_zone_id"] = source_zone.source_zone_id;
+		record["role"] = source_zone.role;
+		record["source_bucket"] = source_zone.source_bucket;
+		record["source_owner_index"] = source_zone.source_owner_index;
+		record["actual_owner_color"] = actual_owner_color;
+		record["level"] = 0;
+		record["source_base_size"] = source_zone.base_size;
+		record["min_player_castles"] = source_zone.min_player_castles;
+		record["terrain_match_to_town"] = source_zone.terrain_match_to_town;
+		record["terrain_policy"] = source_zone.terrain_policy;
+		record["monster_strength"] = source_zone.monster_strength;
+		record["allowed_town_count"] = source_zone.allowed_town_count;
+		record["allowed_terrain_count"] = source_zone.allowed_terrain_count;
+		record["minimum_ore_mines"] = source_zone.minimum_ore_mines;
+		record["minimum_wood_mines"] = source_zone.minimum_wood_mines;
+		record["minimum_rare_mines"] = source_zone.minimum_rare_mines;
+		records.append(record);
+
+		actual_owner_colors_by_runtime_zone.append(actual_owner_color);
+		minimum_player_castles += source_zone.min_player_castles;
+		if (minimum_source_base_size == 0 || source_zone.base_size < minimum_source_base_size) {
+			minimum_source_base_size = source_zone.base_size;
+		}
+		if (source_zone.source_owner_index >= 0) {
+			if (actual_owner_color >= 0) {
+				assigned_start_zone_count += 1;
+			} else {
+				unassigned_start_zone_count += 1;
+			}
+		} else {
+			treasure_zone_count += 1;
+		}
+	}
+
+	context["status"] = "private_context_ready";
+	context["source"] = "recovered h3maped template catalog plus 0x4a218c runtime-zone record setup";
+	context["selected_template_source_catalog_index"] = selected_template.catalog_index;
+	context["runtime_zone_records"] = records;
+	context["runtime_zone_count"] = records.size();
+	context["assigned_start_zone_count"] = assigned_start_zone_count;
+	context["unassigned_start_zone_count"] = unassigned_start_zone_count;
+	context["treasure_zone_count"] = treasure_zone_count;
+	context["minimum_player_castles"] = minimum_player_castles;
+	context["minimum_source_base_size"] = minimum_source_base_size;
+	context["actual_owner_colors_by_runtime_zone"] = actual_owner_colors_by_runtime_zone;
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -268,10 +387,19 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 	completed_phases.append("template_selection");
 	const TemplateEvidence *selected_template = template_for_catalog_index(int32_t(selection.get("source_catalog_index", -1)));
 	if (selected_template != nullptr) {
-		context["player_context"] = player_slot_assignment_context(*selected_template, normalized_config);
+		const Dictionary player_context = player_slot_assignment_context(*selected_template, normalized_config);
+		const Dictionary runtime_zone_context = runtime_zone_records_context(*selected_template, player_context);
+		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
-		context["status"] = "player_slot_assignment_private_context_ready";
-		context["blocked_next"] = "runtime_zone_records_0x4a218c";
+		context["runtime_zone_context"] = runtime_zone_context;
+		if (String(runtime_zone_context.get("status", "")) == "private_context_ready") {
+			completed_phases.append("runtime_zone_records");
+			context["status"] = "runtime_zone_records_private_context_ready";
+			context["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
+		} else {
+			context["status"] = "player_slot_assignment_private_context_ready";
+			context["blocked_next"] = "runtime_zone_records_0x4a218c";
+		}
 	} else {
 		context["status"] = "selected_template_record_missing";
 		context["blocked_next"] = "player_slot_assignment";
@@ -335,7 +463,7 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : (index == 1 ? String("private_context_ready") : String("pending_strict_port"));
+		phase["status"] = index == 0 ? String("active_boundary_only") : (index == 1 || index == 2 ? String("private_context_ready") : String("pending_strict_port"));
 		phase["materializes_public_output"] = false;
 		phases.append(phase);
 	}

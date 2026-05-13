@@ -33,12 +33,13 @@ The compiled active module now only:
 - computes the recovered h3maped size/water score boundary;
 - selects from the recovered small-land template vector using h3maped RNG `0x4e7269/0x4e7276`;
 - builds a private, non-materializing `0x4ac62a..0x4ac6ec` player-slot assignment context for the selected template;
+- builds a private, non-materializing `0x4a218c` runtime-zone record context for the selected template;
 - reports the strict executable-port backlog;
 - refuses runtime generation and any partial public package payload.
 
 Seed `1`, one human, three total players currently selects `h3maped_template_018` at source catalog index `18`, adapted to `translated_rmg_template_019_v1`, through the h3maped RNG first value `41` and selected vector index `2`. Accepted small-land templates for that profile remain `13`.
 
-The active module no longer exposes the old top-level player-slot, runtime-zone, coordinate, terrain, town, road, blocker, guard, mine, reward, or final-writeout inspection-ledger records. It does expose a compact `private_generation_context` with completed phases `template_selection` and `player_slot_assignment`; that context materializes no runtime players and no public output. Older detailed records were archived because they encouraged incremental report growth without a usable generated map. Future phases must be reintroduced as actual generator implementation derived from `h3maped.exe`, not as broad inspection-ledger expansion.
+The active module no longer exposes the old top-level player-slot, runtime-zone, coordinate, terrain, town, road, blocker, guard, mine, reward, or final-writeout inspection-ledger records. It does expose a compact `private_generation_context` with completed phases `template_selection`, `player_slot_assignment`, and `runtime_zone_records`; that context materializes no runtime players, coordinates, terrain cells, map cells, or public output. For seed `1`, one human, and three total players, the `0x4a218c` context carries six source runtime-zone records from `h3maped_template_018`, owner colors `[0, 1, -1, 2, -1, -1]`, three assigned start zones, one unassigned start zone, two treasure zones, and four minimum player castles. Older detailed records were archived because they encouraged incremental report growth without a usable generated map. Future phases must be reintroduced as actual generator implementation derived from `h3maped.exe`, not as broad inspection-ledger expansion.
 
 ## Runtime Gate
 
