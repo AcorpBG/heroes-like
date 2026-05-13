@@ -87,7 +87,7 @@ func _run() -> void:
 			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
 			or String(backlog[3].get("status", "")) != "active_runtime_state_ready" \
 			or String(backlog[5].get("id", "")) != "town_object_placement" \
-			or String(backlog[5].get("status", "")) != "pending_strict_port" \
+			or String(backlog[5].get("status", "")) != "active_runtime_state_ready" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "terrain_tile_byte_writeback_49b2b6_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6"] \
-			or int(small_state.get("completed_phase_count", -1)) != 16 \
+			or String(small_state.get("status", "")) != "town_castle_phase_4a8d2c_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c"] \
+			or int(small_state.get("completed_phase_count", -1)) != 17 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
-		_fail("Small h3maped generation state did not stop after terrain tile-byte writeback: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243":
+		_fail("Small h3maped generation state did not stop after town/castle placement: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -800,6 +800,85 @@ func _run() -> void:
 		_fail("h3maped terrain tile-byte writeback boundary drifted: %s" % JSON.stringify(tile_writeback_phase))
 		return
 
+	var town_phase: Dictionary = small_state.get("town_castle_phase_4a8d2c", {})
+	var direct_stamping: Dictionary = town_phase.get("direct_stamping_projection", {})
+	var town_candidate: Dictionary = town_phase.get("project_town_adoption_candidate", {})
+	var town_records: Array = town_candidate.get("town_records", [])
+	var player_starts: Array = town_candidate.get("player_starts", [])
+	if String(town_phase.get("phase_id", "")) != "town_castle_phase_4a8d2c" \
+			or String(town_phase.get("h3maped_anchor", "")) != "0x4a8d2c/0x4a8db2/0x4a93a2" \
+			or String(town_phase.get("direct_object_helper_anchor", "")) != "0x4a93a2" \
+			or String(town_phase.get("candidate_gate_anchor", "")) != "0x49aa93" \
+			or String(town_phase.get("footprint_gate_anchor", "")) != "0x49a09c" \
+			or String(town_phase.get("object_record_constructor_anchor", "")) != "0x49ba89" \
+			or String(town_phase.get("town_vtable_anchor", "")) != "0x540a9c" \
+			or String(town_phase.get("status", "")) != "active_runtime_state_ready" \
+			or not bool(town_phase.get("materializes_private_town_candidates", false)) \
+			or bool(town_phase.get("materializes_town_objects", true)) \
+			or bool(town_phase.get("materializes_package_tiles", true)) \
+			or bool(town_phase.get("adopts_into_runtime_grid", true)) \
+			or bool(town_phase.get("public_package_output_allowed", true)) \
+			or int(town_phase.get("source_player_min_castle_count", -1)) != 4 \
+			or int(town_phase.get("assigned_player_min_castle_count", -1)) != 3 \
+			or int(town_phase.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+			or int(town_phase.get("scheduled_direct_minimum_object_count", -1)) != 3 \
+			or int(town_phase.get("scheduled_owned_player_town_count", -1)) != 3 \
+			or Array(town_phase.get("scheduled_owner_colors", [])) != [0, 1, 2] \
+			or int(town_phase.get("project_town_record_candidate_count", -1)) != 3 \
+			or int(town_phase.get("project_player_start_candidate_count", -1)) != 3 \
+			or String(town_phase.get("project_town_adoption_candidate_status", "")) != "h3maped_project_town_adoption_candidate_private" \
+			or String(town_phase.get("blocked_next", "")) != "roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243":
+		_fail("h3maped town/castle phase boundary drifted: %s" % JSON.stringify(town_phase))
+		return
+	if String(direct_stamping.get("status", "")) != "0x4a93a2_0x49ba89_direct_town_object_stamping_projection_private" \
+			or int(direct_stamping.get("direct_candidate_scan_count", -1)) != 3 \
+			or int(direct_stamping.get("direct_candidate_total", -1)) != 445 \
+			or int(direct_stamping.get("direct_footprint_eligible_total", -1)) != 85 \
+			or int(direct_stamping.get("direct_record_projection_count", -1)) != 3 \
+			or int(direct_stamping.get("direct_unique_selection_count", -1)) != 2 \
+			or int(direct_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
+			or int(direct_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
+			or int(direct_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
+			or bool(direct_stamping.get("runtime_package_adoption", true)) \
+			or bool(direct_stamping.get("stamps_generated_cell_state", true)):
+		_fail("h3maped direct town stamping projection drifted: %s" % JSON.stringify(direct_stamping))
+		return
+	if String(town_candidate.get("schema_id", "")) != "aurelion_native_rmg_town_placement_v1" \
+			or bool(town_candidate.get("public_package_adoption", true)) \
+			or bool(town_candidate.get("runtime_grid_adoption", true)) \
+			or int(town_candidate.get("town_record_count", -1)) != 3 \
+			or int(town_candidate.get("player_start_count", -1)) != 3 \
+			or int(town_candidate.get("expected_player_count", -1)) != 3 \
+			or int(town_candidate.get("synchronized_player_start_count", -1)) != 3 \
+			or Array(town_candidate.get("owner_slots", [])) != [1, 2, 3] \
+			or town_records.size() != 3 \
+			or player_starts.size() != 3:
+		_fail("h3maped project town adoption candidate drifted: %s" % JSON.stringify(town_candidate))
+		return
+	if int(town_records[0].get("owner_slot", -1)) != 1 \
+			or String(town_records[0].get("owner", "")) != "player" \
+			or int(town_records[0].get("x", -1)) != 26 \
+			or int(town_records[0].get("y", -1)) != 16 \
+			or int(town_records[1].get("owner_slot", -1)) != 2 \
+			or String(town_records[1].get("owner", "")) != "enemy" \
+			or int(town_records[1].get("x", -1)) != 23 \
+			or int(town_records[1].get("y", -1)) != 23 \
+			or int(town_records[2].get("owner_slot", -1)) != 3 \
+			or int(town_records[2].get("x", -1)) != 18 \
+			or int(town_records[2].get("y", -1)) != 5 \
+			or not bool(town_records[2].get("h3maped_selected_from_random_tie", false)):
+		_fail("h3maped projected town records drifted: %s" % JSON.stringify(town_records))
+		return
+	for index in range(player_starts.size()):
+		var start_record: Dictionary = player_starts[index]
+		var town_record: Dictionary = town_records[index]
+		if int(start_record.get("owner_slot", -1)) != int(town_record.get("owner_slot", -2)) \
+				or int(start_record.get("x", -1)) != int(town_record.get("x", -2)) \
+				or int(start_record.get("y", -1)) != int(town_record.get("y", -2)) \
+				or String(start_record.get("town_placement_id", "")) != String(town_record.get("placement_id", "missing")):
+			_fail("h3maped player start is not synchronized to owned town: %s / %s" % [JSON.stringify(start_record), JSON.stringify(town_record)])
+			return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -807,7 +886,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
