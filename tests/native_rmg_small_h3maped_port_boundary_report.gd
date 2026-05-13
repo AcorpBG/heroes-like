@@ -505,6 +505,7 @@ func _run() -> void:
 	var drained_visual_projection: Dictionary = repaint_order_queue_drain.get("drained_visual_projection", {})
 	var scratch_feedback_projection: Dictionary = repaint_order_queue_drain.get("scratch_feedback_projection", {})
 	var scratch_neighbor_mask_projection: Dictionary = repaint_order_queue_drain.get("scratch_neighbor_mask_projection", {})
+	var masked_visual_selection_projection: Dictionary = repaint_order_queue_drain.get("masked_visual_selection_projection", {})
 	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var drained_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("drained_tile_writeback_candidate", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
@@ -692,6 +693,7 @@ func _run() -> void:
 			or String(repaint_order_queue_drain.get("drained_visual_projection_status", "")) != "0x4bb075_0x4ba938_0x4ba989_0x4bad0f_0x49acf6_generated_grid_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("scratch_feedback_projection_status", "")) != "0x4bad0f_drained_grid_scratch_word_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("scratch_neighbor_mask_projection_status", "")) != "0x4bce6d_scratch_neighbor_mask_projection_inspection_only" \
+			or String(repaint_order_queue_drain.get("masked_visual_selection_projection_status", "")) != "0x4bcfc3_0x4bce6d_0x4ba938_masked_visual_selection_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("queue_container_contract_status", "")) != "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported" \
 			or repaint_order_queue_drain_blocked_exact_dependencies != ["0x4bad0f_live_scratch_visual_state_feedback"] \
 			or Array(repaint_order_queue_drain.get("seed_samples", [])).is_empty() \
@@ -782,6 +784,32 @@ func _run() -> void:
 			or bool(scratch_neighbor_mask_projection.get("adopts_into_runtime_grid", true)) \
 			or bool(scratch_neighbor_mask_projection.get("materializes_package_tiles", true)):
 		_fail("The h3maped scratch-neighbor mask projection drifted: %s" % JSON.stringify(scratch_neighbor_mask_projection))
+		return
+	if String(masked_visual_selection_projection.get("status", "")) != "0x4bcfc3_0x4bce6d_0x4ba938_masked_visual_selection_projection_inspection_only" \
+			or not Array(masked_visual_selection_projection.get("ported_addresses", [])).has("0x4bce6d") \
+			or not Array(masked_visual_selection_projection.get("ported_addresses", [])).has("0x4bcfc3") \
+			or not Array(masked_visual_selection_projection.get("ported_addresses", [])).has("0x4ba938") \
+			or not bool(masked_visual_selection_projection.get("uses_recovered_neighbor_mask", false)) \
+			or int(masked_visual_selection_projection.get("rmg_initial_neighbor_mask", -1)) != 4 \
+			or int(masked_visual_selection_projection.get("tile_count", -1)) != 1296 \
+			or int(masked_visual_selection_projection.get("projected_cell_count", -1)) != 1296 \
+			or int(masked_visual_selection_projection.get("missing_bucket_cell_count", -1)) != 0 \
+			or not bool(masked_visual_selection_projection.get("full_grid_projection_complete", false)) \
+			or int(masked_visual_selection_projection.get("full_native_masked_cell_count", -1)) <= 0 \
+			or int(masked_visual_selection_projection.get("masked_selection_art_delta_count", -1)) <= 0 \
+			or int(masked_visual_selection_projection.get("terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or int(masked_visual_selection_projection.get("terrain_flag_cell_count", -1)) <= 0 \
+			or int(masked_visual_selection_projection.get("missing_mask_cell_count", -1)) != 0 \
+			or Dictionary(masked_visual_selection_projection.get("neighbor_mask_histogram", {})).is_empty() \
+			or PackedInt32Array(masked_visual_selection_projection.get("projected_cell_word_0x24_u32", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(masked_visual_selection_projection.get("projected_cell_word_0x28_u32", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(masked_visual_selection_projection.get("projected_tile_byte_1_terrain_art_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(masked_visual_selection_projection.get("projected_tile_byte_6_terrain_flags_u8", PackedInt32Array())).size() != 1296 \
+			or Array(masked_visual_selection_projection.get("sample_records", [])).is_empty() \
+			or bool(masked_visual_selection_projection.get("live_feedback_materialized", true)) \
+			or bool(masked_visual_selection_projection.get("adopts_into_runtime_grid", true)) \
+			or bool(masked_visual_selection_projection.get("materializes_package_tiles", true)):
+		_fail("The h3maped masked visual-selection projection drifted: %s" % JSON.stringify(masked_visual_selection_projection))
 		return
 	if String(drained_tile_writeback_candidate.get("status", "")) != "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only" \
 			or int(drained_tile_writeback_candidate.get("tile_count", -1)) != 1296 \
