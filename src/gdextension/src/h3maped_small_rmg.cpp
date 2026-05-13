@@ -664,7 +664,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_internal_state"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_internal_state"));
 	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "active_internal_state"));
-	backlog.append(phase_record("terrain_and_terrainplacement", "0x4a3f27, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_runtime_port"));
+	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "terrain_cell_writeout_active_internal_state"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_runtime_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_runtime_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "pending_runtime_port"));
@@ -859,9 +859,13 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 		}
 		if (String(record["terrain_policy"]) == "all_land_h3") {
 			Array allowed_terrain_ids;
-			for (int32_t terrain_id = 0; terrain_id <= 7; ++terrain_id) {
-				allowed_terrain_ids.append(terrain_id);
-			}
+			allowed_terrain_ids.append(0);
+			allowed_terrain_ids.append(1);
+			allowed_terrain_ids.append(2);
+			allowed_terrain_ids.append(3);
+			allowed_terrain_ids.append(4);
+			allowed_terrain_ids.append(5);
+			allowed_terrain_ids.append(7);
 			record["allowed_h3maped_terrain_ids_for_49b53d"] = allowed_terrain_ids;
 		}
 		record["monster_strength"] = Dictionary(zone.get("monster_policy", Dictionary())).get("strength", "");
@@ -1877,7 +1881,7 @@ PolygonSourceResult build_polygon_source_walks_4ccb64(const Array &runtime_zones
 	return result;
 }
 
-Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_config, const Array &runtime_zones, const PolygonSourceResult &source, uint32_t rng_state_after_coordinate_seed) {
+Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_config, const Array &runtime_zones, const PolygonSourceResult &source, uint32_t rng_state_after_coordinate_seed, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
@@ -2155,7 +2159,246 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	report["out_of_bounds_span_count"] = out_of_bounds_span_count;
 	report["blocked_initial_span_count"] = blocked_initial_span_count;
 	report["cells_by_zone_word"] = cells_by_zone_word_report;
+	if (zone_words_out != nullptr) {
+		*zone_words_out = zone_words;
+	}
+	if (cell_flags_out != nullptr) {
+		*cell_flags_out = cell_flags;
+	}
 	return report;
+}
+
+String project_terrain_for_h3maped_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "dirt";
+		case 1:
+			return "sand";
+		case 2:
+			return "grass";
+		case 3:
+			return "snow";
+		case 4:
+			return "swamp";
+		case 5:
+			return "rough";
+		case 6:
+			return "subterranean";
+		case 7:
+			return "lava";
+		case 8:
+			return "water";
+		default:
+			return "unknown";
+	}
+}
+
+Dictionary runtime_terrain_selection_49b53d(Array &runtime_zones, uint32_t rng_state_after_coordinate_replay, const Dictionary &normalized_config) {
+	static constexpr int32_t H3_TOWN_TO_TERRAIN_TABLE_540908[9] = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
+	Dictionary phase;
+	phase["phase_id"] = "runtime_terrain_selection";
+	phase["h3maped_anchor"] = "0x49b53d";
+	phase["town_to_terrain_table_address"] = "0x540908";
+	phase["status"] = "active_internal_state";
+	phase["rng_state_before_0x49b53d_uint32"] = int64_t(rng_state_after_coordinate_replay);
+	phase["materializes_terrain_cells"] = false;
+	phase["materializes_terrain_art"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+
+	H3MapedRng rng { rng_state_after_coordinate_replay };
+	Array selected_h3maped_terrain_ids;
+	Array selected_project_terrains;
+	Array selection_records;
+	int32_t match_to_town_count = 0;
+	int32_t allowed_flag_choice_count = 0;
+	int32_t blank_allowed_mask_count = 0;
+	int32_t forced_subterranean_count = 0;
+	int32_t rng_call_count = 0;
+
+	for (int32_t index = 0; index < runtime_zones.size(); ++index) {
+		if (Variant(runtime_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zones[index];
+		int32_t selected_terrain = 0;
+		String source = "0x49b53d_default_dirt";
+		if (bool(runtime.get("terrain_match_to_town", false))) {
+			const int32_t town_choice = int32_t(runtime.get("town_choice_index_49b3c1", runtime.get("town_choice_index", -1)));
+			if (town_choice >= 0 && town_choice < 9) {
+				selected_terrain = H3_TOWN_TO_TERRAIN_TABLE_540908[town_choice];
+				source = "0x49b53d_0x540908_town_table";
+				match_to_town_count += 1;
+			}
+		} else {
+			Array allowed = runtime.get("allowed_h3maped_terrain_ids_for_49b53d", Array());
+			Array eligible;
+			for (int32_t allowed_index = 0; allowed_index < allowed.size(); ++allowed_index) {
+				const int32_t terrain_id = int32_t(allowed[allowed_index]);
+				if (terrain_id >= 0 && terrain_id <= 7) {
+					eligible.append(terrain_id);
+				}
+			}
+			if (eligible.is_empty()) {
+				blank_allowed_mask_count += 1;
+			} else {
+				const int32_t rng_value = rng.next();
+				rng_call_count += 1;
+				const int32_t selected_index = rng_value % int32_t(eligible.size());
+				selected_terrain = int32_t(eligible[selected_index]);
+				source = "0x49b53d_allowed_terrain_flag_rng";
+				allowed_flag_choice_count += 1;
+			}
+		}
+		if (level_count(normalized_config) == 2 && int32_t(runtime.get("level", 0)) == 1 && selected_terrain != 7) {
+			selected_terrain = 6;
+			source = "0x49b53d_forced_subterranean_level";
+			forced_subterranean_count += 1;
+		}
+
+		const String project_terrain = project_terrain_for_h3maped_id(selected_terrain);
+		runtime["h3maped_terrain_id"] = selected_terrain;
+		runtime["terrain_id"] = project_terrain;
+		runtime["terrain_source"] = source;
+		runtime["terrain_selection_status"] = "0x49b53d_selected";
+		runtime_zones[index] = runtime;
+		selected_h3maped_terrain_ids.append(selected_terrain);
+		selected_project_terrains.append(project_terrain);
+		Dictionary record;
+		record["runtime_zone_index"] = int32_t(runtime.get("runtime_zone_index", index));
+		record["h3maped_terrain_id"] = selected_terrain;
+		record["project_terrain_id"] = project_terrain;
+		record["source"] = source;
+		selection_records.append(record);
+	}
+
+	phase["runtime_zone_count"] = runtime_zones.size();
+	phase["selected_h3maped_terrain_ids"] = selected_h3maped_terrain_ids;
+	phase["selected_project_terrain_ids"] = selected_project_terrains;
+	phase["selection_records"] = selection_records;
+	phase["match_to_town_count"] = match_to_town_count;
+	phase["allowed_flag_choice_count"] = allowed_flag_choice_count;
+	phase["blank_allowed_mask_count"] = blank_allowed_mask_count;
+	phase["forced_subterranean_count"] = forced_subterranean_count;
+	phase["terrain_rng_call_count"] = rng_call_count;
+	phase["rng_state_after_0x49b53d_uint32"] = int64_t(rng.state);
+	return phase;
+}
+
+Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &footprint_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "terrain_cell_writeout";
+	phase["status"] = "blocked_until_zone_footprints";
+	phase["runtime_terrain_selection_anchor"] = "0x49b53d";
+	phase["h3maped_anchor"] = "0x4a3f27";
+	phase["span_fill_anchor"] = "0x4a325d";
+	phase["materializes_private_terrain_cell_buffer"] = false;
+	phase["materializes_terrain_art"] = false;
+	phase["materializes_roads"] = false;
+	phase["materializes_objects"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "terrainplacement_visual_tables_0x4bcff5";
+	if (String(footprint_phase.get("status", "")) != "active_internal_state") {
+		return phase;
+	}
+
+	Array runtime_zones = runtime_zones_for_footprint(runtime_zone_phase, coordinate_phase);
+	PolygonSourceResult source = build_polygon_source_walks_4ccb64(runtime_zones);
+	if (source.blocked) {
+		phase["status"] = "blocked_during_source_node_split";
+		return phase;
+	}
+	std::vector<uint32_t> zone_words;
+	std::vector<uint8_t> cell_flags;
+	Dictionary fill = boundary_and_span_fill_4a2777_4a325d(normalized_config, runtime_zones, source, uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))), &zone_words, &cell_flags);
+	Dictionary selection = runtime_terrain_selection_49b53d(runtime_zones, uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))), normalized_config);
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = level_count(normalized_config);
+	const int32_t tile_count = std::max(0, map_width * map_height * std::max(1, map_level_count));
+	std::vector<int32_t> runtime_zone_terrain_ids(size_t(runtime_zones.size()), 8);
+	for (int32_t index = 0; index < runtime_zones.size(); ++index) {
+		if (Variant(runtime_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zones[index];
+		const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", index));
+		if (runtime_index >= 0 && runtime_index < int32_t(runtime_zone_terrain_ids.size())) {
+			runtime_zone_terrain_ids[size_t(runtime_index)] = int32_t(runtime.get("h3maped_terrain_id", 8));
+		}
+	}
+
+	std::map<int32_t, int32_t> owner_low_byte_counts;
+	std::map<int32_t, int32_t> terrain_code_counts;
+	std::map<String, int32_t> terrain_project_counts;
+	terrain_code_counts[8] = tile_count;
+	terrain_project_counts["water"] = tile_count;
+	int32_t assigned_owner_cell_count = 0;
+	int32_t unassigned_water_cell_count = 0;
+	int32_t reserved_cell_count = 0;
+	for (int32_t cell_index = 0; cell_index < tile_count && cell_index < int32_t(zone_words.size()); ++cell_index) {
+		if ((cell_flags[size_t(cell_index)] & 0x10U) != 0) {
+			reserved_cell_count += 1;
+		}
+		const uint32_t zone_word = zone_words[size_t(cell_index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+		if (zone_word == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			unassigned_water_cell_count += 1;
+			continue;
+		}
+		const int32_t owner_byte = int32_t((zone_word >> 16U) & 0xffU);
+		if (owner_byte < 0 || owner_byte >= int32_t(runtime_zone_terrain_ids.size())) {
+			continue;
+		}
+		const int32_t terrain_id = runtime_zone_terrain_ids[size_t(owner_byte)];
+		const String project_terrain = project_terrain_for_h3maped_id(terrain_id);
+		assigned_owner_cell_count += 1;
+		owner_low_byte_counts[owner_byte] += 1;
+		terrain_code_counts[8] -= 1;
+		terrain_project_counts["water"] -= 1;
+		terrain_code_counts[terrain_id] += 1;
+		terrain_project_counts[project_terrain] += 1;
+	}
+
+	Array owner_counts_report;
+	for (const auto &item : owner_low_byte_counts) {
+		Dictionary entry;
+		entry["owner_low_byte"] = item.first;
+		entry["cell_count"] = item.second;
+		owner_counts_report.append(entry);
+	}
+	Array terrain_code_counts_report;
+	for (const auto &item : terrain_code_counts) {
+		Dictionary entry;
+		entry["h3maped_terrain_id"] = item.first;
+		entry["cell_count"] = item.second;
+		terrain_code_counts_report.append(entry);
+	}
+	Dictionary terrain_project_counts_report;
+	for (const auto &item : terrain_project_counts) {
+		terrain_project_counts_report[item.first] = item.second;
+	}
+
+	phase["status"] = "active_internal_state";
+	phase["source"] = "h3maped 0x49b53d terrain selection plus 0x4a3f27 private terrain cell writeout over the real 0x4a325d zone-word buffer";
+	phase["terrain_selection"] = selection;
+	phase["selected_h3maped_terrain_ids"] = selection.get("selected_h3maped_terrain_ids", Array());
+	phase["selected_project_terrain_ids"] = selection.get("selected_project_terrain_ids", Array());
+	phase["terrain_rng_call_count"] = selection.get("terrain_rng_call_count", 0);
+	phase["rng_state_before_0x49b53d_uint32"] = selection.get("rng_state_before_0x49b53d_uint32", 0);
+	phase["rng_state_after_0x49b53d_uint32"] = selection.get("rng_state_after_0x49b53d_uint32", 0);
+	phase["tile_count"] = tile_count;
+	phase["private_zone_word_cell_count"] = int32_t(zone_words.size());
+	phase["assigned_owner_cell_count"] = assigned_owner_cell_count;
+	phase["unassigned_water_cell_count"] = unassigned_water_cell_count;
+	phase["reserved_cell_count"] = reserved_cell_count;
+	phase["span_fill_boundary_or_filled_cell_count"] = fill.get("total_boundary_or_filled_cell_count", 0);
+	phase["owner_low_byte_counts"] = owner_counts_report;
+	phase["terrain_code_counts"] = terrain_code_counts_report;
+	phase["terrain_project_counts"] = terrain_project_counts_report;
+	phase["materializes_private_terrain_cell_buffer"] = true;
+	return phase;
 }
 
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
@@ -2235,6 +2478,7 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	Dictionary link_phase = link_seed_phase(normalized_config, selection, runtime_zone_phase);
 	Dictionary coordinate_phase = coordinate_replay_phase(normalized_config, runtime_zone_phase, link_phase, uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0))));
 	Dictionary footprint_phase = zone_footprint_phase(normalized_config, runtime_zone_phase, coordinate_phase);
+	Dictionary terrain_phase = terrain_cell_writeout_phase(normalized_config, runtime_zone_phase, coordinate_phase, footprint_phase);
 	Array completed;
 	completed.append("template_selection");
 	if (String(player_phase.get("status", "")) == "active_internal_state") {
@@ -2252,9 +2496,12 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	if (String(footprint_phase.get("status", "")) == "active_internal_state") {
 		completed.append("zone_footprints");
 	}
+	if (String(terrain_phase.get("status", "")) == "active_internal_state") {
+		completed.append("terrain_cell_writeout");
+	}
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_active_generation_state_v1";
-	state["status"] = completed.size() >= 6 ? String("zone_footprints_active_internal_state") : String(completed.size() >= 5 ? "coordinate_replay_active_internal_state" : "blocked_before_coordinate_replay");
+	state["status"] = completed.size() >= 7 ? String("terrain_cell_writeout_active_internal_state") : String(completed.size() >= 6 ? "zone_footprints_active_internal_state" : String(completed.size() >= 5 ? "coordinate_replay_active_internal_state" : "blocked_before_coordinate_replay"));
 	state["completed_phase_ids"] = completed;
 	state["completed_phase_count"] = completed.size();
 	state["runtime_generation_allowed"] = false;
@@ -2267,7 +2514,8 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	state["link_seed_setup"] = link_phase;
 	state["coordinate_replay"] = coordinate_phase;
 	state["zone_footprints"] = footprint_phase;
-	state["blocked_next"] = completed.size() >= 6 ? String("terrain_cell_writeout_0x4a3f27") : String("zone_footprint_source_nodes_0x4a3a03_0x4cc788");
+	state["terrain_cell_writeout"] = terrain_phase;
+	state["blocked_next"] = completed.size() >= 7 ? String("terrainplacement_visual_tables_0x4bcff5") : String(completed.size() >= 6 ? "terrain_cell_writeout_0x4a3f27" : "zone_footprint_source_nodes_0x4a3a03_0x4cc788");
 	return state;
 }
 
