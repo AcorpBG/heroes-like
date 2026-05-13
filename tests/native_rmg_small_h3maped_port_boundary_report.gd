@@ -1227,12 +1227,13 @@ func _run() -> void:
 		return
 	var candidate_order: Dictionary = generic_selector.get("candidate_vector_order_boundary", {})
 	var candidate_order_segments: Array = candidate_order.get("segments", [])
-	if String(generic_selector.get("candidate_vector_order_status", "")) != "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending" \
-				or String(candidate_order.get("status", "")) != "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending" \
+	if String(generic_selector.get("candidate_vector_order_status", "")) != "single_level_candidate_vector_order_materialized_public_commit_pending" \
+				or String(candidate_order.get("status", "")) != "single_level_candidate_vector_order_materialized_public_commit_pending" \
 				or int(candidate_order.get("single_level_total_candidate_record_count", -1)) != 704 \
 				or not bool(candidate_order.get("candidate_vector_indices_materialized", false)) \
 				or bool(candidate_order.get("candidate_records_fully_materialized", true)) \
-				or bool(candidate_order.get("create_vfuncs_materialized", true)) \
+				or not bool(candidate_order.get("create_vfuncs_materialized", false)) \
+				or bool(candidate_order.get("public_coordinate_commit_materialized", true)) \
 				or candidate_order_segments.size() != 9 \
 				or String(candidate_order_segments[0].get("segment", "")) != "static_prefix" \
 				or int(candidate_order_segments[0].get("first_candidate_vector_index", -1)) != 0 \
@@ -1256,7 +1257,9 @@ func _run() -> void:
 		return
 	var candidate_vtables: Dictionary = generic_selector.get("candidate_vtable_boundary", {})
 	var candidate_vtable_records: Array = candidate_vtables.get("records", [])
-	if String(generic_selector.get("candidate_vtable_boundary_status", "")) != "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized" \
+	var create_vfuncs: Dictionary = candidate_vtables.get("create_vfunc_boundary", {})
+	var create_vfunc_records: Array = create_vfuncs.get("records", [])
+	if String(generic_selector.get("candidate_vtable_boundary_status", "")) != "0x540ba0_0x540cac_vfunc_table_value_and_create_materialized" \
 				or String(candidate_vtables.get("source_range", "")) != "0x540ba0..0x540cac" \
 				or int(candidate_vtables.get("entry_size_bytes", -1)) != 0x10 \
 				or String(candidate_vtables.get("create_vfunc_offset", "")) != "+0x00" \
@@ -1277,13 +1280,31 @@ func _run() -> void:
 				or String(candidate_vtable_records[16].get("create_vfunc_address", "")) != "0x49cdb1" \
 				or String(candidate_vtable_records[16].get("value_vfunc_address", "")) != "0x49cd97" \
 				or not bool(candidate_vtables.get("value_vfuncs_reconstructed", false)) \
-				or bool(candidate_vtables.get("create_vfuncs_materialized", true)):
+				or not bool(candidate_vtables.get("create_vfuncs_materialized", false)) \
+				or String(create_vfuncs.get("status", "")) != "create_vfuncs_materialized_coordinate_commit_pending" \
+				or int(create_vfuncs.get("materialized_create_vfunc_count", -1)) != 17 \
+				or String(create_vfuncs.get("base_object_constructor", "")) != "0x49ba89" \
+				or String(create_vfuncs.get("resource_object_constructor", "")) != "0x49bdfc" \
+				or String(create_vfuncs.get("terrain_compound_constructor", "")) != "0x49c0d3" \
+				or String(create_vfuncs.get("allocation_helper", "")) != "0x5044b1" \
+				or String(create_vfuncs.get("selection_helper", "")) != "0x4a9e40" \
+				or String(create_vfuncs.get("object_row_table_address", "")) != "0x592520" \
+				or create_vfunc_records.size() != 17 \
+				or String(create_vfunc_records[0].get("family", "")) != "direct_object_0x49ba89" \
+				or int(create_vfunc_records[0].get("allocation_size_bytes", -1)) != 0x1c \
+				or String(create_vfunc_records[2].get("constructor_or_initializer", "")) != "0x49bdfc" \
+				or int(create_vfunc_records[2].get("allocation_size_bytes", -1)) != 0x54 \
+				or String(create_vfunc_records[12].get("family", "")) != "compound_terrain_object_with_selector_child" \
+				or String(create_vfunc_records[12].get("output_vtable", "")) != "0x540b14" \
+				or String(create_vfunc_records[16].get("family", "")) != "type10_object_wrapper" \
+				or String(create_vfunc_records[16].get("output_vtable", "")) != "0x540b00" \
+				or bool(create_vfuncs.get("public_coordinate_commit_materialized", true)):
 		_fail("h3maped candidate vtable boundary drifted: %s" % JSON.stringify(candidate_vtables))
 		return
 	var value_vfuncs: Dictionary = generic_selector.get("candidate_value_vfunc_boundary", {})
 	var value_vfunc_records: Array = value_vfuncs.get("records", [])
-	if String(generic_selector.get("candidate_value_vfunc_boundary_status", "")) != "0x49c54d_0x49cd97_value_vfuncs_reconstructed_selection_not_materialized" \
-				or String(value_vfuncs.get("status", "")) != "value_vfuncs_reconstructed_create_vfuncs_pending" \
+	if String(generic_selector.get("candidate_value_vfunc_boundary_status", "")) != "0x49c54d_0x49cd97_value_and_create_vfuncs_reconstructed_selection_not_materialized" \
+				or String(value_vfuncs.get("status", "")) != "value_and_create_vfuncs_reconstructed_selection_pending" \
 				or String(value_vfuncs.get("selector_call_site", "")) != "0x4a9ffd..0x4aa004" \
 				or String(value_vfuncs.get("selector_call_contract", "")) != "push generator, push zone_context, call candidate_vtable+0x04" \
 				or String(value_vfuncs.get("range_filter_after_call", "")) != "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band" \
@@ -1302,7 +1323,8 @@ func _run() -> void:
 				or String(value_vfunc_records[5].get("address", "")) != "0x49cd97" \
 				or bool(value_vfuncs.get("selection_materialized", true)) \
 				or not bool(value_vfuncs.get("candidate_record_materialization_pending", false)) \
-				or not bool(value_vfuncs.get("create_vfuncs_pending", false)):
+				or bool(value_vfuncs.get("create_vfuncs_pending", true)) \
+				or not bool(value_vfuncs.get("create_vfuncs_materialized", false)):
 		_fail("h3maped candidate value-vfunc boundary drifted: %s" % JSON.stringify(value_vfuncs))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
@@ -1331,7 +1353,8 @@ func _run() -> void:
 				or not bool(static_materialization.get("dynamic_type53_object_bucket_loop_materialized", false)) \
 				or not bool(static_materialization.get("candidate_vector_order_materialized", false)) \
 				or bool(static_materialization.get("complete_candidate_vector", true)) \
-				or bool(static_materialization.get("create_vfuncs_materialized", true)):
+				or not bool(static_materialization.get("create_vfuncs_materialized", false)) \
+				or bool(static_materialization.get("public_coordinate_commit_materialized", true)):
 		_fail("h3maped materialized static candidate boundary drifted: %s" % JSON.stringify(static_materialization))
 		return
 	var materialized_type17: Dictionary = generic_selector.get("materialized_single_level_type17_candidate_boundary", {})
