@@ -103,6 +103,19 @@ struct H3ObjectLimitOverride {
 	int32_t limit = 0;
 };
 
+struct H3CandidateSpec {
+	const char *source_address = "";
+	const char *vtable_address = "";
+	int32_t record_size_bytes = 0x14;
+	int32_t type_id = 0;
+	int32_t subtype = 0;
+	int32_t value = 0;
+	int32_t weight = 0;
+	int32_t field_0x14 = -1;
+	int32_t field_0x18 = -1;
+	int32_t field_0x1c = -1;
+};
+
 struct RoadArtClassification {
 	int32_t art_class = 0;
 	int32_t flip_a = 0;
@@ -858,6 +871,29 @@ Dictionary h3_extended_candidate_record(const char *source_address, const char *
 	return record;
 }
 
+Dictionary h3_candidate_record_from_spec(const H3CandidateSpec &spec) {
+	Dictionary record = h3_static_candidate_record(spec.source_address, spec.vtable_address, spec.type_id, spec.subtype, spec.value, spec.weight);
+	record["record_size_bytes"] = spec.record_size_bytes;
+	if (spec.field_0x14 >= 0) {
+		record["field_0x14"] = spec.field_0x14;
+	}
+	if (spec.field_0x18 >= 0) {
+		record["field_0x18"] = spec.field_0x18;
+	}
+	if (spec.field_0x1c >= 0) {
+		record["field_0x1c"] = spec.field_0x1c;
+	}
+	return record;
+}
+
+Array h3_candidate_records_from_specs(const H3CandidateSpec *specs, int32_t count) {
+	Array records;
+	for (int32_t index = 0; index < count; ++index) {
+		records.append(h3_candidate_record_from_spec(specs[index]));
+	}
+	return records;
+}
+
 Dictionary h3_monster_candidate_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x49f9ed..0x49fa54";
@@ -922,6 +958,89 @@ Dictionary h3_artifact_pool_candidate_loop_boundary() {
 	return boundary;
 }
 
+Dictionary h3_type17_generator_loop_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x4a0402..0x4a045a";
+	boundary["constructor_address"] = "0x49c523";
+	boundary["constructor_vtable_address"] = "0x540ba0";
+	boundary["overridden_vtable_address"] = "0x540c00";
+	boundary["type_id"] = 0x11;
+	boundary["subtype_source"] = "descending_loop_index";
+	boundary["single_level_iteration_count"] = 0x3a;
+	boundary["extended_iteration_count"] = 0x50;
+	boundary["value"] = -1;
+	boundary["weight"] = 0x28;
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
+Array h3_static_tail_after_artifact_pool_records() {
+	static constexpr H3CandidateSpec TAIL_RECORDS[] = {
+		{ "0x4a00d8", "0x540ba0", 0x14, 7, 0, 8000, 20 },
+		{ "0x4a011d", "0x540ba0", 0x14, 11, 0, 100, 100 },
+		{ "0x4a0150", "0x540ba0", 0x14, 12, 0, 2000, 500 },
+		{ "0x4a0188", "0x540ba0", 0x14, 13, 0, 5000, 20 },
+		{ "0x4a01c0", "0x540ba0", 0x14, 13, 1, 10000, 20 },
+		{ "0x4a01fc", "0x540ba0", 0x14, 13, 2, 7500, 20 },
+		{ "0x4a0238", "0x540ba0", 0x14, 14, 0, 100, 100 },
+		{ "0x4a026b", "0x540ba0", 0x14, 16, 0, 3000, 100 },
+		{ "0x4a02a3", "0x540ba0", 0x14, 16, 1, 2000, 100 },
+		{ "0x4a02df", "0x540ba0", 0x14, 16, 2, 2000, 100 },
+		{ "0x4a031b", "0x540ba0", 0x14, 16, 3, 5000, 100 },
+		{ "0x4a0357", "0x540ba0", 0x14, 16, 4, 1500, 100 },
+		{ "0x4a0393", "0x540ba0", 0x14, 16, 5, 3000, 100 },
+		{ "0x4a03cf", "0x540ba0", 0x14, 16, 6, 9000, 100 },
+		{ "0x4a0466", "0x540ba0", 0x14, 22, 0, 500, 100 },
+		{ "0x4a049e", "0x540ba0", 0x14, 23, 0, 1500, 100 },
+		{ "0x4a04d6", "0x540ba0", 0x14, 24, 0, 4000, 20 },
+		{ "0x4a050e", "0x540ba0", 0x14, 25, 0, 10000, 100 },
+		{ "0x4a0546", "0x540ba0", 0x14, 28, 0, 100, 100 },
+		{ "0x4a0579", "0x540ba0", 0x14, 29, 0, 500, 1000 },
+		{ "0x4a05b1", "0x540ba0", 0x14, 30, 0, 100, 100 },
+		{ "0x4a05e4", "0x540ba0", 0x14, 31, 0, 100, 50 },
+		{ "0x4a061c", "0x540ba0", 0x14, 32, 0, 1500, 100 },
+		{ "0x4a0654", "0x540ba0", 0x14, 35, 0, 7000, 20 },
+		{ "0x4a068c", "0x540ba0", 0x14, 38, 0, 100, 100 },
+		{ "0x4a06bf", "0x540ba0", 0x14, 39, 0, 500, 100 },
+		{ "0x4a06f7", "0x540ba0", 0x14, 41, 0, 12000, 20 },
+		{ "0x4a072f", "0x540ba0", 0x14, 47, 0, 1000, 50 },
+		{ "0x4a0767", "0x540ba0", 0x14, 48, 0, 500, 50 },
+		{ "0x4a079f", "0x540ba0", 0x14, 49, 0, 250, 100 },
+		{ "0x4a07d7", "0x540ba0", 0x14, 51, 0, 1500, 100 },
+		{ "0x4a080f", "0x540ba0", 0x14, 52, 0, 100, 100 },
+		{ "0x4a0842", "0x540ba0", 0x14, 55, 0, 500, 50 },
+		{ "0x4a087a", "0x540ba0", 0x14, 56, 0, 100, 50 },
+		{ "0x4a08b2", "0x540ba0", 0x14, 57, 0, 3500, 200 },
+		{ "0x4a08ea", "0x540ba0", 0x14, 58, 0, 750, 100 },
+		{ "0x4a0922", "0x540ba0", 0x14, 60, 0, 750, 100 },
+		{ "0x4a095a", "0x540ba0", 0x14, 61, 0, 1500, 100 },
+		{ "0x4a0992", "0x540c20", 0x18, 62, 0, 2500, 30, 0 },
+		{ "0x4a09d1", "0x540c20", 0x18, 62, 0, 5000, 30, 5000 },
+		{ "0x4a0a11", "0x540c20", 0x18, 62, 0, 10000, 30, 15000 },
+		{ "0x4a0a54", "0x540c20", 0x18, 62, 0, 20000, 30, 90000 },
+		{ "0x4a0a97", "0x540c20", 0x18, 62, 0, 30000, 30, 500000 },
+		{ "0x4a0ada", "0x540ba0", 0x14, 63, 0, 5000, 20 },
+		{ "0x4a0b12", "0x540ba0", 0x14, 64, 0, 100, 100 },
+		{ "0x4a0b4a", "0x540bb0", 0x14, 66, 0, 2000, 150 },
+		{ "0x4a0b82", "0x540bb0", 0x14, 67, 0, 5000, 150 },
+		{ "0x4a0bba", "0x540bb0", 0x14, 68, 0, 10000, 150 },
+		{ "0x4a0bf2", "0x540bb0", 0x14, 69, 0, 20000, 150 },
+		{ "0x4a0c2f", "0x540c10", 0x14, 76, 0, 1500, 2000 },
+		{ "0x4a0c67", "0x540ba0", 0x14, 78, 0, 5000, 20 },
+		{ "0x4a0ca3", "0x540c10", 0x14, 79, 0, 1400, 300 },
+		{ "0x4a0cdb", "0x540c10", 0x14, 79, 2, 1400, 300 },
+		{ "0x4a0d17", "0x540c10", 0x14, 79, 1, 2000, 300 },
+		{ "0x4a0d53", "0x540c10", 0x14, 79, 3, 2000, 300 },
+		{ "0x4a0d8f", "0x540c10", 0x14, 79, 4, 2000, 300 },
+		{ "0x4a0dcb", "0x540c10", 0x14, 79, 5, 2000, 300 },
+		{ "0x4a0e07", "0x540c10", 0x14, 79, 6, 750, 300 },
+		{ "0x4a0e43", "0x540ba0", 0x14, 80, 0, 100, 50 },
+		{ "0x4a0e7f", "0x540c30", 0x14, 81, 0, 1500, 100 },
+		{ "0x4a0ebb", "0x540ba0", 0x14, 82, 0, 1500, 500 },
+	};
+	return h3_candidate_records_from_specs(TAIL_RECORDS, int32_t(sizeof(TAIL_RECORDS) / sizeof(TAIL_RECORDS[0])));
+}
+
 Dictionary h3maped_generic_value_selector_boundary() {
 	static constexpr H3ObjectLimitOverride GLOBAL_LIMIT_OVERRIDES[] = {
 		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
@@ -979,8 +1098,13 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
 	boundary["candidate_builder_artifact_pool_loop_status"] = "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized";
 	boundary["candidate_builder_artifact_pool_loop"] = h3_artifact_pool_candidate_loop_boundary();
+	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_type17_loop_recovered_not_materialized";
+	boundary["candidate_builder_type17_loop"] = h3_type17_generator_loop_boundary();
+	boundary["candidate_builder_static_tail_status"] = "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized";
+	boundary["candidate_builder_static_tail_count"] = 61;
+	boundary["candidate_builder_static_tail_records"] = h3_static_tail_after_artifact_pool_records();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "remaining fixed/static candidate tail after 0x4a00cc");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "generator+0x568 terrain-specialized loop after 0x4a0eeb");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = false;

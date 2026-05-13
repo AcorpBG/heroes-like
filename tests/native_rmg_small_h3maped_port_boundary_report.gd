@@ -1011,6 +1011,39 @@ func _run() -> void:
 				or bool(artifact_loop.get("materialized_candidate_records", true)):
 		_fail("h3maped artifact pool candidate loop boundary drifted: %s" % JSON.stringify(artifact_loop))
 		return
+	var type17_loop: Dictionary = generic_selector.get("candidate_builder_type17_loop", {})
+	if String(generic_selector.get("candidate_builder_type17_loop_status", "")) != "0x4a0402_0x4a045a_type17_loop_recovered_not_materialized" \
+				or String(type17_loop.get("constructor_address", "")) != "0x49c523" \
+				or String(type17_loop.get("constructor_vtable_address", "")) != "0x540ba0" \
+				or String(type17_loop.get("overridden_vtable_address", "")) != "0x540c00" \
+				or int(type17_loop.get("type_id", -1)) != 0x11 \
+				or int(type17_loop.get("single_level_iteration_count", -1)) != 0x3a \
+				or int(type17_loop.get("extended_iteration_count", -1)) != 0x50 \
+				or int(type17_loop.get("value", 0)) != -1 \
+				or int(type17_loop.get("weight", -1)) != 0x28 \
+				or bool(type17_loop.get("materialized_candidate_records", true)):
+		_fail("h3maped type-17 candidate loop boundary drifted: %s" % JSON.stringify(type17_loop))
+		return
+	var static_tail: Array = generic_selector.get("candidate_builder_static_tail_records", [])
+	if String(generic_selector.get("candidate_builder_static_tail_status", "")) != "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized" \
+				or int(generic_selector.get("candidate_builder_static_tail_count", -1)) != 61 \
+				or static_tail.size() != 61 \
+				or String(static_tail[0].get("source_address", "")) != "0x4a00d8" \
+				or int(static_tail[0].get("type_id", -1)) != 7 \
+				or int(static_tail[0].get("value", -1)) != 8000 \
+				or int(static_tail[0].get("weight", -1)) != 20 \
+				or String(static_tail[38].get("source_address", "")) != "0x4a0992" \
+				or String(static_tail[38].get("vtable_address", "")) != "0x540c20" \
+				or int(static_tail[38].get("record_size_bytes", -1)) != 0x18 \
+				or int(static_tail[38].get("field_0x14", -1)) != 0 \
+				or String(static_tail[42].get("source_address", "")) != "0x4a0a97" \
+				or int(static_tail[42].get("field_0x14", -1)) != 500000 \
+				or String(static_tail[60].get("source_address", "")) != "0x4a0ebb" \
+				or int(static_tail[60].get("type_id", -1)) != 82 \
+				or int(static_tail[60].get("value", -1)) != 1500 \
+				or int(static_tail[60].get("weight", -1)) != 500:
+		_fail("h3maped static candidate tail boundary drifted: %s" % JSON.stringify(static_tail))
+		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
