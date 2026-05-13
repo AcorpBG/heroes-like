@@ -1005,6 +1005,8 @@ Array h3_static_tail_after_terrain_loop_records();
 Dictionary h3_candidate_create_vfunc_boundary();
 Dictionary h3_candidate_selector_materialization_boundary();
 Dictionary h3_reward_coordinate_commit_boundary();
+Dictionary h3_reward_coordinate_filter_boundary();
+Dictionary h3_reward_final_object_commit_boundary();
 
 Dictionary h3_materialized_static_candidate_record(const Dictionary &source_record, int32_t vector_index, const char *source_group) {
 	Dictionary record = source_record.duplicate(true);
@@ -1818,13 +1820,77 @@ Dictionary h3_reward_coordinate_commit_boundary() {
 	boundary["coordinate_vector_clear_helper"] = "0x4ae52a";
 	boundary["footprint_filter_helper"] = "0x4aa603";
 	boundary["final_object_commit_helper"] = "0x4aa3e9";
+	boundary["footprint_filter_boundary"] = h3_reward_coordinate_filter_boundary();
+	boundary["final_object_commit_boundary"] = h3_reward_final_object_commit_boundary();
 	boundary["weighted_rng_address"] = "0x4e7276";
 	boundary["random_pick_algorithm"] = "if the temporary vector is nonempty, count=(end-begin)/12, rng=0x4e7276()%count, select that coordinate record, then call 0x4aa3e9";
 	boundary["materializes_scan_boundary"] = true;
 	boundary["materializes_private_reward_coordinate_records"] = false;
 	boundary["materializes_public_reward_objects"] = false;
 	boundary["public_package_output_allowed"] = false;
-	boundary["remaining_blocker"] = "port_0x4aa603_filter_and_0x4aa3e9_object_commit_against_project_object_templates";
+	boundary["remaining_blocker"] = "materialize_0x4aa603_filter_eval_and_0x4aa3e9_generated_cell_mutation_against_project_object_templates";
+	return boundary;
+}
+
+Dictionary h3_reward_coordinate_filter_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "0x4aa603_filter_gate_stack_materialized_private_eval_pending";
+	boundary["source_range"] = "0x4aa603..0x4aa9b4";
+	boundary["call_contract"] = "ecx is generator; args are selected reward object/template, candidate coordinate triplet, and zone/context from 0x4aa9b7";
+	boundary["selected_object_body_bounds_offset"] = "object+0x18";
+	boundary["selected_object_child_vector_offset"] = "object+0x2c..+0x30";
+	boundary["selected_object_special_flag_offset"] = "object+0x48";
+	boundary["selected_object_special_anchor_offsets"] = "object+0x4c/+0x50";
+	boundary["selected_object_footprint_mask_offset"] = "object+0x38";
+	boundary["generated_cell_state_word_offset"] = "+0x28";
+	boundary["generated_cell_terrain_word_offset"] = "+0x24";
+	boundary["child_collision_loop_range"] = "0x4aa62a..0x4aa68d";
+	boundary["child_collision_helper"] = "0x49a6f9";
+	boundary["special_object_neighborhood_range"] = "0x4aa68d..0x4aa766";
+	boundary["special_object_reject_type"] = 0x36;
+	boundary["direction_gate_range"] = "0x4aa766..0x4aa8c9";
+	boundary["direction_table_address"] = "0x5a2658";
+	boundary["direction_count_source"] = "metadata byte 0x57c648[type*0x10 + 1] selects 4 or 8 directions; terrain water flag can force 8";
+	boundary["direction_cell_validity_helper"] = "0x49a1d8";
+	boundary["direction_gate_state_bits"] = "requires neighboring generated-cell bit27 set, bit22 clear, bit23 set; paired target cell must be in bounds, terrain-water-compatible, valid, bit22 clear, and bit27 clear";
+	boundary["object_class_probe_helper"] = "0x49d65c";
+	boundary["final_footprint_gate_range"] = "0x4aa8d5..0x4aa90f";
+	boundary["final_footprint_gate_helper"] = "0x49a09c";
+	boundary["body_collision_scan_range"] = "0x4aa915..0x4aa9ae";
+	boundary["body_collision_state_bits"] = "rejects when target generated-cell bit27 is already set or paired package/generator cell bit22 is set";
+	boundary["return_true_range"] = "0x4aa9ae..0x4aa9b4";
+	boundary["return_false_range"] = "0x4aa9aa..0x4aa9b4";
+	boundary["materializes_filter_boundary"] = true;
+	boundary["materializes_private_filter_eval"] = false;
+	boundary["materializes_public_reward_objects"] = false;
+	boundary["remaining_blocker"] = "implement_selected_reward_template_filter_eval_over_private_generated_cell_state";
+	return boundary;
+}
+
+Dictionary h3_reward_final_object_commit_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "0x4aa3e9_final_object_commit_boundary_materialized_private_mutation_pending";
+	boundary["source_range"] = "0x4aa3e9..0x4aa603";
+	boundary["call_contract"] = "ecx is generator; args are selected reward object/template and selected coordinate triplet from 0x4aa9b7";
+	boundary["selected_coordinate_write_range"] = "0x4aa3f5..0x4aa405";
+	boundary["selected_coordinate_destination"] = "object+0x54..+0x5c";
+	boundary["child_object_commit_loop_range"] = "0x4aa405..0x4aa455";
+	boundary["child_object_virtual_commit_slot"] = "selected child vtable +0x04";
+	boundary["generated_cell_mutation_loop_range"] = "0x4aa4c1..0x4aa5dc";
+	boundary["coordinate_transform_helper"] = "0x49d2c7";
+	boundary["generated_cell_state_word_offset"] = "+0x28";
+	boundary["generated_cell_terrain_word_offset"] = "+0x24";
+	boundary["validity_helper"] = "0x49a1d8";
+	boundary["state_set_helper_zero_arg"] = "0x49a932";
+	boundary["state_set_helper_one_arg"] = "0x49aa63";
+	boundary["mutation_semantics"] = "for each body/action cell, copy/preserve bit27 and bit26 state around 0x49a1d8 validity and bit22 collision gates, then write object occupancy/action bits through 0x49a932/0x49aa63";
+	boundary["child_cleanup_loop_range"] = "0x4aa5dc..0x4aa5fc";
+	boundary["child_cleanup_virtual_slot"] = "selected child vtable +0x08";
+	boundary["materializes_commit_boundary"] = true;
+	boundary["materializes_private_generated_cell_mutation"] = false;
+	boundary["materializes_public_reward_objects"] = false;
+	boundary["public_package_output_allowed"] = false;
+	boundary["remaining_blocker"] = "implement_generated_cell_bit_mutation_and_project_reward_object_adoption";
 	return boundary;
 }
 
