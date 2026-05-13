@@ -99,7 +99,9 @@ func _run() -> void:
 			or String(backlog[0].get("status", "")) != "active_boundary_only" \
 			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
 			or String(backlog[1].get("status", "")) != "private_context_ready" \
-			or String(backlog[2].get("status", "")) != "pending_strict_port" \
+			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
+			or String(backlog[2].get("status", "")) != "private_context_ready" \
+			or String(backlog[3].get("status", "")) != "pending_strict_port" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -110,12 +112,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "player_slot_assignment_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"] \
-			or int(private_context.get("completed_phase_count", -1)) != 2 \
+			or String(private_context.get("status", "")) != "runtime_zone_records_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"] \
+			or int(private_context.get("completed_phase_count", -1)) != 3 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped player-slot phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped runtime-zone phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -147,6 +149,43 @@ func _run() -> void:
 			or int(assignments[2].get("actual_player_color", -1)) != 2:
 		_fail("h3maped player-slot assignment records drifted: %s" % JSON.stringify(assignments))
 		return
+	var runtime_zone_context: Dictionary = private_context.get("runtime_zone_context", {})
+	if String(runtime_zone_context.get("h3maped_anchor", "")) != "0x4a218c" \
+			or String(runtime_zone_context.get("initializer_anchor", "")) != "0x49b452" \
+			or String(runtime_zone_context.get("status", "")) != "private_context_ready" \
+			or String(runtime_zone_context.get("runtime_zone_vector_begin_offset", "")) != "generator+0x10e0" \
+			or String(runtime_zone_context.get("runtime_zone_vector_end_offset", "")) != "generator+0x10e4" \
+			or String(runtime_zone_context.get("runtime_zone_vector_capacity_offset", "")) != "generator+0x10e8" \
+			or int(runtime_zone_context.get("runtime_zone_record_size_bytes", -1)) != 0x414 \
+			or int(runtime_zone_context.get("runtime_zone_count", -1)) != 6 \
+			or int(runtime_zone_context.get("assigned_start_zone_count", -1)) != 3 \
+			or int(runtime_zone_context.get("unassigned_start_zone_count", -1)) != 1 \
+			or int(runtime_zone_context.get("treasure_zone_count", -1)) != 2 \
+			or int(runtime_zone_context.get("minimum_player_castles", -1)) != 4 \
+			or int(runtime_zone_context.get("minimum_source_base_size", -1)) != 11 \
+			or Array(runtime_zone_context.get("actual_owner_colors_by_runtime_zone", [])) != [0, 1, -1, 2, -1, -1] \
+			or bool(runtime_zone_context.get("materializes_runtime_zone_coordinates", true)) \
+			or bool(runtime_zone_context.get("materializes_terrain", true)) \
+			or bool(runtime_zone_context.get("materializes_map_cells", true)) \
+			or bool(runtime_zone_context.get("materializes_runtime_players", true)) \
+			or bool(runtime_zone_context.get("materializes_public_output", true)):
+		_fail("h3maped runtime-zone private context drifted: %s" % JSON.stringify(runtime_zone_context))
+		return
+	var runtime_records: Array = runtime_zone_context.get("runtime_zone_records", [])
+	if runtime_records.size() != 6 \
+			or String(runtime_records[0].get("role", "")) != "human_start" \
+			or int(runtime_records[0].get("source_owner_index", -1)) != 0 \
+			or int(runtime_records[0].get("actual_owner_color", -1)) != 0 \
+			or int(runtime_records[0].get("min_player_castles", -1)) != 1 \
+			or String(runtime_records[2].get("role", "")) != "treasure" \
+			or int(runtime_records[2].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[2].get("terrain_policy", "")) != "all_land_h3" \
+			or int(runtime_records[2].get("minimum_rare_mines", -1)) != 5 \
+			or int(runtime_records[4].get("source_owner_index", -1)) != 3 \
+			or int(runtime_records[4].get("actual_owner_color", 99)) != -1 \
+			or String(runtime_records[5].get("role", "")) != "treasure":
+		_fail("h3maped runtime-zone records drifted: %s" % JSON.stringify(runtime_records))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
@@ -154,7 +193,7 @@ func _run() -> void:
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
