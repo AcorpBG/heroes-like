@@ -33,8 +33,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v6":
-		_fail("Small h3maped inspection did not use the v6 clean restart boundary: %s" % JSON.stringify(report))
+	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v7":
+		_fail("Small h3maped inspection did not use the v7 clean restart boundary: %s" % JSON.stringify(report))
 		return
 	if String(report.get("status", "")) != "h3maped_small_clean_boundary_ready":
 		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
@@ -285,6 +285,48 @@ func _run() -> void:
 			or int(trace_preview[6].get("x", -1)) != 8 \
 			or int(trace_preview[6].get("y", -1)) != 3:
 		_fail("0x4a261a line writer sample drifted: %s" % JSON.stringify(line_sample))
+		return
+
+	var randomized_writer: Dictionary = report.get("randomized_line_writer_4a2413", {})
+	if String(randomized_writer.get("status", "")) != "0x4a2413_randomized_line_writer_ported_inspection_only" \
+			or String(randomized_writer.get("function_address", "")) != "0x4a2413" \
+			or String(randomized_writer.get("caller_address", "")) != "0x4a2777" \
+			or String(randomized_writer.get("rng_address", "")) != "0x4e7276" \
+			or String(randomized_writer.get("distance_helper_address", "")) != "0x4cc5ad":
+		_fail("0x4a2413 randomized line writer boundary drifted: %s" % JSON.stringify(randomized_writer))
+		return
+	if bool(randomized_writer.get("materializes_boundaries", true)) \
+			or bool(randomized_writer.get("materializes_span_fill", true)) \
+			or bool(randomized_writer.get("materializes_terrain", true)) \
+			or bool(randomized_writer.get("materializes_map_cells", true)):
+		_fail("0x4a2413 randomized line writer must not materialize generated output: %s" % JSON.stringify(randomized_writer))
+		return
+	var randomized_sample: Dictionary = randomized_writer.get("sample_contract", {})
+	var randomized_trace: Array = randomized_sample.get("trace_preview", [])
+	if int(randomized_sample.get("map_width", -1)) != 36 \
+			or int(randomized_sample.get("map_height", -1)) != 36 \
+			or int(randomized_sample.get("from_x", -1)) != 2 \
+			or int(randomized_sample.get("from_y", -1)) != 2 \
+			or int(randomized_sample.get("to_x", -1)) != 33 \
+			or int(randomized_sample.get("to_y", -1)) != 31 \
+			or int(randomized_sample.get("zone_word_id", -1)) != 9 \
+			or int(randomized_sample.get("random_span_limit", -1)) != 6 \
+			or int(randomized_sample.get("write_count", -1)) != 64 \
+			or int(randomized_sample.get("unique_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("zone_word_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("reserved_flag_write_count", -1)) != 64 \
+			or int(randomized_sample.get("reserved_flag_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("out_of_bounds_write_count", -1)) != 0 \
+			or int(randomized_sample.get("rng_call_count", -1)) != 51 \
+			or int(randomized_sample.get("inserted_midpoint_count", -1)) != 63 \
+			or int(randomized_sample.get("max_pending_point_count", -1)) != 7 \
+			or int(randomized_sample.get("rng_state_after_uint32", -1)) != 3821795434 \
+			or randomized_trace.size() != 8 \
+			or int(randomized_trace[0].get("x", -1)) != 2 \
+			or int(randomized_trace[0].get("y", -1)) != 2 \
+			or int(randomized_trace[7].get("x", -1)) != 5 \
+			or int(randomized_trace[7].get("y", -1)) != 4:
+		_fail("0x4a2413 randomized line writer sample drifted: %s" % JSON.stringify(randomized_sample))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)
