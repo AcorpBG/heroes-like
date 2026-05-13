@@ -1044,6 +1044,35 @@ func _run() -> void:
 				or int(static_tail[60].get("weight", -1)) != 500:
 		_fail("h3maped static candidate tail boundary drifted: %s" % JSON.stringify(static_tail))
 		return
+	var terrain_loop: Dictionary = generic_selector.get("candidate_builder_terrain_specialized_loop", {})
+	var terrain_fixed_records: Array = terrain_loop.get("fixed_records_per_terrain", [])
+	if String(generic_selector.get("candidate_builder_terrain_specialized_loop_status", "")) != "0x4a0eeb_0x4a1194_generator_plus_0x568_loop_recovered_not_materialized" \
+				or String(terrain_loop.get("terrain_vector_offset", "")) != "generator+0x568..+0x56c" \
+				or int(terrain_loop.get("terrain_vector_stride_bytes", -1)) != 0x04 \
+				or String(terrain_loop.get("monster_table_pointer_address", "")) != "0x581298" \
+				or String(terrain_loop.get("monster_table_address", "")) != "0x57cea0" \
+				or int(terrain_loop.get("monster_table_stride_bytes", -1)) != 0x74 \
+				or int(terrain_loop.get("single_level_monster_iteration_count", -1)) != 0x76 \
+				or int(terrain_loop.get("extended_monster_iteration_count", -1)) != 0x91 \
+				or int(terrain_loop.get("single_level_active_monster_count_per_terrain", -1)) != 118 \
+				or int(terrain_loop.get("extended_active_monster_count_per_terrain", -1)) != 141 \
+				or String(terrain_loop.get("monster_constructor_address", "")) != "0x49c5cd" \
+				or String(terrain_loop.get("overridden_monster_vtable_address", "")) != "0x540c60" \
+				or int(terrain_loop.get("type_id", -1)) != 0x53 \
+				or int(terrain_loop.get("fixed_records_per_terrain_count", -1)) != 8 \
+				or terrain_fixed_records.size() != 8 \
+				or String(terrain_fixed_records[0].get("source_address", "")) != "0x4a0f8e" \
+				or String(terrain_fixed_records[0].get("vtable_address", "")) != "0x540c70" \
+				or int(terrain_fixed_records[0].get("subtype", 0)) != -1 \
+				or int(terrain_fixed_records[0].get("value", -1)) != 0x7d0 \
+				or int(terrain_fixed_records[0].get("field_0x14", -1)) != 0x1388 \
+				or String(terrain_fixed_records[7].get("source_address", "")) != "0x4a114e" \
+				or String(terrain_fixed_records[7].get("vtable_address", "")) != "0x540c80" \
+				or int(terrain_fixed_records[7].get("value", -1)) != 0x2ee0 \
+				or int(terrain_fixed_records[7].get("field_0x14", -1)) != 0x4e20 \
+				or bool(terrain_loop.get("materialized_candidate_records", true)):
+		_fail("h3maped terrain-specialized candidate loop boundary drifted: %s" % JSON.stringify(terrain_loop))
+		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
