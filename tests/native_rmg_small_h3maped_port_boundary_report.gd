@@ -302,9 +302,13 @@ func _run() -> void:
 			or int(direct_town_stamping.get("direct_candidate_scan_count", -1)) != 3 \
 			or int(direct_town_stamping.get("direct_candidate_total", -1)) != 451 \
 			or int(direct_town_stamping.get("direct_candidate_missing_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_footprint_eligible_total", -1)) != 97 \
+			or int(direct_town_stamping.get("direct_footprint_missing_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
 			or int(direct_town_stamping.get("direct_grid_unavailable_count", -1)) != 0 \
-			or int(direct_town_stamping.get("direct_unique_selection_count", -1)) != 3 \
-			or int(direct_town_stamping.get("direct_random_tie_required_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_unique_selection_count", -1)) != 2 \
+			or int(direct_town_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
+			or int(direct_town_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
 			or int(direct_town_stamping.get("direct_record_projection_count", -1)) != 3:
 		_fail("The 0x4a93a2 direct town object stamping projection drifted: %s" % JSON.stringify(direct_town_stamping))
 		return
@@ -319,15 +323,19 @@ func _run() -> void:
 	var first_direct_town: Dictionary = direct_town_records[0]
 	var second_direct_town: Dictionary = direct_town_records[1]
 	var third_direct_town: Dictionary = direct_town_records[2]
-	if String(first_direct_town.get("status", "")) != "0x4a93a2_unique_closest_zone_byte_candidate_record_projection_inspection_only" \
+	if String(first_direct_town.get("status", "")) != "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_inspection_only" \
 			or String(first_direct_town.get("base_constructor_address", "")) != "0x49ba89" \
 			or String(first_direct_town.get("town_vtable_address", "")) != "0x540a9c" \
-			or int(first_direct_town.get("selected_x", -1)) != 23 \
-			or int(first_direct_town.get("selected_y", -1)) != 11 \
-			or int(second_direct_town.get("selected_x", -1)) != 21 \
-			or int(second_direct_town.get("selected_y", -1)) != 22 \
+			or int(first_direct_town.get("town_footprint_body_cell_count", -1)) != 13 \
+			or int(first_direct_town.get("selected_x", -1)) != 28 \
+			or int(first_direct_town.get("selected_y", -1)) != 14 \
+			or int(second_direct_town.get("selected_x", -1)) != 24 \
+			or int(second_direct_town.get("selected_y", -1)) != 23 \
 			or int(third_direct_town.get("selected_x", -1)) != 18 \
-			or int(third_direct_town.get("selected_y", -1)) != 4:
+			or int(third_direct_town.get("selected_y", -1)) != 5 \
+			or not bool(third_direct_town.get("selected_from_random_tie", false)) \
+			or int(third_direct_town.get("random_tie_rng_value", -1)) != 12382 \
+			or int(third_direct_town.get("random_tie_selected_index", -1)) != 1:
 		_fail("The selected 0x4a93a2 town anchors or object-record evidence drifted: %s" % JSON.stringify(direct_town_stamping))
 		return
 	var polygon_seed: Dictionary = footprint_schedule.get("polygon_seed", {})
