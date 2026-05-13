@@ -938,6 +938,51 @@ Dictionary randomized_line_writer_4a2413_report(const Dictionary &normalized_con
 	return report;
 }
 
+Dictionary source_node_rectangle_4cc788_report() {
+	Dictionary report;
+	report["status"] = "0x4cc788_initial_source_node_bounds_ported_inspection_only";
+	report["source"] = "h3maped 0x4cc788 constructs the initial polygon source-node rectangle from constants 0xffffff38 (-200) and 0x190 (400), then links four 0x4cc955 nodes before 0x4ccb64 runtime-zone split insertions";
+	report["function_address"] = "0x4cc788";
+	report["node_constructor_address"] = "0x4cc955";
+	report["splitter_address"] = "0x4ccb64";
+	report["locator_address"] = "0x4cca55";
+	report["finalizer_address"] = "0x4ccdfc";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["constant_min_hex"] = "0xffffff38";
+	bounds["constant_max_hex"] = "0x190";
+	report["initial_bounds"] = bounds;
+
+	Array edges;
+	auto append_edge = [&](const char *id, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y) {
+		Dictionary edge;
+		edge["id"] = id;
+		edge["from_x"] = from_x;
+		edge["from_y"] = from_y;
+		edge["to_x"] = to_x;
+		edge["to_y"] = to_y;
+		edge["payload"] = 0;
+		edges.append(edge);
+	};
+	append_edge("top", -200, -200, 400, -200);
+	append_edge("right", 400, -200, 400, 400);
+	append_edge("bottom", 400, 400, -200, 400);
+	append_edge("left", -200, 400, -200, -200);
+	report["initial_edge_count"] = edges.size();
+	report["initial_edges"] = edges;
+	report["blocked_next"] = "port 0x4ccb64 split insertion and 0x4ccdfc source-node finalization before feeding real cycles into 0x4a2777";
+	return report;
+}
+
 Array accepted_templates_for_config(const Dictionary &normalized_config, int32_t score, int32_t human_count, int32_t player_count) {
 	Array accepted_templates;
 	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
@@ -1073,8 +1118,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 
 	Dictionary report;
 	report["ok"] = supports_scope(normalized_config) && !accepted_templates.is_empty();
-	report["schema_id"] = "aurelion_native_rmg_small_h3maped_clean_restart_v7";
-	report["schema_version"] = 7;
+	report["schema_id"] = "aurelion_native_rmg_small_h3maped_clean_restart_v8";
+	report["schema_version"] = 8;
 	report["status"] = supports_scope(normalized_config) ? (accepted_templates.is_empty() ? String("h3maped_small_no_accepted_templates") : String("h3maped_small_clean_boundary_ready")) : String("unsupported_scope");
 	report["scope"] = "small_36x36_surface_land_only";
 	report["implementation_policy"] = "clean_restart_no_catalog_auto_no_hash_selection_no_per_case_materialization_no_fallback_maps";
@@ -1114,6 +1159,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 				report["clip_helper_4a2b33"] = clip_helper_4a2b33_report(normalized_config);
 				report["line_writer_4a261a"] = line_writer_4a261a_report(normalized_config);
 				report["randomized_line_writer_4a2413"] = randomized_line_writer_4a2413_report(normalized_config);
+				report["source_node_rectangle_4cc788"] = source_node_rectangle_4cc788_report();
 				break;
 			}
 		}
