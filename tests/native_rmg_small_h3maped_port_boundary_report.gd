@@ -317,6 +317,51 @@ func _run() -> void:
 		_fail("Strict h3maped footprint finalizer port drifted: %s" % JSON.stringify(zone_finalizer))
 		return
 
+	var runtime_terrain: Dictionary = report.get("runtime_terrain_selection", {})
+	var terrain_selections: Array = runtime_terrain.get("selections", [])
+	if String(runtime_terrain.get("phase_id", "")) != "runtime_terrain_selection" \
+			or String(runtime_terrain.get("status", "")) != "active_strict_executable_port" \
+			or String(runtime_terrain.get("h3maped_anchor", "")) != "0x49b53d" \
+			or String(runtime_terrain.get("source_range", "")) != "0x49b53d/0x49b54c/0x49b586/0x49b5b7/0x540908" \
+			or String(runtime_terrain.get("binary_byte_prefix_0x49b53d", "")) != "56 8b f1 57 8b 06 80 b8 84 00 00 00 00 74 11 8b" \
+			or String(runtime_terrain.get("town_to_terrain_table_address", "")) != "0x540908" \
+			or String(runtime_terrain.get("allowed_terrain_flags_source", "")) != "source_zone+0x85..0x8c" \
+			or int(runtime_terrain.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
+			or Array(runtime_terrain.get("town_choice_to_terrain_table", [])) != [2, 2, 3, 7, 0, 0, 5, 4, 2] \
+			or int(runtime_terrain.get("selection_count", -1)) != 6 \
+			or Array(runtime_terrain.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
+			or Array(runtime_terrain.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or int(runtime_terrain.get("match_to_town_count", -1)) != 4 \
+			or int(runtime_terrain.get("allowed_flag_choice_count", -1)) != 2 \
+			or int(runtime_terrain.get("blank_allowed_mask_count", -1)) != 0 \
+			or int(runtime_terrain.get("forced_subterranean_count", -1)) != 0 \
+			or int(runtime_terrain.get("terrain_rng_call_count", -1)) != 2 \
+			or int(runtime_terrain.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160 \
+			or not bool(runtime_terrain.get("materializes_runtime_zone_terrain_ids", false)) \
+			or bool(runtime_terrain.get("materializes_terrain_cells", true)) \
+			or bool(runtime_terrain.get("materializes_terrain_art", true)) \
+			or bool(runtime_terrain.get("materializes_map_cells", true)) \
+			or bool(runtime_terrain.get("materializes_runtime_players", true)) \
+			or bool(runtime_terrain.get("materializes_package_tiles", true)) \
+			or bool(runtime_terrain.get("materializes_public_output", true)) \
+			or bool(runtime_terrain.get("public_package_output_allowed", true)) \
+			or String(runtime_terrain.get("blocked_next", "")) != "terrain_cell_writeout_0x4a3f27" \
+			or terrain_selections.size() != 6:
+		_fail("Strict h3maped runtime terrain selection port drifted: %s" % JSON.stringify(runtime_terrain))
+		return
+	if String(terrain_selections[0].get("faction_id", "")) != "elemental" \
+			or int(terrain_selections[0].get("town_choice_index", -1)) != 8 \
+			or int(terrain_selections[0].get("selected_h3maped_terrain_id", -1)) != 2 \
+			or String(terrain_selections[0].get("source", "")) != "0x49b54c_0x49b55b_match_to_town_table_0x540908" \
+			or int(terrain_selections[2].get("rng_value", -1)) != 153 \
+			or int(terrain_selections[2].get("selected_allowed_ordinal", -1)) != 6 \
+			or int(terrain_selections[2].get("selected_h3maped_terrain_id", -1)) != 7 \
+			or String(terrain_selections[4].get("faction_id", "")) != "fortress" \
+			or int(terrain_selections[5].get("rng_value", -1)) != 292 \
+			or int(terrain_selections[5].get("selected_h3maped_terrain_id", -1)) != 5:
+		_fail("Strict h3maped runtime terrain selections drifted: %s" % JSON.stringify(terrain_selections))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -324,19 +369,20 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "runtime_terrain_selection_0x49b53d":
+			or String(strict_state.get("next_required_port", "")) != "terrain_cell_writeout_0x4a3f27":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 6 \
-			or not pending_ports.has("runtime_terrain_selection:0x49b53d") \
+			or not pending_ports.has("terrain_cell_writeout:0x4a3f27") \
+			or not pending_ports.has("terrainplacement:0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 14 \
+	if backlog.size() != 15 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -345,9 +391,11 @@ func _run() -> void:
 			or String(backlog[5].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[6].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[7].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[8].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[9].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[10].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[11].get("status", "")) != "pending_runtime_port":
+			or String(backlog[11].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[12].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
