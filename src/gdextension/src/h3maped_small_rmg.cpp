@@ -952,6 +952,128 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 	return phase;
 }
 
+Dictionary zone_footprint_phase_boundary(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "zone_footprint_phase_boundary";
+	phase["h3maped_anchor"] = "0x4a3a03";
+	phase["helper_sequence"] = "0x4a2777 -> 0x4a325d -> 0x4a3710";
+	phase["synthetic_source_zone_id"] = "0xd4";
+	phase["synthetic_triplets"] = "0xa0=100,0xa4=1000,0xa8=5,0xac=2000,0xb0=6000,0xb4=1";
+	phase["status"] = "blocked_until_coordinate_replay";
+	phase["materializes_boundaries"] = false;
+	phase["materializes_span_fill"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "source_node_rectangle_0x4cc788";
+	if (String(coordinate_phase.get("status", "")) != "active_runtime_state_ready") {
+		return phase;
+	}
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array runtime_records = runtime_zone_phase.get("runtime_zone_records", Array());
+	Array levels;
+	int32_t total_collected = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array zone_indices;
+		Array helper_inputs;
+		for (int32_t index = 0; index < runtime_records.size(); ++index) {
+			if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary record = runtime_records[index];
+			if (int32_t(record.get("level", 0)) != level) {
+				continue;
+			}
+			const int32_t runtime_index = int32_t(record.get("runtime_index", index));
+			zone_indices.append(runtime_index);
+			Dictionary helper_input;
+			helper_input["call_order"] = helper_inputs.size();
+			helper_input["helper_address"] = "0x4a2777";
+			helper_input["runtime_zone_index"] = runtime_index;
+			helper_input["source_zone_id"] = record.get("source_zone_id", -1);
+			helper_input["level"] = level;
+			helper_input["input_status"] = "queued_for_0x4a2777_no_boundary_materialization";
+			helper_inputs.append(helper_input);
+		}
+		total_collected += zone_indices.size();
+		Dictionary level_record;
+		level_record["level"] = level;
+		level_record["collected_runtime_zone_indices"] = zone_indices;
+		level_record["collected_runtime_zone_count"] = zone_indices.size();
+		level_record["helper_call_inputs"] = helper_inputs;
+		level_record["helper_call_input_count"] = helper_inputs.size();
+		level_record["synthetic_zone_appended"] = false;
+		level_record["synthetic_zone_status"] = water_code == 0 && level_count == 1 ? String("not_applicable_small_one_level_land") : String("pending_water_or_multilevel_rule_port");
+		level_record["helper_status"] = "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending";
+		levels.append(level_record);
+	}
+
+	phase["status"] = "active_runtime_state_ready";
+	phase["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection and helper input scheduling";
+	phase["level_count"] = level_count;
+	phase["h3maped_water_mode_code"] = water_code;
+	phase["per_level"] = levels;
+	phase["total_collected_runtime_zone_count"] = total_collected;
+	phase["synthetic_zone_appended_count"] = 0;
+	return phase;
+}
+
+Dictionary source_node_rectangle_phase(const Dictionary &zone_footprint_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "source_node_rectangle";
+	phase["h3maped_anchor"] = "0x4cc788";
+	phase["node_constructor_anchor"] = "0x4cc955";
+	phase["splitter_anchor"] = "0x4ccb64";
+	phase["locator_anchor"] = "0x4cca55";
+	phase["finalizer_anchor"] = "0x4ccdfc";
+	phase["status"] = "blocked_until_zone_footprint_phase";
+	phase["materializes_source_node_graph"] = false;
+	phase["materializes_boundaries"] = false;
+	phase["materializes_span_fill"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["feeds_real_0x4a2777_boundary"] = false;
+	phase["blocked_next"] = "polygon_split_model_0x4ccb64_0x4ccdfc";
+	if (String(zone_footprint_phase.get("status", "")) != "active_runtime_state_ready") {
+		return phase;
+	}
+
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["constant_min_hex"] = "0xffffff38";
+	bounds["constant_max_hex"] = "0x190";
+
+	Array edges;
+	auto edge = [&](const char *id, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, const char *next) {
+		Dictionary item;
+		item["id"] = id;
+		item["from_x"] = from_x;
+		item["from_y"] = from_y;
+		item["to_x"] = to_x;
+		item["to_y"] = to_y;
+		item["next"] = next;
+		item["constructor"] = "0x4cc955";
+		return item;
+	};
+	edges.append(edge("top", -200, -200, 400, -200, "right"));
+	edges.append(edge("right", 400, -200, 400, 400, "bottom"));
+	edges.append(edge("bottom", 400, 400, -200, 400, "left"));
+	edges.append(edge("left", -200, 400, -200, -200, "top"));
+
+	phase["status"] = "active_runtime_state_ready";
+	phase["source"] = "h3maped 0x4cc788 initial source-node rectangle constants before 0x4ccb64 split insertions";
+	phase["initial_bounds"] = bounds;
+	phase["initial_edge_count"] = edges.size();
+	phase["initial_edges"] = edges;
+	return phase;
+}
+
 Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_generation_state_v1";
@@ -1000,15 +1122,26 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	if (String(coordinate_phase.get("status", "")) == "active_runtime_state_ready") {
 		completed_phases.append("coordinate_replay");
 	}
+	Dictionary zone_footprint_phase = zone_footprint_phase_boundary(normalized_config, runtime_zone_phase, coordinate_phase);
+	if (String(zone_footprint_phase.get("status", "")) == "active_runtime_state_ready") {
+		completed_phases.append("zone_footprint_phase_boundary");
+	}
+	Dictionary source_node_phase = source_node_rectangle_phase(zone_footprint_phase);
+	if (String(source_node_phase.get("status", "")) == "active_runtime_state_ready") {
+		completed_phases.append("source_node_rectangle");
+	}
+	const bool source_node_ready = completed_phases.has("source_node_rectangle");
 	const bool coordinate_ready = completed_phases.has("coordinate_replay");
-	state["status"] = coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready"));
+	state["status"] = source_node_ready ? String("source_node_rectangle_active_runtime_state_ready") : (coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready")));
 	state["completed_phase_ids"] = completed_phases;
 	state["completed_phase_count"] = completed_phases.size();
 	state["player_slot_assignment"] = player_phase;
 	state["runtime_zone_records"] = runtime_zone_phase;
 	state["link_seed_setup"] = link_phase;
 	state["coordinate_replay"] = coordinate_phase;
-	state["blocked_next"] = coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c"));
+	state["zone_footprint_phase_boundary"] = zone_footprint_phase;
+	state["source_node_rectangle"] = source_node_phase;
+	state["blocked_next"] = source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c")));
 	return state;
 }
 
@@ -1138,9 +1271,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["selection_identity"] = selection_identity(normalized_config);
 	report["small_generation_state"] = small_pipeline_state(normalized_config);
 	report["restart_phase_backlog"] = restart_backlog();
-	report["materialized_phase_status"] = "coordinate_replay_state_only";
-	report["blocked_before_materialization"] = "waiting_for_strict_h3maped zone footprint and map-cell phase ports from 0x4ac552";
-	report["explicitly_absent_reports"] = "zone footprints, terrain, towns, roads, blockers, guards, mines, rewards, and final writeout are absent until implemented as runtime generator phases";
+	report["materialized_phase_status"] = "source_node_rectangle_state_only";
+	report["blocked_before_materialization"] = "waiting_for_strict_h3maped polygon split, boundary, span-fill, and map-cell phase ports from 0x4ac552";
+	report["explicitly_absent_reports"] = "polygon source-node graph, boundaries, span fill, terrain, towns, roads, blockers, guards, mines, rewards, and final writeout are absent until implemented as runtime generator phases";
 	report["normalized_config"] = normalized_config;
 	return report;
 }
