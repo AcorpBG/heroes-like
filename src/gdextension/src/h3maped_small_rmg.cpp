@@ -1064,7 +1064,8 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_strict_executable_port"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_strict_executable_port"));
 	backlog.append(phase_record("zone_footprint_source_nodes", "0x4a3a03, 0x4cc788, 0x4cc955, 0x4ccb64, 0x4ccdfc", "active_strict_executable_port"));
-	backlog.append(phase_record("zone_boundary_and_span_fill", "0x4a2777, 0x4a2b33, 0x4a261a, 0x4a2413, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
+	backlog.append(phase_record("zone_boundary_and_span_fill", "0x4a2777, 0x4a2b33, 0x4a261a, 0x4a2413, 0x4a325d", "active_strict_executable_port"));
+	backlog.append(phase_record("zone_footprint_finalizer", "0x4a3710", "pending_strict_executable_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_strict_executable_port"));
@@ -1079,7 +1080,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, and source-node geometry");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a2777/0x4a325d boundary/span fill over the source-node output, not terrain or object expansion");
+	gaps.append("next implementation step is a narrow executable port of 0x4a3710 footprint ordering/finalizer over the private span-fill output, not terrain or object expansion");
 	return gaps;
 }
 
@@ -1104,9 +1105,10 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"runtime_zone_records:0x4a218c_0x49b452",
 			"link_seed_setup:0x4a1f3b",
 			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
-			"zone_footprint_source_nodes:0x4a3a03_0x4cc788_0x4cc955_0x4ccb64_0x4ccdfc");
+			"zone_footprint_source_nodes:0x4a3a03_0x4cc788_0x4cc955_0x4ccb64_0x4ccdfc",
+			"zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d");
 	state["pending_strict_ports"] = Array::make(
-			"zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d_0x4a3710",
+			"zone_footprint_finalizer:0x4a3710",
 			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
@@ -1118,7 +1120,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "zone_boundary_and_span_fill_0x4a2777_0x4a325d";
+	state["next_required_port"] = "zone_footprint_finalizer_0x4a3710";
 	return state;
 }
 
@@ -2570,10 +2572,6 @@ Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config
 	return phase;
 }
 
-#if 0
-// Archived overgrown phase code. The same recovery evidence remains in the
-// archived 20260513 files; live code reintroduces each phase only as a narrow
-// strict executable port.
 Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_config, const Array &runtime_zones, const PolygonSourceResult &source, uint32_t rng_state_after_coordinate_seed, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	const int32_t map_width = width(normalized_config);
@@ -2861,6 +2859,85 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	return report;
 }
 
+Dictionary zone_boundary_and_span_fill_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &source_node_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "zone_boundary_and_span_fill";
+	phase["status"] = "blocked_until_source_nodes";
+	phase["boundary_traversal_anchor"] = "0x4a2777";
+	phase["clip_helper_anchor"] = "0x4a2b33";
+	phase["deterministic_line_writer_anchor"] = "0x4a261a";
+	phase["randomized_line_writer_anchor"] = "0x4a2413";
+	phase["span_fill_anchor"] = "0x4a325d";
+	phase["strict_port_scope"] = "source-node boundary traversal and private span-fill zone buffer only; no finalizer, terrain, map cells, or public output";
+	phase["source"] = "h3maped 0x4a2777 traversal over finalized source-node cycles plus 0x4a325d private span fill; 0x4a3710 ordering/finalizer remains pending";
+	phase["materializes_private_zone_cell_buffer"] = false;
+	phase["materializes_boundary_trace"] = false;
+	phase["materializes_span_fill"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "zone_footprint_finalizer_0x4a3710";
+	if (String(source_node_phase.get("status", "")) != "active_strict_executable_port") {
+		return phase;
+	}
+	if (level_count(normalized_config) != 1 || water_mode_code(normalized_config) != 0) {
+		phase["status"] = "unsupported_scope";
+		return phase;
+	}
+
+	Array runtime_zones = runtime_zones_for_footprint(runtime_zone_phase, coordinate_phase);
+	PolygonSourceResult source = build_polygon_source_walks_4ccb64(runtime_zones);
+	if (source.blocked) {
+		phase["status"] = "blocked_during_source_node_split";
+		return phase;
+	}
+
+	Dictionary fill = boundary_and_span_fill_4a2777_4a325d(
+			normalized_config,
+			runtime_zones,
+			source,
+			uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))));
+	phase["status"] = "active_strict_executable_port";
+	phase["boundary_status"] = fill.get("boundary_status", "");
+	phase["boundary_runtime_zone_walk_count"] = fill.get("runtime_zone_walk_count", 0);
+	phase["boundary_blocked_zone_count"] = fill.get("blocked_zone_count", 0);
+	phase["boundary_fallback_zone_count"] = fill.get("fallback_zone_count", 0);
+	phase["boundary_connector_segment_count"] = fill.get("connector_segment_count", 0);
+	phase["boundary_wrap_segment_count"] = fill.get("wrap_segment_count", 0);
+	phase["boundary_final_segment_count"] = fill.get("final_segment_count", 0);
+	phase["boundary_flagged_writer_segment_count"] = fill.get("flagged_writer_segment_count", 0);
+	phase["boundary_deterministic_writer_segment_count"] = fill.get("deterministic_writer_segment_count", 0);
+	phase["boundary_randomized_rng_call_count"] = fill.get("randomized_rng_call_count", 0);
+	phase["boundary_randomized_inserted_midpoint_count"] = fill.get("randomized_inserted_midpoint_count", 0);
+	phase["boundary_randomized_max_pending_point_count"] = fill.get("randomized_max_pending_point_count", 0);
+	phase["boundary_rng_state_after_0x4a2777_uint32"] = fill.get("rng_state_after_0x4a2777_uint32", 0);
+	phase["boundary_trace_write_count"] = fill.get("trace_write_count", 0);
+	phase["boundary_unique_cell_count"] = fill.get("unique_boundary_cell_count", 0);
+	phase["boundary_out_of_bounds_write_count"] = fill.get("out_of_bounds_write_count", 0);
+	phase["boundary_loop_guard_exhausted"] = fill.get("loop_guard_exhausted", false);
+	phase["span_fill_status"] = fill.get("span_fill_status", "");
+	phase["span_fill_filled_zone_count"] = fill.get("filled_zone_count", 0);
+	phase["span_fill_seed_blocked_count"] = fill.get("seed_blocked_count", 0);
+	phase["span_fill_unique_filled_cell_count"] = fill.get("total_unique_filled_cell_count", 0);
+	phase["span_fill_boundary_or_filled_cell_count"] = fill.get("total_boundary_or_filled_cell_count", 0);
+	phase["span_fill_remaining_unassigned_cell_count"] = fill.get("remaining_unassigned_cell_count", 0);
+	phase["span_fill_reserved_cell_count"] = fill.get("reserved_cell_count", 0);
+	phase["span_fill_pushed_span_count"] = fill.get("pushed_span_count", 0);
+	phase["span_fill_popped_span_count"] = fill.get("popped_span_count", 0);
+	phase["span_fill_max_pending_span_count"] = fill.get("max_pending_span_count", 0);
+	phase["span_fill_out_of_bounds_span_count"] = fill.get("out_of_bounds_span_count", 0);
+	phase["span_fill_blocked_initial_span_count"] = fill.get("blocked_initial_span_count", 0);
+	phase["cells_by_zone_word"] = fill.get("cells_by_zone_word", Array());
+	phase["materializes_private_zone_cell_buffer"] = true;
+	phase["materializes_boundary_trace"] = true;
+	phase["materializes_span_fill"] = true;
+	return phase;
+}
+
+#if 0
+// Archived overgrown phase code. The same recovery evidence remains in the
+// archived 20260513 files; live code reintroduces each phase only as a narrow
+// strict executable port.
 String project_terrain_for_h3maped_id(int32_t terrain_id) {
 	switch (terrain_id) {
 		case 0:
@@ -6237,6 +6314,14 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	zone_source_nodes["binary_byte_prefix_0x4ccb64"] = "55 8b ec 83 ec 0c 53 56 57 8b 7d 08 ff 75 0c 8b";
 	zone_source_nodes["binary_byte_prefix_0x4ccdfc"] = "55 8b ec 83 ec 0c 83 65 fc 00 53 56 57 8b d9 8b";
 	report["zone_footprint_source_nodes"] = zone_source_nodes;
+	Dictionary zone_boundary_span = zone_boundary_and_span_fill_phase(normalized_config, runtime_zones, coordinate_replay, zone_source_nodes);
+	zone_boundary_span["source_range"] = "0x4a2777/0x4a2b33/0x4a261a/0x4a2413/0x4a325d";
+	zone_boundary_span["binary_byte_prefix_0x4a2777"] = "55 8b ec 81 ec 88 00 00 00 53 8b 5d 08 56 57 8b";
+	zone_boundary_span["binary_byte_prefix_0x4a2b33"] = "55 8b ec 83 ec 18 53 8b 5d 1c 56 8b 75 0c 8b 13";
+	zone_boundary_span["binary_byte_prefix_0x4a261a"] = "55 8b ec 83 ec 20 8b 55 10 53 56 8b f1 8b 4d 08";
+	zone_boundary_span["binary_byte_prefix_0x4a2413"] = "b8 68 a7 52 00 e8 b3 3c 04 00 83 ec 30 8a 45 1f";
+	zone_boundary_span["binary_byte_prefix_0x4a325d"] = "b8 a4 a7 52 00 e8 69 2e 04 00 83 ec 60 8b 45 08";
+	report["zone_boundary_and_span_fill"] = zone_boundary_span;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
