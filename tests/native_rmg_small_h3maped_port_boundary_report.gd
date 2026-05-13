@@ -872,6 +872,76 @@ func _run() -> void:
 		_fail("TerrainPlacement scratch/writeback samples drifted: %s" % JSON.stringify(scratch_samples))
 		return
 
+	var terrain_classifier: Dictionary = terrainplacement.get("terrain_classifier_contract", {})
+	if String(terrain_classifier.get("status", "")) != "0x4bb039_0x5436e0_0x4bb075_relation_classifier_ported_inspection_only" \
+			or String(terrain_classifier.get("relation_function_address", "")) != "0x4bb039" \
+			or String(terrain_classifier.get("orientation_table_address", "")) != "0x5436e0" \
+			or String(terrain_classifier.get("classifier_address", "")) != "0x4bb075" \
+			or String(terrain_classifier.get("relations_slot_order", "")) != "N,NE,E,SE,S,SW,W,NW" \
+			or bool(terrain_classifier.get("materializes_visual_records", true)) \
+			or bool(terrain_classifier.get("materializes_full_terrain_art_grid", true)):
+		_fail("TerrainPlacement relation/classifier boundary drifted: %s" % JSON.stringify(terrain_classifier))
+		return
+	var relation_matrix: Array = terrain_classifier.get("relation_matrix_terrain_ids_0_9", [])
+	if relation_matrix.size() != 10:
+		_fail("TerrainPlacement relation matrix size drifted: %s" % JSON.stringify(relation_matrix))
+		return
+	var relation_row_0 := PackedInt32Array(relation_matrix[0])
+	var relation_row_1 := PackedInt32Array(relation_matrix[1])
+	var relation_row_2 := PackedInt32Array(relation_matrix[2])
+	var relation_row_8 := PackedInt32Array(relation_matrix[8])
+	if relation_row_0.size() != 10 \
+			or relation_row_1.size() != 10 \
+			or relation_row_2.size() != 10 \
+			or relation_row_8.size() != 10 \
+			or relation_row_0[0] != 0 \
+			or relation_row_0[1] != 2 \
+			or relation_row_1[8] != 0 \
+			or relation_row_2[0] != 1 \
+			or relation_row_2[2] != 0 \
+			or relation_row_2[8] != 2 \
+			or relation_row_8[2] != 2:
+		_fail("TerrainPlacement relation matrix anchors drifted: %s" % JSON.stringify(relation_matrix))
+		return
+	var orientation_rows: Array = terrain_classifier.get("orientation_rows", [])
+	if orientation_rows.size() != 4:
+		_fail("TerrainPlacement orientation rows size drifted: %s" % JSON.stringify(orientation_rows))
+		return
+	var orientation_slots_0 := PackedInt32Array(orientation_rows[0].get("slot_permutation", PackedInt32Array()))
+	var orientation_slots_1 := PackedInt32Array(orientation_rows[1].get("slot_permutation", PackedInt32Array()))
+	var orientation_slots_3 := PackedInt32Array(orientation_rows[3].get("slot_permutation", PackedInt32Array()))
+	if int(orientation_rows[0].get("flag_a", -1)) != 0 \
+			or int(orientation_rows[0].get("flag_b", -1)) != 0 \
+			or orientation_slots_0 != PackedInt32Array([0, 1, 2, 3, 4, 5, 6, 7]) \
+			or int(orientation_rows[1].get("flag_a", -1)) != 0 \
+			or int(orientation_rows[1].get("flag_b", -1)) != 1 \
+			or orientation_slots_1 != PackedInt32Array([4, 3, 2, 1, 0, 7, 6, 5]) \
+			or int(orientation_rows[3].get("flag_a", -1)) != 1 \
+			or int(orientation_rows[3].get("flag_b", -1)) != 1 \
+			or orientation_slots_3 != PackedInt32Array([4, 5, 6, 7, 0, 1, 2, 3]):
+		_fail("TerrainPlacement orientation row anchors drifted: %s" % JSON.stringify(orientation_rows))
+		return
+	var classifier_samples: Array = terrain_classifier.get("representative_samples", [])
+	if classifier_samples.size() != 4 \
+			or String(classifier_samples[0].get("id", "")) != "class_0_full_native" \
+			or int(classifier_samples[0].get("class", -1)) != 0 \
+			or int(classifier_samples[0].get("flag_a", -1)) != 0 \
+			or int(classifier_samples[0].get("flag_b", -1)) != 0 \
+			or String(classifier_samples[1].get("id", "")) != "class_8_relation2_corner" \
+			or int(classifier_samples[1].get("class", -1)) != 8 \
+			or int(classifier_samples[1].get("flag_a", -1)) != 0 \
+			or int(classifier_samples[1].get("flag_b", -1)) != 0 \
+			or String(classifier_samples[2].get("id", "")) != "class_18_transposed_block" \
+			or int(classifier_samples[2].get("class", -1)) != 18 \
+			or int(classifier_samples[2].get("flag_a", -1)) != 1 \
+			or int(classifier_samples[2].get("flag_b", -1)) != 0 \
+			or String(classifier_samples[3].get("id", "")) != "class_28_compound_junction" \
+			or int(classifier_samples[3].get("class", -1)) != 28 \
+			or int(classifier_samples[3].get("flag_a", -1)) != 1 \
+			or int(classifier_samples[3].get("flag_b", -1)) != 0:
+		_fail("TerrainPlacement classifier representative samples drifted: %s" % JSON.stringify(classifier_samples))
+		return
+
 	var finalizer: Dictionary = report.get("footprint_finalizer_4a3710", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
 			or String(finalizer.get("function_address", "")) != "0x4a3710" \
