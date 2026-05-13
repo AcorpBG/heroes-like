@@ -981,8 +981,31 @@ func _run() -> void:
 				or String(monster_loop.get("constructor_address", "")) != "0x49c5cd" \
 				or String(monster_loop.get("constructor_vtable_address", "")) != "0x540bc0" \
 				or int(monster_loop.get("constructor_type_id", -1)) != 6 \
+				or String(monster_loop.get("runtime_table_initializer_address", "")) != "0x40ce11" \
+				or not bool(monster_loop.get("runtime_table_initializer_required", false)) \
+				or bool(monster_loop.get("raw_static_table_usable_for_materialization", true)) \
 				or bool(monster_loop.get("materialized_candidate_records", true)):
 		_fail("h3maped monster candidate loop boundary drifted: %s" % JSON.stringify(monster_loop))
+		return
+	var monster_initializer: Dictionary = generic_selector.get("candidate_builder_monster_table_initializer", {})
+	var monster_initializer_fields: Array = monster_initializer.get("confirmed_fields", [])
+	if String(generic_selector.get("candidate_builder_monster_table_initializer_status", "")) != "0x40ce11_monster_table_initializer_required_before_dynamic_monster_loop_materialization" \
+				or String(monster_initializer.get("source_range", "")) != "0x40ce11..0x40d0c8" \
+				or String(monster_initializer.get("table_pointer_address", "")) != "0x581298" \
+				or String(monster_initializer.get("table_address", "")) != "0x57cea0" \
+				or int(monster_initializer.get("record_stride_bytes", -1)) != 0x74 \
+				or String(monster_initializer.get("row_source_register", "")) != "esi+0x04" \
+				or int(monster_initializer.get("raw_static_single_level_rows_checked", -1)) != 0x76 \
+				or int(monster_initializer.get("raw_static_active_rows", -1)) != 118 \
+				or int(monster_initializer.get("raw_static_denominator_zero_rows", -1)) != 118 \
+				or String(monster_initializer.get("materialization_blocker", "")) != "port_0x40ce11_monster_table_initializer_or_recovered_creature_rows_before_dynamic_monster_loop" \
+				or bool(monster_initializer.get("candidate_loop_materialization_safe", true)) \
+				or not bool(monster_initializer.get("required_before_dynamic_monster_loop_materialization", false)) \
+				or monster_initializer_fields.size() != 12 \
+				or String(monster_initializer_fields[8].get("field_offset", "")) != "+0x40" \
+				or String(monster_initializer_fields[8].get("source_range", "")) != "0x40cf65..0x40cf6d" \
+				or String(monster_initializer_fields[8].get("source", "")) != "parsed_row+0x28":
+		_fail("h3maped monster table initializer boundary drifted: %s" % JSON.stringify(monster_initializer))
 		return
 	var value_bands: Array = generic_selector.get("candidate_builder_fixed_type6_value_band_records", [])
 	if String(generic_selector.get("candidate_builder_fixed_type6_value_band_status", "")) != "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized" \

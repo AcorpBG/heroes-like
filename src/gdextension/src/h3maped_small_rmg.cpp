@@ -944,6 +944,47 @@ Dictionary h3_materialized_static_candidate_boundary() {
 	return boundary;
 }
 
+Dictionary h3_monster_table_initializer_field(const char *field_offset, const char *source_range, const char *source, const char *semantics) {
+	Dictionary field;
+	field["field_offset"] = field_offset;
+	field["source_range"] = source_range;
+	field["source"] = source;
+	field["semantics"] = semantics;
+	return field;
+}
+
+Dictionary h3_monster_table_initializer_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x40ce11..0x40d0c8";
+	boundary["initializer_address"] = "0x40ce11";
+	boundary["table_pointer_address"] = "0x581298";
+	boundary["table_address"] = "0x57cea0";
+	boundary["record_stride_bytes"] = 0x74;
+	boundary["row_source_register"] = "esi+0x04";
+	boundary["population_source"] = "parsed creature/monster row payload, not complete static .data bytes";
+	boundary["dynamic_candidate_loop_dependency"] = "0x49f9ed..0x49fa54 uses initialized monster_table fields through 0x49c5cd and 0x49c64b";
+	boundary["raw_static_single_level_rows_checked"] = 0x76;
+	boundary["raw_static_active_rows"] = 118;
+	boundary["raw_static_denominator_zero_rows"] = 118;
+	boundary["materialization_blocker"] = "port_0x40ce11_monster_table_initializer_or_recovered_creature_rows_before_dynamic_monster_loop";
+	boundary["candidate_loop_materialization_safe"] = false;
+	boundary["required_before_dynamic_monster_loop_materialization"] = true;
+	boundary["confirmed_fields"] = Array::make(
+			h3_monster_table_initializer_field("+0x20", "0x40ceb6..0x40cec0", "parsed_row+0x08", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x24", "0x40cec3..0x40cecd", "parsed_row+0x0c", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x28", "0x40ced0..0x40ceda", "parsed_row+0x10", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x2c", "0x40cedd..0x40cee7", "parsed_row+0x14", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x30", "0x40ceea..0x40cef4", "parsed_row+0x18", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x34", "0x40cef7..0x40cf01", "parsed_row+0x1c", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x38", "0x40cf04..0x40cf0e", "parsed_row+0x20", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x3c", "0x40cf11..0x40cf1b", "parsed_row+0x24", "numeric monster stat field"),
+			h3_monster_table_initializer_field("+0x40", "0x40cf65..0x40cf6d", "parsed_row+0x28", "monster value denominator used by 0x49c5cd/0x49c64b"),
+			h3_monster_table_initializer_field("+0x44", "0x40cf70..0x40cf7b", "parsed_row+0x2c", "monster table value field"),
+			h3_monster_table_initializer_field("+0x48", "0x40cf7e..0x40cf89", "parsed_row+0x30", "monster table value field"),
+			h3_monster_table_initializer_field("+0x4c..+0x70", "0x40cf8c..0x40d06b", "parsed_row+0x34..+0x58", "remaining monster table numeric fields"));
+	return boundary;
+}
+
 Dictionary h3_monster_candidate_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x49f9ed..0x49fa54";
@@ -963,6 +1004,9 @@ Dictionary h3_monster_candidate_loop_boundary() {
 	boundary["constructor_type_id"] = 6;
 	boundary["constructor_subtype_field"] = "+0x14 monster_table_index";
 	boundary["constructor_value_field"] = "+0x18 scaled_monster_value";
+	boundary["runtime_table_initializer_address"] = "0x40ce11";
+	boundary["runtime_table_initializer_required"] = true;
+	boundary["raw_static_table_usable_for_materialization"] = false;
 	boundary["materialized_candidate_records"] = false;
 	return boundary;
 }
@@ -1313,6 +1357,8 @@ Dictionary h3maped_generic_value_selector_boundary() {
 			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50));
 	boundary["candidate_builder_monster_loop_status"] = "0x49f9ed_0x49fa54_monster_table_loop_recovered_not_materialized";
 	boundary["candidate_builder_monster_loop"] = h3_monster_candidate_loop_boundary();
+	boundary["candidate_builder_monster_table_initializer_status"] = "0x40ce11_monster_table_initializer_required_before_dynamic_monster_loop_materialization";
+	boundary["candidate_builder_monster_table_initializer"] = h3_monster_table_initializer_boundary();
 	boundary["candidate_builder_fixed_type6_value_band_status"] = "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized";
 	boundary["candidate_builder_fixed_type6_value_band_count"] = 18;
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
@@ -1334,7 +1380,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_loops_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("0x40ce11 monster table initializer", "dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = true;
