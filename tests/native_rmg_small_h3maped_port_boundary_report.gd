@@ -103,7 +103,7 @@ func _run() -> void:
 			or String(backlog[2].get("status", "")) != "private_context_ready" \
 			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
 			or String(backlog[3].get("status", "")) != "private_context_ready" \
-			or String(backlog[4].get("status", "")) != "private_visual_table_boundary_ready_live_feedback_pending" \
+			or String(backlog[4].get("status", "")) != "private_live_feedback_boundary_ready_tile_writeback_pending" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -113,14 +113,14 @@ func _run() -> void:
 			return
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
-	var completed_private_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5"]
+	var completed_private_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0"]
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "terrainplacement_visual_tables_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != completed_private_phases \
-			or int(private_context.get("completed_phase_count", -1)) != completed_private_phases.size() \
-			or bool(private_context.get("runtime_generation_allowed", true)) \
-			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped TerrainPlacement visual-table phase: %s" % JSON.stringify(private_context))
+			or String(private_context.get("status", "")) != "terrainplacement_live_feedback_private_context_ready" \
+				or Array(private_context.get("completed_phase_ids", [])) != completed_private_phases \
+				or int(private_context.get("completed_phase_count", -1)) != completed_private_phases.size() \
+				or bool(private_context.get("runtime_generation_allowed", true)) \
+				or bool(private_context.get("partial_materialized_payload_public_api", true)):
+		_fail("Private generation context did not stop at the h3maped TerrainPlacement live-feedback phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -722,16 +722,69 @@ func _run() -> void:
 			or int(visual_samples[3].get("selected_row", -1)) != 11:
 		_fail("h3maped TerrainPlacement visual row samples drifted: %s" % JSON.stringify(visual_samples))
 		return
-	var scratch_samples: Array = terrainplacement.get("scratch_write_samples", [])
-	if scratch_samples.size() != 4 \
-			or int(scratch_samples[0].get("scratch_word_u16", -1)) != 1925 \
-			or int(scratch_samples[0].get("tile_byte_1_terrain_art", -1)) != 60 \
-			or int(scratch_samples[1].get("scratch_word_u16", -1)) != 6565 \
-			or int(scratch_samples[1].get("tile_byte_6_terrain_flags", -1)) != 1 \
-			or int(scratch_samples[2].get("scratch_word_u16", -1)) != 657 \
-			or int(scratch_samples[3].get("scratch_word_u16", -1)) != 371:
-		_fail("h3maped TerrainPlacement scratch samples drifted: %s" % JSON.stringify(scratch_samples))
-		return
+		var scratch_samples: Array = terrainplacement.get("scratch_write_samples", [])
+		if scratch_samples.size() != 4 \
+				or int(scratch_samples[0].get("scratch_word_u16", -1)) != 1925 \
+				or int(scratch_samples[0].get("tile_byte_1_terrain_art", -1)) != 60 \
+				or int(scratch_samples[1].get("scratch_word_u16", -1)) != 6565 \
+				or int(scratch_samples[1].get("tile_byte_6_terrain_flags", -1)) != 1 \
+				or int(scratch_samples[2].get("scratch_word_u16", -1)) != 657 \
+				or int(scratch_samples[3].get("scratch_word_u16", -1)) != 371:
+			_fail("h3maped TerrainPlacement scratch samples drifted: %s" % JSON.stringify(scratch_samples))
+			return
+
+		var live_feedback: Dictionary = private_context.get("terrainplacement_live_feedback_context", {})
+		if String(live_feedback.get("phase_id", "")) != "terrainplacement_live_feedback_4bb74b_4bc5f0" \
+				or String(live_feedback.get("h3maped_anchor", "")) != "0x4bb74b/0x4bc5f0" \
+				or String(live_feedback.get("status", "")) != "private_context_ready" \
+				or String(live_feedback.get("full_water_repaint_address", "")) != "0x4a4025" \
+				or String(live_feedback.get("zone_repaint_loop_address", "")) != "0x4a4082" \
+				or String(live_feedback.get("single_cell_repaint_address", "")) != "0x4a415a" \
+				or String(live_feedback.get("changed_cell_update_address", "")) != "0x4bb74b" \
+				or String(live_feedback.get("neighbor_seed_address", "")) != "0x4bba59" \
+				or String(live_feedback.get("frontier_retouch_address", "")) != "0x4bbd01" \
+				or String(live_feedback.get("queue_drain_address", "")) != "0x4bc5f0" \
+				or String(live_feedback.get("candidate_gate_address", "")) != "0x4bc988" \
+				or String(live_feedback.get("visual_selector_address", "")) != "0x4bcfc3" \
+				or String(live_feedback.get("neighbor_mask_address", "")) != "0x4bce6d" \
+				or String(live_feedback.get("scratch_write_address", "")) != "0x4bad0f" \
+				or String(live_feedback.get("generated_cell_write_address", "")) != "0x49acf6" \
+				or bool(live_feedback.get("materializes_package_tiles", true)) \
+				or bool(live_feedback.get("project_grid_public_runtime_adoption", true)) \
+				or bool(live_feedback.get("public_package_output_allowed", true)) \
+				or not bool(live_feedback.get("uses_live_scratch_neighbor_mask", false)) \
+				or not bool(live_feedback.get("materializes_private_generated_cell_words", false)) \
+				or int(live_feedback.get("tile_count", -1)) != 1296 \
+				or not bool(live_feedback.get("exact_queue_drain_complete", false)) \
+				or not bool(live_feedback.get("live_feedback_materialized", false)) \
+				or int(live_feedback.get("live_visual_attempt_count", -1)) != 2845 \
+				or int(live_feedback.get("live_visual_write_count", -1)) != 2845 \
+				or int(live_feedback.get("live_visual_missing_bucket_count", -1)) != 0 \
+				or int(live_feedback.get("live_initial_water_attempt_count", -1)) != 1296 \
+				or int(live_feedback.get("live_repaint_attempt_count", -1)) != 942 \
+				or int(live_feedback.get("live_queue_attempt_count", -1)) != 607 \
+				or int(live_feedback.get("live_dirty_cell_count", -1)) != 1296 \
+				or int(live_feedback.get("live_roundtrip_mismatch_count", -1)) != 0 \
+				or int(live_feedback.get("live_terrain_mismatch_count", -1)) != 0 \
+				or int(live_feedback.get("post_queue_terrain_difference_count", -1)) != 181 \
+				or int(live_feedback.get("changed_cell_update_count", -1)) != 1107 \
+				or int(live_feedback.get("initial_set_a_candidate_count", -1)) != 176 \
+				or int(live_feedback.get("initial_set_b_candidate_count", -1)) != 176 \
+				or int(live_feedback.get("total_set_a_insert_count", -1)) != 176 \
+				or int(live_feedback.get("total_set_b_insert_count", -1)) != 10522 \
+				or int(live_feedback.get("set_a_drain_count", -1)) != 176 \
+				or int(live_feedback.get("set_b_drain_count", -1)) != 10522 \
+				or int(live_feedback.get("set_b_candidate_true_count", -1)) != 386 \
+				or int(live_feedback.get("retouched_cell_write_count", -1)) != 221 \
+				or bool(live_feedback.get("drain_guard_exhausted", true)) \
+				or String(live_feedback.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
+			_fail("h3maped TerrainPlacement live feedback context drifted: %s" % JSON.stringify(live_feedback))
+			return
+		var live_selector_histogram: Dictionary = live_feedback.get("selector_kind_histogram", {})
+		if int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1326 \
+				or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1519:
+			_fail("h3maped TerrainPlacement live selector histogram drifted: %s" % JSON.stringify(live_selector_histogram))
+			return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
