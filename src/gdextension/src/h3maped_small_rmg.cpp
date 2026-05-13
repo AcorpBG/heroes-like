@@ -2506,6 +2506,98 @@ Dictionary span_fill_4a325d_phase(const Dictionary &normalized_config, const Dic
 	return phase;
 }
 
+Dictionary footprint_finalizer_4a3710_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &zone_footprint_phase, const Dictionary &span_fill_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "footprint_finalizer_4a3710";
+	phase["h3maped_anchor"] = "0x4a3710";
+	phase["call_site_anchor"] = "0x4a3efc..0x4a3f05";
+	phase["call_site_start_index_source"] = "0x4a3a86..0x4a3a9a captures runtime-zone vector count before the synthetic branch and passes it at 0x4a3f02";
+	phase["polygon_locator_anchor"] = "0x4cca55";
+	phase["clip_helper_anchor"] = "0x4a2b33";
+	phase["zone_order_reset_anchor"] = "0x49b61b";
+	phase["per_zone_order_helper_anchor"] = "0x4a3554";
+	phase["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	phase["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	phase["status"] = "blocked_until_span_fill_4a325d";
+	phase["materializes_zone_cells"] = false;
+	phase["materializes_boundary_cells"] = false;
+	phase["materializes_span_fill"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_runtime_players"] = false;
+	phase["materializes_package_tiles"] = false;
+	phase["public_package_output_allowed"] = false;
+	phase["blocked_next"] = "runtime_terrain_selection_49b53d";
+	if (String(span_fill_phase.get("status", "")) != "active_runtime_state_ready") {
+		return phase;
+	}
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const bool synthetic_branch_allowed = level_count > 1 || water_code != 0;
+	Array runtime_zone_records = runtime_zone_phase.get("runtime_zone_records", Array());
+	Array per_level = zone_footprint_phase.get("per_level", Array());
+	int32_t original_same_level_runtime_zone_count = int32_t(zone_footprint_phase.get("total_collected_runtime_zone_count", runtime_zone_records.size()));
+	if (per_level.size() > 0 && Variant(per_level[0]).get_type() == Variant::DICTIONARY) {
+		Dictionary level_record = per_level[0];
+		Array collected = level_record.get("collected_runtime_zone_indices", Array());
+		original_same_level_runtime_zone_count = int32_t(collected.size());
+	}
+	const int32_t final_runtime_zone_count = int32_t(runtime_zone_records.size());
+	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
+	phase["status"] = appended_runtime_zone_count == 0
+			? String("0x4a3710_small_land_no_appended_zone_finalizer_ported_private")
+			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
+	phase["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	phase["level_count"] = level_count;
+	phase["h3maped_water_mode_code"] = water_code;
+	phase["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	phase["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
+	phase["final_runtime_zone_count"] = final_runtime_zone_count;
+	phase["appended_runtime_zone_count"] = appended_runtime_zone_count;
+
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors only for appended synthetic zones");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	phase["recovered_operations"] = recovered_operations;
+
+	Array finalizer_phases;
+	Dictionary initial_insert_phase;
+	initial_insert_phase["address_range"] = "0x4a3735..0x4a3874";
+	initial_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	initial_insert_phase["end_index"] = final_runtime_zone_count;
+	initial_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_appended_runtime_zone_adjacency_schema_pending");
+	initial_insert_phase["materialized_adjacency_insert_count"] = 0;
+	finalizer_phases.append(initial_insert_phase);
+
+	Dictionary order_reset_phase;
+	order_reset_phase["address_range"] = "0x4a3879..0x4a38be";
+	order_reset_phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	order_reset_phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	order_reset_phase["status"] = "0x49b61b_reset_and_0x4a3554_rebuild_scheduled";
+	finalizer_phases.append(order_reset_phase);
+
+	Dictionary ordered_insert_phase;
+	ordered_insert_phase["address_range"] = "0x4a38be..0x4a39fc";
+	ordered_insert_phase["start_index"] = original_same_level_runtime_zone_count;
+	ordered_insert_phase["end_index"] = final_runtime_zone_count;
+	ordered_insert_phase["status"] = appended_runtime_zone_count == 0 ? String("skipped_no_appended_runtime_zones") : String("blocked_ordered_appended_adjacency_schema_pending");
+	ordered_insert_phase["materialized_adjacency_insert_count"] = 0;
+	finalizer_phases.append(ordered_insert_phase);
+
+	phase["phases"] = finalizer_phases;
+	phase["zone_order_reset_call_count"] = final_runtime_zone_count;
+	phase["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
+	phase["materialized_adjacency_count"] = 0;
+	phase["blocked_next"] = appended_runtime_zone_count == 0
+			? String("runtime_terrain_selection_49b53d")
+			: String("runtime_zone_0xc4_appended_adjacency_records");
+	return phase;
+}
+
 Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_generation_state_v1";
@@ -2576,12 +2668,17 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	if (String(span_fill_phase.get("status", "")) == "active_runtime_state_ready") {
 		completed_phases.append("span_fill_4a325d");
 	}
+	Dictionary footprint_finalizer_phase = footprint_finalizer_4a3710_phase(normalized_config, runtime_zone_phase, zone_footprint_phase, span_fill_phase);
+	if (String(footprint_finalizer_phase.get("status", "")) == "0x4a3710_small_land_no_appended_zone_finalizer_ported_private") {
+		completed_phases.append("footprint_finalizer_4a3710");
+	}
+	const bool footprint_finalizer_ready = completed_phases.has("footprint_finalizer_4a3710");
 	const bool span_fill_ready = completed_phases.has("span_fill_4a325d");
 	const bool boundary_traversal_ready = completed_phases.has("source_node_boundary_traversal");
 	const bool polygon_split_ready = completed_phases.has("polygon_split_model");
 	const bool source_node_ready = completed_phases.has("source_node_rectangle");
 	const bool coordinate_ready = completed_phases.has("coordinate_replay");
-	state["status"] = span_fill_ready ? String("span_fill_4a325d_active_runtime_state_ready") : (boundary_traversal_ready ? String("source_node_boundary_traversal_active_runtime_state_ready") : (polygon_split_ready ? String("polygon_split_model_active_runtime_state_ready") : (source_node_ready ? String("source_node_rectangle_active_runtime_state_ready") : (coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready"))))));
+	state["status"] = footprint_finalizer_ready ? String("footprint_finalizer_4a3710_active_runtime_state_ready") : (span_fill_ready ? String("span_fill_4a325d_active_runtime_state_ready") : (boundary_traversal_ready ? String("source_node_boundary_traversal_active_runtime_state_ready") : (polygon_split_ready ? String("polygon_split_model_active_runtime_state_ready") : (source_node_ready ? String("source_node_rectangle_active_runtime_state_ready") : (coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready")))))));
 	state["completed_phase_ids"] = completed_phases;
 	state["completed_phase_count"] = completed_phases.size();
 	state["player_slot_assignment"] = player_phase;
@@ -2593,7 +2690,8 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	state["polygon_split_model"] = polygon_split_phase;
 	state["source_node_boundary_traversal"] = boundary_traversal_phase;
 	state["span_fill_4a325d"] = span_fill_phase;
-	state["blocked_next"] = span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c"))))));
+	state["footprint_finalizer_4a3710"] = footprint_finalizer_phase;
+	state["blocked_next"] = footprint_finalizer_ready ? String("runtime_terrain_selection_49b53d") : (span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c")))))));
 	return state;
 }
 
@@ -2723,9 +2821,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["selection_identity"] = selection_identity(normalized_config);
 	report["small_generation_state"] = small_pipeline_state(normalized_config);
 	report["restart_phase_backlog"] = restart_backlog();
-	report["materialized_phase_status"] = "span_fill_private_zone_word_state_only";
-	report["blocked_before_materialization"] = "waiting_for_strict_h3maped footprint finalizer, terrain, and map-cell phase ports from 0x4ac552";
-	report["explicitly_absent_reports"] = "footprint finalizer, terrain, towns, roads, blockers, guards, mines, rewards, and final writeout are absent until implemented as runtime generator phases";
+	report["materialized_phase_status"] = "footprint_finalizer_private_state_only";
+	report["blocked_before_materialization"] = "waiting_for_strict_h3maped terrain selection and map-cell phase ports from 0x4ac552";
+	report["explicitly_absent_reports"] = "terrain, towns, roads, blockers, guards, mines, rewards, and final writeout are absent until implemented as runtime generator phases";
 	report["normalized_config"] = normalized_config;
 	return report;
 }
