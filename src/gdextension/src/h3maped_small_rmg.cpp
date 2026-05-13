@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <map>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -60,6 +61,99 @@ struct CoordCandidate {
 	int32_t level = 0;
 };
 
+struct PolygonPoint {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct LineCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
+struct LineWriteResult {
+	std::vector<LineCellWrite> trace;
+	std::map<int64_t, bool> unique_cells;
+	int32_t out_of_bounds_write_count = 0;
+};
+
+struct SpanRecord {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct SpanFillCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
+struct SpanFillResult {
+	std::vector<SpanFillCellWrite> trace;
+	std::map<int64_t, bool> unique_cells;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+};
+
+struct ClipBounds {
+	int32_t min_x = 0;
+	int32_t min_y = 0;
+	int32_t max_x = 0;
+	int32_t max_y = 0;
+};
+
+struct ClipResult {
+	int32_t x = 0;
+	int32_t y = 0;
+	bool input_inside = false;
+};
+
+struct SourceCycleNode {
+	int32_t x = 0;
+	int32_t y = 0;
+	bool finalized = false;
+	int32_t finalized_x = 0;
+	int32_t finalized_y = 0;
+};
+
+struct SourceWalk {
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t start_x = 0;
+	int32_t start_y = 0;
+	std::vector<SourceCycleNode> cycle_nodes;
+};
+
+struct PolygonSourceResult {
+	std::vector<SourceWalk> walks;
+	Array split_steps;
+	int32_t executed_split_count = 0;
+	int32_t duplicate_skip_count = 0;
+	int32_t edge_removal_count = 0;
+	int32_t inserted_node_pair_count = 0;
+	int32_t inserted_bridge_pair_count = 0;
+	int32_t crossing_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
+	int32_t allocated_node_pair_count = 0;
+	int32_t active_node_pair_count = 0;
+	int32_t finalized_triplet_count = 0;
+	int32_t finalized_node_count = 0;
+	int32_t active_payload_node_count = 0;
+	int32_t source_node_walk_count = 0;
+	int32_t source_node_walk_guard_exhausted_count = 0;
+	bool blocked = false;
+};
+
 struct RuntimeZoneSeed {
 	int32_t runtime_index = -1;
 	int32_t source_zone_id = -1;
@@ -71,6 +165,242 @@ struct RuntimeZoneSeed {
 	int32_t y = 0;
 	int32_t level = 0;
 	int32_t scaled_size = 0;
+};
+
+constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
+
+struct PolygonModelNode {
+	String id;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t payload = 0;
+	bool has_payload = false;
+	int32_t pair = -1;
+	int32_t next = -1;
+	int32_t previous = -1;
+	bool active = true;
+	bool finalized = false;
+	int32_t finalized_x = 0;
+	int32_t finalized_y = 0;
+};
+
+struct PolygonModel {
+	std::vector<PolygonModelNode> nodes;
+	int32_t root = -1;
+
+	int32_t add_pair(const String &prefix, int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload, bool from_has_payload = false, bool to_has_payload = false) {
+		const int32_t primary_index = int32_t(nodes.size());
+		const int32_t paired_index = primary_index + 1;
+		PolygonModelNode primary;
+		primary.id = prefix + String("_primary");
+		primary.x = from_x;
+		primary.y = from_y;
+		primary.payload = from_payload;
+		primary.has_payload = from_has_payload;
+		primary.pair = paired_index;
+		primary.next = primary_index;
+		primary.previous = primary_index;
+		PolygonModelNode paired;
+		paired.id = prefix + String("_paired");
+		paired.x = to_x;
+		paired.y = to_y;
+		paired.payload = to_payload;
+		paired.has_payload = to_has_payload;
+		paired.pair = primary_index;
+		paired.next = paired_index;
+		paired.previous = paired_index;
+		nodes.push_back(primary);
+		nodes.push_back(paired);
+		return primary_index;
+	}
+
+	void relink_4cc643(int32_t first, int32_t second) {
+		const int32_t first_next = nodes[size_t(first)].next;
+		const int32_t second_next = nodes[size_t(second)].next;
+		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
+		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	void edge_swap_4cc670(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		relink_4cc643(node_index, nodes[size_t(node_index)].previous);
+		relink_4cc643(paired, paired_previous);
+	}
+
+	void crossing_collapse_4cc68e(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t previous = nodes[size_t(node_index)].previous;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		edge_swap_4cc670(node_index);
+		const int32_t previous_pair = nodes[size_t(previous)].pair;
+		nodes[size_t(node_index)].payload = nodes[size_t(previous_pair)].payload;
+		nodes[size_t(node_index)].has_payload = nodes[size_t(previous_pair)].has_payload;
+		nodes[size_t(node_index)].x = nodes[size_t(previous_pair)].x;
+		nodes[size_t(node_index)].y = nodes[size_t(previous_pair)].y;
+		const int32_t paired_previous_pair = nodes[size_t(paired_previous)].pair;
+		nodes[size_t(paired)].payload = nodes[size_t(paired_previous_pair)].payload;
+		nodes[size_t(paired)].has_payload = nodes[size_t(paired_previous_pair)].has_payload;
+		nodes[size_t(paired)].x = nodes[size_t(paired_previous_pair)].x;
+		nodes[size_t(paired)].y = nodes[size_t(paired_previous_pair)].y;
+		relink_4cc643(node_index, nodes[size_t(previous_pair)].previous);
+		relink_4cc643(paired, nodes[size_t(paired_previous_pair)].previous);
+	}
+
+	void erase_edge_4cc9cc(int32_t node_index) {
+		edge_swap_4cc670(node_index);
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		nodes[size_t(node_index)].active = false;
+		nodes[size_t(paired)].active = false;
+	}
+
+	int32_t active_node_pair_count() const {
+		int32_t count = 0;
+		for (int32_t index = 0; index + 1 < int32_t(nodes.size()); index += 2) {
+			if (nodes[size_t(index)].active || nodes[size_t(index + 1)].active) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+
+	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const String &prefix) {
+		const PolygonModelNode &old_pair = nodes[size_t(nodes[size_t(old_node)].pair)];
+		const PolygonModelNode &target = nodes[size_t(target_node)];
+		const int32_t bridge_primary = add_pair(prefix, old_pair.x, old_pair.y, old_pair.payload, target.x, target.y, target.payload, old_pair.has_payload, target.has_payload);
+		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
+		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
+		return bridge_primary;
+	}
+
+	int64_t side_4cca55(int32_t from_node, int32_t to_node, int32_t x, int32_t y) const {
+		const PolygonModelNode &from = nodes[size_t(from_node)];
+		const PolygonModelNode &to = nodes[size_t(to_node)];
+		return int64_t(to.y - from.y) * int64_t(x - from.x) - int64_t(to.x - from.x) * int64_t(y - from.y);
+	}
+
+	int32_t locate_4cca55(int32_t x, int32_t y) const {
+		int32_t current = root;
+		for (int32_t guard = 0; guard < 512 && current >= 0 && current < int32_t(nodes.size()); ++guard) {
+			const PolygonModelNode &current_node = nodes[size_t(current)];
+			if (current_node.x == x && current_node.y == y) {
+				return current;
+			}
+			const int32_t paired = current_node.pair;
+			const PolygonModelNode &paired_node = nodes[size_t(paired)];
+			if (paired_node.x == x && paired_node.y == y) {
+				return paired;
+			}
+			if (side_4cca55(current, paired, x, y) > 0) {
+				current = paired;
+				continue;
+			}
+			const int32_t next = current_node.next;
+			if (side_4cca55(next, nodes[size_t(next)].pair, x, y) <= 0) {
+				current = next;
+				continue;
+			}
+			const int32_t nested = nodes[size_t(nodes[size_t(paired)].previous)].pair;
+			if (side_4cca55(nested, nodes[size_t(nested)].pair, x, y) > 0) {
+				return current;
+			}
+			current = nested;
+		}
+		return -1;
+	}
+
+	bool edge_side_test_4cc6f2(int32_t node_index, int32_t x, int32_t y) const {
+		const PolygonModelNode &node = nodes[size_t(node_index)];
+		const PolygonModelNode &paired = nodes[size_t(node.pair)];
+		const int64_t edge_dx = int64_t(node.x) - int64_t(paired.x);
+		const int64_t edge_dy = int64_t(node.y) - int64_t(paired.y);
+		const int64_t edge_distance_sq = edge_dx * edge_dx + edge_dy * edge_dy;
+		const int64_t node_dx = int64_t(x) - int64_t(node.x);
+		const int64_t node_dy = int64_t(y) - int64_t(node.y);
+		if (node_dx * node_dx + node_dy * node_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t paired_dx = int64_t(x) - int64_t(paired.x);
+		const int64_t paired_dy = int64_t(y) - int64_t(paired.y);
+		if (paired_dx * paired_dx + paired_dy * paired_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t expression = int64_t(node.y) * int64_t(paired.x - node.x)
+				- int64_t(node.x) * int64_t(paired.y - node.y)
+				- int64_t(y) * int64_t(paired.x - node.x)
+				+ int64_t(x) * int64_t(paired.y - node.y);
+		return expression == 0;
+	}
+
+	bool crossing_test_4ccc7a(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, int32_t x4, int32_t y4) const {
+		const int64_t v1 = int64_t(y4 - y2) * int64_t(x3 - x2) - int64_t(x4 - x2) * int64_t(y3 - y2);
+		const int64_t v2 = int64_t(x2 - x1) * int64_t(y3 - y1) - int64_t(y2 - y1) * int64_t(x3 - x1);
+		const int64_t v3 = int64_t(y4 - y1) * int64_t(x3 - x1) - int64_t(x4 - x1) * int64_t(y3 - y1);
+		const int64_t v4 = int64_t(y4 - y1) * int64_t(x2 - x1) - int64_t(x4 - x1) * int64_t(y2 - y1);
+		const int64_t p1 = int64_t(x1) * int64_t(x1) + int64_t(y1) * int64_t(y1);
+		const int64_t p2 = int64_t(x2) * int64_t(x2) + int64_t(y2) * int64_t(y2);
+		const int64_t p3 = int64_t(x3) * int64_t(x3) + int64_t(y3) * int64_t(y3);
+		const int64_t p4 = int64_t(x4) * int64_t(x4) + int64_t(y4) * int64_t(y4);
+		return (p1 * v1 - p4 * v2 - p2 * v3 + p3 * v4) > 0;
+	}
+
+	bool crossing_orientation_gate_4ccb64(int32_t node_index) const {
+		const PolygonModelNode &node = nodes[size_t(node_index)];
+		const PolygonModelNode &paired = nodes[size_t(node.pair)];
+		const PolygonModelNode &previous_pair = nodes[size_t(nodes[size_t(node.previous)].pair)];
+		const int64_t value = int64_t(paired.y - node.y) * int64_t(previous_pair.x - node.x)
+				- int64_t(paired.x - node.x) * int64_t(previous_pair.y - node.y);
+		return value > 0;
+	}
+
+	static int64_t idiv_truncate(int64_t numerator, int64_t denominator) {
+		if (denominator == 0) {
+			return 0;
+		}
+		return numerator / denominator;
+	}
+
+	static int32_t half_truncate_4ccd69(int64_t value) {
+		return int32_t(value / 2);
+	}
+
+	static PolygonPoint intersection_4ccd69(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3) {
+		const int64_t term = int64_t(y3 - y2) * int64_t(y1 - y3) + int64_t(x1 - x3) * int64_t(x3 - x2);
+		const int64_t denominator = int64_t(x1 - x3) * int64_t(y1 - y2) + int64_t(y1 - y3) * int64_t(x2 - x1);
+		const int64_t x_adjust = idiv_truncate(int64_t(y1 - y2) * term, denominator);
+		const int64_t y_adjust = idiv_truncate(int64_t(x2 - x1) * term, denominator);
+		return PolygonPoint {
+			x1 + half_truncate_4ccd69(int64_t(x2 - x1) + x_adjust),
+			y1 + half_truncate_4ccd69(int64_t(y2 - y1) + y_adjust)
+		};
+	}
+
+	void write_finalized_4ccdfc(int32_t node_index, const PolygonPoint &point) {
+		nodes[size_t(node_index)].finalized_x = point.x;
+		nodes[size_t(node_index)].finalized_y = point.y;
+		nodes[size_t(node_index)].finalized = true;
+	}
+
+	int32_t finalize_4ccdfc() {
+		int32_t finalized_triplets = 0;
+		for (int32_t index = 0; index < int32_t(nodes.size()); ++index) {
+			PolygonModelNode &node = nodes[size_t(index)];
+			if (!node.active || !node.has_payload || node.finalized) {
+				continue;
+			}
+			const int32_t next_pair = nodes[size_t(node.next)].pair;
+			const PolygonModelNode &paired = nodes[size_t(node.pair)];
+			const PolygonModelNode &next_pair_node = nodes[size_t(next_pair)];
+			const PolygonPoint point = intersection_4ccd69(node.x, node.y, paired.x, paired.y, next_pair_node.x, next_pair_node.y);
+			write_finalized_4ccdfc(index, point);
+			write_finalized_4ccdfc(next_pair, point);
+			const int32_t nested = nodes[size_t(next_pair)].next;
+			const int32_t nested_pair = nodes[size_t(nested)].pair;
+			write_finalized_4ccdfc(nested_pair, point);
+			finalized_triplets += 1;
+		}
+		return finalized_triplets;
+	}
 };
 
 struct RuntimeLinkSeed {
@@ -333,7 +663,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_internal_state"));
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_internal_state"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_internal_state"));
-	backlog.append(phase_record("zone_footprints", "0x4a3a03", "pending_runtime_port"));
+	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "active_internal_state"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x4a3f27, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_runtime_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_runtime_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_runtime_port"));
@@ -345,8 +675,8 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, link-seed setup, and coordinate replay");
-	gaps.append("physical zone fills, terrain, towns, roads, blockers, guards, mines, rewards, and writeout are not implemented in the fresh active module");
+	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, link-seed setup, coordinate replay, and private zone footprint/cell ownership buffers");
+	gaps.append("terrain, towns, roads, blockers, guards, mines, rewards, and writeout are not implemented in the fresh active module");
 	gaps.append("all earlier private phase ledgers were archived because they were report growth, not usable map generation");
 	gaps.append("small maps remain blocked from runtime package output until executable-derived phases are ported as actual generation state");
 	return gaps;
@@ -1062,12 +1392,849 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 	return phase;
 }
 
+int64_t cell_key_4a325d(int32_t map_width, int32_t map_height, int32_t x, int32_t y, int32_t level) {
+	return int64_t(level) * int64_t(map_width) * int64_t(map_height) + int64_t(y) * int64_t(map_width) + int64_t(x);
+}
+
+uint32_t zone_word_4a325d(uint32_t existing_word, int32_t zone_id) {
+	return (existing_word & 0xff00ffffU) | (uint32_t(zone_id & 0xff) << 16U);
+}
+
+int32_t zone_word_id_for_runtime_zone(const Dictionary &runtime_zone) {
+	const int32_t runtime_index = int32_t(runtime_zone.get("runtime_zone_index", runtime_zone.get("runtime_index", -1)));
+	const int32_t source_zone_id = int32_t(runtime_zone.get("source_zone_id", -1));
+	if (source_zone_id > 0 && runtime_index >= 0 && source_zone_id == runtime_index + 1) {
+		return runtime_index;
+	}
+	if (source_zone_id >= 0) {
+		return source_zone_id;
+	}
+	return runtime_index;
+}
+
+ClipResult clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const ClipBounds &bounds) {
+	ClipResult result;
+	result.x = x1;
+	result.y = y1;
+	if (x1 >= bounds.min_x && x1 < bounds.max_x && y1 >= bounds.min_y && y1 < bounds.max_y) {
+		result.input_inside = true;
+		return result;
+	}
+
+	int32_t clipped_x = x1;
+	int32_t clipped_y = y1;
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	auto accept_with_original_x = [&]() {
+		result.x = x1;
+		result.y = clipped_y;
+		return result;
+	};
+	auto accept_current = [&]() {
+		result.x = clipped_x;
+		result.y = clipped_y;
+		return result;
+	};
+
+	if (x1 < bounds.min_x && dx != 0) {
+		const int32_t delta = bounds.min_x - x1;
+		clipped_x = x1 + int32_t((int64_t(dx) * int64_t(delta)) / int64_t(dx));
+		clipped_y = y1 + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if ((y1 >= bounds.min_y && clipped_y < bounds.min_y) || (y1 < bounds.max_y && clipped_y >= bounds.max_y)) {
+			return accept_with_original_x();
+		}
+	}
+	if (clipped_y < bounds.min_y && dy != 0) {
+		const int32_t delta = bounds.min_y - clipped_y;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if ((x1 >= bounds.min_x && clipped_x < bounds.min_x) || (x1 < bounds.max_x && clipped_x >= bounds.max_x)) {
+			return accept_with_original_x();
+		}
+	}
+	if (clipped_x >= bounds.max_x && dx != 0) {
+		const int32_t delta = bounds.max_x - clipped_x - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dx));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if ((y1 >= bounds.min_y && clipped_y < bounds.min_y) || (y1 < bounds.max_y && clipped_y >= bounds.max_y)) {
+			return accept_with_original_x();
+		}
+	}
+	if (clipped_y >= bounds.max_y && dy != 0) {
+		const int32_t delta = bounds.max_y - clipped_y - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if ((x1 >= bounds.min_x && clipped_x < bounds.min_x) || (x1 < bounds.max_x && clipped_x >= bounds.max_x)) {
+			return accept_current();
+		}
+	}
+	return accept_current();
+}
+
+int32_t sign_for_line_4a261a(int32_t value) {
+	return value > 0 ? 1 : -1;
+}
+
+void write_line_cell_4a261a(LineWriteResult &result, int32_t map_width, int32_t map_height, int32_t map_level_count, int32_t water_code, int32_t x, int32_t y, int32_t zone_id, int32_t level) {
+	if (x < 0 || y < 0 || level < 0 || x >= map_width || y >= map_height || level >= map_level_count) {
+		result.out_of_bounds_write_count += 1;
+		return;
+	}
+	LineCellWrite write;
+	write.x = x;
+	write.y = y;
+	write.level = level;
+	write.zone_id = zone_id & 0xff;
+	write.reserved = !(water_code == 2 && level != 1);
+	result.trace.push_back(write);
+	const int64_t key = cell_key_4a325d(map_width, map_height, x, y, level);
+	result.unique_cells[key] = true;
+}
+
+LineWriteResult line_writer_4a261a(int32_t map_width, int32_t map_height, int32_t map_level_count, int32_t water_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level) {
+	LineWriteResult result;
+	if (x1 > x2) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	const int32_t abs_dy = std::abs(dy);
+	int32_t major = 0;
+	int32_t minor = 0;
+	int32_t simple_step_x = 0;
+	int32_t simple_step_y = 0;
+	const int32_t diagonal_step_y = sign_for_line_4a261a(dy);
+	if (dx > abs_dy) {
+		major = dx;
+		minor = abs_dy;
+		simple_step_x = 1;
+	} else {
+		major = abs_dy;
+		minor = dx;
+		simple_step_y = sign_for_line_4a261a(dy);
+	}
+	int32_t error = major / 2;
+	int32_t x = x1;
+	int32_t y = y1;
+	while (x != x2 || y != y2) {
+		write_line_cell_4a261a(result, map_width, map_height, map_level_count, water_code, x, y, zone_id, level);
+		error += minor;
+		if (error < major) {
+			x += simple_step_x;
+			y += simple_step_y;
+		} else {
+			error -= major;
+			x += 1;
+			y += diagonal_step_y;
+		}
+	}
+	write_line_cell_4a261a(result, map_width, map_height, map_level_count, water_code, x, y, zone_id, level);
+	return result;
+}
+
+LineWriteResult randomized_line_writer_4a2413(int32_t map_width, int32_t map_height, int32_t map_level_count, int32_t water_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
+	LineWriteResult result;
+	std::vector<PolygonPoint> pending;
+	pending.push_back(PolygonPoint { x2, y2 });
+	max_pending_point_count = std::max<int32_t>(max_pending_point_count, int32_t(pending.size()));
+	int32_t current_x = x1;
+	int32_t current_y = y1;
+	for (int32_t guard = 0; guard < 4096 && !pending.empty(); ++guard) {
+		const PolygonPoint target = pending.back();
+		pending.pop_back();
+		const int32_t midpoint_x = (target.x + current_x + 1) / 2;
+		const int32_t midpoint_y = (target.y + current_y + 1) / 2;
+		if ((midpoint_x == current_x && midpoint_y == current_y) || (midpoint_x == target.x && midpoint_y == target.y)) {
+			const int32_t clamped_x = std::min(std::max(current_x, 0), map_width - 1);
+			const int32_t clamped_y = std::min(std::max(current_y, 0), map_height - 1);
+			write_line_cell_4a261a(result, map_width, map_height, map_level_count, water_code, clamped_x, clamped_y, zone_id, level);
+			current_x = target.x;
+			current_y = target.y;
+			continue;
+		}
+		const int32_t dx = target.x - current_x;
+		const int32_t neg_dy = current_y - target.y;
+		const int32_t segment_length = h3maped_distance_truncate_local(0, 0, dx, neg_dy);
+		int32_t jittered_x = midpoint_x;
+		int32_t jittered_y = midpoint_y;
+		if (segment_length > 1) {
+			const int32_t jitter_limit = std::max<int32_t>(1, std::min(random_span_limit, segment_length));
+			const int32_t rng_value = rng.next();
+			rng_call_count += 1;
+			const int32_t centered_offset = (rng_value % jitter_limit) - (jitter_limit / 2);
+			jittered_x += int32_t((int64_t(centered_offset) * int64_t(neg_dy)) / int64_t(segment_length));
+			jittered_y += int32_t((int64_t(dx) * int64_t(centered_offset)) / int64_t(segment_length));
+		}
+		pending.push_back(target);
+		pending.push_back(PolygonPoint { jittered_x, jittered_y });
+		inserted_midpoint_count += 1;
+		max_pending_point_count = std::max<int32_t>(max_pending_point_count, int32_t(pending.size()));
+	}
+	return result;
+}
+
+bool point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bounds) {
+	return point.x >= bounds.min_x && point.x < bounds.max_x && point.y >= bounds.min_y && point.y < bounds.max_y;
+}
+
+void apply_line_trace_to_zone_buffer_4a2777(const LineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t map_width, int32_t map_height, int32_t map_level_count) {
+	for (const LineCellWrite &write : line.trace) {
+		if (write.x < 0 || write.y < 0 || write.level < 0 || write.x >= map_width || write.y >= map_height || write.level >= map_level_count) {
+			continue;
+		}
+		const int64_t key = cell_key_4a325d(map_width, map_height, write.x, write.y, write.level);
+		zone_words[size_t(key)] = zone_word_4a325d(zone_words[size_t(key)], write.zone_id);
+		if (write.reserved) {
+			cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
+		}
+	}
+}
+
+bool span_cell_in_bounds_4a325d(int32_t map_width, int32_t map_height, int32_t map_level_count, const SpanRecord &span) {
+	return span.x >= 0 && span.x < map_width && span.y >= 0 && span.y < map_height && span.level >= 0 && span.level < map_level_count;
+}
+
+bool is_unassigned_zone_word_4a325d(const std::vector<uint32_t> &zone_words, int32_t map_width, int32_t map_height, int32_t x, int32_t y, int32_t level) {
+	return (zone_words[size_t(cell_key_4a325d(map_width, map_height, x, y, level))] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD;
+}
+
+void push_span_4a325d(std::vector<SpanRecord> &pending, const SpanRecord &span, SpanFillResult &result) {
+	pending.push_back(span);
+	result.pushed_span_count += 1;
+	result.max_pending_span_count = std::max<int32_t>(result.max_pending_span_count, int32_t(pending.size()));
+}
+
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t map_width, int32_t map_height, int32_t map_level_count, int32_t water_code, int32_t zone_id, const SpanRecord &seed) {
+	SpanFillResult result;
+	std::vector<SpanRecord> pending;
+	push_span_4a325d(pending, seed, result);
+	for (int32_t guard = 0; guard < map_width * map_height * std::max(1, map_level_count) * 4 && !pending.empty(); ++guard) {
+		SpanRecord span = pending.back();
+		pending.pop_back();
+		result.popped_span_count += 1;
+		if (!span_cell_in_bounds_4a325d(map_width, map_height, map_level_count, span)) {
+			result.out_of_bounds_span_count += 1;
+			continue;
+		}
+		int32_t x = span.x;
+		while (x > 0 && is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, x - 1, span.y, span.level)) {
+			x -= 1;
+		}
+		if (x >= 0 && x < map_width && !is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, x, span.y, span.level)) {
+			result.blocked_initial_span_count += 1;
+		}
+		bool above_open = false;
+		bool below_open = false;
+		SpanRecord above_span;
+		SpanRecord below_span;
+		for (; x < map_width; ++x) {
+			if (!is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, x, span.y, span.level)) {
+				break;
+			}
+			const int64_t key = cell_key_4a325d(map_width, map_height, x, span.y, span.level);
+			zone_words[size_t(key)] = zone_word_4a325d(zone_words[size_t(key)], zone_id);
+			const bool reserved = !(water_code == 2 && span.level == 1);
+			if (reserved) {
+				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
+			}
+			SpanFillCellWrite write;
+			write.x = x;
+			write.y = span.y;
+			write.level = span.level;
+			write.zone_id = zone_id;
+			write.reserved = reserved;
+			result.trace.push_back(write);
+			result.unique_cells[key] = true;
+			if (span.y > 0 && is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, x, span.y - 1, span.level)) {
+				if (!above_open) {
+					above_span = span;
+					above_span.x = x;
+					above_span.y = span.y - 1;
+					above_open = true;
+				}
+			} else if (above_open) {
+				push_span_4a325d(pending, above_span, result);
+				above_open = false;
+			}
+			if (span.y < map_height - 1 && is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, x, span.y + 1, span.level)) {
+				if (!below_open) {
+					below_span = span;
+					below_span.x = x;
+					below_span.y = span.y + 1;
+					below_open = true;
+				}
+			} else if (below_open) {
+				push_span_4a325d(pending, below_span, result);
+				below_open = false;
+			}
+		}
+		if (above_open) {
+			push_span_4a325d(pending, above_span, result);
+		}
+		if (below_open) {
+			push_span_4a325d(pending, below_span, result);
+		}
+	}
+	return result;
+}
+
+Array runtime_zones_for_footprint(const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
+	Array runtime_records = runtime_zone_phase.get("runtime_zone_records", Array());
+	Array scaled_coords = coordinate_phase.get("scaled_zone_coordinates", Array());
+	Array zones;
+	for (int32_t index = 0; index < runtime_records.size(); ++index) {
+		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(runtime_records[index]).duplicate();
+		const int32_t runtime_index = int32_t(zone.get("runtime_index", index));
+		zone["runtime_zone_index"] = runtime_index;
+		for (int32_t coord_index = 0; coord_index < scaled_coords.size(); ++coord_index) {
+			if (Variant(scaled_coords[coord_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary coord = scaled_coords[coord_index];
+			if (int32_t(coord.get("runtime_zone_index", -1)) != runtime_index) {
+				continue;
+			}
+			zone["x_after_bbox_rescale"] = coord.get("x_after_bbox_rescale", 0);
+			zone["y_after_bbox_rescale"] = coord.get("y_after_bbox_rescale", 0);
+			zone["level"] = coord.get("level", 0);
+			zone["runtime_size_after_bbox_rescale"] = coord.get("runtime_size_after_bbox_rescale", zone.get("source_base_size", 1));
+			break;
+		}
+		zones.append(zone);
+	}
+	return zones;
+}
+
+PolygonSourceResult build_polygon_source_walks_4ccb64(const Array &runtime_zones) {
+	PolygonSourceResult result;
+	PolygonModel model;
+	const int32_t p0 = model.add_pair("initial_pair_0", -200, -200, 0, 400, -200, 0);
+	const int32_t p1 = model.add_pair("initial_pair_1", 400, -200, 0, 400, 400, 0);
+	const int32_t p2 = model.add_pair("initial_pair_2", 400, 400, 0, -200, 400, 0);
+	const int32_t p3 = model.add_pair("initial_pair_3", -200, 400, 0, -200, -200, 0);
+	model.relink_4cc643(model.nodes[size_t(p0)].pair, p1);
+	model.relink_4cc643(model.nodes[size_t(p1)].pair, p2);
+	model.relink_4cc643(model.nodes[size_t(p2)].pair, p3);
+	model.relink_4cc643(model.nodes[size_t(p3)].pair, p0);
+	model.bridge_4ccb1f(p3, p2, "initial_bridge_pair_0");
+	model.root = p0;
+
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		if (int32_t(runtime.get("level", 0)) != 0) {
+			continue;
+		}
+		const int32_t zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+		const int32_t x = int32_t(runtime.get("x_after_bbox_rescale", 0));
+		const int32_t y = int32_t(runtime.get("y_after_bbox_rescale", 0));
+		Dictionary step;
+		step["runtime_zone_index"] = zone_index;
+		step["source_zone_id"] = runtime.get("source_zone_id", -1);
+		step["x"] = x;
+		step["y"] = y;
+		int32_t located = model.locate_4cca55(x, y);
+		if (located < 0) {
+			step["status"] = "0x4cca55_locator_guard_failed";
+			result.blocked = true;
+			result.split_steps.append(step);
+			break;
+		}
+		if ((model.nodes[size_t(located)].x == x && model.nodes[size_t(located)].y == y)
+				|| (model.nodes[size_t(model.nodes[size_t(located)].pair)].x == x && model.nodes[size_t(model.nodes[size_t(located)].pair)].y == y)) {
+			step["status"] = "0x4ccb64_duplicate_point_skipped";
+			result.duplicate_skip_count += 1;
+			result.split_steps.append(step);
+			continue;
+		}
+		if (model.edge_side_test_4cc6f2(located, x, y)) {
+			located = model.nodes[size_t(located)].previous;
+			const int32_t erased = model.nodes[size_t(located)].next;
+			model.erase_edge_4cc9cc(erased);
+			result.edge_removal_count += 1;
+		}
+		const PolygonModelNode &located_node = model.nodes[size_t(located)];
+		const int32_t split_primary = model.add_pair(String("split_") + String::num_int64(zone_index), located_node.x, located_node.y, located_node.payload, x, y, zone_index, located_node.has_payload, true);
+		model.relink_4cc643(split_primary, located);
+		model.root = split_primary;
+		result.inserted_node_pair_count += 1;
+		result.executed_split_count += 1;
+		int32_t bridge_pair_count = 0;
+		int32_t current_bridge = split_primary;
+		int32_t bridge_source = located;
+		for (int32_t guard = 0; guard < 64; ++guard) {
+			current_bridge = model.bridge_4ccb1f(bridge_source, model.nodes[size_t(current_bridge)].pair, String("split_") + String::num_int64(zone_index) + "_bridge_" + String::num_int64(bridge_pair_count));
+			bridge_pair_count += 1;
+			result.inserted_bridge_pair_count += 1;
+			bridge_source = model.nodes[size_t(current_bridge)].previous;
+			const int32_t bridge_source_pair = model.nodes[size_t(bridge_source)].pair;
+			if (model.nodes[size_t(bridge_source_pair)].previous == model.root) {
+				break;
+			}
+			if (guard == 63) {
+				result.blocked = true;
+				step["status"] = "0x4ccb64_bridge_loop_guard_failed";
+			}
+		}
+		int32_t cleanup_scan_count = 0;
+		int32_t cleanup_test_count = 0;
+		int32_t cleanup_collapse_count = 0;
+		int32_t cleanup_cursor = bridge_source;
+		for (int32_t guard = 0; guard < 256; ++guard) {
+			cleanup_scan_count += 1;
+			result.crossing_scan_count += 1;
+			if (model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
+				const PolygonModelNode &cursor = model.nodes[size_t(cleanup_cursor)];
+				const PolygonModelNode &previous_pair = model.nodes[size_t(model.nodes[size_t(cursor.previous)].pair)];
+				const PolygonModelNode &paired = model.nodes[size_t(cursor.pair)];
+				cleanup_test_count += 1;
+				result.crossing_test_count += 1;
+				if (model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, x, y)) {
+					model.crossing_collapse_4cc68e(cleanup_cursor);
+					cleanup_collapse_count += 1;
+					result.crossing_collapse_count += 1;
+					cleanup_cursor = model.nodes[size_t(cleanup_cursor)].previous;
+					continue;
+				}
+			}
+			cleanup_cursor = model.nodes[size_t(cleanup_cursor)].next;
+			if (cleanup_cursor == model.root) {
+				break;
+			}
+			cleanup_cursor = model.nodes[size_t(model.nodes[size_t(cleanup_cursor)].next)].pair;
+			if (guard == 255) {
+				result.blocked = true;
+				step["status"] = "0x4ccb64_crossing_cleanup_guard_failed";
+			}
+		}
+		step["bridge_pair_count"] = bridge_pair_count;
+		step["crossing_cleanup_scan_count"] = cleanup_scan_count;
+		step["crossing_test_count"] = cleanup_test_count;
+		step["crossing_collapse_count"] = cleanup_collapse_count;
+		step["status"] = result.blocked ? String("0x4ccb64_guard_failed") : String("0x4ccb64_pre_crossing_inserted");
+		result.split_steps.append(step);
+		if (result.blocked) {
+			break;
+		}
+	}
+
+	result.allocated_node_pair_count = int32_t(model.nodes.size() / 2);
+	result.active_node_pair_count = model.active_node_pair_count();
+	result.finalized_triplet_count = result.blocked ? 0 : model.finalize_4ccdfc();
+	for (const PolygonModelNode &node : model.nodes) {
+		if (!node.active) {
+			continue;
+		}
+		if (node.has_payload) {
+			result.active_payload_node_count += 1;
+		}
+		if (node.finalized) {
+			result.finalized_node_count += 1;
+		}
+	}
+
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		if (int32_t(runtime.get("level", 0)) != 0) {
+			continue;
+		}
+		SourceWalk walk;
+		walk.runtime_zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+		walk.source_zone_id = int32_t(runtime.get("source_zone_id", -1));
+		walk.start_x = int32_t(runtime.get("x_after_bbox_rescale", 0));
+		walk.start_y = int32_t(runtime.get("y_after_bbox_rescale", 0));
+		const int32_t located = result.blocked ? -1 : model.locate_4cca55(walk.start_x, walk.start_y);
+		if (located >= 0) {
+			int32_t current = located;
+			bool guard_exhausted = false;
+			for (int32_t guard = 0; guard < 96; ++guard) {
+				const PolygonModelNode &node = model.nodes[size_t(current)];
+				walk.cycle_nodes.push_back(SourceCycleNode { node.x, node.y, node.finalized, node.finalized_x, node.finalized_y });
+				current = node.next;
+				if (current == located) {
+					break;
+				}
+				if (guard == 95) {
+					guard_exhausted = true;
+				}
+			}
+			if (guard_exhausted) {
+				result.source_node_walk_guard_exhausted_count += 1;
+			}
+		}
+		result.walks.push_back(walk);
+		result.source_node_walk_count += 1;
+	}
+	return result;
+}
+
+Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_config, const Array &runtime_zones, const PolygonSourceResult &source, uint32_t rng_state_after_coordinate_seed) {
+	Dictionary report;
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = level_count(normalized_config);
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t cell_count = std::max(0, map_width * map_height * std::max(1, map_level_count));
+	std::vector<uint32_t> zone_words(size_t(cell_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(cell_count), 0);
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = map_width;
+	bounds.max_y = map_height;
+
+	std::map<int64_t, bool> boundary_unique_cells;
+	int32_t trace_write_count = 0;
+	int32_t out_of_bounds_write_count = 0;
+	int32_t runtime_zone_walk_count = 0;
+	int32_t blocked_zone_count = 0;
+	int32_t fallback_zone_count = 0;
+	int32_t connector_segment_count = 0;
+	int32_t wrap_segment_count = 0;
+	int32_t final_segment_count = 0;
+	int32_t flagged_writer_segment_count = 0;
+	int32_t deterministic_writer_segment_count = 0;
+	int32_t randomized_rng_call_count = 0;
+	int32_t randomized_inserted_midpoint_count = 0;
+	int32_t randomized_max_pending_point_count = 0;
+	bool loop_guard_exhausted = false;
+	H3MapedRng rng { rng_state_after_coordinate_seed };
+
+	auto runtime_zone_by_index = [&](int32_t runtime_zone_index) -> Dictionary {
+		for (int32_t index = 0; index < runtime_zones.size(); ++index) {
+			if (Variant(runtime_zones[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary runtime = runtime_zones[index];
+			if (int32_t(runtime.get("runtime_zone_index", index)) == runtime_zone_index) {
+				return runtime;
+			}
+		}
+		return Dictionary();
+	};
+	auto point_on_clip_border = [&](int32_t x, int32_t y) {
+		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
+	};
+	auto merge_line = [&](const LineWriteResult &line) {
+		for (const auto &item : line.unique_cells) {
+			boundary_unique_cells[item.first] = true;
+		}
+		trace_write_count += int32_t(line.trace.size());
+		out_of_bounds_write_count += line.out_of_bounds_write_count;
+		apply_line_trace_to_zone_buffer_4a2777(line, zone_words, cell_flags, map_width, map_height, map_level_count);
+	};
+	auto append_segment = [&](int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_word, int32_t level, bool randomized, int32_t random_span_limit) {
+		LineWriteResult line;
+		if (randomized) {
+			line = randomized_line_writer_4a2413(map_width, map_height, map_level_count, water_code, x1, y1, x2, y2, zone_word, level, random_span_limit, rng, randomized_rng_call_count, randomized_inserted_midpoint_count, randomized_max_pending_point_count);
+			flagged_writer_segment_count += 1;
+		} else {
+			line = line_writer_4a261a(map_width, map_height, map_level_count, water_code, x1, y1, x2, y2, zone_word, level);
+			deterministic_writer_segment_count += 1;
+		}
+		merge_line(line);
+	};
+
+	for (const SourceWalk &walk : source.walks) {
+		Dictionary runtime_zone = runtime_zone_by_index(walk.runtime_zone_index);
+		if (runtime_zone.is_empty()) {
+			blocked_zone_count += 1;
+			continue;
+		}
+		const int32_t zone_word = zone_word_id_for_runtime_zone(runtime_zone);
+		const int32_t level = int32_t(runtime_zone.get("level", 0));
+		const bool flagged_branch = !(map_level_count == 2 && level != 1);
+		const int32_t random_span_limit = std::max<int32_t>(1, int32_t(runtime_zone.get("runtime_size_after_bbox_rescale", runtime_zone.get("source_base_size", 1))));
+		std::vector<PolygonPoint> finalized_points;
+		for (const SourceCycleNode &node : walk.cycle_nodes) {
+			if (node.finalized) {
+				finalized_points.push_back(PolygonPoint { node.finalized_x, node.finalized_y });
+			}
+		}
+		if (finalized_points.size() < 2) {
+			blocked_zone_count += 1;
+			continue;
+		}
+		int32_t selected_segment_index = -1;
+		ClipResult clipped_current;
+		ClipResult clipped_target;
+		for (int32_t index = 0; index < int32_t(finalized_points.size()); ++index) {
+			const PolygonPoint from = finalized_points[size_t(index)];
+			const PolygonPoint to = finalized_points[size_t((index + 1) % int32_t(finalized_points.size()))];
+			if (from.x == to.x && from.y == to.y) {
+				continue;
+			}
+			ClipResult candidate_current = clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
+			ClipResult candidate_target = clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!point_inside_bounds_4a2777(candidate_current, bounds)) {
+				continue;
+			}
+			if (candidate_current.x == candidate_target.x && candidate_current.y == candidate_target.y) {
+				continue;
+			}
+			selected_segment_index = index;
+			clipped_current = candidate_current;
+			clipped_target = candidate_target;
+			break;
+		}
+		if (selected_segment_index < 0) {
+			fallback_zone_count += 1;
+			continue;
+		}
+		append_segment(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
+		connector_segment_count += 1;
+		int32_t current_x = clipped_target.x;
+		int32_t current_y = clipped_target.y;
+		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+		int32_t source_index = (selected_segment_index + 1) % int32_t(finalized_points.size());
+		for (int32_t guard = 0; guard < int32_t(finalized_points.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(finalized_points.size());
+			if (source_index == selected_segment_index) {
+				break;
+			}
+			const PolygonPoint from = finalized_points[size_t(source_index)];
+			const PolygonPoint to = finalized_points[size_t(next_source_index)];
+			source_index = next_source_index;
+			if (from.x == to.x && from.y == to.y) {
+				continue;
+			}
+			const ClipResult next_clip = clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!point_inside_bounds_4a2777(next_clip, bounds)) {
+				continue;
+			}
+			int32_t wrap_guard = 0;
+			while (current_x != next_clip.x && current_y != next_clip.y && point_on_clip_border(current_x, current_y) && point_on_clip_border(next_clip.x, next_clip.y) && wrap_guard < 8) {
+				int32_t border_x = current_x;
+				int32_t border_y = current_y;
+				if (current_x == bounds.min_x) {
+					if (current_y == bounds.min_y) {
+						border_x = right_x;
+						border_y = bounds.min_y;
+					} else {
+						border_x = bounds.min_x;
+						border_y = bounds.min_y;
+					}
+				} else if (current_y == bounds.min_y) {
+					border_x = right_x;
+					border_y = bounds.min_y;
+				} else if (current_x == right_x && current_y != bottom_y) {
+					border_x = right_x;
+					border_y = bottom_y;
+				} else {
+					border_x = bounds.min_x;
+					border_y = bottom_y;
+				}
+				append_segment(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
+				current_x = border_x;
+				current_y = border_y;
+				wrap_segment_count += 1;
+				wrap_guard += 1;
+			}
+			if (wrap_guard >= 8 && current_x != next_clip.x && current_y != next_clip.y) {
+				loop_guard_exhausted = true;
+				break;
+			}
+			if (current_x != next_clip.x || current_y != next_clip.y) {
+				append_segment(current_x, current_y, next_clip.x, next_clip.y, zone_word, level, false, random_span_limit);
+				current_x = next_clip.x;
+				current_y = next_clip.y;
+				final_segment_count += 1;
+			}
+			if (source_index == selected_segment_index) {
+				break;
+			}
+		}
+		runtime_zone_walk_count += 1;
+	}
+
+	std::map<int64_t, bool> unique_filled_cells;
+	int32_t filled_zone_count = 0;
+	int32_t seed_blocked_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		const int32_t zone_word = zone_word_id_for_runtime_zone(runtime);
+		SpanRecord seed;
+		seed.x = int32_t(runtime.get("x_after_bbox_rescale", 0));
+		seed.y = int32_t(runtime.get("y_after_bbox_rescale", 0));
+		seed.level = int32_t(runtime.get("level", 0));
+		if (!span_cell_in_bounds_4a325d(map_width, map_height, map_level_count, seed)) {
+			seed_blocked_count += 1;
+			continue;
+		}
+		if (!is_unassigned_zone_word_4a325d(zone_words, map_width, map_height, seed.x, seed.y, seed.level)) {
+			seed_blocked_count += 1;
+		}
+		SpanFillResult fill = span_fill_4a325d(zone_words, cell_flags, map_width, map_height, map_level_count, water_code, zone_word, seed);
+		for (const auto &item : fill.unique_cells) {
+			unique_filled_cells[item.first] = true;
+		}
+		if (!fill.trace.empty()) {
+			filled_zone_count += 1;
+		}
+		out_of_bounds_span_count += fill.out_of_bounds_span_count;
+		pushed_span_count += fill.pushed_span_count;
+		popped_span_count += fill.popped_span_count;
+		max_pending_span_count = std::max<int32_t>(max_pending_span_count, fill.max_pending_span_count);
+		blocked_initial_span_count += fill.blocked_initial_span_count;
+	}
+
+	int32_t remaining_unassigned_count = 0;
+	int32_t boundary_or_filled_count = 0;
+	int32_t reserved_cell_count = 0;
+	std::map<int32_t, int32_t> cells_by_zone_word;
+	for (int32_t level = 0; level < map_level_count; ++level) {
+		for (int32_t y = 0; y < map_height; ++y) {
+			for (int32_t x = 0; x < map_width; ++x) {
+				const int64_t key = cell_key_4a325d(map_width, map_height, x, y, level);
+				if ((cell_flags[size_t(key)] & 0x10U) != 0) {
+					reserved_cell_count += 1;
+				}
+				const uint32_t zone_word = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (zone_word == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					remaining_unassigned_count += 1;
+				} else {
+					boundary_or_filled_count += 1;
+					cells_by_zone_word[int32_t((zone_word >> 16U) & 0xffU)] += 1;
+				}
+			}
+		}
+	}
+	Array cells_by_zone_word_report;
+	for (const auto &item : cells_by_zone_word) {
+		Dictionary entry;
+		entry["zone_word_id"] = item.first;
+		entry["cell_count"] = item.second;
+		cells_by_zone_word_report.append(entry);
+	}
+
+	report["boundary_status"] = "0x4a2777_private_boundary_materialized";
+	report["runtime_zone_walk_count"] = runtime_zone_walk_count;
+	report["blocked_zone_count"] = blocked_zone_count;
+	report["fallback_zone_count"] = fallback_zone_count;
+	report["connector_segment_count"] = connector_segment_count;
+	report["wrap_segment_count"] = wrap_segment_count;
+	report["final_segment_count"] = final_segment_count;
+	report["flagged_writer_segment_count"] = flagged_writer_segment_count;
+	report["deterministic_writer_segment_count"] = deterministic_writer_segment_count;
+	report["randomized_rng_call_count"] = randomized_rng_call_count;
+	report["randomized_inserted_midpoint_count"] = randomized_inserted_midpoint_count;
+	report["randomized_max_pending_point_count"] = randomized_max_pending_point_count;
+	report["rng_state_after_0x4a2777_uint32"] = int64_t(rng.state);
+	report["trace_write_count"] = trace_write_count;
+	report["unique_boundary_cell_count"] = int32_t(boundary_unique_cells.size());
+	report["out_of_bounds_write_count"] = out_of_bounds_write_count;
+	report["loop_guard_exhausted"] = loop_guard_exhausted;
+	report["span_fill_status"] = "0x4a325d_private_span_fill_materialized";
+	report["filled_zone_count"] = filled_zone_count;
+	report["seed_blocked_count"] = seed_blocked_count;
+	report["total_unique_filled_cell_count"] = int32_t(unique_filled_cells.size());
+	report["total_boundary_or_filled_cell_count"] = boundary_or_filled_count;
+	report["remaining_unassigned_cell_count"] = remaining_unassigned_count;
+	report["reserved_cell_count"] = reserved_cell_count;
+	report["pushed_span_count"] = pushed_span_count;
+	report["popped_span_count"] = popped_span_count;
+	report["max_pending_span_count"] = max_pending_span_count;
+	report["out_of_bounds_span_count"] = out_of_bounds_span_count;
+	report["blocked_initial_span_count"] = blocked_initial_span_count;
+	report["cells_by_zone_word"] = cells_by_zone_word_report;
+	return report;
+}
+
+Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "zone_footprints";
+	phase["status"] = "blocked_until_coordinate_replay";
+	phase["h3maped_anchor"] = "0x4a3a03";
+	phase["polygon_constructor_anchor"] = "0x4cc788";
+	phase["polygon_split_anchor"] = "0x4ccb64";
+	phase["polygon_finalize_anchor"] = "0x4ccdfc";
+	phase["boundary_traversal_anchor"] = "0x4a2777";
+	phase["span_fill_anchor"] = "0x4a325d";
+	phase["small_land_finalizer_anchor"] = "0x4a3710";
+	phase["materializes_private_zone_cell_buffer"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "terrain_cell_writeout_0x4a3f27";
+	if (String(coordinate_phase.get("status", "")) != "active_internal_state" || level_count(normalized_config) != 1) {
+		return phase;
+	}
+
+	Array runtime_zones = runtime_zones_for_footprint(runtime_zone_phase, coordinate_phase);
+	PolygonSourceResult source = build_polygon_source_walks_4ccb64(runtime_zones);
+	Dictionary fill = source.blocked ? Dictionary() : boundary_and_span_fill_4a2777_4a325d(normalized_config, runtime_zones, source, uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))));
+
+	phase["status"] = source.blocked ? String("blocked_during_source_node_split") : String("active_internal_state");
+	phase["source"] = "h3maped 0x4a3a03 small-land footprint phase: 0x4cc788 source rectangle, 0x4ccb64 split/crossing cleanup, 0x4ccdfc finalized source-node cycles, 0x4a2777 boundary traversal, 0x4a325d span fill, and 0x4a3710 no-synthetic-zone finalizer boundary";
+	phase["level_count"] = level_count(normalized_config);
+	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
+	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = false;
+	phase["appended_synthetic_runtime_zone_count"] = 0;
+	phase["initial_bounds_min_x"] = -200;
+	phase["initial_bounds_min_y"] = -200;
+	phase["initial_bounds_max_x"] = 400;
+	phase["initial_bounds_max_y"] = 400;
+	phase["initial_node_pair_count"] = 5;
+	phase["total_matching_runtime_zones"] = runtime_zones.size();
+	phase["total_polygon_split_calls"] = source.executed_split_count;
+	phase["split_steps"] = source.split_steps;
+	phase["duplicate_skip_count"] = source.duplicate_skip_count;
+	phase["edge_removal_branch_count"] = source.edge_removal_count;
+	phase["pre_crossing_inserted_node_pair_count"] = source.inserted_node_pair_count;
+	phase["pre_crossing_inserted_bridge_pair_count"] = source.inserted_bridge_pair_count;
+	phase["crossing_cleanup_scan_count"] = source.crossing_scan_count;
+	phase["crossing_test_count"] = source.crossing_test_count;
+	phase["crossing_collapse_count"] = source.crossing_collapse_count;
+	phase["post_crossing_cleanup_allocated_node_pair_count"] = source.allocated_node_pair_count;
+	phase["post_crossing_cleanup_active_node_pair_count"] = source.active_node_pair_count;
+	phase["finalized_triplet_count"] = source.finalized_triplet_count;
+	phase["finalized_node_count"] = source.finalized_node_count;
+	phase["active_payload_node_count"] = source.active_payload_node_count;
+	phase["source_node_walk_count"] = source.source_node_walk_count;
+	phase["source_node_walk_guard_exhausted_count"] = source.source_node_walk_guard_exhausted_count;
+	if (!source.blocked) {
+		phase["boundary_traversal_status"] = fill.get("boundary_status", "");
+		phase["boundary_runtime_zone_walk_count"] = fill.get("runtime_zone_walk_count", 0);
+		phase["boundary_unique_cell_count"] = fill.get("unique_boundary_cell_count", 0);
+		phase["boundary_trace_write_count"] = fill.get("trace_write_count", 0);
+		phase["boundary_loop_guard_exhausted"] = fill.get("loop_guard_exhausted", false);
+		phase["span_fill_status"] = fill.get("span_fill_status", "");
+		phase["span_fill_filled_zone_count"] = fill.get("filled_zone_count", 0);
+		phase["span_fill_unique_filled_cell_count"] = fill.get("total_unique_filled_cell_count", 0);
+		phase["span_fill_boundary_or_filled_cell_count"] = fill.get("total_boundary_or_filled_cell_count", 0);
+		phase["span_fill_remaining_unassigned_cell_count"] = fill.get("remaining_unassigned_cell_count", 0);
+		phase["reserved_cell_count"] = fill.get("reserved_cell_count", 0);
+		phase["cells_by_zone_word"] = fill.get("cells_by_zone_word", Array());
+		phase["materializes_private_zone_cell_buffer"] = true;
+	}
+	return phase;
+}
+
 Dictionary active_generation_state(const Dictionary &normalized_config) {
 	Dictionary selection = selection_identity(normalized_config);
 	Dictionary player_phase = player_slot_assignment_phase(normalized_config, selection);
 	Dictionary runtime_zone_phase = runtime_zone_records_phase(selection, player_phase);
 	Dictionary link_phase = link_seed_phase(normalized_config, selection, runtime_zone_phase);
 	Dictionary coordinate_phase = coordinate_replay_phase(normalized_config, runtime_zone_phase, link_phase, uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0))));
+	Dictionary footprint_phase = zone_footprint_phase(normalized_config, runtime_zone_phase, coordinate_phase);
 	Array completed;
 	completed.append("template_selection");
 	if (String(player_phase.get("status", "")) == "active_internal_state") {
@@ -1082,9 +2249,12 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	if (String(coordinate_phase.get("status", "")) == "active_internal_state") {
 		completed.append("coordinate_replay");
 	}
+	if (String(footprint_phase.get("status", "")) == "active_internal_state") {
+		completed.append("zone_footprints");
+	}
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_active_generation_state_v1";
-	state["status"] = completed.size() >= 5 ? String("coordinate_replay_active_internal_state") : String("blocked_before_coordinate_replay");
+	state["status"] = completed.size() >= 6 ? String("zone_footprints_active_internal_state") : String(completed.size() >= 5 ? "coordinate_replay_active_internal_state" : "blocked_before_coordinate_replay");
 	state["completed_phase_ids"] = completed;
 	state["completed_phase_count"] = completed.size();
 	state["runtime_generation_allowed"] = false;
@@ -1096,7 +2266,8 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	state["runtime_zone_records"] = runtime_zone_phase;
 	state["link_seed_setup"] = link_phase;
 	state["coordinate_replay"] = coordinate_phase;
-	state["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
+	state["zone_footprints"] = footprint_phase;
+	state["blocked_next"] = completed.size() >= 6 ? String("terrain_cell_writeout_0x4a3f27") : String("zone_footprint_source_nodes_0x4a3a03_0x4cc788");
 	return state;
 }
 
@@ -1201,7 +2372,7 @@ Dictionary generation_not_ready_result(const Dictionary &normalized_config, cons
 	result["generation_status"] = "h3maped_small_clean_restart_generation_not_ready";
 	result["full_generation_status"] = "h3maped_small_clean_restart_waiting_for_executable_phase_ports";
 	result["error_code"] = "h3maped_phase_port_incomplete";
-	result["message"] = "The old native RMG and overgrown h3maped report path are archived. The active small-map path only verifies h3maped.exe and performs h3maped RNG template selection; runtime package output is blocked until real generator phases are ported.";
+	result["message"] = "The old native RMG and overgrown h3maped report path are archived. The active small-map path has private h3maped template/player/zone/link/coordinate/footprint state, but runtime package output is blocked until terrain, object, road, guard, and writeout phases are ported.";
 	result["runtime_generation_allowed"] = false;
 	result["partial_materialized_payload_public_api"] = false;
 	result["normalized_config"] = normalized_config;
