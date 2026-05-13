@@ -5355,6 +5355,8 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	Array mine_minimum_schedule;
 	Array mine_density_schedule;
 	Array reward_band_schedule;
+	Array reward_scheduler_records;
+	Array reward_value_preview_records;
 	Array mine_coordinate_records;
 	Array mine_placement_records;
 	int32_t mine_minimum_record_count = 0;
@@ -5369,6 +5371,11 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	int32_t mine_placement_rejected_special_distance_count = 0;
 	int32_t mine_placement_marked_body_cell_count = 0;
 	int32_t reward_band_weight_total = 0;
+	int32_t reward_scheduler_zone_count = 0;
+	int32_t reward_scheduler_total_density_sum = 0;
+	int32_t reward_scheduler_budget_total = 0;
+	int32_t reward_scheduler_preview_attempt_count = 0;
+	int32_t reward_value_preview_rng_call_count = 0;
 	Dictionary direct_stamping = town_castle_phase.get("direct_stamping_projection", Dictionary());
 	H3MapedRng object_rng { uint32_t(int64_t(direct_stamping.get("object_rng_state_after_0x4a93a2_uint32", 0))) };
 	const uint32_t object_rng_state_before = object_rng.state;
@@ -5735,6 +5742,129 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 		}
 	}
 
+	H3MapedRng reward_preview_rng { object_rng.state };
+	const uint32_t reward_preview_rng_state_before = reward_preview_rng.state;
+	const int32_t reward_budget_base = water_mode_code(normalized_config) == 2 ? 0x640 : 0x320;
+	for (int64_t zone_index = 0; zone_index < runtime_zone_records.size(); ++zone_index) {
+		if (Variant(runtime_zone_records[zone_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zone_records[zone_index];
+		const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", zone_index)));
+		struct RewardBandRuntime {
+			int32_t band_index = -1;
+			int32_t low = 0;
+			int32_t high = 0;
+			int32_t density = 0;
+			int32_t counter = 0;
+			int32_t counter_step = 0;
+		};
+		std::vector<RewardBandRuntime> eligible_bands;
+		Array eligible_band_records;
+		int32_t total_density = 0;
+		int32_t density_product = 1;
+		for (int64_t reward_index = 0; reward_index < reward_band_schedule.size(); ++reward_index) {
+			if (Variant(reward_band_schedule[reward_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary reward = reward_band_schedule[reward_index];
+			if (int32_t(reward.get("runtime_zone_index", -1)) != runtime_index) {
+				continue;
+			}
+			const int32_t density = int32_t(reward.get("density_weight", 0));
+			total_density += density;
+			density_product *= density;
+			eligible_bands.push_back(RewardBandRuntime {
+					int32_t(reward.get("band_index", -1)),
+					int32_t(reward.get("low_value", 0)),
+					int32_t(reward.get("high_value", 0)),
+					density,
+					0,
+					0 });
+		}
+		if (eligible_bands.empty() || total_density <= 0) {
+			continue;
+		}
+		reward_scheduler_zone_count += 1;
+		reward_scheduler_total_density_sum += total_density;
+		const int32_t placement_budget = reward_budget_base / total_density;
+		reward_scheduler_budget_total += placement_budget;
+		for (RewardBandRuntime &band : eligible_bands) {
+			band.counter_step = band.density > 0 ? density_product / band.density : 0;
+			Dictionary eligible;
+			eligible["band_index"] = band.band_index;
+			eligible["low_value"] = band.low;
+			eligible["high_value"] = band.high;
+			eligible["density_weight"] = band.density;
+			eligible["scheduler_counter_initial"] = band.counter;
+			eligible["scheduler_counter_step"] = band.counter_step;
+			eligible_band_records.append(eligible);
+		}
+
+		Array selected_attempts;
+		for (int32_t attempt = 0; attempt < int32_t(eligible_bands.size()); ++attempt) {
+			int32_t selected_index = -1;
+			int32_t selected_counter = 0;
+			for (int32_t band_index = 0; band_index < int32_t(eligible_bands.size()); ++band_index) {
+				const RewardBandRuntime &band = eligible_bands[size_t(band_index)];
+				if (selected_index < 0 || band.counter < selected_counter) {
+					selected_index = band_index;
+					selected_counter = band.counter;
+				}
+			}
+			if (selected_index < 0) {
+				break;
+			}
+			RewardBandRuntime &selected_band = eligible_bands[size_t(selected_index)];
+			const int32_t counter_before = selected_band.counter;
+			selected_band.counter += selected_band.counter_step;
+			int32_t selected_value = selected_band.high;
+			int32_t value_rng = -1;
+			if (selected_band.high > selected_band.low) {
+				value_rng = reward_preview_rng.next();
+				reward_value_preview_rng_call_count += 1;
+				selected_value = (value_rng % (selected_band.high - selected_band.low)) + selected_band.low;
+			}
+
+			Dictionary value_record;
+			value_record["phase"] = "0x4aab7e_0x4aa354_reward_value_selection_preview";
+			value_record["runtime_zone_index"] = runtime_index;
+			value_record["source_zone_id"] = runtime.get("source_zone_id", -1);
+			value_record["attempt_index_within_zone"] = attempt;
+			value_record["band_index"] = selected_band.band_index;
+			value_record["low_value"] = selected_band.low;
+			value_record["high_value"] = selected_band.high;
+			value_record["density_weight"] = selected_band.density;
+			value_record["scheduler_counter_before"] = counter_before;
+			value_record["scheduler_counter_step"] = selected_band.counter_step;
+			value_record["scheduler_counter_after"] = selected_band.counter;
+			value_record["value_rng_value"] = value_rng;
+			value_record["selected_value"] = selected_value;
+			value_record["commit_helper"] = "0x4aa9b7";
+			value_record["commit_materialized"] = false;
+			value_record["coordinate_vector_append_pending"] = true;
+			reward_value_preview_records.append(value_record);
+			selected_attempts.append(value_record);
+			reward_scheduler_preview_attempt_count += 1;
+		}
+
+		Dictionary scheduler;
+		scheduler["phase"] = "0x4aab7e_weighted_reward_scheduler";
+		scheduler["runtime_zone_index"] = runtime_index;
+		scheduler["source_zone_id"] = runtime.get("source_zone_id", -1);
+		scheduler["eligible_band_count"] = int32_t(eligible_bands.size());
+		scheduler["eligible_density_total"] = total_density;
+		scheduler["eligible_density_product"] = density_product;
+		scheduler["budget_base"] = reward_budget_base;
+		scheduler["placement_budget_argument_to_0x4aa9b7"] = placement_budget;
+		scheduler["eligible_bands"] = eligible_band_records;
+		scheduler["preview_attempts"] = selected_attempts;
+		scheduler["commit_helper"] = "0x4aa9b7";
+		scheduler["commit_helper_pending"] = true;
+		scheduler["complete_coordinate_vector_claim"] = false;
+		reward_scheduler_records.append(scheduler);
+	}
+
 	Dictionary known_coordinate_vector_gap;
 	known_coordinate_vector_gap["town_coordinate_record_count"] = town_records.size();
 	known_coordinate_vector_gap["mine_minimum_record_count"] = mine_minimum_record_count;
@@ -5742,6 +5872,11 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	known_coordinate_vector_gap["mine_density_weight_total"] = mine_density_weight_total;
 	known_coordinate_vector_gap["eligible_reward_band_count"] = reward_band_schedule.size();
 	known_coordinate_vector_gap["reward_band_weight_total"] = reward_band_weight_total;
+	known_coordinate_vector_gap["reward_scheduler_preview_zone_count"] = reward_scheduler_zone_count;
+	known_coordinate_vector_gap["reward_scheduler_preview_attempt_count"] = reward_scheduler_preview_attempt_count;
+	known_coordinate_vector_gap["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
+	known_coordinate_vector_gap["materialized_private_reward_coordinate_record_count"] = 0;
+	known_coordinate_vector_gap["reward_commit_helper_pending"] = true;
 	known_coordinate_vector_gap["current_road_vector_only_has_towns"] = mine_coordinate_records.is_empty();
 	known_coordinate_vector_gap["roads_must_not_be_publicly_adopted_from_partial_vector"] = true;
 
@@ -5763,6 +5898,15 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["mine_density_weight_total"] = mine_density_weight_total;
 	phase["eligible_reward_band_count"] = reward_band_schedule.size();
 	phase["reward_band_weight_total"] = reward_band_weight_total;
+	phase["reward_scheduler_model"] = "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 commit not materialized";
+	phase["reward_scheduler_budget_base"] = reward_budget_base;
+	phase["reward_scheduler_preview_zone_count"] = reward_scheduler_zone_count;
+	phase["reward_scheduler_total_density_sum"] = reward_scheduler_total_density_sum;
+	phase["reward_scheduler_budget_argument_total"] = reward_scheduler_budget_total;
+	phase["reward_scheduler_preview_attempt_count"] = reward_scheduler_preview_attempt_count;
+	phase["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
+	phase["materialized_private_reward_coordinate_record_count"] = 0;
+	phase["reward_commit_helper_pending"] = true;
 	phase["mine_template_selection_rng_call_count"] = mine_template_selection_rng_call_count;
 	phase["mine_placement_rng_call_count"] = mine_placement_rng_call_count;
 	phase["mine_placement_scan_call_count"] = mine_placement_scan_call_count;
@@ -5774,12 +5918,16 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["mine_placement_marked_body_cell_count"] = mine_placement_marked_body_cell_count;
 	phase["object_rng_state_before_0x4a9911_uint32"] = int64_t(object_rng_state_before);
 	phase["object_rng_state_after_0x4a9911_0x4a9641_uint32"] = int64_t(object_rng.state);
+	phase["reward_preview_rng_state_before_0x4aab7e_uint32"] = int64_t(reward_preview_rng_state_before);
+	phase["reward_preview_rng_state_after_0x4aa354_uint32"] = int64_t(reward_preview_rng.state);
 	phase["known_coordinate_vector_gap"] = known_coordinate_vector_gap;
 	phase["mine_minimum_schedule"] = mine_minimum_schedule;
 	phase["mine_placement_records"] = mine_placement_records;
 	phase["mine_coordinate_records"] = mine_coordinate_records;
 	phase["mine_density_schedule"] = mine_density_schedule;
 	phase["reward_band_schedule"] = reward_band_schedule;
+	phase["reward_scheduler_records"] = reward_scheduler_records;
+	phase["reward_value_preview_records"] = reward_value_preview_records;
 	return phase;
 }
 

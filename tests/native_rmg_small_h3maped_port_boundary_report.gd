@@ -912,6 +912,17 @@ func _run() -> void:
 				or int(object_vector_phase.get("mine_density_weight_total", -1)) != 18 \
 				or int(object_vector_phase.get("eligible_reward_band_count", -1)) != 18 \
 				or int(object_vector_phase.get("reward_band_weight_total", -1)) != 96 \
+				or String(object_vector_phase.get("reward_scheduler_model", "")) != "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 commit not materialized" \
+				or int(object_vector_phase.get("reward_scheduler_budget_base", -1)) != 800 \
+				or int(object_vector_phase.get("reward_scheduler_preview_zone_count", -1)) != 6 \
+				or int(object_vector_phase.get("reward_scheduler_total_density_sum", -1)) != 96 \
+				or int(object_vector_phase.get("reward_scheduler_budget_argument_total", -1)) != 300 \
+				or int(object_vector_phase.get("reward_scheduler_preview_attempt_count", -1)) != 18 \
+				or int(object_vector_phase.get("reward_value_preview_rng_call_count", -1)) != 18 \
+				or int(object_vector_phase.get("materialized_private_reward_coordinate_record_count", -1)) != 0 \
+				or not bool(object_vector_phase.get("reward_commit_helper_pending", false)) \
+				or int(object_vector_phase.get("reward_preview_rng_state_before_0x4aab7e_uint32", -1)) != 2346411599 \
+				or int(object_vector_phase.get("reward_preview_rng_state_after_0x4aa354_uint32", -1)) != 2380015889 \
 				or String(object_vector_phase.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
 		return
@@ -921,6 +932,11 @@ func _run() -> void:
 				or int(known_vector_gap.get("mine_density_weight_total", -1)) != 18 \
 				or int(known_vector_gap.get("eligible_reward_band_count", -1)) != 18 \
 				or int(known_vector_gap.get("reward_band_weight_total", -1)) != 96 \
+				or int(known_vector_gap.get("reward_scheduler_preview_zone_count", -1)) != 6 \
+				or int(known_vector_gap.get("reward_scheduler_preview_attempt_count", -1)) != 18 \
+				or int(known_vector_gap.get("reward_value_preview_rng_call_count", -1)) != 18 \
+				or int(known_vector_gap.get("materialized_private_reward_coordinate_record_count", -1)) != 0 \
+				or not bool(known_vector_gap.get("reward_commit_helper_pending", false)) \
 				or bool(known_vector_gap.get("current_road_vector_only_has_towns", true)) \
 				or not bool(known_vector_gap.get("roads_must_not_be_publicly_adopted_from_partial_vector", false)):
 		_fail("h3maped known coordinate-vector gap drifted: %s" % JSON.stringify(known_vector_gap))
