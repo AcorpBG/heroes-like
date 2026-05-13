@@ -73,6 +73,11 @@ struct RuntimeLinkSeed {
 	int32_t runtime_b = -1;
 };
 
+struct H3MaskPoint {
+	int32_t dx = 0;
+	int32_t dy = 0;
+};
+
 struct TerrainVisualRow {
 	int32_t shape_class = -1;
 	int32_t flag_a = 0;
@@ -412,6 +417,35 @@ int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, 
 bool h3maped_cell_unassigned(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
 	const int64_t index = h3maped_cell_index(width, height, x, y, level);
 	return index >= 0 && index < int64_t(zone_words.size()) && (zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD;
+}
+
+std::vector<H3MaskPoint> h3_text_mask_points(const String &mask_text, bool action_mask) {
+	std::vector<H3MaskPoint> points;
+	if (mask_text.length() < 48) {
+		return points;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t text_col = 0; text_col < 8; ++text_col) {
+			const bool bit_set = mask_text[row * 8 + text_col] == '1';
+			const bool include = action_mask ? bit_set : !bit_set;
+			if (!include) {
+				continue;
+			}
+			points.push_back(H3MaskPoint { -text_col, -(5 - row) });
+		}
+	}
+	return points;
+}
+
+Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
+	Array result;
+	for (const H3MaskPoint &point : points) {
+		Dictionary record;
+		record["dx"] = point.dx;
+		record["dy"] = point.dy;
+		result.append(record);
+	}
+	return result;
 }
 
 void append_span_fill_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
@@ -6297,13 +6331,31 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 	}
 
 	Array direct_stamping_records;
+	const String town_passability_mask = "000001110000011110001111111111111111111111111111";
+	const String town_action_mask = "001000000000000000000000000000000000000000000000";
+	const std::vector<H3MaskPoint> town_body_points = h3_text_mask_points(town_passability_mask, false);
+	const std::vector<H3MaskPoint> town_action_points = h3_text_mask_points(town_action_mask, true);
+	std::vector<uint8_t> object_occupied;
+	if (expected_cell_count > 0) {
+		object_occupied.resize(size_t(expected_cell_count), 0);
+	}
 	int32_t direct_candidate_scan_count = 0;
 	int32_t direct_candidate_total = 0;
 	int32_t direct_candidate_missing_count = 0;
+	int32_t direct_footprint_eligible_total = 0;
+	int32_t direct_footprint_missing_count = 0;
+	int32_t direct_footprint_rejected_bounds_count = 0;
+	int32_t direct_footprint_rejected_zone_count = 0;
+	int32_t direct_footprint_rejected_terrain_count = 0;
+	int32_t direct_footprint_rejected_collision_count = 0;
+	int32_t direct_footprint_marked_cell_count = 0;
 	int32_t direct_unique_selection_count = 0;
-	int32_t direct_random_tie_required_count = 0;
+	int32_t direct_random_tie_selection_count = 0;
+	int32_t direct_random_tie_rng_call_count = 0;
 	int32_t direct_record_projection_count = 0;
 	int32_t direct_grid_unavailable_count = 0;
+	H3MapedRng object_rng { uint32_t(int64_t(terrain_selection.get("rng_state_after_0x49b53d_uint32", coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", 0)))) };
+	const uint32_t object_rng_state_before = object_rng.state;
 	for (int64_t index = 0; index < scheduled_records.size(); ++index) {
 		if (Variant(scheduled_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -6335,6 +6387,11 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 		record["record_offset_0x24_castle_flag"] = scheduled.get("has_castle", false);
 		record["cell_marking_contract"] = "clear cell bit 26 and set bit 27 unless cell+0x2c bit 0 locks the mark";
 		record["runtime_package_adoption"] = false;
+		record["object_template_source"] = "objects.txt AVCcasx0.def type 98 subtype 0";
+		record["object_template_passability_mask"] = town_passability_mask;
+		record["object_template_action_mask"] = town_action_mask;
+		record["town_footprint_body_cell_count"] = int32_t(town_body_points.size());
+		record["town_footprint_action_cell_count"] = int32_t(town_action_points.size());
 		direct_candidate_scan_count += 1;
 		if (width <= 0 || height <= 0 || zone_word_u32.size() != expected_cell_count || terrain_code_u16.size() != expected_cell_count) {
 			record["status"] = "blocked_missing_0x4a325d_zone_word_or_0x4a3f27_terrain_grid";
@@ -6350,6 +6407,14 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 		int32_t closest_distance = 0x7fffffff;
 		Array closest_candidates;
 		Array candidate_preview;
+		int32_t footprint_eligible_count = 0;
+		int32_t footprint_rejected_bounds_count = 0;
+		int32_t footprint_rejected_zone_count = 0;
+		int32_t footprint_rejected_terrain_count = 0;
+		int32_t footprint_rejected_collision_count = 0;
+		int32_t closest_footprint_distance = 0x7fffffff;
+		Array closest_footprint_candidates;
+		Array footprint_candidate_preview;
 		for (int32_t level = 0; level < level_count; ++level) {
 			if (level != anchor_level) {
 				continue;
@@ -6389,32 +6454,159 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 						candidate["terrain_code_u16"] = terrain_code;
 						closest_candidates.append(candidate);
 					}
+
+					bool footprint_passes = !town_body_points.empty();
+					String footprint_reject_reason;
+					for (const H3MaskPoint &point : town_body_points) {
+						const int32_t body_x = x + point.dx;
+						const int32_t body_y = y + point.dy;
+						if (body_x < 0 || body_y < 0 || body_x >= width || body_y >= height) {
+							footprint_passes = false;
+							footprint_reject_reason = "out_of_bounds";
+							break;
+						}
+						const int32_t body_index = level * width * height + body_y * width + body_x;
+						if (body_index < 0 || body_index >= expected_cell_count) {
+							footprint_passes = false;
+							footprint_reject_reason = "out_of_bounds";
+							break;
+						}
+						if (!object_occupied.empty() && object_occupied[size_t(body_index)] != 0) {
+							footprint_passes = false;
+							footprint_reject_reason = "object_collision";
+							break;
+						}
+						const uint32_t body_masked = uint32_t(int32_t(zone_word_u32[body_index])) & H3MAPED_UNASSIGNED_ZONE_WORD;
+						if (body_masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((body_masked >> 16U) & 0xffU) != runtime_index) {
+							footprint_passes = false;
+							footprint_reject_reason = "zone_mismatch";
+							break;
+						}
+						const int32_t body_terrain_code = int32_t(terrain_code_u16[body_index]) & 0x3f;
+						if (body_terrain_code == 8 || body_terrain_code == 9) {
+							footprint_passes = false;
+							footprint_reject_reason = "terrain_mismatch";
+							break;
+						}
+					}
+					if (!footprint_passes) {
+						if (footprint_reject_reason == "out_of_bounds") {
+							footprint_rejected_bounds_count += 1;
+						} else if (footprint_reject_reason == "object_collision") {
+							footprint_rejected_collision_count += 1;
+						} else if (footprint_reject_reason == "terrain_mismatch") {
+							footprint_rejected_terrain_count += 1;
+						} else {
+							footprint_rejected_zone_count += 1;
+						}
+						continue;
+					}
+					footprint_eligible_count += 1;
+					if (footprint_candidate_preview.size() < 8) {
+						Dictionary candidate;
+						candidate["x"] = x;
+						candidate["y"] = y;
+						candidate["level"] = level;
+						candidate["distance_to_runtime_anchor"] = distance;
+						candidate["body_cell_count"] = int32_t(town_body_points.size());
+						footprint_candidate_preview.append(candidate);
+					}
+					if (distance < closest_footprint_distance) {
+						closest_footprint_distance = distance;
+						closest_footprint_candidates.clear();
+					}
+					if (distance == closest_footprint_distance && closest_footprint_candidates.size() < 16) {
+						Dictionary candidate;
+						candidate["x"] = x;
+						candidate["y"] = y;
+						candidate["level"] = level;
+						candidate["distance_to_runtime_anchor"] = distance;
+						candidate["body_cell_count"] = int32_t(town_body_points.size());
+						closest_footprint_candidates.append(candidate);
+					}
 				}
 			}
 		}
 		direct_candidate_total += candidate_count;
+		direct_footprint_eligible_total += footprint_eligible_count;
+		direct_footprint_rejected_bounds_count += footprint_rejected_bounds_count;
+		direct_footprint_rejected_zone_count += footprint_rejected_zone_count;
+		direct_footprint_rejected_terrain_count += footprint_rejected_terrain_count;
+		direct_footprint_rejected_collision_count += footprint_rejected_collision_count;
 		record["candidate_count"] = candidate_count;
 		record["candidate_preview"] = candidate_preview;
 		record["closest_distance"] = candidate_count > 0 ? closest_distance : -1;
 		record["closest_candidate_count"] = closest_candidates.size();
 		record["closest_candidates"] = closest_candidates;
-		record["full_0x49aa93_status"] = "pending_object_template_footprint_collision_and_cell_bit22_model";
+		record["footprint_eligible_count"] = footprint_eligible_count;
+		record["footprint_candidate_preview"] = footprint_candidate_preview;
+		record["footprint_rejected_bounds_count"] = footprint_rejected_bounds_count;
+		record["footprint_rejected_zone_count"] = footprint_rejected_zone_count;
+		record["footprint_rejected_terrain_count"] = footprint_rejected_terrain_count;
+		record["footprint_rejected_collision_count"] = footprint_rejected_collision_count;
+		record["closest_footprint_distance"] = footprint_eligible_count > 0 ? closest_footprint_distance : -1;
+		record["closest_footprint_candidate_count"] = closest_footprint_candidates.size();
+		record["closest_footprint_candidates"] = closest_footprint_candidates;
+		record["full_0x49aa93_status"] = footprint_eligible_count > 0
+				? String("0x49aa93_0x49a09c_town_footprint_gate_ported_for_zone_words_no_package_adoption")
+				: String("0x49aa93_0x49a09c_town_footprint_gate_no_eligible_candidates");
 		if (candidate_count == 0) {
 			record["status"] = "0x4a93a2_zone_byte_candidate_scan_no_candidates";
 			direct_candidate_missing_count += 1;
-		} else if (closest_candidates.size() == 1 && Variant(closest_candidates[0]).get_type() == Variant::DICTIONARY) {
-			Dictionary selected = closest_candidates[0];
-			record["status"] = "0x4a93a2_unique_closest_zone_byte_candidate_record_projection_inspection_only";
+		} else if (footprint_eligible_count == 0) {
+			record["status"] = "0x4a93a2_0x49aa93_town_footprint_gate_no_eligible_candidates";
+			direct_footprint_missing_count += 1;
+		} else {
+			Dictionary selected;
+			bool selected_from_random_tie = false;
+			int32_t random_tie_rng_value = -1;
+			int32_t random_tie_selected_index = -1;
+			if (closest_footprint_candidates.size() == 1 && Variant(closest_footprint_candidates[0]).get_type() == Variant::DICTIONARY) {
+				selected = closest_footprint_candidates[0];
+				record["status"] = "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_inspection_only";
+				direct_unique_selection_count += 1;
+			} else {
+				random_tie_rng_value = object_rng.next();
+				direct_random_tie_rng_call_count += 1;
+				random_tie_selected_index = random_tie_rng_value % int32_t(closest_footprint_candidates.size());
+				selected = closest_footprint_candidates[random_tie_selected_index];
+				selected_from_random_tie = true;
+				record["status"] = "0x4a93a2_random_tie_0x49aa93_town_footprint_candidate_record_projection_inspection_only";
+				direct_random_tie_selection_count += 1;
+			}
 			record["selected_x"] = selected.get("x", -1);
 			record["selected_y"] = selected.get("y", -1);
 			record["selected_level"] = selected.get("level", -1);
+			record["selected_from_random_tie"] = selected_from_random_tie;
+			record["random_tie_rng_value"] = random_tie_rng_value;
+			record["random_tie_selected_index"] = random_tie_selected_index;
 			record["object_record_projection_status"] = "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption";
-			direct_unique_selection_count += 1;
+			int32_t marked_cells = 0;
+			Array marked_preview;
+			for (const H3MaskPoint &point : town_body_points) {
+				const int32_t body_x = int32_t(selected.get("x", -1)) + point.dx;
+				const int32_t body_y = int32_t(selected.get("y", -1)) + point.dy;
+				const int32_t body_level = int32_t(selected.get("level", -1));
+				const int32_t body_index = body_level * width * height + body_y * width + body_x;
+				if (body_index < 0 || body_index >= expected_cell_count || object_occupied.empty()) {
+					continue;
+				}
+				if (object_occupied[size_t(body_index)] == 0) {
+					object_occupied[size_t(body_index)] = 1;
+					marked_cells += 1;
+					if (marked_preview.size() < 12) {
+						Dictionary cell;
+						cell["x"] = body_x;
+						cell["y"] = body_y;
+						cell["level"] = body_level;
+						marked_preview.append(cell);
+					}
+				}
+			}
+			record["object_occupied_cell_mark_count"] = marked_cells;
+			record["object_occupied_body_cell_preview"] = marked_preview;
+			direct_footprint_marked_cell_count += marked_cells;
 			direct_record_projection_count += 1;
-		} else {
-			record["status"] = "0x4a93a2_random_tie_selection_required_before_record_projection";
-			record["object_record_projection_status"] = "pending_exact_0x4e7276_tie_rng_state";
-			direct_random_tie_required_count += 1;
 		}
 		direct_stamping_records.append(record);
 	}
@@ -6425,10 +6617,25 @@ Dictionary town_castle_phase_schedule_report(const Array &runtime_zone_records, 
 	direct_stamping["direct_candidate_scan_count"] = direct_candidate_scan_count;
 	direct_stamping["direct_candidate_total"] = direct_candidate_total;
 	direct_stamping["direct_candidate_missing_count"] = direct_candidate_missing_count;
+	direct_stamping["town_footprint_mask_status"] = "objects_txt_AVCcasx0_footprint_offsets_ported_for_0x49a09c";
+	direct_stamping["town_footprint_body_cell_count"] = int32_t(town_body_points.size());
+	direct_stamping["town_footprint_action_cell_count"] = int32_t(town_action_points.size());
+	direct_stamping["town_footprint_body_offsets"] = h3_mask_points_to_array(town_body_points);
+	direct_stamping["town_footprint_action_offsets"] = h3_mask_points_to_array(town_action_points);
+	direct_stamping["direct_footprint_eligible_total"] = direct_footprint_eligible_total;
+	direct_stamping["direct_footprint_missing_count"] = direct_footprint_missing_count;
+	direct_stamping["direct_footprint_rejected_bounds_count"] = direct_footprint_rejected_bounds_count;
+	direct_stamping["direct_footprint_rejected_zone_count"] = direct_footprint_rejected_zone_count;
+	direct_stamping["direct_footprint_rejected_terrain_count"] = direct_footprint_rejected_terrain_count;
+	direct_stamping["direct_footprint_rejected_collision_count"] = direct_footprint_rejected_collision_count;
+	direct_stamping["direct_footprint_marked_cell_count"] = direct_footprint_marked_cell_count;
 	direct_stamping["direct_grid_unavailable_count"] = direct_grid_unavailable_count;
 	direct_stamping["direct_unique_selection_count"] = direct_unique_selection_count;
-	direct_stamping["direct_random_tie_required_count"] = direct_random_tie_required_count;
+	direct_stamping["direct_random_tie_selection_count"] = direct_random_tie_selection_count;
+	direct_stamping["direct_random_tie_rng_call_count"] = direct_random_tie_rng_call_count;
 	direct_stamping["direct_record_projection_count"] = direct_record_projection_count;
+	direct_stamping["object_rng_state_before_0x4a93a2_uint32"] = int64_t(object_rng_state_before);
+	direct_stamping["object_rng_state_after_0x4a93a2_uint32"] = int64_t(object_rng.state);
 	direct_stamping["runtime_package_adoption"] = false;
 	direct_stamping["stamps_generated_cell_state"] = false;
 	direct_stamping["records"] = direct_stamping_records;
