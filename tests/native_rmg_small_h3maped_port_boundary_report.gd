@@ -1054,8 +1054,20 @@ func _run() -> void:
 		_fail("h3maped fixed type6 value-band boundary drifted: %s" % JSON.stringify(value_bands))
 		return
 	var artifact_loop: Dictionary = generic_selector.get("candidate_builder_artifact_pool_loop", {})
+	var artifact_layout: Dictionary = artifact_loop.get("artifact_pool_vector_layout", {})
 	if String(generic_selector.get("candidate_builder_artifact_pool_loop_status", "")) != "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized" \
 				or String(artifact_loop.get("artifact_pool_vector_offset", "")) != "generator+0xd8..+0xdc" \
+				or String(artifact_loop.get("artifact_pool_vector_layout_status", "")) != "type10_object_bucket_vector_layout_identified" \
+				or String(artifact_layout.get("producer_range", "")) != "0x49da08..0x49db75" \
+				or String(artifact_layout.get("bucket_array_offset", "")) != "generator+0x34" \
+				or int(artifact_layout.get("bucket_stride_bytes", -1)) != 0x10 \
+				or int(artifact_layout.get("bucket_count", -1)) != 0xe8 \
+				or String(artifact_layout.get("artifact_bucket_struct_offset", "")) != "generator+0xd4" \
+				or String(artifact_layout.get("artifact_bucket_begin_offset", "")) != "generator+0xd8" \
+				or String(artifact_layout.get("artifact_bucket_end_offset", "")) != "generator+0xdc" \
+				or String(artifact_layout.get("producer_bucket_index_source", "")) != "[0x57c648 + source_type*0x10 + 0x08]" \
+				or bool(artifact_layout.get("producer_remap_materialized", true)) \
+				or bool(artifact_layout.get("source_rows_materialized", true)) \
 				or String(artifact_loop.get("selection_state_helper_address", "")) != "0x48d21c" \
 				or String(artifact_loop.get("vtable_address", "")) != "0x540ca0" \
 				or int(artifact_loop.get("type_id", -1)) != 10 \
@@ -1065,12 +1077,16 @@ func _run() -> void:
 				or not bool(artifact_loop.get("record_shape_materialized", false)) \
 				or not bool(artifact_loop.get("candidate_record_values_materialized", false)) \
 				or bool(artifact_loop.get("candidate_pool_count_materialized", true)) \
-				or String(artifact_loop.get("candidate_pool_count_blocker", "")) != "generator+0xd8..+0xdc producer not ported" \
+				or String(artifact_loop.get("candidate_pool_count_blocker", "")) != "0x49da08 source-table row filters and 0x57c648 bucket remap not materialized" \
 				or bool(artifact_loop.get("materialized_candidate_records", true)):
 		_fail("h3maped artifact pool candidate loop boundary drifted: %s" % JSON.stringify(artifact_loop))
 		return
 	var artifact_blocker: Dictionary = generic_selector.get("candidate_builder_artifact_pool_materialization_blocker", {})
-	if String(generic_selector.get("candidate_builder_artifact_pool_materialization_blocker_status", "")) != "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported" \
+	var blocker_layout: Dictionary = artifact_blocker.get("producer_layout", {})
+	if String(generic_selector.get("candidate_builder_artifact_pool_materialization_blocker_status", "")) != "blocked_until_0x49da08_object_bucket_producer_is_materialized" \
+				or String(artifact_blocker.get("status", "")) != "blocked_until_0x49da08_object_bucket_producer_is_materialized" \
+				or String(blocker_layout.get("producer_range", "")) != "0x49da08..0x49db75" \
+				or String(blocker_layout.get("producer_record_initializer_address", "")) != "0x49db76" \
 				or String(artifact_blocker.get("consumer_source_range", "")) != "0x49ff59..0x4a00c7" \
 				or String(artifact_blocker.get("consumer_pool_count_formula", "")) != "(generator+0xdc - generator+0xd8) / 4" \
 				or int(artifact_blocker.get("consumer_records_per_pool_entry", -1)) != 5 \
