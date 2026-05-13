@@ -954,6 +954,8 @@ func _run() -> void:
 				or bool(generic_selector.get("candidate_vector_reconstructed", true)) \
 				or not bool(generic_selector.get("candidate_vector_order_reconstructed", false)) \
 				or not bool(generic_selector.get("value_vfuncs_reconstructed", false)) \
+				or not bool(generic_selector.get("selector_scan_materialized", false)) \
+				or String(generic_selector.get("selector_materialization_status", "")) != "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_pending" \
 				or bool(generic_selector.get("materializes_reward_object", true)):
 		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
 		return
@@ -1303,8 +1305,8 @@ func _run() -> void:
 		return
 	var value_vfuncs: Dictionary = generic_selector.get("candidate_value_vfunc_boundary", {})
 	var value_vfunc_records: Array = value_vfuncs.get("records", [])
-	if String(generic_selector.get("candidate_value_vfunc_boundary_status", "")) != "0x49c54d_0x49cd97_value_and_create_vfuncs_reconstructed_selection_not_materialized" \
-				or String(value_vfuncs.get("status", "")) != "value_and_create_vfuncs_reconstructed_selection_pending" \
+	if String(generic_selector.get("candidate_value_vfunc_boundary_status", "")) != "0x49c54d_0x49cd97_value_create_and_selector_scan_materialized" \
+				or String(value_vfuncs.get("status", "")) != "value_create_and_selector_scan_materialized_coordinate_commit_pending" \
 				or String(value_vfuncs.get("selector_call_site", "")) != "0x4a9ffd..0x4aa004" \
 				or String(value_vfuncs.get("selector_call_contract", "")) != "push generator, push zone_context, call candidate_vtable+0x04" \
 				or String(value_vfuncs.get("range_filter_after_call", "")) != "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band" \
@@ -1321,11 +1323,37 @@ func _run() -> void:
 				or String(value_vfunc_records[3].get("address", "")) != "0x49ca8b" \
 				or String(value_vfunc_records[4].get("address", "")) != "0x49cb60" \
 				or String(value_vfunc_records[5].get("address", "")) != "0x49cd97" \
-				or bool(value_vfuncs.get("selection_materialized", true)) \
+				or not bool(value_vfuncs.get("selection_materialized", false)) \
+				or not bool(value_vfuncs.get("selector_scan_materialized", false)) \
 				or not bool(value_vfuncs.get("candidate_record_materialization_pending", false)) \
 				or bool(value_vfuncs.get("create_vfuncs_pending", true)) \
 				or not bool(value_vfuncs.get("create_vfuncs_materialized", false)):
 		_fail("h3maped candidate value-vfunc boundary drifted: %s" % JSON.stringify(value_vfuncs))
+		return
+	var selector_materialization: Dictionary = generic_selector.get("selector_materialization_boundary", {})
+	var selector_gates: Array = selector_materialization.get("gates", [])
+	if String(selector_materialization.get("status", "")) != "selector_scan_weighted_choice_materialized_coordinate_commit_pending" \
+				or String(selector_materialization.get("source_range", "")) != "0x4a9f1c..0x4aa192" \
+				or String(selector_materialization.get("loop_range", "")) != "0x4a9f6a..0x4aa0ef" \
+				or String(selector_materialization.get("weighted_choice_range", "")) != "0x4aa0fc..0x4aa168" \
+				or String(selector_materialization.get("candidate_vector_source", "")) != "generator+0x10f4..+0x10f8" \
+				or String(selector_materialization.get("global_limit_table_address", "")) != "0x5a26e4" \
+				or String(selector_materialization.get("per_zone_limit_table_address", "")) != "0x5a2a8c" \
+				or String(selector_materialization.get("template_selector_address", "")) != "0x4a9e40" \
+				or String(selector_materialization.get("collision_helper_address", "")) != "0x49a6f9" \
+				or String(selector_materialization.get("footprint_size_helper_address", "")) != "0x4aa195" \
+				or String(selector_materialization.get("weighted_rng_address", "")) != "0x4e7276" \
+				or not bool(selector_materialization.get("selector_materialized", false)) \
+				or not bool(selector_materialization.get("weighted_choice_materialized", false)) \
+				or not bool(selector_materialization.get("create_call_materialized", false)) \
+				or bool(selector_materialization.get("runtime_reward_coordinate_commit_materialized", true)) \
+				or bool(selector_materialization.get("public_object_materialization_allowed", true)) \
+				or selector_gates.size() != 8 \
+				or String(selector_gates[0].get("gate", "")) != "metadata_primary_secondary" \
+				or String(selector_gates[4].get("gate", "")) != "value_range" \
+				or String(selector_gates[7].get("gate", "")) != "footprint_weight_window" \
+				or String(selector_materialization.get("remaining_blocker", "")) != "port_0x4aa9b7_coordinate_commit_and_reward_object_adoption":
+		_fail("h3maped selector materialization boundary drifted: %s" % JSON.stringify(selector_materialization))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or String(generic_selector.get("materialized_static_candidate_boundary_status", "")) != "static_candidate_records_materialized_dynamic_subset_pending":
