@@ -101,7 +101,9 @@ func _run() -> void:
 			or String(backlog[1].get("status", "")) != "private_context_ready" \
 			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
 			or String(backlog[2].get("status", "")) != "private_context_ready" \
-			or String(backlog[3].get("status", "")) != "pending_strict_port" \
+			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
+			or String(backlog[3].get("status", "")) != "private_context_ready" \
+			or String(backlog[4].get("status", "")) != "pending_strict_port" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -112,12 +114,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "runtime_zone_records_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"] \
-			or int(private_context.get("completed_phase_count", -1)) != 3 \
+			or String(private_context.get("status", "")) != "coordinate_replay_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints"] \
+			or int(private_context.get("completed_phase_count", -1)) != 5 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped runtime-zone phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped coordinate-replay phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -186,6 +188,82 @@ func _run() -> void:
 			or String(runtime_records[5].get("role", "")) != "treasure":
 		_fail("h3maped runtime-zone records drifted: %s" % JSON.stringify(runtime_records))
 		return
+	var link_context: Dictionary = private_context.get("link_context", {})
+	if String(link_context.get("h3maped_anchor", "")) != "0x4a1f3b" \
+			or String(link_context.get("candidate_generator_anchor", "")) != "0x4a17f5" \
+			or String(link_context.get("distance_validation_anchor", "")) != "0x4a1701" \
+			or String(link_context.get("late_payload_consumer_anchor", "")) != "0x4a79a3" \
+			or String(link_context.get("status", "")) != "private_context_ready" \
+			or int(link_context.get("link_seed_count", -1)) != 5 \
+			or bool(link_context.get("materializes_coordinates", true)) \
+			or bool(link_context.get("materializes_connection_guards", true)) \
+			or bool(link_context.get("materializes_roads", true)) \
+			or bool(link_context.get("materializes_blockers", true)) \
+			or bool(link_context.get("materializes_public_output", true)):
+		_fail("h3maped link-seed private context drifted: %s" % JSON.stringify(link_context))
+		return
+	var link_seeds: Array = link_context.get("link_seeds", [])
+	if link_seeds.size() != 5 \
+			or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 \
+			or int(link_seeds[0].get("runtime_zone_b", -1)) != 3 \
+			or int(link_seeds[0].get("guard_value", -1)) != 3000 \
+			or int(link_seeds[3].get("runtime_zone_a", -1)) != 2 \
+			or int(link_seeds[3].get("runtime_zone_b", -1)) != 4 \
+			or int(link_seeds[3].get("guard_value", -1)) != 6000 \
+			or int(link_seeds[4].get("runtime_zone_a", -1)) != 5 \
+			or int(link_seeds[4].get("runtime_zone_b", -1)) != 3:
+		_fail("h3maped link seeds drifted: %s" % JSON.stringify(link_seeds))
+		return
+	var coordinate_context: Dictionary = private_context.get("coordinate_replay_context", {})
+	if String(coordinate_context.get("status", "")) != "private_context_ready" \
+			or String(coordinate_context.get("link_endpoint_consumer_anchor", "")) != "0x4a1f3b" \
+			or String(coordinate_context.get("candidate_generator_anchor", "")) != "0x4a17f5" \
+			or String(coordinate_context.get("distance_validation_anchor", "")) != "0x4a1701" \
+			or String(coordinate_context.get("candidate_prune_anchor", "")) != "0x4a1ad8" \
+			or String(coordinate_context.get("bbox_rescale_anchor", "")) != "0x4a19ed" \
+			or int(coordinate_context.get("rng_state_before_0x4a218c_replay_uint32", -1)) != 2745024 \
+			or int(coordinate_context.get("placement_step_count", -1)) != 18 \
+			or int(coordinate_context.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
+			or int(coordinate_context.get("town_choice_rng_calls_during_0x4a218c", -1)) != 4 \
+			or int(coordinate_context.get("total_interleaved_rng_calls_during_0x4a218c", -1)) != 22 \
+			or int(coordinate_context.get("rng_event_count", -1)) != 22 \
+			or int(coordinate_context.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 255755822 \
+			or bool(coordinate_context.get("materializes_map_cells", true)) \
+			or bool(coordinate_context.get("materializes_zone_footprints", true)) \
+			or bool(coordinate_context.get("materializes_terrain", true)) \
+			or bool(coordinate_context.get("materializes_public_output", true)):
+		_fail("h3maped coordinate-replay private context drifted: %s" % JSON.stringify(coordinate_context))
+		return
+	var bbox: Dictionary = coordinate_context.get("bounding_box_rescale", {})
+	if int(bbox.get("selected_span_before_rescale", -1)) != 84 \
+			or int(bbox.get("map_span", -1)) != 36:
+		_fail("h3maped coordinate bbox rescale drifted: %s" % JSON.stringify(bbox))
+		return
+	var scaled: Array = coordinate_context.get("scaled_zone_coordinates", [])
+	if scaled.size() != 6 \
+			or int(scaled[0].get("x_after_bbox_rescale", -1)) != 23 \
+			or int(scaled[0].get("y_after_bbox_rescale", -1)) != 11 \
+			or int(scaled[1].get("x_after_bbox_rescale", -1)) != 21 \
+			or int(scaled[1].get("y_after_bbox_rescale", -1)) != 22 \
+			or int(scaled[2].get("x_after_bbox_rescale", -1)) != 12 \
+			or int(scaled[2].get("y_after_bbox_rescale", -1)) != 23 \
+			or int(scaled[3].get("x_after_bbox_rescale", -1)) != 18 \
+			or int(scaled[3].get("y_after_bbox_rescale", -1)) != 4 \
+			or int(scaled[4].get("x_after_bbox_rescale", -1)) != 18 \
+			or int(scaled[4].get("y_after_bbox_rescale", -1)) != 30 \
+			or int(scaled[5].get("x_after_bbox_rescale", -1)) != 12 \
+			or int(scaled[5].get("y_after_bbox_rescale", -1)) != 11:
+		_fail("h3maped scaled zone coordinates drifted: %s" % JSON.stringify(scaled))
+		return
+	var rng_events: Array = coordinate_context.get("rng_events", [])
+	if rng_events.size() != 22 \
+			or String(rng_events[0].get("consumer", "")) != "0x49b3c1" \
+			or String(rng_events[0].get("selected_faction_id", "")) != "elemental" \
+			or String(rng_events[2].get("selected_faction_id", "")) != "necropolis" \
+			or String(rng_events[5].get("selected_faction_id", "")) != "inferno" \
+			or String(rng_events[7].get("selected_faction_id", "")) != "fortress":
+		_fail("h3maped interleaved RNG events drifted: %s" % JSON.stringify(rng_events))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
@@ -193,7 +271,7 @@ func _run() -> void:
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 

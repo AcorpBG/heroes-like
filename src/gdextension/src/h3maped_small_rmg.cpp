@@ -7,9 +7,11 @@
 
 #include <algorithm>
 #include <cerrno>
+#include <cmath>
 #include <cstdint>
 #include <cstdlib>
 #include <iterator>
+#include <vector>
 
 namespace godot::h3maped_small_rmg {
 namespace {
@@ -58,6 +60,39 @@ struct SourceZoneEvidence {
 	int32_t minimum_rare_mines;
 };
 
+struct SourceLinkEvidence {
+	int32_t template_catalog_index;
+	int32_t source_zone_a;
+	int32_t source_zone_b;
+	int32_t guard_value;
+	bool wide;
+	bool border_guard;
+};
+
+struct CoordCandidate {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct RuntimeZoneSeed {
+	int32_t runtime_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t source_bucket = -1;
+	int32_t source_owner_index = -1;
+	int32_t actual_owner_color = -1;
+	int32_t source_base_size = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t scaled_size = 0;
+};
+
+struct RuntimeLinkSeed {
+	int32_t runtime_a = -1;
+	int32_t runtime_b = -1;
+};
+
 struct H3MapedRng {
 	uint32_t state = 0;
 
@@ -99,6 +134,191 @@ const SourceZoneEvidence TEMPLATE_018_SOURCE_ZONES[] = {
 	{ 18, 5, "human_start", 0, 3, 11, 1, true, "match_to_player_town", "average", 9, 0, 1, 1, 0 },
 	{ 18, 6, "treasure", 2, -2, 11, 0, false, "all_land_h3", "strong", 0, 8, 0, 0, 5 },
 };
+
+const SourceLinkEvidence TEMPLATE_018_SOURCE_LINKS[] = {
+	{ 18, 1, 4, 3000, false, false },
+	{ 18, 2, 5, 3000, false, false },
+	{ 18, 4, 5, 3000, false, false },
+	{ 18, 3, 5, 6000, false, false },
+	{ 18, 6, 4, 6000, false, false },
+};
+
+const char *H3MAPED_ALLOWED_MAIN_TOWNS[] = {
+	"castle",
+	"rampart",
+	"tower",
+	"inferno",
+	"necropolis",
+	"dungeon",
+	"stronghold",
+	"fortress",
+	"elemental",
+};
+
+int32_t h3maped_distance_truncate_local(int32_t ax, int32_t ay, int32_t bx, int32_t by) {
+	const int64_t dx = int64_t(ax) - int64_t(bx);
+	const int64_t dy = int64_t(ay) - int64_t(by);
+	return int32_t(std::trunc(std::sqrt(double(dx * dx + dy * dy))));
+}
+
+int32_t ftol_truncate(double value) {
+	return int32_t(std::trunc(value));
+}
+
+Array coordinate_candidate_report(const std::vector<CoordCandidate> &candidates, int32_t limit = 8) {
+	Array result;
+	const int32_t capped = std::min<int32_t>(int32_t(candidates.size()), limit);
+	for (int32_t index = 0; index < capped; ++index) {
+		Dictionary item;
+		item["x"] = candidates[size_t(index)].x;
+		item["y"] = candidates[size_t(index)].y;
+		item["level"] = candidates[size_t(index)].level;
+		result.append(item);
+	}
+	return result;
+}
+
+bool candidate_valid_4a1701(const RuntimeZoneSeed &current, const CoordCandidate &candidate, const std::vector<RuntimeZoneSeed> &zones, const std::vector<int32_t> &visible_runtime_indices) {
+	if ((current.source_bucket == 0 || current.source_bucket == 1) && candidate.level == 1
+			&& current.actual_owner_color != 3 && current.actual_owner_color != 4 && current.actual_owner_color != 5) {
+		return false;
+	}
+	for (const int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		const RuntimeZoneSeed &other = zones[size_t(other_index)];
+		if (other.runtime_index == current.runtime_index || other.level != candidate.level) {
+			continue;
+		}
+		const int32_t distance = h3maped_distance_truncate_local(candidate.x, candidate.y, other.x, other.y);
+		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
+		if (distance * 10 < minimum_tenths) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool zones_connectable_49b6e2(const RuntimeZoneSeed &first, const RuntimeZoneSeed &second) {
+	const int32_t distance = h3maped_distance_truncate_local(first.x, first.y, second.x, second.y);
+	const int32_t size_sum = first.source_base_size + second.source_base_size;
+	if (first.level != second.level) {
+		if (size_sum < distance) {
+			return false;
+		}
+		return (size_sum - distance) > (std::min(first.source_base_size, second.source_base_size) / 2);
+	}
+	return size_sum * 11 >= distance * 10;
+}
+
+int32_t link_acceptance_count_4a1967(const RuntimeZoneSeed &current, const std::vector<RuntimeZoneSeed> &zones, const std::vector<RuntimeLinkSeed> &links) {
+	int32_t accepted = 0;
+	for (const RuntimeLinkSeed &link : links) {
+		int32_t other_index = -1;
+		if (link.runtime_a == current.runtime_index) {
+			other_index = link.runtime_b;
+		} else if (link.runtime_b == current.runtime_index) {
+			other_index = link.runtime_a;
+		}
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		if (zones_connectable_49b6e2(zones[size_t(other_index)], current)) {
+			accepted += 1;
+		}
+	}
+	return accepted;
+}
+
+void append_angle_candidates_4a17f5(const RuntimeZoneSeed &base, const RuntimeZoneSeed &current, const std::vector<RuntimeZoneSeed> &zones, const std::vector<int32_t> &visible_runtime_indices, std::vector<CoordCandidate> &candidates) {
+	static constexpr double X_TABLE[32] = {
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+	};
+	static constexpr double Y_TABLE[32] = {
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+	};
+	const int32_t combined_size = base.source_base_size + current.source_base_size;
+	for (int32_t direction = 0; direction < 32; ++direction) {
+		CoordCandidate candidate;
+		candidate.x = ftol_truncate(double(combined_size) * X_TABLE[direction] + double(base.x));
+		candidate.y = ftol_truncate(double(combined_size) * Y_TABLE[direction] + double(base.y));
+		candidate.level = base.level;
+		if (candidate_valid_4a1701(current, candidate, zones, visible_runtime_indices)) {
+			candidates.push_back(candidate);
+		}
+	}
+}
+
+void prune_candidates_4a1ad8_single_level(const RuntimeZoneSeed &current_template, const std::vector<RuntimeZoneSeed> &zones, const std::vector<int32_t> &visible_runtime_indices, const std::vector<RuntimeLinkSeed> &links, std::vector<CoordCandidate> &candidates) {
+	if (candidates.empty()) {
+		return;
+	}
+	int32_t best_link_count = 0;
+	for (const CoordCandidate &candidate : candidates) {
+		RuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		best_link_count = std::max(best_link_count, link_acceptance_count_4a1967(candidate_zone, zones, links));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		RuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		return link_acceptance_count_4a1967(candidate_zone, zones, links) < best_link_count;
+	}), candidates.end());
+	if (candidates.empty()) {
+		return;
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (const int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index == current_template.runtime_index) {
+			continue;
+		}
+		const RuntimeZoneSeed &other = zones[size_t(other_index)];
+		min_y = std::min(other.y - other.source_base_size, min_y);
+		min_x = std::min(other.x - other.source_base_size, min_x);
+		max_y = std::max(other.y + other.source_base_size + 1, max_y);
+		max_x = std::max(other.x + other.source_base_size + 1, max_x);
+	}
+
+	int32_t best_metric = 0x7d00;
+	for (const CoordCandidate &candidate : candidates) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		best_metric = std::min(best_metric, std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		const int32_t metric = std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x);
+		return best_metric < metric;
+	}), candidates.end());
+}
 
 int32_t water_mode_code(const Dictionary &normalized_config) {
 	const String water_mode = String(normalized_config.get("water_mode", "land"));
@@ -337,6 +557,13 @@ Dictionary runtime_zone_records_context(const TemplateEvidence &selected_templat
 		record["minimum_ore_mines"] = source_zone.minimum_ore_mines;
 		record["minimum_wood_mines"] = source_zone.minimum_wood_mines;
 		record["minimum_rare_mines"] = source_zone.minimum_rare_mines;
+		if (source_zone.allowed_town_count > 0) {
+			Array allowed_factions;
+			for (int32_t town_index = 0; town_index < int32_t(std::size(H3MAPED_ALLOWED_MAIN_TOWNS)); ++town_index) {
+				allowed_factions.append(H3MAPED_ALLOWED_MAIN_TOWNS[town_index]);
+			}
+			record["allowed_faction_ids_for_49b3c1"] = allowed_factions;
+		}
 		records.append(record);
 
 		actual_owner_colors_by_runtime_zone.append(actual_owner_color);
@@ -369,6 +596,296 @@ Dictionary runtime_zone_records_context(const TemplateEvidence &selected_templat
 	return context;
 }
 
+Dictionary link_seed_context(const TemplateEvidence &selected_template, const Dictionary &runtime_zone_context) {
+	Dictionary context;
+	context["phase_id"] = "link_seed_setup";
+	context["h3maped_anchor"] = "0x4a1f3b";
+	context["candidate_generator_anchor"] = "0x4a17f5";
+	context["distance_validation_anchor"] = "0x4a1701";
+	context["late_payload_consumer_anchor"] = "0x4a79a3";
+	context["status"] = "pending_source_link_evidence_for_selected_template";
+	context["materializes_coordinates"] = false;
+	context["materializes_connection_guards"] = false;
+	context["materializes_roads"] = false;
+	context["materializes_blockers"] = false;
+	context["materializes_public_output"] = false;
+	context["blocked_next"] = "coordinate_replay_0x4a17f5_0x4a1701";
+	if (selected_template.catalog_index != 18) {
+		return context;
+	}
+
+	Array seeds;
+	for (int32_t index = 0; index < int32_t(std::size(TEMPLATE_018_SOURCE_LINKS)); ++index) {
+		const SourceLinkEvidence &source_link = TEMPLATE_018_SOURCE_LINKS[index];
+		Dictionary seed;
+		seed["link_index"] = index;
+		seed["source_template_catalog_index"] = source_link.template_catalog_index;
+		seed["source_zone_a"] = source_link.source_zone_a;
+		seed["source_zone_b"] = source_link.source_zone_b;
+		seed["runtime_zone_a"] = source_link.source_zone_a - 1;
+		seed["runtime_zone_b"] = source_link.source_zone_b - 1;
+		seed["guard_value"] = source_link.guard_value;
+		seed["wide"] = source_link.wide;
+		seed["border_guard"] = source_link.border_guard;
+		seed["early_consumer"] = "0x4a1f3b_endpoint_only";
+		seed["late_payload_consumer"] = "0x4a79a3";
+		seeds.append(seed);
+	}
+
+	context["status"] = String(runtime_zone_context.get("status", "")) == "private_context_ready" ? String("private_context_ready") : String("blocked_until_runtime_zone_records");
+	context["source"] = "recovered h3maped template connection catalog plus 0x4a1f3b endpoint seed setup";
+	context["link_seed_count"] = seeds.size();
+	context["link_seeds"] = seeds;
+	return context;
+}
+
+Dictionary coordinate_replay_context(const Dictionary &normalized_config, const Dictionary &runtime_zone_context, const Dictionary &link_context, uint32_t rng_state_after_template_selection) {
+	Dictionary context;
+	context["phase_id"] = "coordinate_replay_and_zone_footprints";
+	context["h3maped_anchor"] = "0x4a218c";
+	context["link_endpoint_consumer_anchor"] = "0x4a1f3b";
+	context["candidate_generator_anchor"] = "0x4a17f5";
+	context["distance_validation_anchor"] = "0x4a1701";
+	context["candidate_prune_anchor"] = "0x4a1ad8";
+	context["bbox_rescale_anchor"] = "0x4a19ed";
+	context["status"] = "blocked_until_one_level_small_land_scope";
+	context["angle_table_x_address"] = "0x58dc28";
+	context["angle_table_y_address"] = "0x58dd28";
+	context["rng_state_before_0x4a218c_replay_uint32"] = int64_t(rng_state_after_template_selection);
+	context["materializes_map_cells"] = false;
+	context["materializes_zone_footprints"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_public_output"] = false;
+	context["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
+	if (int32_t(normalized_config.get("level_count", 1)) != 1 || String(runtime_zone_context.get("status", "")) != "private_context_ready" || String(link_context.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+
+	Array runtime_records = runtime_zone_context.get("runtime_zone_records", Array());
+	std::vector<RuntimeZoneSeed> zones;
+	zones.reserve(size_t(runtime_records.size()));
+	for (int32_t index = 0; index < runtime_records.size(); ++index) {
+		Dictionary runtime = runtime_records[index];
+		RuntimeZoneSeed zone;
+		zone.runtime_index = int32_t(runtime.get("runtime_zone_index", index));
+		zone.source_zone_id = int32_t(runtime.get("source_zone_id", -1));
+		zone.source_bucket = int32_t(runtime.get("source_bucket", -1));
+		zone.source_owner_index = int32_t(runtime.get("source_owner_index", -1));
+		zone.actual_owner_color = int32_t(runtime.get("actual_owner_color", -1));
+		zone.source_base_size = int32_t(runtime.get("source_base_size", 0));
+		zone.scaled_size = zone.source_base_size;
+		zones.push_back(zone);
+	}
+
+	std::vector<RuntimeLinkSeed> links;
+	Array link_seeds = link_context.get("link_seeds", Array());
+	for (int32_t index = 0; index < link_seeds.size(); ++index) {
+		Dictionary link = link_seeds[index];
+		RuntimeLinkSeed seed;
+		seed.runtime_a = int32_t(link.get("runtime_zone_a", -1));
+		seed.runtime_b = int32_t(link.get("runtime_zone_b", -1));
+		if (seed.runtime_a >= 0 && seed.runtime_b >= 0) {
+			links.push_back(seed);
+		}
+	}
+
+	H3MapedRng rng { rng_state_after_template_selection };
+	Array placement_steps;
+	Array rng_events;
+	int32_t coordinate_rng_calls = 0;
+	int32_t town_choice_rng_calls = 0;
+	bool complete = true;
+
+	auto apply_runtime_initializer_rng = [&](int32_t zone_index) {
+		if (zone_index < 0 || zone_index >= runtime_records.size()) {
+			return;
+		}
+		Dictionary runtime = runtime_records[zone_index];
+		String faction_id = String(runtime.get("faction_id", ""));
+		if (faction_id.is_empty()) {
+			Array allowed_factions = runtime.get("allowed_faction_ids_for_49b3c1", Array());
+			if (!allowed_factions.is_empty()) {
+				const int32_t rng_value = rng.next();
+				const int32_t town_choice_index = rng_value % int32_t(allowed_factions.size());
+				faction_id = String(allowed_factions[town_choice_index]);
+				runtime["faction_id"] = faction_id;
+				runtime["town_choice_index"] = town_choice_index;
+				runtime["faction_source"] = "0x49b3c1_allowed_town_choice";
+				town_choice_rng_calls += 1;
+				Dictionary event;
+				event["consumer"] = "0x49b3c1";
+				event["runtime_zone_index"] = zone_index;
+				event["value"] = rng_value;
+				event["modulus"] = allowed_factions.size();
+				event["selected_index"] = town_choice_index;
+				event["selected_faction_id"] = faction_id;
+				rng_events.append(event);
+			}
+		}
+		runtime_records[zone_index] = runtime;
+	};
+
+	auto place_zone = [&](int32_t zone_index, const String &pass_id, const std::vector<int32_t> &visible_runtime_indices) {
+		std::vector<CoordCandidate> candidates;
+		Dictionary step;
+		step["pass"] = pass_id;
+		step["runtime_zone_index"] = zone_index;
+		step["runtime_vector_count_before_call"] = int32_t(visible_runtime_indices.size());
+		Array visible_report;
+		for (const int32_t visible_index : visible_runtime_indices) {
+			visible_report.append(visible_index);
+		}
+		step["visible_runtime_zone_indices"] = visible_report;
+
+		if (visible_runtime_indices.empty()) {
+			candidates.push_back(CoordCandidate { 0, 0, 0 });
+			step["candidate_source"] = "0x4a1f7b_empty_runtime_vector_origin";
+			step["explicit_link_base_count"] = 0;
+			step["fallback_base_count"] = 0;
+		} else {
+			int32_t explicit_base_count = 0;
+			for (const RuntimeLinkSeed &link : links) {
+				int32_t other_index = -1;
+				if (link.runtime_a == zone_index) {
+					other_index = link.runtime_b;
+				} else if (link.runtime_b == zone_index) {
+					other_index = link.runtime_a;
+				}
+				if (other_index < 0 || std::find(visible_runtime_indices.begin(), visible_runtime_indices.end(), other_index) == visible_runtime_indices.end()) {
+					continue;
+				}
+				explicit_base_count += 1;
+				append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, visible_runtime_indices, candidates);
+			}
+			step["explicit_link_base_count"] = explicit_base_count;
+			if (candidates.empty()) {
+				for (const int32_t other_index : visible_runtime_indices) {
+					append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, visible_runtime_indices, candidates);
+				}
+				step["candidate_source"] = "0x4a2069_existing_runtime_zone_fallback";
+				step["fallback_base_count"] = int32_t(visible_runtime_indices.size());
+			} else {
+				step["candidate_source"] = "0x4a200c_explicit_source_link_endpoint";
+				step["fallback_base_count"] = 0;
+			}
+		}
+
+		step["candidate_count_before_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_before_4a1ad8"] = coordinate_candidate_report(candidates);
+		prune_candidates_4a1ad8_single_level(zones[size_t(zone_index)], zones, visible_runtime_indices, links, candidates);
+		step["candidate_count_after_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_after_4a1ad8"] = coordinate_candidate_report(candidates);
+		if (candidates.empty()) {
+			step["blocked_reason"] = "0x4a1f3b produced no coordinate candidates";
+			complete = false;
+			placement_steps.append(step);
+			return;
+		}
+
+		const int32_t rng_value = rng.next();
+		coordinate_rng_calls += 1;
+		const int32_t selected_index = rng_value % int32_t(candidates.size());
+		const CoordCandidate selected = candidates[size_t(selected_index)];
+		zones[size_t(zone_index)].x = selected.x;
+		zones[size_t(zone_index)].y = selected.y;
+		zones[size_t(zone_index)].level = selected.level;
+		step["rng_value"] = rng_value;
+		step["selected_candidate_index"] = selected_index;
+		Dictionary selected_report;
+		selected_report["x"] = selected.x;
+		selected_report["y"] = selected.y;
+		selected_report["level"] = selected.level;
+		step["selected_candidate"] = selected_report;
+		Dictionary event;
+		event["consumer"] = "0x4a1f3b_candidate_selection";
+		event["runtime_zone_index"] = zone_index;
+		event["pass"] = pass_id;
+		event["value"] = rng_value;
+		event["modulus"] = candidates.size();
+		event["selected_index"] = selected_index;
+		rng_events.append(event);
+		placement_steps.append(step);
+	};
+
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		std::vector<int32_t> visible;
+		for (int32_t visible_index = 0; visible_index < zone_index; ++visible_index) {
+			visible.push_back(visible_index);
+		}
+		apply_runtime_initializer_rng(zone_index);
+		place_zone(zone_index, "0x4a2226_initial_runtime_zone_insertion", visible);
+	}
+	std::vector<int32_t> all_visible;
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		all_visible.push_back(zone_index);
+	}
+	for (int32_t pass = 0; pass < 2; ++pass) {
+		for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+			place_zone(zone_index, pass == 0 ? String("0x4a22b3_refinement_pass_1") : String("0x4a22b3_refinement_pass_2"), all_visible);
+		}
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (const RuntimeZoneSeed &zone : zones) {
+		min_y = std::min(zone.y - zone.source_base_size, min_y);
+		min_x = std::min(zone.x - zone.source_base_size, min_x);
+		max_y = std::max(zone.y + zone.source_base_size + 1, max_y);
+		max_x = std::max(zone.x + zone.source_base_size + 1, max_x);
+	}
+	const int32_t bbox_height = max_y - min_y;
+	const int32_t bbox_width = max_x - min_x;
+	const int32_t bbox_span = std::max(bbox_height, bbox_width);
+	const int32_t map_span = std::min(int32_t(normalized_config.get("width", 36)), int32_t(normalized_config.get("height", 36)));
+	const int32_t offset_y = (min_y - bbox_span + max_y) / 2;
+	const int32_t offset_x = (min_x - bbox_span + max_x) / 2;
+
+	Array scaled_zone_coordinates;
+	for (RuntimeZoneSeed &zone : zones) {
+		if (bbox_span > 0) {
+			zone.x = ((zone.x - offset_x) * map_span) / bbox_span;
+			zone.y = ((zone.y - offset_y) * map_span) / bbox_span;
+			zone.scaled_size = (zone.source_base_size * map_span) / bbox_span;
+		}
+		Dictionary item;
+		item["runtime_zone_index"] = zone.runtime_index;
+		item["x_after_bbox_rescale"] = zone.x;
+		item["y_after_bbox_rescale"] = zone.y;
+		item["level"] = zone.level;
+		item["runtime_size_after_bbox_rescale"] = zone.scaled_size;
+		scaled_zone_coordinates.append(item);
+	}
+
+	Dictionary bbox;
+	bbox["min_y_before_rescale"] = min_y;
+	bbox["min_x_before_rescale"] = min_x;
+	bbox["max_y_before_rescale"] = max_y;
+	bbox["max_x_before_rescale"] = max_x;
+	bbox["height_before_rescale"] = bbox_height;
+	bbox["width_before_rescale"] = bbox_width;
+	bbox["selected_span_before_rescale"] = bbox_span;
+	bbox["map_span"] = map_span;
+	bbox["offset_y"] = offset_y;
+	bbox["offset_x"] = offset_x;
+
+	context["status"] = complete ? String("private_context_ready") : String("blocked_coordinate_candidate_replay");
+	context["source"] = "h3maped 0x4a218c interleaved runtime initializer, 0x4a1f3b endpoint walking, 0x4a17f5 candidates, 0x4a1701 spacing validation, 0x4a1ad8 pruning, and 0x4a19ed bbox rescale";
+	context["placement_step_count"] = placement_steps.size();
+	context["placement_steps"] = placement_steps;
+	context["coordinate_rng_calls_during_0x4a1f3b"] = coordinate_rng_calls;
+	context["town_choice_rng_calls_during_0x4a218c"] = town_choice_rng_calls;
+	context["total_interleaved_rng_calls_during_0x4a218c"] = coordinate_rng_calls + town_choice_rng_calls;
+	context["rng_event_count"] = rng_events.size();
+	context["rng_events"] = rng_events;
+	context["runtime_zone_records_after_0x49b3c1"] = runtime_records;
+	context["rng_state_after_0x4a218c_replay_uint32"] = int64_t(rng.state);
+	context["bounding_box_rescale"] = bbox;
+	context["scaled_zone_coordinates"] = scaled_zone_coordinates;
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -389,13 +906,29 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 	if (selected_template != nullptr) {
 		const Dictionary player_context = player_slot_assignment_context(*selected_template, normalized_config);
 		const Dictionary runtime_zone_context = runtime_zone_records_context(*selected_template, player_context);
+		const Dictionary link_context = link_seed_context(*selected_template, runtime_zone_context);
+		const Dictionary coordinate_context = coordinate_replay_context(normalized_config, runtime_zone_context, link_context, uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0))));
 		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
 		context["runtime_zone_context"] = runtime_zone_context;
 		if (String(runtime_zone_context.get("status", "")) == "private_context_ready") {
 			completed_phases.append("runtime_zone_records");
-			context["status"] = "runtime_zone_records_private_context_ready";
-			context["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
+			context["link_context"] = link_context;
+			if (String(link_context.get("status", "")) == "private_context_ready") {
+				completed_phases.append("link_seed_setup");
+				context["coordinate_replay_context"] = coordinate_context;
+				if (String(coordinate_context.get("status", "")) == "private_context_ready") {
+					completed_phases.append("coordinate_replay_and_zone_footprints");
+					context["status"] = "coordinate_replay_private_context_ready";
+					context["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
+				} else {
+					context["status"] = "link_seed_private_context_ready";
+					context["blocked_next"] = "coordinate_replay_0x4a17f5_0x4a1701";
+				}
+			} else {
+				context["status"] = "runtime_zone_records_private_context_ready";
+				context["blocked_next"] = "link_seed_setup_0x4a1f3b";
+			}
 		} else {
 			context["status"] = "player_slot_assignment_private_context_ready";
 			context["blocked_next"] = "runtime_zone_records_0x4a218c";
@@ -463,7 +996,7 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : (index == 1 || index == 2 ? String("private_context_ready") : String("pending_strict_port"));
+		phase["status"] = index == 0 ? String("active_boundary_only") : (index >= 1 && index <= 3 ? String("private_context_ready") : String("pending_strict_port"));
 		phase["materializes_public_output"] = false;
 		phases.append(phase);
 	}
