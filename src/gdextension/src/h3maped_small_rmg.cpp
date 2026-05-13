@@ -1050,6 +1050,53 @@ Array h3_static_tail_after_terrain_loop_records() {
 	return h3_candidate_records_from_specs(TAIL_RECORDS, int32_t(sizeof(TAIL_RECORDS) / sizeof(TAIL_RECORDS[0])));
 }
 
+Dictionary h3_candidate_vtable_record(const char *vtable_address, const char *create_vfunc, const char *value_vfunc, const char *disabled_vfunc, const char *value_semantics, const char *disabled_semantics) {
+	Dictionary record;
+	record["vtable_address"] = vtable_address;
+	record["create_vfunc_address"] = create_vfunc;
+	record["value_vfunc_address"] = value_vfunc;
+	record["disabled_vfunc_address"] = disabled_vfunc;
+	record["value_semantics"] = value_semantics;
+	record["disabled_semantics"] = disabled_semantics;
+	return record;
+}
+
+Array h3_candidate_vtable_records() {
+	return Array::make(
+			h3_candidate_vtable_record("0x540ba0", "0x49c553", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540bb0", "0x49c58a", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540bc0", "0x49c69b", "0x49c64b", "0x49c54a", "monster_value_from_table_and_generator_strength", "always_false"),
+			h3_candidate_vtable_record("0x540bd0", "0x49c6e2", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540be0", "0x49c723", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540bf0", "0x49c764", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c00", "0x49c806", "0x49c849", "0x49c54a", "terrain_specialized_monster_value_from_table", "always_false"),
+			h3_candidate_vtable_record("0x540c10", "0x49c8b0", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c20", "0x49c8f3", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c30", "0x49c97c", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c40", "0x49c9e3", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c50", "0x49ca48", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540c60", "0x49cac2", "0x49ca8b", "0x49baf5", "terrain_vector_context_value_gate", "always_true"),
+			h3_candidate_vtable_record("0x540c70", "0x49cb83", "0x49cb60", "0x49baf5", "generator_plus_0xf58_and_0x10b4_gate_then_record_value", "always_true"),
+			h3_candidate_vtable_record("0x540c80", "0x49cc22", "0x49cb60", "0x49baf5", "generator_plus_0xf58_and_0x10b4_gate_then_record_value", "always_true"),
+			h3_candidate_vtable_record("0x540c90", "0x49ccec", "0x49c54d", "0x49c54a", "returns_record_field_0x0c", "always_false"),
+			h3_candidate_vtable_record("0x540ca0", "0x49cdb1", "0x49cd97", "0x49baf5", "generator_plus_0xf5c_gate_then_record_value", "always_true"));
+}
+
+Dictionary h3_candidate_vtable_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x540ba0..0x540cac";
+	boundary["entry_size_bytes"] = 0x10;
+	boundary["create_vfunc_offset"] = "+0x00";
+	boundary["value_vfunc_offset"] = "+0x04";
+	boundary["disabled_vfunc_offset"] = "+0x08";
+	boundary["rtti_or_typeinfo_offset"] = "+0x0c";
+	boundary["record_count"] = 17;
+	boundary["records"] = h3_candidate_vtable_records();
+	boundary["value_vfuncs_materialized"] = false;
+	boundary["create_vfuncs_materialized"] = false;
+	return boundary;
+}
+
 Dictionary h3_static_tail_after_terrain_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x4a1194..0x4a1701";
@@ -1194,6 +1241,8 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
 	boundary["candidate_builder_static_constructor_tail_status"] = "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
+	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized";
+	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
 	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
