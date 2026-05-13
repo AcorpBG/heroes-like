@@ -1263,6 +1263,35 @@ Dictionary h3_artifact_pool_candidate_loop_boundary() {
 	boundary["weight"] = 10;
 	boundary["candidate_records_per_artifact"] = 5;
 	boundary["iteration_order"] = "descending_artifact_pool_index";
+	boundary["record_shape_materialized"] = true;
+	boundary["candidate_record_values_materialized"] = true;
+	boundary["candidate_pool_count_materialized"] = false;
+	boundary["candidate_pool_count_blocker"] = "generator+0xd8..+0xdc producer not ported";
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
+Dictionary h3_artifact_pool_materialization_blocker_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported";
+	boundary["consumer_source_range"] = "0x49ff59..0x4a00c7";
+	boundary["consumer_pool_count_formula"] = "(generator+0xdc - generator+0xd8) / 4";
+	boundary["consumer_iteration_order"] = "descending_artifact_pool_index";
+	boundary["consumer_records_per_pool_entry"] = 5;
+	boundary["consumer_record_values"] = Array::make(5000, 7500, 10000, 15000, 20000);
+	boundary["consumer_record_type_id"] = 10;
+	boundary["consumer_record_weight"] = 10;
+	boundary["consumer_vtable_address"] = "0x540ca0";
+	boundary["selection_state_offset"] = "generator+0x1100";
+	boundary["selection_state_buffer_offset"] = "generator+0x1104";
+	boundary["selection_state_helper_address"] = "0x48d21c";
+	boundary["selection_state_helper_semantics"] = "ensure byte-vector length is at least artifact pool count and initialize new bytes from stack seed byte";
+	boundary["selection_state_write_source"] = "0x49ff99..0x49ffa4 clears selection byte for each descending artifact-pool index before appending its five value records";
+	boundary["value_vfunc_address"] = "0x49cd97";
+	boundary["value_vfunc_dependency"] = "returns record.value only when generator+0xf5c equals record.subtype";
+	boundary["producer_required_before_materialization"] = true;
+	boundary["known_consumer_record_shape_safe"] = true;
+	boundary["known_pool_contents_safe"] = false;
 	boundary["materialized_candidate_records"] = false;
 	return boundary;
 }
@@ -1625,6 +1654,8 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
 	boundary["candidate_builder_artifact_pool_loop_status"] = "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized";
 	boundary["candidate_builder_artifact_pool_loop"] = h3_artifact_pool_candidate_loop_boundary();
+	boundary["candidate_builder_artifact_pool_materialization_blocker_status"] = "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported";
+	boundary["candidate_builder_artifact_pool_materialization_blocker"] = h3_artifact_pool_materialization_blocker_boundary();
 	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending";
 	boundary["candidate_builder_type17_loop"] = h3_type17_generator_loop_boundary();
 	boundary["materialized_single_level_type17_candidate_boundary_status"] = "single_level_type17_candidate_loop_materialized_vector_index_pending";
