@@ -91,6 +91,13 @@ struct RuntimeLinkSeed {
 	int32_t runtime_b = -1;
 };
 
+struct HighOwnerQueueNode {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t score = 0;
+};
+
 struct ClipBounds {
 	int32_t min_x = 0;
 	int32_t min_y = 0;
@@ -3513,7 +3520,8 @@ Dictionary same_level_connection_owner_channel_report(const Array &link_seeds, c
 	report["helper_addresses"] = Array::make("0x4a61bc", "0x4a696b");
 	report["owner_low_byte_source"] = terrain_cell_writeout.get("owner_low_byte_source", "cell+0x20 bits 16..23");
 	report["owner_high_byte_source"] = terrain_cell_writeout.get("owner_high_byte_source", "cell+0x20 bits 24..31");
-	report["owner_high_byte_producer_pending"] = "0x49a318";
+	report["owner_high_byte_producer"] = "0x4a5767/0x49a318";
+	report["owner_high_byte_object_metadata_pending"] = true;
 	report["materializes_endpoint_coordinates"] = false;
 	report["materializes_connection_guards"] = false;
 	report["materializes_roads"] = false;
@@ -3605,7 +3613,214 @@ Dictionary same_level_connection_owner_channel_report(const Array &link_seeds, c
 	report["links_with_low_owner_cells"] = links_with_low_owner_cells;
 	report["links_with_high_owner_cells"] = links_with_high_owner_cells;
 	report["records"] = records;
-	report["blocked_next"] = "port 0x49a318 high-owner normalization before actual 0x4a61bc/0x4a696b endpoint candidate success path";
+	report["blocked_next"] = "port remaining 0x49a318 bit22/object metadata branches and actual 0x4a61bc/0x4a696b endpoint candidate success path";
+	return report;
+}
+
+Dictionary high_owner_normalization_4a5767_49a318_report(
+		const Dictionary &coordinate_replay,
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		const PackedInt32Array &owner_low_grid,
+		PackedInt32Array &owner_high_grid,
+		const PackedInt32Array &repaint_member_grid,
+		const PackedInt32Array &terrain_codes) {
+	Dictionary report;
+	report["schema_id"] = "aurelion_h3maped_small_high_owner_4a5767_49a318_v1";
+	report["status"] = "0x4a5767_49a318_high_owner_channel_materialized_inspection_only";
+	report["function_address"] = "0x4a5767";
+	report["propagation_helper_address"] = "0x49a318";
+	report["cell_init_helper_address"] = "0x4a59e2";
+	report["source"] = "Recovered h3maped.exe occupancy reset/high-owner propagation: all cells start with high owner sentinel -1 and low/high path words 0x7d00; runtime-zone anchors seed 0x49a318, which writes cell+0x20 bits 24..31 only when propagation crosses into a different low-owner channel.";
+	report["owner_low_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31";
+	report["path_low_word_reset"] = 0x7d00;
+	report["path_high_word_reset"] = 0x7d00;
+	report["direction_iteration_order"] = "0x49a482..0x49a496 iterates 0x5a2658 table from index 7 down to 0";
+	report["same_owner_step_cost"] = "1, or 10 for terrain 8 cells in the recovered branch";
+	report["cross_owner_step_cost"] = 10;
+	report["materialized_cell_gate"] = "cell+0x28 bit25, carried here as the 0x4a325d/0x4a3f27 repaint-member grid";
+	report["terrain_reject"] = "terrain id 9";
+	report["complete_object_metadata_gate"] = false;
+	report["object_metadata_gate_gap"] = "0x49a318 also has bit22/object metadata branches; the current clean subset ports the owner/materialized/terrain path and keeps object metadata parity pending";
+
+	const int32_t tile_count = width * height * level_count;
+	constexpr int32_t path_reset_value = 0x7d00;
+	PackedInt32Array path_low_word;
+	PackedInt32Array path_high_word;
+	path_low_word.resize(std::max(0, tile_count));
+	path_high_word.resize(std::max(0, tile_count));
+	for (int32_t index = 0; index < tile_count; ++index) {
+		path_low_word.set(index, path_reset_value);
+		path_high_word.set(index, path_reset_value);
+	}
+
+	const bool grids_available = width > 0
+			&& height > 0
+			&& level_count > 0
+			&& owner_low_grid.size() == tile_count
+			&& owner_high_grid.size() == tile_count
+			&& repaint_member_grid.size() == tile_count
+			&& terrain_codes.size() == tile_count;
+	report["grid_available"] = grids_available;
+	if (!grids_available) {
+		report["status"] = "0x4a5767_49a318_high_owner_channel_blocked_missing_grids";
+		report["path_low_word_u16"] = path_low_word;
+		report["path_high_word_u16"] = path_high_word;
+		return report;
+	}
+
+	constexpr int32_t direction_count = 8;
+	constexpr int32_t direction_dx[direction_count] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	constexpr int32_t direction_dy[direction_count] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	Array runtime_zones = coordinate_replay.get("scaled_zone_coordinates", Array());
+	Array seed_reports;
+	int32_t seed_attempt_count = 0;
+	int32_t seed_blocked_count = 0;
+	int32_t total_popped_count = 0;
+	int32_t total_same_owner_relax_count = 0;
+	int32_t total_cross_owner_write_count = 0;
+	int32_t max_queue_size = 0;
+
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		const int32_t seed_x = int32_t(runtime.get("x_after_bbox_rescale", 0));
+		const int32_t seed_y = int32_t(runtime.get("y_after_bbox_rescale", 0));
+		const int32_t seed_level = int32_t(runtime.get("level", 0));
+		const bool seed_in_bounds = seed_x >= 0 && seed_x < width && seed_y >= 0 && seed_y < height && seed_level >= 0 && seed_level < level_count;
+		Dictionary seed_report;
+		seed_report["runtime_zone_index"] = runtime.get("runtime_zone_index", runtime_index);
+		seed_report["seed_x"] = seed_x;
+		seed_report["seed_y"] = seed_y;
+		seed_report["seed_level"] = seed_level;
+		seed_report["seed_in_bounds"] = seed_in_bounds;
+		seed_attempt_count += 1;
+		if (!seed_in_bounds) {
+			seed_blocked_count += 1;
+			seed_report["status"] = "blocked_seed_out_of_bounds";
+			seed_reports.append(seed_report);
+			continue;
+		}
+		const int32_t seed_index = int32_t(h3maped_cell_index(width, height, seed_x, seed_y, seed_level));
+		const int32_t source_owner = int32_t(owner_low_grid[seed_index]);
+		seed_report["source_owner_byte"] = source_owner;
+		if (source_owner < 0 || int32_t(repaint_member_grid[seed_index]) == 0 || int32_t(terrain_codes[seed_index]) == 9) {
+			seed_blocked_count += 1;
+			seed_report["status"] = "blocked_seed_not_materialized_or_unowned";
+			seed_reports.append(seed_report);
+			continue;
+		}
+
+		std::vector<HighOwnerQueueNode> queue;
+		path_low_word.set(seed_index, 0);
+		queue.push_back(HighOwnerQueueNode { seed_x, seed_y, seed_level, 0 });
+		int32_t popped_count = 0;
+		int32_t same_owner_relax_count = 0;
+		int32_t cross_owner_write_count = 0;
+		int32_t rejected_bounds_count = 0;
+		int32_t rejected_unowned_count = 0;
+		int32_t rejected_materialized_count = 0;
+		int32_t rejected_terrain9_count = 0;
+		for (int32_t guard = 0; guard < tile_count * 16 && !queue.empty(); ++guard) {
+			int32_t best_index = 0;
+			for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
+				if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
+					best_index = index;
+				}
+			}
+			const HighOwnerQueueNode node = queue[size_t(best_index)];
+			queue.erase(queue.begin() + best_index);
+			popped_count += 1;
+			total_popped_count += 1;
+			const int32_t node_index = int32_t(h3maped_cell_index(width, height, node.x, node.y, node.level));
+			const int32_t node_owner = int32_t(owner_low_grid[node_index]);
+			const int32_t base_score = node_owner == source_owner ? int32_t(path_low_word[node_index]) : int32_t(path_high_word[node_index]);
+			for (int32_t direction = direction_count - 1; direction >= 0; --direction) {
+				const int32_t nx = node.x + direction_dx[direction];
+				const int32_t ny = node.y + direction_dy[direction];
+				const int32_t nl = node.level;
+				if (nx < 0 || nx >= width || ny < 0 || ny >= height || nl < 0 || nl >= level_count) {
+					rejected_bounds_count += 1;
+					continue;
+				}
+				const int32_t next_index = int32_t(h3maped_cell_index(width, height, nx, ny, nl));
+				const int32_t next_owner = int32_t(owner_low_grid[next_index]);
+				if (next_owner < 0) {
+					rejected_unowned_count += 1;
+					continue;
+				}
+				if (int32_t(repaint_member_grid[next_index]) == 0) {
+					rejected_materialized_count += 1;
+					continue;
+				}
+				const int32_t terrain = int32_t(terrain_codes[next_index]);
+				if (terrain == 9) {
+					rejected_terrain9_count += 1;
+					continue;
+				}
+				if (next_owner == source_owner) {
+					const int32_t step = terrain == 8 ? 10 : 1;
+					const int32_t next_score = base_score + step;
+					if (next_score < int32_t(path_low_word[next_index])) {
+						path_low_word.set(next_index, next_score);
+						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						same_owner_relax_count += 1;
+						total_same_owner_relax_count += 1;
+					}
+				} else {
+					const int32_t next_score = base_score + 10;
+					if (next_score < int32_t(path_high_word[next_index])) {
+						path_high_word.set(next_index, next_score);
+						owner_high_grid.set(next_index, source_owner);
+						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						cross_owner_write_count += 1;
+						total_cross_owner_write_count += 1;
+					}
+				}
+				max_queue_size = std::max<int32_t>(max_queue_size, int32_t(queue.size()));
+			}
+		}
+		seed_report["status"] = "0x49a318_seed_propagated";
+		seed_report["popped_cell_count"] = popped_count;
+		seed_report["same_owner_relax_count"] = same_owner_relax_count;
+		seed_report["cross_owner_high_byte_write_count"] = cross_owner_write_count;
+		seed_report["rejected_bounds_count"] = rejected_bounds_count;
+		seed_report["rejected_unowned_count"] = rejected_unowned_count;
+		seed_report["rejected_materialized_count"] = rejected_materialized_count;
+		seed_report["rejected_terrain9_count"] = rejected_terrain9_count;
+		seed_reports.append(seed_report);
+	}
+
+	int32_t high_owner_materialized_count = 0;
+	int32_t high_owner_sentinel_count = 0;
+	Dictionary high_owner_counts;
+	for (int32_t index = 0; index < tile_count; ++index) {
+		const int32_t high_owner = int32_t(owner_high_grid[index]);
+		if (high_owner < 0) {
+			high_owner_sentinel_count += 1;
+		} else {
+			high_owner_materialized_count += 1;
+			const String owner_key = String::num_int64(high_owner);
+			high_owner_counts[owner_key] = int32_t(high_owner_counts.get(owner_key, 0)) + 1;
+		}
+	}
+	report["seed_attempt_count"] = seed_attempt_count;
+	report["seed_blocked_count"] = seed_blocked_count;
+	report["seed_reports"] = seed_reports;
+	report["popped_cell_count"] = total_popped_count;
+	report["same_owner_relax_count"] = total_same_owner_relax_count;
+	report["cross_owner_high_byte_write_count"] = total_cross_owner_write_count;
+	report["max_queue_size"] = max_queue_size;
+	report["owner_high_byte_materialized_count"] = high_owner_materialized_count;
+	report["owner_high_byte_sentinel_count"] = high_owner_sentinel_count;
+	report["owner_high_byte_counts"] = high_owner_counts;
+	report["path_low_word_u16"] = path_low_word;
+	report["path_high_word_u16"] = path_high_word;
+	report["blocked_next"] = "port the remaining 0x49a318 bit22/object metadata branches and then feed low/high owner channels into 0x4a61bc/0x4a696b endpoint geometry";
 	return report;
 }
 
@@ -4973,6 +5188,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	PackedInt32Array zone_word_low_u16;
 	PackedInt32Array owner_low_byte_grid_u8;
 	PackedInt32Array owner_high_byte_grid_i8;
+	PackedInt32Array repaint_member_grid_u8;
 	PackedInt32Array cell_flag_u8;
 	const int32_t cell_count = int32_t(zone_words.size());
 	terrain_code_u16.resize(cell_count);
@@ -4989,6 +5205,7 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	zone_word_low_u16.resize(cell_count);
 	owner_low_byte_grid_u8.resize(cell_count);
 	owner_high_byte_grid_i8.resize(cell_count);
+	repaint_member_grid_u8.resize(cell_count);
 	cell_flag_u8.resize(cell_count);
 
 	int32_t reserved_cell_count = 0;
@@ -5028,13 +5245,15 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 			const String terrain_code_key = String::num_int64(h3_terrain_code);
 			repaint_cells_by_terrain_code[terrain_code_key] = int32_t(repaint_cells_by_terrain_code.get(terrain_code_key, 0)) + 1;
 		}
-		if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+		const bool repaint_member = (cell_flags[size_t(index)] & 0x10U) != 0U;
+		if (repaint_member) {
 			reserved_cell_count += 1;
 		}
 		const uint32_t generated_cell_0x24 = uint32_t(h3_terrain_code) & 0x3fU;
 		const uint32_t generated_cell_0x28 = 0U;
 		owner_low_byte_grid_u8.set(index, owner_low_byte);
 		owner_high_byte_grid_i8.set(index, -1);
+		repaint_member_grid_u8.set(index, repaint_member ? 1 : 0);
 		generated_cell_word_0x24_u32.set(index, int32_t(generated_cell_0x24));
 		generated_cell_word_0x28_u32.set(index, int32_t(generated_cell_0x28));
 		terrain_code_u16.set(index, int32_t(generated_cell_0x24));
@@ -5074,6 +5293,16 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	terrain_repaint_schedule["per_zone_repaint_records"] = per_zone_repaint_records;
 	terrain_repaint_schedule["materializes_visual_art"] = false;
 
+	Dictionary high_owner_normalization = high_owner_normalization_4a5767_49a318_report(
+			coordinate_replay,
+			width,
+			height,
+			level_count,
+			owner_low_byte_grid_u8,
+			owner_high_byte_grid_i8,
+			repaint_member_grid_u8,
+			terrain_code_u16);
+
 	report["cell_count"] = cell_count;
 	report["terrain_code_u16"] = terrain_code_u16;
 	report["generated_cell_word_0x24_u32"] = generated_cell_word_0x24_u32;
@@ -5083,11 +5312,14 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["owner_low_byte_grid_u8"] = owner_low_byte_grid_u8;
 	report["owner_high_byte_grid_i8"] = owner_high_byte_grid_i8;
 	report["owner_low_byte_source"] = "cell+0x20 bits 16..23 from real 0x4a325d zone word id";
-	report["owner_high_byte_source"] = "cell+0x20 bits 24..31 pending 0x49a318 occupancy/anchor normalization";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31 from 0x4a5767/0x49a318 owner propagation";
 	report["owner_low_byte_materialized_count"] = owner_low_materialized_count;
-	report["owner_high_byte_materialized_count"] = 0;
-	report["owner_high_byte_sentinel_count"] = cell_count;
+	report["owner_high_byte_materialized_count"] = high_owner_normalization.get("owner_high_byte_materialized_count", 0);
+	report["owner_high_byte_sentinel_count"] = high_owner_normalization.get("owner_high_byte_sentinel_count", cell_count);
 	report["owner_low_byte_counts"] = owner_low_byte_counts;
+	report["owner_high_byte_counts"] = high_owner_normalization.get("owner_high_byte_counts", Dictionary());
+	report["owner_high_byte_normalization"] = high_owner_normalization;
+	report["repaint_member_grid_u8"] = repaint_member_grid_u8;
 	report["cell_flag_u8"] = cell_flag_u8;
 	report["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
 	report["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
