@@ -97,7 +97,9 @@ func _run() -> void:
 	if backlog.size() != 10 \
 			or String(backlog[0].get("id", "")) != "template_selection" \
 			or String(backlog[0].get("status", "")) != "active_boundary_only" \
-			or String(backlog[1].get("status", "")) != "pending_strict_port" \
+			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
+			or String(backlog[1].get("status", "")) != "private_context_ready" \
+			or String(backlog[2].get("status", "")) != "pending_strict_port" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -106,11 +108,54 @@ func _run() -> void:
 			_fail("Fresh backlog phase unexpectedly materializes public output: %s" % JSON.stringify(phase))
 			return
 
+	var private_context: Dictionary = report.get("private_generation_context", {})
+	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
+			or String(private_context.get("status", "")) != "player_slot_assignment_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"] \
+			or int(private_context.get("completed_phase_count", -1)) != 2 \
+			or bool(private_context.get("runtime_generation_allowed", true)) \
+			or bool(private_context.get("partial_materialized_payload_public_api", true)):
+		_fail("Private generation context did not stop at the h3maped player-slot phase: %s" % JSON.stringify(private_context))
+		return
+	var player_context: Dictionary = private_context.get("player_context", {})
+	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
+			or String(player_context.get("status", "")) != "private_context_ready" \
+			or String(player_context.get("selected_color_bitmap_offset", "")) != "generator+0xed8" \
+			or String(player_context.get("assignment_slots_offset", "")) != "generator+0xee0" \
+			or String(player_context.get("mapped_slots_offset", "")) != "generator+0xee4" \
+			or int(player_context.get("human_capable_source_owner_mask", -1)) != 15 \
+			or int(player_context.get("player_capable_source_owner_mask", -1)) != 15 \
+			or Array(player_context.get("human_capable_source_owner_indices", [])) != [0, 1, 2, 3] \
+			or Array(player_context.get("player_capable_source_owner_indices", [])) != [0, 1, 2, 3] \
+			or Array(player_context.get("raw_ee0_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or Array(player_context.get("mapped_ee4_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or int(player_context.get("assigned_player_count", -1)) != 3 \
+			or bool(player_context.get("materializes_runtime_players", true)) \
+			or bool(player_context.get("materializes_public_output", true)):
+		_fail("h3maped player-slot private context drifted: %s" % JSON.stringify(player_context))
+		return
+	var assignments: Array = player_context.get("assignment_records", [])
+	if assignments.size() != 3 \
+			or String(assignments[0].get("player_type", "")) != "human" \
+			or int(assignments[0].get("source_owner_index", -1)) != 0 \
+			or int(assignments[0].get("actual_player_color", -1)) != 0 \
+			or String(assignments[1].get("player_type", "")) != "computer" \
+			or int(assignments[1].get("source_owner_index", -1)) != 1 \
+			or int(assignments[1].get("actual_player_color", -1)) != 1 \
+			or String(assignments[2].get("player_type", "")) != "computer" \
+			or int(assignments[2].get("source_owner_index", -1)) != 2 \
+			or int(assignments[2].get("actual_player_color", -1)) != 2:
+		_fail("h3maped player-slot assignment records drifted: %s" % JSON.stringify(assignments))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
+		return
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment"]:
+		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
 	var explicit_template_config := config.duplicate(true)
