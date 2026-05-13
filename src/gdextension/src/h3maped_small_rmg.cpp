@@ -1058,15 +1058,15 @@ Dictionary phase_record(const String &id, const String &source, const String &st
 
 Array fresh_phase_backlog() {
 	Array backlog;
-	backlog.append(phase_record("template_selection", "0x49f0cd, 0x4ac597, 0x4e7276", "active_boundary"));
-	backlog.append(phase_record("player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_internal_state"));
-	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_internal_state"));
-	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_internal_state"));
-	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_internal_state"));
-	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "active_internal_state"));
-	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "terrain_tile_byte_writeback_active_internal_state"));
-	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "active_internal_state_private_candidates"));
-	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "active_internal_state_private_prerequisite_boundary"));
+	backlog.append(phase_record("template_selection", "0x49f0cd, 0x4ac597, 0x4e7276", "active_strict_boundary"));
+	backlog.append(phase_record("player_slot_assignment", "0x4ac62a..0x4ac6ec", "pending_strict_executable_port"));
+	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "pending_strict_executable_port"));
+	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "pending_strict_executable_port"));
+	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "pending_strict_executable_port"));
+	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
+	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
+	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
+	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_strict_executable_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "pending_runtime_port"));
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605", "pending_runtime_port"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "pending_runtime_port"));
@@ -1075,11 +1075,49 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, link-seed setup, coordinate replay, private zone footprint/cell ownership buffers, private terrain cell writeout, decoded TerrainPlacement visual tables, private live TerrainPlacement scratch feedback, private terrain tile-byte candidates, private town/castle placement candidates, and the private mine/reward object-vector prerequisite boundary");
-	gaps.append("mine/reward coordinate filter and generated-cell mutation, roads, blockers, guards, road/river/object tile bytes, package adoption, and final writeout are not implemented in the fresh active module");
-	gaps.append("all earlier private phase ledgers were archived because they were report growth, not usable map generation");
-	gaps.append("small maps remain blocked from runtime package output until executable-derived phases are ported as actual generation state");
+	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, and h3maped RNG template-selection evidence only");
+	gaps.append("old private player-slot, zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
+	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
+	gaps.append("next implementation step is a narrow executable port of 0x4ac62a..0x4ac6ec player-slot assignment over the selected template, not broad report expansion");
 	return gaps;
+}
+
+Dictionary strict_restart_state(const Dictionary &normalized_config, const Array &accepted) {
+	Dictionary state;
+	state["schema_id"] = "aurelion_h3maped_small_strict_executable_restart_state_v1";
+	state["status"] = supports_scope(normalized_config) ? String("strict_executable_restart_scaffold_active") : String("unsupported_scope");
+	state["scope"] = "small_36x36_surface_land_only";
+	state["binary_verified"] = bool(binary_verification().get("ok", false));
+	state["active_public_generation_state"] = false;
+	state["runtime_generation_allowed"] = false;
+	state["partial_materialized_payload_public_api"] = false;
+	state["legacy_private_phase_ledgers_exposed"] = false;
+	state["legacy_private_phase_ledgers_archived_only"] = true;
+	state["accepted_template_count"] = accepted.size();
+	state["implemented_boundaries"] = Array::make(
+			"binary_verification:/root/Downloads/h3maped.exe",
+			"small_scope_gate:36x36_one_level_land",
+			"size_water_score_boundary:0x49f0cd",
+			"template_rng_selection_boundary:0x4e7269_0x4e7276");
+	state["pending_strict_ports"] = Array::make(
+			"player_slot_assignment:0x4ac62a..0x4ac6ec",
+			"runtime_zone_records:0x4a218c_0x49b452",
+			"link_seed_setup:0x4a1f3b",
+			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
+			"zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710",
+			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
+			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
+			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
+			"roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2",
+			"final_h3m_writeout:0x49b2b6");
+	state["prohibited_runtime_sources"] = Array::make(
+			"catalog_auto_hash_selection",
+			"owner_sample_exact_count_fitting",
+			"fake_road_cluster_materialization",
+			"metadata_only_zone_link_validation",
+			"archived_native_generator_fallback");
+	state["next_required_port"] = "player_slot_assignment_0x4ac62a_0x4ac6ec";
+	return state;
 }
 
 Dictionary player_slot_assignment_phase(const Dictionary &normalized_config, const Dictionary &selection) {
@@ -6093,7 +6131,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["accepted_template_count"] = accepted.size();
 	report["accepted_templates"] = accepted;
 	report["selection_identity"] = selection_identity(normalized_config);
-	report["active_generation_state"] = active_generation_state(normalized_config);
+	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
 	report["normalized_config"] = normalized_config;
@@ -6107,12 +6145,12 @@ Dictionary generation_not_ready_result(const Dictionary &normalized_config, cons
 	result["generation_status"] = "h3maped_small_clean_restart_generation_not_ready";
 	result["full_generation_status"] = "h3maped_small_clean_restart_waiting_for_executable_phase_ports";
 	result["error_code"] = "h3maped_phase_port_incomplete";
-	result["message"] = "The old native RMG and overgrown h3maped report path are archived. The active small-map path has private h3maped template/player/zone/link/coordinate/footprint state, but runtime package output is blocked until terrain, object, road, guard, and writeout phases are ported.";
+	result["message"] = "The old native RMG and overgrown h3maped report path are archived. The active small-map path is reset to strict h3maped binary verification, scope gating, and template-selection evidence only; runtime package output is blocked until executable-derived phases are ported as generation state.";
 	result["runtime_generation_allowed"] = false;
 	result["partial_materialized_payload_public_api"] = false;
 	result["normalized_config"] = normalized_config;
 	result["h3maped_small_port"] = inspect_port(normalized_config);
-	result["active_generation_state"] = active_generation_state(normalized_config);
+	result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
 	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["extension_profile"] = extension_profile;
 	return result;
