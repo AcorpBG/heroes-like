@@ -949,8 +949,50 @@ func _run() -> void:
 				or bool(reward_commit_boundary.get("materializes_private_reward_coordinate_records", true)) \
 				or bool(reward_commit_boundary.get("materializes_public_reward_objects", true)) \
 				or bool(reward_commit_boundary.get("public_package_output_allowed", true)) \
-				or String(reward_commit_boundary.get("remaining_blocker", "")) != "port_0x4aa603_filter_and_0x4aa3e9_object_commit_against_project_object_templates":
+				or String(reward_commit_boundary.get("remaining_blocker", "")) != "materialize_0x4aa603_filter_eval_and_0x4aa3e9_generated_cell_mutation_against_project_object_templates":
 		_fail("h3maped reward coordinate commit boundary drifted: %s" % JSON.stringify(reward_commit_boundary))
+		return
+	var reward_filter_boundary: Dictionary = reward_commit_boundary.get("footprint_filter_boundary", {})
+	if String(reward_filter_boundary.get("status", "")) != "0x4aa603_filter_gate_stack_materialized_private_eval_pending" \
+				or String(reward_filter_boundary.get("source_range", "")) != "0x4aa603..0x4aa9b4" \
+				or String(reward_filter_boundary.get("selected_object_child_vector_offset", "")) != "object+0x2c..+0x30" \
+				or String(reward_filter_boundary.get("child_collision_loop_range", "")) != "0x4aa62a..0x4aa68d" \
+				or String(reward_filter_boundary.get("child_collision_helper", "")) != "0x49a6f9" \
+				or String(reward_filter_boundary.get("special_object_neighborhood_range", "")) != "0x4aa68d..0x4aa766" \
+				or int(reward_filter_boundary.get("special_object_reject_type", -1)) != 0x36 \
+				or String(reward_filter_boundary.get("direction_gate_range", "")) != "0x4aa766..0x4aa8c9" \
+				or String(reward_filter_boundary.get("direction_table_address", "")) != "0x5a2658" \
+				or String(reward_filter_boundary.get("direction_cell_validity_helper", "")) != "0x49a1d8" \
+				or String(reward_filter_boundary.get("object_class_probe_helper", "")) != "0x49d65c" \
+				or String(reward_filter_boundary.get("final_footprint_gate_range", "")) != "0x4aa8d5..0x4aa90f" \
+				or String(reward_filter_boundary.get("final_footprint_gate_helper", "")) != "0x49a09c" \
+				or String(reward_filter_boundary.get("body_collision_scan_range", "")) != "0x4aa915..0x4aa9ae" \
+				or not bool(reward_filter_boundary.get("materializes_filter_boundary", false)) \
+				or bool(reward_filter_boundary.get("materializes_private_filter_eval", true)) \
+				or bool(reward_filter_boundary.get("materializes_public_reward_objects", true)) \
+				or String(reward_filter_boundary.get("remaining_blocker", "")) != "implement_selected_reward_template_filter_eval_over_private_generated_cell_state":
+		_fail("h3maped reward coordinate filter boundary drifted: %s" % JSON.stringify(reward_filter_boundary))
+		return
+	var reward_final_commit_boundary: Dictionary = reward_commit_boundary.get("final_object_commit_boundary", {})
+	if String(reward_final_commit_boundary.get("status", "")) != "0x4aa3e9_final_object_commit_boundary_materialized_private_mutation_pending" \
+				or String(reward_final_commit_boundary.get("source_range", "")) != "0x4aa3e9..0x4aa603" \
+				or String(reward_final_commit_boundary.get("selected_coordinate_write_range", "")) != "0x4aa3f5..0x4aa405" \
+				or String(reward_final_commit_boundary.get("selected_coordinate_destination", "")) != "object+0x54..+0x5c" \
+				or String(reward_final_commit_boundary.get("child_object_commit_loop_range", "")) != "0x4aa405..0x4aa455" \
+				or String(reward_final_commit_boundary.get("child_object_virtual_commit_slot", "")) != "selected child vtable +0x04" \
+				or String(reward_final_commit_boundary.get("generated_cell_mutation_loop_range", "")) != "0x4aa4c1..0x4aa5dc" \
+				or String(reward_final_commit_boundary.get("coordinate_transform_helper", "")) != "0x49d2c7" \
+				or String(reward_final_commit_boundary.get("validity_helper", "")) != "0x49a1d8" \
+				or String(reward_final_commit_boundary.get("state_set_helper_zero_arg", "")) != "0x49a932" \
+				or String(reward_final_commit_boundary.get("state_set_helper_one_arg", "")) != "0x49aa63" \
+				or String(reward_final_commit_boundary.get("child_cleanup_loop_range", "")) != "0x4aa5dc..0x4aa5fc" \
+				or String(reward_final_commit_boundary.get("child_cleanup_virtual_slot", "")) != "selected child vtable +0x08" \
+				or not bool(reward_final_commit_boundary.get("materializes_commit_boundary", false)) \
+				or bool(reward_final_commit_boundary.get("materializes_private_generated_cell_mutation", true)) \
+				or bool(reward_final_commit_boundary.get("materializes_public_reward_objects", true)) \
+				or bool(reward_final_commit_boundary.get("public_package_output_allowed", true)) \
+				or String(reward_final_commit_boundary.get("remaining_blocker", "")) != "implement_generated_cell_bit_mutation_and_project_reward_object_adoption":
+		_fail("h3maped reward final object commit boundary drifted: %s" % JSON.stringify(reward_final_commit_boundary))
 		return
 	var generic_selector: Dictionary = object_vector_phase.get("generic_value_selector_boundary", {})
 	if String(generic_selector.get("phase", "")) != "0x4a9f1c_generic_value_banded_selector_boundary" \
@@ -1383,7 +1425,9 @@ func _run() -> void:
 	var selector_reward_commit_boundary: Dictionary = selector_materialization.get("reward_coordinate_commit_boundary", {})
 	if String(selector_reward_commit_boundary.get("source_range", "")) != "0x4aa9b7..0x4aab7b" \
 				or String(selector_reward_commit_boundary.get("scan_loop_range", "")) != "0x4aaa2d..0x4aab0a" \
-				or String(selector_reward_commit_boundary.get("final_commit_call_range", "")) != "0x4aab63..0x4aab6f":
+				or String(selector_reward_commit_boundary.get("final_commit_call_range", "")) != "0x4aab63..0x4aab6f" \
+				or String(selector_reward_commit_boundary.get("footprint_filter_boundary", {}).get("source_range", "")) != "0x4aa603..0x4aa9b4" \
+				or String(selector_reward_commit_boundary.get("final_object_commit_boundary", {}).get("source_range", "")) != "0x4aa3e9..0x4aa603":
 		_fail("h3maped selector reward commit boundary drifted: %s" % JSON.stringify(selector_reward_commit_boundary))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
