@@ -1003,6 +1003,7 @@ Array h3_fixed_type6_value_band_records();
 Array h3_static_tail_after_artifact_pool_records();
 Array h3_static_tail_after_terrain_loop_records();
 Dictionary h3_candidate_create_vfunc_boundary();
+Dictionary h3_candidate_selector_materialization_boundary();
 
 Dictionary h3_materialized_static_candidate_record(const Dictionary &source_record, int32_t vector_index, const char *source_group) {
 	Dictionary record = source_record.duplicate(true);
@@ -1697,7 +1698,7 @@ Dictionary h3_candidate_value_vfunc_record(const char *address, const char *sema
 
 Dictionary h3_candidate_value_vfunc_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "value_and_create_vfuncs_reconstructed_selection_pending";
+	boundary["status"] = "value_create_and_selector_scan_materialized_coordinate_commit_pending";
 	boundary["selector_call_site"] = "0x4a9ffd..0x4aa004";
 	boundary["selector_call_contract"] = "push generator, push zone_context, call candidate_vtable+0x04";
 	boundary["range_filter_after_call"] = "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band";
@@ -1715,10 +1716,71 @@ Dictionary h3_candidate_value_vfunc_boundary() {
 			h3_candidate_value_vfunc_record("0x49cb60", "terrain-vector gated constant value", "0x49cb60..0x49cb83", true, "if generator+0xf58 != record.subtype or generator+0x10b4 != 0 return -1; return record.value"),
 			h3_candidate_value_vfunc_record("0x49cd97", "type10-bucket gated constant value", "0x49cd97..0x49cdb1", true, "if generator+0xf5c != record.subtype return -1; return record.value"));
 	boundary["reconstructed_vfunc_count"] = 6;
-	boundary["selection_materialized"] = false;
+	boundary["selection_materialized"] = true;
+	boundary["selector_scan_materialized"] = true;
 	boundary["candidate_record_materialization_pending"] = true;
 	boundary["create_vfuncs_pending"] = false;
 	boundary["create_vfuncs_materialized"] = true;
+	return boundary;
+}
+
+Dictionary h3_selector_gate_record(const char *gate, const char *source_range, const char *condition, const char *reject_target) {
+	Dictionary record;
+	record["gate"] = gate;
+	record["source_range"] = source_range;
+	record["condition"] = condition;
+	record["reject_target"] = reject_target;
+	return record;
+}
+
+Dictionary h3_candidate_selector_materialization_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "selector_scan_weighted_choice_materialized_coordinate_commit_pending";
+	boundary["source_range"] = "0x4a9f1c..0x4aa192";
+	boundary["loop_range"] = "0x4a9f6a..0x4aa0ef";
+	boundary["weighted_choice_range"] = "0x4aa0fc..0x4aa168";
+	boundary["cleanup_range"] = "0x4aa16a..0x4aa192";
+	boundary["candidate_vector_source"] = "generator+0x10f4..+0x10f8";
+	boundary["candidate_pointer_stride_bytes"] = 4;
+	boundary["candidate_weight_offset"] = "+0x10";
+	boundary["candidate_type_offset"] = "+0x04";
+	boundary["candidate_subtype_offset"] = "+0x08";
+	boundary["placed_count_array_offset"] = "generator+0x1110";
+	boundary["global_limit_table_address"] = "0x5a26e4";
+	boundary["per_zone_count_array_offset"] = "zone_context+0x44";
+	boundary["per_zone_limit_table_address"] = "0x5a2a8c";
+	boundary["metadata_table_pointer_address"] = "0x57c648";
+	boundary["metadata_record_size_bytes"] = 0x10;
+	boundary["metadata_primary_gate_offset"] = "+0x00";
+	boundary["metadata_secondary_gate_offset"] = "+0x02";
+	boundary["disabled_vfunc_offset"] = "+0x08";
+	boundary["value_vfunc_offset"] = "+0x04";
+	boundary["create_vfunc_offset"] = "+0x00";
+	boundary["template_selector_address"] = "0x4a9e40";
+	boundary["collision_helper_address"] = "0x49a6f9";
+	boundary["footprint_size_helper_address"] = "0x4aa195";
+	boundary["candidate_append_helper_address"] = "0x40bb26";
+	boundary["candidate_vector_cleanup_helper_address"] = "0x42c92d";
+	boundary["weighted_rng_address"] = "0x4e7276";
+	boundary["selector_materialized"] = true;
+	boundary["weighted_choice_materialized"] = true;
+	boundary["create_call_materialized"] = true;
+	boundary["runtime_reward_coordinate_commit_materialized"] = false;
+	boundary["public_object_materialization_allowed"] = false;
+	boundary["gates"] = Array::make(
+			h3_selector_gate_record("metadata_primary_secondary", "0x4a9fa3..0x4a9fb9", "when metadata gate flag is false, nonzero primary and zero secondary reject candidate", "0x4aa0ef"),
+			h3_selector_gate_record("disabled_vfunc", "0x4a9fbf..0x4a9fd2", "when disabled check flag is false, candidate_vtable+0x08 returning true rejects candidate", "0x4aa0ef"),
+			h3_selector_gate_record("global_limit", "0x4a9fd5..0x4a9fe7", "generator+0x1110[type] must be below global limit table 0x5a26e4[type]", "0x4aa0ef"),
+			h3_selector_gate_record("per_zone_limit", "0x4a9fed..0x4a9ff7", "zone_context+0x44[type] must be below per-zone limit table 0x5a2a8c[type]", "0x4aa0ef"),
+			h3_selector_gate_record("value_range", "0x4a9ffd..0x4aa01d", "candidate value-vfunc result must be nonnegative and within low/high args", "0x4aa0ef"),
+			h3_selector_gate_record("template_selector", "0x4aa023..0x4aa03e", "0x4a9e40 must return a non-null object template for zone terrain/type/subtype", "0x4aa0ef"),
+			h3_selector_gate_record("collision", "0x4aa044..0x4aa06b", "when optional coordinate arg is nonnegative, 0x49a6f9 collision test must be false", "0x4aa0ec"),
+			h3_selector_gate_record("footprint_weight_window", "0x4aa071..0x4aa0c9", "when footprint-size scaling flag is true, value divided by 0x4aa195 footprint count must stay inside the rolling 3/4 window", "0x4aa0ef"));
+	boundary["selection_algorithm"] = "append surviving candidate/template pairs, sum candidate+0x10 weights, rng=0x4e7276()%total_weight, subtract weights until negative, then call selected value-vfunc and create-vfunc";
+	boundary["selected_value_writeback"] = "0x4aa14f..0x4aa15e writes selected value-vfunc result to arg+0x14 output pointer";
+	boundary["selected_create_call"] = "0x4aa15e..0x4aa168 calls selected candidate_vtable+0x00 with selected template, generator, and zone context";
+	boundary["null_return_conditions"] = Array::make("candidate vector empty", "no candidate passes filters", "accepted candidate vector has no weight-bearing entries");
+	boundary["remaining_blocker"] = "port_0x4aa9b7_coordinate_commit_and_reward_object_adoption";
 	return boundary;
 }
 
@@ -1883,16 +1945,19 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_vector_order_boundary"] = h3_materialized_single_level_candidate_vector_order_boundary();
 	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_value_and_create_materialized";
 	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
-	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_and_create_vfuncs_reconstructed_selection_not_materialized";
+	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_create_and_selector_scan_materialized";
 	boundary["candidate_value_vfunc_boundary"] = h3_candidate_value_vfunc_boundary();
+	boundary["selector_materialization_status"] = "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_pending";
+	boundary["selector_materialization_boundary"] = h3_candidate_selector_materialization_boundary();
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_subset_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "selector materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["candidate_vector_order_reconstructed"] = true;
 	boundary["value_vfuncs_reconstructed"] = true;
+	boundary["selector_scan_materialized"] = true;
 	boundary["materializes_reward_object"] = false;
 
 	Dictionary metadata_load = load_json_dictionary(OBJECT_METADATA_SOURCE_PATH);
