@@ -404,6 +404,7 @@ Dictionary runtime_zone_record_setup_report(const TemplateEvidence &candidate, c
 		record["source_bucket"] = zone.get("bucket", -1);
 		record["source_owner_index"] = source_owner_index;
 		record["actual_owner_color"] = actual_owner_color;
+		record["level"] = 0;
 		record["source_base_size"] = source_base_size;
 		record["player_min_towns"] = player_towns.get("min_towns", 0);
 		record["player_min_castles"] = min_castles;
@@ -429,6 +430,55 @@ Dictionary runtime_zone_record_setup_report(const TemplateEvidence &candidate, c
 	report["minimum_source_base_size"] = has_base_size ? minimum_source_base_size : 0;
 	report["actual_owner_colors_by_runtime_zone"] = owner_colors;
 	report["runtime_zone_records"] = records;
+	return report;
+}
+
+Dictionary zone_footprint_phase_boundary_report(const Dictionary &normalized_config, const Dictionary &runtime_zone_setup) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_zone_footprint_phase_boundary_ported_inspection_only";
+	report["source"] = "h3maped 0x4a3a03 runs once per level, collects matching runtime zones, may append synthetic source 0xd4 for water/level cases, then calls 0x4a2777 -> 0x4a325d -> 0x4a3710";
+	report["phase_address"] = "0x4a3a03";
+	report["helper_sequence"] = "0x4a2777 -> 0x4a325d -> 0x4a3710";
+	report["synthetic_source_zone_id"] = "0xd4";
+	report["synthetic_triplets"] = "0xa0=100,0xa4=1000,0xa8=5,0xac=2000,0xb0=6000,0xb4=1";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array runtime_records = runtime_zone_setup.get("runtime_zone_records", Array());
+	Array levels;
+	int32_t total_collected = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array zone_indices;
+		for (int64_t index = 0; index < runtime_records.size(); ++index) {
+			if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary record = runtime_records[index];
+			if (int32_t(record.get("level", 0)) != level) {
+				continue;
+			}
+			zone_indices.append(record.get("runtime_zone_index", index));
+		}
+		total_collected += zone_indices.size();
+		Dictionary level_record;
+		level_record["level"] = level;
+		level_record["collected_runtime_zone_indices"] = zone_indices;
+		level_record["collected_runtime_zone_count"] = zone_indices.size();
+		level_record["synthetic_zone_appended"] = false;
+		level_record["synthetic_zone_status"] = water_code == 0 && level_count == 1 ? String("not_applicable_small_one_level_land") : String("pending_water_or_multilevel_rule_port");
+		level_record["helper_status"] = "pending_0x4a2777_0x4a325d_0x4a3710_materialization";
+		levels.append(level_record);
+	}
+
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["per_level"] = levels;
+	report["total_collected_runtime_zone_count"] = total_collected;
+	report["synthetic_zone_appended_count"] = 0;
 	return report;
 }
 
@@ -475,6 +525,8 @@ Array restart_phase_backlog() {
 			record["status"] = "active_inspection_only";
 		} else if (phase.id == String("runtime_zone_records")) {
 			record["status"] = "active_inspection_only";
+		} else if (phase.id == String("zone_footprints_and_terrain")) {
+			record["status"] = "active_phase_boundary_only";
 		} else {
 			record["status"] = "pending_strict_port";
 		}
@@ -600,7 +652,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			if (candidate.catalog_index == selected_catalog_index) {
 				Dictionary assignment = player_slot_assignment_report(candidate, normalized_config, human_count, computer_count);
 				report["player_slot_assignment"] = assignment;
-				report["runtime_zone_record_setup"] = runtime_zone_record_setup_report(candidate, source_template_record_for_catalog_index(selected_catalog_index), assignment, human_count, player_count);
+				Dictionary runtime_zone_setup = runtime_zone_record_setup_report(candidate, source_template_record_for_catalog_index(selected_catalog_index), assignment, human_count, player_count);
+				report["runtime_zone_record_setup"] = runtime_zone_setup;
+				report["zone_footprint_phase_boundary"] = zone_footprint_phase_boundary_report(normalized_config, runtime_zone_setup);
 				break;
 			}
 		}

@@ -127,7 +127,11 @@ func _run() -> void:
 			or String(backlog[2].get("status", "")) != "active_inspection_only":
 		_fail("Runtime-zone records should be the active h3maped inspection phase after player assignment: %s" % JSON.stringify(backlog))
 		return
-	for index in range(3, backlog.size()):
+	if String(backlog[3].get("phase_id", "")) != "zone_footprints_and_terrain" \
+			or String(backlog[3].get("status", "")) != "active_phase_boundary_only":
+		_fail("Zone-footprint phase should be active only as a h3maped phase boundary: %s" % JSON.stringify(backlog))
+		return
+	for index in range(4, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
@@ -157,6 +161,7 @@ func _run() -> void:
 	var zone_records: Array = runtime_zones.get("runtime_zone_records", [])
 	if zone_records.size() != 6 \
 			or String(zone_records[0].get("role", "")) != "human_start" \
+			or int(zone_records[0].get("level", -1)) != 0 \
 			or int(zone_records[0].get("actual_owner_color", -1)) != 0 \
 			or String(zone_records[2].get("role", "")) != "treasure" \
 			or int(zone_records[2].get("actual_owner_color", 0)) != -1 \
@@ -164,6 +169,32 @@ func _run() -> void:
 			or int(zone_records[4].get("source_owner_index", -1)) != 3 \
 			or int(zone_records[4].get("actual_owner_color", 0)) != -1:
 		_fail("Runtime-zone record projection drifted: %s" % JSON.stringify(zone_records))
+		return
+
+	var footprint_boundary: Dictionary = report.get("zone_footprint_phase_boundary", {})
+	if String(footprint_boundary.get("status", "")) != "0x4a3a03_zone_footprint_phase_boundary_ported_inspection_only" \
+			or String(footprint_boundary.get("phase_address", "")) != "0x4a3a03" \
+			or String(footprint_boundary.get("helper_sequence", "")) != "0x4a2777 -> 0x4a325d -> 0x4a3710":
+		_fail("h3maped zone-footprint phase boundary drifted: %s" % JSON.stringify(footprint_boundary))
+		return
+	if int(footprint_boundary.get("level_count", -1)) != 1 \
+			or int(footprint_boundary.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(footprint_boundary.get("total_collected_runtime_zone_count", -1)) != 6 \
+			or int(footprint_boundary.get("synthetic_zone_appended_count", -1)) != 0:
+		_fail("Small one-level land footprint collection should collect 6 runtime zones with no synthetic source zone: %s" % JSON.stringify(footprint_boundary))
+		return
+	if bool(footprint_boundary.get("materializes_boundaries", true)) \
+			or bool(footprint_boundary.get("materializes_span_fill", true)) \
+			or bool(footprint_boundary.get("materializes_terrain", true)) \
+			or bool(footprint_boundary.get("materializes_map_cells", true)):
+		_fail("Zone-footprint boundary must not materialize geometry or cells yet: %s" % JSON.stringify(footprint_boundary))
+		return
+	var level_records: Array = footprint_boundary.get("per_level", [])
+	if level_records.size() != 1 \
+			or Array(level_records[0].get("collected_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
+			or String(level_records[0].get("synthetic_zone_status", "")) != "not_applicable_small_one_level_land" \
+			or String(level_records[0].get("helper_status", "")) != "pending_0x4a2777_0x4a325d_0x4a3710_materialization":
+		_fail("Per-level 0x4a3a03 footprint boundary drifted: %s" % JSON.stringify(level_records))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)
