@@ -1004,6 +1004,7 @@ Array h3_static_tail_after_artifact_pool_records();
 Array h3_static_tail_after_terrain_loop_records();
 Dictionary h3_candidate_create_vfunc_boundary();
 Dictionary h3_candidate_selector_materialization_boundary();
+Dictionary h3_reward_coordinate_commit_boundary();
 
 Dictionary h3_materialized_static_candidate_record(const Dictionary &source_record, int32_t vector_index, const char *source_group) {
 	Dictionary record = source_record.duplicate(true);
@@ -1735,7 +1736,7 @@ Dictionary h3_selector_gate_record(const char *gate, const char *source_range, c
 
 Dictionary h3_candidate_selector_materialization_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "selector_scan_weighted_choice_materialized_coordinate_commit_pending";
+	boundary["status"] = "selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending";
 	boundary["source_range"] = "0x4a9f1c..0x4aa192";
 	boundary["loop_range"] = "0x4a9f6a..0x4aa0ef";
 	boundary["weighted_choice_range"] = "0x4aa0fc..0x4aa168";
@@ -1765,8 +1766,10 @@ Dictionary h3_candidate_selector_materialization_boundary() {
 	boundary["selector_materialized"] = true;
 	boundary["weighted_choice_materialized"] = true;
 	boundary["create_call_materialized"] = true;
+	boundary["runtime_reward_coordinate_commit_boundary_materialized"] = true;
 	boundary["runtime_reward_coordinate_commit_materialized"] = false;
 	boundary["public_object_materialization_allowed"] = false;
+	boundary["reward_coordinate_commit_boundary"] = h3_reward_coordinate_commit_boundary();
 	boundary["gates"] = Array::make(
 			h3_selector_gate_record("metadata_primary_secondary", "0x4a9fa3..0x4a9fb9", "when metadata gate flag is false, nonzero primary and zero secondary reject candidate", "0x4aa0ef"),
 			h3_selector_gate_record("disabled_vfunc", "0x4a9fbf..0x4a9fd2", "when disabled check flag is false, candidate_vtable+0x08 returning true rejects candidate", "0x4aa0ef"),
@@ -1780,7 +1783,48 @@ Dictionary h3_candidate_selector_materialization_boundary() {
 	boundary["selected_value_writeback"] = "0x4aa14f..0x4aa15e writes selected value-vfunc result to arg+0x14 output pointer";
 	boundary["selected_create_call"] = "0x4aa15e..0x4aa168 calls selected candidate_vtable+0x00 with selected template, generator, and zone context";
 	boundary["null_return_conditions"] = Array::make("candidate vector empty", "no candidate passes filters", "accepted candidate vector has no weight-bearing entries");
-	boundary["remaining_blocker"] = "port_0x4aa9b7_coordinate_commit_and_reward_object_adoption";
+	boundary["remaining_blocker"] = "materialize_private_reward_coordinate_records_and_reward_object_adoption";
+	return boundary;
+}
+
+Dictionary h3_reward_coordinate_commit_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "0x4aa9b7_coordinate_scan_and_random_pick_boundary_materialized_private_record_pending";
+	boundary["source_range"] = "0x4aa9b7..0x4aab7b";
+	boundary["call_contract"] = "ecx is generator; args are selected reward object/template, selected value threshold, and zone/context from 0x4aab7e";
+	boundary["scheduler_caller_range"] = "0x4aab7e..0x4aad20";
+	boundary["scheduler_contract"] = "0x4aab7e selects eligible treasure bands by low>=100 and density>0, computes 0x320/0x640 divided by density sum, then calls 0x4aa9b7";
+	boundary["generated_cell_base_offset"] = "generator+0x14";
+	boundary["generated_cell_width_offset"] = "generator+0x18";
+	boundary["generated_cell_height_offset"] = "generator+0x1c";
+	boundary["generated_cell_record_stride_bytes"] = 0x30;
+	boundary["generated_cell_score_word_offset"] = "+0x20";
+	boundary["candidate_coordinate_record_size_bytes"] = 12;
+	boundary["temporary_vector_record_size_bytes"] = 12;
+	boundary["template_body_bounds_source"] = "selected_template/body extents copied from arg+0x08+0x18 and selected object/context +0x10/+0x20";
+	boundary["scan_bounds_setup_range"] = "0x4aa9e0..0x4aaa2d";
+	boundary["scan_loop_range"] = "0x4aaa2d..0x4aab0a";
+	boundary["owner_byte_gate_range"] = "0x4aaa71..0x4aaa86";
+	boundary["score_threshold_gate_range"] = "0x4aaa8a..0x4aaa98";
+	boundary["footprint_gate_call_range"] = "0x4aaa9b..0x4aaabd";
+	boundary["best_score_reset_range"] = "0x4aaac3..0x4aaade";
+	boundary["append_coordinate_range"] = "0x4aaae1..0x4aaaec";
+	boundary["random_pick_range"] = "0x4aab17..0x4aab57";
+	boundary["final_commit_call_range"] = "0x4aab63..0x4aab6f";
+	boundary["owner_gate_semantics"] = "signed high byte of generated-cell +0x20 must match selected reward object/template owner/type byte";
+	boundary["score_gate_semantics"] = "low word of generated-cell +0x20 must be at least the scheduler budget/threshold argument";
+	boundary["best_score_semantics"] = "when a candidate has a higher score than the current threshold, 0x4aa9b7 raises the threshold and clears the temporary coordinate vector";
+	boundary["coordinate_append_helper"] = "0x4ae1fd";
+	boundary["coordinate_vector_clear_helper"] = "0x4ae52a";
+	boundary["footprint_filter_helper"] = "0x4aa603";
+	boundary["final_object_commit_helper"] = "0x4aa3e9";
+	boundary["weighted_rng_address"] = "0x4e7276";
+	boundary["random_pick_algorithm"] = "if the temporary vector is nonempty, count=(end-begin)/12, rng=0x4e7276()%count, select that coordinate record, then call 0x4aa3e9";
+	boundary["materializes_scan_boundary"] = true;
+	boundary["materializes_private_reward_coordinate_records"] = false;
+	boundary["materializes_public_reward_objects"] = false;
+	boundary["public_package_output_allowed"] = false;
+	boundary["remaining_blocker"] = "port_0x4aa603_filter_and_0x4aa3e9_object_commit_against_project_object_templates";
 	return boundary;
 }
 
@@ -1947,12 +1991,12 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
 	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_create_and_selector_scan_materialized";
 	boundary["candidate_value_vfunc_boundary"] = h3_candidate_value_vfunc_boundary();
-	boundary["selector_materialization_status"] = "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_pending";
+	boundary["selector_materialization_status"] = "0x4a9f1c_selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending";
 	boundary["selector_materialization_boundary"] = h3_candidate_selector_materialization_boundary();
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_subset_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "0x4aa9b7 private coordinate records and reward object adoption");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["candidate_vector_order_reconstructed"] = true;
@@ -7042,6 +7086,8 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	known_coordinate_vector_gap["reward_scheduler_preview_zone_count"] = reward_scheduler_zone_count;
 	known_coordinate_vector_gap["reward_scheduler_preview_attempt_count"] = reward_scheduler_preview_attempt_count;
 	known_coordinate_vector_gap["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
+	known_coordinate_vector_gap["reward_coordinate_commit_boundary_materialized"] = true;
+	known_coordinate_vector_gap["reward_coordinate_commit_boundary"] = h3_reward_coordinate_commit_boundary();
 	known_coordinate_vector_gap["materialized_private_reward_coordinate_record_count"] = 0;
 	known_coordinate_vector_gap["reward_commit_helper_pending"] = true;
 	known_coordinate_vector_gap["current_road_vector_only_has_towns"] = mine_coordinate_records.is_empty();
@@ -7065,7 +7111,9 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["mine_density_weight_total"] = mine_density_weight_total;
 	phase["eligible_reward_band_count"] = reward_band_schedule.size();
 	phase["reward_band_weight_total"] = reward_band_weight_total;
-	phase["reward_scheduler_model"] = "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 commit not materialized";
+	phase["reward_scheduler_model"] = "0x4aab7e per-zone low>=100 and density>0 eligibility, density-product counters, and per-zone 0x320/0x640 budget argument; 0x4aa9b7 coordinate scan boundary materialized";
+	phase["reward_coordinate_commit_boundary_materialized"] = true;
+	phase["reward_coordinate_commit_boundary"] = h3_reward_coordinate_commit_boundary();
 	phase["reward_scheduler_budget_base"] = reward_budget_base;
 	phase["reward_scheduler_preview_zone_count"] = reward_scheduler_zone_count;
 	phase["reward_scheduler_total_density_sum"] = reward_scheduler_total_density_sum;
@@ -7074,6 +7122,7 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
 	phase["materialized_private_reward_coordinate_record_count"] = 0;
 	phase["reward_commit_helper_pending"] = true;
+	phase["reward_commit_private_records_pending"] = true;
 	phase["generic_value_selector_boundary"] = generic_value_selector_boundary;
 	phase["mine_template_selection_rng_call_count"] = mine_template_selection_rng_call_count;
 	phase["mine_placement_rng_call_count"] = mine_placement_rng_call_count;
