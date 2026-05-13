@@ -186,6 +186,45 @@ func _run() -> void:
 			_fail("Strict h3maped scaled coordinate replay changed: %s" % JSON.stringify(scaled_coords))
 			return
 
+	var zone_source_nodes: Dictionary = report.get("zone_footprint_source_nodes", {})
+	var split_steps: Array = zone_source_nodes.get("split_steps", [])
+	if String(zone_source_nodes.get("status", "")) != "active_strict_executable_port" \
+			or String(zone_source_nodes.get("source_range", "")) != "0x4a3a03/0x4cc788/0x4cc955/0x4ccb64/0x4ccdfc" \
+			or String(zone_source_nodes.get("binary_byte_prefix_0x4a3a03", "")) != "b8 ea a7 52 00 e8 c3 26 04 00 81 ec 64 05 00 00" \
+			or String(zone_source_nodes.get("binary_byte_prefix_0x4cc788", "")) != "b8 f3 ca 52 00 e8 3e 99 01 00 83 ec 1c 8a 45 f3" \
+			or String(zone_source_nodes.get("binary_byte_prefix_0x4cc955", "")) != "b8 0a cb 52 00 e8 71 97 01 00 51 51 56 8b f1 6a" \
+			or String(zone_source_nodes.get("binary_byte_prefix_0x4ccb64", "")) != "55 8b ec 83 ec 0c 53 56 57 8b 7d 08 ff 75 0c 8b" \
+			or String(zone_source_nodes.get("binary_byte_prefix_0x4ccdfc", "")) != "55 8b ec 83 ec 0c 83 65 fc 00 53 56 57 8b d9 8b" \
+			or int(zone_source_nodes.get("total_matching_runtime_zones", -1)) != 6 \
+			or int(zone_source_nodes.get("total_polygon_split_calls", -1)) != 6 \
+			or int(zone_source_nodes.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(zone_source_nodes.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
+			or int(zone_source_nodes.get("crossing_cleanup_scan_count", -1)) != 34 \
+			or int(zone_source_nodes.get("crossing_test_count", -1)) != 24 \
+			or int(zone_source_nodes.get("crossing_collapse_count", -1)) != 8 \
+			or int(zone_source_nodes.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 23 \
+			or int(zone_source_nodes.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(zone_source_nodes.get("finalized_triplet_count", -1)) != 14 \
+			or int(zone_source_nodes.get("finalized_node_count", -1)) != 42 \
+			or int(zone_source_nodes.get("active_payload_node_count", -1)) != 28 \
+			or int(zone_source_nodes.get("source_node_walk_count", -1)) != 6 \
+			or int(zone_source_nodes.get("source_node_walk_guard_exhausted_count", -1)) != 0 \
+			or split_steps.size() != 6 \
+			or int(split_steps[0].get("runtime_zone_index", -1)) != 0 \
+			or int(split_steps[0].get("x", -1)) != 23 \
+			or int(split_steps[0].get("y", -1)) != 11 \
+			or int(split_steps[5].get("runtime_zone_index", -1)) != 5 \
+			or int(split_steps[5].get("x", -1)) != 12 \
+			or int(split_steps[5].get("y", -1)) != 11 \
+			or bool(zone_source_nodes.get("materializes_boundary_trace", true)) \
+			or bool(zone_source_nodes.get("materializes_span_fill", true)) \
+			or bool(zone_source_nodes.get("materializes_private_zone_cell_buffer", true)) \
+			or bool(zone_source_nodes.get("materializes_terrain", true)) \
+			or bool(zone_source_nodes.get("materializes_map_cells", true)) \
+			or bool(zone_source_nodes.get("materializes_public_output", true)):
+		_fail("Strict h3maped zone source-node port drifted: %s" % JSON.stringify(zone_source_nodes))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -193,26 +232,27 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "zone_footprints_0x4a3a03_0x4cc788":
+			or String(strict_state.get("next_required_port", "")) != "zone_boundary_and_span_fill_0x4a2777_0x4a325d":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 6 \
-			or not pending_ports.has("zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710") \
+			or not pending_ports.has("zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d_0x4a3710") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 12 \
+	if backlog.size() != 13 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[3].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[4].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[9].get("status", "")) != "pending_runtime_port":
+			or String(backlog[5].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[9].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[10].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 

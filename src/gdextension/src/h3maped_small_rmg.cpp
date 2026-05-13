@@ -1063,7 +1063,8 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_strict_executable_port"));
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_strict_executable_port"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_strict_executable_port"));
-	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
+	backlog.append(phase_record("zone_footprint_source_nodes", "0x4a3a03, 0x4cc788, 0x4cc955, 0x4ccb64, 0x4ccdfc", "active_strict_executable_port"));
+	backlog.append(phase_record("zone_boundary_and_span_fill", "0x4a2777, 0x4a2b33, 0x4a261a, 0x4a2413, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_strict_executable_port"));
@@ -1075,10 +1076,10 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, and h3maped RNG template-selection evidence only");
-	gaps.append("old private player-slot, zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
+	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, and source-node geometry");
+	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a3a03 zone-footprint source-node setup over the coordinate replay output, not broad report expansion");
+	gaps.append("next implementation step is a narrow executable port of 0x4a2777/0x4a325d boundary/span fill over the source-node output, not terrain or object expansion");
 	return gaps;
 }
 
@@ -1102,9 +1103,10 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"player_slot_assignment:0x4ac62a..0x4ac6ec",
 			"runtime_zone_records:0x4a218c_0x49b452",
 			"link_seed_setup:0x4a1f3b",
-			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed");
+			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
+			"zone_footprint_source_nodes:0x4a3a03_0x4cc788_0x4cc955_0x4ccb64_0x4ccdfc");
 	state["pending_strict_ports"] = Array::make(
-			"zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710",
+			"zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d_0x4a3710",
 			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
@@ -1116,7 +1118,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "zone_footprints_0x4a3a03_0x4cc788";
+	state["next_required_port"] = "zone_boundary_and_span_fill_0x4a2777_0x4a325d";
 	return state;
 }
 
@@ -2023,10 +2025,6 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 	return phase;
 }
 
-#if 0
-// Archived overgrown phase code. The same recovery evidence remains in the
-// archived 20260513 files; live code reintroduces each phase only as a narrow
-// strict executable port.
 int64_t cell_key_4a325d(int32_t map_width, int32_t map_height, int32_t x, int32_t y, int32_t level) {
 	return int64_t(level) * int64_t(map_width) * int64_t(map_height) + int64_t(y) * int64_t(map_width) + int64_t(x);
 }
@@ -2512,6 +2510,70 @@ PolygonSourceResult build_polygon_source_walks_4ccb64(const Array &runtime_zones
 	return result;
 }
 
+Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "zone_footprint_source_nodes";
+	phase["status"] = "blocked_until_coordinate_replay";
+	phase["h3maped_anchor"] = "0x4a3a03";
+	phase["polygon_constructor_anchor"] = "0x4cc788";
+	phase["polygon_node_constructor_anchor"] = "0x4cc955";
+	phase["polygon_split_anchor"] = "0x4ccb64";
+	phase["polygon_finalize_anchor"] = "0x4ccdfc";
+	phase["strict_port_scope"] = "source-node rectangle, split insertion, crossing cleanup, and finalized source-node cycles only; no boundary/span fill, terrain, map cells, or public output";
+	phase["source"] = "h3maped 0x4a3a03 small-land source-node setup through 0x4cc788, 0x4cc955, 0x4ccb64, and 0x4ccdfc over the coordinate replay output";
+	phase["materializes_private_zone_cell_buffer"] = false;
+	phase["materializes_boundary_trace"] = false;
+	phase["materializes_span_fill"] = false;
+	phase["materializes_terrain"] = false;
+	phase["materializes_map_cells"] = false;
+	phase["materializes_public_output"] = false;
+	phase["blocked_next"] = "zone_boundary_and_span_fill_0x4a2777_0x4a325d_0x4a3710";
+	if (String(coordinate_phase.get("status", "")) != "active_internal_state"
+			&& String(coordinate_phase.get("status", "")) != "active_strict_executable_port") {
+		return phase;
+	}
+	if (level_count(normalized_config) != 1 || water_mode_code(normalized_config) != 0) {
+		phase["status"] = "unsupported_scope";
+		return phase;
+	}
+
+	Array runtime_zones = runtime_zones_for_footprint(runtime_zone_phase, coordinate_phase);
+	PolygonSourceResult source = build_polygon_source_walks_4ccb64(runtime_zones);
+
+	phase["status"] = source.blocked ? String("blocked_during_source_node_split") : String("active_strict_executable_port");
+	phase["level_count"] = level_count(normalized_config);
+	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
+	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = false;
+	phase["appended_synthetic_runtime_zone_count"] = 0;
+	phase["initial_bounds_min_x"] = -200;
+	phase["initial_bounds_min_y"] = -200;
+	phase["initial_bounds_max_x"] = 400;
+	phase["initial_bounds_max_y"] = 400;
+	phase["initial_node_pair_count"] = 5;
+	phase["total_matching_runtime_zones"] = runtime_zones.size();
+	phase["total_polygon_split_calls"] = source.executed_split_count;
+	phase["split_steps"] = source.split_steps;
+	phase["duplicate_skip_count"] = source.duplicate_skip_count;
+	phase["edge_removal_branch_count"] = source.edge_removal_count;
+	phase["pre_crossing_inserted_node_pair_count"] = source.inserted_node_pair_count;
+	phase["pre_crossing_inserted_bridge_pair_count"] = source.inserted_bridge_pair_count;
+	phase["crossing_cleanup_scan_count"] = source.crossing_scan_count;
+	phase["crossing_test_count"] = source.crossing_test_count;
+	phase["crossing_collapse_count"] = source.crossing_collapse_count;
+	phase["post_crossing_cleanup_allocated_node_pair_count"] = source.allocated_node_pair_count;
+	phase["post_crossing_cleanup_active_node_pair_count"] = source.active_node_pair_count;
+	phase["finalized_triplet_count"] = source.finalized_triplet_count;
+	phase["finalized_node_count"] = source.finalized_node_count;
+	phase["active_payload_node_count"] = source.active_payload_node_count;
+	phase["source_node_walk_count"] = source.source_node_walk_count;
+	phase["source_node_walk_guard_exhausted_count"] = source.source_node_walk_guard_exhausted_count;
+	return phase;
+}
+
+#if 0
+// Archived overgrown phase code. The same recovery evidence remains in the
+// archived 20260513 files; live code reintroduces each phase only as a narrow
+// strict executable port.
 Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_config, const Array &runtime_zones, const PolygonSourceResult &source, uint32_t rng_state_after_coordinate_seed, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	const int32_t map_width = width(normalized_config);
@@ -6167,6 +6229,14 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	coordinate_replay["binary_byte_prefix_0x4a19ed"] = "55 8b ec 83 ec 14 8b 55 10 53 8b 5d 08 8b c1 8b";
 	coordinate_replay["strict_port_scope"] = "coordinate candidate replay, pruning, RNG choice, and bbox rescale only; no zone footprints, terrain, map cells, or public output";
 	report["coordinate_replay"] = coordinate_replay;
+	Dictionary zone_source_nodes = zone_footprint_source_nodes_phase(normalized_config, runtime_zones, coordinate_replay);
+	zone_source_nodes["source_range"] = "0x4a3a03/0x4cc788/0x4cc955/0x4ccb64/0x4ccdfc";
+	zone_source_nodes["binary_byte_prefix_0x4a3a03"] = "b8 ea a7 52 00 e8 c3 26 04 00 81 ec 64 05 00 00";
+	zone_source_nodes["binary_byte_prefix_0x4cc788"] = "b8 f3 ca 52 00 e8 3e 99 01 00 83 ec 1c 8a 45 f3";
+	zone_source_nodes["binary_byte_prefix_0x4cc955"] = "b8 0a cb 52 00 e8 71 97 01 00 51 51 56 8b f1 6a";
+	zone_source_nodes["binary_byte_prefix_0x4ccb64"] = "55 8b ec 83 ec 0c 53 56 57 8b 7d 08 ff 75 0c 8b";
+	zone_source_nodes["binary_byte_prefix_0x4ccdfc"] = "55 8b ec 83 ec 0c 83 65 fc 00 53 56 57 8b d9 8b";
+	report["zone_footprint_source_nodes"] = zone_source_nodes;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
