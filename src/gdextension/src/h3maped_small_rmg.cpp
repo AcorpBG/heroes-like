@@ -2300,6 +2300,7 @@ Dictionary h3maped_scratch_neighbor_mask_projection_report(const PackedInt32Arra
 
 Dictionary generated_grid_visual_projection_report(const PackedInt32Array &terrain_code_u16, const PackedInt32Array &boundary_counts, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
 Dictionary h3maped_masked_visual_selection_projection_report(const PackedInt32Array &drained_terrain_code_u16, const Dictionary &drained_visual_projection, const Dictionary &scratch_neighbor_mask_projection, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection);
+bool select_visual_row_for_grid_cell_with_neighbor_mask(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b, String &selector_address, String &selector_kind, int32_t &probability_threshold, int32_t &probability_rng_value);
 
 Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
 	Dictionary report;
@@ -2307,7 +2308,7 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	report["source"] = "runs the recovered h3maped 0x4bc5f0 set-A/set-B drain shape per 0x4a3f27 repaint over a copied terrain grid";
 	report["ported_addresses"] = Array::make("0x4bc5f0", "0x4bbd01", "0x4bc988", "0x4bb74b", "0x4bba59", "0x4bbfcc");
 	report["exact_drain_complete"] = false;
-	report["blocked_exact_dependencies"] = Array::make("0x4bad0f_live_scratch_visual_state_feedback");
+	report["blocked_exact_dependencies"] = Array::make("0x49b2b6_safe_tile_byte_adoption");
 	Dictionary queue_container_contract = h3maped_queue_container_contract_report(level_count);
 	report["queue_container_contract_status"] = queue_container_contract.get("status", "");
 	report["queue_container_contract"] = queue_container_contract;
@@ -2320,6 +2321,143 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	drain_grid.resize(int32_t(zone_words.size()));
 	for (int32_t index = 0; index < drain_grid.size(); ++index) {
 		drain_grid.set(index, 8);
+	}
+	TerrainVisualGridTables tables;
+	bool visual_tables_decoded = false;
+	if (FileAccess::file_exists(BINARY_PATH)) {
+		Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+		if (file.is_valid() && file->is_open()) {
+			tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
+			tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
+			tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
+			tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
+			tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+			visual_tables_decoded = tables.dirt_rows.size() == 46 && tables.sand_rows.size() == 24 && tables.normal_rows.size() == 79 && tables.water_rows.size() == 33 && tables.rock_rows.size() == 48;
+		}
+	}
+	PackedInt32Array live_scratch_word_u16;
+	PackedInt32Array live_cell_word_0x24_u32;
+	PackedInt32Array live_cell_word_0x28_u32;
+	live_scratch_word_u16.resize(drain_grid.size());
+	live_cell_word_0x24_u32.resize(drain_grid.size());
+	live_cell_word_0x28_u32.resize(drain_grid.size());
+	H3MapedRng live_visual_rng{ rng_state_before_visual_selection };
+	Dictionary live_neighbor_mask_histogram;
+	Dictionary live_selector_kind_histogram;
+	Array live_visual_samples;
+	int32_t live_visual_attempt_count = 0;
+	int32_t live_visual_write_count = 0;
+	int32_t live_visual_missing_bucket_count = 0;
+	int32_t live_full_native_cell_count = 0;
+	int32_t live_initial_water_attempt_count = 0;
+	int32_t live_repaint_attempt_count = 0;
+	int32_t live_queue_attempt_count = 0;
+	int32_t live_terrain_art_nonzero_cell_count = 0;
+	int32_t live_terrain_flag_cell_count = 0;
+	auto live_accept_neighbor = [&](int32_t neighbor_index, int32_t terrain_id) -> bool {
+		if (neighbor_index < 0 || neighbor_index >= live_scratch_word_u16.size()) {
+			return false;
+		}
+		const uint32_t neighbor_scratch = uint32_t(int32_t(live_scratch_word_u16[neighbor_index]));
+		if ((neighbor_scratch & 0x01U) == 0U) {
+			return false;
+		}
+		if (h3maped_scratch_terrain_id(neighbor_scratch) != terrain_id) {
+			return false;
+		}
+		return h3maped_scratch_art_id(neighbor_scratch) != 0;
+	};
+	auto live_neighbor_mask_for_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id) -> int32_t {
+		const int32_t index = level * level_tile_count + y * width + x;
+		int32_t mask = 4;
+		if (x > 0 && live_accept_neighbor(index - 1, terrain_id)) {
+			mask >>= 1;
+		}
+		if (y > 0 && live_accept_neighbor(index - width, terrain_id)) {
+			mask >>= 1;
+		}
+		if (x + 1 < width && live_accept_neighbor(index + 1, terrain_id)) {
+			mask >>= 1;
+		}
+		if (y + 1 < height && live_accept_neighbor(index + width, terrain_id)) {
+			mask >>= 1;
+		}
+		return mask;
+	};
+	auto write_live_visual_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id, const char *source_branch) -> bool {
+		if (!visual_tables_decoded || x < 0 || y < 0 || x >= width || y >= height) {
+			return false;
+		}
+		const int32_t index = level * level_tile_count + y * width + x;
+		if (index < 0 || index >= drain_grid.size()) {
+			return false;
+		}
+		live_visual_attempt_count += 1;
+		const TerrainClassResult classified = classify_grid_cell(drain_grid, width, height, level_tile_count, level, x, y, terrain_id);
+		const int32_t neighbor_mask = live_neighbor_mask_for_cell(level, x, y, terrain_id);
+		const String mask_key = String::num_int64(neighbor_mask);
+		live_neighbor_mask_histogram[mask_key] = int32_t(live_neighbor_mask_histogram.get(mask_key, 0)) + 1;
+		if (classified.shape_class == 0) {
+			live_full_native_cell_count += 1;
+		}
+		int32_t selected_row = -1;
+		int32_t out_flag_a = 0;
+		int32_t out_flag_b = 0;
+		int32_t probability_threshold = -1;
+		int32_t probability_rng_value = -1;
+		String selector_address;
+		String selector_kind;
+		const std::vector<TerrainVisualRow> &rows = visual_rows_for_terrain_id(tables, terrain_id);
+		const bool selected = select_visual_row_for_grid_cell_with_neighbor_mask(rows, terrain_id, classified, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b, selector_address, selector_kind, probability_threshold, probability_rng_value);
+		live_selector_kind_histogram[selector_kind] = int32_t(live_selector_kind_histogram.get(selector_kind, 0)) + 1;
+		if (!selected) {
+			live_visual_missing_bucket_count += 1;
+			return false;
+		}
+		const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, out_flag_a, out_flag_b);
+		const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU)
+				| ((uint32_t(selected_row) & 0xffU) << 6U);
+		const uint32_t generated_cell_word_0x28 = ((uint32_t(out_flag_a) & 0x01U) << 15U)
+				| ((uint32_t(out_flag_b) & 0x01U) << 16U);
+		live_scratch_word_u16.set(index, int32_t(scratch_word));
+		live_cell_word_0x24_u32.set(index, int32_t(generated_cell_word_0x24));
+		live_cell_word_0x28_u32.set(index, int32_t(generated_cell_word_0x28));
+		live_visual_write_count += 1;
+		if (selected_row != 0) {
+			live_terrain_art_nonzero_cell_count += 1;
+		}
+		if (((generated_cell_word_0x28 >> 15U) & 0x03U) != 0U) {
+			live_terrain_flag_cell_count += 1;
+		}
+		if (live_visual_samples.size() < 16 && (classified.shape_class == 0 || neighbor_mask < 4)) {
+			Dictionary sample;
+			sample["index"] = index;
+			sample["x"] = x;
+			sample["y"] = y;
+			sample["level"] = level;
+			sample["terrain_id"] = terrain_id;
+			sample["class"] = classified.shape_class;
+			sample["neighbor_mask"] = neighbor_mask;
+			sample["source_branch"] = source_branch;
+			sample["selector_address"] = selector_address;
+			sample["selector_kind"] = selector_kind;
+			sample["probability_threshold"] = probability_threshold;
+			sample["probability_rng_value"] = probability_rng_value;
+			sample["selected_row"] = selected_row;
+			sample["scratch_word_u16"] = int32_t(scratch_word);
+			sample["generated_cell_word_0x24_u32"] = int64_t(generated_cell_word_0x24);
+			sample["generated_cell_word_0x28_u32"] = int64_t(generated_cell_word_0x28);
+			live_visual_samples.append(sample);
+		}
+		return true;
+	};
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				live_initial_water_attempt_count += 1;
+				write_live_visual_cell(level, x, y, 8, "0x4a4025_initial_water_repaint");
+			}
+		}
 	}
 	std::set<int64_t> set_a;
 	std::set<int64_t> set_b;
@@ -2411,6 +2549,8 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 			return;
 		}
 		set_terrain_at_grid_index(drain_grid, width, height, level_tile_count, level, x, y, active_terrain);
+		live_queue_attempt_count += 1;
+		write_live_visual_cell(level, x, y, active_terrain, "0x4bb74b_queue_live_visual_feedback");
 		if (!h3maped_toolkit_byte5_allows_same_class_gate(active_terrain)) {
 			seed_4bb74b_neighbor_branch(level, x, y - 1, active_terrain, true, "0x4bb7b7_neighbor_0x4bba13_false");
 			seed_4bb74b_neighbor_branch(level, x, y + 1, active_terrain, true, "0x4bb80b_neighbor_0x4bba13_false");
@@ -2494,6 +2634,8 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 					}
 					changed_cell_update_count += 1;
 					if (set_terrain_at_grid_index(drain_grid, width, height, level_tile_count, level, x, y, terrain)) {
+						live_repaint_attempt_count += 1;
+						write_live_visual_cell(level, x, y, terrain, "0x4bb74b_repaint_live_visual_feedback");
 						if (h3maped_candidate_gate_4bc988_grid(drain_grid, width, height, level_tile_count, level, x, y)) {
 							append_set_a(level, x, y, "0x4bb9ed_repaint_candidate_to_set_a");
 						} else {
@@ -2512,17 +2654,6 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 		}
 	}
 
-	TerrainVisualGridTables tables;
-	if (FileAccess::file_exists(BINARY_PATH)) {
-		Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
-		if (file.is_valid() && file->is_open()) {
-			tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
-			tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
-			tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
-			tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
-			tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
-		}
-	}
 	int32_t initial_missing_count = 0;
 	for (int32_t level = 0; level < level_count; ++level) {
 		for (int32_t y = 0; y < height; ++y) {
@@ -2592,7 +2723,79 @@ Dictionary h3maped_repaint_order_queue_drain_projection_report(const std::vector
 	Dictionary masked_visual_selection_projection = h3maped_masked_visual_selection_projection_report(drain_grid, drained_visual_projection, scratch_neighbor_mask_projection, width, height, level_count, rng_state_before_visual_selection);
 	report["masked_visual_selection_projection_status"] = masked_visual_selection_projection.get("status", "");
 	report["masked_visual_selection_projection"] = masked_visual_selection_projection;
-	report["blocked_next"] = "replace this copied terrain-only projection with live 0x4bad0f scratch-neighbor feedback sequencing and safe generated-cell/runtime adoption";
+	PackedInt32Array masked_cell_word_0x24_u32 = masked_visual_selection_projection.get("projected_cell_word_0x24_u32", PackedInt32Array());
+	PackedInt32Array masked_cell_word_0x28_u32 = masked_visual_selection_projection.get("projected_cell_word_0x28_u32", PackedInt32Array());
+	int32_t live_dirty_cell_count = 0;
+	int32_t live_roundtrip_mismatch_count = 0;
+	int32_t live_terrain_mismatch_count = 0;
+	int32_t live_vs_masked_art_delta_count = 0;
+	int32_t live_vs_masked_flag_delta_count = 0;
+	for (int32_t index = 0; index < live_scratch_word_u16.size(); ++index) {
+		const uint32_t scratch_word = uint32_t(int32_t(live_scratch_word_u16[index]));
+		if ((scratch_word & 0x01U) != 0U) {
+			live_dirty_cell_count += 1;
+		}
+		const uint32_t roundtrip_0x24 = (uint32_t(h3maped_scratch_terrain_id(scratch_word)) & 0x3fU)
+				| ((uint32_t(h3maped_scratch_art_id(scratch_word)) & 0xffU) << 6U);
+		const uint32_t roundtrip_0x28 = ((scratch_word >> 12U) & 0x01U) << 15U
+				| (((scratch_word >> 13U) & 0x01U) << 16U);
+		const uint32_t live_word_0x24 = uint32_t(int32_t(live_cell_word_0x24_u32[index]));
+		const uint32_t live_word_0x28 = uint32_t(int32_t(live_cell_word_0x28_u32[index]));
+		if (roundtrip_0x24 != live_word_0x24 || roundtrip_0x28 != live_word_0x28) {
+			live_roundtrip_mismatch_count += 1;
+		}
+		if (int32_t(live_word_0x24 & 0x3fU) != int32_t(drain_grid[index])) {
+			live_terrain_mismatch_count += 1;
+		}
+		const int32_t live_art = int32_t((live_word_0x24 >> 6U) & 0xffU);
+		const int32_t live_flags = int32_t((live_word_0x28 >> 15U) & 0x03U);
+		const int32_t masked_art = index < masked_cell_word_0x24_u32.size() ? int32_t((uint32_t(int32_t(masked_cell_word_0x24_u32[index])) >> 6U) & 0xffU) : -1;
+		const int32_t masked_flags = index < masked_cell_word_0x28_u32.size() ? int32_t((uint32_t(int32_t(masked_cell_word_0x28_u32[index])) >> 15U) & 0x03U) : -1;
+		if (live_art != masked_art) {
+			live_vs_masked_art_delta_count += 1;
+		}
+		if (live_flags != masked_flags) {
+			live_vs_masked_flag_delta_count += 1;
+		}
+	}
+	Dictionary live_scratch_visual_feedback_projection;
+	live_scratch_visual_feedback_projection["status"] = "0x4bb74b_0x4bc5f0_live_scratch_visual_feedback_projection_inspection_only";
+	live_scratch_visual_feedback_projection["source"] = "projects 0x4bcfc3 / 0x4bad0f / 0x49acf6 visual writes during the copied 0x4a4025 and 0x4bb74b repaint/queue sequence instead of after the final terrain grid";
+	live_scratch_visual_feedback_projection["ported_addresses"] = Array::make("0x4a4025", "0x4bb74b", "0x4bc5f0", "0x4bcfc3", "0x4bce6d", "0x4ba938", "0x4bad0f", "0x49acf6");
+	live_scratch_visual_feedback_projection["visual_tables_decoded"] = visual_tables_decoded;
+	live_scratch_visual_feedback_projection["uses_live_scratch_neighbor_mask"] = true;
+	live_scratch_visual_feedback_projection["live_feedback_materialized"] = true;
+	live_scratch_visual_feedback_projection["adopts_into_runtime_grid"] = false;
+	live_scratch_visual_feedback_projection["materializes_package_tiles"] = false;
+	live_scratch_visual_feedback_projection["width"] = width;
+	live_scratch_visual_feedback_projection["height"] = height;
+	live_scratch_visual_feedback_projection["level_count"] = level_count;
+	live_scratch_visual_feedback_projection["tile_count"] = live_scratch_word_u16.size();
+	live_scratch_visual_feedback_projection["live_visual_attempt_count"] = live_visual_attempt_count;
+	live_scratch_visual_feedback_projection["live_visual_write_count"] = live_visual_write_count;
+	live_scratch_visual_feedback_projection["live_visual_missing_bucket_count"] = live_visual_missing_bucket_count;
+	live_scratch_visual_feedback_projection["live_initial_water_attempt_count"] = live_initial_water_attempt_count;
+	live_scratch_visual_feedback_projection["live_repaint_attempt_count"] = live_repaint_attempt_count;
+	live_scratch_visual_feedback_projection["live_queue_attempt_count"] = live_queue_attempt_count;
+	live_scratch_visual_feedback_projection["live_dirty_cell_count"] = live_dirty_cell_count;
+	live_scratch_visual_feedback_projection["live_roundtrip_mismatch_count"] = live_roundtrip_mismatch_count;
+	live_scratch_visual_feedback_projection["live_terrain_mismatch_count"] = live_terrain_mismatch_count;
+	live_scratch_visual_feedback_projection["live_full_native_cell_count"] = live_full_native_cell_count;
+	live_scratch_visual_feedback_projection["live_terrain_art_nonzero_cell_count"] = live_terrain_art_nonzero_cell_count;
+	live_scratch_visual_feedback_projection["live_terrain_flag_cell_count"] = live_terrain_flag_cell_count;
+	live_scratch_visual_feedback_projection["live_vs_masked_post_drain_art_delta_count"] = live_vs_masked_art_delta_count;
+	live_scratch_visual_feedback_projection["live_vs_masked_post_drain_flag_delta_count"] = live_vs_masked_flag_delta_count;
+	live_scratch_visual_feedback_projection["neighbor_mask_histogram"] = live_neighbor_mask_histogram;
+	live_scratch_visual_feedback_projection["selector_kind_histogram"] = live_selector_kind_histogram;
+	live_scratch_visual_feedback_projection["scratch_word_u16"] = live_scratch_word_u16;
+	live_scratch_visual_feedback_projection["generated_cell_word_0x24_u32"] = live_cell_word_0x24_u32;
+	live_scratch_visual_feedback_projection["generated_cell_word_0x28_u32"] = live_cell_word_0x28_u32;
+	live_scratch_visual_feedback_projection["sample_records"] = live_visual_samples;
+	live_scratch_visual_feedback_projection["rng_state_after_live_visual_selection_uint32"] = int64_t(live_visual_rng.state);
+	live_scratch_visual_feedback_projection["blocked_next"] = "adopt these live generated-cell words through the 0x49b2b6 tile serializer only after road/object phases are similarly executable-derived";
+	report["live_scratch_visual_feedback_projection_status"] = live_scratch_visual_feedback_projection.get("status", "");
+	report["live_scratch_visual_feedback_projection"] = live_scratch_visual_feedback_projection;
+	report["blocked_next"] = "adopt live 0x49acf6 generated-cell terrain art/flag words through the 0x49b2b6 tile serializer after road/object phases are executable-derived";
 	return report;
 }
 

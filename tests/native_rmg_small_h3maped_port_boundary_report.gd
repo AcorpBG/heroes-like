@@ -506,6 +506,7 @@ func _run() -> void:
 	var scratch_feedback_projection: Dictionary = repaint_order_queue_drain.get("scratch_feedback_projection", {})
 	var scratch_neighbor_mask_projection: Dictionary = repaint_order_queue_drain.get("scratch_neighbor_mask_projection", {})
 	var masked_visual_selection_projection: Dictionary = repaint_order_queue_drain.get("masked_visual_selection_projection", {})
+	var live_scratch_visual_feedback_projection: Dictionary = repaint_order_queue_drain.get("live_scratch_visual_feedback_projection", {})
 	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var drained_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("drained_tile_writeback_candidate", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
@@ -694,8 +695,9 @@ func _run() -> void:
 			or String(repaint_order_queue_drain.get("scratch_feedback_projection_status", "")) != "0x4bad0f_drained_grid_scratch_word_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("scratch_neighbor_mask_projection_status", "")) != "0x4bce6d_scratch_neighbor_mask_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("masked_visual_selection_projection_status", "")) != "0x4bcfc3_0x4bce6d_0x4ba938_masked_visual_selection_projection_inspection_only" \
+			or String(repaint_order_queue_drain.get("live_scratch_visual_feedback_projection_status", "")) != "0x4bb74b_0x4bc5f0_live_scratch_visual_feedback_projection_inspection_only" \
 			or String(repaint_order_queue_drain.get("queue_container_contract_status", "")) != "0x4bd1c1_0x4bd374_0x4bd3c5_0x4bd408_queue_container_contract_ported" \
-			or repaint_order_queue_drain_blocked_exact_dependencies != ["0x4bad0f_live_scratch_visual_state_feedback"] \
+			or repaint_order_queue_drain_blocked_exact_dependencies != ["0x49b2b6_safe_tile_byte_adoption"] \
 			or Array(repaint_order_queue_drain.get("seed_samples", [])).is_empty() \
 			or Array(repaint_order_queue_drain.get("drain_samples", [])).is_empty() \
 			or PackedInt32Array(repaint_order_queue_drain.get("drained_terrain_code_u16", PackedInt32Array())).size() != 1296 \
@@ -810,6 +812,38 @@ func _run() -> void:
 			or bool(masked_visual_selection_projection.get("adopts_into_runtime_grid", true)) \
 			or bool(masked_visual_selection_projection.get("materializes_package_tiles", true)):
 		_fail("The h3maped masked visual-selection projection drifted: %s" % JSON.stringify(masked_visual_selection_projection))
+		return
+	if String(live_scratch_visual_feedback_projection.get("status", "")) != "0x4bb74b_0x4bc5f0_live_scratch_visual_feedback_projection_inspection_only" \
+			or not Array(live_scratch_visual_feedback_projection.get("ported_addresses", [])).has("0x4bb74b") \
+			or not Array(live_scratch_visual_feedback_projection.get("ported_addresses", [])).has("0x4bc5f0") \
+			or not Array(live_scratch_visual_feedback_projection.get("ported_addresses", [])).has("0x4bcfc3") \
+			or not Array(live_scratch_visual_feedback_projection.get("ported_addresses", [])).has("0x4bce6d") \
+			or not bool(live_scratch_visual_feedback_projection.get("visual_tables_decoded", false)) \
+			or not bool(live_scratch_visual_feedback_projection.get("uses_live_scratch_neighbor_mask", false)) \
+			or not bool(live_scratch_visual_feedback_projection.get("live_feedback_materialized", false)) \
+			or int(live_scratch_visual_feedback_projection.get("tile_count", -1)) != 1296 \
+			or int(live_scratch_visual_feedback_projection.get("live_initial_water_attempt_count", -1)) != 1296 \
+			or int(live_scratch_visual_feedback_projection.get("live_visual_attempt_count", -1)) <= 1296 \
+			or int(live_scratch_visual_feedback_projection.get("live_visual_write_count", -1)) != int(live_scratch_visual_feedback_projection.get("live_visual_attempt_count", -2)) \
+			or int(live_scratch_visual_feedback_projection.get("live_visual_missing_bucket_count", -1)) != 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_repaint_attempt_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_queue_attempt_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_dirty_cell_count", -1)) != 1296 \
+			or int(live_scratch_visual_feedback_projection.get("live_roundtrip_mismatch_count", -1)) != 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_terrain_mismatch_count", -1)) != 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_full_native_cell_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_terrain_art_nonzero_cell_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_terrain_flag_cell_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_vs_masked_post_drain_art_delta_count", -1)) <= 0 \
+			or int(live_scratch_visual_feedback_projection.get("live_vs_masked_post_drain_flag_delta_count", -1)) <= 0 \
+			or Dictionary(live_scratch_visual_feedback_projection.get("neighbor_mask_histogram", {})).is_empty() \
+			or PackedInt32Array(live_scratch_visual_feedback_projection.get("scratch_word_u16", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_scratch_visual_feedback_projection.get("generated_cell_word_0x24_u32", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_scratch_visual_feedback_projection.get("generated_cell_word_0x28_u32", PackedInt32Array())).size() != 1296 \
+			or Array(live_scratch_visual_feedback_projection.get("sample_records", [])).is_empty() \
+			or bool(live_scratch_visual_feedback_projection.get("adopts_into_runtime_grid", true)) \
+			or bool(live_scratch_visual_feedback_projection.get("materializes_package_tiles", true)):
+		_fail("The h3maped live scratch visual-feedback projection drifted: %s" % JSON.stringify(live_scratch_visual_feedback_projection))
 		return
 	if String(drained_tile_writeback_candidate.get("status", "")) != "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only" \
 			or int(drained_tile_writeback_candidate.get("tile_count", -1)) != 1296 \
