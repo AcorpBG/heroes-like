@@ -88,6 +88,17 @@ struct ClipResult {
 	const char *branch = "";
 };
 
+struct LineWriteResult {
+	int32_t write_count = 0;
+	int32_t unique_cell_count = 0;
+	int32_t out_of_bounds_write_count = 0;
+	int32_t reserved_flag_write_count = 0;
+	Array trace_preview;
+};
+
+constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
+constexpr uint32_t H3MAPED_ZONE_WORD_CLEAR_MASK = 0xff00ffffU;
+
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "", 0xff, 0xff },
 	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, "", 0x03, 0x03 },
@@ -306,6 +317,85 @@ ClipResult h3maped_clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t
 		}
 	}
 	return accept_current("0x4a2b5d_fallback_current");
+}
+
+int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return (int64_t(level) * int64_t(height) + int64_t(y)) * int64_t(width) + int64_t(x);
+}
+
+void append_line_trace_preview(Array &trace_preview, int32_t x, int32_t y, int32_t level) {
+	if (trace_preview.size() >= 8) {
+		return;
+	}
+	Dictionary item;
+	item["x"] = x;
+	item["y"] = y;
+	item["level"] = level;
+	trace_preview.append(item);
+}
+
+int32_t h3maped_line_sign_4a261a(int32_t value) {
+	return value > 0 ? 1 : -1;
+}
+
+void h3maped_write_line_cell_4a261a(LineWriteResult &result, std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t x, int32_t y, int32_t level, int32_t zone_word_id) {
+	if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
+		result.out_of_bounds_write_count += 1;
+		return;
+	}
+	const int64_t index = h3maped_cell_index(width, height, x, y, level);
+	if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) != (uint32_t(zone_word_id & 0xff) << 16U)) {
+		result.unique_cell_count += 1;
+	}
+	zone_words[size_t(index)] = (zone_words[size_t(index)] & H3MAPED_ZONE_WORD_CLEAR_MASK) | (uint32_t(zone_word_id & 0xff) << 16U);
+	if (!(water_code == 2 && level != 1)) {
+		cell_flags[size_t(index)] = uint8_t(cell_flags[size_t(index)] | 0x10U);
+		result.reserved_flag_write_count += 1;
+	}
+	result.write_count += 1;
+	append_line_trace_preview(result.trace_preview, x, y, level);
+}
+
+LineWriteResult h3maped_line_writer_4a261a(std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t level, int32_t zone_word_id) {
+	LineWriteResult result;
+	if (x1 > x2) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	const int32_t abs_dy = std::abs(dy);
+	int32_t major = 0;
+	int32_t minor = 0;
+	int32_t simple_step_x = 0;
+	int32_t simple_step_y = 0;
+	const int32_t diagonal_step_y = h3maped_line_sign_4a261a(dy);
+	if (dx > abs_dy) {
+		major = dx;
+		minor = abs_dy;
+		simple_step_x = 1;
+	} else {
+		major = abs_dy;
+		minor = dx;
+		simple_step_y = h3maped_line_sign_4a261a(dy);
+	}
+	int32_t error = major / 2;
+	int32_t x = x1;
+	int32_t y = y1;
+	while (x != x2 || y != y2) {
+		h3maped_write_line_cell_4a261a(result, zone_words, cell_flags, width, height, level_count, water_code, x, y, level, zone_word_id);
+		error += minor;
+		if (error < major) {
+			x += simple_step_x;
+			y += simple_step_y;
+		} else {
+			error -= major;
+			x += 1;
+			y += diagonal_step_y;
+		}
+	}
+	h3maped_write_line_cell_4a261a(result, zone_words, cell_flags, width, height, level_count, water_code, x, y, level, zone_word_id);
+	return result;
 }
 
 Array bool_bitmap_report(const std::array<bool, 8> &bitmap) {
@@ -1231,6 +1321,67 @@ Dictionary clip_helper_4a2b33_report(const Dictionary &normalized_config) {
 	return report;
 }
 
+Dictionary line_writer_4a261a_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a261a_deterministic_line_writer_ported_inspection_only";
+	report["source"] = "h3maped 0x4a2777 dependency: 0x4a261a paints a deterministic line of zone-word cells and reserved flags after endpoint clipping";
+	report["function_address"] = "0x4a261a";
+	report["caller_address"] = "0x4a2777";
+	report["zone_word_mask"] = "0x00ff0000";
+	report["zone_word_clear_mask"] = "0xff00ffff";
+	report["reserved_flag_mask"] = "0x10";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+
+	const int32_t sample_width = 12;
+	const int32_t sample_height = 8;
+	const int32_t level_count = 1;
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t zone_word_id = 7;
+	std::vector<uint32_t> zone_words(size_t(sample_width * sample_height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(sample_width * sample_height * level_count), 0);
+	LineWriteResult line = h3maped_line_writer_4a261a(zone_words, cell_flags, sample_width, sample_height, level_count, water_code, 2, 3, 8, 3, 0, zone_word_id);
+
+	int32_t zone_word_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	for (int32_t y = 0; y < sample_height; ++y) {
+		for (int32_t x = 0; x < sample_width; ++x) {
+			const int64_t index = h3maped_cell_index(sample_width, sample_height, x, y, 0);
+			if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == (uint32_t(zone_word_id) << 16U)) {
+				zone_word_cell_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_cell_count += 1;
+			}
+		}
+	}
+
+	Dictionary sample;
+	sample["map_width"] = sample_width;
+	sample["map_height"] = sample_height;
+	sample["level_count"] = level_count;
+	sample["h3maped_water_mode_code"] = water_code;
+	sample["from_x"] = 2;
+	sample["from_y"] = 3;
+	sample["to_x"] = 8;
+	sample["to_y"] = 3;
+	sample["level"] = 0;
+	sample["zone_word_id"] = zone_word_id;
+	sample["write_count"] = line.write_count;
+	sample["unique_cell_count"] = line.unique_cell_count;
+	sample["zone_word_cell_count"] = zone_word_cell_count;
+	sample["reserved_flag_write_count"] = line.reserved_flag_write_count;
+	sample["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	sample["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	sample["trace_preview"] = line.trace_preview;
+	report["sample_contract"] = sample;
+	report["blocked_next"] = "port 0x4a2413 randomized line writer and assemble 0x4a2777 source-node traversal from queued helper inputs";
+	return report;
+}
+
 } // namespace
 
 bool supports_scope(const Dictionary &normalized_config) {
@@ -1334,6 +1485,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["zone_footprint_phase_boundary"] = zone_footprint_phase_boundary_report(normalized_config, runtime_zone_setup);
 			report["source_node_rectangle_4cc788"] = source_node_rectangle_4cc788_report();
 			report["clip_helper_4a2b33"] = clip_helper_4a2b33_report(normalized_config);
+			report["line_writer_4a261a"] = line_writer_4a261a_report(normalized_config);
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
