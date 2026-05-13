@@ -401,6 +401,33 @@ struct H3MapedRng {
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 constexpr uint32_t H3MAPED_ZONE_WORD_CLEAR_MASK = 0xff00ffffU;
 
+String terrain_for_h3maped_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "dirt";
+		case 1:
+			return "sand";
+		case 2:
+			return "grass";
+		case 3:
+			return "snow";
+		case 4:
+			return "swamp";
+		case 5:
+			return "rough";
+		case 6:
+			return "underground";
+		case 7:
+			return "lava";
+		case 8:
+			return "water";
+		case 9:
+			return "rock";
+		default:
+			return "unknown";
+	}
+}
+
 int32_t h3maped_distance_truncate_local(int32_t ax, int32_t ay, int32_t bx, int32_t by) {
 	const int64_t dx = int64_t(ax) - int64_t(bx);
 	const int64_t dy = int64_t(ay) - int64_t(by);
@@ -1146,6 +1173,13 @@ Dictionary runtime_zone_records_context(const TemplateEvidence &selected_templat
 				allowed_factions.append(H3MAPED_ALLOWED_MAIN_TOWNS[town_index]);
 			}
 			record["allowed_faction_ids_for_49b3c1"] = allowed_factions;
+		}
+		if (String(source_zone.terrain_policy) == "all_land_h3") {
+			Array allowed_terrain_ids;
+			for (int32_t terrain_id = 0; terrain_id <= 7; ++terrain_id) {
+				allowed_terrain_ids.append(terrain_id);
+			}
+			record["allowed_h3maped_terrain_ids_for_49b53d"] = allowed_terrain_ids;
 		}
 		records.append(record);
 
@@ -2263,7 +2297,7 @@ Dictionary seed_relocation_4a325d_context(const Dictionary &source_node_walk, co
 	return context;
 }
 
-Dictionary span_fill_4a325d_context(const Dictionary &normalized_config, const Dictionary &coordinate_context, const Dictionary &polygon_split_context, const Dictionary &boundary_traversal_context, std::vector<uint32_t> zone_words, std::vector<uint8_t> cell_flags) {
+Dictionary span_fill_4a325d_context(const Dictionary &normalized_config, const Dictionary &coordinate_context, const Dictionary &polygon_split_context, const Dictionary &boundary_traversal_context, std::vector<uint32_t> zone_words, std::vector<uint8_t> cell_flags, std::vector<uint32_t> *zone_words_out = nullptr, std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary context;
 	context["phase_id"] = "span_fill_4a325d";
 	context["h3maped_anchor"] = "0x4a325d";
@@ -2410,6 +2444,10 @@ Dictionary span_fill_4a325d_context(const Dictionary &normalized_config, const D
 	context["cells_by_zone_word"] = cells_by_zone_word;
 	context["zone_fill_reports"] = zone_fill_reports;
 	context["blocked_next"] = "0x4a3710_ordering_finalizer";
+	if (zone_words_out != nullptr && cell_flags_out != nullptr) {
+		*zone_words_out = zone_words;
+		*cell_flags_out = cell_flags;
+	}
 	return context;
 }
 
@@ -2502,6 +2540,269 @@ Dictionary footprint_finalizer_4a3710_context(const Dictionary &normalized_confi
 	return context;
 }
 
+Dictionary runtime_terrain_selection_49b53d_context(const Dictionary &runtime_zone_context, const Dictionary &coordinate_context) {
+	Dictionary context;
+	context["phase_id"] = "runtime_terrain_selection_49b53d";
+	context["h3maped_anchor"] = "0x49b53d";
+	context["town_to_terrain_table_address"] = "0x540908";
+	context["allowed_terrain_flags_source"] = "source_zone+0x85..0x8c";
+	context["rng_state_before_0x49b53d_uint32"] = coordinate_context.get("rng_state_after_0x4a218c_replay_uint32", 0);
+	context["status"] = "blocked_until_coordinate_replay";
+	context["materializes_terrain_cells"] = false;
+	context["materializes_terrain_art"] = false;
+	context["materializes_map_cells"] = false;
+	context["public_package_output_allowed"] = false;
+	context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+	if (String(runtime_zone_context.get("status", "")) != "private_context_ready" || String(coordinate_context.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+
+	const int32_t town_to_terrain[] = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
+	Array town_table;
+	for (const int32_t terrain_id : town_to_terrain) {
+		town_table.append(terrain_id);
+	}
+	context["town_choice_to_terrain_table"] = town_table;
+
+	H3MapedRng rng { uint32_t(int64_t(coordinate_context.get("rng_state_after_0x4a218c_replay_uint32", 0))) };
+	Array runtime_records = coordinate_context.get("runtime_zone_records_after_0x49b3c1", Array());
+	Array selections;
+	Array selected_ids;
+	Array selected_names;
+	int32_t rng_call_count = 0;
+	int32_t match_to_town_count = 0;
+	int32_t allowed_flag_choice_count = 0;
+	int32_t blank_allowed_mask_count = 0;
+	int32_t forced_subterranean_count = 0;
+	for (int64_t index = 0; index < runtime_records.size(); ++index) {
+		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_records[index];
+		Dictionary selection;
+		const int32_t runtime_zone_index = int32_t(runtime.get("runtime_zone_index", index));
+		const int32_t level = int32_t(runtime.get("level", 0));
+		const bool match_to_town = bool(runtime.get("terrain_match_to_town", false));
+		const int32_t town_choice_index = int32_t(runtime.get("town_choice_index", -1));
+		selection["runtime_zone_index"] = runtime_zone_index;
+		selection["level"] = level;
+		selection["terrain_match_to_town"] = match_to_town;
+		selection["town_choice_index"] = town_choice_index;
+		selection["faction_id"] = runtime.get("faction_id", "");
+
+		int32_t selected_terrain = -1;
+		String source;
+		if (match_to_town && town_choice_index >= 0 && town_choice_index < int32_t(std::size(town_to_terrain))) {
+			selected_terrain = town_to_terrain[town_choice_index];
+			source = "0x49b54c_0x49b55b_match_to_town_table_0x540908";
+			match_to_town_count += 1;
+		} else {
+			Array allowed = runtime.get("allowed_h3maped_terrain_ids_for_49b53d", Array());
+			Array eligible_ids;
+			Array eligible_names;
+			for (int64_t allowed_index = 0; allowed_index < allowed.size(); ++allowed_index) {
+				const int32_t h3_id = int32_t(allowed[allowed_index]);
+				if (h3_id < 0 || h3_id > 7) {
+					continue;
+				}
+				if (h3_id == 6 && level != 1) {
+					continue;
+				}
+				eligible_ids.append(h3_id);
+				eligible_names.append(terrain_for_h3maped_id(h3_id));
+			}
+			if (eligible_ids.is_empty()) {
+				selected_terrain = 0;
+				source = "0x49b57d_0x49b584_no_eligible_flags_defaults_zero";
+				blank_allowed_mask_count += 1;
+			} else {
+				const int32_t rng_value = rng.next();
+				rng_call_count += 1;
+				const int32_t selected_ordinal = rng_value % int32_t(eligible_ids.size());
+				selected_terrain = int32_t(eligible_ids[selected_ordinal]);
+				source = "0x49b586_0x49b5b4_allowed_flag_rng_choice";
+				allowed_flag_choice_count += 1;
+				selection["rng_value"] = rng_value;
+				selection["rng_modulus"] = eligible_ids.size();
+				selection["selected_allowed_ordinal"] = selected_ordinal;
+			}
+			selection["eligible_h3maped_terrain_ids"] = eligible_ids;
+			selection["eligible_project_terrain_ids"] = eligible_names;
+		}
+		if (level == 1 && selected_terrain != 7) {
+			selected_terrain = 6;
+			forced_subterranean_count += 1;
+			selection["forced_subterranean_branch"] = "0x49b5b7_0x49b5c3_level_1_non_lava_forces_terrain_6";
+		}
+		selection["selected_h3maped_terrain_id"] = selected_terrain;
+		selection["selected_project_terrain_id"] = terrain_for_h3maped_id(selected_terrain);
+		selection["source"] = source;
+		selections.append(selection);
+		selected_ids.append(selected_terrain);
+		selected_names.append(terrain_for_h3maped_id(selected_terrain));
+	}
+
+	context["status"] = "private_context_ready";
+	context["source"] = "h3maped 0x49b53d runtime terrain selection over the 0x49b3c1 town choices and source-zone allowed terrain flags";
+	context["selection_count"] = selections.size();
+	context["selections"] = selections;
+	context["selected_h3maped_terrain_ids"] = selected_ids;
+	context["selected_project_terrain_ids"] = selected_names;
+	context["match_to_town_count"] = match_to_town_count;
+	context["allowed_flag_choice_count"] = allowed_flag_choice_count;
+	context["blank_allowed_mask_count"] = blank_allowed_mask_count;
+	context["forced_subterranean_count"] = forced_subterranean_count;
+	context["rng_call_count"] = rng_call_count;
+	context["rng_state_after_0x49b53d_uint32"] = int64_t(rng.state);
+	context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+	return context;
+}
+
+Dictionary terrain_cell_writeout_4a3f27_context(const Dictionary &normalized_config, const Dictionary &span_fill_context, const Dictionary &terrain_selection_context, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags) {
+	Dictionary context;
+	context["phase_id"] = "terrain_cell_writeout_4a3f27";
+	context["h3maped_anchor"] = "0x4a3f27";
+	context["full_map_water_repaint_address"] = "0x4a4025";
+	context["per_zone_repaint_loop_address"] = "0x4a4082";
+	context["per_cell_repaint_call_address"] = "0x4a415a";
+	context["owner_byte_gate_address"] = "0x4a4142";
+	context["reserved_flag_gate_address"] = "0x4a4150";
+	context["span_fill_source_address"] = "0x4a325d";
+	context["tile_serializer_address"] = "0x49b2b6";
+	context["status"] = "blocked_until_terrain_selection_and_span_fill";
+	context["materializes_private_generated_cell_words"] = true;
+	context["materializes_terrain_art"] = false;
+	context["materializes_roads"] = false;
+	context["materializes_objects"] = false;
+	context["materializes_package_tiles"] = false;
+	context["project_grid_public_runtime_adoption"] = false;
+	context["public_package_output_allowed"] = false;
+	context["blocked_next"] = "TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
+	if (String(span_fill_context.get("status", "")) != "private_context_ready" || String(terrain_selection_context.get("status", "")) != "private_context_ready" || zone_words.empty()) {
+		return context;
+	}
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	Array selected_terrain_names = terrain_selection_context.get("selected_project_terrain_ids", Array());
+	Array selected_terrain_codes = terrain_selection_context.get("selected_h3maped_terrain_ids", Array());
+	Dictionary terrain_name_counts;
+	Dictionary h3_terrain_code_counts;
+	Dictionary cells_by_zone_word;
+	Dictionary repaint_cells_by_terrain_code;
+	Array per_zone_repaint_records;
+	Array sample_cells;
+	const int32_t cell_count = int32_t(zone_words.size());
+
+	int32_t reserved_cell_count = 0;
+	int32_t unassigned_cell_count = 0;
+	int32_t non_water_terrain_cell_count = 0;
+	int32_t owner_low_materialized_count = 0;
+	Dictionary owner_low_byte_counts;
+	for (int32_t index = 0; index < cell_count; ++index) {
+		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+		int32_t h3_terrain_code = 8;
+		String terrain_name = "water";
+		int32_t owner_low_byte = -1;
+		if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			unassigned_cell_count += 1;
+		} else {
+			const int32_t zone_word_id = int32_t((masked >> 16U) & 0xffU);
+			owner_low_byte = zone_word_id;
+			owner_low_materialized_count += 1;
+			const String owner_key = String::num_int64(owner_low_byte);
+			owner_low_byte_counts[owner_key] = int32_t(owner_low_byte_counts.get(owner_key, 0)) + 1;
+			const String zone_key = String::num_int64(zone_word_id);
+			cells_by_zone_word[zone_key] = int32_t(cells_by_zone_word.get(zone_key, 0)) + 1;
+			if (zone_word_id >= 0 && zone_word_id < selected_terrain_codes.size()) {
+				h3_terrain_code = int32_t(selected_terrain_codes[zone_word_id]);
+			}
+			if (zone_word_id >= 0 && zone_word_id < selected_terrain_names.size()) {
+				terrain_name = String(selected_terrain_names[zone_word_id]);
+			} else {
+				terrain_name = terrain_for_h3maped_id(h3_terrain_code);
+			}
+		}
+		if (h3_terrain_code != 8) {
+			non_water_terrain_cell_count += 1;
+			const String terrain_code_key = String::num_int64(h3_terrain_code);
+			repaint_cells_by_terrain_code[terrain_code_key] = int32_t(repaint_cells_by_terrain_code.get(terrain_code_key, 0)) + 1;
+		}
+		const bool repaint_member = (cell_flags.size() == zone_words.size() && (cell_flags[size_t(index)] & 0x10U) != 0U);
+		if (repaint_member) {
+			reserved_cell_count += 1;
+		}
+		terrain_name_counts[terrain_name] = int32_t(terrain_name_counts.get(terrain_name, 0)) + 1;
+		const String code_key = String::num_int64(h3_terrain_code);
+		h3_terrain_code_counts[code_key] = int32_t(h3_terrain_code_counts.get(code_key, 0)) + 1;
+		if (sample_cells.size() < 8) {
+			Dictionary sample;
+			sample["index"] = index;
+			sample["x"] = index % width;
+			sample["y"] = (index / width) % height;
+			sample["level"] = index / (width * height);
+			sample["owner_low_byte"] = owner_low_byte;
+			sample["terrain_code"] = h3_terrain_code;
+			sample["terrain_name"] = terrain_name;
+			sample["repaint_member"] = repaint_member;
+			sample_cells.append(sample);
+		}
+	}
+
+	for (int64_t zone_index = 0; zone_index < selected_terrain_codes.size(); ++zone_index) {
+		const int32_t zone_terrain_code = int32_t(selected_terrain_codes[zone_index]);
+		const String zone_key = String::num_int64(zone_index);
+		Dictionary zone_record;
+		zone_record["runtime_zone_index"] = int32_t(zone_index);
+		zone_record["terrain_code"] = zone_terrain_code;
+		zone_record["terrain_name"] = zone_index < selected_terrain_names.size() ? String(selected_terrain_names[zone_index]) : terrain_for_h3maped_id(zone_terrain_code);
+		zone_record["single_cell_repaint_count"] = zone_terrain_code == 8 ? 0 : int32_t(cells_by_zone_word.get(zone_key, 0));
+		zone_record["skipped_water_zone"] = zone_terrain_code == 8;
+		per_zone_repaint_records.append(zone_record);
+	}
+
+	Dictionary terrain_repaint_schedule;
+	terrain_repaint_schedule["status"] = "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_private";
+	terrain_repaint_schedule["initial_water_terrain_id"] = 8;
+	terrain_repaint_schedule["initial_water_full_map_cell_count"] = cell_count;
+	terrain_repaint_schedule["two_level_rock_prefill_address"] = "0x4a3f97";
+	terrain_repaint_schedule["two_level_rock_prefill_executed"] = level_count > 1;
+	terrain_repaint_schedule["single_cell_repaint_count"] = non_water_terrain_cell_count;
+	terrain_repaint_schedule["repaint_cells_by_terrain_code"] = repaint_cells_by_terrain_code;
+	terrain_repaint_schedule["per_zone_repaint_records"] = per_zone_repaint_records;
+	terrain_repaint_schedule["materializes_visual_art"] = false;
+
+	context["status"] = "private_context_ready";
+	context["source"] = "h3maped 0x4a3f27 terrain/cell writeout consumes the private real 0x4a325d zone-word buffer: full-map water repaint first, then per-runtime-zone terrain repaint; art/index/flip remain blocked before package adoption";
+	context["map_width"] = width;
+	context["map_height"] = height;
+	context["level_count"] = level_count;
+	context["cell_count"] = cell_count;
+	context["span_fill_status"] = span_fill_context.get("status", "");
+	context["span_fill_total_boundary_or_filled_cell_count"] = span_fill_context.get("total_boundary_or_filled_cell_count", 0);
+	context["span_fill_remaining_unassigned_cell_count"] = span_fill_context.get("remaining_unassigned_cell_count", 0);
+	context["span_fill_reserved_flag_cell_count"] = span_fill_context.get("reserved_flag_cell_count", 0);
+	context["owner_low_byte_source"] = "cell+0x20 bits 16..23 from real 0x4a325d zone word id";
+	context["owner_low_byte_materialized_count"] = owner_low_materialized_count;
+	context["owner_low_byte_counts"] = owner_low_byte_counts;
+	context["tile_byte_zero_terrain_cell_count"] = cell_count;
+	context["tile_byte_zero_non_water_terrain_cell_count"] = non_water_terrain_cell_count;
+	context["tile_byte_one_nonzero_art_cell_count"] = 0;
+	context["tile_byte_six_terrain_flip_cell_count"] = 0;
+	context["reserved_flag_cell_count"] = reserved_cell_count;
+	context["unassigned_water_cell_count"] = unassigned_cell_count;
+	context["terrain_name_counts"] = terrain_name_counts;
+	context["h3_terrain_code_counts"] = h3_terrain_code_counts;
+	context["cells_by_zone_word"] = cells_by_zone_word;
+	context["terrain_repaint_schedule"] = terrain_repaint_schedule;
+	context["sample_cells"] = sample_cells;
+	context["tile_byte_writeout_status"] = "0x49b2b6_terrain_id_byte_packed_art_flip_pending";
+	context["tile_byte_writeout_source"] = "0x49b2b6 serializes generated cell+0x24 bits 0..5 to terrain byte 0; terrain art byte 1 and terrain flip byte 6 bits 0..1 remain blocked until TerrainPlacement is ported";
+	context["blocked_next"] = "TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -2530,8 +2831,12 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 		std::vector<uint32_t> boundary_zone_words;
 		std::vector<uint8_t> boundary_cell_flags;
 		const Dictionary boundary_traversal_context = source_node_boundary_traversal_context(normalized_config, coordinate_context, polygon_split_context, &boundary_zone_words, &boundary_cell_flags);
-		const Dictionary span_fill_context = span_fill_4a325d_context(normalized_config, coordinate_context, polygon_split_context, boundary_traversal_context, boundary_zone_words, boundary_cell_flags);
+		std::vector<uint32_t> span_fill_zone_words;
+		std::vector<uint8_t> span_fill_cell_flags;
+		const Dictionary span_fill_context = span_fill_4a325d_context(normalized_config, coordinate_context, polygon_split_context, boundary_traversal_context, boundary_zone_words, boundary_cell_flags, &span_fill_zone_words, &span_fill_cell_flags);
 		const Dictionary footprint_finalizer_context = footprint_finalizer_4a3710_context(normalized_config, runtime_zone_context, zone_footprint_context, span_fill_context);
+		const Dictionary runtime_terrain_context = runtime_terrain_selection_49b53d_context(runtime_zone_context, coordinate_context);
+		const Dictionary terrain_cell_writeout_context = terrain_cell_writeout_4a3f27_context(normalized_config, span_fill_context, runtime_terrain_context, span_fill_zone_words, span_fill_cell_flags);
 		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
 		context["runtime_zone_context"] = runtime_zone_context;
@@ -2561,8 +2866,22 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 										context["footprint_finalizer_context"] = footprint_finalizer_context;
 										if (String(footprint_finalizer_context.get("status", "")) == "0x4a3710_small_land_no_appended_zone_finalizer_ported_private") {
 											completed_phases.append("footprint_finalizer_4a3710");
-											context["status"] = "footprint_finalizer_private_context_ready";
-											context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+											context["runtime_terrain_selection_context"] = runtime_terrain_context;
+											if (String(runtime_terrain_context.get("status", "")) == "private_context_ready") {
+												completed_phases.append("runtime_terrain_selection_49b53d");
+												context["terrain_cell_writeout_context"] = terrain_cell_writeout_context;
+												if (String(terrain_cell_writeout_context.get("status", "")) == "private_context_ready") {
+													completed_phases.append("terrain_cell_writeout_4a3f27");
+													context["status"] = "terrain_cell_writeout_private_context_ready";
+													context["blocked_next"] = "TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout";
+												} else {
+													context["status"] = "runtime_terrain_selection_private_context_ready";
+													context["blocked_next"] = "0x4a3f27_terrain_cell_writeout";
+												}
+											} else {
+												context["status"] = "footprint_finalizer_private_context_ready";
+												context["blocked_next"] = "0x49b53d_runtime_terrain_selection";
+											}
 										} else {
 											context["status"] = "span_fill_private_context_ready";
 											context["blocked_next"] = "0x4a3710_ordering_finalizer";
@@ -2662,7 +2981,7 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : (index >= 1 && index <= 3 ? String("private_context_ready") : String("pending_strict_port"));
+		phase["status"] = index == 0 ? String("active_boundary_only") : (index >= 1 && index <= 3 ? String("private_context_ready") : (index == 4 ? String("private_terrain_writeout_ready_visuals_pending") : String("pending_strict_port")));
 		phase["materializes_public_output"] = false;
 		phases.append(phase);
 	}

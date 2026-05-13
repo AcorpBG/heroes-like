@@ -103,7 +103,7 @@ func _run() -> void:
 			or String(backlog[2].get("status", "")) != "private_context_ready" \
 			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
 			or String(backlog[3].get("status", "")) != "private_context_ready" \
-			or String(backlog[4].get("status", "")) != "pending_strict_port" \
+			or String(backlog[4].get("status", "")) != "private_terrain_writeout_ready_visuals_pending" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -113,13 +113,14 @@ func _run() -> void:
 			return
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
+	var completed_private_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27"]
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "footprint_finalizer_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710"] \
-			or int(private_context.get("completed_phase_count", -1)) != 11 \
+			or String(private_context.get("status", "")) != "terrain_cell_writeout_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != completed_private_phases \
+			or int(private_context.get("completed_phase_count", -1)) != completed_private_phases.size() \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped footprint finalizer phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped terrain-cell writeout phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -578,13 +579,104 @@ func _run() -> void:
 		_fail("h3maped footprint finalizer phase reports drifted: %s" % JSON.stringify(finalizer_phases))
 		return
 
+	var runtime_terrain: Dictionary = private_context.get("runtime_terrain_selection_context", {})
+	if String(runtime_terrain.get("phase_id", "")) != "runtime_terrain_selection_49b53d" \
+			or String(runtime_terrain.get("h3maped_anchor", "")) != "0x49b53d" \
+			or String(runtime_terrain.get("town_to_terrain_table_address", "")) != "0x540908" \
+			or String(runtime_terrain.get("status", "")) != "private_context_ready" \
+			or int(runtime_terrain.get("selection_count", -1)) != 6 \
+			or Array(runtime_terrain.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
+			or Array(runtime_terrain.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or int(runtime_terrain.get("match_to_town_count", -1)) != 4 \
+			or int(runtime_terrain.get("allowed_flag_choice_count", -1)) != 2 \
+			or int(runtime_terrain.get("blank_allowed_mask_count", -1)) != 0 \
+			or int(runtime_terrain.get("forced_subterranean_count", -1)) != 0 \
+			or int(runtime_terrain.get("rng_call_count", -1)) != 2 \
+			or int(runtime_terrain.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
+			or int(runtime_terrain.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160 \
+			or bool(runtime_terrain.get("materializes_terrain_cells", true)) \
+			or bool(runtime_terrain.get("materializes_terrain_art", true)) \
+			or bool(runtime_terrain.get("materializes_map_cells", true)) \
+			or bool(runtime_terrain.get("public_package_output_allowed", true)) \
+			or String(runtime_terrain.get("blocked_next", "")) != "0x4a3f27_terrain_cell_writeout":
+		_fail("h3maped runtime terrain selection drifted: %s" % JSON.stringify(runtime_terrain))
+		return
+	var terrain_selections: Array = runtime_terrain.get("selections", [])
+	if terrain_selections.size() != 6 \
+			or String(terrain_selections[0].get("faction_id", "")) != "elemental" \
+			or int(terrain_selections[0].get("selected_h3maped_terrain_id", -1)) != 2 \
+			or String(terrain_selections[1].get("faction_id", "")) != "necropolis" \
+			or int(terrain_selections[1].get("selected_h3maped_terrain_id", -1)) != 0 \
+			or int(terrain_selections[2].get("rng_value", -1)) != 153 \
+			or int(terrain_selections[2].get("selected_h3maped_terrain_id", -1)) != 7 \
+			or String(terrain_selections[3].get("faction_id", "")) != "inferno" \
+			or String(terrain_selections[4].get("faction_id", "")) != "fortress" \
+			or int(terrain_selections[5].get("rng_value", -1)) != 292 \
+			or int(terrain_selections[5].get("selected_h3maped_terrain_id", -1)) != 5:
+		_fail("h3maped runtime terrain selection records drifted: %s" % JSON.stringify(terrain_selections))
+		return
+
+	var terrain_writeout: Dictionary = private_context.get("terrain_cell_writeout_context", {})
+	if String(terrain_writeout.get("phase_id", "")) != "terrain_cell_writeout_4a3f27" \
+			or String(terrain_writeout.get("h3maped_anchor", "")) != "0x4a3f27" \
+			or String(terrain_writeout.get("full_map_water_repaint_address", "")) != "0x4a4025" \
+			or String(terrain_writeout.get("per_zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(terrain_writeout.get("per_cell_repaint_call_address", "")) != "0x4a415a" \
+			or String(terrain_writeout.get("owner_byte_gate_address", "")) != "0x4a4142" \
+			or String(terrain_writeout.get("reserved_flag_gate_address", "")) != "0x4a4150" \
+			or String(terrain_writeout.get("tile_serializer_address", "")) != "0x49b2b6" \
+			or String(terrain_writeout.get("status", "")) != "private_context_ready" \
+			or int(terrain_writeout.get("cell_count", -1)) != 1296 \
+			or int(terrain_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
+			or int(terrain_writeout.get("tile_byte_zero_non_water_terrain_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("unassigned_water_cell_count", -1)) != 189 \
+			or int(terrain_writeout.get("reserved_flag_cell_count", -1)) != 1107 \
+			or int(terrain_writeout.get("owner_low_byte_materialized_count", -1)) != 1107 \
+			or int(terrain_writeout.get("tile_byte_one_nonzero_art_cell_count", -1)) != 0 \
+			or int(terrain_writeout.get("tile_byte_six_terrain_flip_cell_count", -1)) != 0 \
+			or bool(terrain_writeout.get("materializes_terrain_art", true)) \
+			or bool(terrain_writeout.get("materializes_roads", true)) \
+			or bool(terrain_writeout.get("materializes_objects", true)) \
+			or bool(terrain_writeout.get("materializes_package_tiles", true)) \
+			or bool(terrain_writeout.get("project_grid_public_runtime_adoption", true)) \
+			or bool(terrain_writeout.get("public_package_output_allowed", true)) \
+			or String(terrain_writeout.get("blocked_next", "")) != "TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout":
+		_fail("h3maped terrain-cell writeout identity/counts drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+	var terrain_counts: Dictionary = terrain_writeout.get("terrain_name_counts", {})
+	if int(terrain_counts.get("water", -1)) != 189 \
+			or int(terrain_counts.get("grass", -1)) != 177 \
+			or int(terrain_counts.get("dirt", -1)) != 91 \
+			or int(terrain_counts.get("lava", -1)) != 403 \
+			or int(terrain_counts.get("swamp", -1)) != 207 \
+			or int(terrain_counts.get("rough", -1)) != 229:
+		_fail("h3maped terrain name counts drifted: %s" % JSON.stringify(terrain_counts))
+		return
+	var h3_terrain_counts: Dictionary = terrain_writeout.get("h3_terrain_code_counts", {})
+	if int(h3_terrain_counts.get("8", -1)) != 189 \
+			or int(h3_terrain_counts.get("2", -1)) != 177 \
+			or int(h3_terrain_counts.get("0", -1)) != 91 \
+			or int(h3_terrain_counts.get("7", -1)) != 403 \
+			or int(h3_terrain_counts.get("4", -1)) != 207 \
+			or int(h3_terrain_counts.get("5", -1)) != 229:
+		_fail("h3maped terrain code counts drifted: %s" % JSON.stringify(h3_terrain_counts))
+		return
+	var repaint_schedule: Dictionary = terrain_writeout.get("terrain_repaint_schedule", {})
+	if String(repaint_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_private" \
+			or int(repaint_schedule.get("initial_water_full_map_cell_count", -1)) != 1296 \
+			or int(repaint_schedule.get("single_cell_repaint_count", -1)) != 1107 \
+			or bool(repaint_schedule.get("two_level_rock_prefill_executed", true)) \
+			or bool(repaint_schedule.get("materializes_visual_art", true)):
+		_fail("h3maped terrain repaint schedule drifted: %s" % JSON.stringify(repaint_schedule))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != completed_private_phases:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
