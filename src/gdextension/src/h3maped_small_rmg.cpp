@@ -832,6 +832,19 @@ Array h3_object_limit_override_records(const H3ObjectLimitOverride *overrides, i
 	return records;
 }
 
+Dictionary h3_static_candidate_record(const char *source_address, const char *vtable_address, int32_t type_id, int32_t subtype, int32_t value, int32_t weight) {
+	Dictionary record;
+	record["source_address"] = source_address;
+	record["vtable_address"] = vtable_address;
+	record["type_id"] = type_id;
+	record["subtype"] = subtype;
+	record["value"] = value;
+	record["weight"] = weight;
+	record["record_size_bytes"] = 0x14;
+	record["materialized_candidate_record"] = false;
+	return record;
+}
+
 Dictionary h3maped_generic_value_selector_boundary() {
 	static constexpr H3ObjectLimitOverride GLOBAL_LIMIT_OVERRIDES[] = {
 		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
@@ -877,6 +890,13 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["template_selector_address"] = "0x4a9e40";
 	boundary["collision_helper_address"] = "0x49a6f9";
 	boundary["weighted_rng_address"] = "0x4e7276";
+	boundary["candidate_builder_static_prefix_status"] = "0x49f95a_fixed_simple_records_recovered_not_materialized";
+	boundary["candidate_builder_static_prefix_count"] = 2;
+	boundary["candidate_builder_static_prefix_records"] = Array::make(
+			h3_static_candidate_record("0x49f97b", "0x540ba0", 2, 0, 100, 20),
+			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50));
+	boundary["candidate_builder_dynamic_loops_pending"] = true;
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("0x581298 monster table loop", "generator+0xd8..+0xdc artifact pool loop", "type 6 value-band extended candidates", "remaining fixed/static value-band candidates");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = false;
