@@ -1002,6 +1002,7 @@ Array h3_candidate_records_from_specs(const H3CandidateSpec *specs, int32_t coun
 Array h3_fixed_type6_value_band_records();
 Array h3_static_tail_after_artifact_pool_records();
 Array h3_static_tail_after_terrain_loop_records();
+Dictionary h3_candidate_create_vfunc_boundary();
 
 Dictionary h3_materialized_static_candidate_record(const Dictionary &source_record, int32_t vector_index, const char *source_group) {
 	Dictionary record = source_record.duplicate(true);
@@ -1010,7 +1011,7 @@ Dictionary h3_materialized_static_candidate_record(const Dictionary &source_reco
 	record["source_group"] = source_group;
 	record["materialized_candidate_record"] = true;
 	record["value_vfunc_reconstructed"] = true;
-	record["create_vfunc_materialized"] = false;
+	record["create_vfunc_materialized"] = true;
 	return record;
 }
 
@@ -1063,13 +1064,14 @@ Dictionary h3_candidate_vector_order_segment(const char *segment, const char *so
 
 Dictionary h3_materialized_single_level_candidate_vector_order_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending";
+	boundary["status"] = "single_level_candidate_vector_order_materialized_public_commit_pending";
 	boundary["source_range"] = "0x49f95a..0x4a1701";
 	boundary["single_level_total_candidate_record_count"] = 704;
 	boundary["extended_total_candidate_record_count_materialized"] = false;
 	boundary["candidate_vector_indices_materialized"] = true;
 	boundary["candidate_records_fully_materialized"] = false;
-	boundary["create_vfuncs_materialized"] = false;
+	boundary["create_vfuncs_materialized"] = true;
+	boundary["public_coordinate_commit_materialized"] = false;
 	boundary["segments"] = Array::make(
 			h3_candidate_vector_order_segment("static_prefix", "0x49f95a..0x49f9e5", 0, 2, true),
 			h3_candidate_vector_order_segment("single_level_monster_loop", "0x49f9ed..0x49fa54", 2, 118, true),
@@ -1101,7 +1103,8 @@ Dictionary h3_materialized_static_candidate_boundary() {
 	boundary["dynamic_type53_object_bucket_loop_materialized"] = true;
 	boundary["candidate_vector_order_materialized"] = true;
 	boundary["complete_candidate_vector"] = false;
-	boundary["create_vfuncs_materialized"] = false;
+	boundary["create_vfuncs_materialized"] = true;
+	boundary["public_coordinate_commit_materialized"] = false;
 	return boundary;
 }
 
@@ -1164,7 +1167,7 @@ Dictionary h3_materialized_monster_candidate_record(int32_t candidate_vector_ind
 	record["quantity_bucket_formula"] = "0x49c608..0x49c642 rounded by >50 nearest 10, >12 nearest 5, >5 nearest 2";
 	record["candidate_record_field_0x18"] = quantity_bucket;
 	record["value_vfunc_reconstructed"] = true;
-	record["create_vfunc_materialized"] = false;
+	record["create_vfunc_materialized"] = true;
 	return record;
 }
 
@@ -1450,7 +1453,7 @@ Dictionary h3_materialized_type17_candidate_record(int32_t relative_loop_index, 
 	record["record_size_bytes"] = 0x14;
 	record["candidate_vector_index_materialized"] = true;
 	record["value_vfunc_reconstructed"] = true;
-	record["create_vfunc_materialized"] = false;
+	record["create_vfunc_materialized"] = true;
 	return record;
 }
 
@@ -1629,7 +1632,56 @@ Dictionary h3_candidate_vtable_boundary() {
 	boundary["record_count"] = 17;
 	boundary["records"] = h3_candidate_vtable_records();
 	boundary["value_vfuncs_reconstructed"] = true;
-	boundary["create_vfuncs_materialized"] = false;
+	boundary["create_vfuncs_materialized"] = true;
+	boundary["create_vfunc_boundary"] = h3_candidate_create_vfunc_boundary();
+	return boundary;
+}
+
+Dictionary h3_candidate_create_vfunc_record(const char *address, const char *disassembly_range, const char *family, int32_t allocation_size_bytes, const char *constructor_or_initializer, const char *output_vtable, const char *field_writes, bool returns_null_gate) {
+	Dictionary record;
+	record["address"] = address;
+	record["disassembly_range"] = disassembly_range;
+	record["family"] = family;
+	record["allocation_size_bytes"] = allocation_size_bytes;
+	record["constructor_or_initializer"] = constructor_or_initializer;
+	record["output_vtable"] = output_vtable;
+	record["field_writes"] = field_writes;
+	record["returns_null_gate"] = returns_null_gate;
+	return record;
+}
+
+Dictionary h3_candidate_create_vfunc_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "create_vfuncs_materialized_coordinate_commit_pending";
+	boundary["source_range"] = "0x49c553..0x49cdb1";
+	boundary["call_contract"] = "selector calls candidate_vtable+0x00 after value-band choice; args are placement coordinate/context and generator/zone context";
+	boundary["base_object_constructor"] = "0x49ba89";
+	boundary["resource_object_constructor"] = "0x49bdfc";
+	boundary["terrain_compound_constructor"] = "0x49c0d3";
+	boundary["allocation_helper"] = "0x5044b1";
+	boundary["selection_helper"] = "0x4a9e40";
+	boundary["object_row_table_address"] = "0x592520";
+	boundary["weighted_rng_address"] = "0x4e7276";
+	boundary["materialized_create_vfunc_count"] = 17;
+	boundary["public_coordinate_commit_materialized"] = false;
+	boundary["records"] = Array::make(
+			h3_candidate_create_vfunc_record("0x49c553", "0x49c553..0x49c58a", "direct_object_0x49ba89", 0x1c, "0x49ba89", "base", "none beyond 0x49ba89", false),
+			h3_candidate_create_vfunc_record("0x49c58a", "0x49c58a..0x49c5cd", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540ac4", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49c69b", "0x49c69b..0x49c6e2", "resource_object_0x49bdfc_monster_fields", 0x54, "0x49bdfc", "resource_base", "object+0x3c=record+0x14; object+0x40=record+0x18", false),
+			h3_candidate_create_vfunc_record("0x49c6e2", "0x49c6e2..0x49c723", "resource_object_0x49bdfc_copy_field", 0x54, "0x49bdfc", "resource_base", "object+0x1c=record+0x14", false),
+			h3_candidate_create_vfunc_record("0x49c723", "0x49c723..0x49c764", "resource_object_0x49bdfc_add_field", 0x54, "0x49bdfc", "resource_base", "object+0x38 += record+0x14", false),
+			h3_candidate_create_vfunc_record("0x49c764", "0x49c764..0x49c806", "resource_object_0x49bdfc_row_filter_vector", 0x54, "0x49bdfc", "resource_base", "append matching 0x592520 row indexes to object+0x44 using record+0x14..+0x1c filters", false),
+			h3_candidate_create_vfunc_record("0x49c806", "0x49c806..0x49c849", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540ab0", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49c8b0", "0x49c8b0..0x49c8f3", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540ad8", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49c8f3", "0x49c8f3..0x49c97c", "serial_object_0x49ba89_with_0x4ad640_gate", 0x2c, "0x49ba89", "0x540b3c", "generator+0xf44 serial to object+0x20; helper result to +0x24; record+0x14 to +0x28", true),
+			h3_candidate_create_vfunc_record("0x49c97c", "0x49c97c..0x49c9bf", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540b50", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49c9e3", "0x49c9e3..0x49ca26", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540b64", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49ca48", "0x49ca48..0x49ca8b", "direct_object_0x49ba89_vtable_override", 0x1c, "0x49ba89", "0x540b8c", "record vtable override", false),
+			h3_candidate_create_vfunc_record("0x49cac2", "0x49cac2..0x49cb60", "compound_terrain_object_with_selector_child", 0x34, "0x49c0d3 and 0x49ba89", "0x540b14", "child selected by 0x4a9e40 type 0x41; wrapper fields +0x1c zone, +0x20 child, +0x24 record; compound +0x2c/+0x30 from record +0x14/+0x18", false),
+			h3_candidate_create_vfunc_record("0x49cb83", "0x49cb83..0x49cc22", "compound_terrain_object_with_selector_child", 0x34, "0x49c0d3 and 0x49ba89", "0x540b14", "child selected by 0x4a9e40 type 0x41; compound +0x20=record+0x14", false),
+			h3_candidate_create_vfunc_record("0x49cc22", "0x49cc22..0x49ccc1", "compound_terrain_object_with_selector_child", 0x34, "0x49c0d3 and 0x49ba89", "0x540b14", "child selected by 0x4a9e40 type 0x41; compound +0x24=6 and +0x28=record+0x14", false),
+			h3_candidate_create_vfunc_record("0x49ccec", "0x49ccec..0x49cd97", "random_object_row_pick", 0x20, "0x49ba89", "0x540b78", "choose matching 0x592520 row by 0x4e7276; object+0x1c=selected row index", false),
+			h3_candidate_create_vfunc_record("0x49cdb1", "0x49cdb1..0x49ce04", "type10_object_wrapper", 0x24, "0x49ba89", "0x540b00", "object+0x20=record+0x0c value; object+0x1c=zone/context argument", false));
 	return boundary;
 }
 
@@ -1645,7 +1697,7 @@ Dictionary h3_candidate_value_vfunc_record(const char *address, const char *sema
 
 Dictionary h3_candidate_value_vfunc_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "value_vfuncs_reconstructed_create_vfuncs_pending";
+	boundary["status"] = "value_and_create_vfuncs_reconstructed_selection_pending";
 	boundary["selector_call_site"] = "0x4a9ffd..0x4aa004";
 	boundary["selector_call_contract"] = "push generator, push zone_context, call candidate_vtable+0x04";
 	boundary["range_filter_after_call"] = "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band";
@@ -1665,7 +1717,8 @@ Dictionary h3_candidate_value_vfunc_boundary() {
 	boundary["reconstructed_vfunc_count"] = 6;
 	boundary["selection_materialized"] = false;
 	boundary["candidate_record_materialization_pending"] = true;
-	boundary["create_vfuncs_pending"] = true;
+	boundary["create_vfuncs_pending"] = false;
+	boundary["create_vfuncs_materialized"] = true;
 	return boundary;
 }
 
@@ -1826,16 +1879,16 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
 	boundary["candidate_builder_static_constructor_tail_status"] = "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
-	boundary["candidate_vector_order_status"] = "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending";
+	boundary["candidate_vector_order_status"] = "single_level_candidate_vector_order_materialized_public_commit_pending";
 	boundary["candidate_vector_order_boundary"] = h3_materialized_single_level_candidate_vector_order_boundary();
-	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized";
+	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_value_and_create_materialized";
 	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
-	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_vfuncs_reconstructed_selection_not_materialized";
+	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_and_create_vfuncs_reconstructed_selection_not_materialized";
 	boundary["candidate_value_vfunc_boundary"] = h3_candidate_value_vfunc_boundary();
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_subset_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "create-vfunc materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "selector materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["candidate_vector_order_reconstructed"] = true;
