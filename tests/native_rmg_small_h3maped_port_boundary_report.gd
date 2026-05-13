@@ -309,6 +309,49 @@ func _run() -> void:
 		_fail("0x4cc788 source-node rectangle constants drifted: %s" % JSON.stringify(source_node_rectangle))
 		return
 
+	var clip_helper: Dictionary = report.get("clip_helper_4a2b33", {})
+	if String(clip_helper.get("status", "")) != "0x4a2b33_clip_helper_ported_inspection_only" \
+			or String(clip_helper.get("function_address", "")) != "0x4a2b33" \
+			or String(clip_helper.get("caller_address", "")) != "0x4a2777":
+		_fail("0x4a2b33 clip helper boundary drifted: %s" % JSON.stringify(clip_helper))
+		return
+	if bool(clip_helper.get("materializes_boundaries", true)) \
+			or bool(clip_helper.get("materializes_span_fill", true)) \
+			or bool(clip_helper.get("materializes_terrain", true)) \
+			or bool(clip_helper.get("materializes_map_cells", true)) \
+			or bool(clip_helper.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("0x4a2b33 clip helper must not materialize generated output yet: %s" % JSON.stringify(clip_helper))
+		return
+	var clip_bounds: Dictionary = clip_helper.get("clip_bounds", {})
+	if int(clip_bounds.get("min_x", -1)) != 0 \
+			or int(clip_bounds.get("min_y", -1)) != 0 \
+			or int(clip_bounds.get("max_x", -1)) != 36 \
+			or int(clip_bounds.get("max_y", -1)) != 36:
+		_fail("0x4a2b33 clip bounds drifted: %s" % JSON.stringify(clip_helper))
+		return
+	var clip_samples: Array = clip_helper.get("samples", [])
+	if int(clip_helper.get("sample_count", -1)) != 5 \
+			or clip_samples.size() != 5 \
+			or String(clip_samples[0].get("id", "")) != "inside" \
+			or int(clip_samples[0].get("out_x", -1)) != 10 \
+			or int(clip_samples[0].get("out_y", -1)) != 10 \
+			or not bool(clip_samples[0].get("input_inside", false)) \
+			or String(clip_samples[0].get("branch", "")) != "0x4a2b5d_input_inside" \
+			or String(clip_samples[1].get("id", "")) != "left_to_inside" \
+			or int(clip_samples[1].get("out_x", -1)) != 0 \
+			or int(clip_samples[1].get("out_y", -1)) != 10 \
+			or String(clip_samples[2].get("id", "")) != "top_to_inside" \
+			or int(clip_samples[2].get("out_x", -1)) != 10 \
+			or int(clip_samples[2].get("out_y", -1)) != 0 \
+			or String(clip_samples[3].get("id", "")) != "right_to_inside" \
+			or int(clip_samples[3].get("out_x", -1)) != 35 \
+			or int(clip_samples[3].get("out_y", -1)) != 12 \
+			or String(clip_samples[4].get("id", "")) != "bottom_to_inside" \
+			or int(clip_samples[4].get("out_x", -1)) != 12 \
+			or int(clip_samples[4].get("out_y", -1)) != 35:
+		_fail("0x4a2b33 clip samples drifted: %s" % JSON.stringify(clip_samples))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
