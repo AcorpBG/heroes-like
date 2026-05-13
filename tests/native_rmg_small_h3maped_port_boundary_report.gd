@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "source_node_rectangle_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle"] \
-			or int(small_state.get("completed_phase_count", -1)) != 7 \
+			or String(small_state.get("status", "")) != "polygon_split_model_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"] \
+			or int(small_state.get("completed_phase_count", -1)) != 8 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "polygon_split_model_0x4ccb64_0x4ccdfc":
-		_fail("Small h3maped generation state did not stop after source-node rectangle setup: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "source_node_boundary_traversal_0x4a2777":
+		_fail("Small h3maped generation state did not stop after polygon split/finalizer setup: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -294,6 +294,68 @@ func _run() -> void:
 		_fail("h3maped source-node rectangle phase drifted: %s" % JSON.stringify(source_node_phase))
 		return
 
+	var polygon_phase: Dictionary = small_state.get("polygon_split_model", {})
+	var polygon_steps: Array = polygon_phase.get("split_steps", [])
+	var finalized_steps: Array = polygon_phase.get("finalized_steps", [])
+	var source_node_walks: Array = polygon_phase.get("source_node_walks", [])
+	if String(polygon_phase.get("phase_id", "")) != "polygon_split_model" \
+			or String(polygon_phase.get("h3maped_anchor", "")) != "0x4ccb64" \
+			or String(polygon_phase.get("locator_anchor", "")) != "0x4cca55" \
+			or String(polygon_phase.get("node_relink_anchor", "")) != "0x4cc643" \
+			or String(polygon_phase.get("edge_side_test_anchor", "")) != "0x4cc6f2" \
+			or String(polygon_phase.get("edge_erase_anchor", "")) != "0x4cc9cc" \
+			or String(polygon_phase.get("bridge_anchor", "")) != "0x4ccb1f" \
+			or String(polygon_phase.get("crossing_test_anchor", "")) != "0x4ccc7a" \
+			or String(polygon_phase.get("crossing_collapse_anchor", "")) != "0x4cc68e" \
+			or String(polygon_phase.get("intersection_writer_anchor", "")) != "0x4ccd69" \
+			or String(polygon_phase.get("finalizer_anchor", "")) != "0x4ccdfc" \
+			or String(polygon_phase.get("status", "")) != "active_runtime_state_ready" \
+			or int(polygon_phase.get("runtime_split_point_count", -1)) != 6 \
+			or int(polygon_phase.get("executed_split_call_count", -1)) != 6 \
+			or int(polygon_phase.get("duplicate_skip_count", -1)) != 0 \
+			or int(polygon_phase.get("edge_removal_branch_count", -1)) != 0 \
+			or int(polygon_phase.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(polygon_phase.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
+			or int(polygon_phase.get("crossing_cleanup_scan_count", -1)) != 34 \
+			or int(polygon_phase.get("crossing_test_count", -1)) != 24 \
+			or int(polygon_phase.get("crossing_collapse_count", -1)) != 8 \
+			or int(polygon_phase.get("initial_node_pair_count", -1)) != 5 \
+			or int(polygon_phase.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(polygon_phase.get("post_crossing_cleanup_active_node_count", -1)) != 46 \
+			or String(polygon_phase.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported" \
+			or String(polygon_phase.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported" \
+			or int(polygon_phase.get("finalized_triplet_count", -1)) != 14 \
+			or int(polygon_phase.get("finalized_node_count", -1)) != 42 \
+			or int(polygon_phase.get("source_node_walk_count", -1)) != 6 \
+			or int(polygon_phase.get("source_node_walk_guard_exhausted_count", -1)) != 0 \
+			or String(polygon_phase.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered_private_only" \
+			or bool(polygon_phase.get("feeds_real_0x4a2777_boundary", true)) \
+			or not bool(polygon_phase.get("materializes_source_node_graph", false)) \
+			or bool(polygon_phase.get("materializes_boundaries", true)) \
+			or bool(polygon_phase.get("materializes_span_fill", true)) \
+			or bool(polygon_phase.get("materializes_terrain", true)) \
+			or bool(polygon_phase.get("materializes_map_cells", true)) \
+			or bool(polygon_phase.get("materializes_public_output", true)) \
+			or String(polygon_phase.get("blocked_next", "")) != "source_node_boundary_traversal_0x4a2777" \
+			or polygon_steps.size() != 6 \
+			or finalized_steps.size() != 14 \
+			or source_node_walks.size() != 6:
+		_fail("h3maped polygon split/finalizer phase drifted: %s" % JSON.stringify(polygon_phase))
+		return
+	if String(polygon_steps[0].get("status", "")) != "0x4ccb64_pre_crossing_inserted" \
+			or int(polygon_steps[0].get("runtime_zone_index", -1)) != 0 \
+			or int(polygon_steps[0].get("bridge_pair_count", -1)) != 2 \
+			or int(polygon_steps[5].get("runtime_zone_index", -1)) != 5 \
+			or int(polygon_steps[5].get("bridge_pair_count", -1)) != 2:
+		_fail("h3maped polygon split steps drifted: %s" % JSON.stringify(polygon_steps))
+		return
+	if int(source_node_walks[0].get("runtime_zone_index", -1)) != 0 \
+			or int(source_node_walks[0].get("cycle_node_count", -1)) <= 0 \
+			or int(source_node_walks[0].get("finalized_coordinate_count", -1)) <= 0 \
+			or bool(source_node_walks[0].get("guard_exhausted", true)):
+		_fail("h3maped source-node walks drifted: %s" % JSON.stringify(source_node_walks))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -301,7 +363,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
