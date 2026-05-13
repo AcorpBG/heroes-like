@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "runtime_terrain_selection_49b53d_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d"] \
-			or int(small_state.get("completed_phase_count", -1)) != 12 \
+			or String(small_state.get("status", "")) != "terrain_cell_writeout_4a3f27_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27"] \
+			or int(small_state.get("completed_phase_count", -1)) != 13 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "terrain_cell_writeout_4a3f27":
-		_fail("Small h3maped generation state did not stop after runtime terrain selection: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "terrainplacement_visual_tables_4bcff5":
+		_fail("Small h3maped generation state did not stop after terrain cell writeout: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -545,6 +545,89 @@ func _run() -> void:
 		_fail("h3maped runtime terrain selections drifted: %s" % JSON.stringify(terrain_selections))
 		return
 
+	var terrain_cell_phase: Dictionary = small_state.get("terrain_cell_writeout_4a3f27", {})
+	var owner_low_counts: Dictionary = terrain_cell_phase.get("owner_low_byte_counts", {})
+	var terrain_name_counts: Dictionary = terrain_cell_phase.get("terrain_name_counts", {})
+	var terrain_code_counts: Dictionary = terrain_cell_phase.get("h3_terrain_code_counts", {})
+	var terrain_schedule: Dictionary = terrain_cell_phase.get("terrain_repaint_schedule", {})
+	var repaint_code_counts: Dictionary = terrain_schedule.get("repaint_cells_by_terrain_code", {})
+	var per_zone_repaint_records: Array = terrain_schedule.get("per_zone_repaint_records", [])
+	if String(terrain_cell_phase.get("phase_id", "")) != "terrain_cell_writeout_4a3f27" \
+			or String(terrain_cell_phase.get("h3maped_anchor", "")) != "0x4a3f27" \
+			or String(terrain_cell_phase.get("full_map_water_repaint_address", "")) != "0x4a4025" \
+			or String(terrain_cell_phase.get("per_zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(terrain_cell_phase.get("per_cell_repaint_call_address", "")) != "0x4a415a" \
+			or String(terrain_cell_phase.get("owner_byte_gate_address", "")) != "0x4a4142" \
+			or String(terrain_cell_phase.get("reserved_flag_gate_address", "")) != "0x4a4150" \
+			or String(terrain_cell_phase.get("span_fill_source_address", "")) != "0x4a325d" \
+			or String(terrain_cell_phase.get("tile_serializer_address", "")) != "0x49b2b6" \
+			or String(terrain_cell_phase.get("status", "")) != "active_runtime_state_ready" \
+			or int(terrain_cell_phase.get("map_width", -1)) != 36 \
+			or int(terrain_cell_phase.get("map_height", -1)) != 36 \
+			or int(terrain_cell_phase.get("level_count", -1)) != 1 \
+			or int(terrain_cell_phase.get("cell_count", -1)) != 1296 \
+			or int(terrain_cell_phase.get("span_fill_total_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(terrain_cell_phase.get("span_fill_remaining_unassigned_cell_count", -1)) != 189 \
+			or int(terrain_cell_phase.get("span_fill_reserved_flag_cell_count", -1)) != 1107 \
+			or int(terrain_cell_phase.get("owner_low_byte_materialized_count", -1)) != 1107 \
+			or int(owner_low_counts.get("0", -1)) != 177 \
+			or int(owner_low_counts.get("1", -1)) != 91 \
+			or int(owner_low_counts.get("2", -1)) != 226 \
+			or int(owner_low_counts.get("3", -1)) != 177 \
+			or int(owner_low_counts.get("4", -1)) != 207 \
+			or int(owner_low_counts.get("5", -1)) != 229 \
+			or int(terrain_cell_phase.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
+			or int(terrain_cell_phase.get("tile_byte_zero_non_water_terrain_cell_count", -1)) != 1107 \
+			or int(terrain_cell_phase.get("tile_byte_one_nonzero_art_cell_count", -1)) != 0 \
+			or int(terrain_cell_phase.get("tile_byte_six_terrain_flip_cell_count", -1)) != 0 \
+			or int(terrain_cell_phase.get("reserved_flag_cell_count", -1)) != 1107 \
+			or int(terrain_cell_phase.get("unassigned_water_cell_count", -1)) != 189 \
+			or int(terrain_name_counts.get("water", -1)) != 189 \
+			or int(terrain_name_counts.get("grass", -1)) != 177 \
+			or int(terrain_name_counts.get("dirt", -1)) != 91 \
+			or int(terrain_name_counts.get("lava", -1)) != 403 \
+			or int(terrain_name_counts.get("swamp", -1)) != 207 \
+			or int(terrain_name_counts.get("rough", -1)) != 229 \
+			or int(terrain_code_counts.get("8", -1)) != 189 \
+			or int(terrain_code_counts.get("2", -1)) != 177 \
+			or int(terrain_code_counts.get("0", -1)) != 91 \
+			or int(terrain_code_counts.get("7", -1)) != 403 \
+			or int(terrain_code_counts.get("4", -1)) != 207 \
+			or int(terrain_code_counts.get("5", -1)) != 229 \
+			or not bool(terrain_cell_phase.get("materializes_private_generated_cell_words", false)) \
+			or bool(terrain_cell_phase.get("materializes_terrain_art", true)) \
+			or bool(terrain_cell_phase.get("materializes_roads", true)) \
+			or bool(terrain_cell_phase.get("materializes_objects", true)) \
+			or bool(terrain_cell_phase.get("materializes_package_tiles", true)) \
+			or bool(terrain_cell_phase.get("project_grid_public_runtime_adoption", true)) \
+			or bool(terrain_cell_phase.get("public_package_output_allowed", true)) \
+			or String(terrain_cell_phase.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
+			or String(terrain_cell_phase.get("blocked_next", "")) != "terrainplacement_visual_tables_4bcff5":
+		_fail("h3maped terrain cell writeout drifted: %s" % JSON.stringify(terrain_cell_phase))
+		return
+	if String(terrain_schedule.get("status", "")) != "0x4a3f27_water_then_zone_single_cell_repaint_schedule_ported_private" \
+			or int(terrain_schedule.get("initial_water_terrain_id", -1)) != 8 \
+			or int(terrain_schedule.get("initial_water_full_map_cell_count", -1)) != 1296 \
+			or bool(terrain_schedule.get("two_level_rock_prefill_executed", true)) \
+			or int(terrain_schedule.get("single_cell_repaint_count", -1)) != 1107 \
+			or int(repaint_code_counts.get("2", -1)) != 177 \
+			or int(repaint_code_counts.get("0", -1)) != 91 \
+			or int(repaint_code_counts.get("7", -1)) != 403 \
+			or int(repaint_code_counts.get("4", -1)) != 207 \
+			or int(repaint_code_counts.get("5", -1)) != 229 \
+			or bool(terrain_schedule.get("materializes_visual_art", true)) \
+			or per_zone_repaint_records.size() != 6:
+		_fail("h3maped terrain repaint schedule drifted: %s" % JSON.stringify(terrain_schedule))
+		return
+	if int(per_zone_repaint_records[0].get("single_cell_repaint_count", -1)) != 177 \
+			or int(per_zone_repaint_records[1].get("single_cell_repaint_count", -1)) != 91 \
+			or int(per_zone_repaint_records[2].get("single_cell_repaint_count", -1)) != 226 \
+			or int(per_zone_repaint_records[3].get("single_cell_repaint_count", -1)) != 177 \
+			or int(per_zone_repaint_records[4].get("single_cell_repaint_count", -1)) != 207 \
+			or int(per_zone_repaint_records[5].get("single_cell_repaint_count", -1)) != 229:
+		_fail("h3maped terrain repaint records drifted: %s" % JSON.stringify(per_zone_repaint_records))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -552,7 +635,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27"]:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
