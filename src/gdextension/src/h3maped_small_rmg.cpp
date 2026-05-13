@@ -3218,6 +3218,7 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	report["status"] = "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only";
 	report["source"] = "h3maped 0x4a6cf2 copies the two runtime-zone bounding rectangles, computes their overlap before reading Wide, scans generated cells inside that overlap, then later consumes Value/Wide/Border Guard";
 	report["ported_addresses"] = Array::make("0x4a6d52..0x4a6ddc", "0x4a6de2..0x4a6f4a", "0x4a707b..0x4a709a");
+	report["same_level_return_false_range"] = "0x4a6d3d..0x4a6d40";
 	report["materializes_connection_geometry"] = false;
 	report["materializes_connection_guards"] = false;
 	report["shape_list_source_pending"] = "generator+0x6a8";
@@ -3309,7 +3310,9 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	Array records;
 	Array overlap_available_link_indices;
 	Array fallback_required_link_indices;
+	Array same_level_return_false_link_indices;
 	int32_t overlap_available_count = 0;
+	int32_t same_level_return_false_count = 0;
 	int32_t overlap_cell_total = 0;
 	int32_t overlap_zone_a_cell_total = 0;
 	int32_t overlap_zone_b_cell_total = 0;
@@ -3346,9 +3349,31 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 		const int32_t max_x = std::min(a.max_x, b.max_x);
 		const int32_t min_y = std::max(a.min_y, b.min_y);
 		const int32_t max_y = std::min(a.max_y, b.max_y);
-		const bool overlap_exists = min_x <= max_x && min_y <= max_y && a.level == b.level;
+		const bool overlap_exists = min_x <= max_x && min_y <= max_y && a.level != b.level;
 		record["runtime_zone_a_bounds"] = bounds_report[runtime_a];
 		record["runtime_zone_b_bounds"] = bounds_report[runtime_b];
+		const bool same_level = a.level == b.level;
+		if (same_level) {
+			record["same_level_return_false"] = true;
+			record["overlap_exists"] = false;
+			record["overlap_min_x"] = -1;
+			record["overlap_min_y"] = -1;
+			record["overlap_max_x"] = -1;
+			record["overlap_max_y"] = -1;
+			record["overlap_level"] = -1;
+			record["overlap_cell_count"] = 0;
+			record["overlap_zone_a_cell_count"] = 0;
+			record["overlap_zone_b_cell_count"] = 0;
+			record["overlap_other_reserved_cell_count"] = 0;
+			record["overlap_reserved_cell_preview"] = Array();
+			record["status"] = "0x4a6cf2_same_level_return_false";
+			record["helper_resolution_precondition"] = "same_level_connection_must_be_resolved_by_0x4a61bc_0x4a696b_or_0x4a7605";
+			same_level_return_false_count += 1;
+			same_level_return_false_link_indices.append(link.get("link_index", index));
+			fallback_required_link_indices.append(link.get("link_index", index));
+			records.append(record);
+			continue;
+		}
 		record["overlap_exists"] = overlap_exists;
 		record["overlap_min_x"] = overlap_exists ? min_x : -1;
 		record["overlap_min_y"] = overlap_exists ? min_y : -1;
@@ -3415,6 +3440,8 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	report["link_count"] = records.size();
 	report["overlap_available_count"] = overlap_available_count;
 	report["overlap_available_link_indices"] = overlap_available_link_indices;
+	report["same_level_return_false_count"] = same_level_return_false_count;
+	report["same_level_return_false_link_indices"] = same_level_return_false_link_indices;
 	report["fallback_required_link_indices"] = fallback_required_link_indices;
 	report["fallback_required_count"] = fallback_required_link_indices.size();
 	report["overlap_cell_total"] = overlap_cell_total;
@@ -3422,6 +3449,60 @@ Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_rec
 	report["overlap_zone_b_cell_total"] = overlap_zone_b_cell_total;
 	report["records"] = records;
 	report["blocked_next"] = "port generator+0x6a8 candidate shape list, low-word score summing, 0x49aa93 two-sided validation, and endpoint object/guard stamping before runtime connection adoption";
+	return report;
+}
+
+Dictionary late_connection_helper_dispatch_report(const Array &link_seeds, const Dictionary &late_connection_overlap) {
+	Dictionary report;
+	report["status"] = "0x4a79a3_helper_dispatch_same_level_geometry_boundary_inspection_only";
+	report["source"] = "h3maped 0x4a79a3 first pass calls 0x4a61bc, 0x4a696b, and 0x4a6cf2; second pass calls 0x4a696b and 0x4a7605 for links still unprocessed at +0x0a";
+	report["first_pass_range"] = "0x4a7b96..0x4a7c3d";
+	report["first_pass_helpers"] = Array::make("0x4a61bc", "0x4a696b", "0x4a6cf2");
+	report["second_pass_range"] = "0x4a7c8f..0x4a7e71";
+	report["second_pass_helpers_if_unprocessed"] = Array::make("0x4a696b", "0x4a7605");
+	report["helper_4a61bc_status"] = "0x4a61bc_same_level_transition_vector_helper_identified_endpoint_geometry_pending";
+	report["helper_4a696b_status"] = "0x4a696b_same_level_shipyard_lane_helper_identified_endpoint_geometry_pending";
+	report["helper_4a6cf2_status"] = "0x4a6cf2_same_level_return_false_for_current_one_level_links";
+	report["helper_4a7605_status"] = "0x4a7605_second_pass_fallback_pending_if_first_pass_unprocessed";
+	report["consumes_raw_link_pointer"] = true;
+	report["consumes_value_wide_border_guard"] = true;
+	report["materializes_endpoint_coordinates"] = false;
+	report["materializes_connection_guards"] = false;
+	report["materializes_roads"] = false;
+
+	const Array same_level_links = late_connection_overlap.get("same_level_return_false_link_indices", Array());
+	const int32_t same_level_count = same_level_links.size();
+	Array records;
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = link_seeds[index];
+		Dictionary record;
+		record["link_index"] = link.get("link_index", index);
+		record["source_zone_a"] = link.get("source_zone_a", -1);
+		record["source_zone_b"] = link.get("source_zone_b", -1);
+		record["runtime_zone_a"] = link.get("runtime_zone_a", -1);
+		record["runtime_zone_b"] = link.get("runtime_zone_b", -1);
+		record["first_pass_helpers"] = report.get("first_pass_helpers", Array());
+		record["second_pass_helpers_if_unprocessed"] = report.get("second_pass_helpers_if_unprocessed", Array());
+		record["helper_4a61bc_applicable"] = true;
+		record["helper_4a696b_applicable"] = true;
+		record["helper_4a6cf2_same_level_return_false"] = true;
+		record["helper_4a7605_requires_unprocessed_after_first_pass"] = true;
+		record["endpoint_coordinate_materialized"] = false;
+		record["status"] = "same_level_connection_endpoint_geometry_pending_strict_h3maped_helper_port";
+		records.append(record);
+	}
+	report["link_count"] = records.size();
+	report["same_level_link_count"] = same_level_count;
+	report["helper_4a61bc_same_level_ready_count"] = same_level_count;
+	report["helper_4a696b_same_level_ready_count"] = same_level_count;
+	report["helper_4a6cf2_same_level_return_false_count"] = int32_t(late_connection_overlap.get("same_level_return_false_count", 0));
+	report["helper_4a7605_second_pass_if_unprocessed_count"] = same_level_count;
+	report["endpoint_coordinate_materialized_count"] = 0;
+	report["records"] = records;
+	report["blocked_next"] = "port the actual 0x4a61bc/0x4a696b same-level endpoint candidate scans and processed-marker success path before guard or road adoption";
 	return report;
 }
 
@@ -5974,7 +6055,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["real_source_node_cycle_traversal_4a2777"] = real_source_node_cycle_traversal_4a2777_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 			report["real_boundary_span_fill_4a325d"] = real_boundary_span_fill_4a325d_report(normalized_config, report["coordinate_replay"], polygon_split_model);
 			report["terrain_cell_writeout_4a3f27"] = terrain_cell_writeout_4a3f27_report(normalized_config, report["coordinate_replay"], polygon_split_model, report["runtime_terrain_selection_49b53d"]);
-			report["late_connection_overlap_geometry"] = late_connection_overlap_geometry_report(runtime_zone_setup.get("runtime_zone_records", Array()), link_seed_setup.get("link_seeds", Array()), report["terrain_cell_writeout_4a3f27"]);
+			Dictionary late_connection_overlap = late_connection_overlap_geometry_report(runtime_zone_setup.get("runtime_zone_records", Array()), link_seed_setup.get("link_seeds", Array()), report["terrain_cell_writeout_4a3f27"]);
+			report["late_connection_overlap_geometry"] = late_connection_overlap;
+			report["late_connection_helper_dispatch"] = late_connection_helper_dispatch_report(link_seed_setup.get("link_seeds", Array()), late_connection_overlap);
 			report["town_castle_phase_schedule"] = town_castle_phase_schedule_report(normalized_config, runtime_zone_setup.get("runtime_zone_records", Array()), report["coordinate_replay"], report["runtime_terrain_selection_49b53d"], report["terrain_cell_writeout_4a3f27"]);
 			report["terrainplacement_visual_tables_4bcff5"] = terrainplacement_visual_tables_4bcff5_report();
 			report["footprint_finalizer_4a3710"] = footprint_finalizer_4a3710_report(normalized_config, report["runtime_zone_record_setup"], report["zone_footprint_phase_boundary"]);

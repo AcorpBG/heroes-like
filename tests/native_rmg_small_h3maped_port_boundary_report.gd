@@ -829,6 +829,7 @@ func _run() -> void:
 
 	var late_overlap: Dictionary = report.get("late_connection_overlap_geometry", {})
 	if String(late_overlap.get("status", "")) != "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only" \
+			or String(late_overlap.get("same_level_return_false_range", "")) != "0x4a6d3d..0x4a6d40" \
 			or String(late_overlap.get("candidate_validation_pending", "")) != "0x49aa93" \
 			or String(late_overlap.get("shape_list_source_pending", "")) != "generator+0x6a8":
 		_fail("0x4a6cf2 late connection overlap identity drifted: %s" % JSON.stringify(late_overlap))
@@ -842,28 +843,63 @@ func _run() -> void:
 			or int(late_overlap.get("height", -1)) != 36 \
 			or int(late_overlap.get("level_count", -1)) != 1 \
 			or int(late_overlap.get("link_count", -1)) != 5 \
-			or int(late_overlap.get("overlap_available_count", -1)) != 4 \
-			or int(late_overlap.get("fallback_required_count", -1)) != 1 \
-			or Array(late_overlap.get("overlap_available_link_indices", [])) != [0, 1, 3, 4] \
-			or Array(late_overlap.get("fallback_required_link_indices", [])) != [2] \
-			or int(late_overlap.get("overlap_cell_total", -1)) != 488 \
-			or int(late_overlap.get("overlap_zone_a_cell_total", -1)) != 167 \
-			or int(late_overlap.get("overlap_zone_b_cell_total", -1)) != 316:
+			or int(late_overlap.get("overlap_available_count", -1)) != 0 \
+			or int(late_overlap.get("fallback_required_count", -1)) != 5 \
+			or int(late_overlap.get("same_level_return_false_count", -1)) != 5 \
+			or Array(late_overlap.get("overlap_available_link_indices", [])) != [] \
+			or Array(late_overlap.get("fallback_required_link_indices", [])) != [0, 1, 2, 3, 4] \
+			or Array(late_overlap.get("same_level_return_false_link_indices", [])) != [0, 1, 2, 3, 4] \
+			or int(late_overlap.get("overlap_cell_total", -1)) != 0 \
+			or int(late_overlap.get("overlap_zone_a_cell_total", -1)) != 0 \
+			or int(late_overlap.get("overlap_zone_b_cell_total", -1)) != 0:
 		_fail("0x4a6cf2 late connection overlap counts drifted: %s" % JSON.stringify(late_overlap))
 		return
 	var overlap_records: Array = late_overlap.get("records", [])
 	if overlap_records.size() != 5 \
 			or int(overlap_records[0].get("link_index", -1)) != 0 \
-			or int(overlap_records[0].get("overlap_cell_count", -1)) != 165 \
-			or int(overlap_records[0].get("overlap_zone_a_cell_count", -1)) != 48 \
-			or int(overlap_records[0].get("overlap_zone_b_cell_count", -1)) != 116 \
-			or not bool(overlap_records[1].get("overlap_exists", false)) \
-			or int(overlap_records[1].get("overlap_cell_count", -1)) != 5 \
-			or bool(overlap_records[2].get("overlap_exists", true)) \
-			or int(overlap_records[2].get("overlap_cell_count", -1)) != 0 \
-			or int(overlap_records[3].get("overlap_cell_count", -1)) != 164 \
-			or int(overlap_records[4].get("overlap_cell_count", -1)) != 154:
+			or String(overlap_records[0].get("status", "")) != "0x4a6cf2_same_level_return_false" \
+			or not bool(overlap_records[0].get("same_level_return_false", false)) \
+			or bool(overlap_records[0].get("overlap_exists", true)) \
+			or int(overlap_records[0].get("overlap_cell_count", -1)) != 0 \
+			or String(overlap_records[1].get("status", "")) != "0x4a6cf2_same_level_return_false" \
+			or String(overlap_records[2].get("status", "")) != "0x4a6cf2_same_level_return_false" \
+			or String(overlap_records[3].get("status", "")) != "0x4a6cf2_same_level_return_false" \
+			or String(overlap_records[4].get("status", "")) != "0x4a6cf2_same_level_return_false":
 		_fail("0x4a6cf2 late connection overlap records drifted: %s" % JSON.stringify(overlap_records))
+		return
+
+	var helper_dispatch: Dictionary = report.get("late_connection_helper_dispatch", {})
+	if String(helper_dispatch.get("status", "")) != "0x4a79a3_helper_dispatch_same_level_geometry_boundary_inspection_only" \
+			or String(helper_dispatch.get("first_pass_range", "")) != "0x4a7b96..0x4a7c3d" \
+			or String(helper_dispatch.get("second_pass_range", "")) != "0x4a7c8f..0x4a7e71" \
+			or Array(helper_dispatch.get("first_pass_helpers", [])) != ["0x4a61bc", "0x4a696b", "0x4a6cf2"] \
+			or Array(helper_dispatch.get("second_pass_helpers_if_unprocessed", [])) != ["0x4a696b", "0x4a7605"]:
+		_fail("0x4a79a3 helper dispatch identity drifted: %s" % JSON.stringify(helper_dispatch))
+		return
+	if bool(helper_dispatch.get("materializes_endpoint_coordinates", true)) \
+			or bool(helper_dispatch.get("materializes_connection_guards", true)) \
+			or bool(helper_dispatch.get("materializes_roads", true)):
+		_fail("0x4a79a3 helper dispatch must not materialize endpoint output yet: %s" % JSON.stringify(helper_dispatch))
+		return
+	if int(helper_dispatch.get("link_count", -1)) != 5 \
+			or int(helper_dispatch.get("same_level_link_count", -1)) != 5 \
+			or int(helper_dispatch.get("helper_4a61bc_same_level_ready_count", -1)) != 5 \
+			or int(helper_dispatch.get("helper_4a696b_same_level_ready_count", -1)) != 5 \
+			or int(helper_dispatch.get("helper_4a6cf2_same_level_return_false_count", -1)) != 5 \
+			or int(helper_dispatch.get("helper_4a7605_second_pass_if_unprocessed_count", -1)) != 5 \
+			or int(helper_dispatch.get("endpoint_coordinate_materialized_count", -1)) != 0:
+		_fail("0x4a79a3 helper dispatch counts drifted: %s" % JSON.stringify(helper_dispatch))
+		return
+	var dispatch_records: Array = helper_dispatch.get("records", [])
+	if dispatch_records.size() != 5 \
+			or int(dispatch_records[0].get("link_index", -1)) != 0 \
+			or not bool(dispatch_records[0].get("helper_4a61bc_applicable", false)) \
+			or not bool(dispatch_records[0].get("helper_4a696b_applicable", false)) \
+			or not bool(dispatch_records[0].get("helper_4a6cf2_same_level_return_false", false)) \
+			or bool(dispatch_records[0].get("endpoint_coordinate_materialized", true)) \
+			or int(dispatch_records[4].get("runtime_zone_a", -1)) != 5 \
+			or int(dispatch_records[4].get("runtime_zone_b", -1)) != 3:
+		_fail("0x4a79a3 helper dispatch records drifted: %s" % JSON.stringify(dispatch_records))
 		return
 
 	var live_repaint_feedback: Dictionary = terrain_writeout.get("repaint_live_visual_feedback", {})
