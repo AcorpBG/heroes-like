@@ -26,6 +26,7 @@ constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
 constexpr const char *CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
 constexpr const char *OBJECT_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json";
+constexpr const char *OBJECT_METADATA_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json";
 constexpr const char *PROJECT_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *ARCHIVED_OVERGROWN_ACTIVE_PATH = "src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp";
 constexpr const char *ARCHIVED_PHASE_LEDGER_PATH = "src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp";
@@ -95,6 +96,11 @@ struct H3MapedRng {
 		state = state * 0x343fdu + 0x269ec3u;
 		return int32_t((state >> 16U) & 0x7fffu);
 	}
+};
+
+struct H3ObjectLimitOverride {
+	int32_t type_id = -1;
+	int32_t limit = 0;
 };
 
 struct RoadArtClassification {
@@ -812,6 +818,86 @@ std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_terrain(const s
 		}
 	}
 	return result;
+}
+
+Array h3_object_limit_override_records(const H3ObjectLimitOverride *overrides, int32_t count, const char *source_range) {
+	Array records;
+	for (int32_t index = 0; index < count; ++index) {
+		Dictionary record;
+		record["source_range"] = source_range;
+		record["type_id"] = overrides[index].type_id;
+		record["limit"] = overrides[index].limit;
+		records.append(record);
+	}
+	return records;
+}
+
+Dictionary h3maped_generic_value_selector_boundary() {
+	static constexpr H3ObjectLimitOverride GLOBAL_LIMIT_OVERRIDES[] = {
+		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
+		{ 32, 32 }, { 51, 32 }, { 61, 32 }, { 102, 32 }, { 41, 32 }, { 4, 32 },
+		{ 47, 32 }, { 107, 32 }, { 104, 32 }, { 113, 32 }, { 88, 32 }, { 89, 32 },
+		{ 90, 32 }, { 92, 32 }, { 55, 32 }, { 109, 32 }, { 112, 32 }, { 48, 32 },
+		{ 22, 32 }, { 39, 32 }, { 108, 32 }, { 105, 32 }, { 83, 48 }, { 7, 32 },
+	};
+	static constexpr H3ObjectLimitOverride PER_ZONE_LIMIT_OVERRIDES[] = {
+		{ 2, 1 }, { 13, 1 }, { 14, 1 }, { 15, 1 }, { 27, 1 }, { 28, 1 },
+		{ 30, 1 }, { 31, 1 }, { 35, 1 }, { 38, 1 }, { 42, 1 }, { 48, 1 },
+		{ 49, 1 }, { 56, 1 }, { 58, 1 }, { 60, 1 }, { 64, 1 }, { 80, 1 },
+		{ 94, 1 }, { 96, 1 }, { 99, 1 }, { 106, 1 }, { 110, 1 }, { 113, 3 },
+	};
+
+	Dictionary boundary;
+	boundary["phase"] = "0x4a9f1c_generic_value_banded_selector_boundary";
+	boundary["selector_address"] = "0x4a9f1c";
+	boundary["candidate_vector_offset"] = "generator+0x10f4..+0x10f8";
+	boundary["candidate_vector_builder_address"] = "0x49f95a";
+	boundary["placed_count_array_offset"] = "generator+0x1110";
+	boundary["global_limit_table_address"] = "0x5a26e4";
+	boundary["per_zone_limit_table_address"] = "0x5a2a8c";
+	boundary["limit_default_value"] = 0x7d00;
+	boundary["global_limit_override_source_range"] = "0x540758..0x540840";
+	boundary["per_zone_limit_override_source_range"] = "0x540848..0x540900";
+	boundary["global_limit_override_count"] = int32_t(sizeof(GLOBAL_LIMIT_OVERRIDES) / sizeof(GLOBAL_LIMIT_OVERRIDES[0]));
+	boundary["per_zone_limit_override_count"] = int32_t(sizeof(PER_ZONE_LIMIT_OVERRIDES) / sizeof(PER_ZONE_LIMIT_OVERRIDES[0]));
+	boundary["global_limit_overrides"] = h3_object_limit_override_records(GLOBAL_LIMIT_OVERRIDES, int32_t(sizeof(GLOBAL_LIMIT_OVERRIDES) / sizeof(GLOBAL_LIMIT_OVERRIDES[0])), "0x540758..0x540840");
+	boundary["per_zone_limit_overrides"] = h3_object_limit_override_records(PER_ZONE_LIMIT_OVERRIDES, int32_t(sizeof(PER_ZONE_LIMIT_OVERRIDES) / sizeof(PER_ZONE_LIMIT_OVERRIDES[0])), "0x540848..0x540900");
+	boundary["metadata_table_pointer_address"] = "0x57c648";
+	boundary["metadata_table_address"] = "0x598300";
+	boundary["metadata_record_size_bytes"] = 0x10;
+	boundary["metadata_primary_gate_offset"] = "+0x00";
+	boundary["metadata_secondary_gate_offset"] = "+0x02";
+	boundary["metadata_serialize_first_pass_offset"] = "+0x0c";
+	boundary["candidate_type_offset"] = "+0x04";
+	boundary["candidate_subtype_offset"] = "+0x08";
+	boundary["candidate_weight_offset"] = "+0x10";
+	boundary["candidate_disabled_vfunc_offset"] = "+0x08";
+	boundary["candidate_value_vfunc_offset"] = "+0x04";
+	boundary["candidate_create_vfunc_offset"] = "+0x00";
+	boundary["template_selector_address"] = "0x4a9e40";
+	boundary["collision_helper_address"] = "0x49a6f9";
+	boundary["weighted_rng_address"] = "0x4e7276";
+	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
+	boundary["candidate_vector_reconstructed"] = false;
+	boundary["value_vfuncs_reconstructed"] = false;
+	boundary["materializes_reward_object"] = false;
+
+	Dictionary metadata_load = load_json_dictionary(OBJECT_METADATA_SOURCE_PATH);
+	boundary["object_metadata_source_path"] = OBJECT_METADATA_SOURCE_PATH;
+	boundary["object_metadata_load"] = metadata_load;
+	if (bool(metadata_load.get("ok", false))) {
+		Dictionary metadata = metadata_load.get("data", Dictionary());
+		Dictionary totals = metadata.get("totals", Dictionary());
+		boundary["metadata_type_count"] = totals.get("types_with_object_templates", 0);
+		boundary["metadata_primary_gate_count"] = totals.get("primary_gate_count", 0);
+		boundary["metadata_secondary_gate_count"] = totals.get("secondary_gate_count", 0);
+		boundary["metadata_wide_placement_count"] = totals.get("wide_placement_count", 0);
+		boundary["metadata_serialize_first_pass_count"] = totals.get("serialize_first_pass_count", 0);
+		Dictionary initializer_tables = metadata.get("initializer_tables", Dictionary());
+		Dictionary bucket_pairs = initializer_tables.get("bucket_pairs", Dictionary());
+		boundary["metadata_bucket_pair_count"] = bucket_pairs.get("count", 0);
+	}
+	return boundary;
 }
 
 String native_mine_proxy_object_id_for_subtype(int32_t subtype) {
@@ -5267,6 +5353,8 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["h3maped_cell_validity_address"] = "0x49a1d8";
 	phase["h3maped_treasure_phase_address"] = "0x4aab7e";
 	phase["h3maped_reward_value_selector_address"] = "0x4aa354";
+	phase["h3maped_generic_value_banded_selector_address"] = "0x4a9f1c";
+	phase["h3maped_reward_object_commit_address"] = "0x4aa9b7";
 	phase["coordinate_vector_begin_offset"] = "+0x14b4";
 	phase["coordinate_vector_end_offset"] = "+0x14b8";
 	phase["coordinate_record_size_bytes"] = 12;
@@ -5357,6 +5445,7 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	Array reward_band_schedule;
 	Array reward_scheduler_records;
 	Array reward_value_preview_records;
+	Dictionary generic_value_selector_boundary = h3maped_generic_value_selector_boundary();
 	Array mine_coordinate_records;
 	Array mine_placement_records;
 	int32_t mine_minimum_record_count = 0;
@@ -5907,6 +5996,7 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
 	phase["materialized_private_reward_coordinate_record_count"] = 0;
 	phase["reward_commit_helper_pending"] = true;
+	phase["generic_value_selector_boundary"] = generic_value_selector_boundary;
 	phase["mine_template_selection_rng_call_count"] = mine_template_selection_rng_call_count;
 	phase["mine_placement_rng_call_count"] = mine_placement_rng_call_count;
 	phase["mine_placement_scan_call_count"] = mine_placement_scan_call_count;

@@ -894,6 +894,8 @@ func _run() -> void:
 				or String(object_vector_phase.get("h3maped_footprint_gate_address", "")) != "0x49a09c" \
 				or String(object_vector_phase.get("h3maped_cell_validity_address", "")) != "0x49a1d8" \
 				or String(object_vector_phase.get("h3maped_treasure_phase_address", "")) != "0x4aab7e" \
+				or String(object_vector_phase.get("h3maped_generic_value_banded_selector_address", "")) != "0x4a9f1c" \
+				or String(object_vector_phase.get("h3maped_reward_object_commit_address", "")) != "0x4aa9b7" \
 				or bool(object_vector_phase.get("complete_coordinate_vector_claim", true)) \
 				or not bool(object_vector_phase.get("materializes_private_object_coordinate_records", false)) \
 				or bool(object_vector_phase.get("materializes_public_objects", true)) \
@@ -925,6 +927,31 @@ func _run() -> void:
 				or int(object_vector_phase.get("reward_preview_rng_state_after_0x4aa354_uint32", -1)) != 2380015889 \
 				or String(object_vector_phase.get("blocked_next", "")) != "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a":
 		_fail("h3maped object-vector prerequisite phase drifted: %s" % JSON.stringify(object_vector_phase))
+		return
+	var generic_selector: Dictionary = object_vector_phase.get("generic_value_selector_boundary", {})
+	if String(generic_selector.get("phase", "")) != "0x4a9f1c_generic_value_banded_selector_boundary" \
+				or String(generic_selector.get("selector_address", "")) != "0x4a9f1c" \
+				or String(generic_selector.get("candidate_vector_offset", "")) != "generator+0x10f4..+0x10f8" \
+				or String(generic_selector.get("candidate_vector_builder_address", "")) != "0x49f95a" \
+				or String(generic_selector.get("placed_count_array_offset", "")) != "generator+0x1110" \
+				or String(generic_selector.get("global_limit_table_address", "")) != "0x5a26e4" \
+				or String(generic_selector.get("per_zone_limit_table_address", "")) != "0x5a2a8c" \
+				or int(generic_selector.get("limit_default_value", -1)) != 0x7d00 \
+				or int(generic_selector.get("global_limit_override_count", -1)) != 30 \
+				or int(generic_selector.get("per_zone_limit_override_count", -1)) != 24 \
+				or String(generic_selector.get("metadata_table_pointer_address", "")) != "0x57c648" \
+				or String(generic_selector.get("metadata_table_address", "")) != "0x598300" \
+				or int(generic_selector.get("metadata_record_size_bytes", -1)) != 0x10 \
+				or int(generic_selector.get("metadata_type_count", -1)) != 167 \
+				or int(generic_selector.get("metadata_primary_gate_count", -1)) != 42 \
+				or int(generic_selector.get("metadata_secondary_gate_count", -1)) != 34 \
+				or int(generic_selector.get("metadata_wide_placement_count", -1)) != 42 \
+				or int(generic_selector.get("metadata_serialize_first_pass_count", -1)) != 95 \
+				or int(generic_selector.get("metadata_bucket_pair_count", -1)) != 46 \
+				or bool(generic_selector.get("candidate_vector_reconstructed", true)) \
+				or bool(generic_selector.get("value_vfuncs_reconstructed", true)) \
+				or bool(generic_selector.get("materializes_reward_object", true)):
+		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
