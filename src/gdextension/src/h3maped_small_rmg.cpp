@@ -1071,7 +1071,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("terrainplacement_visual_tables", "0x4bcff5, 0x543108, 0x543380, 0x5434f0, 0x5435b0, 0x542f88", "active_strict_executable_port"));
 	backlog.append(phase_record("terrainplacement_live_feedback", "0x4bb74b, 0x4bc5f0", "active_strict_executable_port"));
 	backlog.append(phase_record("terrain_tile_byte_writeback", "0x49b2b6", "active_strict_executable_port"));
-	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
+	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "active_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_strict_executable_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "pending_runtime_port"));
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605", "pending_runtime_port"));
@@ -1084,7 +1084,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a8d2c/0x4a8db2/0x4a93a2 town placement over the private 0x49b2b6 tile-byte boundary, not object expansion or package output");
+	gaps.append("next implementation step is a narrow executable port of 0x4a9d6a/0x4a9911/0x4aa354/0x4a9f1c/0x4aa9b7 mines, rewards, and object-vector producers over the private town candidates, not report expansion or package output");
 	return gaps;
 }
 
@@ -1116,9 +1116,9 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"terrain_cell_writeout:0x4a3f27_0x4a4025_0x4a4082_0x4a415a",
 			"terrainplacement_visual_tables:0x4bcff5_0x543108_0x543380_0x5434f0_0x5435b0_0x542f88",
 			"terrainplacement_live_feedback:0x4bb74b_0x4bc5f0",
-			"terrain_tile_byte_writeback:0x49b2b6");
+			"terrain_tile_byte_writeback:0x49b2b6",
+			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2");
 	state["pending_strict_ports"] = Array::make(
-			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
 			"roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2",
 			"final_h3m_writeout:0x49b2b6");
@@ -1128,7 +1128,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "town_object_placement_0x4a8d2c_0x4a8db2_0x4a93a2";
+	state["next_required_port"] = "mines_rewards_and_object_vector_0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7";
 	return state;
 }
 
@@ -6194,6 +6194,8 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	return phase;
 }
 
+#endif
+
 Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_phase, const Dictionary &terrain_tile_byte_phase, const std::vector<uint32_t> &zone_words, const std::vector<int32_t> &live_terrain_code) {
 	Dictionary phase;
 	phase["phase_id"] = "town_castle_phase";
@@ -6211,10 +6213,14 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	phase["adopts_into_runtime_grid"] = false;
 	phase["public_package_output_allowed"] = false;
 	phase["blocked_next"] = "object_vector_prerequisite_phase_4a9d6a_4aab7e";
-	if (String(runtime_zone_phase.get("status", "")) != "active_internal_state"
-			|| String(coordinate_phase.get("status", "")) != "active_internal_state"
-			|| String(terrain_phase.get("status", "")) != "active_internal_state"
-			|| String(terrain_tile_byte_phase.get("status", "")) != "active_internal_state"
+	const String runtime_status = String(runtime_zone_phase.get("status", ""));
+	const String coordinate_status = String(coordinate_phase.get("status", ""));
+	const String terrain_status = String(terrain_phase.get("status", ""));
+	const String tile_status = String(terrain_tile_byte_phase.get("status", ""));
+	if ((runtime_status != "active_internal_state" && runtime_status != "active_strict_executable_port")
+			|| (coordinate_status != "active_internal_state" && coordinate_status != "active_strict_executable_port")
+			|| (terrain_status != "active_internal_state" && terrain_status != "active_strict_executable_port")
+			|| (tile_status != "active_internal_state" && tile_status != "active_strict_executable_port")
 			|| zone_words.empty()
 			|| zone_words.size() != live_terrain_code.size()) {
 		return phase;
@@ -6760,7 +6766,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	project_town_adoption_candidate["player_starts"] = project_player_starts;
 	project_town_adoption_candidate["blocked_next"] = "object_vector_prerequisite_phase_4a9d6a_4aab7e";
 
-	phase["status"] = "active_internal_state";
+	phase["status"] = "active_strict_executable_port";
 	phase["source"] = "h3maped 0x4a8d2c/0x4a8db2 town/castle phase and 0x4a93a2 direct town record projection ported as private candidates only";
 	phase["map_width"] = map_width;
 	phase["map_height"] = map_height;
@@ -6792,6 +6798,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	return phase;
 }
 
+#if 0
 Array h3_object_limit_override_records(const H3ObjectLimitOverride *overrides, int32_t count, const char *source_range) {
 	Array records;
 	for (int32_t index = 0; index < count; ++index) {
@@ -8079,6 +8086,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	terrain_tile_byte_writeback["binary_byte_prefix_0x49b2b6"] = "55 8b ec 51 53 56 57 8b 75 08 8b f9 6a 01 5b 8d";
 	terrain_tile_byte_writeback["binary_byte_prefix_0x49acf6"] = "8b 41 24 8b 54 24 04 66 25 00 c0 83 e2 3f 33 c2";
 	report["terrain_tile_byte_writeback"] = terrain_tile_byte_writeback;
+	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, terrain_tile_byte_writeback, zone_words, live_terrain_code);
+	town_castle["source_range"] = "0x4a8d2c/0x4a8db2/0x4a93a2/0x49aa93/0x49a09c/0x49b3c1/0x49ba89";
+	town_castle["binary_byte_prefix_0x4a8d2c"] = "55 8b ec 51 53 56 57 8b 7d 08 8b d9 8b 37 8b 47";
+	town_castle["binary_byte_prefix_0x4a8db2"] = "55 8b ec 83 ec 48 8b 45 08 53 56 33 db 8b 30 8b";
+	town_castle["binary_byte_prefix_0x4a93a2"] = "b8 72 aa 52 00 e8 24 cd 03 00 83 ec 48 83 7d 0c";
+	town_castle["binary_byte_prefix_0x49aa93"] = "55 8b ec 51 51 89 4d fc 53 8b 4d 18 56 57 6a 00";
+	town_castle["binary_byte_prefix_0x49a09c"] = "55 8b ec 51 51 8b 45 1c 80 65 ff 00 53 56 83 78";
+	town_castle["binary_byte_prefix_0x49b3c1"] = "56 57 33 ff 8b f1 33 c0 80 7c 06 41 00 74 01 47";
+	town_castle["binary_byte_prefix_0x49ba89"] = "8b 44 24 04 56 8b f1 c7 06 74 0a 54 00 89 46 04";
+	report["town_castle_phase"] = town_castle;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
