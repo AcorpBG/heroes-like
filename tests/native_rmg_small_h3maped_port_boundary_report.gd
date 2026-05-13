@@ -808,6 +808,8 @@ func _run() -> void:
 			or int(terrain_writeout.get("owner_low_byte_materialized_count", -1)) != 1107 \
 			or int(terrain_writeout.get("owner_high_byte_materialized_count", -1)) != 1107 \
 			or int(terrain_writeout.get("owner_high_byte_sentinel_count", -1)) != 189 \
+			or int(terrain_writeout.get("generated_cell_word_0x28_materialized_bit25_count", -1)) != 1107 \
+			or int(terrain_writeout.get("generated_cell_word_0x28_direction_bit_count", -1)) != 1107 \
 			or int(owner_low_counts.get("0", -1)) != 177 \
 			or int(owner_low_counts.get("1", -1)) != 91 \
 			or int(owner_low_counts.get("2", -1)) != 226 \
@@ -835,6 +837,7 @@ func _run() -> void:
 			or int(high_owner_normalization.get("popped_cell_count", -1)) != 3594 \
 			or int(high_owner_normalization.get("same_owner_relax_count", -1)) != 1101 \
 			or int(high_owner_normalization.get("cross_owner_high_byte_write_count", -1)) != 2487 \
+			or int(high_owner_normalization.get("cross_owner_direction_write_count", -1)) != 2487 \
 			or int(high_owner_normalization.get("max_queue_size", -1)) != 73 \
 			or int(high_owner_normalization.get("owner_high_byte_materialized_count", -1)) != 1107 \
 			or int(high_owner_normalization.get("owner_high_byte_sentinel_count", -1)) != 189 \
@@ -990,6 +993,40 @@ func _run() -> void:
 			or int(owner_records[4].get("high_owner_a_cell_count", -1)) != 176 \
 			or int(owner_records[4].get("high_owner_b_cell_count", -1)) != 262:
 		_fail("0x4a61bc/0x4a696b owner-channel records drifted: %s" % JSON.stringify(owner_records))
+		return
+
+	var transition_vectors: Dictionary = report.get("same_level_connection_transition_vectors", {})
+	if String(transition_vectors.get("status", "")) != "0x4a79a3_transition_vector_build_and_4a61bc_candidate_score_scan_inspection_only" \
+			or String(transition_vectors.get("transition_vector_build_range", "")) != "0x4a79d8..0x4a7af9" \
+			or String(transition_vectors.get("candidate_scan_range", "")) != "0x4a6245..0x4a633e" \
+			or bool(transition_vectors.get("materializes_endpoint_coordinates", true)) \
+			or bool(transition_vectors.get("materializes_connection_guards", true)) \
+			or bool(transition_vectors.get("materializes_roads", true)):
+		_fail("0x4a79a3/0x4a61bc transition-vector identity drifted: %s" % JSON.stringify(transition_vectors))
+		return
+	if not bool(transition_vectors.get("grid_available", false)) \
+			or int(transition_vectors.get("transition_candidate_count", -1)) != 324 \
+			or int(transition_vectors.get("rejected_high_owner_sentinel_count", -1)) != 189 \
+			or int(transition_vectors.get("rejected_missing_materialized_bit25_count", -1)) != 0 \
+			or int(transition_vectors.get("rejected_neighbor_bounds_count", -1)) != 0 \
+			or int(transition_vectors.get("rejected_neighbor_terrain8_count", -1)) != 0 \
+			or int(transition_vectors.get("rejected_same_low_owner_count", -1)) != 783 \
+			or int(transition_vectors.get("link_count", -1)) != 5 \
+			or int(transition_vectors.get("links_with_directional_candidates", -1)) != 4 \
+			or int(transition_vectors.get("total_directional_candidate_count", -1)) != 211:
+		_fail("0x4a79a3 transition-vector counts drifted: %s" % JSON.stringify(transition_vectors))
+		return
+	var transition_records: Array = transition_vectors.get("records", [])
+	if transition_records.size() != 5 \
+			or int(transition_records[0].get("a_to_b_candidate_count", -1)) != 56 \
+			or int(transition_records[0].get("b_to_a_candidate_count", -1)) != 52 \
+			or int(transition_records[0].get("a_to_b_min_path_high_word_score", -1)) != 12 \
+			or int(transition_records[0].get("b_to_a_min_path_high_word_score", -1)) != 10 \
+			or int(transition_records[2].get("a_to_b_candidate_count", -1)) != 0 \
+			or bool(transition_records[2].get("has_directional_candidates", true)) \
+			or int(transition_records[4].get("a_to_b_candidate_count", -1)) != 24 \
+			or int(transition_records[4].get("b_to_a_candidate_count", -1)) != 23:
+		_fail("0x4a61bc directional candidate records drifted: %s" % JSON.stringify(transition_records))
 		return
 
 	var live_repaint_feedback: Dictionary = terrain_writeout.get("repaint_live_visual_feedback", {})
