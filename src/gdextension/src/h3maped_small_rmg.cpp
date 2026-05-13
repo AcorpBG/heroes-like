@@ -1015,6 +1015,52 @@ Dictionary h3_terrain_specialized_candidate_loop_boundary() {
 	return boundary;
 }
 
+Array h3_static_tail_after_terrain_loop_records() {
+	static constexpr H3CandidateSpec TAIL_RECORDS[] = {
+		{ "0x4a1194", "0x540ba0", 0x14, 0x54, 0, 0x3e8, 0x64 },
+		{ "0x4a11d7", "0x540ba0", 0x14, 0x55, 0, 0x7d0, 0x64 },
+		{ "0x4a1216", "0x540ba0", 0x14, 0x56, 0, 0x5dc, 0x32 },
+		{ "0x4a124f", "0x540c40", 0x14, 0x58, 0, 0x1f4, 0x64 },
+		{ "0x4a128e", "0x540c40", 0x14, 0x59, 0, 0x7d0, 0x64 },
+		{ "0x4a12b6", "0x540c40", 0x14, 0x5a, 0, 0xbb8, 0x64 },
+		{ "0x4a12e2", "0x540ba0", 0x14, 0x5c, 0, 0x64, 0x14 },
+		{ "0x4a130d", "0x540c90", 0x18, 0x5d, 0, 0x1f4, 0x1e, 0x01 },
+		{ "0x4a133c", "0x540c90", 0x18, 0x5d, 0, 0x7d0, 0x1e, 0x02 },
+		{ "0x4a1366", "0x540c90", 0x18, 0x5d, 0, 0xbb8, 0x1e, 0x03 },
+		{ "0x4a1391", "0x540c90", 0x18, 0x5d, 0, 0xfa0, 0x1e, 0x04 },
+		{ "0x4a13bc", "0x540c90", 0x18, 0x5d, 0, 0x1388, 0x1e, 0x05 },
+		{ "0x4a13e7", "0x540ba0", 0x14, 0x5e, 0, 0xc8, 0x28 },
+		{ "0x4a1419", "0x540ba0", 0x14, 0x5f, 0, 0x64, 0x14 },
+		{ "0x4a1449", "0x540ba0", 0x14, 0x60, 0, 0x64, 0x64 },
+		{ "0x4a1473", "0x540ba0", 0x14, 0x61, 0, 0x64, 0x64 },
+		{ "0x4a149d", "0x540ba0", 0x14, 0x63, 0, 0x64, 0x64 },
+		{ "0x4a14c7", "0x540ba0", 0x14, 0x64, 0, 0x5dc, 0xc8 },
+		{ "0x4a14fe", "0x540ba0", 0x14, 0x65, 0, 0x5dc, 0x3e8 },
+		{ "0x4a152d", "0x540ba0", 0x14, 0x66, 0, 0x9c4, 0x32 },
+		{ "0x4a1563", "0x540ba0", 0x14, 0x68, 0, 0x9c4, 0x14 },
+		{ "0x4a158f", "0x540ba0", 0x14, 0x69, 0, 0x1f4, 0x32 },
+		{ "0x4a15bf", "0x540ba0", 0x14, 0x6a, 0, 0x5dc, 0x32 },
+		{ "0x4a15eb", "0x540ba0", 0x14, 0x6b, 0, 0x3e8, 0x32 },
+		{ "0x4a161d", "0x540ba0", 0x14, 0x6c, 0, 0x1770, 0x14 },
+		{ "0x4a164b", "0x540ba0", 0x14, 0x6d, 0, 0x2ee, 0x32 },
+		{ "0x4a167a", "0x540ba0", 0x14, 0x6e, 0, 0x1f4, 0x32 },
+		{ "0x4a16a9", "0x540ba0", 0x14, 0x70, 0, 0x9c4, 0x96 },
+		{ "0x4a16d7", "0x540c50", 0x14, 0x71, 0, 0x5dc, 0x50 },
+	};
+	return h3_candidate_records_from_specs(TAIL_RECORDS, int32_t(sizeof(TAIL_RECORDS) / sizeof(TAIL_RECORDS[0])));
+}
+
+Dictionary h3_static_tail_after_terrain_loop_boundary() {
+	Dictionary boundary;
+	boundary["source_range"] = "0x4a1194..0x4a1701";
+	boundary["record_count"] = 29;
+	boundary["constructor_addresses"] = Array::make("direct writes", "0x49c523", "0x49c9bf", "0x49ccc1", "0x49ca26");
+	boundary["constructor_vtables"] = Array::make("0x540ba0", "0x540c40", "0x540c50", "0x540c90");
+	boundary["records"] = h3_static_tail_after_terrain_loop_records();
+	boundary["materialized_candidate_records"] = false;
+	return boundary;
+}
+
 Array h3_static_tail_after_artifact_pool_records() {
 	static constexpr H3CandidateSpec TAIL_RECORDS[] = {
 		{ "0x4a00d8", "0x540ba0", 0x14, 7, 0, 8000, 20 },
@@ -1146,8 +1192,10 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_tail_records"] = h3_static_tail_after_artifact_pool_records();
 	boundary["candidate_builder_terrain_specialized_loop_status"] = "0x4a0eeb_0x4a1194_generator_plus_0x568_loop_recovered_not_materialized";
 	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
+	boundary["candidate_builder_static_constructor_tail_status"] = "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized";
+	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization", "static constructor tail after 0x4a1194");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = false;
