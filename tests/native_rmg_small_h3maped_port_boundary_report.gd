@@ -948,10 +948,26 @@ func _run() -> void:
 				or int(generic_selector.get("metadata_wide_placement_count", -1)) != 42 \
 				or int(generic_selector.get("metadata_serialize_first_pass_count", -1)) != 95 \
 				or int(generic_selector.get("metadata_bucket_pair_count", -1)) != 46 \
+				or String(generic_selector.get("candidate_builder_static_prefix_status", "")) != "0x49f95a_fixed_simple_records_recovered_not_materialized" \
+				or int(generic_selector.get("candidate_builder_static_prefix_count", -1)) != 2 \
+				or not bool(generic_selector.get("candidate_builder_dynamic_loops_pending", false)) \
 				or bool(generic_selector.get("candidate_vector_reconstructed", true)) \
 				or bool(generic_selector.get("value_vfuncs_reconstructed", true)) \
 				or bool(generic_selector.get("materializes_reward_object", true)):
 		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
+		return
+	var static_prefix: Array = generic_selector.get("candidate_builder_static_prefix_records", [])
+	if static_prefix.size() != 2 \
+				or String(static_prefix[0].get("source_address", "")) != "0x49f97b" \
+				or int(static_prefix[0].get("type_id", -1)) != 2 \
+				or int(static_prefix[0].get("subtype", -1)) != 0 \
+				or int(static_prefix[0].get("value", -1)) != 100 \
+				or int(static_prefix[0].get("weight", -1)) != 20 \
+				or String(static_prefix[1].get("source_address", "")) != "0x49f9be" \
+				or int(static_prefix[1].get("type_id", -1)) != 4 \
+				or int(static_prefix[1].get("value", -1)) != 3000 \
+				or int(static_prefix[1].get("weight", -1)) != 50:
+		_fail("h3maped generic selector static prefix drifted: %s" % JSON.stringify(static_prefix))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
