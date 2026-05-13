@@ -509,6 +509,7 @@ func _run() -> void:
 	var live_scratch_visual_feedback_projection: Dictionary = repaint_order_queue_drain.get("live_scratch_visual_feedback_projection", {})
 	var drained_final_sweep_boundary_counter: Dictionary = repaint_order_queue_drain.get("drained_final_sweep_boundary_counter", {})
 	var drained_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("drained_tile_writeback_candidate", {})
+	var live_tile_writeback_candidate: Dictionary = terrain_cell_writeout.get("live_tile_writeback_candidate", {})
 	var terrain_art_required_addresses: Array = terrain_art_blocker.get("required_addresses", [])
 	var final_normalization_contract: Dictionary = terrain_art_blocker.get("final_normalization_contract", {})
 	var terrain_repaint_boundary: Dictionary = terrain_art_blocker.get("terrainplacement_repaint_boundary", {})
@@ -544,6 +545,7 @@ func _run() -> void:
 			or String(terrain_cell_writeout.get("repaint_order_queue_seed_status", "")) != "0x4a3f27_0x4bb74b_0x4bba59_repaint_order_queue_seed_projection" \
 			or String(terrain_cell_writeout.get("repaint_order_queue_drain_status", "")) != "0x4bc5f0_repaint_order_queue_drain_projection_inspection_only" \
 			or String(terrain_cell_writeout.get("drained_tile_writeback_candidate_status", "")) != "0x49b2b6_drained_terrain_tile_byte_writeback_candidate_inspection_only" \
+			or String(terrain_cell_writeout.get("live_tile_writeback_candidate_status", "")) != "0x49b2b6_live_generated_cell_tile_byte_candidate_inspection_only" \
 			or String(terrain_cell_writeout.get("tile_serializer_contract_status", "")) != "0x49b2b6_generated_cell_tile_serializer_bit_contract_ported" \
 			or String(terrain_cell_writeout.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout" \
 			or not bool(terrain_cell_writeout.get("materializes_project_grid", false)) \
@@ -859,6 +861,29 @@ func _run() -> void:
 			or bool(drained_tile_writeback_candidate.get("adopts_into_runtime_grid", true)) \
 			or bool(drained_tile_writeback_candidate.get("materializes_package_tiles", true)):
 		_fail("The h3maped drained terrain tile-byte writeback candidate drifted: %s" % JSON.stringify(drained_tile_writeback_candidate))
+		return
+	if String(live_tile_writeback_candidate.get("status", "")) != "0x49b2b6_live_generated_cell_tile_byte_candidate_inspection_only" \
+			or not Array(live_tile_writeback_candidate.get("ported_addresses", [])).has("0x4bb74b") \
+			or not Array(live_tile_writeback_candidate.get("ported_addresses", [])).has("0x4bc5f0") \
+			or not Array(live_tile_writeback_candidate.get("ported_addresses", [])).has("0x49acf6") \
+			or not Array(live_tile_writeback_candidate.get("ported_addresses", [])).has("0x49b2b6") \
+			or String(live_tile_writeback_candidate.get("generated_cell_source_status", "")) != "0x4bb74b_0x4bc5f0_live_scratch_visual_feedback_projection_inspection_only" \
+			or not bool(live_tile_writeback_candidate.get("live_feedback_materialized", false)) \
+			or int(live_tile_writeback_candidate.get("tile_count", -1)) != 1296 \
+			or int(live_tile_writeback_candidate.get("projected_cell_word_0x24_count", -1)) != 1296 \
+			or int(live_tile_writeback_candidate.get("projected_cell_word_0x28_count", -1)) != 1296 \
+			or int(live_tile_writeback_candidate.get("terrain_mismatch_count", -1)) != 0 \
+			or int(live_tile_writeback_candidate.get("nonzero_art_cell_count", -1)) <= 0 \
+			or int(live_tile_writeback_candidate.get("terrain_flag_cell_count", -1)) <= 0 \
+			or int(live_tile_writeback_candidate.get("live_vs_drained_tile_art_delta_count", -1)) <= 0 \
+			or int(live_tile_writeback_candidate.get("live_vs_drained_tile_flag_delta_count", -1)) <= 0 \
+			or PackedInt32Array(live_tile_writeback_candidate.get("tile_byte_0_terrain_id_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_tile_writeback_candidate.get("tile_byte_1_terrain_art_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(live_tile_writeback_candidate.get("tile_byte_6_flags_u8", PackedInt32Array())).size() != 1296 \
+			or Array(live_tile_writeback_candidate.get("sample_records", [])).is_empty() \
+			or bool(live_tile_writeback_candidate.get("adopts_into_runtime_grid", true)) \
+			or bool(live_tile_writeback_candidate.get("materializes_package_tiles", true)):
+		_fail("The h3maped live terrain tile-byte writeback candidate drifted: %s" % JSON.stringify(live_tile_writeback_candidate))
 		return
 	var first_missing_visual_projection: Dictionary = visual_projection_missing_samples[0]
 	if String(first_missing_visual_projection.get("same_terrain_mask_address", "")) != "0x4bc74c" \
