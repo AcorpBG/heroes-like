@@ -1248,10 +1248,44 @@ Array h3_fixed_type6_value_band_records() {
 			h3_extended_candidate_record("0x49ff15", "0x540bf0", 0x20, 6, 0, 30000, 2, 1, 5, 15));
 }
 
+Dictionary h3_object_bucket_vector_layout_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "producer_layout_identified_source_rows_pending_materialization";
+	boundary["base_constructor_range"] = "0x49d914..0x49dc9e";
+	boundary["producer_range"] = "0x49da08..0x49db75";
+	boundary["bucket_array_offset"] = "generator+0x34";
+	boundary["bucket_stride_bytes"] = 0x10;
+	boundary["bucket_count"] = 0xe8;
+	boundary["artifact_type_id"] = 10;
+	boundary["artifact_bucket_struct_offset_formula"] = "generator+0x34 + 10*0x10";
+	boundary["artifact_bucket_struct_offset"] = "generator+0xd4";
+	boundary["artifact_bucket_begin_offset"] = "generator+0xd8";
+	boundary["artifact_bucket_end_offset"] = "generator+0xdc";
+	boundary["artifact_bucket_capacity_offset"] = "generator+0xe0";
+	boundary["producer_source_table_pointer_address"] = "0x58d27c";
+	boundary["producer_source_table_loader_address"] = "0x490c4c";
+	boundary["producer_source_row_stride_bytes"] = 0x4c;
+	boundary["producer_source_type_offset"] = "+0x1c";
+	boundary["producer_source_subtype_or_level_filter_offset"] = "+0x20";
+	boundary["producer_record_allocation_size_bytes"] = 0xe8;
+	boundary["producer_record_initializer_address"] = "0x49db76";
+	boundary["producer_append_helper_address"] = "0x40bb26";
+	boundary["producer_type_metadata_pointer_address"] = "0x57c648";
+	boundary["producer_bucket_index_source"] = "[0x57c648 + source_type*0x10 + 0x08]";
+	boundary["producer_bucket_address_formula"] = "generator+0x34 + producer_bucket_index*0x10";
+	boundary["producer_remap_materialized"] = false;
+	boundary["source_rows_materialized"] = false;
+	boundary["artifact_pool_count_materialized"] = false;
+	boundary["materialization_blocker"] = "port 0x49da08 source-table row filters and 0x57c648 bucket remap before deriving artifact pool count";
+	return boundary;
+}
+
 Dictionary h3_artifact_pool_candidate_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x49ff59..0x4a00c7";
 	boundary["artifact_pool_vector_offset"] = "generator+0xd8..+0xdc";
+	boundary["artifact_pool_vector_layout_status"] = "type10_object_bucket_vector_layout_identified";
+	boundary["artifact_pool_vector_layout"] = h3_object_bucket_vector_layout_boundary();
 	boundary["selection_state_offset"] = "generator+0x1100";
 	boundary["selection_state_buffer_offset"] = "generator+0x1104";
 	boundary["selection_state_helper_address"] = "0x48d21c";
@@ -1266,14 +1300,15 @@ Dictionary h3_artifact_pool_candidate_loop_boundary() {
 	boundary["record_shape_materialized"] = true;
 	boundary["candidate_record_values_materialized"] = true;
 	boundary["candidate_pool_count_materialized"] = false;
-	boundary["candidate_pool_count_blocker"] = "generator+0xd8..+0xdc producer not ported";
+	boundary["candidate_pool_count_blocker"] = "0x49da08 source-table row filters and 0x57c648 bucket remap not materialized";
 	boundary["materialized_candidate_records"] = false;
 	return boundary;
 }
 
 Dictionary h3_artifact_pool_materialization_blocker_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported";
+	boundary["status"] = "blocked_until_0x49da08_object_bucket_producer_is_materialized";
+	boundary["producer_layout"] = h3_object_bucket_vector_layout_boundary();
 	boundary["consumer_source_range"] = "0x49ff59..0x4a00c7";
 	boundary["consumer_pool_count_formula"] = "(generator+0xdc - generator+0xd8) / 4";
 	boundary["consumer_iteration_order"] = "descending_artifact_pool_index";
@@ -1654,7 +1689,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_fixed_type6_value_band_records"] = h3_fixed_type6_value_band_records();
 	boundary["candidate_builder_artifact_pool_loop_status"] = "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized";
 	boundary["candidate_builder_artifact_pool_loop"] = h3_artifact_pool_candidate_loop_boundary();
-	boundary["candidate_builder_artifact_pool_materialization_blocker_status"] = "blocked_until_generator_plus_0xd8_artifact_pool_producer_is_ported";
+	boundary["candidate_builder_artifact_pool_materialization_blocker_status"] = "blocked_until_0x49da08_object_bucket_producer_is_materialized";
 	boundary["candidate_builder_artifact_pool_materialization_blocker"] = h3_artifact_pool_materialization_blocker_boundary();
 	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending";
 	boundary["candidate_builder_type17_loop"] = h3_type17_generator_loop_boundary();
