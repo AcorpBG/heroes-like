@@ -33,8 +33,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v4":
-		_fail("Small h3maped inspection did not use the v4 clean restart boundary: %s" % JSON.stringify(report))
+	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v5":
+		_fail("Small h3maped inspection did not use the v5 clean restart boundary: %s" % JSON.stringify(report))
 		return
 	if String(report.get("status", "")) != "h3maped_small_clean_boundary_ready":
 		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
@@ -206,6 +206,48 @@ func _run() -> void:
 			or int(helper_inputs[5].get("runtime_zone_index", -1)) != 5 \
 			or int(helper_inputs[5].get("source_zone_id", -1)) != 6:
 		_fail("0x4a2777 helper input queue drifted: %s" % JSON.stringify(helper_inputs))
+		return
+
+	var clip_helper: Dictionary = report.get("clip_helper_4a2b33", {})
+	if String(clip_helper.get("status", "")) != "0x4a2b33_clip_helper_ported_inspection_only" \
+			or String(clip_helper.get("function_address", "")) != "0x4a2b33" \
+			or String(clip_helper.get("caller_address", "")) != "0x4a2777":
+		_fail("0x4a2b33 clip helper boundary drifted: %s" % JSON.stringify(clip_helper))
+		return
+	if bool(clip_helper.get("materializes_boundaries", true)) \
+			or bool(clip_helper.get("materializes_span_fill", true)) \
+			or bool(clip_helper.get("materializes_terrain", true)) \
+			or bool(clip_helper.get("materializes_map_cells", true)):
+		_fail("0x4a2b33 clip helper must not materialize generated output: %s" % JSON.stringify(clip_helper))
+		return
+	var clip_bounds: Dictionary = clip_helper.get("clip_bounds", {})
+	var clip_samples: Array = clip_helper.get("samples", [])
+	if int(clip_helper.get("sample_count", -1)) != 5 \
+			or int(clip_bounds.get("min_x", -1)) != 0 \
+			or int(clip_bounds.get("min_y", -1)) != 0 \
+			or int(clip_bounds.get("max_x", -1)) != 36 \
+			or int(clip_bounds.get("max_y", -1)) != 36 \
+			or clip_samples.size() != 5:
+		_fail("0x4a2b33 clip helper sample envelope drifted: %s" % JSON.stringify(clip_helper))
+		return
+	if String(clip_samples[0].get("id", "")) != "inside" \
+			or int(clip_samples[0].get("out_x", -1)) != 10 \
+			or int(clip_samples[0].get("out_y", -1)) != 10 \
+			or String(clip_samples[0].get("branch", "")) != "0x4a2b5d_input_inside" \
+			or not bool(clip_samples[0].get("input_inside", false)) \
+			or String(clip_samples[1].get("id", "")) != "left_to_inside" \
+			or int(clip_samples[1].get("out_x", -1)) != 0 \
+			or int(clip_samples[1].get("out_y", -1)) != 10 \
+			or String(clip_samples[2].get("id", "")) != "top_to_inside" \
+			or int(clip_samples[2].get("out_x", -1)) != 10 \
+			or int(clip_samples[2].get("out_y", -1)) != 0 \
+			or String(clip_samples[3].get("id", "")) != "right_to_inside" \
+			or int(clip_samples[3].get("out_x", -1)) != 35 \
+			or int(clip_samples[3].get("out_y", -1)) != 12 \
+			or String(clip_samples[4].get("id", "")) != "bottom_to_inside" \
+			or int(clip_samples[4].get("out_x", -1)) != 12 \
+			or int(clip_samples[4].get("out_y", -1)) != 35:
+		_fail("0x4a2b33 clip helper samples drifted: %s" % JSON.stringify(clip_samples))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)

@@ -40,6 +40,20 @@ struct TemplateEvidence {
 	uint8_t player_capable_source_owner_mask;
 };
 
+struct ClipBounds {
+	int32_t min_x = 0;
+	int32_t min_y = 0;
+	int32_t max_x = 0;
+	int32_t max_y = 0;
+};
+
+struct ClipResult {
+	int32_t x = 0;
+	int32_t y = 0;
+	bool input_inside = false;
+	const char *branch = "";
+};
+
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0, "", 0xff, 0xff },
 	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0, "", 0x03, 0x03 },
@@ -203,6 +217,81 @@ std::array<bool, 8> selected_color_bitmap_from_config(const Dictionary &normaliz
 		bitmap[size_t(index)] = bool(selected[index]);
 	}
 	return bitmap;
+}
+
+ClipResult h3maped_clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const ClipBounds &bounds) {
+	ClipResult result;
+	result.x = x1;
+	result.y = y1;
+	result.branch = "0x4a2b5d_fallback_current";
+	if (x1 >= bounds.min_x && x1 < bounds.max_x && y1 >= bounds.min_y && y1 < bounds.max_y) {
+		result.input_inside = true;
+		result.branch = "0x4a2b5d_input_inside";
+		return result;
+	}
+
+	int32_t clipped_x = x1;
+	int32_t clipped_y = y1;
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	auto accept_original_x = [&](const char *branch) {
+		result.x = x1;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+	auto accept_current = [&](const char *branch) {
+		result.x = clipped_x;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+
+	if (x1 < bounds.min_x && dx != 0) {
+		const int32_t delta = bounds.min_x - x1;
+		clipped_x = x1 + int32_t((int64_t(dx) * int64_t(delta)) / int64_t(dx));
+		clipped_y = y1 + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_original_x("0x4a2bb5_left_edge_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_original_x("0x4a2bb5_left_edge_crosses_max_y");
+		}
+	}
+	if (clipped_y < bounds.min_y && dy != 0) {
+		const int32_t delta = bounds.min_y - clipped_y;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_original_x("0x4a2bb5_min_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_original_x("0x4a2bb5_min_y_crosses_max_x");
+		}
+	}
+	if (clipped_x >= bounds.max_x && dx != 0) {
+		const int32_t delta = bounds.max_x - clipped_x - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dx));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_original_x("0x4a2bb5_max_x_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_original_x("0x4a2bb5_max_x_crosses_max_y");
+		}
+	}
+	if (clipped_y >= bounds.max_y && dy != 0) {
+		const int32_t delta = bounds.max_y - clipped_y - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_max_x");
+		}
+	}
+	return accept_current("0x4a2b5d_fallback_current");
 }
 
 Dictionary player_slot_assignment_report(const TemplateEvidence &candidate, const Dictionary &normalized_config, int32_t human_count, int32_t computer_count) {
@@ -494,6 +583,57 @@ Dictionary zone_footprint_phase_boundary_report(const Dictionary &normalized_con
 	return report;
 }
 
+Dictionary clip_helper_4a2b33_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2b33_clip_helper_ported_inspection_only";
+	report["source"] = "h3maped 0x4a2777 dependency: 0x4a2b33 clips source-node segment endpoints to the active map rectangle before boundary line painting";
+	report["function_address"] = "0x4a2b33";
+	report["caller_address"] = "0x4a2777";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = std::max(1, int32_t(normalized_config.get("width", 36)));
+	bounds.max_y = std::max(1, int32_t(normalized_config.get("height", 36)));
+	Dictionary bounds_report;
+	bounds_report["min_x"] = bounds.min_x;
+	bounds_report["min_y"] = bounds.min_y;
+	bounds_report["max_x"] = bounds.max_x;
+	bounds_report["max_y"] = bounds.max_y;
+	report["clip_bounds"] = bounds_report;
+
+	auto clip_sample = [&](const char *id, int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+		ClipResult clipped = h3maped_clip_point_4a2b33(x1, y1, x2, y2, bounds);
+		Dictionary item;
+		item["id"] = id;
+		item["from_x"] = x1;
+		item["from_y"] = y1;
+		item["to_x"] = x2;
+		item["to_y"] = y2;
+		item["out_x"] = clipped.x;
+		item["out_y"] = clipped.y;
+		item["input_inside"] = clipped.input_inside;
+		item["branch"] = clipped.branch;
+		item["output_in_bounds"] = clipped.x >= bounds.min_x && clipped.x < bounds.max_x && clipped.y >= bounds.min_y && clipped.y < bounds.max_y;
+		return item;
+	};
+
+	Array samples;
+	samples.append(clip_sample("inside", 10, 10, 30, 30));
+	samples.append(clip_sample("left_to_inside", -5, 10, 20, 10));
+	samples.append(clip_sample("top_to_inside", 10, -5, 10, 20));
+	samples.append(clip_sample("right_to_inside", bounds.max_x + 5, 12, 20, 12));
+	samples.append(clip_sample("bottom_to_inside", 12, bounds.max_y + 5, 12, 20));
+	report["sample_count"] = samples.size();
+	report["samples"] = samples;
+	report["blocked_next"] = "port 0x4a261a deterministic line writer before 0x4a2777 can consume queued runtime-zone cycles";
+	return report;
+}
+
 Array accepted_templates_for_config(const Dictionary &normalized_config, int32_t score, int32_t human_count, int32_t player_count) {
 	Array accepted_templates;
 	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
@@ -629,8 +769,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 
 	Dictionary report;
 	report["ok"] = supports_scope(normalized_config) && !accepted_templates.is_empty();
-	report["schema_id"] = "aurelion_native_rmg_small_h3maped_clean_restart_v4";
-	report["schema_version"] = 4;
+	report["schema_id"] = "aurelion_native_rmg_small_h3maped_clean_restart_v5";
+	report["schema_version"] = 5;
 	report["status"] = supports_scope(normalized_config) ? (accepted_templates.is_empty() ? String("h3maped_small_no_accepted_templates") : String("h3maped_small_clean_boundary_ready")) : String("unsupported_scope");
 	report["scope"] = "small_36x36_surface_land_only";
 	report["implementation_policy"] = "clean_restart_no_catalog_auto_no_hash_selection_no_per_case_materialization_no_fallback_maps";
@@ -667,6 +807,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 				Dictionary runtime_zone_setup = runtime_zone_record_setup_report(candidate, source_template_record_for_catalog_index(selected_catalog_index), assignment, human_count, player_count);
 				report["runtime_zone_record_setup"] = runtime_zone_setup;
 				report["zone_footprint_phase_boundary"] = zone_footprint_phase_boundary_report(normalized_config, runtime_zone_setup);
+				report["clip_helper_4a2b33"] = clip_helper_4a2b33_report(normalized_config);
 				break;
 			}
 		}
