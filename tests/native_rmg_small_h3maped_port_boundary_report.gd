@@ -1147,9 +1147,20 @@ func _run() -> void:
 		return
 	var terrain_loop: Dictionary = generic_selector.get("candidate_builder_terrain_specialized_loop", {})
 	var terrain_fixed_records: Array = terrain_loop.get("fixed_records_per_terrain", [])
-	if String(generic_selector.get("candidate_builder_terrain_specialized_loop_status", "")) != "0x4a0eeb_0x4a1194_generator_plus_0x568_loop_recovered_not_materialized" \
-				or String(terrain_loop.get("terrain_vector_offset", "")) != "generator+0x568..+0x56c" \
-				or int(terrain_loop.get("terrain_vector_stride_bytes", -1)) != 0x04 \
+	if String(generic_selector.get("candidate_builder_terrain_specialized_loop_status", "")) != "0x4a0eeb_0x4a1194_type53_object_bucket_loop_count_materialized" \
+				or String(terrain_loop.get("type53_bucket_vector_offset", "")) != "generator+0x568..+0x56c" \
+				or String(terrain_loop.get("type53_bucket_struct_offset", "")) != "generator+0x564" \
+				or String(terrain_loop.get("type53_bucket_begin_offset", "")) != "generator+0x568" \
+				or String(terrain_loop.get("type53_bucket_end_offset", "")) != "generator+0x56c" \
+				or String(terrain_loop.get("type53_bucket_capacity_offset", "")) != "generator+0x570" \
+				or int(terrain_loop.get("type53_bucket_vector_stride_bytes", -1)) != 0x04 \
+				or String(terrain_loop.get("producer_range", "")) != "0x49da08..0x49db75" \
+				or int(terrain_loop.get("producer_record_stride_bytes", -1)) != 0x4c \
+				or not bool(terrain_loop.get("producer_accepts_type53", false)) \
+				or not bool(terrain_loop.get("type53_source_row_count_materialized", false)) \
+				or int(terrain_loop.get("type53_source_row_count", -1)) != 3 \
+				or not bool(terrain_loop.get("bucket_entry_count_materialized", false)) \
+				or int(terrain_loop.get("bucket_entry_count", -1)) != 3 \
 				or String(terrain_loop.get("monster_table_pointer_address", "")) != "0x581298" \
 				or String(terrain_loop.get("monster_table_address", "")) != "0x57cea0" \
 				or int(terrain_loop.get("monster_table_stride_bytes", -1)) != 0x74 \
@@ -1171,7 +1182,11 @@ func _run() -> void:
 				or String(terrain_fixed_records[7].get("vtable_address", "")) != "0x540c80" \
 				or int(terrain_fixed_records[7].get("value", -1)) != 0x2ee0 \
 				or int(terrain_fixed_records[7].get("field_0x14", -1)) != 0x4e20 \
-				or bool(terrain_loop.get("materialized_candidate_records", true)):
+				or int(terrain_loop.get("single_level_materialized_candidate_record_count", -1)) != 378 \
+				or int(terrain_loop.get("extended_materialized_candidate_record_count", -1)) != 447 \
+				or int(terrain_loop.get("materialized_candidate_record_count", -1)) != 378 \
+				or not bool(terrain_loop.get("materialized_candidate_records", false)) \
+				or bool(terrain_loop.get("candidate_vector_indices_materialized", true)):
 		_fail("h3maped terrain-specialized candidate loop boundary drifted: %s" % JSON.stringify(terrain_loop))
 		return
 	var constructor_tail: Dictionary = generic_selector.get("candidate_builder_static_constructor_tail", {})
@@ -1276,7 +1291,7 @@ func _run() -> void:
 				or not bool(static_materialization.get("dynamic_monster_loop_materialized", false)) \
 				or not bool(static_materialization.get("dynamic_type10_object_bucket_loop_materialized", false)) \
 				or not bool(static_materialization.get("dynamic_type17_loop_materialized", false)) \
-				or bool(static_materialization.get("dynamic_terrain_vector_loop_materialized", true)) \
+				or not bool(static_materialization.get("dynamic_type53_object_bucket_loop_materialized", false)) \
 				or bool(static_materialization.get("complete_candidate_vector", true)) \
 				or bool(static_materialization.get("create_vfuncs_materialized", true)):
 		_fail("h3maped materialized static candidate boundary drifted: %s" % JSON.stringify(static_materialization))

@@ -1043,7 +1043,7 @@ Dictionary h3_materialized_static_candidate_boundary() {
 	boundary["dynamic_monster_loop_materialized"] = true;
 	boundary["dynamic_type10_object_bucket_loop_materialized"] = true;
 	boundary["dynamic_type17_loop_materialized"] = true;
-	boundary["dynamic_terrain_vector_loop_materialized"] = false;
+	boundary["dynamic_type53_object_bucket_loop_materialized"] = true;
 	boundary["complete_candidate_vector"] = false;
 	boundary["create_vfuncs_materialized"] = false;
 	return boundary;
@@ -1441,8 +1441,28 @@ Array h3_terrain_specialized_fixed_value_records() {
 Dictionary h3_terrain_specialized_candidate_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x4a0eeb..0x4a1194";
-	boundary["terrain_vector_offset"] = "generator+0x568..+0x56c";
-	boundary["terrain_vector_stride_bytes"] = 0x04;
+	boundary["type53_bucket_vector_offset"] = "generator+0x568..+0x56c";
+	boundary["type53_bucket_struct_offset"] = "generator+0x564";
+	boundary["type53_bucket_begin_offset"] = "generator+0x568";
+	boundary["type53_bucket_end_offset"] = "generator+0x56c";
+	boundary["type53_bucket_capacity_offset"] = "generator+0x570";
+	boundary["type53_bucket_vector_stride_bytes"] = 0x04;
+	boundary["object_metadata_initializer"] = h3_object_metadata_initializer_boundary();
+	boundary["type53_has_bucket_remap_override"] = false;
+	boundary["bucket53_has_inbound_remap_override"] = false;
+	boundary["type53_in_any_metadata_flag_array"] = false;
+	boundary["type53_bucket_index"] = 0x53;
+	boundary["producer_range"] = "0x49da08..0x49db75";
+	boundary["producer_source"] = "objects.txt";
+	boundary["producer_record_stride_bytes"] = 0x4c;
+	boundary["producer_source_type_offset"] = "+0x1c";
+	boundary["producer_subtype_offset"] = "+0x20";
+	boundary["producer_accepts_type53"] = true;
+	boundary["type53_source_row_count_materialized"] = true;
+	boundary["type53_source_row_count"] = 3;
+	boundary["type53_source_subtypes"] = Array::make(0, 1, 2);
+	boundary["bucket_entry_count_materialized"] = true;
+	boundary["bucket_entry_count"] = 3;
 	boundary["outer_iteration_order"] = "ascending_vector_index";
 	boundary["outer_index_field"] = "+0x08 subtype";
 	boundary["allocation_size_bytes"] = 0x1c;
@@ -1463,7 +1483,13 @@ Dictionary h3_terrain_specialized_candidate_loop_boundary() {
 	boundary["monster_value_field"] = "+0x18 scaled_monster_value";
 	boundary["fixed_records_per_terrain_count"] = 8;
 	boundary["fixed_records_per_terrain"] = h3_terrain_specialized_fixed_value_records();
-	boundary["materialized_candidate_records"] = false;
+	boundary["single_level_materialized_candidate_record_count"] = 378;
+	boundary["extended_materialized_candidate_record_count"] = 447;
+	boundary["materialized_candidate_record_count"] = 378;
+	boundary["materialized_candidate_record_formula"] = "bucket_entry_count * (active_monster_rows + fixed_records_per_bucket_entry)";
+	boundary["materialized_candidate_records"] = true;
+	boundary["candidate_vector_indices_materialized"] = false;
+	boundary["candidate_vector_index_blocker"] = "pre_type53_static_tail_and_complete_candidate_vector_order_not_materialized";
 	return boundary;
 }
 
@@ -1733,7 +1759,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_tail_status"] = "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_tail_count"] = 61;
 	boundary["candidate_builder_static_tail_records"] = h3_static_tail_after_artifact_pool_records();
-	boundary["candidate_builder_terrain_specialized_loop_status"] = "0x4a0eeb_0x4a1194_generator_plus_0x568_loop_recovered_not_materialized";
+	boundary["candidate_builder_terrain_specialized_loop_status"] = "0x4a0eeb_0x4a1194_type53_object_bucket_loop_count_materialized";
 	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
 	boundary["candidate_builder_static_constructor_tail_status"] = "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
@@ -1744,7 +1770,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_subset_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "terrain-vector dynamic candidate loop materialization", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "complete candidate vector ordering", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
 	boundary["value_vfuncs_reconstructed"] = true;
