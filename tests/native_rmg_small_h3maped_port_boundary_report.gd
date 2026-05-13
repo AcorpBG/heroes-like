@@ -1066,7 +1066,7 @@ func _run() -> void:
 		_fail("h3maped artifact pool candidate loop boundary drifted: %s" % JSON.stringify(artifact_loop))
 		return
 	var type17_loop: Dictionary = generic_selector.get("candidate_builder_type17_loop", {})
-	if String(generic_selector.get("candidate_builder_type17_loop_status", "")) != "0x4a0402_0x4a045a_type17_loop_recovered_not_materialized" \
+	if String(generic_selector.get("candidate_builder_type17_loop_status", "")) != "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending" \
 				or String(type17_loop.get("constructor_address", "")) != "0x49c523" \
 				or String(type17_loop.get("constructor_vtable_address", "")) != "0x540ba0" \
 				or String(type17_loop.get("overridden_vtable_address", "")) != "0x540c00" \
@@ -1233,6 +1233,31 @@ func _run() -> void:
 				or bool(static_materialization.get("complete_candidate_vector", true)) \
 				or bool(static_materialization.get("create_vfuncs_materialized", true)):
 		_fail("h3maped materialized static candidate boundary drifted: %s" % JSON.stringify(static_materialization))
+		return
+	var materialized_type17: Dictionary = generic_selector.get("materialized_single_level_type17_candidate_boundary", {})
+	var materialized_type17_records: Array = materialized_type17.get("records", [])
+	if String(generic_selector.get("materialized_single_level_type17_candidate_boundary_status", "")) != "single_level_type17_candidate_loop_materialized_vector_index_pending" \
+				or String(materialized_type17.get("status", "")) != "single_level_type17_candidate_loop_materialized_vector_index_pending" \
+				or String(materialized_type17.get("source_range", "")) != "0x4a0402..0x4a045a" \
+				or String(materialized_type17.get("constructor_address", "")) != "0x49c523" \
+				or String(materialized_type17.get("constructor_vtable_address", "")) != "0x540ba0" \
+				or String(materialized_type17.get("overridden_vtable_address", "")) != "0x540c00" \
+				or int(materialized_type17.get("record_size_bytes", -1)) != 0x14 \
+				or int(materialized_type17.get("type_id", -1)) != 0x11 \
+				or int(materialized_type17.get("value", 0)) != -1 \
+				or int(materialized_type17.get("weight", -1)) != 0x28 \
+				or int(materialized_type17.get("candidate_record_count", -1)) != 0x3a \
+				or materialized_type17_records.size() != 0x3a \
+				or int(materialized_type17_records[0].get("relative_loop_index", -1)) != 0 \
+				or int(materialized_type17_records[0].get("subtype", -1)) != 0x39 \
+				or String(materialized_type17_records[0].get("vtable_address", "")) != "0x540c00" \
+				or int(materialized_type17_records[0].get("record_size_bytes", -1)) != 0x14 \
+				or bool(materialized_type17_records[0].get("candidate_vector_index_materialized", true)) \
+				or int(materialized_type17_records[57].get("relative_loop_index", -1)) != 57 \
+				or int(materialized_type17_records[57].get("subtype", -1)) != 0 \
+				or bool(materialized_type17.get("candidate_vector_indices_materialized", true)) \
+				or bool(materialized_type17.get("extended_type17_loop_materialized", true)):
+		_fail("h3maped materialized type-17 candidate boundary drifted: %s" % JSON.stringify(materialized_type17))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
