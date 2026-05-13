@@ -147,6 +147,39 @@ func _run() -> void:
 		_fail("Runtime-zone record projection drifted: %s" % JSON.stringify(zone_records))
 		return
 
+	var link_seeds: Dictionary = report.get("link_seed_setup", {})
+	if String(link_seeds.get("status", "")) != "0x4a1f3b_endpoint_link_seeds_ported_inspection_only" \
+			or String(link_seeds.get("link_endpoint_consumer_address", "")) != "0x4a1f3b" \
+			or String(link_seeds.get("candidate_generator_address", "")) != "0x4a17f5" \
+			or String(link_seeds.get("distance_validation_address", "")) != "0x4a1701" \
+			or String(link_seeds.get("late_payload_consumer_address", "")) != "0x4a79a3":
+		_fail("h3maped link seed boundary drifted: %s" % JSON.stringify(link_seeds))
+		return
+	if bool(link_seeds.get("materializes_coordinates", true)) \
+			or bool(link_seeds.get("materializes_connection_guards", true)) \
+			or bool(link_seeds.get("materializes_roads", true)) \
+			or bool(link_seeds.get("materializes_blockers", true)):
+		_fail("Link seed setup must not materialize map output: %s" % JSON.stringify(link_seeds))
+		return
+	var seed_records: Array = link_seeds.get("link_seeds", [])
+	if int(link_seeds.get("link_seed_count", -1)) != 5 \
+			or seed_records.size() != 5 \
+			or int(seed_records[0].get("source_zone_a", -1)) != 1 \
+			or int(seed_records[0].get("source_zone_b", -1)) != 4 \
+			or int(seed_records[0].get("runtime_zone_a", -1)) != 0 \
+			or int(seed_records[0].get("runtime_zone_b", -1)) != 3 \
+			or int(seed_records[0].get("guard_value", -1)) != 3000 \
+			or int(seed_records[3].get("source_zone_a", -1)) != 3 \
+			or int(seed_records[3].get("source_zone_b", -1)) != 5 \
+			or int(seed_records[3].get("guard_value", -1)) != 6000 \
+			or int(seed_records[4].get("source_zone_a", -1)) != 6 \
+			or int(seed_records[4].get("source_zone_b", -1)) != 4 \
+			or int(seed_records[4].get("runtime_zone_a", -1)) != 5 \
+			or int(seed_records[4].get("runtime_zone_b", -1)) != 3 \
+			or int(seed_records[4].get("guard_value", -1)) != 6000:
+		_fail("Recovered template 18 link seed endpoints drifted: %s" % JSON.stringify(seed_records))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
@@ -163,7 +196,11 @@ func _run() -> void:
 			or String(backlog[2].get("status", "")) != "active_inspection_only":
 		_fail("Runtime-zone records should be active only as inspection evidence: %s" % JSON.stringify(backlog))
 		return
-	for index in range(3, backlog.size()):
+	if String(backlog[3].get("phase_id", "")) != "coordinate_replay" \
+			or String(backlog[3].get("status", "")) != "active_link_seed_boundary_only":
+		_fail("Coordinate replay phase should expose only link endpoint seeds so far: %s" % JSON.stringify(backlog))
+		return
+	for index in range(4, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_h3maped_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
