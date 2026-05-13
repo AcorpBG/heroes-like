@@ -114,9 +114,9 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "source_node_rectangle_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle"] \
-			or int(private_context.get("completed_phase_count", -1)) != 7 \
+			or String(private_context.get("status", "")) != "polygon_split_model_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"] \
+			or int(private_context.get("completed_phase_count", -1)) != 8 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
 		_fail("Private generation context did not stop at the h3maped source-node rectangle phase: %s" % JSON.stringify(private_context))
@@ -351,13 +351,81 @@ func _run() -> void:
 		_fail("h3maped source-node rectangle edges drifted: %s" % JSON.stringify(initial_edges))
 		return
 
+	var polygon_split: Dictionary = private_context.get("polygon_split_context", {})
+	if String(polygon_split.get("phase_id", "")) != "polygon_split_model" \
+			or String(polygon_split.get("h3maped_anchor", "")) != "0x4ccb64" \
+			or String(polygon_split.get("locator_anchor", "")) != "0x4cca55" \
+			or String(polygon_split.get("splitter_anchor", "")) != "0x4ccb64" \
+			or String(polygon_split.get("node_constructor_anchor", "")) != "0x4cc955" \
+			or String(polygon_split.get("node_relink_anchor", "")) != "0x4cc643" \
+			or String(polygon_split.get("edge_side_test_anchor", "")) != "0x4cc6f2" \
+			or String(polygon_split.get("edge_erase_anchor", "")) != "0x4cc9cc" \
+			or String(polygon_split.get("bridge_anchor", "")) != "0x4ccb1f" \
+			or String(polygon_split.get("crossing_test_anchor", "")) != "0x4ccc7a" \
+			or String(polygon_split.get("crossing_collapse_anchor", "")) != "0x4cc68e" \
+			or String(polygon_split.get("intersection_writer_anchor", "")) != "0x4ccd69" \
+			or String(polygon_split.get("finalizer_anchor", "")) != "0x4ccdfc" \
+			or String(polygon_split.get("status", "")) != "private_context_ready" \
+			or not bool(polygon_split.get("materializes_source_node_graph", false)) \
+			or bool(polygon_split.get("materializes_boundaries", true)) \
+			or bool(polygon_split.get("materializes_span_fill", true)) \
+			or bool(polygon_split.get("materializes_terrain", true)) \
+			or bool(polygon_split.get("materializes_map_cells", true)) \
+			or bool(polygon_split.get("materializes_public_output", true)) \
+			or bool(polygon_split.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("h3maped polygon split context drifted: %s" % JSON.stringify(polygon_split))
+		return
+	if int(polygon_split.get("runtime_split_point_count", -1)) != 6 \
+			or int(polygon_split.get("executed_split_call_count", -1)) != 6 \
+			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
+			or int(polygon_split.get("edge_removal_branch_count", -1)) != 0 \
+			or int(polygon_split.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
+			or int(polygon_split.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
+			or int(polygon_split.get("crossing_cleanup_scan_count", -1)) != 34 \
+			or int(polygon_split.get("crossing_test_count", -1)) != 24 \
+			or int(polygon_split.get("crossing_collapse_count", -1)) != 8 \
+			or int(polygon_split.get("initial_node_pair_count", -1)) != 5 \
+			or int(polygon_split.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 23 \
+			or int(polygon_split.get("post_crossing_cleanup_allocated_node_count", -1)) != 46 \
+			or int(polygon_split.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
+			or int(polygon_split.get("post_crossing_cleanup_active_node_count", -1)) != 46 \
+			or String(polygon_split.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported" \
+			or String(polygon_split.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported" \
+			or int(polygon_split.get("finalized_triplet_count", -1)) != 14 \
+			or int(polygon_split.get("finalized_node_count", -1)) != 42 \
+			or int(polygon_split.get("active_payload_node_count", -1)) != 28 \
+			or String(polygon_split.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered_private_only" \
+			or int(polygon_split.get("source_node_walk_count", -1)) != 6 \
+			or int(polygon_split.get("source_node_walk_guard_exhausted_count", -1)) != 0 \
+			or String(polygon_split.get("blocked_next", "")) != "feed_finalized_0x4ccdfc_source_node_cycles_into_real_0x4a2777_traversal":
+		_fail("h3maped polygon split counts drifted: %s" % JSON.stringify(polygon_split))
+		return
+	var split_steps: Array = polygon_split.get("split_steps", [])
+	if split_steps.size() != 6 \
+			or int(split_steps[0].get("runtime_zone_index", -1)) != 0 \
+			or int(split_steps[0].get("bridge_pair_count", -1)) != 2 \
+			or String(split_steps[0].get("status", "")) != "0x4ccb64_pre_crossing_inserted" \
+			or int(split_steps[5].get("runtime_zone_index", -1)) != 5 \
+			or int(split_steps[5].get("bridge_pair_count", -1)) != 2:
+		_fail("h3maped polygon split steps drifted: %s" % JSON.stringify(split_steps))
+		return
+	var finalized_steps: Array = polygon_split.get("finalized_steps", [])
+	var source_node_walks: Array = polygon_split.get("source_node_walks", [])
+	if finalized_steps.size() != 14 \
+			or source_node_walks.size() != 6 \
+			or int(source_node_walks[0].get("runtime_zone_index", -1)) != 0 \
+			or int(source_node_walks[0].get("cycle_node_count", -1)) <= 0 \
+			or bool(source_node_walks[0].get("guard_exhausted", true)):
+		_fail("h3maped polygon finalized source-node walks drifted: %s" % JSON.stringify(source_node_walks))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
