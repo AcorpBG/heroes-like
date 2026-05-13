@@ -566,6 +566,67 @@ func _run() -> void:
 		_fail("0x4a2777 traversal zone cycle reports drifted: %s" % JSON.stringify(traversal_zones))
 		return
 
+	var span_fill: Dictionary = report.get("real_boundary_span_fill_4a325d", {})
+	if String(span_fill.get("status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_ported_private" \
+			or String(span_fill.get("function_address", "")) != "0x4a325d" \
+			or String(span_fill.get("boundary_source_address", "")) != "0x4a2777" \
+			or String(span_fill.get("seed_source", "")) != "runtime_zone+0x10 x/y/level after 0x4a19ed bbox rescale" \
+			or not bool(span_fill.get("uses_real_0x4a2777_boundary", false)):
+		_fail("0x4a325d span-fill identity drifted: %s" % JSON.stringify(span_fill))
+		return
+	if not bool(span_fill.get("materializes_span_fill", false)) \
+			or bool(span_fill.get("materializes_terrain", true)) \
+			or bool(span_fill.get("materializes_map_cells", true)) \
+			or bool(span_fill.get("materializes_package_tiles", true)) \
+			or bool(span_fill.get("project_grid_public_runtime_adoption", true)) \
+			or bool(span_fill.get("public_package_output_allowed", true)):
+		_fail("0x4a325d span-fill must remain private and stop before terrain/package output: %s" % JSON.stringify(span_fill))
+		return
+	if int(span_fill.get("boundary_unique_cell_count", -1)) != 262 \
+			or int(span_fill.get("boundary_trace_write_count", -1)) != 326 \
+			or int(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", -1)) != 3257732100 \
+			or int(span_fill.get("runtime_zone_fill_attempt_count", -1)) != 6 \
+			or int(span_fill.get("filled_zone_count", -1)) != 6 \
+			or int(span_fill.get("seed_blocked_count", -1)) != 0 \
+			or int(span_fill.get("missing_seed_count", -1)) != 0 \
+			or int(span_fill.get("seed_relocation_count", -1)) != 0 \
+			or int(span_fill.get("unique_filled_cell_count", -1)) != 762 \
+			or int(span_fill.get("total_boundary_or_filled_cell_count", -1)) != 1024 \
+			or int(span_fill.get("remaining_unassigned_cell_count", -1)) != 272 \
+			or int(span_fill.get("reserved_flag_cell_count", -1)) != 1024 \
+			or int(span_fill.get("pushed_span_count", -1)) != 111 \
+			or int(span_fill.get("popped_span_count", -1)) != 111 \
+			or int(span_fill.get("max_pending_span_count", -1)) != 3 \
+			or int(span_fill.get("out_of_bounds_span_count", -1)) != 0 \
+			or int(span_fill.get("blocked_initial_span_count", -1)) != 0:
+		_fail("0x4a325d span-fill counts drifted: %s" % JSON.stringify(span_fill))
+		return
+	var cells_by_zone_word: Dictionary = span_fill.get("cells_by_zone_word", {})
+	if int(cells_by_zone_word.get("0", -1)) != 266 \
+			or int(cells_by_zone_word.get("1", -1)) != 227 \
+			or int(cells_by_zone_word.get("2", -1)) != 204 \
+			or int(cells_by_zone_word.get("3", -1)) != 58 \
+			or int(cells_by_zone_word.get("4", -1)) != 152 \
+			or int(cells_by_zone_word.get("5", -1)) != 117:
+		_fail("0x4a325d cells-by-zone distribution drifted: %s" % JSON.stringify(cells_by_zone_word))
+		return
+	var span_zones: Array = span_fill.get("zone_fill_reports", [])
+	if span_zones.size() != 6 \
+			or int(span_zones[0].get("seed_x", -1)) != 30 \
+			or int(span_zones[0].get("seed_y", -1)) != 16 \
+			or int(span_zones[0].get("filled_cell_count", -1)) != 229 \
+			or int(span_zones[1].get("seed_x", -1)) != 8 \
+			or int(span_zones[1].get("seed_y", -1)) != 13 \
+			or int(span_zones[1].get("filled_cell_count", -1)) != 186 \
+			or int(span_zones[2].get("filled_cell_count", -1)) != 161 \
+			or int(span_zones[3].get("filled_cell_count", -1)) != 15 \
+			or int(span_zones[4].get("filled_cell_count", -1)) != 100 \
+			or int(span_zones[5].get("seed_x", -1)) != 18 \
+			or int(span_zones[5].get("seed_y", -1)) != 13 \
+			or int(span_zones[5].get("filled_cell_count", -1)) != 71:
+		_fail("0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(span_zones))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
