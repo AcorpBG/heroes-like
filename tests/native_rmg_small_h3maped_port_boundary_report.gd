@@ -98,15 +98,15 @@ func _run() -> void:
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "coordinate_replay_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay"] \
-			or int(small_state.get("completed_phase_count", -1)) != 5 \
+			or String(small_state.get("status", "")) != "source_node_rectangle_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle"] \
+			or int(small_state.get("completed_phase_count", -1)) != 7 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "zone_footprint_source_nodes_0x4a3a03_0x4cc788":
-		_fail("Small h3maped generation state did not stop after coordinate replay: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "polygon_split_model_0x4ccb64_0x4ccdfc":
+		_fail("Small h3maped generation state did not stop after source-node rectangle setup: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -234,6 +234,66 @@ func _run() -> void:
 		_fail("h3maped coordinate replay phase drifted: %s" % JSON.stringify(coordinate_phase))
 		return
 
+	var zone_footprint_phase: Dictionary = small_state.get("zone_footprint_phase_boundary", {})
+	var per_level: Array = zone_footprint_phase.get("per_level", [])
+	if String(zone_footprint_phase.get("phase_id", "")) != "zone_footprint_phase_boundary" \
+			or String(zone_footprint_phase.get("h3maped_anchor", "")) != "0x4a3a03" \
+			or String(zone_footprint_phase.get("helper_sequence", "")) != "0x4a2777 -> 0x4a325d -> 0x4a3710" \
+			or String(zone_footprint_phase.get("status", "")) != "active_runtime_state_ready" \
+			or int(zone_footprint_phase.get("level_count", -1)) != 1 \
+			or int(zone_footprint_phase.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(zone_footprint_phase.get("total_collected_runtime_zone_count", -1)) != 6 \
+			or int(zone_footprint_phase.get("synthetic_zone_appended_count", -1)) != 0 \
+			or per_level.size() != 1 \
+			or int(per_level[0].get("collected_runtime_zone_count", -1)) != 6 \
+			or Array(per_level[0].get("collected_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
+			or int(per_level[0].get("helper_call_input_count", -1)) != 6 \
+			or String(per_level[0].get("synthetic_zone_status", "")) != "not_applicable_small_one_level_land" \
+			or bool(zone_footprint_phase.get("materializes_boundaries", true)) \
+			or bool(zone_footprint_phase.get("materializes_span_fill", true)) \
+			or bool(zone_footprint_phase.get("materializes_terrain", true)) \
+			or bool(zone_footprint_phase.get("materializes_map_cells", true)) \
+			or bool(zone_footprint_phase.get("materializes_public_output", true)):
+		_fail("h3maped zone-footprint phase boundary drifted: %s" % JSON.stringify(zone_footprint_phase))
+		return
+	var helper_inputs: Array = per_level[0].get("helper_call_inputs", [])
+	if helper_inputs.size() != 6 \
+			or String(helper_inputs[0].get("helper_address", "")) != "0x4a2777" \
+			or int(helper_inputs[0].get("runtime_zone_index", -1)) != 0 \
+			or int(helper_inputs[5].get("runtime_zone_index", -1)) != 5:
+		_fail("h3maped zone-footprint helper inputs drifted: %s" % JSON.stringify(helper_inputs))
+		return
+
+	var source_node_phase: Dictionary = small_state.get("source_node_rectangle", {})
+	var source_node_bounds: Dictionary = source_node_phase.get("initial_bounds", {})
+	var source_node_edges: Array = source_node_phase.get("initial_edges", [])
+	if String(source_node_phase.get("phase_id", "")) != "source_node_rectangle" \
+			or String(source_node_phase.get("h3maped_anchor", "")) != "0x4cc788" \
+			or String(source_node_phase.get("node_constructor_anchor", "")) != "0x4cc955" \
+			or String(source_node_phase.get("splitter_anchor", "")) != "0x4ccb64" \
+			or String(source_node_phase.get("locator_anchor", "")) != "0x4cca55" \
+			or String(source_node_phase.get("finalizer_anchor", "")) != "0x4ccdfc" \
+			or String(source_node_phase.get("status", "")) != "active_runtime_state_ready" \
+			or int(source_node_bounds.get("min_x", 0)) != -200 \
+			or int(source_node_bounds.get("min_y", 0)) != -200 \
+			or int(source_node_bounds.get("max_x", 0)) != 400 \
+			or int(source_node_bounds.get("max_y", 0)) != 400 \
+			or String(source_node_bounds.get("constant_min_hex", "")) != "0xffffff38" \
+			or String(source_node_bounds.get("constant_max_hex", "")) != "0x190" \
+			or int(source_node_phase.get("initial_edge_count", -1)) != 4 \
+			or source_node_edges.size() != 4 \
+			or String(source_node_edges[0].get("id", "")) != "top" \
+			or String(source_node_edges[3].get("next", "")) != "top" \
+			or bool(source_node_phase.get("feeds_real_0x4a2777_boundary", true)) \
+			or bool(source_node_phase.get("materializes_source_node_graph", true)) \
+			or bool(source_node_phase.get("materializes_boundaries", true)) \
+			or bool(source_node_phase.get("materializes_span_fill", true)) \
+			or bool(source_node_phase.get("materializes_terrain", true)) \
+			or bool(source_node_phase.get("materializes_map_cells", true)) \
+			or bool(source_node_phase.get("materializes_public_output", true)):
+		_fail("h3maped source-node rectangle phase drifted: %s" % JSON.stringify(source_node_phase))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -241,8 +301,8 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay"]:
-		_fail("Blocked generation result did not carry the small coordinate replay state: %s" % JSON.stringify(generated))
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle"]:
+		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
 	var explicit_template_config := config.duplicate(true)
