@@ -715,7 +715,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_internal_state"));
 	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_internal_state"));
 	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "active_internal_state"));
-	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "terrainplacement_live_feedback_active_internal_state"));
+	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "terrain_tile_byte_writeback_active_internal_state"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_runtime_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7", "pending_runtime_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "pending_runtime_port"));
@@ -726,8 +726,8 @@ Array fresh_phase_backlog() {
 
 Array current_gap_summary() {
 	Array gaps;
-	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, link-seed setup, coordinate replay, private zone footprint/cell ownership buffers, private terrain cell writeout, decoded TerrainPlacement visual tables, and private live TerrainPlacement scratch feedback");
-	gaps.append("terrain tile-byte adoption, towns, roads, blockers, guards, mines, rewards, and writeout are not implemented in the fresh active module");
+	gaps.append("active code contains h3maped binary verification, small scope gate, template RNG selection, player-slot assignment, runtime-zone records, link-seed setup, coordinate replay, private zone footprint/cell ownership buffers, private terrain cell writeout, decoded TerrainPlacement visual tables, private live TerrainPlacement scratch feedback, and private terrain tile-byte candidates");
+	gaps.append("towns, roads, blockers, guards, mines, rewards, road/river/object tile bytes, package adoption, and final writeout are not implemented in the fresh active module");
 	gaps.append("all earlier private phase ledgers were archived because they were report growth, not usable map generation");
 	gaps.append("small maps remain blocked from runtime package output until executable-derived phases are ported as actual generation state");
 	return gaps;
@@ -3225,7 +3225,7 @@ Dictionary terrainplacement_visual_tables_phase(const Dictionary &terrain_cell_p
 	return phase;
 }
 
-Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_cell_phase, const Dictionary &visual_tables_phase) {
+Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_cell_phase, const Dictionary &visual_tables_phase, std::vector<uint32_t> *out_live_cell_word_0x24 = nullptr, std::vector<uint32_t> *out_live_cell_word_0x28 = nullptr, std::vector<int32_t> *out_live_terrain_code = nullptr) {
 	Dictionary phase;
 	phase["phase_id"] = "terrainplacement_live_feedback";
 	phase["h3maped_anchor"] = "0x4bb74b/0x4bc5f0";
@@ -3668,6 +3668,105 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	phase["drain_samples"] = drain_samples;
 	phase["sample_records"] = sample_records;
 	phase["blocked_next"] = "private_0x49b2b6_tile_byte_writeback_candidate";
+	if (out_live_cell_word_0x24 != nullptr) {
+		*out_live_cell_word_0x24 = live_cell_word_0x24;
+	}
+	if (out_live_cell_word_0x28 != nullptr) {
+		*out_live_cell_word_0x28 = live_cell_word_0x28;
+	}
+	if (out_live_terrain_code != nullptr) {
+		*out_live_terrain_code = live_terrain_code;
+	}
+	return phase;
+}
+
+Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config, const Dictionary &live_feedback_phase, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code) {
+	Dictionary phase;
+	phase["phase_id"] = "terrain_tile_byte_writeback";
+	phase["h3maped_anchor"] = "0x49b2b6";
+	phase["generated_cell_write_address"] = "0x49acf6";
+	phase["serializer_contract"] = "byte0 = cell+0x24 bits0..5 terrain id; byte1 = cell+0x24 bits6..13 terrain art; byte6 bits0..1 = cell+0x28 bits15..16 terrain flags; river/road bytes remain pending";
+	phase["status"] = "blocked_until_live_feedback";
+	phase["materializes_private_tile_byte_candidates"] = true;
+	phase["materializes_package_tiles"] = false;
+	phase["project_grid_public_runtime_adoption"] = false;
+	phase["public_package_output_allowed"] = false;
+	phase["road_river_bytes_materialized"] = false;
+	phase["object_bytes_materialized"] = false;
+	phase["blocked_next"] = "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2";
+	if (String(live_feedback_phase.get("status", "")) != "active_internal_state"
+			|| live_cell_word_0x24.empty()
+			|| live_cell_word_0x24.size() != live_cell_word_0x28.size()
+			|| live_cell_word_0x24.size() != live_terrain_code.size()) {
+		return phase;
+	}
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t tile_count = int32_t(live_cell_word_0x24.size());
+	Dictionary terrain_byte_histogram;
+	Dictionary art_byte_histogram;
+	Dictionary flag_byte_histogram;
+	Array sample_tiles;
+	int32_t terrain_mismatch_count = 0;
+	int32_t art_nonzero_count = 0;
+	int32_t flag_nonzero_count = 0;
+	int32_t road_river_nonzero_count = 0;
+	for (int32_t index = 0; index < tile_count; ++index) {
+		const uint32_t word_0x24 = live_cell_word_0x24[size_t(index)];
+		const uint32_t word_0x28 = live_cell_word_0x28[size_t(index)];
+		const int32_t byte_0_terrain = int32_t(word_0x24 & 0x3fU);
+		const int32_t byte_1_art = int32_t((word_0x24 >> 6U) & 0xffU);
+		const int32_t byte_6_flags = int32_t((word_0x28 >> 15U) & 0x03U);
+		const String terrain_key = String::num_int64(byte_0_terrain);
+		const String art_key = String::num_int64(byte_1_art);
+		const String flag_key = String::num_int64(byte_6_flags);
+		terrain_byte_histogram[terrain_key] = int32_t(terrain_byte_histogram.get(terrain_key, 0)) + 1;
+		art_byte_histogram[art_key] = int32_t(art_byte_histogram.get(art_key, 0)) + 1;
+		flag_byte_histogram[flag_key] = int32_t(flag_byte_histogram.get(flag_key, 0)) + 1;
+		if (byte_0_terrain != live_terrain_code[size_t(index)]) {
+			terrain_mismatch_count += 1;
+		}
+		if (byte_1_art != 0) {
+			art_nonzero_count += 1;
+		}
+		if (byte_6_flags != 0) {
+			flag_nonzero_count += 1;
+		}
+		if (sample_tiles.size() < 16) {
+			Dictionary sample;
+			sample["index"] = index;
+			sample["x"] = map_width > 0 ? index % map_width : 0;
+			sample["y"] = map_width > 0 ? (index / map_width) % std::max(1, map_height) : 0;
+			sample["level"] = level_tile_count > 0 ? index / level_tile_count : 0;
+			sample["generated_cell_word_0x24_u32"] = int64_t(word_0x24);
+			sample["generated_cell_word_0x28_u32"] = int64_t(word_0x28);
+			sample["tile_byte_0_terrain_id"] = byte_0_terrain;
+			sample["tile_byte_1_terrain_art"] = byte_1_art;
+			sample["tile_byte_2_river_type"] = 0;
+			sample["tile_byte_3_river_art"] = 0;
+			sample["tile_byte_4_road_type"] = 0;
+			sample["tile_byte_5_road_art"] = 0;
+			sample["tile_byte_6_terrain_flags"] = byte_6_flags;
+			sample_tiles.append(sample);
+		}
+	}
+
+	phase["status"] = "active_internal_state";
+	phase["source"] = "h3maped 0x49b2b6 terrain tile-byte projection from live 0x49acf6 generated-cell words; roads/rivers/objects and package/public adoption remain pending";
+	phase["tile_count"] = tile_count;
+	phase["terrain_byte_candidate_count"] = tile_count;
+	phase["terrain_byte_mismatch_count"] = terrain_mismatch_count;
+	phase["terrain_art_nonzero_cell_count"] = art_nonzero_count;
+	phase["terrain_flag_nonzero_cell_count"] = flag_nonzero_count;
+	phase["road_river_nonzero_byte_count"] = road_river_nonzero_count;
+	phase["tile_byte_0_histogram"] = terrain_byte_histogram;
+	phase["tile_byte_1_art_histogram"] = art_byte_histogram;
+	phase["tile_byte_6_flag_histogram"] = flag_byte_histogram;
+	phase["sample_tile_byte_records"] = sample_tiles;
+	phase["sample_tile_byte_record_count"] = sample_tiles.size();
+	phase["blocked_next"] = "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2";
 	return phase;
 }
 
@@ -3750,7 +3849,11 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	Dictionary footprint_phase = zone_footprint_phase(normalized_config, runtime_zone_phase, coordinate_phase);
 	Dictionary terrain_phase = terrain_cell_writeout_phase(normalized_config, runtime_zone_phase, coordinate_phase, footprint_phase);
 	Dictionary terrainplacement_visual_phase = terrainplacement_visual_tables_phase(terrain_phase);
-	Dictionary terrainplacement_live_feedback = terrainplacement_live_feedback_phase(normalized_config, runtime_zone_phase, coordinate_phase, terrain_phase, terrainplacement_visual_phase);
+	std::vector<uint32_t> live_cell_word_0x24;
+	std::vector<uint32_t> live_cell_word_0x28;
+	std::vector<int32_t> live_terrain_code;
+	Dictionary terrainplacement_live_feedback = terrainplacement_live_feedback_phase(normalized_config, runtime_zone_phase, coordinate_phase, terrain_phase, terrainplacement_visual_phase, &live_cell_word_0x24, &live_cell_word_0x28, &live_terrain_code);
+	Dictionary terrain_tile_byte_writeback = terrain_tile_byte_writeback_phase(normalized_config, terrainplacement_live_feedback, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code);
 	Array completed;
 	completed.append("template_selection");
 	if (String(player_phase.get("status", "")) == "active_internal_state") {
@@ -3777,9 +3880,12 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	if (String(terrainplacement_live_feedback.get("status", "")) == "active_internal_state") {
 		completed.append("terrainplacement_live_feedback");
 	}
+	if (String(terrain_tile_byte_writeback.get("status", "")) == "active_internal_state") {
+		completed.append("terrain_tile_byte_writeback");
+	}
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_active_generation_state_v1";
-	state["status"] = completed.size() >= 9 ? String("terrainplacement_live_feedback_active_internal_state") : String(completed.size() >= 8 ? "terrainplacement_visual_tables_active_internal_state" : String(completed.size() >= 7 ? "terrain_cell_writeout_active_internal_state" : String(completed.size() >= 6 ? "zone_footprints_active_internal_state" : String(completed.size() >= 5 ? "coordinate_replay_active_internal_state" : "blocked_before_coordinate_replay"))));
+	state["status"] = completed.size() >= 10 ? String("terrain_tile_byte_writeback_active_internal_state") : String(completed.size() >= 9 ? "terrainplacement_live_feedback_active_internal_state" : String(completed.size() >= 8 ? "terrainplacement_visual_tables_active_internal_state" : String(completed.size() >= 7 ? "terrain_cell_writeout_active_internal_state" : String(completed.size() >= 6 ? "zone_footprints_active_internal_state" : String(completed.size() >= 5 ? "coordinate_replay_active_internal_state" : "blocked_before_coordinate_replay")))));
 	state["completed_phase_ids"] = completed;
 	state["completed_phase_count"] = completed.size();
 	state["runtime_generation_allowed"] = false;
@@ -3795,7 +3901,8 @@ Dictionary active_generation_state(const Dictionary &normalized_config) {
 	state["terrain_cell_writeout"] = terrain_phase;
 	state["terrainplacement_visual_tables"] = terrainplacement_visual_phase;
 	state["terrainplacement_live_feedback"] = terrainplacement_live_feedback;
-	state["blocked_next"] = completed.size() >= 9 ? String("private_0x49b2b6_tile_byte_writeback_candidate") : String(completed.size() >= 8 ? "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback" : String(completed.size() >= 7 ? "terrainplacement_visual_tables_0x4bcff5" : String(completed.size() >= 6 ? "terrain_cell_writeout_0x4a3f27" : "zone_footprint_source_nodes_0x4a3a03_0x4cc788")));
+	state["terrain_tile_byte_writeback"] = terrain_tile_byte_writeback;
+	state["blocked_next"] = completed.size() >= 10 ? String("town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2") : String(completed.size() >= 9 ? "private_0x49b2b6_tile_byte_writeback_candidate" : String(completed.size() >= 8 ? "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback" : String(completed.size() >= 7 ? "terrainplacement_visual_tables_0x4bcff5" : String(completed.size() >= 6 ? "terrain_cell_writeout_0x4a3f27" : "zone_footprint_source_nodes_0x4a3a03_0x4cc788"))));
 	return state;
 }
 

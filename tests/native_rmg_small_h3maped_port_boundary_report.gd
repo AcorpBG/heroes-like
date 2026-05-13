@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "terrainplacement_live_feedback_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback"] \
+			or String(active_state.get("status", "")) != "terrain_tile_byte_writeback_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback", "terrain_tile_byte_writeback"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
+			or String(active_state.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
 		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -383,6 +383,41 @@ func _run() -> void:
 			or String(live_feedback.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
 		_fail("h3maped TerrainPlacement live feedback phase drifted: %s" % JSON.stringify(live_feedback))
 		return
+	var tile_byte_phase: Dictionary = active_state.get("terrain_tile_byte_writeback", {})
+	if String(tile_byte_phase.get("phase_id", "")) != "terrain_tile_byte_writeback" \
+			or String(tile_byte_phase.get("h3maped_anchor", "")) != "0x49b2b6" \
+			or String(tile_byte_phase.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or String(tile_byte_phase.get("status", "")) != "active_internal_state" \
+			or not bool(tile_byte_phase.get("materializes_private_tile_byte_candidates", false)) \
+			or bool(tile_byte_phase.get("materializes_package_tiles", true)) \
+			or bool(tile_byte_phase.get("project_grid_public_runtime_adoption", true)) \
+			or bool(tile_byte_phase.get("public_package_output_allowed", true)) \
+			or bool(tile_byte_phase.get("road_river_bytes_materialized", true)) \
+			or bool(tile_byte_phase.get("object_bytes_materialized", true)) \
+			or int(tile_byte_phase.get("tile_count", -1)) != 1296 \
+			or int(tile_byte_phase.get("terrain_byte_candidate_count", -1)) != 1296 \
+			or int(tile_byte_phase.get("terrain_byte_mismatch_count", -1)) != 0 \
+			or int(tile_byte_phase.get("terrain_art_nonzero_cell_count", -1)) != 1238 \
+			or int(tile_byte_phase.get("terrain_flag_nonzero_cell_count", -1)) != 1033 \
+			or int(tile_byte_phase.get("road_river_nonzero_byte_count", -1)) != 0 \
+			or int(tile_byte_phase.get("sample_tile_byte_record_count", -1)) != 16 \
+			or String(tile_byte_phase.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
+		_fail("h3maped terrain tile-byte writeback phase drifted: %s" % JSON.stringify(tile_byte_phase))
+		return
+	var terrain_histogram: Dictionary = tile_byte_phase.get("tile_byte_0_histogram", {})
+	var flag_histogram: Dictionary = tile_byte_phase.get("tile_byte_6_flag_histogram", {})
+	if int(terrain_histogram.get("0", -1)) != 97 \
+			or int(terrain_histogram.get("2", -1)) != 138 \
+			or int(terrain_histogram.get("4", -1)) != 262 \
+			or int(terrain_histogram.get("5", -1)) != 269 \
+			or int(terrain_histogram.get("7", -1)) != 444 \
+			or int(terrain_histogram.get("8", -1)) != 86 \
+			or int(flag_histogram.get("0", -1)) != 263 \
+			or int(flag_histogram.get("1", -1)) != 112 \
+			or int(flag_histogram.get("2", -1)) != 150 \
+			or int(flag_histogram.get("3", -1)) != 771:
+		_fail("h3maped terrain tile-byte histograms changed: %s / %s" % [JSON.stringify(terrain_histogram), JSON.stringify(flag_histogram)])
+		return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -429,7 +464,7 @@ func _run() -> void:
 			or String(backlog[5].get("id", "")) != "zone_footprints" \
 			or String(backlog[5].get("status", "")) != "active_internal_state" \
 			or String(backlog[6].get("id", "")) != "terrain_and_terrainplacement" \
-			or String(backlog[6].get("status", "")) != "terrainplacement_live_feedback_active_internal_state" \
+			or String(backlog[6].get("status", "")) != "terrain_tile_byte_writeback_active_internal_state" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
