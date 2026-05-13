@@ -28,10 +28,11 @@ The active module is intentionally small again. It only:
 - accepts only small 36x36 one-level land configs;
 - computes the recovered h3maped size/water score boundary;
 - selects from the recovered small-land template vector using h3maped RNG `0x4e7269/0x4e7276`;
+- ports player-slot assignment `0x4ac62a..0x4ac6ec` as inspection-only evidence, including `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`;
 - records a strict restart backlog for the required executable phase ports;
 - refuses runtime generation.
 
-Seed `1`, one human, three total players currently selects `h3maped_template_018` at source catalog index `18`, adapted to `translated_rmg_template_019_v1`.
+Seed `1`, one human, three total players currently selects `h3maped_template_018` at source catalog index `18`, adapted to `translated_rmg_template_019_v1`. Its recovered source-owner masks are `0x0f` for human-capable owners and `0x0f` for player-capable owners; default color ordering maps source owners `0,1,2` to actual colors `0,1,2`.
 
 The active module does not materialize map cells, terrain art, towns, roads, blockers, guards, mines, rewards, or packages.
 
@@ -53,8 +54,8 @@ Explicit translated-template requests do not bypass the reset gate.
 The restart must port these phases from `h3maped.exe` before public package output is allowed:
 
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
-2. Player-slot assignment: `0x4ac62a..0x4ac6ec`.
-3. Runtime-zone records: `0x4a218c`.
+2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active inspection only; no runtime player materialization).
+3. Runtime-zone records: `0x4a218c` (next pending strict port).
 4. Zone footprints and terrain: `0x4a3a03`, `0x4a2777`, `0x4a325d`, `0x4a3f27`.
 5. Town object placement: `0x4a8d2c`, `0x4a93a2`, `0x49ba89`.
 6. Roads and rivers: `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`.
