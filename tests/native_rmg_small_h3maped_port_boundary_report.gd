@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "terrain_tile_byte_writeback_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback", "terrain_tile_byte_writeback"] \
+			or String(active_state.get("status", "")) != "town_castle_phase_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback", "terrain_tile_byte_writeback", "town_castle_phase"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2":
+			or String(active_state.get("blocked_next", "")) != "object_vector_prerequisite_phase_4a9d6a_4aab7e":
 		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -418,6 +418,97 @@ func _run() -> void:
 			or int(flag_histogram.get("3", -1)) != 771:
 		_fail("h3maped terrain tile-byte histograms changed: %s / %s" % [JSON.stringify(terrain_histogram), JSON.stringify(flag_histogram)])
 		return
+	var town_phase: Dictionary = active_state.get("town_castle_phase", {})
+	if String(town_phase.get("phase_id", "")) != "town_castle_phase" \
+			or String(town_phase.get("h3maped_anchor", "")) != "0x4a8d2c/0x4a8db2/0x4a93a2" \
+			or String(town_phase.get("direct_object_helper_anchor", "")) != "0x4a93a2" \
+			or String(town_phase.get("candidate_gate_anchor", "")) != "0x49aa93" \
+			or String(town_phase.get("footprint_gate_anchor", "")) != "0x49a09c" \
+			or String(town_phase.get("town_type_chooser_anchor", "")) != "0x49b3c1" \
+			or String(town_phase.get("object_record_constructor_anchor", "")) != "0x49ba89" \
+			or String(town_phase.get("town_vtable_anchor", "")) != "0x540a9c" \
+			or String(town_phase.get("status", "")) != "active_internal_state" \
+			or not bool(town_phase.get("materializes_private_town_candidates", false)) \
+			or bool(town_phase.get("materializes_town_objects", true)) \
+			or bool(town_phase.get("materializes_package_tiles", true)) \
+			or bool(town_phase.get("adopts_into_runtime_grid", true)) \
+			or bool(town_phase.get("public_package_output_allowed", true)) \
+			or int(town_phase.get("map_width", -1)) != 36 \
+			or int(town_phase.get("map_height", -1)) != 36 \
+			or int(town_phase.get("level_count", -1)) != 1 \
+			or int(town_phase.get("cell_count", -1)) != 1296 \
+			or int(town_phase.get("source_player_min_town_count", -1)) != 0 \
+			or int(town_phase.get("source_player_min_castle_count", -1)) != 4 \
+			or int(town_phase.get("assigned_player_min_town_count", -1)) != 0 \
+			or int(town_phase.get("assigned_player_min_castle_count", -1)) != 3 \
+			or int(town_phase.get("skipped_unassigned_player_start_min_town_count", -1)) != 0 \
+			or int(town_phase.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+			or int(town_phase.get("neutral_minimum_town_castle_count", -1)) != 0 \
+			or int(town_phase.get("density_schedule_count", -1)) != 0 \
+			or int(town_phase.get("scheduled_direct_minimum_object_count", -1)) != 3 \
+			or int(town_phase.get("scheduled_owned_player_town_count", -1)) != 3 \
+			or int(town_phase.get("project_town_record_candidate_count", -1)) != 3 \
+			or int(town_phase.get("project_player_start_candidate_count", -1)) != 3 \
+			or String(town_phase.get("blocked_next", "")) != "object_vector_prerequisite_phase_4a9d6a_4aab7e":
+		_fail("h3maped town/castle phase drifted: %s" % JSON.stringify(town_phase))
+		return
+	var direct_stamping: Dictionary = town_phase.get("direct_stamping_projection", {})
+	if String(direct_stamping.get("status", "")) != "0x4a93a2_0x49ba89_direct_town_object_stamping_projection_private" \
+			or int(direct_stamping.get("direct_candidate_scan_count", -1)) != 3 \
+			or int(direct_stamping.get("direct_candidate_total", -1)) != 445 \
+			or int(direct_stamping.get("direct_candidate_missing_count", -1)) != 0 \
+			or int(direct_stamping.get("direct_footprint_eligible_total", -1)) != 85 \
+			or int(direct_stamping.get("direct_footprint_missing_count", -1)) != 0 \
+			or int(direct_stamping.get("direct_footprint_rejected_bounds_count", -1)) != 134 \
+			or int(direct_stamping.get("direct_footprint_rejected_zone_count", -1)) != 222 \
+			or int(direct_stamping.get("direct_footprint_rejected_terrain_count", -1)) != 0 \
+			or int(direct_stamping.get("direct_footprint_rejected_collision_count", -1)) != 4 \
+			or int(direct_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
+			or int(direct_stamping.get("direct_unique_selection_count", -1)) != 2 \
+			or int(direct_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
+			or int(direct_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
+			or int(direct_stamping.get("direct_record_projection_count", -1)) != 3 \
+			or int(direct_stamping.get("object_rng_state_before_0x4a93a2_uint32", -1)) != 2166683160 \
+			or int(direct_stamping.get("object_rng_state_after_0x4a93a2_uint32", -1)) != 811474043 \
+			or bool(direct_stamping.get("runtime_package_adoption", true)) \
+			or bool(direct_stamping.get("stamps_generated_cell_state", true)):
+		_fail("h3maped direct town stamping drifted: %s" % JSON.stringify(direct_stamping))
+		return
+	var project_towns: Dictionary = town_phase.get("project_town_adoption_candidate", {})
+	var town_records: Array = project_towns.get("town_records", [])
+	var player_starts: Array = project_towns.get("player_starts", [])
+	if String(project_towns.get("status", "")) != "h3maped_project_town_adoption_candidate_private" \
+			or bool(project_towns.get("public_package_adoption", true)) \
+			or bool(project_towns.get("runtime_grid_adoption", true)) \
+			or int(project_towns.get("town_record_count", -1)) != 3 \
+			or int(project_towns.get("player_start_count", -1)) != 3 \
+			or int(project_towns.get("expected_player_count", -1)) != 3 \
+			or int(project_towns.get("synchronized_player_start_count", -1)) != 3 \
+			or Array(project_towns.get("owner_slots", [])) != [1, 2, 3] \
+			or town_records.size() != 3 \
+			or player_starts.size() != 3:
+		_fail("h3maped project town candidate bridge drifted: %s" % JSON.stringify(project_towns))
+		return
+	var expected_town_points := [
+		{"slot": 1, "x": 26, "y": 16, "town": "town_riverwatch", "faction": "faction_embercourt", "owner": "player"},
+		{"slot": 2, "x": 23, "y": 23, "town": "town_duskfen", "faction": "faction_mireclaw", "owner": "enemy"},
+		{"slot": 3, "x": 18, "y": 5, "town": "town_prismhearth", "faction": "faction_sunvault", "owner": "enemy"},
+	]
+	for town_index in expected_town_points.size():
+		var expected: Dictionary = expected_town_points[town_index]
+		if int(town_records[town_index].get("player_slot", -1)) != int(expected["slot"]) \
+				or int(town_records[town_index].get("x", -1)) != int(expected["x"]) \
+				or int(town_records[town_index].get("y", -1)) != int(expected["y"]) \
+				or String(town_records[town_index].get("town_id", "")) != String(expected["town"]) \
+				or String(town_records[town_index].get("faction_id", "")) != String(expected["faction"]) \
+				or String(town_records[town_index].get("owner", "")) != String(expected["owner"]) \
+				or not bool(town_records[town_index].get("is_start_town", false)) \
+				or not bool(town_records[town_index].get("is_castle", false)) \
+				or int(player_starts[town_index].get("player_slot", -1)) != int(expected["slot"]) \
+				or int(player_starts[town_index].get("x", -1)) != int(expected["x"]) \
+				or int(player_starts[town_index].get("y", -1)) != int(expected["y"]):
+			_fail("h3maped town/start coordinates drifted: %s / %s" % [JSON.stringify(town_records), JSON.stringify(player_starts)])
+			return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -465,6 +556,8 @@ func _run() -> void:
 			or String(backlog[5].get("status", "")) != "active_internal_state" \
 			or String(backlog[6].get("id", "")) != "terrain_and_terrainplacement" \
 			or String(backlog[6].get("status", "")) != "terrain_tile_byte_writeback_active_internal_state" \
+			or String(backlog[7].get("id", "")) != "town_object_placement" \
+			or String(backlog[7].get("status", "")) != "active_internal_state_private_candidates" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
