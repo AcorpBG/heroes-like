@@ -1092,8 +1092,44 @@ Dictionary h3_candidate_vtable_boundary() {
 	boundary["rtti_or_typeinfo_offset"] = "+0x0c";
 	boundary["record_count"] = 17;
 	boundary["records"] = h3_candidate_vtable_records();
-	boundary["value_vfuncs_materialized"] = false;
+	boundary["value_vfuncs_reconstructed"] = true;
 	boundary["create_vfuncs_materialized"] = false;
+	return boundary;
+}
+
+Dictionary h3_candidate_value_vfunc_record(const char *address, const char *semantics, const char *disassembly_range, bool returns_negative_one_gate, const char *formula) {
+	Dictionary record;
+	record["address"] = address;
+	record["semantics"] = semantics;
+	record["disassembly_range"] = disassembly_range;
+	record["returns_negative_one_gate"] = returns_negative_one_gate;
+	record["formula"] = formula;
+	return record;
+}
+
+Dictionary h3_candidate_value_vfunc_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "value_vfuncs_reconstructed_create_vfuncs_pending";
+	boundary["selector_call_site"] = "0x4a9ffd..0x4aa004";
+	boundary["selector_call_contract"] = "push generator, push zone_context, call candidate_vtable+0x04";
+	boundary["range_filter_after_call"] = "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band";
+	boundary["default_value_vfunc"] = "0x49c54d";
+	boundary["default_value_formula"] = "return candidate+0x0c value field";
+	boundary["disabled_false_vfunc"] = "0x49c54a";
+	boundary["disabled_false_formula"] = "xor al,al; ret";
+	boundary["disabled_true_vfunc"] = "0x49baf5";
+	boundary["disabled_true_formula"] = "mov al,1; ret";
+	boundary["records"] = Array::make(
+			h3_candidate_value_vfunc_record("0x49c54d", "constant candidate value", "0x49c54d..0x49c553", false, "return record.value"),
+			h3_candidate_value_vfunc_record("0x49c64b", "monster value scaled by zone/generator strength", "0x49c64b..0x49c69b", true, "if monster_table[record.field_0x14].terrain_id != zone_context+0x08 return -1; base = monster_table[record.field_0x14]+0x40 * record.field_0x18; if generator+0xf60 > 0 add generator+0xf64[terrain_id] * base / generator+0xf60; return base"),
+			h3_candidate_value_vfunc_record("0x49c849", "terrain-specialized monster value from terrain index table", "0x49c849..0x49c8b0", true, "monster_index = dword[0x531cc4 + record.subtype * 4]; if monster_table[monster_index].terrain_id != zone_context+0x08 return -1; return scaled monster_table fields + generator+0xf64 terrain pressure adjustment"),
+			h3_candidate_value_vfunc_record("0x49ca8b", "terrain-vector gated monster value", "0x49ca8b..0x49cac2", true, "if generator+0xf58 != record.subtype or generator+0x10b4 != 0 return -1; return (2 * value_0x49c64b(record, zone_context, generator) - 4000) / 3"),
+			h3_candidate_value_vfunc_record("0x49cb60", "terrain-vector gated constant value", "0x49cb60..0x49cb83", true, "if generator+0xf58 != record.subtype or generator+0x10b4 != 0 return -1; return record.value"),
+			h3_candidate_value_vfunc_record("0x49cd97", "artifact-pool gated constant value", "0x49cd97..0x49cdb1", true, "if generator+0xf5c != record.subtype return -1; return record.value"));
+	boundary["reconstructed_vfunc_count"] = 6;
+	boundary["selection_materialized"] = false;
+	boundary["candidate_record_materialization_pending"] = true;
+	boundary["create_vfuncs_pending"] = true;
 	return boundary;
 }
 
@@ -1243,11 +1279,13 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
 	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized";
 	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
+	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_vfuncs_reconstructed_selection_not_materialized";
+	boundary["candidate_value_vfunc_boundary"] = h3_candidate_value_vfunc_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate value-vfunc reconstruction", "candidate record materialization");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("candidate record materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
-	boundary["value_vfuncs_reconstructed"] = false;
+	boundary["value_vfuncs_reconstructed"] = true;
 	boundary["materializes_reward_object"] = false;
 
 	Dictionary metadata_load = load_json_dictionary(OBJECT_METADATA_SOURCE_PATH);

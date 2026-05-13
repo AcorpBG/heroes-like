@@ -952,7 +952,7 @@ func _run() -> void:
 				or int(generic_selector.get("candidate_builder_static_prefix_count", -1)) != 2 \
 				or not bool(generic_selector.get("candidate_builder_dynamic_loops_pending", false)) \
 				or bool(generic_selector.get("candidate_vector_reconstructed", true)) \
-				or bool(generic_selector.get("value_vfuncs_reconstructed", true)) \
+				or not bool(generic_selector.get("value_vfuncs_reconstructed", false)) \
 				or bool(generic_selector.get("materializes_reward_object", true)):
 		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
 		return
@@ -1123,9 +1123,34 @@ func _run() -> void:
 				or String(candidate_vtable_records[16].get("vtable_address", "")) != "0x540ca0" \
 				or String(candidate_vtable_records[16].get("create_vfunc_address", "")) != "0x49cdb1" \
 				or String(candidate_vtable_records[16].get("value_vfunc_address", "")) != "0x49cd97" \
-				or bool(candidate_vtables.get("value_vfuncs_materialized", true)) \
+				or not bool(candidate_vtables.get("value_vfuncs_reconstructed", false)) \
 				or bool(candidate_vtables.get("create_vfuncs_materialized", true)):
 		_fail("h3maped candidate vtable boundary drifted: %s" % JSON.stringify(candidate_vtables))
+		return
+	var value_vfuncs: Dictionary = generic_selector.get("candidate_value_vfunc_boundary", {})
+	var value_vfunc_records: Array = value_vfuncs.get("records", [])
+	if String(generic_selector.get("candidate_value_vfunc_boundary_status", "")) != "0x49c54d_0x49cd97_value_vfuncs_reconstructed_selection_not_materialized" \
+				or String(value_vfuncs.get("status", "")) != "value_vfuncs_reconstructed_create_vfuncs_pending" \
+				or String(value_vfuncs.get("selector_call_site", "")) != "0x4a9ffd..0x4aa004" \
+				or String(value_vfuncs.get("selector_call_contract", "")) != "push generator, push zone_context, call candidate_vtable+0x04" \
+				or String(value_vfuncs.get("range_filter_after_call", "")) != "0x4aa006..0x4aa01d rejects negative values and values outside requested low/high band" \
+				or String(value_vfuncs.get("default_value_vfunc", "")) != "0x49c54d" \
+				or String(value_vfuncs.get("disabled_false_vfunc", "")) != "0x49c54a" \
+				or String(value_vfuncs.get("disabled_true_vfunc", "")) != "0x49baf5" \
+				or int(value_vfuncs.get("reconstructed_vfunc_count", -1)) != 6 \
+				or value_vfunc_records.size() != 6 \
+				or String(value_vfunc_records[0].get("address", "")) != "0x49c54d" \
+				or String(value_vfunc_records[0].get("formula", "")) != "return record.value" \
+				or String(value_vfunc_records[1].get("address", "")) != "0x49c64b" \
+				or not bool(value_vfunc_records[1].get("returns_negative_one_gate", false)) \
+				or String(value_vfunc_records[2].get("address", "")) != "0x49c849" \
+				or String(value_vfunc_records[3].get("address", "")) != "0x49ca8b" \
+				or String(value_vfunc_records[4].get("address", "")) != "0x49cb60" \
+				or String(value_vfunc_records[5].get("address", "")) != "0x49cd97" \
+				or bool(value_vfuncs.get("selection_materialized", true)) \
+				or not bool(value_vfuncs.get("candidate_record_materialization_pending", false)) \
+				or not bool(value_vfuncs.get("create_vfuncs_pending", false)):
+		_fail("h3maped candidate value-vfunc boundary drifted: %s" % JSON.stringify(value_vfuncs))
 		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
