@@ -277,6 +277,46 @@ func _run() -> void:
 		_fail("Strict h3maped boundary/span-fill port drifted: %s" % JSON.stringify(zone_boundary_span))
 		return
 
+	var zone_finalizer: Dictionary = report.get("zone_footprint_finalizer", {})
+	var finalizer_steps: Array = zone_finalizer.get("phases", [])
+	if String(zone_finalizer.get("status", "")) != "active_strict_executable_port" \
+			or String(zone_finalizer.get("h3maped_status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported" \
+			or String(zone_finalizer.get("source_range", "")) != "0x4a3710/0x4a3efc/0x4a3f05/0x4cca55/0x49b61b/0x4a3554" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x4a3710", "")) != "55 8b ec 83 ec 70 53 8b d9 83 65 ac 00 83 65 b0" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x4a3efc", "")) != "8d 45 90 8b ce 50 ff 75 d4 e8 06 f8 ff ff 83 4d" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x4a3f05", "")) != "e8 06 f8 ff ff 83 4d fc ff 8d 4d 90 e8 08 8a 02" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x4cca55", "")) != "55 8b ec 51 51 8b 01 53 56 57 8b 08 8b 50 04 39" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x49b61b", "")) != "55 8b ec 51 83 65 fc 00 56 57 8b 7d 08 8b f1 8d" \
+			or String(zone_finalizer.get("binary_byte_prefix_0x4a3554", "")) != "b8 c0 a7 52 00 e8 72 2b 04 00 83 ec 40 8a 45 0b" \
+			or int(zone_finalizer.get("level_count", -1)) != 1 \
+			or int(zone_finalizer.get("h3maped_water_mode_code", -1)) != 0 \
+			or bool(zone_finalizer.get("synthetic_branch_allowed_by_0x4a3a9d", true)) \
+			or int(zone_finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 \
+			or int(zone_finalizer.get("final_runtime_zone_count", -1)) != 6 \
+			or int(zone_finalizer.get("appended_runtime_zone_count", -1)) != 0 \
+			or finalizer_steps.size() != 3 \
+			or String(finalizer_steps[0].get("address_range", "")) != "0x4a3735..0x4a3874" \
+			or String(finalizer_steps[0].get("status", "")) != "skipped_no_appended_runtime_zones" \
+			or int(finalizer_steps[0].get("materialized_adjacency_insert_count", -1)) != 0 \
+			or String(finalizer_steps[1].get("address_range", "")) != "0x4a3879..0x4a38be" \
+			or String(finalizer_steps[1].get("status", "")) != "0x49b61b_reset_and_0x4a3554_rebuild_scheduled" \
+			or int(finalizer_steps[1].get("zone_order_reset_call_count", -1)) != 6 \
+			or int(finalizer_steps[1].get("per_zone_order_helper_call_count", -1)) != 6 \
+			or String(finalizer_steps[2].get("address_range", "")) != "0x4a38be..0x4a39fc" \
+			or String(finalizer_steps[2].get("status", "")) != "skipped_no_appended_runtime_zones" \
+			or int(finalizer_steps[2].get("materialized_adjacency_insert_count", -1)) != 0 \
+			or int(zone_finalizer.get("zone_order_reset_call_count", -1)) != 6 \
+			or int(zone_finalizer.get("per_zone_order_helper_call_count", -1)) != 6 \
+			or int(zone_finalizer.get("materialized_adjacency_count", -1)) != 0 \
+			or bool(zone_finalizer.get("materializes_adjacency", true)) \
+			or bool(zone_finalizer.get("materializes_terrain", true)) \
+			or bool(zone_finalizer.get("materializes_map_cells", true)) \
+			or bool(zone_finalizer.get("materializes_runtime_players", true)) \
+			or bool(zone_finalizer.get("materializes_public_output", true)) \
+			or String(zone_finalizer.get("blocked_next", "")) != "runtime_terrain_selection_0x49b53d":
+		_fail("Strict h3maped footprint finalizer port drifted: %s" % JSON.stringify(zone_finalizer))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -284,13 +324,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "zone_footprint_finalizer_0x4a3710":
+			or String(strict_state.get("next_required_port", "")) != "runtime_terrain_selection_0x49b53d":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 6 \
-			or not pending_ports.has("zone_footprint_finalizer:0x4a3710") \
+			or not pending_ports.has("runtime_terrain_selection:0x49b53d") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -304,6 +344,8 @@ func _run() -> void:
 			or String(backlog[4].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[5].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[6].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[7].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[10].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[11].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
