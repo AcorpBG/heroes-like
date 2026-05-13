@@ -802,18 +802,48 @@ func _run() -> void:
 		_fail("0x4a3f27 terrain arrays/writeout status drifted: %s" % JSON.stringify(terrain_writeout))
 		return
 	var owner_low_counts: Dictionary = terrain_writeout.get("owner_low_byte_counts", {})
+	var owner_high_counts: Dictionary = terrain_writeout.get("owner_high_byte_counts", {})
 	if String(terrain_writeout.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23 from real 0x4a325d zone word id" \
-			or String(terrain_writeout.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31 pending 0x49a318 occupancy/anchor normalization" \
+			or String(terrain_writeout.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31 from 0x4a5767/0x49a318 owner propagation" \
 			or int(terrain_writeout.get("owner_low_byte_materialized_count", -1)) != 1107 \
-			or int(terrain_writeout.get("owner_high_byte_materialized_count", -1)) != 0 \
-			or int(terrain_writeout.get("owner_high_byte_sentinel_count", -1)) != 1296 \
+			or int(terrain_writeout.get("owner_high_byte_materialized_count", -1)) != 1107 \
+			or int(terrain_writeout.get("owner_high_byte_sentinel_count", -1)) != 189 \
 			or int(owner_low_counts.get("0", -1)) != 177 \
 			or int(owner_low_counts.get("1", -1)) != 91 \
 			or int(owner_low_counts.get("2", -1)) != 226 \
 			or int(owner_low_counts.get("3", -1)) != 177 \
 			or int(owner_low_counts.get("4", -1)) != 207 \
-			or int(owner_low_counts.get("5", -1)) != 229:
+			or int(owner_low_counts.get("5", -1)) != 229 \
+			or int(owner_high_counts.get("0", -1)) != 173 \
+			or int(owner_high_counts.get("1", -1)) != 162 \
+			or int(owner_high_counts.get("2", -1)) != 200 \
+			or int(owner_high_counts.get("3", -1)) != 262 \
+			or int(owner_high_counts.get("4", -1)) != 134 \
+			or int(owner_high_counts.get("5", -1)) != 176:
 		_fail("0x4a3f27 owner byte channels drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+	var high_owner_normalization: Dictionary = terrain_writeout.get("owner_high_byte_normalization", {})
+	var high_owner_seeds: Array = high_owner_normalization.get("seed_reports", [])
+	if String(high_owner_normalization.get("status", "")) != "0x4a5767_49a318_high_owner_channel_materialized_inspection_only" \
+			or String(high_owner_normalization.get("function_address", "")) != "0x4a5767" \
+			or String(high_owner_normalization.get("propagation_helper_address", "")) != "0x49a318" \
+			or String(high_owner_normalization.get("cell_init_helper_address", "")) != "0x4a59e2" \
+			or not bool(high_owner_normalization.get("grid_available", false)) \
+			or bool(high_owner_normalization.get("complete_object_metadata_gate", true)) \
+			or int(high_owner_normalization.get("seed_attempt_count", -1)) != 6 \
+			or int(high_owner_normalization.get("seed_blocked_count", -1)) != 0 \
+			or int(high_owner_normalization.get("popped_cell_count", -1)) != 3594 \
+			or int(high_owner_normalization.get("same_owner_relax_count", -1)) != 1101 \
+			or int(high_owner_normalization.get("cross_owner_high_byte_write_count", -1)) != 2487 \
+			or int(high_owner_normalization.get("max_queue_size", -1)) != 73 \
+			or int(high_owner_normalization.get("owner_high_byte_materialized_count", -1)) != 1107 \
+			or int(high_owner_normalization.get("owner_high_byte_sentinel_count", -1)) != 189 \
+			or high_owner_seeds.size() != 6 \
+			or int(high_owner_seeds[0].get("source_owner_byte", -1)) != 0 \
+			or int(high_owner_seeds[0].get("cross_owner_high_byte_write_count", -1)) != 930 \
+			or int(high_owner_seeds[5].get("source_owner_byte", -1)) != 5 \
+			or int(high_owner_seeds[5].get("same_owner_relax_count", -1)) != 228:
+		_fail("0x4a5767/0x49a318 high-owner normalization drifted: %s" % JSON.stringify(high_owner_normalization))
 		return
 	var final_sweep_counter: Dictionary = terrain_writeout.get("final_sweep_boundary_counter", {})
 	var final_sweep_counts := PackedInt32Array(final_sweep_counter.get("boundary_counts_u8", PackedInt32Array()))
@@ -922,7 +952,8 @@ func _run() -> void:
 	var owner_channels: Dictionary = report.get("same_level_connection_owner_channels", {})
 	if String(owner_channels.get("status", "")) != "0x4a61bc_0x4a696b_same_level_owner_channel_precondition_inspection_only" \
 			or Array(owner_channels.get("helper_addresses", [])) != ["0x4a61bc", "0x4a696b"] \
-			or String(owner_channels.get("owner_high_byte_producer_pending", "")) != "0x49a318":
+			or String(owner_channels.get("owner_high_byte_producer", "")) != "0x4a5767/0x49a318" \
+			or not bool(owner_channels.get("owner_high_byte_object_metadata_pending", false)):
 		_fail("0x4a61bc/0x4a696b owner-channel identity drifted: %s" % JSON.stringify(owner_channels))
 		return
 	if bool(owner_channels.get("materializes_endpoint_coordinates", true)) \
@@ -936,11 +967,11 @@ func _run() -> void:
 			or int(owner_channels.get("level_count", -1)) != 1 \
 			or int(owner_channels.get("tile_count", -1)) != 1296 \
 			or int(owner_channels.get("owner_low_byte_materialized_count", -1)) != 1107 \
-			or int(owner_channels.get("owner_high_byte_materialized_count", -1)) != 0 \
-			or int(owner_channels.get("owner_high_byte_sentinel_count", -1)) != 1296 \
+			or int(owner_channels.get("owner_high_byte_materialized_count", -1)) != 1107 \
+			or int(owner_channels.get("owner_high_byte_sentinel_count", -1)) != 189 \
 			or int(owner_channels.get("link_count", -1)) != 5 \
 			or int(owner_channels.get("links_with_low_owner_cells", -1)) != 5 \
-			or int(owner_channels.get("links_with_high_owner_cells", -1)) != 0:
+			or int(owner_channels.get("links_with_high_owner_cells", -1)) != 5:
 		_fail("0x4a61bc/0x4a696b owner-channel counts drifted: %s" % JSON.stringify(owner_channels))
 		return
 	var owner_records: Array = owner_channels.get("records", [])
@@ -948,16 +979,16 @@ func _run() -> void:
 			or int(owner_records[0].get("link_index", -1)) != 0 \
 			or int(owner_records[0].get("low_owner_a_cell_count", -1)) != 177 \
 			or int(owner_records[0].get("low_owner_b_cell_count", -1)) != 177 \
-			or int(owner_records[0].get("high_owner_a_cell_count", -1)) != 0 \
-			or int(owner_records[0].get("high_owner_b_cell_count", -1)) != 0 \
+			or int(owner_records[0].get("high_owner_a_cell_count", -1)) != 173 \
+			or int(owner_records[0].get("high_owner_b_cell_count", -1)) != 262 \
 			or not bool(owner_records[0].get("low_owner_channel_ready", false)) \
-			or bool(owner_records[0].get("high_owner_channel_ready", true)) \
+			or not bool(owner_records[0].get("high_owner_channel_ready", false)) \
 			or int(owner_records[4].get("runtime_zone_a", -1)) != 5 \
 			or int(owner_records[4].get("runtime_zone_b", -1)) != 3 \
 			or int(owner_records[4].get("low_owner_a_cell_count", -1)) != 229 \
 			or int(owner_records[4].get("low_owner_b_cell_count", -1)) != 177 \
-			or int(owner_records[4].get("high_owner_a_cell_count", -1)) != 0 \
-			or int(owner_records[4].get("high_owner_b_cell_count", -1)) != 0:
+			or int(owner_records[4].get("high_owner_a_cell_count", -1)) != 176 \
+			or int(owner_records[4].get("high_owner_b_cell_count", -1)) != 262:
 		_fail("0x4a61bc/0x4a696b owner-channel records drifted: %s" % JSON.stringify(owner_records))
 		return
 
