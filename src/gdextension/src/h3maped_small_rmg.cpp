@@ -96,6 +96,82 @@ struct H3MapedRng {
 	}
 };
 
+struct RoadArtClassification {
+	int32_t art_class = 0;
+	int32_t flip_a = 0;
+	int32_t flip_b = 0;
+};
+
+RoadArtClassification h3maped_classify_road_art_458893(const uint8_t flags[8]) {
+	RoadArtClassification result;
+	const uint8_t f0 = flags[0];
+	const uint8_t f2 = flags[2];
+	const uint8_t f4 = flags[4];
+	const uint8_t f6 = flags[6];
+
+	if (f0 != 0) {
+		if (f2 != 0 && f4 != 0 && f6 != 0) {
+			result.art_class = 8;
+			return result;
+		}
+		if (f4 != 0) {
+			if (f2 != 0) {
+				result.art_class = 6;
+				return result;
+			}
+			if (f6 != 0) {
+				result.art_class = 6;
+				result.flip_a = 1;
+				return result;
+			}
+			result.art_class = 2;
+			return result;
+		}
+	}
+
+	if (f2 != 0 && f6 != 0) {
+		if (f4 != 0) {
+			result.art_class = 7;
+			return result;
+		}
+		if (f0 != 0) {
+			result.art_class = 7;
+			result.flip_b = 1;
+			return result;
+		}
+		result.art_class = 3;
+		return result;
+	}
+
+	constexpr int32_t shape_offsets[4][8] = {
+		{ 0, 1, 2, 3, 4, 5, 6, 7 },
+		{ 4, 3, 2, 1, 0, 7, 6, 5 },
+		{ 0, 7, 6, 5, 4, 3, 2, 1 },
+		{ 4, 5, 6, 7, 0, 1, 2, 3 },
+	};
+	constexpr int32_t selector_flip_a[4] = { 0, 0, 1, 1 };
+	constexpr int32_t selector_flip_b[4] = { 0, 1, 0, 1 };
+	for (int32_t selector_index = 0; selector_index < 4; ++selector_index) {
+		const int32_t record_index = selector_flip_b[selector_index] + selector_flip_a[selector_index] * 2;
+		if (flags[shape_offsets[record_index][2]] == 0 || flags[shape_offsets[record_index][4]] == 0) {
+			continue;
+		}
+		result.art_class = flags[shape_offsets[record_index][1]] != 0 || flags[shape_offsets[record_index][5]] != 0 ? 5 : 4;
+		result.flip_a = selector_flip_a[selector_index];
+		result.flip_b = selector_flip_b[selector_index];
+		return result;
+	}
+
+	if (f6 == 0 && f2 == 0) {
+		result.art_class = 0;
+		result.flip_b = f4 == 0 ? 1 : 0;
+		return result;
+	}
+	result.art_class = 1;
+	result.flip_a = f6 != 0 ? 1 : 0;
+	return result;
+}
+
 struct CoordCandidate {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -4975,6 +5051,568 @@ Dictionary town_castle_phase_4a8d2c_phase(const Dictionary &normalized_config, c
 	return phase;
 }
 
+Dictionary roads_and_rivers_phase_4ab52a_phase(const Dictionary &normalized_config, const Dictionary &town_castle_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code) {
+	Dictionary phase;
+	phase["phase_id"] = "roads_and_rivers_phase_4ab52a";
+	phase["h3maped_phase_runner_address"] = "0x4ab52a";
+	phase["h3maped_path_state_seed_address"] = "0x4aae7b";
+	phase["h3maped_road_adapter_entry_address"] = "0x4ab37f";
+	phase["h3maped_road_toolkit_entry_address"] = "0x4b4243";
+	phase["h3maped_road_candidate_mark_address"] = "0x49aec5";
+	phase["h3maped_road_final_art_addresses"] = Array::make("0x458e61", "0x458a2f", "0x458893", "0x49ae47", "0x49af1d");
+	phase["status"] = "blocked_until_town_castle_phase";
+	phase["materializes_private_road_overlay_candidates"] = true;
+	phase["materializes_public_roads"] = false;
+	phase["materializes_rivers"] = false;
+	phase["materializes_package_tiles"] = false;
+	phase["public_package_output_allowed"] = false;
+	phase["complete_coordinate_vector_claim"] = false;
+	phase["coordinate_vector_begin_offset"] = "+0x14b4";
+	phase["coordinate_vector_end_offset"] = "+0x14b8";
+	phase["coordinate_record_size_bytes"] = 12;
+	phase["blocked_next"] = "complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases";
+	if (String(town_castle_phase.get("status", "")) != "active_runtime_state_ready" || zone_words.empty() || zone_words.size() != cell_flags.size() || zone_words.size() != live_terrain_code.size()) {
+		return phase;
+	}
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t tile_count = width * height * level_count;
+	const bool grid_available = width > 0 && height > 0 && level_count > 0 && tile_count == int32_t(zone_words.size());
+	Dictionary town_candidate = town_castle_phase.get("project_town_adoption_candidate", Dictionary());
+	Array town_records = town_candidate.get("town_records", Array());
+	Array coordinate_records;
+	for (int64_t index = 0; index < town_records.size(); ++index) {
+		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = town_records[index];
+		const int32_t x = int32_t(town.get("x", 0));
+		const int32_t y = int32_t(town.get("y", 0));
+		const int32_t level = int32_t(town.get("level", 0));
+		Dictionary record;
+		record["vector_index"] = coordinate_records.size();
+		record["byte_offset_from_begin"] = int32_t(coordinate_records.size()) * 12;
+		record["record_size_bytes"] = 12;
+		record["phase"] = "0x4a93a2_direct_town_placement";
+		record["append_address"] = "0x4a959b";
+		record["push_helper_address"] = "0x4ae1fd";
+		record["source_kind"] = "town";
+		record["source_placement_id"] = town.get("placement_id", "");
+		record["source_runtime_zone_index"] = town.get("runtime_zone_index", -1);
+		record["source_zone_id"] = town.get("source_zone_id", -1);
+		record["owner_slot"] = town.get("owner_slot", -1);
+		record["x"] = x;
+		record["y"] = y;
+		record["level"] = level;
+		record["coordinate_triplet"] = Array::make(x, y, level);
+		record["coordinate_semantics"] = "project town anchor for recovered generator+0x14b0 12-byte road coordinate-vector entry";
+		record["complete_executable_vector_claim"] = false;
+		coordinate_records.append(record);
+	}
+
+	const int32_t record_count = coordinate_records.size();
+	const int32_t expected_pair_count = record_count > 1 ? (record_count * (record_count - 1)) / 2 : 0;
+	constexpr int32_t direction_count = 8;
+	constexpr int32_t direction_dx[direction_count] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	constexpr int32_t direction_dy[direction_count] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	Array seed_initializations;
+	Array propagation_summaries;
+	Array candidate_low_words;
+	Array predecessor_chain_records;
+	int32_t total_candidate_low_word_count = 0;
+	int32_t total_candidate_accept_count = 0;
+	int32_t total_reached_cell_count = 0;
+	int32_t total_relaxed_edge_count = 0;
+	int32_t total_predecessor_chain_cell_visits = 0;
+	int32_t max_predecessor_chain_step_count = 0;
+
+	auto cell_is_pathable = [&](int32_t flat) -> bool {
+		if (flat < 0 || flat >= tile_count) {
+			return false;
+		}
+		const int32_t terrain_class = live_terrain_code[size_t(flat)] & 0x3f;
+		if (terrain_class == 8 || terrain_class == 9) {
+			return false;
+		}
+		if ((cell_flags[size_t(flat)] & 0x10U) == 0U) {
+			return false;
+		}
+		const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+		return masked != H3MAPED_UNASSIGNED_ZONE_WORD;
+	};
+
+	for (int32_t seed_index = 0; seed_index < std::max(0, record_count - 1); ++seed_index) {
+		Dictionary coordinate = Variant(coordinate_records[seed_index]).get_type() == Variant::DICTIONARY ? Dictionary(coordinate_records[seed_index]) : Dictionary();
+		const int32_t x = int32_t(coordinate.get("x", -1));
+		const int32_t y = int32_t(coordinate.get("y", -1));
+		const int32_t level = int32_t(coordinate.get("level", -1));
+		const bool in_bounds = grid_available && x >= 0 && x < width && y >= 0 && y < height && level >= 0 && level < level_count;
+		const int32_t flat_index = in_bounds ? int32_t(h3maped_cell_index(width, height, x, y, level)) : -1;
+		Dictionary seed_init;
+		seed_init["seed_vector_index"] = seed_index;
+		seed_init["seed_byte_offset"] = seed_index * 12;
+		seed_init["source_placement_id"] = coordinate.get("source_placement_id", "");
+		seed_init["source_kind"] = coordinate.get("source_kind", "");
+		seed_init["x"] = x;
+		seed_init["y"] = y;
+		seed_init["level"] = level;
+		seed_init["flat_cell_index"] = flat_index;
+		seed_init["in_bounds"] = in_bounds;
+		seed_init["seed_write_block"] = "0x4aaedc..0x4aaf0e";
+		seed_init["path_cost_low_word_after_seed"] = 0;
+		seed_init["predecessor_after_seed"] = Array::make(-1, -1, -1);
+		seed_initializations.append(seed_init);
+		if (!in_bounds) {
+			continue;
+		}
+
+		std::vector<int32_t> costs(size_t(tile_count), 0x7d00);
+		std::vector<int32_t> predecessor_x(size_t(tile_count), -1);
+		std::vector<int32_t> predecessor_y(size_t(tile_count), -1);
+		std::vector<int32_t> predecessor_level(size_t(tile_count), -1);
+		std::vector<uint8_t> queued(size_t(tile_count), 0);
+		std::vector<int32_t> queue;
+		queue.reserve(size_t(tile_count));
+		costs[size_t(flat_index)] = 0;
+		queue.push_back(flat_index);
+		queued[size_t(flat_index)] = 1;
+		int32_t relaxed_edges = 0;
+		for (size_t cursor = 0; cursor < queue.size(); ++cursor) {
+			const int32_t current_flat = queue[cursor];
+			queued[size_t(current_flat)] = 0;
+			const int32_t current_x = current_flat % width;
+			const int32_t current_y = (current_flat / width) % height;
+			const int32_t current_level = current_flat / (width * height);
+			const int32_t current_cost = costs[size_t(current_flat)] & 0xffff;
+			for (int32_t direction_index = direction_count - 1; direction_index >= 0; --direction_index) {
+				const int32_t nx = current_x + direction_dx[direction_index];
+				const int32_t ny = current_y + direction_dy[direction_index];
+				const int32_t nl = current_level;
+				if (nx < 0 || ny < 0 || nx >= width || ny >= height || nl < 0 || nl >= level_count) {
+					continue;
+				}
+				const int32_t target_flat = int32_t(h3maped_cell_index(width, height, nx, ny, nl));
+				if (!cell_is_pathable(target_flat)) {
+					continue;
+				}
+				const int32_t step_cost = (direction_index & 1) != 0 ? 0x3c : 0x14;
+				const int32_t computed_cost = current_cost + step_cost;
+				if (computed_cost >= (costs[size_t(target_flat)] & 0xffff)) {
+					continue;
+				}
+				costs[size_t(target_flat)] = computed_cost;
+				predecessor_x[size_t(target_flat)] = current_x;
+				predecessor_y[size_t(target_flat)] = current_y;
+				predecessor_level[size_t(target_flat)] = current_level;
+				relaxed_edges += 1;
+				if (queued[size_t(target_flat)] == 0) {
+					queue.push_back(target_flat);
+					queued[size_t(target_flat)] = 1;
+				}
+			}
+		}
+
+		int32_t reached_cells = 0;
+		int32_t max_reached_cost = 0;
+		for (int32_t index = 0; index < tile_count; ++index) {
+			const int32_t cell_cost = costs[size_t(index)] & 0xffff;
+			if (cell_cost != 0x7d00) {
+				reached_cells += 1;
+				max_reached_cost = std::max(max_reached_cost, cell_cost);
+			}
+		}
+		total_reached_cell_count += reached_cells;
+		total_relaxed_edge_count += relaxed_edges;
+		Dictionary propagation;
+		propagation["seed_vector_index"] = seed_index;
+		propagation["seed_flat_cell_index"] = flat_index;
+		propagation["normal_neighbor_update_block"] = "0x4ab2d8..0x4ab33a";
+		propagation["direction_iteration_order"] = "0x4ab060 decrements index 7..0 over 0x5a2658";
+		propagation["reached_cell_count"] = reached_cells;
+		propagation["relaxed_edge_count"] = relaxed_edges;
+		propagation["max_reached_path_cost_low_word"] = max_reached_cost;
+		propagation["special_vector_updates_materialized"] = false;
+		Array candidate_preview;
+		for (int32_t candidate_index = seed_index + 1; candidate_index < record_count; ++candidate_index) {
+			Dictionary candidate_coordinate = Variant(coordinate_records[candidate_index]).get_type() == Variant::DICTIONARY ? Dictionary(coordinate_records[candidate_index]) : Dictionary();
+			const int32_t cx = int32_t(candidate_coordinate.get("x", -1));
+			const int32_t cy = int32_t(candidate_coordinate.get("y", -1));
+			const int32_t cl = int32_t(candidate_coordinate.get("level", -1));
+			const bool candidate_in_bounds = cx >= 0 && cx < width && cy >= 0 && cy < height && cl >= 0 && cl < level_count;
+			const int32_t candidate_flat = candidate_in_bounds ? int32_t(h3maped_cell_index(width, height, cx, cy, cl)) : -1;
+			const int32_t candidate_low_word = candidate_in_bounds ? (costs[size_t(candidate_flat)] & 0xffff) : 0x7d00;
+			const bool accepted = candidate_low_word <= 0x7530;
+			Dictionary candidate;
+			candidate["seed_vector_index"] = seed_index;
+			candidate["candidate_vector_index"] = candidate_index;
+			candidate["candidate_flat_cell_index"] = candidate_flat;
+			candidate["candidate_low_word"] = candidate_low_word;
+			candidate["candidate_accept_threshold"] = 0x7530;
+			candidate["candidate_accepts_0x4ab52a"] = accepted;
+			candidate["in_bounds"] = candidate_in_bounds;
+			total_candidate_low_word_count += 1;
+			if (accepted) {
+				total_candidate_accept_count += 1;
+				Dictionary chain;
+				chain["seed_vector_index"] = seed_index;
+				chain["candidate_vector_index"] = candidate_index;
+				chain["seed_flat_cell_index"] = flat_index;
+				chain["candidate_flat_cell_index"] = candidate_flat;
+				chain["seed_coordinate_triplet"] = coordinate.get("coordinate_triplet", Array::make(x, y, level));
+				chain["candidate_coordinate_triplet"] = candidate_coordinate.get("coordinate_triplet", Array::make(cx, cy, cl));
+				chain["candidate_low_word"] = candidate_low_word;
+				chain["walk_semantics"] = "0x4ab37f follows cell+0x10/+0x14/+0x18 predecessor coordinates while cell+0x1c low word remains nonzero";
+				chain["road_cell_mutation_materialized"] = false;
+				Array reverse_trace_preview;
+				Array predecessor_chain_flat_cells;
+				int32_t trace_flat = candidate_flat;
+				int32_t step_count = 0;
+				bool reached_seed = trace_flat == flat_index;
+				bool broken_chain = false;
+				const int32_t max_trace_steps = tile_count + 1;
+				while (!reached_seed && !broken_chain && trace_flat >= 0 && trace_flat < tile_count && step_count < max_trace_steps) {
+					const int32_t trace_x = trace_flat % width;
+					const int32_t trace_y = (trace_flat / width) % height;
+					const int32_t trace_level = trace_flat / (width * height);
+					predecessor_chain_flat_cells.append(trace_flat);
+					if (reverse_trace_preview.size() < 16) {
+						Dictionary trace_cell;
+						trace_cell["flat_cell_index"] = trace_flat;
+						trace_cell["x"] = trace_x;
+						trace_cell["y"] = trace_y;
+						trace_cell["level"] = trace_level;
+						trace_cell["path_cost_low_word"] = costs[size_t(trace_flat)] & 0xffff;
+						reverse_trace_preview.append(trace_cell);
+					}
+					const int32_t px = predecessor_x[size_t(trace_flat)];
+					const int32_t py = predecessor_y[size_t(trace_flat)];
+					const int32_t pl = predecessor_level[size_t(trace_flat)];
+					if (px < 0 || py < 0 || pl < 0 || px >= width || py >= height || pl >= level_count) {
+						broken_chain = true;
+						break;
+					}
+					trace_flat = int32_t(h3maped_cell_index(width, height, px, py, pl));
+					step_count += 1;
+					reached_seed = trace_flat == flat_index;
+				}
+				if (reached_seed && reverse_trace_preview.size() < 16) {
+					Dictionary seed_trace_cell;
+					seed_trace_cell["flat_cell_index"] = flat_index;
+					seed_trace_cell["x"] = x;
+					seed_trace_cell["y"] = y;
+					seed_trace_cell["level"] = level;
+					seed_trace_cell["path_cost_low_word"] = 0;
+					reverse_trace_preview.append(seed_trace_cell);
+				}
+				if (reached_seed) {
+					predecessor_chain_flat_cells.append(flat_index);
+				}
+				chain["predecessor_chain_status"] = reached_seed ? String("h3maped_0x4ab37f_predecessor_chain_reaches_seed") : (broken_chain ? String("h3maped_0x4ab37f_predecessor_chain_broken") : String("h3maped_0x4ab37f_predecessor_chain_guard_limit_hit"));
+				chain["predecessor_chain_reaches_seed"] = reached_seed;
+				chain["predecessor_chain_step_count"] = step_count;
+				chain["predecessor_chain_flat_cells"] = predecessor_chain_flat_cells;
+				chain["predecessor_chain_flat_cell_count"] = predecessor_chain_flat_cells.size();
+				chain["reverse_trace_preview"] = reverse_trace_preview;
+				total_predecessor_chain_cell_visits += step_count + 1;
+				max_predecessor_chain_step_count = std::max(max_predecessor_chain_step_count, step_count);
+				predecessor_chain_records.append(chain);
+			}
+			if (candidate_preview.size() < 6) {
+				candidate_preview.append(candidate);
+			}
+			candidate_low_words.append(candidate);
+		}
+		propagation["candidate_low_word_preview"] = candidate_preview;
+		propagation_summaries.append(propagation);
+	}
+
+	Dictionary direct_stamping = town_castle_phase.get("direct_stamping_projection", Dictionary());
+	H3MapedRng road_rng { uint32_t(int64_t(direct_stamping.get("object_rng_state_after_0x4a93a2_uint32", 0))) };
+	const uint32_t rng_state_before_road_phase = road_rng.state;
+	const int32_t road_type_rng_value = road_rng.next();
+	const int32_t selected_road_type = road_type_rng_value % 3 + 1;
+	std::vector<int32_t> road_type(size_t(std::max(0, tile_count)), 0);
+	std::vector<int32_t> road_art(size_t(std::max(0, tile_count)), 0);
+	std::vector<int32_t> road_flip_a(size_t(std::max(0, tile_count)), 0);
+	std::vector<int32_t> road_flip_b(size_t(std::max(0, tile_count)), 0);
+	std::map<int32_t, bool> marked_cells;
+	std::map<int32_t, bool> final_write_cells;
+	Array write_preview;
+	int32_t line_visit_call_count = 0;
+	int32_t line_visit_skip_same_type_count = 0;
+	int32_t candidate_mark_count = 0;
+	int32_t neighbor_retouch_call_count = 0;
+	int32_t stable_readback_skip_count = 0;
+	int32_t final_write_count = 0;
+	int32_t final_art_rng_call_count = 0;
+	int32_t invalid_flat_cell_count = 0;
+	constexpr int32_t road_variant_classes[17] = { 4, 4, 5, 5, 5, 5, 6, 6, 7, 7, 2, 2, 3, 3, 0, 1, 8 };
+	constexpr int32_t road_bucket_starts[9] = { 14, 15, 10, 12, 0, 2, 6, 8, 16 };
+	constexpr int32_t road_bucket_counts[9] = { 1, 1, 2, 2, 2, 4, 2, 2, 1 };
+	constexpr int32_t road_dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	constexpr int32_t road_dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+	auto in_bounds_flat = [&](int32_t flat) -> bool {
+		return flat >= 0 && flat < tile_count;
+	};
+	auto build_neighbor_flags = [&](int32_t flat, int32_t current_road_type, uint8_t flags[8]) {
+		const int32_t x = flat % width;
+		const int32_t y = (flat / width) % height;
+		const int32_t level = flat / (width * height);
+		for (int32_t index = 0; index < 8; ++index) {
+			flags[index] = 1;
+		}
+		if (y == 0) {
+			flags[1] = 0;
+			flags[7] = 0;
+			flags[0] = 0;
+		} else if (y == height - 1) {
+			flags[3] = 0;
+			flags[5] = 0;
+			flags[4] = 0;
+		}
+		if (x == 0) {
+			flags[5] = 0;
+			flags[7] = 0;
+			flags[6] = 0;
+		} else if (x == width - 1) {
+			flags[3] = 0;
+			flags[1] = 0;
+			flags[2] = 0;
+		}
+		for (int32_t direction = 0; direction < 8; ++direction) {
+			if (flags[direction] == 0) {
+				continue;
+			}
+			const int32_t nx = x + road_dx[direction];
+			const int32_t ny = y + road_dy[direction];
+			const int32_t neighbor_flat = int32_t(h3maped_cell_index(width, height, nx, ny, level));
+			flags[direction] = in_bounds_flat(neighbor_flat) && road_type[size_t(neighbor_flat)] == current_road_type ? 1 : 0;
+		}
+	};
+	auto final_write_458a2f = [&](int32_t flat) {
+		const int32_t current_road_type = road_type[size_t(flat)] & 0x0f;
+		if (current_road_type == 0) {
+			return;
+		}
+		uint8_t flags[8] = {};
+		build_neighbor_flags(flat, current_road_type, flags);
+		const RoadArtClassification classified = h3maped_classify_road_art_458893(flags);
+		const int32_t current_art = road_art[size_t(flat)] & 0xff;
+		const int32_t current_class = current_art >= 0 && current_art < 17 ? road_variant_classes[current_art] : -1;
+		if (current_class == classified.art_class && road_flip_a[size_t(flat)] == classified.flip_a && road_flip_b[size_t(flat)] == classified.flip_b) {
+			stable_readback_skip_count += 1;
+			return;
+		}
+		const int32_t bucket_count = road_bucket_counts[classified.art_class];
+		const int32_t rng_value = road_rng.next();
+		final_art_rng_call_count += 1;
+		const int32_t final_art = road_bucket_starts[classified.art_class] + (bucket_count > 0 ? rng_value % bucket_count : 0);
+		road_art[size_t(flat)] = final_art;
+		road_flip_a[size_t(flat)] = classified.flip_a;
+		road_flip_b[size_t(flat)] = classified.flip_b;
+		final_write_count += 1;
+		final_write_cells[flat] = true;
+		if (write_preview.size() < 24) {
+			Dictionary write;
+			write["flat_cell_index"] = flat;
+			write["x"] = flat % width;
+			write["y"] = (flat / width) % height;
+			write["level"] = flat / (width * height);
+			write["road_type"] = current_road_type;
+			write["art_class"] = classified.art_class;
+			write["art_variant_index"] = final_art;
+			write["flip_a"] = classified.flip_a;
+			write["flip_b"] = classified.flip_b;
+			write["rng_value"] = rng_value;
+			write_preview.append(write);
+		}
+	};
+	auto line_visit_458e61 = [&](int32_t flat) {
+		line_visit_call_count += 1;
+		if (!in_bounds_flat(flat)) {
+			invalid_flat_cell_count += 1;
+			return;
+		}
+		if ((road_type[size_t(flat)] & 0x0f) == selected_road_type) {
+			line_visit_skip_same_type_count += 1;
+			return;
+		}
+		road_type[size_t(flat)] = selected_road_type;
+		marked_cells[flat] = true;
+		candidate_mark_count += 1;
+		final_write_458a2f(flat);
+		uint8_t retouch_flags[8] = {};
+		build_neighbor_flags(flat, selected_road_type, retouch_flags);
+		const int32_t x = flat % width;
+		const int32_t y = (flat / width) % height;
+		const int32_t level = flat / (width * height);
+		for (int32_t direction = 0; direction < 8; ++direction) {
+			if (retouch_flags[direction] == 0) {
+				continue;
+			}
+			const int32_t neighbor_flat = int32_t(h3maped_cell_index(width, height, x + road_dx[direction], y + road_dy[direction], level));
+			if (!in_bounds_flat(neighbor_flat)) {
+				continue;
+			}
+			neighbor_retouch_call_count += 1;
+			final_write_458a2f(neighbor_flat);
+		}
+	};
+
+	for (int64_t chain_index = 0; chain_index < predecessor_chain_records.size(); ++chain_index) {
+		if (Variant(predecessor_chain_records[chain_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary chain = predecessor_chain_records[chain_index];
+		if (!bool(chain.get("predecessor_chain_reaches_seed", false))) {
+			continue;
+		}
+		Array flat_cells = chain.get("predecessor_chain_flat_cells", Array());
+		for (int64_t cell_index = 0; cell_index < flat_cells.size(); ++cell_index) {
+			line_visit_458e61(int32_t(flat_cells[cell_index]));
+		}
+	}
+
+	int32_t final_grid_selected_count = 0;
+	int32_t final_nonzero_art_count = 0;
+	int32_t road_overlay_cell_count = 0;
+	int32_t road_flip_flagged_cell_count = 0;
+	Array final_road_flat_cells;
+	for (const auto &entry : marked_cells) {
+		final_road_flat_cells.append(entry.first);
+	}
+	for (int32_t index = 0; index < tile_count; ++index) {
+		if ((road_type[size_t(index)] & 0x0f) == selected_road_type) {
+			final_grid_selected_count += 1;
+			road_overlay_cell_count += 1;
+			if ((road_art[size_t(index)] & 0xff) != 0) {
+				final_nonzero_art_count += 1;
+			}
+			const int32_t road_flip_bits = ((road_flip_a[size_t(index)] & 0x01) << 4) | ((road_flip_b[size_t(index)] & 0x01) << 5);
+			if (road_flip_bits != 0) {
+				road_flip_flagged_cell_count += 1;
+			}
+		}
+	}
+
+	Dictionary coordinate_vector_source;
+	coordinate_vector_source["schema_id"] = "aurelion_h3maped_small_road_coordinate_vector_source_v1";
+	coordinate_vector_source["status"] = "h3maped_generator_plus_0x14b0_partial_town_coordinate_vector_records_materialized";
+	coordinate_vector_source["source"] = "Recovered from h3maped.exe: direct town placement pushes 12-byte coordinate records into generator+0x14b0 through 0x4ae1fd; final road phase reads begin/end from +0x14b4/+0x14b8.";
+	coordinate_vector_source["materialized_town_record_count"] = town_records.size();
+	coordinate_vector_source["materialized_mine_record_count"] = 0;
+	coordinate_vector_source["materialized_partial_coordinate_record_count"] = coordinate_records.size();
+	coordinate_vector_source["materialized_partial_coordinate_byte_count"] = coordinate_records.size() * 12;
+	coordinate_vector_source["complete_executable_vector_claim"] = false;
+	coordinate_vector_source["blocked_reason"] = "Only direct town records are currently in the clean reset vector; later mines, rewards, guards, monsters, and decorations that may affect the executable vector are still pending.";
+	coordinate_vector_source["materialized_partial_coordinate_records"] = coordinate_records;
+
+	Dictionary path_state_seed;
+	path_state_seed["schema_id"] = "aurelion_h3maped_small_road_path_state_seed_v1";
+	path_state_seed["status"] = grid_available ? String("h3maped_0x4aae7b_normal_neighbor_path_costs_materialized_special_vectors_pending") : String("h3maped_0x4aae7b_normal_neighbor_path_costs_blocked_missing_grid");
+	path_state_seed["function_address"] = "0x4aae7b";
+	path_state_seed["seed_initialization_call_count"] = seed_initializations.size();
+	path_state_seed["seed_initializations"] = seed_initializations;
+	path_state_seed["normal_neighbor_propagation_seed_count"] = propagation_summaries.size();
+	path_state_seed["normal_neighbor_propagation_summaries"] = propagation_summaries;
+	path_state_seed["normal_neighbor_total_reached_cell_count"] = total_reached_cell_count;
+	path_state_seed["normal_neighbor_total_relaxed_edge_count"] = total_relaxed_edge_count;
+	path_state_seed["candidate_low_word_status"] = grid_available ? String("h3maped_0x4ab52a_candidate_low_words_materialized_from_normal_0x4aae7b") : String("pending_0x4aae7b_path_cost_grid_materialization");
+	path_state_seed["candidate_low_word_count"] = total_candidate_low_word_count;
+	path_state_seed["candidate_accept_count"] = total_candidate_accept_count;
+	path_state_seed["candidate_low_words"] = candidate_low_words;
+	path_state_seed["predecessor_chain_status"] = grid_available ? String("h3maped_0x4ab37f_predecessor_chains_materialized_from_normal_0x4aae7b") : String("pending_0x4aae7b_path_cost_grid_materialization");
+	path_state_seed["predecessor_chain_count"] = predecessor_chain_records.size();
+	path_state_seed["predecessor_chain_records"] = predecessor_chain_records;
+	path_state_seed["predecessor_chain_total_cell_visits"] = total_predecessor_chain_cell_visits;
+	path_state_seed["predecessor_chain_max_step_count"] = max_predecessor_chain_step_count;
+	path_state_seed["materializes_road_geometry"] = false;
+	path_state_seed["special_vector_updates_materialized"] = false;
+
+	Dictionary pair_iteration;
+	pair_iteration["schema_id"] = "aurelion_h3maped_small_road_pair_iteration_v1";
+	pair_iteration["status"] = grid_available ? String("h3maped_0x4ab52a_pair_iteration_ported_path_costs_materialized_road_adapter_private") : String("h3maped_0x4ab52a_pair_iteration_ported_path_costs_pending");
+	pair_iteration["function_address"] = "0x4ab52a";
+	pair_iteration["rng_state_before_road_phase_uint32"] = int64_t(rng_state_before_road_phase);
+	pair_iteration["road_type_rng_value"] = road_type_rng_value;
+	pair_iteration["rng_state_after_road_type_uint32"] = int64_t((rng_state_before_road_phase * 0x343fdu + 0x269ec3u));
+	pair_iteration["selected_road_type"] = selected_road_type;
+	pair_iteration["coordinate_record_count"] = record_count;
+	pair_iteration["outer_seed_iteration_count"] = std::max(0, record_count - 1);
+	pair_iteration["pair_candidate_iteration_count"] = expected_pair_count;
+	pair_iteration["candidate_low_word_threshold"] = 0x7530;
+	pair_iteration["candidate_accept_count"] = total_candidate_accept_count;
+	pair_iteration["road_geometry_materialized"] = false;
+
+	Dictionary final_art_materialization;
+	final_art_materialization["schema_id"] = "aurelion_h3maped_small_road_final_art_flip_v1";
+	final_art_materialization["status"] = marked_cells.empty() ? String("h3maped_0x458a2f_458893_final_art_flip_blocked_no_candidate_marks") : String("h3maped_0x458a2f_458893_final_art_flip_materialized_private_overlay_pending");
+	final_art_materialization["selected_road_type"] = selected_road_type;
+	final_art_materialization["line_visit_call_count"] = line_visit_call_count;
+	final_art_materialization["line_visit_skip_same_type_count"] = line_visit_skip_same_type_count;
+	final_art_materialization["candidate_mark_count"] = candidate_mark_count;
+	final_art_materialization["final_road_cell_count"] = int32_t(marked_cells.size());
+	final_art_materialization["final_road_type_grid_selected_count"] = final_grid_selected_count;
+	final_art_materialization["final_nonzero_art_cell_count"] = final_nonzero_art_count;
+	final_art_materialization["neighbor_retouch_call_count"] = neighbor_retouch_call_count;
+	final_art_materialization["stable_readback_skip_count"] = stable_readback_skip_count;
+	final_art_materialization["final_write_count"] = final_write_count;
+	final_art_materialization["final_write_unique_cell_count"] = int32_t(final_write_cells.size());
+	final_art_materialization["rng_call_count"] = final_art_rng_call_count;
+	final_art_materialization["rng_state_after_final_art_uint32"] = int64_t(road_rng.state);
+	final_art_materialization["invalid_flat_cell_count"] = invalid_flat_cell_count;
+	final_art_materialization["final_road_flat_cells"] = final_road_flat_cells;
+	final_art_materialization["write_preview"] = write_preview;
+	final_art_materialization["materializes_final_road_art"] = !marked_cells.empty();
+	final_art_materialization["materializes_serialized_road_overlay"] = false;
+	final_art_materialization["complete_coordinate_vector_claim"] = false;
+
+	Dictionary road_overlay_serialization;
+	road_overlay_serialization["schema_id"] = "aurelion_h3maped_small_road_overlay_serialization_v1";
+	road_overlay_serialization["status"] = road_overlay_cell_count > 0 ? String("h3maped_0x49b2b6_road_overlay_bytes_materialized_private_partial_vector") : String("h3maped_0x49b2b6_road_overlay_bytes_blocked_missing_final_art_grid");
+	road_overlay_serialization["function_address"] = "0x49b2b6";
+	road_overlay_serialization["source"] = "Recovered from h3maped.exe 0x49b2b6: cell+0x24 bits 26..29 serialize to tile byte 4, cell+0x28 low byte serializes to tile byte 5, and cell+0x28 bits 19..20 serialize to tile byte 6 bits 4..5.";
+	road_overlay_serialization["road_overlay_cell_count"] = road_overlay_cell_count;
+	road_overlay_serialization["road_type_selected_count"] = final_grid_selected_count;
+	road_overlay_serialization["road_art_nonzero_count"] = final_nonzero_art_count;
+	road_overlay_serialization["road_flip_flagged_cell_count"] = road_flip_flagged_cell_count;
+	road_overlay_serialization["materializes_serialized_road_overlay"] = road_overlay_cell_count > 0;
+	road_overlay_serialization["materializes_serialized_river_overlay"] = false;
+	road_overlay_serialization["complete_coordinate_vector_claim"] = false;
+
+	phase["status"] = "active_runtime_state_ready";
+	phase["source"] = "Private clean reset port of h3maped road phase order from /root/Downloads/h3maped.exe. It uses only the currently materialized town coordinate vector and does not emit public roads.";
+	phase["width"] = width;
+	phase["height"] = height;
+	phase["level_count"] = level_count;
+	phase["tile_count"] = tile_count;
+	phase["grid_available"] = grid_available;
+	phase["coordinate_vector_source"] = coordinate_vector_source;
+	phase["path_state_seed"] = path_state_seed;
+	phase["road_pair_iteration"] = pair_iteration;
+	phase["road_final_art_materialization"] = final_art_materialization;
+	phase["road_overlay_serialization"] = road_overlay_serialization;
+	phase["partial_coordinate_record_count"] = coordinate_records.size();
+	phase["road_type_rng_value"] = road_type_rng_value;
+	phase["selected_road_type"] = selected_road_type;
+	phase["candidate_low_word_count"] = total_candidate_low_word_count;
+	phase["candidate_accept_count"] = total_candidate_accept_count;
+	phase["predecessor_chain_count"] = predecessor_chain_records.size();
+	phase["predecessor_chain_total_cell_visits"] = total_predecessor_chain_cell_visits;
+	phase["final_road_cell_count"] = int32_t(marked_cells.size());
+	phase["road_overlay_cell_count"] = road_overlay_cell_count;
+	phase["road_overlay_art_nonzero_count"] = final_nonzero_art_count;
+	phase["road_overlay_flip_flagged_cell_count"] = road_flip_flagged_cell_count;
+	phase["road_overlay_public_adoption"] = false;
+	phase["runtime_package_adoption"] = false;
+	phase["river_phase_status"] = "pending_strict_port";
+	phase["blocked_reason"] = "Private road overlay candidates are materialized only for the current town coordinate vector. Complete generator+0x14b0 object vector parity, river bytes, blockers, guards, rewards, and final runtime package adoption remain pending.";
+	return phase;
+}
+
 Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	Dictionary state;
 	state["schema_id"] = "aurelion_h3maped_small_generation_state_v1";
@@ -5078,6 +5716,11 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 		if (String(town_castle_phase.get("status", "")) == "active_runtime_state_ready") {
 			completed_phases.append("town_castle_phase_4a8d2c");
 		}
+		Dictionary roads_and_rivers_phase = roads_and_rivers_phase_4ab52a_phase(normalized_config, town_castle_phase, span_fill_zone_words, span_fill_cell_flags, live_terrain_code);
+		if (String(roads_and_rivers_phase.get("status", "")) == "active_runtime_state_ready") {
+			completed_phases.append("roads_and_rivers_phase_4ab52a");
+		}
+		const bool roads_and_rivers_ready = completed_phases.has("roads_and_rivers_phase_4ab52a");
 		const bool town_castle_ready = completed_phases.has("town_castle_phase_4a8d2c");
 		const bool terrain_tile_byte_writeback_ready = completed_phases.has("terrain_tile_byte_writeback_49b2b6");
 		const bool terrainplacement_live_feedback_ready = completed_phases.has("terrainplacement_live_feedback_4bb74b_4bc5f0");
@@ -5090,7 +5733,7 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 	const bool polygon_split_ready = completed_phases.has("polygon_split_model");
 	const bool source_node_ready = completed_phases.has("source_node_rectangle");
 	const bool coordinate_ready = completed_phases.has("coordinate_replay");
-		state["status"] = town_castle_ready ? String("town_castle_phase_4a8d2c_active_runtime_state_ready") : (terrain_tile_byte_writeback_ready ? String("terrain_tile_byte_writeback_49b2b6_active_runtime_state_ready") : (terrainplacement_live_feedback_ready ? String("terrainplacement_live_feedback_4bb74b_4bc5f0_active_runtime_state_ready") : (terrainplacement_visual_tables_ready ? String("terrainplacement_visual_tables_4bcff5_active_runtime_state_ready") : (terrain_cell_ready ? String("terrain_cell_writeout_4a3f27_active_runtime_state_ready") : (runtime_terrain_ready ? String("runtime_terrain_selection_49b53d_active_runtime_state_ready") : (footprint_finalizer_ready ? String("footprint_finalizer_4a3710_active_runtime_state_ready") : (span_fill_ready ? String("span_fill_4a325d_active_runtime_state_ready") : (boundary_traversal_ready ? String("source_node_boundary_traversal_active_runtime_state_ready") : (polygon_split_ready ? String("polygon_split_model_active_runtime_state_ready") : (source_node_ready ? String("source_node_rectangle_active_runtime_state_ready") : (coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready")))))))))))));
+		state["status"] = roads_and_rivers_ready ? String("roads_and_rivers_phase_4ab52a_active_runtime_state_ready") : (town_castle_ready ? String("town_castle_phase_4a8d2c_active_runtime_state_ready") : (terrain_tile_byte_writeback_ready ? String("terrain_tile_byte_writeback_49b2b6_active_runtime_state_ready") : (terrainplacement_live_feedback_ready ? String("terrainplacement_live_feedback_4bb74b_4bc5f0_active_runtime_state_ready") : (terrainplacement_visual_tables_ready ? String("terrainplacement_visual_tables_4bcff5_active_runtime_state_ready") : (terrain_cell_ready ? String("terrain_cell_writeout_4a3f27_active_runtime_state_ready") : (runtime_terrain_ready ? String("runtime_terrain_selection_49b53d_active_runtime_state_ready") : (footprint_finalizer_ready ? String("footprint_finalizer_4a3710_active_runtime_state_ready") : (span_fill_ready ? String("span_fill_4a325d_active_runtime_state_ready") : (boundary_traversal_ready ? String("source_node_boundary_traversal_active_runtime_state_ready") : (polygon_split_ready ? String("polygon_split_model_active_runtime_state_ready") : (source_node_ready ? String("source_node_rectangle_active_runtime_state_ready") : (coordinate_ready ? String("coordinate_replay_active_runtime_state_ready") : (completed_phases.size() >= 3 ? String("runtime_zone_records_active_runtime_state_ready") : String("player_slot_assignment_active_runtime_state_ready"))))))))))))));
 	state["completed_phase_ids"] = completed_phases;
 	state["completed_phase_count"] = completed_phases.size();
 	state["player_slot_assignment"] = player_phase;
@@ -5109,7 +5752,8 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 		state["terrainplacement_live_feedback_4bb74b_4bc5f0"] = terrainplacement_live_feedback_phase;
 		state["terrain_tile_byte_writeback_49b2b6"] = terrain_tile_byte_writeback_phase;
 		state["town_castle_phase_4a8d2c"] = town_castle_phase;
-		state["blocked_next"] = town_castle_ready ? String("roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243") : (terrain_tile_byte_writeback_ready ? String("town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2") : (terrainplacement_live_feedback_ready ? String("private_0x49b2b6_tile_byte_writeback_candidate") : (terrainplacement_visual_tables_ready ? String("live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback") : (terrain_cell_ready ? String("terrainplacement_visual_tables_4bcff5") : (runtime_terrain_ready ? String("terrain_cell_writeout_4a3f27") : (footprint_finalizer_ready ? String("runtime_terrain_selection_49b53d") : (span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c")))))))))))));
+		state["roads_and_rivers_phase_4ab52a"] = roads_and_rivers_phase;
+		state["blocked_next"] = roads_and_rivers_ready ? String("complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases") : (town_castle_ready ? String("roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243") : (terrain_tile_byte_writeback_ready ? String("town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2") : (terrainplacement_live_feedback_ready ? String("private_0x49b2b6_tile_byte_writeback_candidate") : (terrainplacement_visual_tables_ready ? String("live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback") : (terrain_cell_ready ? String("terrainplacement_visual_tables_4bcff5") : (runtime_terrain_ready ? String("terrain_cell_writeout_4a3f27") : (footprint_finalizer_ready ? String("runtime_terrain_selection_49b53d") : (span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c"))))))))))))));
 		return state;
 	}
 
@@ -5143,9 +5787,9 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-			phase["status"] = index == 0 ? String("active_boundary_only") : (index <= 5 ? String("active_runtime_state_ready") : String("pending_strict_port"));
+			phase["status"] = index == 0 ? String("active_boundary_only") : (index <= 6 ? String("active_runtime_state_ready") : String("pending_strict_port"));
 		phase["materializes_public_output"] = false;
-		phase["requires_exe_derived_implementation_before_runtime"] = index > 5;
+		phase["requires_exe_derived_implementation_before_runtime"] = index > 6;
 		phases.append(phase);
 	}
 	return phases;

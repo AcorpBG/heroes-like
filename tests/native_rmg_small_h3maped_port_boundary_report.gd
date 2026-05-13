@@ -84,29 +84,32 @@ func _run() -> void:
 			or String(backlog[1].get("status", "")) != "active_runtime_state_ready" \
 			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
 			or String(backlog[2].get("status", "")) != "active_runtime_state_ready" \
-			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
-			or String(backlog[3].get("status", "")) != "active_runtime_state_ready" \
-			or String(backlog[5].get("id", "")) != "town_object_placement" \
-			or String(backlog[5].get("status", "")) != "active_runtime_state_ready" \
-			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
-		_fail("Restart backlog drifted: %s" % JSON.stringify(backlog))
-		return
+				or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
+				or String(backlog[3].get("status", "")) != "active_runtime_state_ready" \
+				or String(backlog[5].get("id", "")) != "town_object_placement" \
+				or String(backlog[5].get("status", "")) != "active_runtime_state_ready" \
+				or String(backlog[6].get("id", "")) != "roads_and_rivers" \
+				or String(backlog[6].get("status", "")) != "active_runtime_state_ready" \
+				or String(backlog[9].get("id", "")) != "final_h3m_writeout":
+			_fail("Restart backlog drifted: %s" % JSON.stringify(backlog))
+			return
 	for phase in backlog:
 		if bool(phase.get("materializes_public_output", true)):
 			_fail("Restart backlog phase unexpectedly materializes public output: %s" % JSON.stringify(phase))
 			return
 
 	var small_state: Dictionary = report.get("small_generation_state", {})
+	var expected_completed_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c", "roads_and_rivers_phase_4ab52a"]
 	if String(small_state.get("schema_id", "")) != "aurelion_h3maped_small_generation_state_v1" \
-			or String(small_state.get("status", "")) != "town_castle_phase_4a8d2c_active_runtime_state_ready" \
-			or Array(small_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c"] \
-			or int(small_state.get("completed_phase_count", -1)) != 17 \
+			or String(small_state.get("status", "")) != "roads_and_rivers_phase_4ab52a_active_runtime_state_ready" \
+			or Array(small_state.get("completed_phase_ids", [])) != expected_completed_phases \
+			or int(small_state.get("completed_phase_count", -1)) != 18 \
 			or bool(small_state.get("runtime_generation_allowed", true)) \
 			or bool(small_state.get("materializes_runtime_players", true)) \
 			or bool(small_state.get("materializes_map_cells", true)) \
 			or bool(small_state.get("materializes_public_output", true)) \
-			or String(small_state.get("blocked_next", "")) != "roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243":
-		_fail("Small h3maped generation state did not stop after town/castle placement: %s" % JSON.stringify(small_state))
+			or String(small_state.get("blocked_next", "")) != "complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases":
+		_fail("Small h3maped generation state did not stop after private partial road state: %s" % JSON.stringify(small_state))
 		return
 	var player_phase: Dictionary = small_state.get("player_slot_assignment", {})
 	if String(player_phase.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -879,6 +882,116 @@ func _run() -> void:
 			_fail("h3maped player start is not synchronized to owned town: %s / %s" % [JSON.stringify(start_record), JSON.stringify(town_record)])
 			return
 
+	var roads_phase: Dictionary = small_state.get("roads_and_rivers_phase_4ab52a", {})
+	var coordinate_vector_source: Dictionary = roads_phase.get("coordinate_vector_source", {})
+	var path_state_seed: Dictionary = roads_phase.get("path_state_seed", {})
+	var road_pair_iteration: Dictionary = roads_phase.get("road_pair_iteration", {})
+	var road_final_art: Dictionary = roads_phase.get("road_final_art_materialization", {})
+	var road_overlay_serialization: Dictionary = roads_phase.get("road_overlay_serialization", {})
+	if String(roads_phase.get("phase_id", "")) != "roads_and_rivers_phase_4ab52a" \
+				or String(roads_phase.get("h3maped_phase_runner_address", "")) != "0x4ab52a" \
+				or String(roads_phase.get("h3maped_path_state_seed_address", "")) != "0x4aae7b" \
+				or String(roads_phase.get("h3maped_road_adapter_entry_address", "")) != "0x4ab37f" \
+				or String(roads_phase.get("h3maped_road_toolkit_entry_address", "")) != "0x4b4243" \
+				or String(roads_phase.get("h3maped_road_candidate_mark_address", "")) != "0x49aec5" \
+				or String(roads_phase.get("status", "")) != "active_runtime_state_ready" \
+				or not bool(roads_phase.get("materializes_private_road_overlay_candidates", false)) \
+				or bool(roads_phase.get("materializes_public_roads", true)) \
+				or bool(roads_phase.get("materializes_rivers", true)) \
+				or bool(roads_phase.get("materializes_package_tiles", true)) \
+				or bool(roads_phase.get("public_package_output_allowed", true)) \
+				or bool(roads_phase.get("complete_coordinate_vector_claim", true)) \
+				or int(roads_phase.get("partial_coordinate_record_count", -1)) != 3 \
+				or int(roads_phase.get("road_type_rng_value", -1)) != 17421 \
+				or int(roads_phase.get("selected_road_type", -1)) != 1 \
+				or int(roads_phase.get("candidate_low_word_count", -1)) != 3 \
+				or int(roads_phase.get("candidate_accept_count", -1)) != 3 \
+				or int(roads_phase.get("predecessor_chain_count", -1)) != 3 \
+				or int(roads_phase.get("predecessor_chain_total_cell_visits", -1)) != 55 \
+				or int(roads_phase.get("final_road_cell_count", -1)) != 49 \
+				or int(roads_phase.get("road_overlay_cell_count", -1)) != 49 \
+				or int(roads_phase.get("road_overlay_art_nonzero_count", -1)) != 48 \
+				or int(roads_phase.get("road_overlay_flip_flagged_cell_count", -1)) != 24 \
+				or bool(roads_phase.get("road_overlay_public_adoption", true)) \
+				or bool(roads_phase.get("runtime_package_adoption", true)) \
+				or String(roads_phase.get("river_phase_status", "")) != "pending_strict_port" \
+				or String(roads_phase.get("blocked_next", "")) != "complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases":
+		_fail("h3maped roads/rivers private phase boundary drifted: %s" % JSON.stringify(roads_phase))
+		return
+	if String(coordinate_vector_source.get("schema_id", "")) != "aurelion_h3maped_small_road_coordinate_vector_source_v1" \
+				or String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_partial_town_coordinate_vector_records_materialized" \
+				or int(coordinate_vector_source.get("materialized_town_record_count", -1)) != 3 \
+				or int(coordinate_vector_source.get("materialized_mine_record_count", -1)) != 0 \
+				or int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", -1)) != 3 \
+				or int(coordinate_vector_source.get("materialized_partial_coordinate_byte_count", -1)) != 36 \
+				or bool(coordinate_vector_source.get("complete_executable_vector_claim", true)):
+		_fail("h3maped road coordinate vector source drifted: %s" % JSON.stringify(coordinate_vector_source))
+		return
+	if String(path_state_seed.get("schema_id", "")) != "aurelion_h3maped_small_road_path_state_seed_v1" \
+				or String(path_state_seed.get("status", "")) != "h3maped_0x4aae7b_normal_neighbor_path_costs_materialized_special_vectors_pending" \
+				or String(path_state_seed.get("function_address", "")) != "0x4aae7b" \
+				or int(path_state_seed.get("seed_initialization_call_count", -1)) != 2 \
+				or int(path_state_seed.get("normal_neighbor_propagation_seed_count", -1)) != 2 \
+				or int(path_state_seed.get("normal_neighbor_total_reached_cell_count", -1)) != 2214 \
+				or int(path_state_seed.get("normal_neighbor_total_relaxed_edge_count", -1)) != 5237 \
+				or int(path_state_seed.get("candidate_low_word_count", -1)) != 3 \
+				or int(path_state_seed.get("candidate_accept_count", -1)) != 3 \
+				or int(path_state_seed.get("predecessor_chain_count", -1)) != 3 \
+				or int(path_state_seed.get("predecessor_chain_total_cell_visits", -1)) != 55 \
+				or int(path_state_seed.get("predecessor_chain_max_step_count", -1)) != 23 \
+				or bool(path_state_seed.get("materializes_road_geometry", true)) \
+				or bool(path_state_seed.get("special_vector_updates_materialized", true)):
+		_fail("h3maped road path-state seed drifted: %s" % JSON.stringify(path_state_seed))
+		return
+	if String(road_pair_iteration.get("schema_id", "")) != "aurelion_h3maped_small_road_pair_iteration_v1" \
+				or String(road_pair_iteration.get("status", "")) != "h3maped_0x4ab52a_pair_iteration_ported_path_costs_materialized_road_adapter_private" \
+				or String(road_pair_iteration.get("function_address", "")) != "0x4ab52a" \
+				or int(road_pair_iteration.get("rng_state_before_road_phase_uint32", -1)) != 811474043 \
+				or int(road_pair_iteration.get("road_type_rng_value", -1)) != 17421 \
+				or int(road_pair_iteration.get("rng_state_after_road_type_uint32", -1)) != 3289249106 \
+				or int(road_pair_iteration.get("selected_road_type", -1)) != 1 \
+				or int(road_pair_iteration.get("coordinate_record_count", -1)) != 3 \
+				or int(road_pair_iteration.get("outer_seed_iteration_count", -1)) != 2 \
+				or int(road_pair_iteration.get("pair_candidate_iteration_count", -1)) != 3 \
+				or int(road_pair_iteration.get("candidate_low_word_threshold", -1)) != 30000 \
+				or int(road_pair_iteration.get("candidate_accept_count", -1)) != 3 \
+				or bool(road_pair_iteration.get("road_geometry_materialized", true)):
+		_fail("h3maped road pair iteration drifted: %s" % JSON.stringify(road_pair_iteration))
+		return
+	if String(road_final_art.get("schema_id", "")) != "aurelion_h3maped_small_road_final_art_flip_v1" \
+				or String(road_final_art.get("status", "")) != "h3maped_0x458a2f_458893_final_art_flip_materialized_private_overlay_pending" \
+				or int(road_final_art.get("selected_road_type", -1)) != 1 \
+				or int(road_final_art.get("line_visit_call_count", -1)) != 55 \
+				or int(road_final_art.get("line_visit_skip_same_type_count", -1)) != 6 \
+				or int(road_final_art.get("candidate_mark_count", -1)) != 49 \
+				or int(road_final_art.get("final_road_cell_count", -1)) != 49 \
+				or int(road_final_art.get("final_road_type_grid_selected_count", -1)) != 49 \
+				or int(road_final_art.get("final_nonzero_art_cell_count", -1)) != 48 \
+				or int(road_final_art.get("neighbor_retouch_call_count", -1)) != 84 \
+				or int(road_final_art.get("stable_readback_skip_count", -1)) != 29 \
+				or int(road_final_art.get("final_write_count", -1)) != 104 \
+				or int(road_final_art.get("final_write_unique_cell_count", -1)) != 49 \
+				or int(road_final_art.get("rng_call_count", -1)) != 104 \
+				or int(road_final_art.get("rng_state_after_final_art_uint32", -1)) != 1792438202 \
+				or int(road_final_art.get("invalid_flat_cell_count", -1)) != 0 \
+				or not bool(road_final_art.get("materializes_final_road_art", false)) \
+				or bool(road_final_art.get("materializes_serialized_road_overlay", true)) \
+				or bool(road_final_art.get("complete_coordinate_vector_claim", true)):
+		_fail("h3maped road final art drifted: %s" % JSON.stringify(road_final_art))
+		return
+	if String(road_overlay_serialization.get("schema_id", "")) != "aurelion_h3maped_small_road_overlay_serialization_v1" \
+				or String(road_overlay_serialization.get("status", "")) != "h3maped_0x49b2b6_road_overlay_bytes_materialized_private_partial_vector" \
+				or String(road_overlay_serialization.get("function_address", "")) != "0x49b2b6" \
+				or int(road_overlay_serialization.get("road_overlay_cell_count", -1)) != 49 \
+				or int(road_overlay_serialization.get("road_type_selected_count", -1)) != 49 \
+				or int(road_overlay_serialization.get("road_art_nonzero_count", -1)) != 48 \
+				or int(road_overlay_serialization.get("road_flip_flagged_cell_count", -1)) != 24 \
+				or not bool(road_overlay_serialization.get("materializes_serialized_road_overlay", false)) \
+				or bool(road_overlay_serialization.get("materializes_serialized_river_overlay", true)) \
+				or bool(road_overlay_serialization.get("complete_coordinate_vector_claim", true)):
+		_fail("h3maped road overlay serialization drifted: %s" % JSON.stringify(road_overlay_serialization))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
@@ -886,7 +999,7 @@ func _run() -> void:
 			or generated.has("private_generation_context"):
 		_fail("Supported small generation must remain blocked by the restart boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c"]:
+	if Array(generated.get("small_generation_state", {}).get("completed_phase_ids", [])) != expected_completed_phases:
 		_fail("Blocked generation result did not carry the small source-node rectangle state: %s" % JSON.stringify(generated))
 		return
 
