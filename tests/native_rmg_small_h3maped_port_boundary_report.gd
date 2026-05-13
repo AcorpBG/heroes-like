@@ -969,6 +969,48 @@ func _run() -> void:
 				or int(static_prefix[1].get("weight", -1)) != 50:
 		_fail("h3maped generic selector static prefix drifted: %s" % JSON.stringify(static_prefix))
 		return
+	var monster_loop: Dictionary = generic_selector.get("candidate_builder_monster_loop", {})
+	if String(generic_selector.get("candidate_builder_monster_loop_status", "")) != "0x49f9ed_0x49fa54_monster_table_loop_recovered_not_materialized" \
+				or String(monster_loop.get("table_pointer_address", "")) != "0x581298" \
+				or String(monster_loop.get("table_address", "")) != "0x57cea0" \
+				or int(monster_loop.get("record_stride_bytes", -1)) != 0x74 \
+				or int(monster_loop.get("single_level_iteration_count", -1)) != 0x76 \
+				or int(monster_loop.get("extended_iteration_count", -1)) != 0x91 \
+				or int(monster_loop.get("single_level_active_count", -1)) != 118 \
+				or int(monster_loop.get("extended_active_count", -1)) != 141 \
+				or String(monster_loop.get("constructor_address", "")) != "0x49c5cd" \
+				or String(monster_loop.get("constructor_vtable_address", "")) != "0x540bc0" \
+				or int(monster_loop.get("constructor_type_id", -1)) != 6 \
+				or bool(monster_loop.get("materialized_candidate_records", true)):
+		_fail("h3maped monster candidate loop boundary drifted: %s" % JSON.stringify(monster_loop))
+		return
+	var value_bands: Array = generic_selector.get("candidate_builder_fixed_type6_value_band_records", [])
+	if String(generic_selector.get("candidate_builder_fixed_type6_value_band_status", "")) != "0x49fa54_0x49ff54_fixed_type6_value_bands_recovered_not_materialized" \
+				or int(generic_selector.get("candidate_builder_fixed_type6_value_band_count", -1)) != 18 \
+				or value_bands.size() != 18 \
+				or String(value_bands[0].get("source_address", "")) != "0x49fa63" \
+				or int(value_bands[0].get("value", -1)) != 6000 \
+				or int(value_bands[0].get("field_0x14", -1)) != 5000 \
+				or String(value_bands[8].get("vtable_address", "")) != "0x540bf0" \
+				or int(value_bands[8].get("record_size_bytes", -1)) != 0x20 \
+				or int(value_bands[8].get("field_0x1c", -1)) != 15 \
+				or String(value_bands[17].get("source_address", "")) != "0x49ff15" \
+				or int(value_bands[17].get("value", -1)) != 30000 \
+				or int(value_bands[17].get("field_0x18", -1)) != 5:
+		_fail("h3maped fixed type6 value-band boundary drifted: %s" % JSON.stringify(value_bands))
+		return
+	var artifact_loop: Dictionary = generic_selector.get("candidate_builder_artifact_pool_loop", {})
+	if String(generic_selector.get("candidate_builder_artifact_pool_loop_status", "")) != "0x49ff59_0x4a00c7_artifact_pool_loop_recovered_not_materialized" \
+				or String(artifact_loop.get("artifact_pool_vector_offset", "")) != "generator+0xd8..+0xdc" \
+				or String(artifact_loop.get("selection_state_helper_address", "")) != "0x48d21c" \
+				or String(artifact_loop.get("vtable_address", "")) != "0x540ca0" \
+				or int(artifact_loop.get("type_id", -1)) != 10 \
+				or int(artifact_loop.get("candidate_records_per_artifact", -1)) != 5 \
+				or Array(artifact_loop.get("values", [])) != [5000, 7500, 10000, 15000, 20000] \
+				or int(artifact_loop.get("weight", -1)) != 10 \
+				or bool(artifact_loop.get("materialized_candidate_records", true)):
+		_fail("h3maped artifact pool candidate loop boundary drifted: %s" % JSON.stringify(artifact_loop))
+		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
