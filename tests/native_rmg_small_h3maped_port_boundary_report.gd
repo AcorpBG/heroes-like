@@ -297,6 +297,39 @@ func _run() -> void:
 			or not String(town_castle_phase.get("same_town_type_scope", "")).contains("neutral weighted placement"):
 		_fail("The town/castle phase ownership or source-address evidence drifted: %s" % JSON.stringify(town_castle_phase))
 		return
+	var direct_town_stamping: Dictionary = town_castle_phase.get("direct_stamping_projection", {})
+	if String(town_castle_phase.get("direct_stamping_projection_status", "")) != "0x4a93a2_0x49ba89_direct_town_object_stamping_projection_inspection_only" \
+			or int(direct_town_stamping.get("direct_candidate_scan_count", -1)) != 3 \
+			or int(direct_town_stamping.get("direct_candidate_total", -1)) != 451 \
+			or int(direct_town_stamping.get("direct_candidate_missing_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_grid_unavailable_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_unique_selection_count", -1)) != 3 \
+			or int(direct_town_stamping.get("direct_random_tie_required_count", -1)) != 0 \
+			or int(direct_town_stamping.get("direct_record_projection_count", -1)) != 3:
+		_fail("The 0x4a93a2 direct town object stamping projection drifted: %s" % JSON.stringify(direct_town_stamping))
+		return
+	if bool(direct_town_stamping.get("runtime_package_adoption", true)) \
+			or bool(direct_town_stamping.get("stamps_generated_cell_state", true)):
+		_fail("The 0x4a93a2 stamping projection must not adopt package/cell state yet: %s" % JSON.stringify(direct_town_stamping))
+		return
+	var direct_town_records: Array = direct_town_stamping.get("records", [])
+	if direct_town_records.size() != 3:
+		_fail("The 0x4a93a2 projection must expose three player-owned town records: %s" % JSON.stringify(direct_town_stamping))
+		return
+	var first_direct_town: Dictionary = direct_town_records[0]
+	var second_direct_town: Dictionary = direct_town_records[1]
+	var third_direct_town: Dictionary = direct_town_records[2]
+	if String(first_direct_town.get("status", "")) != "0x4a93a2_unique_closest_zone_byte_candidate_record_projection_inspection_only" \
+			or String(first_direct_town.get("base_constructor_address", "")) != "0x49ba89" \
+			or String(first_direct_town.get("town_vtable_address", "")) != "0x540a9c" \
+			or int(first_direct_town.get("selected_x", -1)) != 23 \
+			or int(first_direct_town.get("selected_y", -1)) != 11 \
+			or int(second_direct_town.get("selected_x", -1)) != 21 \
+			or int(second_direct_town.get("selected_y", -1)) != 22 \
+			or int(third_direct_town.get("selected_x", -1)) != 18 \
+			or int(third_direct_town.get("selected_y", -1)) != 4:
+		_fail("The selected 0x4a93a2 town anchors or object-record evidence drifted: %s" % JSON.stringify(direct_town_stamping))
+		return
 	var polygon_seed: Dictionary = footprint_schedule.get("polygon_seed", {})
 	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
 	var polygon_edges: Array = polygon_seed.get("initial_edges", [])
