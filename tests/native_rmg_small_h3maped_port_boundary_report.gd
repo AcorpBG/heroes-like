@@ -794,9 +794,26 @@ func _run() -> void:
 			or PackedInt32Array(terrain_writeout.get("tile_byte_0_terrain_id_u8", PackedInt32Array())).size() != 1296 \
 			or PackedInt32Array(terrain_writeout.get("tile_byte_1_terrain_art_u8", PackedInt32Array())).size() != 1296 \
 			or PackedInt32Array(terrain_writeout.get("tile_byte_6_flags_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("zone_word_low_u16", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("owner_low_byte_grid_u8", PackedInt32Array())).size() != 1296 \
+			or PackedInt32Array(terrain_writeout.get("owner_high_byte_grid_i8", PackedInt32Array())).size() != 1296 \
 			or String(terrain_writeout.get("tile_byte_writeout_status", "")) != "0x49b2b6_terrain_id_byte_packed_art_flip_pending" \
 			or String(terrain_writeout.get("next_materialization_status", "")) != "pending_TerrainPlacement_0x4bcff5_0x4bd099_art_index_flip_writeout":
 		_fail("0x4a3f27 terrain arrays/writeout status drifted: %s" % JSON.stringify(terrain_writeout))
+		return
+	var owner_low_counts: Dictionary = terrain_writeout.get("owner_low_byte_counts", {})
+	if String(terrain_writeout.get("owner_low_byte_source", "")) != "cell+0x20 bits 16..23 from real 0x4a325d zone word id" \
+			or String(terrain_writeout.get("owner_high_byte_source", "")) != "cell+0x20 bits 24..31 pending 0x49a318 occupancy/anchor normalization" \
+			or int(terrain_writeout.get("owner_low_byte_materialized_count", -1)) != 1107 \
+			or int(terrain_writeout.get("owner_high_byte_materialized_count", -1)) != 0 \
+			or int(terrain_writeout.get("owner_high_byte_sentinel_count", -1)) != 1296 \
+			or int(owner_low_counts.get("0", -1)) != 177 \
+			or int(owner_low_counts.get("1", -1)) != 91 \
+			or int(owner_low_counts.get("2", -1)) != 226 \
+			or int(owner_low_counts.get("3", -1)) != 177 \
+			or int(owner_low_counts.get("4", -1)) != 207 \
+			or int(owner_low_counts.get("5", -1)) != 229:
+		_fail("0x4a3f27 owner byte channels drifted: %s" % JSON.stringify(terrain_writeout))
 		return
 	var final_sweep_counter: Dictionary = terrain_writeout.get("final_sweep_boundary_counter", {})
 	var final_sweep_counts := PackedInt32Array(final_sweep_counter.get("boundary_counts_u8", PackedInt32Array()))
@@ -900,6 +917,48 @@ func _run() -> void:
 			or int(dispatch_records[4].get("runtime_zone_a", -1)) != 5 \
 			or int(dispatch_records[4].get("runtime_zone_b", -1)) != 3:
 		_fail("0x4a79a3 helper dispatch records drifted: %s" % JSON.stringify(dispatch_records))
+		return
+
+	var owner_channels: Dictionary = report.get("same_level_connection_owner_channels", {})
+	if String(owner_channels.get("status", "")) != "0x4a61bc_0x4a696b_same_level_owner_channel_precondition_inspection_only" \
+			or Array(owner_channels.get("helper_addresses", [])) != ["0x4a61bc", "0x4a696b"] \
+			or String(owner_channels.get("owner_high_byte_producer_pending", "")) != "0x49a318":
+		_fail("0x4a61bc/0x4a696b owner-channel identity drifted: %s" % JSON.stringify(owner_channels))
+		return
+	if bool(owner_channels.get("materializes_endpoint_coordinates", true)) \
+			or bool(owner_channels.get("materializes_connection_guards", true)) \
+			or bool(owner_channels.get("materializes_roads", true)):
+		_fail("0x4a61bc/0x4a696b owner-channel inspection must not materialize output: %s" % JSON.stringify(owner_channels))
+		return
+	if not bool(owner_channels.get("grid_available", false)) \
+			or int(owner_channels.get("width", -1)) != 36 \
+			or int(owner_channels.get("height", -1)) != 36 \
+			or int(owner_channels.get("level_count", -1)) != 1 \
+			or int(owner_channels.get("tile_count", -1)) != 1296 \
+			or int(owner_channels.get("owner_low_byte_materialized_count", -1)) != 1107 \
+			or int(owner_channels.get("owner_high_byte_materialized_count", -1)) != 0 \
+			or int(owner_channels.get("owner_high_byte_sentinel_count", -1)) != 1296 \
+			or int(owner_channels.get("link_count", -1)) != 5 \
+			or int(owner_channels.get("links_with_low_owner_cells", -1)) != 5 \
+			or int(owner_channels.get("links_with_high_owner_cells", -1)) != 0:
+		_fail("0x4a61bc/0x4a696b owner-channel counts drifted: %s" % JSON.stringify(owner_channels))
+		return
+	var owner_records: Array = owner_channels.get("records", [])
+	if owner_records.size() != 5 \
+			or int(owner_records[0].get("link_index", -1)) != 0 \
+			or int(owner_records[0].get("low_owner_a_cell_count", -1)) != 177 \
+			or int(owner_records[0].get("low_owner_b_cell_count", -1)) != 177 \
+			or int(owner_records[0].get("high_owner_a_cell_count", -1)) != 0 \
+			or int(owner_records[0].get("high_owner_b_cell_count", -1)) != 0 \
+			or not bool(owner_records[0].get("low_owner_channel_ready", false)) \
+			or bool(owner_records[0].get("high_owner_channel_ready", true)) \
+			or int(owner_records[4].get("runtime_zone_a", -1)) != 5 \
+			or int(owner_records[4].get("runtime_zone_b", -1)) != 3 \
+			or int(owner_records[4].get("low_owner_a_cell_count", -1)) != 229 \
+			or int(owner_records[4].get("low_owner_b_cell_count", -1)) != 177 \
+			or int(owner_records[4].get("high_owner_a_cell_count", -1)) != 0 \
+			or int(owner_records[4].get("high_owner_b_cell_count", -1)) != 0:
+		_fail("0x4a61bc/0x4a696b owner-channel records drifted: %s" % JSON.stringify(owner_records))
 		return
 
 	var live_repaint_feedback: Dictionary = terrain_writeout.get("repaint_live_visual_feedback", {})

@@ -3506,6 +3506,109 @@ Dictionary late_connection_helper_dispatch_report(const Array &link_seeds, const
 	return report;
 }
 
+Dictionary same_level_connection_owner_channel_report(const Array &link_seeds, const Dictionary &terrain_cell_writeout) {
+	Dictionary report;
+	report["status"] = "0x4a61bc_0x4a696b_same_level_owner_channel_precondition_inspection_only";
+	report["source"] = "h3maped same-level helpers compare generated cell+0x20 low owner byte bits 16..23 and high owner byte bits 24..31 before endpoint candidate success";
+	report["helper_addresses"] = Array::make("0x4a61bc", "0x4a696b");
+	report["owner_low_byte_source"] = terrain_cell_writeout.get("owner_low_byte_source", "cell+0x20 bits 16..23");
+	report["owner_high_byte_source"] = terrain_cell_writeout.get("owner_high_byte_source", "cell+0x20 bits 24..31");
+	report["owner_high_byte_producer_pending"] = "0x49a318";
+	report["materializes_endpoint_coordinates"] = false;
+	report["materializes_connection_guards"] = false;
+	report["materializes_roads"] = false;
+
+	PackedInt32Array owner_low = terrain_cell_writeout.get("owner_low_byte_grid_u8", PackedInt32Array());
+	PackedInt32Array owner_high = terrain_cell_writeout.get("owner_high_byte_grid_i8", PackedInt32Array());
+	const int32_t width = int32_t(terrain_cell_writeout.get("map_width", 0));
+	const int32_t height = int32_t(terrain_cell_writeout.get("map_height", 0));
+	const int32_t level_count = std::max(1, int32_t(terrain_cell_writeout.get("level_count", 1)));
+	const int32_t expected_cell_count = width * height * level_count;
+	const bool grid_available = width > 0 && height > 0 && owner_low.size() == expected_cell_count && owner_high.size() == expected_cell_count;
+	report["grid_available"] = grid_available;
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = expected_cell_count;
+	if (!grid_available) {
+		report["records"] = Array();
+		report["blocked_reason"] = "missing owner low/high generated-cell channel arrays";
+		return report;
+	}
+
+	int32_t low_materialized_count = 0;
+	int32_t high_materialized_count = 0;
+	int32_t high_sentinel_count = 0;
+	for (int32_t index = 0; index < expected_cell_count; ++index) {
+		if (owner_low[index] >= 0) {
+			low_materialized_count += 1;
+		}
+		if (owner_high[index] >= 0) {
+			high_materialized_count += 1;
+		} else {
+			high_sentinel_count += 1;
+		}
+	}
+
+	Array records;
+	int32_t links_with_low_owner_cells = 0;
+	int32_t links_with_high_owner_cells = 0;
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = link_seeds[index];
+		const int32_t runtime_a = int32_t(link.get("runtime_zone_a", -1));
+		const int32_t runtime_b = int32_t(link.get("runtime_zone_b", -1));
+		int32_t low_a_count = 0;
+		int32_t low_b_count = 0;
+		int32_t high_a_count = 0;
+		int32_t high_b_count = 0;
+		for (int32_t cell = 0; cell < expected_cell_count; ++cell) {
+			if (owner_low[cell] == runtime_a) {
+				low_a_count += 1;
+			} else if (owner_low[cell] == runtime_b) {
+				low_b_count += 1;
+			}
+			if (owner_high[cell] == runtime_a) {
+				high_a_count += 1;
+			} else if (owner_high[cell] == runtime_b) {
+				high_b_count += 1;
+			}
+		}
+		if (low_a_count > 0 && low_b_count > 0) {
+			links_with_low_owner_cells += 1;
+		}
+		if (high_a_count > 0 && high_b_count > 0) {
+			links_with_high_owner_cells += 1;
+		}
+		Dictionary record;
+		record["link_index"] = link.get("link_index", index);
+		record["runtime_zone_a"] = runtime_a;
+		record["runtime_zone_b"] = runtime_b;
+		record["low_owner_a_cell_count"] = low_a_count;
+		record["low_owner_b_cell_count"] = low_b_count;
+		record["high_owner_a_cell_count"] = high_a_count;
+		record["high_owner_b_cell_count"] = high_b_count;
+		record["low_owner_channel_ready"] = low_a_count > 0 && low_b_count > 0;
+		record["high_owner_channel_ready"] = high_a_count > 0 && high_b_count > 0;
+		record["status"] = high_a_count > 0 && high_b_count > 0
+				? String("owner_channels_ready_endpoint_scan_pending")
+				: String("high_owner_channel_pending_endpoint_scan_blocked");
+		records.append(record);
+	}
+
+	report["owner_low_byte_materialized_count"] = low_materialized_count;
+	report["owner_high_byte_materialized_count"] = high_materialized_count;
+	report["owner_high_byte_sentinel_count"] = high_sentinel_count;
+	report["link_count"] = records.size();
+	report["links_with_low_owner_cells"] = links_with_low_owner_cells;
+	report["links_with_high_owner_cells"] = links_with_high_owner_cells;
+	report["records"] = records;
+	report["blocked_next"] = "port 0x49a318 high-owner normalization before actual 0x4a61bc/0x4a696b endpoint candidate success path";
+	return report;
+}
+
 Dictionary coordinate_replay_report(const Dictionary &normalized_config, const Dictionary &runtime_zone_setup, const Dictionary &link_seed_setup, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported_inspection_only";
@@ -4867,6 +4970,9 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	PackedInt32Array tile_byte_5_road_art_u8;
 	PackedInt32Array tile_byte_6_flags_u8;
 	PackedInt32Array zone_word_u32;
+	PackedInt32Array zone_word_low_u16;
+	PackedInt32Array owner_low_byte_grid_u8;
+	PackedInt32Array owner_high_byte_grid_i8;
 	PackedInt32Array cell_flag_u8;
 	const int32_t cell_count = int32_t(zone_words.size());
 	terrain_code_u16.resize(cell_count);
@@ -4880,21 +4986,32 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	tile_byte_5_road_art_u8.resize(cell_count);
 	tile_byte_6_flags_u8.resize(cell_count);
 	zone_word_u32.resize(cell_count);
+	zone_word_low_u16.resize(cell_count);
+	owner_low_byte_grid_u8.resize(cell_count);
+	owner_high_byte_grid_i8.resize(cell_count);
 	cell_flag_u8.resize(cell_count);
 
 	int32_t reserved_cell_count = 0;
 	int32_t unassigned_cell_count = 0;
 	int32_t non_water_terrain_cell_count = 0;
+	int32_t owner_low_materialized_count = 0;
+	Dictionary owner_low_byte_counts;
 	for (int32_t index = 0; index < cell_count; ++index) {
 		zone_word_u32.set(index, int32_t(zone_words[size_t(index)]));
+		zone_word_low_u16.set(index, int32_t(zone_words[size_t(index)] & 0xffffU));
 		cell_flag_u8.set(index, int32_t(cell_flags[size_t(index)]));
 		const uint32_t masked = zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD;
 		int32_t h3_terrain_code = 8;
 		String terrain_name = "water";
+		int32_t owner_low_byte = -1;
 		if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
 			unassigned_cell_count += 1;
 		} else {
 			const int32_t zone_word_id = int32_t((masked >> 16U) & 0xffU);
+			owner_low_byte = zone_word_id;
+			owner_low_materialized_count += 1;
+			const String owner_key = String::num_int64(owner_low_byte);
+			owner_low_byte_counts[owner_key] = int32_t(owner_low_byte_counts.get(owner_key, 0)) + 1;
 			const String zone_key = String::num_int64(zone_word_id);
 			cells_by_zone_word[zone_key] = int32_t(cells_by_zone_word.get(zone_key, 0)) + 1;
 			if (zone_word_id >= 0 && zone_word_id < selected_terrain_codes.size()) {
@@ -4916,6 +5033,8 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 		}
 		const uint32_t generated_cell_0x24 = uint32_t(h3_terrain_code) & 0x3fU;
 		const uint32_t generated_cell_0x28 = 0U;
+		owner_low_byte_grid_u8.set(index, owner_low_byte);
+		owner_high_byte_grid_i8.set(index, -1);
 		generated_cell_word_0x24_u32.set(index, int32_t(generated_cell_0x24));
 		generated_cell_word_0x28_u32.set(index, int32_t(generated_cell_0x28));
 		terrain_code_u16.set(index, int32_t(generated_cell_0x24));
@@ -4960,6 +5079,15 @@ Dictionary terrain_cell_writeout_4a3f27_report(const Dictionary &normalized_conf
 	report["generated_cell_word_0x24_u32"] = generated_cell_word_0x24_u32;
 	report["generated_cell_word_0x28_u32"] = generated_cell_word_0x28_u32;
 	report["zone_word_u32"] = zone_word_u32;
+	report["zone_word_low_u16"] = zone_word_low_u16;
+	report["owner_low_byte_grid_u8"] = owner_low_byte_grid_u8;
+	report["owner_high_byte_grid_i8"] = owner_high_byte_grid_i8;
+	report["owner_low_byte_source"] = "cell+0x20 bits 16..23 from real 0x4a325d zone word id";
+	report["owner_high_byte_source"] = "cell+0x20 bits 24..31 pending 0x49a318 occupancy/anchor normalization";
+	report["owner_low_byte_materialized_count"] = owner_low_materialized_count;
+	report["owner_high_byte_materialized_count"] = 0;
+	report["owner_high_byte_sentinel_count"] = cell_count;
+	report["owner_low_byte_counts"] = owner_low_byte_counts;
 	report["cell_flag_u8"] = cell_flag_u8;
 	report["tile_byte_0_terrain_id_u8"] = tile_byte_0_terrain_id_u8;
 	report["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
@@ -6058,6 +6186,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			Dictionary late_connection_overlap = late_connection_overlap_geometry_report(runtime_zone_setup.get("runtime_zone_records", Array()), link_seed_setup.get("link_seeds", Array()), report["terrain_cell_writeout_4a3f27"]);
 			report["late_connection_overlap_geometry"] = late_connection_overlap;
 			report["late_connection_helper_dispatch"] = late_connection_helper_dispatch_report(link_seed_setup.get("link_seeds", Array()), late_connection_overlap);
+			report["same_level_connection_owner_channels"] = same_level_connection_owner_channel_report(link_seed_setup.get("link_seeds", Array()), report["terrain_cell_writeout_4a3f27"]);
 			report["town_castle_phase_schedule"] = town_castle_phase_schedule_report(normalized_config, runtime_zone_setup.get("runtime_zone_records", Array()), report["coordinate_replay"], report["runtime_terrain_selection_49b53d"], report["terrain_cell_writeout_4a3f27"]);
 			report["terrainplacement_visual_tables_4bcff5"] = terrainplacement_visual_tables_4bcff5_report();
 			report["footprint_finalizer_4a3710"] = footprint_finalizer_4a3710_report(normalized_config, report["runtime_zone_record_setup"], report["zone_footprint_phase_boundary"]);
