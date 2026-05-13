@@ -398,6 +398,51 @@ LineWriteResult h3maped_line_writer_4a261a(std::vector<uint32_t> &zone_words, st
 	return result;
 }
 
+int32_t h3maped_distance_truncate_local(int32_t ax, int32_t ay, int32_t bx, int32_t by);
+
+LineWriteResult h3maped_randomized_line_writer_4a2413(std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t level, int32_t zone_word_id, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
+	LineWriteResult result;
+	std::vector<CoordCandidate> pending;
+	pending.push_back(CoordCandidate{ x2, y2, level });
+	max_pending_point_count = std::max<int32_t>(max_pending_point_count, int32_t(pending.size()));
+	int32_t current_x = x1;
+	int32_t current_y = y1;
+	for (int32_t guard = 0; guard < 4096 && !pending.empty(); ++guard) {
+		const CoordCandidate target = pending.back();
+		pending.pop_back();
+		const int32_t midpoint_x = (target.x + current_x + 1) / 2;
+		const int32_t midpoint_y = (target.y + current_y + 1) / 2;
+		if ((midpoint_x == current_x && midpoint_y == current_y) || (midpoint_x == target.x && midpoint_y == target.y)) {
+			const int32_t clamped_x = std::min(std::max(current_x, 0), std::max(0, width - 1));
+			const int32_t clamped_y = std::min(std::max(current_y, 0), std::max(0, height - 1));
+			h3maped_write_line_cell_4a261a(result, zone_words, cell_flags, width, height, level_count, water_code, clamped_x, clamped_y, level, zone_word_id);
+			current_x = target.x;
+			current_y = target.y;
+			continue;
+		}
+		const int32_t dx = target.x - current_x;
+		const int32_t neg_dy = current_y - target.y;
+		const int32_t segment_length = h3maped_distance_truncate_local(0, 0, dx, neg_dy);
+		int32_t jittered_x = midpoint_x;
+		int32_t jittered_y = midpoint_y;
+		if (segment_length > 1) {
+			const int32_t jitter_limit = std::max<int32_t>(1, std::min(random_span_limit, segment_length));
+			const int32_t rng_value = rng.next();
+			rng_call_count += 1;
+			const int32_t centered_offset = (rng_value % jitter_limit) - (jitter_limit / 2);
+			const int32_t adjusted_x = int32_t((int64_t(centered_offset) * int64_t(neg_dy)) / int64_t(segment_length));
+			const int32_t adjusted_y = int32_t((int64_t(dx) * int64_t(centered_offset)) / int64_t(segment_length));
+			jittered_x += adjusted_x;
+			jittered_y += adjusted_y;
+		}
+		pending.push_back(target);
+		pending.push_back(CoordCandidate{ jittered_x, jittered_y, level });
+		inserted_midpoint_count += 1;
+		max_pending_point_count = std::max<int32_t>(max_pending_point_count, int32_t(pending.size()));
+	}
+	return result;
+}
+
 Array bool_bitmap_report(const std::array<bool, 8> &bitmap) {
 	Array report;
 	for (bool value : bitmap) {
@@ -1382,6 +1427,95 @@ Dictionary line_writer_4a261a_report(const Dictionary &normalized_config) {
 	return report;
 }
 
+Dictionary randomized_line_writer_4a2413_report(const Dictionary &normalized_config) {
+	Dictionary report;
+	report["status"] = "0x4a2413_randomized_line_writer_ported_inspection_only";
+	report["source"] = "h3maped 0x4a2777 flagged branch writer; recursively subdivides a segment, jitters midpoint candidates with 0x4e7276, clamps terminal writes to map bounds, and writes zone words like 0x4a261a";
+	report["function_address"] = "0x4a2413";
+	report["caller_address"] = "0x4a2777";
+	report["rng_address"] = "0x4e7276";
+	report["distance_helper_address"] = "0x4cc5ad";
+	report["reserved_flag_mask"] = "0x10";
+	report["materializes_boundaries"] = false;
+	report["materializes_span_fill"] = false;
+	report["materializes_terrain"] = false;
+	report["materializes_map_cells"] = false;
+	report["feeds_real_0x4a2777_boundary"] = false;
+
+	const int32_t width = std::max(1, int32_t(normalized_config.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(normalized_config.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t zone_word_id = 9;
+	const int32_t random_span_limit = 6;
+	std::vector<uint32_t> zone_words(size_t(width * height * level_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(width * height * level_count), 0);
+	H3MapedRng rng;
+	rng.state = 1;
+	int32_t rng_call_count = 0;
+	int32_t inserted_midpoint_count = 0;
+	int32_t max_pending_point_count = 0;
+	LineWriteResult line = h3maped_randomized_line_writer_4a2413(
+			zone_words,
+			cell_flags,
+			width,
+			height,
+			level_count,
+			water_code,
+			2,
+			2,
+			width - 3,
+			height - 5,
+			0,
+			zone_word_id,
+			random_span_limit,
+			rng,
+			rng_call_count,
+			inserted_midpoint_count,
+			max_pending_point_count);
+
+	int32_t zone_word_cell_count = 0;
+	int32_t reserved_flag_cell_count = 0;
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int64_t index = h3maped_cell_index(width, height, x, y, 0);
+			if ((zone_words[size_t(index)] & H3MAPED_UNASSIGNED_ZONE_WORD) == (uint32_t(zone_word_id) << 16U)) {
+				zone_word_cell_count += 1;
+			}
+			if ((cell_flags[size_t(index)] & 0x10U) != 0U) {
+				reserved_flag_cell_count += 1;
+			}
+		}
+	}
+
+	Dictionary sample;
+	sample["map_width"] = width;
+	sample["map_height"] = height;
+	sample["level_count"] = level_count;
+	sample["h3maped_water_mode_code"] = water_code;
+	sample["from_x"] = 2;
+	sample["from_y"] = 2;
+	sample["to_x"] = width - 3;
+	sample["to_y"] = height - 5;
+	sample["level"] = 0;
+	sample["zone_word_id"] = zone_word_id;
+	sample["random_span_limit"] = random_span_limit;
+	sample["write_count"] = line.write_count;
+	sample["unique_cell_count"] = line.unique_cell_count;
+	sample["zone_word_cell_count"] = zone_word_cell_count;
+	sample["reserved_flag_write_count"] = line.reserved_flag_write_count;
+	sample["reserved_flag_cell_count"] = reserved_flag_cell_count;
+	sample["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+	sample["rng_call_count"] = rng_call_count;
+	sample["inserted_midpoint_count"] = inserted_midpoint_count;
+	sample["max_pending_point_count"] = max_pending_point_count;
+	sample["rng_state_after_uint32"] = int64_t(rng.state);
+	sample["trace_preview"] = line.trace_preview;
+	report["sample_contract"] = sample;
+	report["blocked_next"] = "wire 0x4a2413 into the real 0x4a2777 flagged source-node traversal branch";
+	return report;
+}
+
 } // namespace
 
 bool supports_scope(const Dictionary &normalized_config) {
@@ -1486,6 +1620,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			report["source_node_rectangle_4cc788"] = source_node_rectangle_4cc788_report();
 			report["clip_helper_4a2b33"] = clip_helper_4a2b33_report(normalized_config);
 			report["line_writer_4a261a"] = line_writer_4a261a_report(normalized_config);
+			report["randomized_line_writer_4a2413"] = randomized_line_writer_4a2413_report(normalized_config);
 		}
 	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
