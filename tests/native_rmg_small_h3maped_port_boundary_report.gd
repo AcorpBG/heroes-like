@@ -33,8 +33,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v3":
-		_fail("Small h3maped inspection did not use the v3 clean restart boundary: %s" % JSON.stringify(report))
+	if String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_clean_restart_v4":
+		_fail("Small h3maped inspection did not use the v4 clean restart boundary: %s" % JSON.stringify(report))
 		return
 	if String(report.get("status", "")) != "h3maped_small_clean_boundary_ready":
 		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
@@ -78,6 +78,39 @@ func _run() -> void:
 		_fail("h3maped RNG template selection boundary drifted: %s" % JSON.stringify(selection))
 		return
 
+	var assignment: Dictionary = report.get("player_slot_assignment", {})
+	if String(assignment.get("status", "")) != "0x4ac62a_player_slot_assignment_ported_inspection_only" \
+			or String(assignment.get("selected_color_bitmap_offset", "")) != "generator+0xed8" \
+			or String(assignment.get("assignment_slots_offset", "")) != "generator+0xee0" \
+			or String(assignment.get("mapped_slots_offset", "")) != "generator+0xee4":
+		_fail("h3maped player-slot assignment boundary drifted: %s" % JSON.stringify(assignment))
+		return
+	if int(assignment.get("human_capable_source_owner_mask", -1)) != 15 \
+			or int(assignment.get("player_capable_source_owner_mask", -1)) != 15 \
+			or Array(assignment.get("human_capable_source_owner_indices", [])) != [0, 1, 2, 3] \
+			or Array(assignment.get("player_capable_source_owner_indices", [])) != [0, 1, 2, 3]:
+		_fail("Selected source-owner capability masks drifted from recovered h3maped template evidence: %s" % JSON.stringify(assignment))
+		return
+	if Array(assignment.get("selected_color_order", [])) != [0, 1, 2, 3, 4, 5, 6, 7] \
+			or Array(assignment.get("actual_colors_by_source_owner", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or Array(assignment.get("raw_ee0_slots", [])) != [-1, 0, 1, 2, -1, -1, -1, -1, -1]:
+		_fail("Default h3maped player-color mapping drifted: %s" % JSON.stringify(assignment))
+		return
+	var assignments: Array = assignment.get("assignments", [])
+	if assignments.size() != 3 \
+			or String(assignments[0].get("player_type", "")) != "human" \
+			or int(assignments[0].get("source_owner_index", -1)) != 0 \
+			or int(assignments[0].get("actual_player_color", -1)) != 0 \
+			or String(assignments[1].get("player_type", "")) != "computer" \
+			or int(assignments[1].get("source_owner_index", -1)) != 1 \
+			or int(assignments[1].get("actual_player_color", -1)) != 1 \
+			or String(assignments[2].get("player_type", "")) != "computer" \
+			or int(assignments[2].get("source_owner_index", -1)) != 2 \
+			or int(assignments[2].get("actual_player_color", -1)) != 2 \
+			or bool(assignment.get("materializes_runtime_players", true)):
+		_fail("h3maped player assignment records are wrong or materialized runtime players too early: %s" % JSON.stringify(assignment))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The clean restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
@@ -86,7 +119,11 @@ func _run() -> void:
 			or String(backlog[0].get("status", "")) != "active_boundary_only":
 		_fail("Template selection should be the only active clean boundary: %s" % JSON.stringify(backlog))
 		return
-	for index in range(1, backlog.size()):
+	if String(backlog[1].get("phase_id", "")) != "player_slot_assignment" \
+			or String(backlog[1].get("status", "")) != "active_inspection_only":
+		_fail("Player-slot assignment should be the only active h3maped inspection phase after selection: %s" % JSON.stringify(backlog))
+		return
+	for index in range(2, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
