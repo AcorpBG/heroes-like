@@ -394,6 +394,51 @@ func _run() -> void:
 		_fail("0x4a261a line-writer sample contract drifted: %s" % JSON.stringify(line_writer))
 		return
 
+	var randomized_line_writer: Dictionary = report.get("randomized_line_writer_4a2413", {})
+	if String(randomized_line_writer.get("status", "")) != "0x4a2413_randomized_line_writer_ported_inspection_only" \
+			or String(randomized_line_writer.get("function_address", "")) != "0x4a2413" \
+			or String(randomized_line_writer.get("caller_address", "")) != "0x4a2777" \
+			or String(randomized_line_writer.get("rng_address", "")) != "0x4e7276" \
+			or String(randomized_line_writer.get("distance_helper_address", "")) != "0x4cc5ad" \
+			or String(randomized_line_writer.get("reserved_flag_mask", "")) != "0x10":
+		_fail("0x4a2413 randomized line-writer boundary drifted: %s" % JSON.stringify(randomized_line_writer))
+		return
+	if bool(randomized_line_writer.get("materializes_boundaries", true)) \
+			or bool(randomized_line_writer.get("materializes_span_fill", true)) \
+			or bool(randomized_line_writer.get("materializes_terrain", true)) \
+			or bool(randomized_line_writer.get("materializes_map_cells", true)) \
+			or bool(randomized_line_writer.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("0x4a2413 randomized line writer must not materialize generated output yet: %s" % JSON.stringify(randomized_line_writer))
+		return
+	var randomized_sample: Dictionary = randomized_line_writer.get("sample_contract", {})
+	var randomized_trace: Array = randomized_sample.get("trace_preview", [])
+	if int(randomized_sample.get("map_width", -1)) != 36 \
+			or int(randomized_sample.get("map_height", -1)) != 36 \
+			or int(randomized_sample.get("level_count", -1)) != 1 \
+			or int(randomized_sample.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(randomized_sample.get("from_x", -1)) != 2 \
+			or int(randomized_sample.get("from_y", -1)) != 2 \
+			or int(randomized_sample.get("to_x", -1)) != 33 \
+			or int(randomized_sample.get("to_y", -1)) != 31 \
+			or int(randomized_sample.get("level", -1)) != 0 \
+			or int(randomized_sample.get("zone_word_id", -1)) != 9 \
+			or int(randomized_sample.get("random_span_limit", -1)) != 6 \
+			or int(randomized_sample.get("write_count", -1)) != 64 \
+			or int(randomized_sample.get("unique_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("zone_word_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("reserved_flag_write_count", -1)) != 64 \
+			or int(randomized_sample.get("reserved_flag_cell_count", -1)) != 63 \
+			or int(randomized_sample.get("out_of_bounds_write_count", -1)) != 0 \
+			or int(randomized_sample.get("rng_call_count", -1)) != 51 \
+			or int(randomized_sample.get("inserted_midpoint_count", -1)) != 63 \
+			or int(randomized_sample.get("max_pending_point_count", -1)) < 6 \
+			or int(randomized_sample.get("rng_state_after_uint32", -1)) != 3821795434 \
+			or randomized_trace.size() != 8 \
+			or int(randomized_trace[0].get("x", -1)) != 2 \
+			or int(randomized_trace[0].get("y", -1)) != 2:
+		_fail("0x4a2413 randomized line-writer sample contract drifted: %s" % JSON.stringify(randomized_line_writer))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
