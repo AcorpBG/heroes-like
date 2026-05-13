@@ -273,6 +273,30 @@ func _run() -> void:
 			or bool(footprint_schedule.get("materializes_span_fill", true)):
 		_fail("Zone footprint scheduling must not materialize cells yet: %s" % JSON.stringify(footprint_schedule))
 		return
+	var town_castle_phase: Dictionary = footprint_schedule.get("town_castle_phase_schedule", {})
+	if String(footprint_schedule.get("town_castle_phase_schedule_status", "")) != "0x4a8d2c_0x4a8db2_town_castle_phase_schedule_inspection_only" \
+			or int(town_castle_phase.get("source_player_min_castle_count", -1)) != 4 \
+			or int(town_castle_phase.get("assigned_player_min_castle_count", -1)) != 3 \
+			or int(town_castle_phase.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+			or int(town_castle_phase.get("source_neutral_min_town_count", -1)) != 0 \
+			or int(town_castle_phase.get("source_neutral_min_castle_count", -1)) != 0 \
+			or int(town_castle_phase.get("neutral_minimum_town_castle_count", -1)) != 0 \
+			or int(town_castle_phase.get("density_schedule_count", -1)) != 0 \
+			or int(town_castle_phase.get("scheduled_direct_minimum_object_count", -1)) != 3 \
+			or int(town_castle_phase.get("scheduled_owned_player_town_count", -1)) != 3:
+		_fail("The 0x4a8d2c/0x4a8db2 town-castle phase schedule drifted: %s" % JSON.stringify(town_castle_phase))
+		return
+	if bool(town_castle_phase.get("materializes_town_objects", true)) \
+			or bool(town_castle_phase.get("materializes_package_tiles", true)) \
+			or bool(town_castle_phase.get("adopts_into_runtime_grid", true)):
+		_fail("Town/castle phase must stay inspection-only until 0x4a93a2/0x49ba89 stamping is ported: %s" % JSON.stringify(town_castle_phase))
+		return
+	if Array(town_castle_phase.get("scheduled_owner_colors", [])) != [0, 1, 2] \
+			or Array(town_castle_phase.get("ported_addresses", [])).find("0x4a93a2") < 0 \
+			or Array(town_castle_phase.get("ported_addresses", [])).find("0x4a901a") < 0 \
+			or not String(town_castle_phase.get("same_town_type_scope", "")).contains("neutral weighted placement"):
+		_fail("The town/castle phase ownership or source-address evidence drifted: %s" % JSON.stringify(town_castle_phase))
+		return
 	var polygon_seed: Dictionary = footprint_schedule.get("polygon_seed", {})
 	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
 	var polygon_edges: Array = polygon_seed.get("initial_edges", [])
