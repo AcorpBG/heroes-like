@@ -507,6 +507,81 @@ func _run() -> void:
 		_fail("TerrainPlacement scratch/writeback samples drifted: %s" % JSON.stringify(scratch_samples))
 		return
 
+	var terrainplacement_live: Dictionary = report.get("terrainplacement_live_feedback", {})
+	var live_samples: Array = terrainplacement_live.get("sample_records", [])
+	var live_seed_samples: Array = terrainplacement_live.get("seed_samples", [])
+	var live_drain_samples: Array = terrainplacement_live.get("drain_samples", [])
+	var live_neighbor_histogram: Dictionary = terrainplacement_live.get("neighbor_mask_histogram", {})
+	var live_selector_histogram: Dictionary = terrainplacement_live.get("selector_kind_histogram", {})
+	if String(terrainplacement_live.get("phase_id", "")) != "terrainplacement_live_feedback" \
+			or String(terrainplacement_live.get("status", "")) != "active_strict_executable_port" \
+			or String(terrainplacement_live.get("h3maped_anchor", "")) != "0x4bb74b/0x4bc5f0" \
+			or String(terrainplacement_live.get("source_range", "")) != "0x4a4025/0x4a4082/0x4a415a/0x4bb74b/0x4bba59/0x4bbd01/0x4bc5f0/0x4bc988/0x4bcfc3/0x4bce6d/0x4bad0f/0x49acf6" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bb74b", "")) != "55 8b ec 83 ec 28 53 56 8b f1 57 8b 7d 08 ff 76" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bba59", "")) != "55 8b ec 83 ec 18 53 56 57 8b 7d 08 6a 0f 8b f1" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bbd01", "")) != "55 8b ec 83 ec 64 53 8b 5d 08 56 8b f1 53 89 75" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bc5f0", "")) != "55 8b ec 83 ec 10 53 56 57 8b f1 33 db 39 5e 20" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bc988", "")) != "56 57 8b 7c 24 0c 8b f1 57 e8 7d f0 ff ff 84 c0" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bcfc3", "")) != "56 8b 74 24 0c 56 ff 74 24 0c e8 9b fe ff ff 8b" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bce6d", "")) != "55 8b ec 83 ec 0c 53 56 57 8b 75 08 8b f9 8b 47" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x4bad0f", "")) != "53 8b 5c 24 08 56 8b 74 24 10 57 8b f9 56 53 8b" \
+			or String(terrainplacement_live.get("binary_byte_prefix_0x49acf6", "")) != "8b 41 24 8b 54 24 04 66 25 00 c0 83 e2 3f 33 c2" \
+			or int(terrainplacement_live.get("tile_count", -1)) != 1296 \
+			or int(terrainplacement_live.get("live_full_native_cell_count", -1)) != 1326 \
+			or int(terrainplacement_live.get("live_initial_water_attempt_count", -1)) != 1296 \
+			or int(terrainplacement_live.get("live_repaint_attempt_count", -1)) != 942 \
+			or int(terrainplacement_live.get("live_queue_attempt_count", -1)) != 607 \
+			or int(terrainplacement_live.get("live_visual_attempt_count", -1)) != 2845 \
+			or int(terrainplacement_live.get("live_visual_write_count", -1)) != 2845 \
+			or int(terrainplacement_live.get("live_visual_missing_bucket_count", -1)) != 0 \
+			or int(terrainplacement_live.get("live_dirty_cell_count", -1)) != 1296 \
+			or int(terrainplacement_live.get("changed_cell_update_count", -1)) != 1107 \
+			or int(terrainplacement_live.get("post_queue_terrain_difference_count", -1)) != 181 \
+			or int(terrainplacement_live.get("set_a_drain_count", -1)) != 176 \
+			or int(terrainplacement_live.get("set_b_drain_count", -1)) != 10522 \
+			or int(terrainplacement_live.get("set_b_candidate_true_count", -1)) != 386 \
+			or int(terrainplacement_live.get("retouched_cell_write_count", -1)) != 221 \
+			or int(terrainplacement_live.get("live_roundtrip_mismatch_count", -1)) != 0 \
+			or int(terrainplacement_live.get("live_terrain_mismatch_count", -1)) != 0 \
+			or int(terrainplacement_live.get("live_terrain_art_nonzero_cell_count", -1)) != 2785 \
+			or int(terrainplacement_live.get("live_terrain_flag_cell_count", -1)) != 1255 \
+			or int(terrainplacement_live.get("rng_state_after_live_visual_selection_uint32", -1)) != 1452413421 \
+			or int(live_neighbor_histogram.get("0", -1)) != 183 \
+			or int(live_neighbor_histogram.get("1", -1)) != 2066 \
+			or int(live_neighbor_histogram.get("2", -1)) != 448 \
+			or int(live_neighbor_histogram.get("4", -1)) != 148 \
+			or int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1326 \
+			or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1519 \
+			or live_samples.size() != 16 \
+			or live_seed_samples.size() != 12 \
+			or live_drain_samples.size() != 24 \
+			or not bool(terrainplacement_live.get("visual_tables_decoded", false)) \
+			or not bool(terrainplacement_live.get("uses_live_scratch_neighbor_mask", false)) \
+			or not bool(terrainplacement_live.get("live_feedback_materialized", false)) \
+			or not bool(terrainplacement_live.get("materializes_private_generated_cell_words", false)) \
+			or not bool(terrainplacement_live.get("exact_queue_drain_complete", false)) \
+			or bool(terrainplacement_live.get("drain_guard_exhausted", true)) \
+			or bool(terrainplacement_live.get("materializes_package_tiles", true)) \
+			or bool(terrainplacement_live.get("materializes_public_output", true)) \
+			or bool(terrainplacement_live.get("project_grid_public_runtime_adoption", true)) \
+			or bool(terrainplacement_live.get("public_package_output_allowed", true)) \
+			or String(terrainplacement_live.get("blocked_next", "")) != "terrain_tile_byte_writeback_0x49b2b6":
+		_fail("Strict TerrainPlacement live-feedback port drifted: %s" % JSON.stringify(terrainplacement_live))
+		return
+	if int(live_samples[0].get("selected_row", -1)) != 25 \
+			or int(live_samples[0].get("scratch_word_u16", -1)) != 817 \
+			or int(live_samples[0].get("generated_cell_word_0x24_u32", -1)) != 1608 \
+			or int(live_samples[0].get("terrain_id", -1)) != 8 \
+			or int(live_samples[0].get("neighbor_mask", -1)) != 4 \
+			or int(live_seed_samples[0].get("x", -1)) != 33 \
+			or int(live_seed_samples[0].get("y", -1)) != 2 \
+			or String(live_seed_samples[0].get("source_branch", "")) != "0x4bba59_north_south_cardinal" \
+			or String(live_drain_samples[1].get("branch", "")) != "0x4bbd01_horizontal_left" \
+			or int(live_drain_samples[1].get("target_x", -1)) != 32 \
+			or int(live_drain_samples[1].get("target_y", -1)) != 0:
+		_fail("TerrainPlacement live-feedback samples drifted: %s / %s / %s" % [JSON.stringify(live_samples), JSON.stringify(live_seed_samples), JSON.stringify(live_drain_samples)])
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -514,19 +589,19 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "terrainplacement_live_feedback_0x4bb74b_0x4bc5f0":
+			or String(strict_state.get("next_required_port", "")) != "terrain_tile_byte_writeback_0x49b2b6":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 5 \
-			or not pending_ports.has("terrainplacement_live_feedback:0x4bb74b_0x4bc5f0_0x49b2b6") \
+			or not pending_ports.has("terrain_tile_byte_writeback:0x49b2b6") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 17 \
+	if backlog.size() != 18 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -538,10 +613,15 @@ func _run() -> void:
 			or String(backlog[8].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[10].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[11].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[11].get("id", "")) != "terrainplacement_live_feedback" \
+			or String(backlog[11].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[12].get("id", "")) != "terrain_tile_byte_writeback" \
 			or String(backlog[12].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[13].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[14].get("status", "")) != "pending_runtime_port":
+			or String(backlog[14].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[15].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[17].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
