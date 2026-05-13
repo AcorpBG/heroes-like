@@ -338,6 +338,39 @@ func _run() -> void:
 			or int(third_direct_town.get("random_tie_selected_index", -1)) != 1:
 		_fail("The selected 0x4a93a2 town anchors or object-record evidence drifted: %s" % JSON.stringify(direct_town_stamping))
 		return
+	var project_town_adoption: Dictionary = town_castle_phase.get("project_town_adoption_candidate", {})
+	if String(town_castle_phase.get("project_town_adoption_candidate_status", "")) != "h3maped_project_town_adoption_candidate_inspection_only" \
+			or int(project_town_adoption.get("town_record_count", -1)) != 3 \
+			or int(project_town_adoption.get("player_start_count", -1)) != 3 \
+			or int(project_town_adoption.get("expected_player_count", -1)) != 3 \
+			or int(project_town_adoption.get("synchronized_player_start_count", -1)) != 3 \
+			or Array(project_town_adoption.get("owner_slots", [])) != [1, 2, 3] \
+			or bool(project_town_adoption.get("public_package_adoption", true)) \
+			or bool(project_town_adoption.get("runtime_grid_adoption", true)):
+		_fail("The h3maped town records were not safely bridged into project town/start candidates: %s" % JSON.stringify(project_town_adoption))
+		return
+	var project_towns: Array = project_town_adoption.get("town_records", [])
+	var project_starts: Array = project_town_adoption.get("player_starts", [])
+	if project_towns.size() != 3 or project_starts.size() != 3:
+		_fail("The project town/start candidate bridge did not expose exactly three owned starts: %s" % JSON.stringify(project_town_adoption))
+		return
+	if String(project_towns[0].get("town_id", "")) != "town_riverwatch" \
+			or String(project_towns[1].get("town_id", "")) != "town_duskfen" \
+			or String(project_towns[2].get("town_id", "")) != "town_prismhearth" \
+			or int(project_towns[0].get("owner_slot", -1)) != 1 \
+			or int(project_towns[1].get("owner_slot", -1)) != 2 \
+			or int(project_towns[2].get("owner_slot", -1)) != 3 \
+			or String(project_towns[0].get("materialization_state", "")) != "h3maped_private_town_record_candidate_no_public_package_adoption":
+		_fail("The project town candidate ownership/faction bridge drifted: %s" % JSON.stringify(project_town_adoption))
+		return
+	if int(project_starts[0].get("x", -1)) != int(project_towns[0].get("x", -2)) \
+			or int(project_starts[0].get("y", -1)) != int(project_towns[0].get("y", -2)) \
+			or int(project_starts[1].get("x", -1)) != int(project_towns[1].get("x", -2)) \
+			or int(project_starts[1].get("y", -1)) != int(project_towns[1].get("y", -2)) \
+			or int(project_starts[2].get("x", -1)) != int(project_towns[2].get("x", -2)) \
+			or int(project_starts[2].get("y", -1)) != int(project_towns[2].get("y", -2)):
+		_fail("Player starts are not anchored on the h3maped-selected town candidates: %s" % JSON.stringify(project_town_adoption))
+		return
 	var polygon_seed: Dictionary = footprint_schedule.get("polygon_seed", {})
 	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
 	var polygon_edges: Array = polygon_seed.get("initial_edges", [])
