@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "terrain_cell_writeout_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout"] \
+			or String(active_state.get("status", "")) != "terrainplacement_visual_tables_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "terrainplacement_visual_tables_0x4bcff5":
+			or String(active_state.get("blocked_next", "")) != "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback":
 		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -268,6 +268,69 @@ func _run() -> void:
 			or int(terrain_counts.get("rough", -1)) != 229:
 		_fail("h3maped terrain project counts changed: %s" % JSON.stringify(terrain_counts))
 		return
+	var visual_phase: Dictionary = active_state.get("terrainplacement_visual_tables", {})
+	if String(visual_phase.get("phase_id", "")) != "terrainplacement_visual_tables" \
+			or String(visual_phase.get("h3maped_anchor", "")) != "0x4bcff5" \
+			or String(visual_phase.get("terrainplacement_constructor_address", "")) != "0x4bb5ce" \
+			or String(visual_phase.get("terrainplacement_wrapper_address", "")) != "0x4bd099" \
+			or String(visual_phase.get("changed_cell_update_address", "")) != "0x4bb74b" \
+			or String(visual_phase.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(visual_phase.get("visual_selector_address", "")) != "0x4bcfc3" \
+			or String(visual_phase.get("neighbor_mask_address", "")) != "0x4bce6d" \
+			or String(visual_phase.get("toolkit_table_address", "")) != "0x5436b8" \
+			or String(visual_phase.get("status", "")) != "active_internal_state" \
+			or bool(visual_phase.get("terrain_art_hash_fallback_allowed", true)) \
+			or bool(visual_phase.get("materializes_visual_record", true)) \
+			or bool(visual_phase.get("materializes_full_terrain_art_grid", true)) \
+			or bool(visual_phase.get("materializes_package_tiles", true)) \
+			or bool(visual_phase.get("project_grid_public_runtime_adoption", true)) \
+			or bool(visual_phase.get("public_package_output_allowed", true)) \
+			or int(visual_phase.get("table_count", -1)) != 5 \
+			or int(visual_phase.get("decoded_total_row_count", -1)) != 230 \
+			or int(visual_phase.get("expected_total_row_count", -1)) != 230 \
+			or int(visual_phase.get("toolkit_constructor_record_count", -1)) != 10 \
+			or int(visual_phase.get("visual_row_selection_sample_count", -1)) != 4 \
+			or int(visual_phase.get("scratch_write_sample_count", -1)) != 4 \
+			or String(visual_phase.get("scratch_write_address", "")) != "0x4bad0f" \
+			or String(visual_phase.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or String(visual_phase.get("blocked_next", "")) != "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback":
+		_fail("h3maped TerrainPlacement visual table phase drifted: %s" % JSON.stringify(visual_phase))
+		return
+	var visual_tables: Array = visual_phase.get("tables", [])
+	var expected_table_rows := [79, 46, 24, 33, 48]
+	var expected_table_addresses := ["0x543108", "0x543380", "0x5434f0", "0x5435b0", "0x542f88"]
+	if visual_tables.size() != expected_table_rows.size():
+		_fail("h3maped visual table count changed: %s" % JSON.stringify(visual_tables))
+		return
+	for table_index in expected_table_rows.size():
+		if String(visual_tables[table_index].get("table_address", "")) != expected_table_addresses[table_index] \
+				or int(visual_tables[table_index].get("decoded_row_count", -1)) != expected_table_rows[table_index] \
+				or String(visual_tables[table_index].get("status", "")) != "decoded_from_h3maped_exe":
+			_fail("h3maped visual table decode changed: %s" % JSON.stringify(visual_tables))
+			return
+	var row_samples: Array = visual_phase.get("visual_row_selection_samples", [])
+	var expected_selected_rows := [60, 77, 20, 11]
+	if row_samples.size() != expected_selected_rows.size():
+		_fail("h3maped visual selector sample count changed: %s" % JSON.stringify(row_samples))
+		return
+	for sample_index in expected_selected_rows.size():
+		if String(row_samples[sample_index].get("status", "")) != "visual_row_selected_from_decoded_h3maped_table" \
+				or int(row_samples[sample_index].get("selected_row", -1)) != expected_selected_rows[sample_index]:
+			_fail("h3maped visual selector samples changed: %s" % JSON.stringify(row_samples))
+			return
+	var scratch_samples: Array = visual_phase.get("scratch_write_samples", [])
+	var expected_scratch_words := [1925, 6565, 657, 371]
+	var expected_generated_0x24 := [3842, 4930, 1288, 713]
+	var expected_generated_0x28 := [0, 32768, 0, 0]
+	if scratch_samples.size() != expected_scratch_words.size():
+		_fail("h3maped scratch sample count changed: %s" % JSON.stringify(scratch_samples))
+		return
+	for sample_index in expected_scratch_words.size():
+		if int(scratch_samples[sample_index].get("scratch_word_u16", -1)) != expected_scratch_words[sample_index] \
+				or int(scratch_samples[sample_index].get("generated_cell_word_0x24_u32", -1)) != expected_generated_0x24[sample_index] \
+				or int(scratch_samples[sample_index].get("generated_cell_word_0x28_u32", -1)) != expected_generated_0x28[sample_index]:
+			_fail("h3maped scratch/writeback samples changed: %s" % JSON.stringify(scratch_samples))
+			return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -314,7 +377,7 @@ func _run() -> void:
 			or String(backlog[5].get("id", "")) != "zone_footprints" \
 			or String(backlog[5].get("status", "")) != "active_internal_state" \
 			or String(backlog[6].get("id", "")) != "terrain_and_terrainplacement" \
-			or String(backlog[6].get("status", "")) != "terrain_cell_writeout_active_internal_state" \
+			or String(backlog[6].get("status", "")) != "terrainplacement_visual_tables_active_internal_state" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
