@@ -114,12 +114,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "source_node_boundary_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"] \
-			or int(private_context.get("completed_phase_count", -1)) != 9 \
+			or String(private_context.get("status", "")) != "span_fill_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d"] \
+			or int(private_context.get("completed_phase_count", -1)) != 10 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped boundary traversal phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped span-fill phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -475,13 +475,74 @@ func _run() -> void:
 		_fail("h3maped source-node boundary traversal zone reports drifted: %s" % JSON.stringify(zone_reports))
 		return
 
+	var span_fill: Dictionary = private_context.get("span_fill_context", {})
+	if String(span_fill.get("phase_id", "")) != "span_fill_4a325d" \
+			or String(span_fill.get("h3maped_anchor", "")) != "0x4a325d" \
+			or String(span_fill.get("boundary_source_anchor", "")) != "0x4a2777" \
+			or String(span_fill.get("seed_source", "")) != "runtime_zone+0x10 x/y/level after 0x4a19ed bbox rescale" \
+			or String(span_fill.get("status", "")) != "private_context_ready" \
+			or not bool(span_fill.get("uses_real_0x4a2777_boundary", false)) \
+			or not bool(span_fill.get("materializes_span_fill", false)) \
+			or bool(span_fill.get("materializes_terrain", true)) \
+			or bool(span_fill.get("materializes_map_cells", true)) \
+			or bool(span_fill.get("materializes_runtime_players", true)) \
+			or bool(span_fill.get("materializes_package_tiles", true)) \
+			or bool(span_fill.get("project_grid_public_runtime_adoption", true)) \
+			or bool(span_fill.get("public_package_output_allowed", true)) \
+			or int(span_fill.get("map_width", -1)) != 36 \
+			or int(span_fill.get("map_height", -1)) != 36 \
+			or int(span_fill.get("level_count", -1)) != 1 \
+			or int(span_fill.get("h3maped_water_mode_code", -1)) != 0:
+		_fail("h3maped span-fill identity drifted: %s" % JSON.stringify(span_fill))
+		return
+	if String(span_fill.get("boundary_status", "")) != "private_context_ready" \
+			or int(span_fill.get("boundary_unique_cell_count", -1)) != 238 \
+			or int(span_fill.get("boundary_trace_write_count", -1)) != 301 \
+			or int(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
+			or int(span_fill.get("runtime_zone_fill_attempt_count", -1)) != 6 \
+			or int(span_fill.get("filled_zone_count", -1)) != 6 \
+			or int(span_fill.get("seed_blocked_count", -1)) != 1 \
+			or int(span_fill.get("missing_seed_count", -1)) != 0 \
+			or int(span_fill.get("seed_relocation_count", -1)) != 0 \
+			or int(span_fill.get("unique_filled_cell_count", -1)) != 869 \
+			or int(span_fill.get("total_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(span_fill.get("remaining_unassigned_cell_count", -1)) != 189 \
+			or int(span_fill.get("reserved_flag_cell_count", -1)) != 1107 \
+			or int(span_fill.get("pushed_span_count", -1)) != 93 \
+			or int(span_fill.get("popped_span_count", -1)) != 93 \
+			or int(span_fill.get("max_pending_span_count", -1)) != 3 \
+			or int(span_fill.get("out_of_bounds_span_count", -1)) != 0 \
+			or int(span_fill.get("blocked_initial_span_count", -1)) != 1 \
+			or String(span_fill.get("blocked_next", "")) != "0x4a3710_ordering_finalizer":
+		_fail("h3maped span-fill counts drifted: %s" % JSON.stringify(span_fill))
+		return
+	var cells_by_zone_word: Dictionary = span_fill.get("cells_by_zone_word", {})
+	if int(cells_by_zone_word.get("0", -1)) != 177 \
+			or int(cells_by_zone_word.get("1", -1)) != 91 \
+			or int(cells_by_zone_word.get("2", -1)) != 226 \
+			or int(cells_by_zone_word.get("3", -1)) != 177 \
+			or int(cells_by_zone_word.get("4", -1)) != 207 \
+			or int(cells_by_zone_word.get("5", -1)) != 229:
+		_fail("h3maped span-fill zone-word distribution drifted: %s" % JSON.stringify(cells_by_zone_word))
+		return
+	var zone_fill_reports: Array = span_fill.get("zone_fill_reports", [])
+	if zone_fill_reports.size() != 6 \
+			or String(zone_fill_reports[0].get("status", "")) != "0x4a325d_span_fill_executed" \
+			or int(zone_fill_reports[0].get("runtime_zone_index", -1)) != 0 \
+			or int(zone_fill_reports[0].get("filled_cell_count", -1)) != 151 \
+			or int(zone_fill_reports[1].get("filled_cell_count", -1)) != 48 \
+			or int(zone_fill_reports[2].get("blocked_initial_span_count", -1)) != 1 \
+			or int(zone_fill_reports[5].get("runtime_zone_index", -1)) != 5:
+		_fail("h3maped span-fill zone reports drifted: %s" % JSON.stringify(zone_fill_reports))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 
