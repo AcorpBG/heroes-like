@@ -633,6 +633,78 @@ func _run() -> void:
 		_fail("Terrain tile-byte writeback samples drifted: %s" % JSON.stringify(terrain_tile_samples))
 		return
 
+	var town_castle: Dictionary = report.get("town_castle_phase", {})
+	var town_stamping: Dictionary = town_castle.get("direct_stamping_projection", {})
+	var town_adoption: Dictionary = town_castle.get("project_town_adoption_candidate", {})
+	var town_records: Array = town_adoption.get("town_records", [])
+	var player_starts: Array = town_adoption.get("player_starts", [])
+	var town_scheduled: Array = town_castle.get("scheduled_records", [])
+	var town_skipped: Array = town_castle.get("skipped_records", [])
+	var town_projection_records: Array = town_stamping.get("records", [])
+	if String(town_castle.get("phase_id", "")) != "town_castle_phase" \
+			or String(town_castle.get("status", "")) != "active_strict_executable_port" \
+			or String(town_castle.get("h3maped_anchor", "")) != "0x4a8d2c/0x4a8db2/0x4a93a2" \
+			or String(town_castle.get("source_range", "")) != "0x4a8d2c/0x4a8db2/0x4a93a2/0x49aa93/0x49a09c/0x49b3c1/0x49ba89" \
+			or String(town_castle.get("binary_byte_prefix_0x4a8d2c", "")) != "55 8b ec 51 53 56 57 8b 7d 08 8b d9 8b 37 8b 47" \
+			or String(town_castle.get("binary_byte_prefix_0x4a8db2", "")) != "55 8b ec 83 ec 48 8b 45 08 53 56 33 db 8b 30 8b" \
+			or String(town_castle.get("binary_byte_prefix_0x4a93a2", "")) != "b8 72 aa 52 00 e8 24 cd 03 00 83 ec 48 83 7d 0c" \
+			or String(town_castle.get("binary_byte_prefix_0x49aa93", "")) != "55 8b ec 51 51 89 4d fc 53 8b 4d 18 56 57 6a 00" \
+			or String(town_castle.get("binary_byte_prefix_0x49a09c", "")) != "55 8b ec 51 51 8b 45 1c 80 65 ff 00 53 56 83 78" \
+			or String(town_castle.get("binary_byte_prefix_0x49b3c1", "")) != "56 57 33 ff 8b f1 33 c0 80 7c 06 41 00 74 01 47" \
+			or String(town_castle.get("binary_byte_prefix_0x49ba89", "")) != "8b 44 24 04 56 8b f1 c7 06 74 0a 54 00 89 46 04" \
+			or int(town_castle.get("source_player_min_castle_count", -1)) != 4 \
+			or int(town_castle.get("assigned_player_min_castle_count", -1)) != 3 \
+			or int(town_castle.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+			or int(town_castle.get("scheduled_direct_minimum_object_count", -1)) != 3 \
+			or int(town_castle.get("scheduled_owned_player_town_count", -1)) != 3 \
+			or int(town_castle.get("project_town_record_candidate_count", -1)) != 3 \
+			or int(town_castle.get("project_player_start_candidate_count", -1)) != 3 \
+			or int(town_stamping.get("direct_candidate_scan_count", -1)) != 3 \
+			or int(town_stamping.get("direct_candidate_total", -1)) != 445 \
+			or int(town_stamping.get("direct_footprint_eligible_total", -1)) != 85 \
+			or int(town_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
+			or int(town_stamping.get("direct_unique_selection_count", -1)) != 2 \
+			or int(town_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
+			or int(town_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
+			or int(town_stamping.get("direct_record_projection_count", -1)) != 3 \
+			or int(town_stamping.get("object_rng_state_before_0x4a93a2_uint32", -1)) != 2166683160 \
+			or int(town_stamping.get("object_rng_state_after_0x4a93a2_uint32", -1)) != 811474043 \
+			or int(town_adoption.get("town_record_count", -1)) != 3 \
+			or int(town_adoption.get("player_start_count", -1)) != 3 \
+			or int(town_adoption.get("synchronized_player_start_count", -1)) != 3 \
+			or town_records.size() != 3 \
+			or player_starts.size() != 3 \
+			or town_scheduled.size() != 3 \
+			or town_skipped.size() != 1 \
+			or town_projection_records.size() != 3 \
+			or not bool(town_castle.get("materializes_private_town_candidates", false)) \
+			or bool(town_castle.get("materializes_town_objects", true)) \
+			or bool(town_castle.get("materializes_package_tiles", true)) \
+			or bool(town_castle.get("adopts_into_runtime_grid", true)) \
+			or bool(town_castle.get("public_package_output_allowed", true)) \
+			or String(town_castle.get("blocked_next", "")) != "object_vector_prerequisite_phase_4a9d6a_4aab7e":
+		_fail("Strict town/castle phase port drifted: %s" % JSON.stringify(town_castle))
+		return
+	if int(town_records[0].get("owner_slot", -1)) != 1 \
+			or String(town_records[0].get("owner", "")) != "player" \
+			or int(town_records[0].get("x", -1)) != 26 \
+			or int(town_records[0].get("y", -1)) != 16 \
+			or int(player_starts[0].get("x", -2)) != int(town_records[0].get("x", -1)) \
+			or int(player_starts[0].get("y", -2)) != int(town_records[0].get("y", -1)) \
+			or int(town_records[1].get("owner_slot", -1)) != 2 \
+			or int(town_records[1].get("x", -1)) != 23 \
+			or int(town_records[1].get("y", -1)) != 23 \
+			or int(player_starts[1].get("x", -2)) != int(town_records[1].get("x", -1)) \
+			or int(player_starts[1].get("y", -2)) != int(town_records[1].get("y", -1)) \
+			or int(town_records[2].get("owner_slot", -1)) != 3 \
+			or int(town_records[2].get("x", -1)) != 18 \
+			or int(town_records[2].get("y", -1)) != 5 \
+			or int(player_starts[2].get("x", -2)) != int(town_records[2].get("x", -1)) \
+			or int(player_starts[2].get("y", -2)) != int(town_records[2].get("y", -1)) \
+			or int(town_projection_records[2].get("random_tie_rng_value", -1)) != 12382:
+		_fail("Town/player-start synchronization drifted: %s / %s" % [JSON.stringify(town_records), JSON.stringify(player_starts)])
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -640,13 +712,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "town_object_placement_0x4a8d2c_0x4a8db2_0x4a93a2":
+			or String(strict_state.get("next_required_port", "")) != "mines_rewards_and_object_vector_0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 4 \
-			or not pending_ports.has("town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2") \
+	if pending_ports.size() != 3 \
+			or not pending_ports.has("mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -668,7 +740,8 @@ func _run() -> void:
 			or String(backlog[11].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[12].get("id", "")) != "terrain_tile_byte_writeback" \
 			or String(backlog[12].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[13].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[13].get("id", "")) != "town_object_placement" \
+			or String(backlog[13].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[14].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[15].get("status", "")) != "pending_runtime_port" \
 			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
