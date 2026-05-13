@@ -1073,6 +1073,34 @@ func _run() -> void:
 				or bool(terrain_loop.get("materialized_candidate_records", true)):
 		_fail("h3maped terrain-specialized candidate loop boundary drifted: %s" % JSON.stringify(terrain_loop))
 		return
+	var constructor_tail: Dictionary = generic_selector.get("candidate_builder_static_constructor_tail", {})
+	var constructor_tail_records: Array = constructor_tail.get("records", [])
+	if String(generic_selector.get("candidate_builder_static_constructor_tail_status", "")) != "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized" \
+				or String(constructor_tail.get("source_range", "")) != "0x4a1194..0x4a1701" \
+				or int(constructor_tail.get("record_count", -1)) != 29 \
+				or constructor_tail_records.size() != 29 \
+				or String(constructor_tail_records[0].get("source_address", "")) != "0x4a1194" \
+				or String(constructor_tail_records[0].get("vtable_address", "")) != "0x540ba0" \
+				or int(constructor_tail_records[0].get("type_id", -1)) != 0x54 \
+				or int(constructor_tail_records[0].get("value", -1)) != 0x3e8 \
+				or int(constructor_tail_records[0].get("weight", -1)) != 0x64 \
+				or String(constructor_tail_records[7].get("source_address", "")) != "0x4a130d" \
+				or String(constructor_tail_records[7].get("vtable_address", "")) != "0x540c90" \
+				or int(constructor_tail_records[7].get("type_id", -1)) != 0x5d \
+				or int(constructor_tail_records[7].get("field_0x14", -1)) != 1 \
+				or int(constructor_tail_records[11].get("field_0x14", -1)) != 5 \
+				or String(constructor_tail_records[17].get("source_address", "")) != "0x4a14c7" \
+				or int(constructor_tail_records[17].get("type_id", -1)) != 0x64 \
+				or int(constructor_tail_records[17].get("value", -1)) != 0x5dc \
+				or int(constructor_tail_records[17].get("weight", -1)) != 0xc8 \
+				or String(constructor_tail_records[28].get("source_address", "")) != "0x4a16d7" \
+				or String(constructor_tail_records[28].get("vtable_address", "")) != "0x540c50" \
+				or int(constructor_tail_records[28].get("type_id", -1)) != 0x71 \
+				or int(constructor_tail_records[28].get("value", -1)) != 0x5dc \
+				or int(constructor_tail_records[28].get("weight", -1)) != 0x50 \
+				or bool(constructor_tail.get("materialized_candidate_records", true)):
+		_fail("h3maped static constructor tail boundary drifted: %s" % JSON.stringify(constructor_tail))
+		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
