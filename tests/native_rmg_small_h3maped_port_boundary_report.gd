@@ -794,36 +794,53 @@ func _run() -> void:
 	var live_mask_histogram: Dictionary = live_repaint_feedback.get("neighbor_mask_histogram", {})
 	var live_selector_histogram: Dictionary = live_repaint_feedback.get("selector_kind_histogram", {})
 	var live_samples: Array = live_repaint_feedback.get("sample_records", [])
-	if String(terrain_writeout.get("repaint_live_visual_feedback_status", "")) != "0x4a4025_0x4bb74b_repaint_live_scratch_visual_feedback_boundary_only" \
-			or String(live_repaint_feedback.get("status", "")) != "0x4a4025_0x4bb74b_repaint_live_scratch_visual_feedback_boundary_only" \
+	var live_seed_samples: Array = live_repaint_feedback.get("seed_samples", [])
+	var live_drain_samples: Array = live_repaint_feedback.get("drain_samples", [])
+	if String(terrain_writeout.get("repaint_live_visual_feedback_status", "")) != "0x4a4025_0x4bb74b_0x4bc5f0_repaint_queue_live_scratch_visual_feedback_boundary" \
+			or String(live_repaint_feedback.get("status", "")) != "0x4a4025_0x4bb74b_0x4bc5f0_repaint_queue_live_scratch_visual_feedback_boundary" \
 			or not bool(live_repaint_feedback.get("visual_tables_decoded", false)) \
-			or bool(live_repaint_feedback.get("exact_queue_drain_complete", true)) \
+			or not bool(live_repaint_feedback.get("exact_queue_drain_complete", false)) \
 			or bool(live_repaint_feedback.get("adopts_into_runtime_grid", true)) \
 			or bool(live_repaint_feedback.get("materializes_package_tiles", true)) \
 			or not bool(live_repaint_feedback.get("live_feedback_materialized", false)) \
 			or not bool(live_repaint_feedback.get("uses_live_scratch_neighbor_mask", false)) \
 			or int(live_repaint_feedback.get("tile_count", -1)) != 1296 \
-			or int(live_repaint_feedback.get("live_visual_attempt_count", -1)) != 2403 \
-			or int(live_repaint_feedback.get("live_visual_write_count", -1)) != 2403 \
+			or int(live_repaint_feedback.get("live_visual_attempt_count", -1)) != 2845 \
+			or int(live_repaint_feedback.get("live_visual_write_count", -1)) != 2845 \
 			or int(live_repaint_feedback.get("live_visual_missing_bucket_count", -1)) != 0 \
 			or int(live_repaint_feedback.get("live_initial_water_attempt_count", -1)) != 1296 \
-			or int(live_repaint_feedback.get("live_repaint_attempt_count", -1)) != 1107 \
+			or int(live_repaint_feedback.get("live_repaint_attempt_count", -1)) != 942 \
+			or int(live_repaint_feedback.get("live_queue_attempt_count", -1)) != 607 \
 			or int(live_repaint_feedback.get("live_dirty_cell_count", -1)) != 1296 \
 			or int(live_repaint_feedback.get("live_roundtrip_mismatch_count", -1)) != 0 \
-			or int(live_repaint_feedback.get("live_terrain_mismatch_count", -1)) != 0 \
-			or int(live_repaint_feedback.get("live_full_native_cell_count", -1)) != 1297 \
-			or int(live_repaint_feedback.get("live_terrain_art_nonzero_cell_count", -1)) != 2392 \
-			or int(live_repaint_feedback.get("live_terrain_flag_cell_count", -1)) != 1023 \
-			or int(live_repaint_feedback.get("rng_state_after_live_visual_selection_uint32", -1)) != 2994722404 \
-			or int(live_mask_histogram.get("1", -1)) != 2015 \
-			or int(live_mask_histogram.get("2", -1)) != 317 \
-			or int(live_mask_histogram.get("4", -1)) != 71 \
-			or int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1297 \
-			or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1106 \
+			or int(live_repaint_feedback.get("live_terrain_mismatch_count", -1)) != 181 \
+			or int(live_repaint_feedback.get("live_full_native_cell_count", -1)) != 1326 \
+			or int(live_repaint_feedback.get("live_terrain_art_nonzero_cell_count", -1)) != 2785 \
+			or int(live_repaint_feedback.get("live_terrain_flag_cell_count", -1)) != 1255 \
+			or int(live_repaint_feedback.get("rng_state_after_live_visual_selection_uint32", -1)) != 1452413421 \
+			or int(live_repaint_feedback.get("changed_cell_update_count", -1)) != 1107 \
+			or int(live_repaint_feedback.get("initial_set_a_candidate_count", -1)) != 1 \
+			or int(live_repaint_feedback.get("initial_set_b_candidate_count", -1)) != 46 \
+			or int(live_repaint_feedback.get("total_set_a_insert_count", -1)) != 176 \
+			or int(live_repaint_feedback.get("total_set_b_insert_count", -1)) != 10522 \
+			or int(live_repaint_feedback.get("set_a_drain_count", -1)) != 176 \
+			or int(live_repaint_feedback.get("set_b_drain_count", -1)) != 10522 \
+			or int(live_repaint_feedback.get("set_b_candidate_true_count", -1)) != 386 \
+			or int(live_repaint_feedback.get("retouched_cell_write_count", -1)) != 221 \
+			or bool(live_repaint_feedback.get("drain_guard_exhausted", true)) \
+			or int(live_mask_histogram.get("0", -1)) != 183 \
+			or int(live_mask_histogram.get("1", -1)) != 2066 \
+			or int(live_mask_histogram.get("2", -1)) != 448 \
+			or int(live_mask_histogram.get("4", -1)) != 148 \
+			or int(live_selector_histogram.get("full_native_special_frequency_masked_by_0x4bce6d", -1)) != 1326 \
+			or int(live_selector_histogram.get("transition_class_bucket", -1)) != 1519 \
 			or PackedInt32Array(live_repaint_feedback.get("scratch_word_u16", PackedInt32Array())).size() != 1296 \
 			or PackedInt32Array(live_repaint_feedback.get("generated_cell_word_0x24_u32", PackedInt32Array())).size() != 1296 \
 			or PackedInt32Array(live_repaint_feedback.get("generated_cell_word_0x28_u32", PackedInt32Array())).size() != 1296 \
-			or live_samples.size() != 16:
+			or PackedInt32Array(live_repaint_feedback.get("post_queue_terrain_code_u16", PackedInt32Array())).size() != 1296 \
+			or live_samples.size() != 16 \
+			or live_seed_samples.size() != 12 \
+			or live_drain_samples.size() != 24:
 		_fail("0x4a4025/0x4bb74b repaint live visual feedback drifted: %s" % JSON.stringify(live_repaint_feedback))
 		return
 	if String(live_samples[0].get("source_branch", "")) != "0x4a4025_initial_water_repaint" \
