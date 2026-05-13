@@ -27,6 +27,7 @@ constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
 constexpr const char *OBJECT_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json";
 constexpr const char *CRTRAITS_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_bmp/raw/crtraits.txt";
+constexpr const char *REWARD_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
 constexpr const char *PROJECT_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *ARCHIVED_REPORT_TREADMILL_PATH = "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp";
 constexpr const char *ARCHIVED_OVERGROWN_ACTIVE_PATH = "src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp";
@@ -63,6 +64,17 @@ struct H3MapedRng {
 struct H3ObjectLimitOverride {
 	int32_t type_id = -1;
 	int32_t limit = 0;
+};
+
+struct H3MapedRewardCandidate {
+	const char *constructor_address = "";
+	const char *vtable_address = "";
+	int32_t type_id = -1;
+	int32_t subtype_id = 0;
+	int32_t value = 0;
+	int32_t weight = 0;
+	int32_t extra_0x14 = 0;
+	const char *source_note = "";
 };
 
 struct H3ObjectRow {
@@ -708,6 +720,163 @@ std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_terrain(const s
 			result.push_back(row);
 		}
 	}
+	return result;
+}
+
+int32_t h3maped_global_type_limit_5a26e4(int32_t type_id) {
+	static constexpr H3ObjectLimitOverride OVERRIDES[] = {
+		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
+		{ 32, 32 }, { 51, 32 }, { 61, 32 }, { 102, 32 }, { 41, 32 }, { 4, 32 },
+		{ 47, 32 }, { 107, 32 }, { 104, 32 }, { 113, 32 }, { 88, 32 }, { 89, 32 },
+		{ 90, 32 }, { 92, 32 }, { 55, 32 }, { 109, 32 }, { 112, 32 }, { 48, 32 },
+		{ 22, 32 }, { 39, 32 }, { 108, 32 }, { 105, 32 }, { 83, 48 }, { 7, 32 },
+	};
+	for (const H3ObjectLimitOverride &entry : OVERRIDES) {
+		if (entry.type_id == type_id) {
+			return entry.limit;
+		}
+	}
+	return 0x7d00;
+}
+
+int32_t h3maped_zone_type_limit_5a2a8c(int32_t type_id) {
+	static constexpr H3ObjectLimitOverride OVERRIDES[] = {
+		{ 2, 1 }, { 13, 1 }, { 14, 1 }, { 15, 1 }, { 27, 1 }, { 28, 1 },
+		{ 30, 1 }, { 31, 1 }, { 35, 1 }, { 38, 1 }, { 42, 1 }, { 48, 1 },
+		{ 49, 1 }, { 56, 1 }, { 58, 1 }, { 60, 1 }, { 64, 1 }, { 80, 1 },
+		{ 94, 1 }, { 96, 1 }, { 99, 1 }, { 106, 1 }, { 110, 1 }, { 113, 3 },
+	};
+	for (const H3ObjectLimitOverride &entry : OVERRIDES) {
+		if (entry.type_id == type_id) {
+			return entry.limit;
+		}
+	}
+	return 0x7d00;
+}
+
+std::vector<H3MapedRewardCandidate> h3maped_reward_proxy_backed_candidates_49f95a() {
+	return {
+		{ "0x49fa63", "0x540bd0", 6, 0, 6000, 20, 5000, "Pandora Box value candidate" },
+		{ "0x49faa5", "0x540bd0", 6, 0, 12000, 20, 10000, "Pandora Box value candidate" },
+		{ "0x49fae7", "0x540bd0", 6, 0, 18000, 20, 15000, "Pandora Box value candidate" },
+		{ "0x49fb29", "0x540bd0", 6, 0, 24000, 20, 20000, "Pandora Box value candidate" },
+		{ "0x49fb6b", "0x540be0", 6, 0, 5000, 5, 5000, "Pandora Box variant candidate" },
+		{ "0x49fbaf", "0x540be0", 6, 0, 10000, 5, 10000, "Pandora Box variant candidate" },
+		{ "0x49fbe9", "0x540be0", 6, 0, 15000, 5, 15000, "Pandora Box variant candidate" },
+		{ "0x49fc28", "0x540be0", 6, 0, 20000, 5, 20000, "Pandora Box variant candidate" },
+		{ "0x4a0150", "0x540ba0", 12, 0, 2000, 500, 0, "Campfire candidate" },
+		{ "0x4a026b", "0x540ba0", 16, 0, 3000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a02a3", "0x540ba0", 16, 1, 2000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a02df", "0x540ba0", 16, 2, 2000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a031b", "0x540ba0", 16, 3, 5000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0357", "0x540ba0", 16, 4, 1500, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0393", "0x540ba0", 16, 5, 3000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a03cf", "0x540ba0", 16, 6, 9000, 100, 0, "Creature Bank candidate" },
+		{ "0x4a0b4a", "0x540bb0", 66, 0, 2000, 150, 0, "Random Treasure Artifact candidate" },
+		{ "0x4a0b82", "0x540bb0", 67, 0, 5000, 150, 0, "Random Minor Artifact candidate" },
+		{ "0x4a0bba", "0x540bb0", 68, 0, 10000, 150, 0, "Random Major Artifact candidate" },
+		{ "0x4a0bf2", "0x540bb0", 69, 0, 20000, 150, 0, "Random Relic candidate" },
+		{ "0x4a0c2f", "0x540c10", 76, 0, 1500, 2000, 0, "Random Resource candidate" },
+		{ "0x4a0ca3", "0x540c10", 79, 0, 1400, 300, 0, "Resource candidate" },
+		{ "0x4a0cdb", "0x540c10", 79, 2, 1400, 300, 0, "Resource candidate" },
+		{ "0x4a0d17", "0x540c10", 79, 1, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0d53", "0x540c10", 79, 3, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0d8f", "0x540c10", 79, 4, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0dcb", "0x540c10", 79, 5, 2000, 300, 0, "Resource candidate" },
+		{ "0x4a0e07", "0x540c10", 79, 6, 750, 300, 0, "Resource candidate" },
+		{ "0x4a11a7", "0x540ba0", 84, 0, 1000, 100, 0, "Crypt candidate" },
+		{ "0x4a1324", "0x540c90", 93, 0, 500, 30, 1, "Spell Scroll candidate" },
+		{ "0x4a134c", "0x540c90", 93, 0, 2000, 30, 2, "Spell Scroll candidate" },
+		{ "0x4a137a", "0x540c90", 93, 0, 3000, 30, 3, "Spell Scroll candidate" },
+		{ "0x4a13a5", "0x540c90", 93, 0, 4000, 30, 4, "Spell Scroll candidate" },
+		{ "0x4a13d0", "0x540c90", 93, 0, 5000, 30, 5, "Spell Scroll candidate" },
+		{ "0x4a1515", "0x540ba0", 101, 0, 1500, 1000, 0, "Treasure Chest candidate" },
+		{ "0x4a1605", "0x540ba0", 107, 0, 1000, 50, 0, "School of War candidate" },
+	};
+}
+
+Dictionary reward_proxy_for_type_subtype(int32_t type_id, int32_t subtype_id) {
+	Dictionary load = load_json_dictionary(REWARD_PROXY_CATALOG_PATH);
+	if (!bool(load.get("ok", false))) {
+		return Dictionary();
+	}
+	Dictionary catalog = load.get("data", Dictionary());
+	Array entries = catalog.get("entries", Array());
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		if (Variant(entries[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary entry = entries[index];
+		if (String(entry.get("generated_kind", "")) != "reward_reference") {
+			continue;
+		}
+		if (int32_t(entry.get("homm3_re_object_type_id", -1)) == type_id && int32_t(entry.get("homm3_re_object_subtype", 0)) == subtype_id) {
+			return entry;
+		}
+	}
+	return Dictionary();
+}
+
+int32_t reward_proxy_reference_count_for_type_subtype(int32_t type_id, int32_t subtype_id) {
+	return reward_proxy_for_type_subtype(type_id, subtype_id).is_empty() ? 0 : 1;
+}
+
+struct RewardObjectSelection {
+	bool selected = false;
+	H3MapedRewardCandidate candidate;
+	Dictionary proxy;
+	int32_t eligible_count = 0;
+	int32_t eligible_weight_total = 0;
+	int32_t rejected_value_count = 0;
+	int32_t rejected_proxy_count = 0;
+	int32_t rejected_limit_count = 0;
+	int32_t rng_value = -1;
+	int32_t selected_weight_roll = -1;
+};
+
+RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, int32_t max_value, H3MapedRng &rng) {
+	RewardObjectSelection result;
+	struct Eligible {
+		H3MapedRewardCandidate candidate;
+		Dictionary proxy;
+	};
+	std::vector<Eligible> eligible;
+	for (const H3MapedRewardCandidate &candidate : h3maped_reward_proxy_backed_candidates_49f95a()) {
+		if (candidate.value < min_value || candidate.value > max_value) {
+			result.rejected_value_count += 1;
+			continue;
+		}
+		if (h3maped_global_type_limit_5a26e4(candidate.type_id) <= 0 || h3maped_zone_type_limit_5a2a8c(candidate.type_id) <= 0) {
+			result.rejected_limit_count += 1;
+			continue;
+		}
+		Dictionary proxy = reward_proxy_for_type_subtype(candidate.type_id, candidate.subtype_id);
+		if (proxy.is_empty()) {
+			result.rejected_proxy_count += 1;
+			continue;
+		}
+		eligible.push_back(Eligible { candidate, proxy });
+		result.eligible_weight_total += candidate.weight;
+	}
+	result.eligible_count = int32_t(eligible.size());
+	if (eligible.empty() || result.eligible_weight_total <= 0) {
+		return result;
+	}
+	result.rng_value = rng.next();
+	result.selected_weight_roll = result.rng_value % result.eligible_weight_total;
+	int32_t accumulator = 0;
+	for (const Eligible &entry : eligible) {
+		accumulator += entry.candidate.weight;
+		if (result.selected_weight_roll < accumulator) {
+			result.selected = true;
+			result.candidate = entry.candidate;
+			result.proxy = entry.proxy;
+			return result;
+		}
+	}
+	result.selected = true;
+	result.candidate = eligible.back().candidate;
+	result.proxy = eligible.back().proxy;
 	return result;
 }
 
@@ -5442,6 +5611,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_scheduler_budget_total = 0;
 	int32_t reward_scheduler_preview_attempt_count = 0;
 	int32_t reward_value_preview_rng_call_count = 0;
+	int32_t reward_object_lookup_count = 0;
+	int32_t reward_object_lookup_selected_count = 0;
+	int32_t reward_object_lookup_rng_call_count = 0;
+	int32_t reward_candidate_scan_count = 0;
+	int32_t reward_candidate_scan_eligible_total = 0;
+	int32_t reward_candidate_scan_weight_total = 0;
+	Array reward_object_lookup_records;
 	for (int64_t zone_index = 0; zone_index < runtime_records.size(); ++zone_index) {
 		if (Variant(runtime_records[zone_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -5538,6 +5714,58 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			value_record["commit_helper"] = "0x4aa9b7";
 			value_record["commit_materialized"] = false;
 			value_record["coordinate_vector_append_pending"] = true;
+
+			const int32_t object_lookup_min_value = selected_value / 4;
+			const int32_t object_lookup_max_value = selected_value;
+			const RewardObjectSelection object_selection = h3maped_select_reward_candidate_4a9f1c(object_lookup_min_value, object_lookup_max_value, reward_preview_rng);
+			reward_object_lookup_count += 1;
+			reward_candidate_scan_count += 1;
+			reward_candidate_scan_eligible_total += object_selection.eligible_count;
+			reward_candidate_scan_weight_total += object_selection.eligible_weight_total;
+			if (object_selection.rng_value >= 0) {
+				reward_object_lookup_rng_call_count += 1;
+			}
+			Dictionary object_lookup;
+			object_lookup["phase"] = "0x4aa1db_reward_object_lookup_private";
+			object_lookup["candidate_scan_helper_address"] = "0x4a9f1c";
+			object_lookup["candidate_vector_builder_address"] = "0x49f95a";
+			object_lookup["primary_probe_retry_budget"] = 3;
+			object_lookup["primary_min_value"] = object_lookup_min_value;
+			object_lookup["primary_max_value"] = object_lookup_max_value;
+			object_lookup["primary_value_divisor"] = 4;
+			object_lookup["scan_source"] = "proxy_backed_recovered_static_candidates_from_0x49f95a";
+			object_lookup["scan_complete_candidate_vector_claim"] = false;
+			object_lookup["proxy_catalog_path"] = REWARD_PROXY_CATALOG_PATH;
+			object_lookup["proxy_adaptation_policy"] = "h3maped_type_subtype_to_original_runtime_proxy";
+			object_lookup["eligible_candidate_count"] = object_selection.eligible_count;
+			object_lookup["eligible_candidate_weight_total"] = object_selection.eligible_weight_total;
+			object_lookup["rejected_value_range_count"] = object_selection.rejected_value_count;
+			object_lookup["rejected_native_proxy_mapping_count"] = object_selection.rejected_proxy_count;
+			object_lookup["rejected_type_limit_count"] = object_selection.rejected_limit_count;
+			object_lookup["weighted_rng_address"] = "0x4e7276";
+			object_lookup["weighted_rng_value"] = object_selection.rng_value;
+			object_lookup["weighted_selection_roll"] = object_selection.selected_weight_roll;
+			object_lookup["selected"] = object_selection.selected;
+			object_lookup["coordinate_commit_helper"] = "0x4aa9b7";
+			object_lookup["coordinate_commit_materialized"] = false;
+			if (object_selection.selected) {
+				reward_object_lookup_selected_count += 1;
+				object_lookup["selected_constructor_address"] = object_selection.candidate.constructor_address;
+				object_lookup["selected_vtable_address"] = object_selection.candidate.vtable_address;
+				object_lookup["selected_type_id"] = object_selection.candidate.type_id;
+				object_lookup["selected_subtype_id"] = object_selection.candidate.subtype_id;
+				object_lookup["selected_value"] = object_selection.candidate.value;
+				object_lookup["selected_weight"] = object_selection.candidate.weight;
+				object_lookup["selected_extra_0x14"] = object_selection.candidate.extra_0x14;
+				object_lookup["selected_source_note"] = object_selection.candidate.source_note;
+				object_lookup["native_proxy_catalog_id"] = object_selection.proxy.get("id", "");
+				object_lookup["native_proxy_object_id"] = object_selection.proxy.get("native_proxy_object_id", "");
+				object_lookup["native_proxy_family"] = object_selection.proxy.get("native_proxy_family", "");
+				object_lookup["native_proxy_category"] = object_selection.proxy.get("native_proxy_category", "");
+				object_lookup["homm3_re_object_def_ref"] = object_selection.proxy.get("homm3_re_object_def_ref", "");
+			}
+			value_record["object_lookup_control_flow"] = object_lookup;
+			reward_object_lookup_records.append(object_lookup);
 			reward_value_preview_records.append(value_record);
 			selected_attempts.append(value_record);
 			reward_scheduler_preview_attempt_count += 1;
@@ -5571,12 +5799,21 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["zone_previews"] = reward_scheduler_preview;
 	reward_scheduler["scheduler_records"] = reward_scheduler_records;
 	reward_scheduler["value_preview_records"] = reward_value_preview_records;
+	reward_scheduler["object_lookup_records"] = reward_object_lookup_records;
 	reward_scheduler["budget_base"] = reward_budget_base;
 	reward_scheduler["scheduler_zone_count"] = reward_scheduler_zone_count;
 	reward_scheduler["scheduler_total_density_sum"] = reward_scheduler_total_density_sum;
 	reward_scheduler["scheduler_budget_argument_total"] = reward_scheduler_budget_total;
 	reward_scheduler["value_preview_attempt_count"] = reward_scheduler_preview_attempt_count;
 	reward_scheduler["value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
+	reward_scheduler["object_lookup_count"] = reward_object_lookup_count;
+	reward_scheduler["object_lookup_selected_count"] = reward_object_lookup_selected_count;
+	reward_scheduler["object_lookup_rng_call_count"] = reward_object_lookup_rng_call_count;
+	reward_scheduler["candidate_scan_count"] = reward_candidate_scan_count;
+	reward_scheduler["candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
+	reward_scheduler["candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
+	reward_scheduler["candidate_scan_source"] = "proxy_backed_recovered_static_candidates_from_0x49f95a";
+	reward_scheduler["candidate_scan_complete_vector_claim"] = false;
 	reward_scheduler["preview_rng_state_before_0x4aa354_uint32"] = int64_t(reward_preview_rng_state_before);
 	reward_scheduler["preview_rng_state_after_0x4aa354_uint32"] = int64_t(reward_preview_rng.state);
 	reward_scheduler["materializes_private_reward_coordinate_records"] = false;
@@ -5607,6 +5844,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_scheduler_preview_attempt_count"] = reward_scheduler_preview_attempt_count;
 	phase["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
 	phase["reward_scheduler_budget_argument_total"] = reward_scheduler_budget_total;
+	phase["reward_object_lookup_count"] = reward_object_lookup_count;
+	phase["reward_object_lookup_selected_count"] = reward_object_lookup_selected_count;
+	phase["reward_object_lookup_rng_call_count"] = reward_object_lookup_rng_call_count;
+	phase["reward_candidate_scan_count"] = reward_candidate_scan_count;
+	phase["reward_candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
+	phase["reward_candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
 	phase["object_catalog_source_path"] = OBJECT_CATALOG_SOURCE_PATH;
 	phase["grid_available"] = grid_available;
 	phase["reward_coordinate_commit_materialized"] = false;
