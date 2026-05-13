@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "link_seed_setup_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup"] \
+			or String(active_state.get("status", "")) != "coordinate_replay_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "coordinate_replay_and_zone_footprints_0x4a1f3b":
+			or String(active_state.get("blocked_next", "")) != "zone_footprint_source_nodes_0x4a3a03_0x4cc788":
 		_fail("Fresh active generation state did not stop at runtime-zone records: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -131,6 +131,45 @@ func _run() -> void:
 			or bool(link_phase.get("materializes_public_output", true)):
 		_fail("h3maped link seed setup drifted: %s" % JSON.stringify(link_phase))
 		return
+	var coordinate_phase: Dictionary = active_state.get("coordinate_replay", {})
+	var bbox: Dictionary = coordinate_phase.get("bounding_box_rescale", {})
+	var scaled_coords: Array = coordinate_phase.get("scaled_zone_coordinates", [])
+	if String(coordinate_phase.get("h3maped_anchor", "")) != "0x4a218c" \
+			or String(coordinate_phase.get("link_endpoint_consumer_anchor", "")) != "0x4a1f3b" \
+			or String(coordinate_phase.get("candidate_generator_anchor", "")) != "0x4a17f5" \
+			or String(coordinate_phase.get("distance_validation_anchor", "")) != "0x4a1701" \
+			or String(coordinate_phase.get("candidate_prune_anchor", "")) != "0x4a1ad8" \
+			or String(coordinate_phase.get("bbox_rescale_anchor", "")) != "0x4a19ed" \
+			or String(coordinate_phase.get("status", "")) != "active_internal_state" \
+			or int(coordinate_phase.get("placement_step_count", -1)) != 18 \
+			or int(coordinate_phase.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
+			or int(coordinate_phase.get("town_choice_rng_calls_during_0x4a218c", -1)) != 4 \
+			or int(coordinate_phase.get("total_interleaved_rng_calls_during_0x4a218c", -1)) != 22 \
+			or int(coordinate_phase.get("rng_event_count", -1)) != 22 \
+			or int(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 255755822 \
+			or int(bbox.get("selected_span_before_rescale", -1)) != 84 \
+			or scaled_coords.size() != 6 \
+			or bool(coordinate_phase.get("materializes_zone_footprints", true)) \
+			or bool(coordinate_phase.get("materializes_terrain", true)) \
+			or bool(coordinate_phase.get("materializes_map_cells", true)) \
+			or bool(coordinate_phase.get("materializes_public_output", true)):
+		_fail("h3maped coordinate replay drifted: %s" % JSON.stringify(coordinate_phase))
+		return
+	var expected_coords := [
+		{"x": 23, "y": 11},
+		{"x": 21, "y": 22},
+		{"x": 12, "y": 23},
+		{"x": 18, "y": 4},
+		{"x": 18, "y": 30},
+		{"x": 12, "y": 11},
+	]
+	for coord_index in expected_coords.size():
+		if int(scaled_coords[coord_index].get("runtime_zone_index", -1)) != coord_index \
+				or int(scaled_coords[coord_index].get("x_after_bbox_rescale", -1)) != int(expected_coords[coord_index]["x"]) \
+				or int(scaled_coords[coord_index].get("y_after_bbox_rescale", -1)) != int(expected_coords[coord_index]["y"]) \
+				or int(scaled_coords[coord_index].get("level", -1)) != 0:
+			_fail("h3maped scaled coordinate replay changed: %s" % JSON.stringify(scaled_coords))
+			return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -163,7 +202,7 @@ func _run() -> void:
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 11 \
+	if backlog.size() != 12 \
 			or String(backlog[0].get("id", "")) != "template_selection" \
 			or String(backlog[0].get("status", "")) != "active_boundary" \
 			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
@@ -172,9 +211,13 @@ func _run() -> void:
 			or String(backlog[2].get("status", "")) != "active_internal_state" \
 			or String(backlog[3].get("id", "")) != "link_seed_setup" \
 			or String(backlog[3].get("status", "")) != "active_internal_state" \
-			or String(backlog[8].get("id", "")) != "roads_and_rivers" \
-			or String(backlog[9].get("id", "")) != "connections_blockers_and_guards" \
-			or String(backlog[10].get("id", "")) != "final_h3m_writeout":
+			or String(backlog[4].get("id", "")) != "coordinate_replay" \
+			or String(backlog[4].get("status", "")) != "active_internal_state" \
+			or String(backlog[5].get("id", "")) != "zone_footprints" \
+			or String(backlog[5].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
+			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
+			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh h3maped phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 	for phase in backlog:
