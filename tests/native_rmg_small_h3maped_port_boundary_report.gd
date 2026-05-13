@@ -225,6 +225,58 @@ func _run() -> void:
 		_fail("Strict h3maped zone source-node port drifted: %s" % JSON.stringify(zone_source_nodes))
 		return
 
+	var zone_boundary_span: Dictionary = report.get("zone_boundary_and_span_fill", {})
+	var cells_by_zone_word: Array = zone_boundary_span.get("cells_by_zone_word", [])
+	if String(zone_boundary_span.get("status", "")) != "active_strict_executable_port" \
+			or String(zone_boundary_span.get("source_range", "")) != "0x4a2777/0x4a2b33/0x4a261a/0x4a2413/0x4a325d" \
+			or String(zone_boundary_span.get("binary_byte_prefix_0x4a2777", "")) != "55 8b ec 81 ec 88 00 00 00 53 8b 5d 08 56 57 8b" \
+			or String(zone_boundary_span.get("binary_byte_prefix_0x4a2b33", "")) != "55 8b ec 83 ec 18 53 8b 5d 1c 56 8b 75 0c 8b 13" \
+			or String(zone_boundary_span.get("binary_byte_prefix_0x4a261a", "")) != "55 8b ec 83 ec 20 8b 55 10 53 56 8b f1 8b 4d 08" \
+			or String(zone_boundary_span.get("binary_byte_prefix_0x4a2413", "")) != "b8 68 a7 52 00 e8 b3 3c 04 00 83 ec 30 8a 45 1f" \
+			or String(zone_boundary_span.get("binary_byte_prefix_0x4a325d", "")) != "b8 a4 a7 52 00 e8 69 2e 04 00 83 ec 60 8b 45 08" \
+			or int(zone_boundary_span.get("boundary_runtime_zone_walk_count", -1)) != 6 \
+			or int(zone_boundary_span.get("boundary_blocked_zone_count", -1)) != 0 \
+			or int(zone_boundary_span.get("boundary_fallback_zone_count", -1)) != 0 \
+			or int(zone_boundary_span.get("boundary_connector_segment_count", -1)) != 6 \
+			or int(zone_boundary_span.get("boundary_wrap_segment_count", -1)) != 0 \
+			or int(zone_boundary_span.get("boundary_final_segment_count", -1)) != 12 \
+			or int(zone_boundary_span.get("boundary_flagged_writer_segment_count", -1)) != 6 \
+			or int(zone_boundary_span.get("boundary_deterministic_writer_segment_count", -1)) != 12 \
+			or int(zone_boundary_span.get("boundary_randomized_rng_call_count", -1)) != 106 \
+			or int(zone_boundary_span.get("boundary_randomized_inserted_midpoint_count", -1)) != 138 \
+			or int(zone_boundary_span.get("boundary_randomized_max_pending_point_count", -1)) != 8 \
+			or int(zone_boundary_span.get("boundary_rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
+			or int(zone_boundary_span.get("boundary_trace_write_count", -1)) != 301 \
+			or int(zone_boundary_span.get("boundary_unique_cell_count", -1)) != 238 \
+			or int(zone_boundary_span.get("boundary_out_of_bounds_write_count", -1)) != 0 \
+			or bool(zone_boundary_span.get("boundary_loop_guard_exhausted", true)) \
+			or int(zone_boundary_span.get("span_fill_filled_zone_count", -1)) != 6 \
+			or int(zone_boundary_span.get("span_fill_seed_blocked_count", -1)) != 1 \
+			or int(zone_boundary_span.get("span_fill_unique_filled_cell_count", -1)) != 869 \
+			or int(zone_boundary_span.get("span_fill_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(zone_boundary_span.get("span_fill_remaining_unassigned_cell_count", -1)) != 189 \
+			or int(zone_boundary_span.get("span_fill_reserved_cell_count", -1)) != 1107 \
+			or int(zone_boundary_span.get("span_fill_pushed_span_count", -1)) != 93 \
+			or int(zone_boundary_span.get("span_fill_popped_span_count", -1)) != 93 \
+			or int(zone_boundary_span.get("span_fill_max_pending_span_count", -1)) != 3 \
+			or int(zone_boundary_span.get("span_fill_out_of_bounds_span_count", -1)) != 0 \
+			or int(zone_boundary_span.get("span_fill_blocked_initial_span_count", -1)) != 0 \
+			or cells_by_zone_word.size() != 6 \
+			or int(cells_by_zone_word[0].get("cell_count", -1)) != 177 \
+			or int(cells_by_zone_word[1].get("cell_count", -1)) != 91 \
+			or int(cells_by_zone_word[2].get("cell_count", -1)) != 226 \
+			or int(cells_by_zone_word[3].get("cell_count", -1)) != 177 \
+			or int(cells_by_zone_word[4].get("cell_count", -1)) != 207 \
+			or int(cells_by_zone_word[5].get("cell_count", -1)) != 229 \
+			or not bool(zone_boundary_span.get("materializes_boundary_trace", false)) \
+			or not bool(zone_boundary_span.get("materializes_span_fill", false)) \
+			or not bool(zone_boundary_span.get("materializes_private_zone_cell_buffer", false)) \
+			or bool(zone_boundary_span.get("materializes_terrain", true)) \
+			or bool(zone_boundary_span.get("materializes_map_cells", true)) \
+			or bool(zone_boundary_span.get("materializes_public_output", true)):
+		_fail("Strict h3maped boundary/span-fill port drifted: %s" % JSON.stringify(zone_boundary_span))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -232,27 +284,28 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "zone_boundary_and_span_fill_0x4a2777_0x4a325d":
+			or String(strict_state.get("next_required_port", "")) != "zone_footprint_finalizer_0x4a3710":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 6 \
-			or not pending_ports.has("zone_boundary_and_span_fill:0x4a2777_0x4a2b33_0x4a261a_0x4a2413_0x4a325d_0x4a3710") \
+			or not pending_ports.has("zone_footprint_finalizer:0x4a3710") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 13 \
+	if backlog.size() != 14 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[3].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[4].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[5].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[9].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[10].get("status", "")) != "pending_runtime_port":
+			or String(backlog[6].get("status", "")) != "active_strict_executable_port" \
+			or String(backlog[10].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[11].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
