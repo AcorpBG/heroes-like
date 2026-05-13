@@ -180,6 +180,43 @@ func _run() -> void:
 		_fail("Recovered template 18 link seed endpoints drifted: %s" % JSON.stringify(seed_records))
 		return
 
+	var late_link_payload: Dictionary = report.get("late_link_payload_postprocess", {})
+	if String(late_link_payload.get("status", "")) != "0x4a79a3_late_connection_payload_postprocess_inspection_only" \
+			or String(late_link_payload.get("cleanup_phase_address", "")) != "0x4a8c15" \
+			or String(late_link_payload.get("raw_link_postprocessor_address", "")) != "0x4a79a3" \
+			or String(late_link_payload.get("reciprocal_finder_address", "")) != "0x49b3fb":
+		_fail("0x4a79a3 late link payload identity drifted: %s" % JSON.stringify(late_link_payload))
+		return
+	if bool(late_link_payload.get("materializes_connection_geometry", true)) \
+			or bool(late_link_payload.get("materializes_connection_guards", true)):
+		_fail("0x4a79a3 late link payload must not materialize connections yet: %s" % JSON.stringify(late_link_payload))
+		return
+	if int(late_link_payload.get("unique_link_count", -1)) != 5 \
+			or int(late_link_payload.get("reciprocal_link_record_count", -1)) != 10 \
+			or int(late_link_payload.get("processed_marker_write_count", -1)) != 10 \
+			or int(late_link_payload.get("global_monster_strength_mode", -1)) != 3 \
+			or int(late_link_payload.get("normal_guard_candidate_count", -1)) != 5 \
+			or int(late_link_payload.get("normal_guard_scaled_positive_count", -1)) != 5 \
+			or int(late_link_payload.get("normal_guard_suppressed_by_wide_count", -1)) != 0 \
+			or int(late_link_payload.get("border_guard_special_count", -1)) != 0 \
+			or int(late_link_payload.get("zero_scaled_guard_count", -1)) != 0 \
+			or Array(late_link_payload.get("raw_guard_values", [])) != [3000, 3000, 3000, 6000, 6000] \
+			or Array(late_link_payload.get("scaled_guard_values", [])) != [2000, 2000, 2000, 5000, 5000]:
+		_fail("0x4a79a3 late link payload counts drifted: %s" % JSON.stringify(late_link_payload))
+		return
+	var late_records: Array = late_link_payload.get("records", [])
+	if late_records.size() != 5 \
+			or int(late_records[0].get("link_index", -1)) != 0 \
+			or int(late_records[0].get("runtime_zone_a", -1)) != 0 \
+			or int(late_records[0].get("runtime_zone_b", -1)) != 3 \
+			or int(late_records[0].get("scaled_guard_value_0x4a65a5", -1)) != 2000 \
+			or int(late_records[3].get("scaled_guard_value_0x4a65a5", -1)) != 5000 \
+			or int(late_records[4].get("source_zone_a", -1)) != 6 \
+			or int(late_records[4].get("source_zone_b", -1)) != 4 \
+			or bool(late_records[4].get("wide_suppresses_normal_guard", true)):
+		_fail("0x4a79a3 late link payload records drifted: %s" % JSON.stringify(late_records))
+		return
+
 	var coordinate_replay: Dictionary = report.get("coordinate_replay", {})
 	if String(coordinate_replay.get("status", "")) != "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported_inspection_only" \
 			or not bool(coordinate_replay.get("ok", false)) \
@@ -790,6 +827,45 @@ func _run() -> void:
 		_fail("0x4bbfcc generated-grid boundary counter drifted: %s" % JSON.stringify(final_sweep_counter))
 		return
 
+	var late_overlap: Dictionary = report.get("late_connection_overlap_geometry", {})
+	if String(late_overlap.get("status", "")) != "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only" \
+			or String(late_overlap.get("candidate_validation_pending", "")) != "0x49aa93" \
+			or String(late_overlap.get("shape_list_source_pending", "")) != "generator+0x6a8":
+		_fail("0x4a6cf2 late connection overlap identity drifted: %s" % JSON.stringify(late_overlap))
+		return
+	if bool(late_overlap.get("materializes_connection_geometry", true)) \
+			or bool(late_overlap.get("materializes_connection_guards", true)):
+		_fail("0x4a6cf2 late connection overlap must not materialize connections yet: %s" % JSON.stringify(late_overlap))
+		return
+	if not bool(late_overlap.get("grid_available", false)) \
+			or int(late_overlap.get("width", -1)) != 36 \
+			or int(late_overlap.get("height", -1)) != 36 \
+			or int(late_overlap.get("level_count", -1)) != 1 \
+			or int(late_overlap.get("link_count", -1)) != 5 \
+			or int(late_overlap.get("overlap_available_count", -1)) != 4 \
+			or int(late_overlap.get("fallback_required_count", -1)) != 1 \
+			or Array(late_overlap.get("overlap_available_link_indices", [])) != [0, 1, 3, 4] \
+			or Array(late_overlap.get("fallback_required_link_indices", [])) != [2] \
+			or int(late_overlap.get("overlap_cell_total", -1)) != 488 \
+			or int(late_overlap.get("overlap_zone_a_cell_total", -1)) != 167 \
+			or int(late_overlap.get("overlap_zone_b_cell_total", -1)) != 316:
+		_fail("0x4a6cf2 late connection overlap counts drifted: %s" % JSON.stringify(late_overlap))
+		return
+	var overlap_records: Array = late_overlap.get("records", [])
+	if overlap_records.size() != 5 \
+			or int(overlap_records[0].get("link_index", -1)) != 0 \
+			or int(overlap_records[0].get("overlap_cell_count", -1)) != 165 \
+			or int(overlap_records[0].get("overlap_zone_a_cell_count", -1)) != 48 \
+			or int(overlap_records[0].get("overlap_zone_b_cell_count", -1)) != 116 \
+			or not bool(overlap_records[1].get("overlap_exists", false)) \
+			or int(overlap_records[1].get("overlap_cell_count", -1)) != 5 \
+			or bool(overlap_records[2].get("overlap_exists", true)) \
+			or int(overlap_records[2].get("overlap_cell_count", -1)) != 0 \
+			or int(overlap_records[3].get("overlap_cell_count", -1)) != 164 \
+			or int(overlap_records[4].get("overlap_cell_count", -1)) != 154:
+		_fail("0x4a6cf2 late connection overlap records drifted: %s" % JSON.stringify(overlap_records))
+		return
+
 	var live_repaint_feedback: Dictionary = terrain_writeout.get("repaint_live_visual_feedback", {})
 	var live_mask_histogram: Dictionary = live_repaint_feedback.get("neighbor_mask_histogram", {})
 	var live_selector_histogram: Dictionary = live_repaint_feedback.get("selector_kind_histogram", {})
@@ -1238,7 +1314,11 @@ func _run() -> void:
 			or String(backlog[5].get("status", "")) != "active_inspection_only":
 		_fail("Town/player-start phase should be active only as h3maped inspection evidence: %s" % JSON.stringify(backlog))
 		return
-	for index in range(6, backlog.size()):
+	if String(backlog[6].get("phase_id", "")) != "roads_rivers_and_zone_links" \
+			or String(backlog[6].get("status", "")) != "active_inspection_only":
+		_fail("Road/link phase should be active only as h3maped inspection evidence: %s" % JSON.stringify(backlog))
+		return
+	for index in range(7, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_h3maped_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
