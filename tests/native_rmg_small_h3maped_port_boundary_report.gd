@@ -193,8 +193,19 @@ func _run() -> void:
 	if level_records.size() != 1 \
 			or Array(level_records[0].get("collected_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
 			or String(level_records[0].get("synthetic_zone_status", "")) != "not_applicable_small_one_level_land" \
-			or String(level_records[0].get("helper_status", "")) != "pending_0x4a2777_0x4a325d_0x4a3710_materialization":
+			or String(level_records[0].get("helper_status", "")) != "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending":
 		_fail("Per-level 0x4a3a03 footprint boundary drifted: %s" % JSON.stringify(level_records))
+		return
+	var helper_inputs: Array = level_records[0].get("helper_call_inputs", [])
+	if int(level_records[0].get("helper_call_input_count", -1)) != 6 \
+			or helper_inputs.size() != 6 \
+			or String(helper_inputs[0].get("helper_address", "")) != "0x4a2777" \
+			or int(helper_inputs[0].get("runtime_zone_index", -1)) != 0 \
+			or int(helper_inputs[0].get("source_zone_id", -1)) != 1 \
+			or String(helper_inputs[0].get("input_status", "")) != "queued_for_0x4a2777_no_boundary_materialization" \
+			or int(helper_inputs[5].get("runtime_zone_index", -1)) != 5 \
+			or int(helper_inputs[5].get("source_zone_id", -1)) != 6:
+		_fail("0x4a2777 helper input queue drifted: %s" % JSON.stringify(helper_inputs))
 		return
 
 	var generation_result: Dictionary = service.generate_random_map(config)

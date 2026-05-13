@@ -453,6 +453,7 @@ Dictionary zone_footprint_phase_boundary_report(const Dictionary &normalized_con
 	int32_t total_collected = 0;
 	for (int32_t level = 0; level < level_count; ++level) {
 		Array zone_indices;
+		Array helper_call_inputs;
 		for (int64_t index = 0; index < runtime_records.size(); ++index) {
 			if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
 				continue;
@@ -461,16 +462,27 @@ Dictionary zone_footprint_phase_boundary_report(const Dictionary &normalized_con
 			if (int32_t(record.get("level", 0)) != level) {
 				continue;
 			}
-			zone_indices.append(record.get("runtime_zone_index", index));
+			const Variant runtime_index = record.get("runtime_zone_index", index);
+			zone_indices.append(runtime_index);
+			Dictionary helper_input;
+			helper_input["call_order"] = helper_call_inputs.size();
+			helper_input["helper_address"] = "0x4a2777";
+			helper_input["runtime_zone_index"] = runtime_index;
+			helper_input["source_zone_id"] = record.get("source_zone_id", -1);
+			helper_input["level"] = level;
+			helper_input["input_status"] = "queued_for_0x4a2777_no_boundary_materialization";
+			helper_call_inputs.append(helper_input);
 		}
 		total_collected += zone_indices.size();
 		Dictionary level_record;
 		level_record["level"] = level;
 		level_record["collected_runtime_zone_indices"] = zone_indices;
 		level_record["collected_runtime_zone_count"] = zone_indices.size();
+		level_record["helper_call_inputs"] = helper_call_inputs;
+		level_record["helper_call_input_count"] = helper_call_inputs.size();
 		level_record["synthetic_zone_appended"] = false;
 		level_record["synthetic_zone_status"] = water_code == 0 && level_count == 1 ? String("not_applicable_small_one_level_land") : String("pending_water_or_multilevel_rule_port");
-		level_record["helper_status"] = "pending_0x4a2777_0x4a325d_0x4a3710_materialization";
+		level_record["helper_status"] = "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending";
 		levels.append(level_record);
 	}
 
