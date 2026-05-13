@@ -41,8 +41,8 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "runtime_zone_records_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records"] \
+			or String(active_state.get("status", "")) != "link_seed_setup_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
@@ -109,6 +109,28 @@ func _run() -> void:
 			or String(runtime_records[5].get("role", "")) != "treasure":
 		_fail("h3maped runtime-zone records changed: %s" % JSON.stringify(runtime_records))
 		return
+	var link_phase: Dictionary = active_state.get("link_seed_setup", {})
+	var link_seeds: Array = link_phase.get("link_seeds", [])
+	if String(link_phase.get("h3maped_anchor", "")) != "0x4a1f3b" \
+			or String(link_phase.get("candidate_generator_anchor", "")) != "0x4a17f5" \
+			or String(link_phase.get("distance_validation_anchor", "")) != "0x4a1701" \
+			or String(link_phase.get("late_payload_consumer_anchor", "")) != "0x4a79a3" \
+			or String(link_phase.get("status", "")) != "active_internal_state" \
+			or int(link_phase.get("link_seed_count", -1)) != 5 \
+			or link_seeds.size() != 5 \
+			or int(link_seeds[0].get("source_zone_a", -1)) != 1 \
+			or int(link_seeds[0].get("source_zone_b", -1)) != 4 \
+			or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 \
+			or int(link_seeds[0].get("runtime_zone_b", -1)) != 3 \
+			or int(link_seeds[0].get("guard_value", -1)) != 3000 \
+			or int(link_seeds[3].get("guard_value", -1)) != 6000 \
+			or bool(link_phase.get("materializes_coordinates", true)) \
+			or bool(link_phase.get("materializes_connection_guards", true)) \
+			or bool(link_phase.get("materializes_roads", true)) \
+			or bool(link_phase.get("materializes_blockers", true)) \
+			or bool(link_phase.get("materializes_public_output", true)):
+		_fail("h3maped link seed setup drifted: %s" % JSON.stringify(link_phase))
+		return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -141,16 +163,18 @@ func _run() -> void:
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 10 \
+	if backlog.size() != 11 \
 			or String(backlog[0].get("id", "")) != "template_selection" \
 			or String(backlog[0].get("status", "")) != "active_boundary" \
 			or String(backlog[1].get("id", "")) != "player_slot_assignment" \
 			or String(backlog[1].get("status", "")) != "active_internal_state" \
 			or String(backlog[2].get("id", "")) != "runtime_zone_records" \
 			or String(backlog[2].get("status", "")) != "active_internal_state" \
-			or String(backlog[7].get("id", "")) != "roads_and_rivers" \
-			or String(backlog[8].get("id", "")) != "connections_blockers_and_guards" \
-			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
+			or String(backlog[3].get("id", "")) != "link_seed_setup" \
+			or String(backlog[3].get("status", "")) != "active_internal_state" \
+			or String(backlog[8].get("id", "")) != "roads_and_rivers" \
+			or String(backlog[9].get("id", "")) != "connections_blockers_and_guards" \
+			or String(backlog[10].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh h3maped phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 	for phase in backlog:
