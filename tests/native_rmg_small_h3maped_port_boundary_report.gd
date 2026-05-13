@@ -952,6 +952,7 @@ func _run() -> void:
 				or int(generic_selector.get("candidate_builder_static_prefix_count", -1)) != 2 \
 				or not bool(generic_selector.get("candidate_builder_dynamic_loops_pending", false)) \
 				or bool(generic_selector.get("candidate_vector_reconstructed", true)) \
+				or not bool(generic_selector.get("candidate_vector_order_reconstructed", false)) \
 				or not bool(generic_selector.get("value_vfuncs_reconstructed", false)) \
 				or bool(generic_selector.get("materializes_reward_object", true)):
 		_fail("h3maped generic value selector boundary drifted: %s" % JSON.stringify(generic_selector))
@@ -1185,8 +1186,10 @@ func _run() -> void:
 				or int(terrain_loop.get("single_level_materialized_candidate_record_count", -1)) != 378 \
 				or int(terrain_loop.get("extended_materialized_candidate_record_count", -1)) != 447 \
 				or int(terrain_loop.get("materialized_candidate_record_count", -1)) != 378 \
+				or int(terrain_loop.get("first_candidate_vector_index", -1)) != 297 \
+				or int(terrain_loop.get("last_candidate_vector_index", -1)) != 674 \
 				or not bool(terrain_loop.get("materialized_candidate_records", false)) \
-				or bool(terrain_loop.get("candidate_vector_indices_materialized", true)):
+				or not bool(terrain_loop.get("candidate_vector_indices_materialized", false)):
 		_fail("h3maped terrain-specialized candidate loop boundary drifted: %s" % JSON.stringify(terrain_loop))
 		return
 	var constructor_tail: Dictionary = generic_selector.get("candidate_builder_static_constructor_tail", {})
@@ -1194,9 +1197,12 @@ func _run() -> void:
 	if String(generic_selector.get("candidate_builder_static_constructor_tail_status", "")) != "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized" \
 				or String(constructor_tail.get("source_range", "")) != "0x4a1194..0x4a1701" \
 				or int(constructor_tail.get("record_count", -1)) != 29 \
+				or int(constructor_tail.get("first_candidate_vector_index", -1)) != 675 \
+				or int(constructor_tail.get("last_candidate_vector_index", -1)) != 703 \
 				or constructor_tail_records.size() != 29 \
 				or String(constructor_tail_records[0].get("source_address", "")) != "0x4a1194" \
 				or String(constructor_tail_records[0].get("vtable_address", "")) != "0x540ba0" \
+				or int(constructor_tail_records[0].get("candidate_vector_index", -1)) != 675 \
 				or int(constructor_tail_records[0].get("type_id", -1)) != 0x54 \
 				or int(constructor_tail_records[0].get("value", -1)) != 0x3e8 \
 				or int(constructor_tail_records[0].get("weight", -1)) != 0x64 \
@@ -1211,11 +1217,42 @@ func _run() -> void:
 				or int(constructor_tail_records[17].get("weight", -1)) != 0xc8 \
 				or String(constructor_tail_records[28].get("source_address", "")) != "0x4a16d7" \
 				or String(constructor_tail_records[28].get("vtable_address", "")) != "0x540c50" \
+				or int(constructor_tail_records[28].get("candidate_vector_index", -1)) != 703 \
 				or int(constructor_tail_records[28].get("type_id", -1)) != 0x71 \
 				or int(constructor_tail_records[28].get("value", -1)) != 0x5dc \
 				or int(constructor_tail_records[28].get("weight", -1)) != 0x50 \
-				or bool(constructor_tail.get("materialized_candidate_records", true)):
+				or not bool(constructor_tail.get("candidate_vector_indices_materialized", false)) \
+				or not bool(constructor_tail.get("materialized_candidate_records", false)):
 		_fail("h3maped static constructor tail boundary drifted: %s" % JSON.stringify(constructor_tail))
+		return
+	var candidate_order: Dictionary = generic_selector.get("candidate_vector_order_boundary", {})
+	var candidate_order_segments: Array = candidate_order.get("segments", [])
+	if String(generic_selector.get("candidate_vector_order_status", "")) != "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending" \
+				or String(candidate_order.get("status", "")) != "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending" \
+				or int(candidate_order.get("single_level_total_candidate_record_count", -1)) != 704 \
+				or not bool(candidate_order.get("candidate_vector_indices_materialized", false)) \
+				or bool(candidate_order.get("candidate_records_fully_materialized", true)) \
+				or bool(candidate_order.get("create_vfuncs_materialized", true)) \
+				or candidate_order_segments.size() != 9 \
+				or String(candidate_order_segments[0].get("segment", "")) != "static_prefix" \
+				or int(candidate_order_segments[0].get("first_candidate_vector_index", -1)) != 0 \
+				or int(candidate_order_segments[0].get("last_candidate_vector_index", -1)) != 1 \
+				or String(candidate_order_segments[1].get("segment", "")) != "single_level_monster_loop" \
+				or int(candidate_order_segments[1].get("first_candidate_vector_index", -1)) != 2 \
+				or int(candidate_order_segments[1].get("last_candidate_vector_index", -1)) != 119 \
+				or String(candidate_order_segments[3].get("segment", "")) != "type10_object_bucket_loop" \
+				or int(candidate_order_segments[3].get("first_candidate_vector_index", -1)) != 138 \
+				or int(candidate_order_segments[3].get("last_candidate_vector_index", -1)) != 177 \
+				or String(candidate_order_segments[5].get("segment", "")) != "single_level_type17_loop" \
+				or int(candidate_order_segments[5].get("first_candidate_vector_index", -1)) != 192 \
+				or int(candidate_order_segments[5].get("last_candidate_vector_index", -1)) != 249 \
+				or String(candidate_order_segments[7].get("segment", "")) != "type53_object_bucket_loop" \
+				or int(candidate_order_segments[7].get("first_candidate_vector_index", -1)) != 297 \
+				or int(candidate_order_segments[7].get("last_candidate_vector_index", -1)) != 674 \
+				or String(candidate_order_segments[8].get("segment", "")) != "static_constructor_tail" \
+				or int(candidate_order_segments[8].get("first_candidate_vector_index", -1)) != 675 \
+				or int(candidate_order_segments[8].get("last_candidate_vector_index", -1)) != 703:
+		_fail("h3maped candidate-vector order boundary drifted: %s" % JSON.stringify(candidate_order))
 		return
 	var candidate_vtables: Dictionary = generic_selector.get("candidate_vtable_boundary", {})
 	var candidate_vtable_records: Array = candidate_vtables.get("records", [])
@@ -1281,25 +1318,26 @@ func _run() -> void:
 				or int(materialized_static_records[0].get("candidate_vector_index", -1)) != 0 \
 				or not bool(materialized_static_records[0].get("materialized_candidate_record", false)) \
 				or String(materialized_static_records[2].get("source_address", "")) != "0x49fa63" \
-				or int(materialized_static_records[2].get("candidate_vector_index", -1)) != 2 \
+				or int(materialized_static_records[2].get("candidate_vector_index", -1)) != 120 \
 				or String(materialized_static_records[20].get("source_address", "")) != "0x4a00d8" \
-				or int(materialized_static_records[20].get("candidate_vector_index", -1)) != 20 \
+				or int(materialized_static_records[20].get("candidate_vector_index", -1)) != 178 \
 				or String(materialized_static_records[81].get("source_address", "")) != "0x4a1194" \
-				or int(materialized_static_records[81].get("candidate_vector_index", -1)) != 81 \
+				or int(materialized_static_records[81].get("candidate_vector_index", -1)) != 675 \
 				or String(materialized_static_records[109].get("source_address", "")) != "0x4a16d7" \
-				or int(materialized_static_records[109].get("candidate_vector_index", -1)) != 109 \
+				or int(materialized_static_records[109].get("candidate_vector_index", -1)) != 703 \
 				or not bool(static_materialization.get("dynamic_monster_loop_materialized", false)) \
 				or not bool(static_materialization.get("dynamic_type10_object_bucket_loop_materialized", false)) \
 				or not bool(static_materialization.get("dynamic_type17_loop_materialized", false)) \
 				or not bool(static_materialization.get("dynamic_type53_object_bucket_loop_materialized", false)) \
+				or not bool(static_materialization.get("candidate_vector_order_materialized", false)) \
 				or bool(static_materialization.get("complete_candidate_vector", true)) \
 				or bool(static_materialization.get("create_vfuncs_materialized", true)):
 		_fail("h3maped materialized static candidate boundary drifted: %s" % JSON.stringify(static_materialization))
 		return
 	var materialized_type17: Dictionary = generic_selector.get("materialized_single_level_type17_candidate_boundary", {})
 	var materialized_type17_records: Array = materialized_type17.get("records", [])
-	if String(generic_selector.get("materialized_single_level_type17_candidate_boundary_status", "")) != "single_level_type17_candidate_loop_materialized_vector_index_pending" \
-				or String(materialized_type17.get("status", "")) != "single_level_type17_candidate_loop_materialized_vector_index_pending" \
+	if String(generic_selector.get("materialized_single_level_type17_candidate_boundary_status", "")) != "single_level_type17_candidate_loop_materialized_with_candidate_indices" \
+				or String(materialized_type17.get("status", "")) != "single_level_type17_candidate_loop_materialized_with_candidate_indices" \
 				or String(materialized_type17.get("source_range", "")) != "0x4a0402..0x4a045a" \
 				or String(materialized_type17.get("constructor_address", "")) != "0x49c523" \
 				or String(materialized_type17.get("constructor_vtable_address", "")) != "0x540ba0" \
@@ -1309,15 +1347,19 @@ func _run() -> void:
 				or int(materialized_type17.get("value", 0)) != -1 \
 				or int(materialized_type17.get("weight", -1)) != 0x28 \
 				or int(materialized_type17.get("candidate_record_count", -1)) != 0x3a \
+				or int(materialized_type17.get("first_candidate_vector_index", -1)) != 192 \
+				or int(materialized_type17.get("last_candidate_vector_index", -1)) != 249 \
 				or materialized_type17_records.size() != 0x3a \
 				or int(materialized_type17_records[0].get("relative_loop_index", -1)) != 0 \
+				or int(materialized_type17_records[0].get("candidate_vector_index", -1)) != 192 \
 				or int(materialized_type17_records[0].get("subtype", -1)) != 0x39 \
 				or String(materialized_type17_records[0].get("vtable_address", "")) != "0x540c00" \
 				or int(materialized_type17_records[0].get("record_size_bytes", -1)) != 0x14 \
-				or bool(materialized_type17_records[0].get("candidate_vector_index_materialized", true)) \
+				or not bool(materialized_type17_records[0].get("candidate_vector_index_materialized", false)) \
 				or int(materialized_type17_records[57].get("relative_loop_index", -1)) != 57 \
+				or int(materialized_type17_records[57].get("candidate_vector_index", -1)) != 249 \
 				or int(materialized_type17_records[57].get("subtype", -1)) != 0 \
-				or bool(materialized_type17.get("candidate_vector_indices_materialized", true)) \
+				or not bool(materialized_type17.get("candidate_vector_indices_materialized", false)) \
 				or bool(materialized_type17.get("extended_type17_loop_materialized", true)):
 		_fail("h3maped materialized type-17 candidate boundary drifted: %s" % JSON.stringify(materialized_type17))
 		return

@@ -1006,6 +1006,7 @@ Array h3_static_tail_after_terrain_loop_records();
 Dictionary h3_materialized_static_candidate_record(const Dictionary &source_record, int32_t vector_index, const char *source_group) {
 	Dictionary record = source_record.duplicate(true);
 	record["candidate_vector_index"] = vector_index;
+	record["static_subset_index"] = -1;
 	record["source_group"] = source_group;
 	record["materialized_candidate_record"] = true;
 	record["value_vfunc_reconstructed"] = true;
@@ -1013,12 +1014,26 @@ Dictionary h3_materialized_static_candidate_record(const Dictionary &source_reco
 	return record;
 }
 
-void h3_append_materialized_static_candidates(Array &target, const Array &source_records, const char *source_group) {
+void h3_append_materialized_static_candidates_range(Array &target, const Array &source_records, int32_t source_begin, int32_t source_count, int32_t first_candidate_vector_index, const char *source_group) {
+	for (int32_t offset = 0; offset < source_count; ++offset) {
+		const int32_t source_index = source_begin + offset;
+		if (source_index < 0 || source_index >= source_records.size() || Variant(source_records[source_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = h3_materialized_static_candidate_record(source_records[source_index], first_candidate_vector_index + offset, source_group);
+		record["static_subset_index"] = int32_t(target.size());
+		target.append(record);
+	}
+}
+
+void h3_append_materialized_static_candidates(Array &target, const Array &source_records, int32_t first_candidate_vector_index, const char *source_group) {
 	for (int64_t index = 0; index < source_records.size(); ++index) {
 		if (Variant(source_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
-		target.append(h3_materialized_static_candidate_record(source_records[index], int32_t(target.size()), source_group));
+		Dictionary record = h3_materialized_static_candidate_record(source_records[index], first_candidate_vector_index + int32_t(index), source_group);
+		record["static_subset_index"] = int32_t(target.size());
+		target.append(record);
 	}
 }
 
@@ -1026,24 +1041,65 @@ Array h3_materialized_static_candidate_records() {
 	Array records;
 	h3_append_materialized_static_candidates(records, Array::make(
 			h3_static_candidate_record("0x49f97b", "0x540ba0", 2, 0, 100, 20),
-			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50)), "0x49f95a_static_prefix");
-	h3_append_materialized_static_candidates(records, h3_fixed_type6_value_band_records(), "0x49fa54_0x49ff54_fixed_type6_value_bands");
-	h3_append_materialized_static_candidates(records, h3_static_tail_after_artifact_pool_records(), "0x4a00cc_0x4a0eeb_static_tail");
-	h3_append_materialized_static_candidates(records, h3_static_tail_after_terrain_loop_records(), "0x4a1194_0x4a1701_static_constructor_tail");
+			h3_static_candidate_record("0x49f9be", "0x540ba0", 4, 0, 3000, 50)), 0, "0x49f95a_static_prefix");
+	h3_append_materialized_static_candidates(records, h3_fixed_type6_value_band_records(), 120, "0x49fa54_0x49ff54_fixed_type6_value_bands");
+	const Array static_tail = h3_static_tail_after_artifact_pool_records();
+	h3_append_materialized_static_candidates_range(records, static_tail, 0, 14, 178, "0x4a00cc_0x4a03cf_static_tail_before_type17");
+	h3_append_materialized_static_candidates_range(records, static_tail, 14, int32_t(static_tail.size()) - 14, 250, "0x4a0466_0x4a0eeb_static_tail_after_type17");
+	h3_append_materialized_static_candidates(records, h3_static_tail_after_terrain_loop_records(), 675, "0x4a1194_0x4a1701_static_constructor_tail");
 	return records;
+}
+
+Dictionary h3_candidate_vector_order_segment(const char *segment, const char *source_range, int32_t first_index, int32_t record_count, bool records_materialized) {
+	Dictionary record;
+	record["segment"] = segment;
+	record["source_range"] = source_range;
+	record["first_candidate_vector_index"] = first_index;
+	record["record_count"] = record_count;
+	record["last_candidate_vector_index"] = record_count <= 0 ? first_index - 1 : first_index + record_count - 1;
+	record["candidate_records_materialized"] = records_materialized;
+	return record;
+}
+
+Dictionary h3_materialized_single_level_candidate_vector_order_boundary() {
+	Dictionary boundary;
+	boundary["status"] = "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending";
+	boundary["source_range"] = "0x49f95a..0x4a1701";
+	boundary["single_level_total_candidate_record_count"] = 704;
+	boundary["extended_total_candidate_record_count_materialized"] = false;
+	boundary["candidate_vector_indices_materialized"] = true;
+	boundary["candidate_records_fully_materialized"] = false;
+	boundary["create_vfuncs_materialized"] = false;
+	boundary["segments"] = Array::make(
+			h3_candidate_vector_order_segment("static_prefix", "0x49f95a..0x49f9e5", 0, 2, true),
+			h3_candidate_vector_order_segment("single_level_monster_loop", "0x49f9ed..0x49fa54", 2, 118, true),
+			h3_candidate_vector_order_segment("fixed_type6_value_bands", "0x49fa54..0x49ff54", 120, 18, true),
+			h3_candidate_vector_order_segment("type10_object_bucket_loop", "0x49ff59..0x4a00c7", 138, 40, false),
+			h3_candidate_vector_order_segment("static_tail_before_type17", "0x4a00cc..0x4a03cf", 178, 14, true),
+			h3_candidate_vector_order_segment("single_level_type17_loop", "0x4a0402..0x4a045a", 192, 58, true),
+			h3_candidate_vector_order_segment("static_tail_after_type17", "0x4a0466..0x4a0eeb", 250, 47, true),
+			h3_candidate_vector_order_segment("type53_object_bucket_loop", "0x4a0eeb..0x4a1194", 297, 378, false),
+			h3_candidate_vector_order_segment("static_constructor_tail", "0x4a1194..0x4a1701", 675, 29, true));
+	boundary["first_type10_candidate_vector_index"] = 138;
+	boundary["first_type17_candidate_vector_index"] = 192;
+	boundary["first_type53_candidate_vector_index"] = 297;
+	boundary["last_type53_candidate_vector_index"] = 674;
+	boundary["first_static_constructor_tail_candidate_vector_index"] = 675;
+	return boundary;
 }
 
 Dictionary h3_materialized_static_candidate_boundary() {
 	Array records = h3_materialized_static_candidate_records();
 	Dictionary boundary;
 	boundary["status"] = "static_candidate_records_materialized_dynamic_subset_pending";
-	boundary["source_groups"] = Array::make("0x49f95a_static_prefix", "0x49fa54_0x49ff54_fixed_type6_value_bands", "0x4a00cc_0x4a0eeb_static_tail", "0x4a1194_0x4a1701_static_constructor_tail");
+	boundary["source_groups"] = Array::make("0x49f95a_static_prefix", "0x49fa54_0x49ff54_fixed_type6_value_bands", "0x4a00cc_0x4a03cf_static_tail_before_type17", "0x4a0466_0x4a0eeb_static_tail_after_type17", "0x4a1194_0x4a1701_static_constructor_tail");
 	boundary["materialized_static_candidate_record_count"] = records.size();
 	boundary["records"] = records;
 	boundary["dynamic_monster_loop_materialized"] = true;
 	boundary["dynamic_type10_object_bucket_loop_materialized"] = true;
 	boundary["dynamic_type17_loop_materialized"] = true;
 	boundary["dynamic_type53_object_bucket_loop_materialized"] = true;
+	boundary["candidate_vector_order_materialized"] = true;
 	boundary["complete_candidate_vector"] = false;
 	boundary["create_vfuncs_materialized"] = false;
 	return boundary;
@@ -1382,17 +1438,17 @@ Dictionary h3_type17_generator_loop_boundary() {
 	return boundary;
 }
 
-Dictionary h3_materialized_type17_candidate_record(int32_t relative_loop_index, int32_t subtype) {
+Dictionary h3_materialized_type17_candidate_record(int32_t relative_loop_index, int32_t subtype, int32_t candidate_vector_index) {
 	Dictionary record = h3_static_candidate_record("0x4a0402", "0x540c00", 0x11, subtype, -1, 0x28);
 	record["relative_loop_index"] = relative_loop_index;
+	record["candidate_vector_index"] = candidate_vector_index;
 	record["source_group"] = "0x4a0402_0x4a045a_single_level_type17_loop";
 	record["materialized_candidate_record"] = true;
 	record["constructor_address"] = "0x49c523";
 	record["constructor_vtable_address"] = "0x540ba0";
 	record["overridden_vtable_address"] = "0x540c00";
 	record["record_size_bytes"] = 0x14;
-	record["candidate_vector_index_materialized"] = false;
-	record["candidate_vector_index_blocker"] = "pre_type17_static_tail_and_complete_candidate_vector_order_not_materialized";
+	record["candidate_vector_index_materialized"] = true;
 	record["value_vfunc_reconstructed"] = true;
 	record["create_vfunc_materialized"] = false;
 	return record;
@@ -1400,7 +1456,7 @@ Dictionary h3_materialized_type17_candidate_record(int32_t relative_loop_index, 
 
 Dictionary h3_materialized_single_level_type17_candidate_boundary() {
 	Dictionary boundary;
-	boundary["status"] = "single_level_type17_candidate_loop_materialized_vector_index_pending";
+	boundary["status"] = "single_level_type17_candidate_loop_materialized_with_candidate_indices";
 	boundary["source_range"] = "0x4a0402..0x4a045a";
 	boundary["constructor_address"] = "0x49c523";
 	boundary["constructor_vtable_address"] = "0x540ba0";
@@ -1414,12 +1470,13 @@ Dictionary h3_materialized_single_level_type17_candidate_boundary() {
 	boundary["loop_iteration_order"] = "descending_subtype";
 	boundary["first_subtype"] = 0x39;
 	boundary["last_subtype"] = 0;
-	boundary["candidate_vector_indices_materialized"] = false;
-	boundary["candidate_vector_index_blocker"] = "pre_type17_static_tail_and_complete_candidate_vector_order_not_materialized";
+	boundary["first_candidate_vector_index"] = 192;
+	boundary["last_candidate_vector_index"] = 249;
+	boundary["candidate_vector_indices_materialized"] = true;
 	boundary["extended_type17_loop_materialized"] = false;
 	Array records;
 	for (int32_t subtype = 0x3a - 1; subtype >= 0; --subtype) {
-		records.append(h3_materialized_type17_candidate_record(int32_t(records.size()), subtype));
+		records.append(h3_materialized_type17_candidate_record(int32_t(records.size()), subtype, 192 + int32_t(records.size())));
 	}
 	boundary["candidate_record_count"] = records.size();
 	boundary["records"] = records;
@@ -1488,8 +1545,9 @@ Dictionary h3_terrain_specialized_candidate_loop_boundary() {
 	boundary["materialized_candidate_record_count"] = 378;
 	boundary["materialized_candidate_record_formula"] = "bucket_entry_count * (active_monster_rows + fixed_records_per_bucket_entry)";
 	boundary["materialized_candidate_records"] = true;
-	boundary["candidate_vector_indices_materialized"] = false;
-	boundary["candidate_vector_index_blocker"] = "pre_type53_static_tail_and_complete_candidate_vector_order_not_materialized";
+	boundary["first_candidate_vector_index"] = 297;
+	boundary["last_candidate_vector_index"] = 674;
+	boundary["candidate_vector_indices_materialized"] = true;
 	return boundary;
 }
 
@@ -1615,10 +1673,15 @@ Dictionary h3_static_tail_after_terrain_loop_boundary() {
 	Dictionary boundary;
 	boundary["source_range"] = "0x4a1194..0x4a1701";
 	boundary["record_count"] = 29;
+	boundary["first_candidate_vector_index"] = 675;
+	boundary["last_candidate_vector_index"] = 703;
+	boundary["candidate_vector_indices_materialized"] = true;
 	boundary["constructor_addresses"] = Array::make("direct writes", "0x49c523", "0x49c9bf", "0x49ccc1", "0x49ca26");
 	boundary["constructor_vtables"] = Array::make("0x540ba0", "0x540c40", "0x540c50", "0x540c90");
-	boundary["records"] = h3_static_tail_after_terrain_loop_records();
-	boundary["materialized_candidate_records"] = false;
+	Array records;
+	h3_append_materialized_static_candidates(records, h3_static_tail_after_terrain_loop_records(), 675, "0x4a1194_0x4a1701_static_constructor_tail");
+	boundary["records"] = records;
+	boundary["materialized_candidate_records"] = true;
 	return boundary;
 }
 
@@ -1754,7 +1817,7 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_type10_object_bucket_materialization"] = h3_type10_object_bucket_materialization_boundary();
 	boundary["candidate_builder_type17_loop_status"] = "0x4a0402_0x4a045a_single_level_type17_loop_materialized_extended_pending";
 	boundary["candidate_builder_type17_loop"] = h3_type17_generator_loop_boundary();
-	boundary["materialized_single_level_type17_candidate_boundary_status"] = "single_level_type17_candidate_loop_materialized_vector_index_pending";
+	boundary["materialized_single_level_type17_candidate_boundary_status"] = "single_level_type17_candidate_loop_materialized_with_candidate_indices";
 	boundary["materialized_single_level_type17_candidate_boundary"] = h3_materialized_single_level_type17_candidate_boundary();
 	boundary["candidate_builder_static_tail_status"] = "0x4a00cc_0x4a0eeb_static_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_tail_count"] = 61;
@@ -1763,6 +1826,8 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["candidate_builder_terrain_specialized_loop"] = h3_terrain_specialized_candidate_loop_boundary();
 	boundary["candidate_builder_static_constructor_tail_status"] = "0x4a1194_0x4a1701_static_constructor_tail_recovered_not_materialized";
 	boundary["candidate_builder_static_constructor_tail"] = h3_static_tail_after_terrain_loop_boundary();
+	boundary["candidate_vector_order_status"] = "single_level_candidate_vector_order_materialized_records_and_create_vfuncs_pending";
+	boundary["candidate_vector_order_boundary"] = h3_materialized_single_level_candidate_vector_order_boundary();
 	boundary["candidate_vtable_boundary_status"] = "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized";
 	boundary["candidate_vtable_boundary"] = h3_candidate_vtable_boundary();
 	boundary["candidate_value_vfunc_boundary_status"] = "0x49c54d_0x49cd97_value_vfuncs_reconstructed_selection_not_materialized";
@@ -1770,9 +1835,10 @@ Dictionary h3maped_generic_value_selector_boundary() {
 	boundary["materialized_static_candidate_boundary_status"] = "static_candidate_records_materialized_dynamic_subset_pending";
 	boundary["materialized_static_candidate_boundary"] = h3_materialized_static_candidate_boundary();
 	boundary["candidate_builder_dynamic_loops_pending"] = true;
-	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "complete candidate vector ordering", "0x4aa9b7 coordinate commit");
+	boundary["candidate_builder_dynamic_sources_pending"] = Array::make("extended monster candidate loop materialization", "create-vfunc materialization", "0x4aa9b7 coordinate commit");
 	boundary["status"] = "selector_limits_and_metadata_boundary_active_candidate_vector_not_reconstructed";
 	boundary["candidate_vector_reconstructed"] = false;
+	boundary["candidate_vector_order_reconstructed"] = true;
 	boundary["value_vfuncs_reconstructed"] = true;
 	boundary["materializes_reward_object"] = false;
 
