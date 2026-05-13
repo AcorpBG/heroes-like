@@ -6,6 +6,7 @@
 #include <godot_cpp/variant/string.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
@@ -34,6 +35,8 @@ struct TemplateEvidence {
 	int32_t zone_count;
 	int32_t connection_count;
 	const char *adapted_template_id;
+	uint8_t human_capable_source_owner_mask;
+	uint8_t player_capable_source_owner_mask;
 };
 
 struct H3MapedRng {
@@ -46,27 +49,27 @@ struct H3MapedRng {
 };
 
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
-	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "" },
-	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, "" },
-	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, "" },
-	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "" },
-	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, "" },
-	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, "" },
-	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, "" },
-	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "translated_rmg_template_019_v1" },
-	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, "" },
-	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "" },
-	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, "" },
-	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "" },
-	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, "" },
-	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "" },
-	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, "" },
-	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, "" },
-	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, "" },
-	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, "" },
-	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, "" },
-	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, "" },
-	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "" },
+	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "", 0xff, 0xff },
+	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, "", 0x03, 0x03 },
+	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "", 0x0f, 0x0f },
+	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, "", 0x03, 0x03 },
+	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, "", 0x03, 0x03 },
+	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, "", 0x03, 0x03 },
+	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "translated_rmg_template_019_v1", 0x0f, 0x0f },
+	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, "", 0x03, 0x03 },
+	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "", 0x0f, 0x0f },
+	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, "", 0x03, 0x03 },
+	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "", 0x0f, 0x0f },
+	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, "", 0x0f, 0x0f },
+	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, "", 0x0f, 0x0f },
+	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, "", 0x3f, 0x3f },
+	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, "", 0x03, 0x07 },
+	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, "", 0x07, 0x1f },
+	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, "", 0x07, 0x1f },
+	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "", 0x3f, 0x7f },
 };
 
 int32_t water_mode_code(const Dictionary &normalized_config) {
@@ -159,7 +162,45 @@ Dictionary template_record(const TemplateEvidence &candidate) {
 	record["zone_count"] = candidate.zone_count;
 	record["connection_count"] = candidate.connection_count;
 	record["adapted_template_id"] = candidate.adapted_template_id;
+	record["human_capable_source_owner_mask"] = candidate.human_capable_source_owner_mask;
+	record["player_capable_source_owner_mask"] = candidate.player_capable_source_owner_mask;
 	return record;
+}
+
+Array mask_indices(uint8_t mask) {
+	Array indices;
+	for (int32_t index = 0; index < 8; ++index) {
+		if ((mask & (1U << index)) != 0) {
+			indices.append(index);
+		}
+	}
+	return indices;
+}
+
+Array bool_bitmap_report(const std::array<bool, 8> &bitmap) {
+	Array report;
+	for (bool value : bitmap) {
+		report.append(value);
+	}
+	return report;
+}
+
+std::array<bool, 8> bool_bitmap_from_mask(uint8_t mask) {
+	std::array<bool, 8> bitmap = {};
+	for (int32_t index = 0; index < 8; ++index) {
+		bitmap[size_t(index)] = (mask & (1U << index)) != 0;
+	}
+	return bitmap;
+}
+
+std::array<bool, 8> selected_color_bitmap_from_config(const Dictionary &normalized_config) {
+	std::array<bool, 8> bitmap = {};
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	Array selected = constraints.get("selected_color_bitmap", Array());
+	for (int32_t index = 0; index < 8 && index < selected.size(); ++index) {
+		bitmap[size_t(index)] = bool(selected[index]);
+	}
+	return bitmap;
 }
 
 Array accepted_templates(const Dictionary &normalized_config) {
@@ -192,13 +233,128 @@ Dictionary restart_backlog() {
 	for (int32_t index = 0; index < 9; ++index) {
 		Dictionary phase;
 		phase["phase_id"] = phase_ids[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : String("pending_strict_h3maped_port");
+		if (index == 0) {
+			phase["status"] = "active_boundary_only";
+		} else if (index == 1) {
+			phase["status"] = "active_inspection_only";
+		} else {
+			phase["status"] = "pending_strict_h3maped_port";
+		}
 		backlog.append(phase);
 	}
 	Dictionary result;
 	result["phase_count"] = backlog.size();
 	result["phases"] = backlog;
 	return result;
+}
+
+const TemplateEvidence *template_for_catalog_index(int32_t catalog_index) {
+	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
+		if (candidate.catalog_index == catalog_index) {
+			return &candidate;
+		}
+	}
+	return nullptr;
+}
+
+Dictionary player_slot_assignment_report(const TemplateEvidence &candidate, const Dictionary &normalized_config, int32_t human_count, int32_t computer_count) {
+	Dictionary report;
+	std::array<int32_t, 9> raw_mapping = {};
+	raw_mapping.fill(-1);
+	std::array<bool, 8> human_capable = bool_bitmap_from_mask(candidate.human_capable_source_owner_mask);
+	std::array<bool, 8> player_capable = bool_bitmap_from_mask(candidate.player_capable_source_owner_mask);
+	const std::array<bool, 8> selected_color_bitmap = selected_color_bitmap_from_config(normalized_config);
+	std::array<int32_t, 8> color_order = {};
+	int32_t order_index = 0;
+	for (int32_t color = 0; color < 8; ++color) {
+		if (selected_color_bitmap[size_t(color)]) {
+			color_order[size_t(order_index++)] = color;
+		}
+	}
+	for (int32_t color = 0; color < 8; ++color) {
+		if (!selected_color_bitmap[size_t(color)]) {
+			color_order[size_t(order_index++)] = color;
+		}
+	}
+
+	Array color_order_report;
+	for (int32_t color : color_order) {
+		color_order_report.append(color);
+	}
+
+	Array assignments;
+	int32_t assigned_count = 0;
+	int32_t source_owner_scan = 0;
+	bool complete = true;
+	for (; assigned_count < human_count; ++assigned_count) {
+		while (source_owner_scan < 8 && !human_capable[size_t(source_owner_scan)]) {
+			++source_owner_scan;
+		}
+		if (source_owner_scan >= 8) {
+			complete = false;
+			break;
+		}
+		player_capable[size_t(source_owner_scan)] = false;
+		const int32_t actual_color = color_order[size_t(assigned_count)];
+		raw_mapping[size_t(source_owner_scan + 1)] = actual_color;
+		Dictionary assignment;
+		assignment["source_owner_index"] = source_owner_scan;
+		assignment["actual_player_color"] = actual_color;
+		assignment["player_type"] = "human";
+		assignments.append(assignment);
+		++source_owner_scan;
+	}
+
+	source_owner_scan = 0;
+	const int32_t desired_total = human_count + computer_count;
+	for (; assigned_count < desired_total; ++assigned_count) {
+		while (source_owner_scan < 8 && !player_capable[size_t(source_owner_scan)]) {
+			++source_owner_scan;
+		}
+		if (source_owner_scan >= 8) {
+			complete = false;
+			break;
+		}
+		const int32_t actual_color = color_order[size_t(assigned_count)];
+		raw_mapping[size_t(source_owner_scan + 1)] = actual_color;
+		Dictionary assignment;
+		assignment["source_owner_index"] = source_owner_scan;
+		assignment["actual_player_color"] = actual_color;
+		assignment["player_type"] = "computer";
+		assignments.append(assignment);
+		++source_owner_scan;
+	}
+
+	Array raw_slots;
+	for (int32_t value : raw_mapping) {
+		raw_slots.append(value);
+	}
+	Array colors_by_source_owner;
+	for (int32_t source_owner = 0; source_owner < 8; ++source_owner) {
+		colors_by_source_owner.append(raw_mapping[size_t(source_owner + 1)]);
+	}
+
+	report["status"] = complete ? String("0x4ac62a_player_slot_assignment_ported_inspection_only") : String("0x4ac62a_player_slot_assignment_incomplete");
+	report["source"] = "h3maped 0x4ac552 before phase calls; source +0x04 role bucket and +0x1c ownership build generator+0xee0/+0xee4";
+	report["selected_color_bitmap_offset"] = "generator+0xed8";
+	report["assignment_slots_offset"] = "generator+0xee0";
+	report["mapped_slots_offset"] = "generator+0xee4";
+	report["source_template_id"] = candidate.id;
+	report["source_catalog_index"] = candidate.catalog_index;
+	report["human_capable_source_owner_mask"] = candidate.human_capable_source_owner_mask;
+	report["player_capable_source_owner_mask"] = candidate.player_capable_source_owner_mask;
+	report["human_capable_source_owner_indices"] = mask_indices(candidate.human_capable_source_owner_mask);
+	report["player_capable_source_owner_indices"] = mask_indices(candidate.player_capable_source_owner_mask);
+	report["selected_color_bitmap"] = bool_bitmap_report(selected_color_bitmap);
+	report["selected_color_order"] = color_order_report;
+	report["raw_ee0_slots"] = raw_slots;
+	report["actual_colors_by_source_owner"] = colors_by_source_owner;
+	report["assignments"] = assignments;
+	report["assigned_count"] = assignments.size();
+	report["desired_human_count"] = human_count;
+	report["desired_computer_count"] = computer_count;
+	report["materializes_runtime_players"] = false;
+	return report;
 }
 
 } // namespace
@@ -284,7 +440,18 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["h3maped_water_mode_code"] = water_mode_code(normalized_config);
 	report["accepted_template_count"] = accepted.size();
 	report["accepted_templates"] = accepted;
-	report["selection_identity"] = selection_identity(normalized_config);
+	Dictionary identity = selection_identity(normalized_config);
+	report["selection_identity"] = identity;
+	if (bool(identity.get("ok", false))) {
+		const TemplateEvidence *selected = template_for_catalog_index(int32_t(identity.get("source_catalog_index", -1)));
+		if (selected != nullptr) {
+			Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+			const int32_t human_count = int32_t(constraints.get("human_count", 1));
+			const int32_t player_count = int32_t(constraints.get("player_count", 2));
+			const int32_t computer_count = int32_t(constraints.get("computer_count", std::max(0, player_count - human_count)));
+			report["player_slot_assignment"] = player_slot_assignment_report(*selected, normalized_config, human_count, computer_count);
+		}
+	}
 	report["restart_phase_backlog"] = restart_backlog().get("phases", Array());
 	report["materialized_phase_status"] = "none_after_restart";
 	report["blocked_before_materialization"] = "waiting_for_strict_h3maped_small_phase_ports_from_0x4ac552";
