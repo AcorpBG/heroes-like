@@ -253,6 +253,18 @@ struct H3MaskPoint {
 	int32_t dy = 0;
 };
 
+struct H3FootprintGateResult {
+	bool pass = false;
+	int32_t valid_count = 0;
+	int32_t invalid_count = 0;
+	int32_t invalid_transition_count = 0;
+	int32_t out_of_bounds_count = 0;
+	int32_t occupied_count = 0;
+	int32_t owner_mismatch_count = 0;
+	int32_t terrain_rejected_count = 0;
+	int32_t repaint_rejected_count = 0;
+};
+
 struct SpanFillResult {
 	int32_t filled_cell_count = 0;
 	int32_t pushed_span_count = 0;
@@ -847,6 +859,8 @@ std::vector<H3MaskPoint> h3_text_mask_points(const String &mask_text, bool actio
 	return points;
 }
 
+int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
+
 Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
 	Array result;
 	for (const H3MaskPoint &point : points) {
@@ -855,6 +869,81 @@ Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
 		record["dy"] = point.dy;
 		result.append(record);
 	}
+	return result;
+}
+
+bool h3maped_49a1d8_cell_valid(const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, int64_t flat) {
+	if (flat < 0 || flat >= int64_t(cell_flags.size()) || flat >= int64_t(live_terrain_code.size())) {
+		return false;
+	}
+	if ((cell_flags[size_t(flat)] & 0x10U) == 0U) {
+		return false;
+	}
+	return (live_terrain_code[size_t(flat)] & 0x3f) != 9;
+}
+
+H3FootprintGateResult h3maped_49a09c_circular_mask_gate(const std::vector<H3MaskPoint> &mask_points, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, const std::vector<uint8_t> &object_occupied, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level, int32_t runtime_zone_index, bool object_is_water_type) {
+	H3FootprintGateResult result;
+	if (mask_points.empty()) {
+		return result;
+	}
+	bool previous_invalid = true;
+	bool saw_invalid_after_valid = false;
+	bool current_invalid = true;
+	for (int32_t step = 0; step <= int32_t(mask_points.size()); ++step) {
+		const H3MaskPoint &point = mask_points[size_t(step % int32_t(mask_points.size()))];
+		const int32_t body_x = anchor_x + point.dx;
+		const int32_t body_y = anchor_y + point.dy;
+		current_invalid = false;
+		if (body_x < 0 || body_y < 0 || body_x >= width || body_y >= height || anchor_level < 0 || anchor_level >= level_count) {
+			result.out_of_bounds_count += 1;
+			current_invalid = true;
+		} else {
+			const int64_t body_flat = h3maped_cell_index(width, height, body_x, body_y, anchor_level);
+			if (body_flat < 0 || body_flat >= int64_t(zone_words.size())) {
+				result.out_of_bounds_count += 1;
+				current_invalid = true;
+			} else if (!object_occupied.empty() && object_occupied[size_t(body_flat)] != 0) {
+				result.occupied_count += 1;
+				current_invalid = true;
+			} else if (!h3maped_49a1d8_cell_valid(cell_flags, live_terrain_code, body_flat)) {
+				if (body_flat >= 0 && body_flat < int64_t(cell_flags.size()) && (cell_flags[size_t(body_flat)] & 0x10U) == 0U) {
+					result.repaint_rejected_count += 1;
+				} else {
+					result.terrain_rejected_count += 1;
+				}
+				current_invalid = true;
+			} else {
+				const int32_t terrain_code = live_terrain_code[size_t(body_flat)] & 0x3f;
+				if ((terrain_code == 8) != object_is_water_type) {
+					result.terrain_rejected_count += 1;
+					current_invalid = true;
+				} else {
+					const uint32_t body_masked = zone_words[size_t(body_flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+					if (body_masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((body_masked >> 16U) & 0xffU) != runtime_zone_index) {
+						result.owner_mismatch_count += 1;
+						current_invalid = true;
+					}
+				}
+			}
+		}
+		if (current_invalid) {
+			result.invalid_count += 1;
+			if (!previous_invalid) {
+				if (saw_invalid_after_valid) {
+					result.invalid_transition_count += 1;
+					result.pass = false;
+					return result;
+				}
+				saw_invalid_after_valid = true;
+				result.invalid_transition_count += 1;
+			}
+		} else {
+			result.valid_count += 1;
+		}
+		previous_invalid = current_invalid;
+	}
+	result.pass = !current_invalid || saw_invalid_after_valid;
 	return result;
 }
 
@@ -5174,6 +5263,8 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["h3maped_mine_phase_address"] = "0x4a9d6a";
 	phase["h3maped_mine_template_selector_address"] = "0x4a9911";
 	phase["h3maped_mine_constraint_address"] = "0x4a9641";
+	phase["h3maped_footprint_gate_address"] = "0x49a09c";
+	phase["h3maped_cell_validity_address"] = "0x49a1d8";
 	phase["h3maped_treasure_phase_address"] = "0x4aab7e";
 	phase["h3maped_reward_value_selector_address"] = "0x4aa354";
 	phase["coordinate_vector_begin_offset"] = "+0x14b4";
@@ -5184,7 +5275,7 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["materializes_public_objects"] = false;
 	phase["materializes_public_roads"] = false;
 	phase["public_package_output_allowed"] = false;
-	phase["blocked_next"] = "port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a";
+	phase["blocked_next"] = "port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a";
 	if (String(runtime_zone_phase.get("status", "")) != "active_runtime_state_ready"
 			|| String(town_castle_phase.get("status", "")) != "active_runtime_state_ready") {
 		return phase;
@@ -5320,6 +5411,8 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 				placement["template_bucket_offset"] = "generator+0x388..+0x38c";
 				placement["template_selector_address"] = "0x4a9911";
 				placement["constraint_scan_address"] = "0x4a9641";
+				placement["footprint_gate_address"] = "0x49a09c";
+				placement["cell_validity_address"] = "0x49a1d8";
 				placement["object_record_constructor"] = "0x49ba89";
 				placement["object_record_vtable"] = "0x540ab0";
 				placement["runtime_package_adoption"] = false;
@@ -5450,40 +5543,13 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 								continue;
 							}
 							owner_match_count += 1;
-							bool footprint_passes = !mine_body_points.empty();
-							for (const H3MaskPoint &point : mine_body_points) {
-								const int32_t body_x = x + point.dx;
-								const int32_t body_y = y + point.dy;
-								if (body_x < 0 || body_y < 0 || body_x >= width || body_y >= height) {
-									rejected_footprint_out_of_bounds_count += 1;
-									footprint_passes = false;
-									break;
-								}
-								const int64_t body_flat = h3maped_cell_index(width, height, body_x, body_y, level);
-								if (body_flat < 0 || body_flat >= expected_cell_count || object_occupied[size_t(body_flat)] != 0) {
-									rejected_footprint_occupied_count += 1;
-									footprint_passes = false;
-									break;
-								}
-								const uint32_t body_masked = zone_words[size_t(body_flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
-								if (body_masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((body_masked >> 16U) & 0xffU) != runtime_index) {
-									rejected_footprint_owner_count += 1;
-									footprint_passes = false;
-									break;
-								}
-								const int32_t terrain_code = live_terrain_code[size_t(body_flat)] & 0x3f;
-								if (terrain_code == 8 || terrain_code == 9) {
-									rejected_footprint_terrain_count += 1;
-									footprint_passes = false;
-									break;
-								}
-								if ((cell_flags[size_t(body_flat)] & 0x10U) == 0U) {
-									rejected_footprint_repaint_count += 1;
-									footprint_passes = false;
-									break;
-								}
-							}
-							if (!footprint_passes) {
+							const H3FootprintGateResult footprint = h3maped_49a09c_circular_mask_gate(mine_body_points, zone_words, cell_flags, live_terrain_code, object_occupied, width, height, level_count, x, y, level, runtime_index, false);
+							if (!footprint.pass) {
+								rejected_footprint_out_of_bounds_count += footprint.out_of_bounds_count;
+								rejected_footprint_occupied_count += footprint.occupied_count;
+								rejected_footprint_owner_count += footprint.owner_mismatch_count;
+								rejected_footprint_terrain_count += footprint.terrain_rejected_count;
+								rejected_footprint_repaint_count += footprint.repaint_rejected_count;
 								rejected_footprint_count += 1;
 								continue;
 							}
@@ -5692,6 +5758,7 @@ Dictionary object_vector_prerequisite_phase_4a9d6a_4aab7e_phase(const Dictionary
 	phase["mine_minimum_record_count"] = mine_minimum_record_count;
 	phase["materializes_private_object_coordinate_records"] = !mine_coordinate_records.is_empty();
 	phase["materialized_private_mine_coordinate_record_count"] = mine_coordinate_records.size();
+	phase["mine_placement_constraint_gate_model"] = "0x49a09c circular mask scan with one-extra wrap step and 0x49a1d8-style cell validity";
 	phase["partial_coordinate_record_count"] = town_records.size() + mine_coordinate_records.size();
 	phase["mine_density_weight_total"] = mine_density_weight_total;
 	phase["eligible_reward_band_count"] = reward_band_schedule.size();
@@ -6432,7 +6499,7 @@ Dictionary small_pipeline_state(const Dictionary &normalized_config) {
 		state["town_castle_phase_4a8d2c"] = town_castle_phase;
 		state["object_vector_prerequisite_phase_4a9d6a_4aab7e"] = object_vector_phase;
 		state["roads_and_rivers_phase_4ab52a"] = roads_and_rivers_phase;
-		state["blocked_next"] = roads_and_rivers_ready ? String("complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases") : (object_vector_ready ? String("port_remaining_0x49aa93_cell_bit_lifecycle_0x4aab7e_rewards_before_0x4ab52a") : (town_castle_ready ? String("object_vector_prerequisite_phase_4a9d6a_4aab7e") : (terrain_tile_byte_writeback_ready ? String("town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2") : (terrainplacement_live_feedback_ready ? String("private_0x49b2b6_tile_byte_writeback_candidate") : (terrainplacement_visual_tables_ready ? String("live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback") : (terrain_cell_ready ? String("terrainplacement_visual_tables_4bcff5") : (runtime_terrain_ready ? String("terrain_cell_writeout_4a3f27") : (footprint_finalizer_ready ? String("runtime_terrain_selection_49b53d") : (span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c")))))))))))))));
+		state["blocked_next"] = roads_and_rivers_ready ? String("complete_0x14b0_coordinate_vector_rivers_and_connection_object_phases") : (object_vector_ready ? String("port_0x4aab7e_rewards_density_guards_adjacent_resources_before_0x4ab52a") : (town_castle_ready ? String("object_vector_prerequisite_phase_4a9d6a_4aab7e") : (terrain_tile_byte_writeback_ready ? String("town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2") : (terrainplacement_live_feedback_ready ? String("private_0x49b2b6_tile_byte_writeback_candidate") : (terrainplacement_visual_tables_ready ? String("live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback") : (terrain_cell_ready ? String("terrainplacement_visual_tables_4bcff5") : (runtime_terrain_ready ? String("terrain_cell_writeout_4a3f27") : (footprint_finalizer_ready ? String("runtime_terrain_selection_49b53d") : (span_fill_ready ? String("footprint_finalizer_4a3710") : (boundary_traversal_ready ? String("span_fill_4a325d") : (polygon_split_ready ? String("source_node_boundary_traversal_0x4a2777") : (source_node_ready ? String("polygon_split_model_0x4ccb64_0x4ccdfc") : (coordinate_ready ? String("zone_footprint_source_nodes_0x4a3a03_0x4cc788") : (completed_phases.size() >= 3 ? String("coordinate_replay_and_zone_footprints_0x4a1f3b") : String("runtime_zone_records_0x4a218c")))))))))))))));
 		return state;
 	}
 
