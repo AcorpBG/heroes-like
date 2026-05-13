@@ -104,6 +104,8 @@ func _run() -> void:
 			or String(backlog[3].get("id", "")) != "coordinate_replay_and_zone_footprints" \
 			or String(backlog[3].get("status", "")) != "private_context_ready" \
 			or String(backlog[4].get("status", "")) != "private_context_ready" \
+			or String(backlog[5].get("id", "")) != "town_object_placement" \
+			or String(backlog[5].get("status", "")) != "private_context_ready" \
 			or String(backlog[9].get("id", "")) != "final_h3m_writeout":
 		_fail("Fresh restart backlog drifted: %s" % JSON.stringify(backlog))
 		return
@@ -113,14 +115,14 @@ func _run() -> void:
 			return
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
-	var completed_private_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6"]
+	var completed_private_phases := ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle", "polygon_split_model", "source_node_boundary_traversal", "span_fill_4a325d", "footprint_finalizer_4a3710", "runtime_terrain_selection_49b53d", "terrain_cell_writeout_4a3f27", "terrainplacement_visual_tables_4bcff5", "terrainplacement_live_feedback_4bb74b_4bc5f0", "terrain_tile_byte_writeback_49b2b6", "town_castle_phase_4a8d2c"]
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "terrain_tile_byte_writeback_private_context_ready" \
+			or String(private_context.get("status", "")) != "town_castle_phase_private_context_ready" \
 				or Array(private_context.get("completed_phase_ids", [])) != completed_private_phases \
 				or int(private_context.get("completed_phase_count", -1)) != completed_private_phases.size() \
 				or bool(private_context.get("runtime_generation_allowed", true)) \
 				or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped terrain tile-byte writeback phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped town/castle phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -806,7 +808,7 @@ func _run() -> void:
 			or int(terrain_tile_writeback.get("terrain_flag_nonzero_cell_count", -1)) != 1033 \
 			or int(terrain_tile_writeback.get("road_river_nonzero_byte_count", -1)) != 0 \
 			or int(terrain_tile_writeback.get("sample_tile_byte_record_count", -1)) != 16 \
-			or String(terrain_tile_writeback.get("blocked_next", "")) != "roads_and_rivers_0x4a8d2c_0x4a8db2_0x4a93a2":
+			or String(terrain_tile_writeback.get("blocked_next", "")) != "town_castle_phase_0x4a8d2c_0x4a8db2_0x4a93a2":
 		_fail("h3maped 0x49b2b6 terrain tile-byte writeback context drifted: %s" % JSON.stringify(terrain_tile_writeback))
 		return
 	var terrain_byte_histogram: Dictionary = terrain_tile_writeback.get("tile_byte_0_histogram", {})
@@ -845,6 +847,72 @@ func _run() -> void:
 			or int(tile_samples[15].get("tile_byte_1_terrain_art", -1)) != 3:
 		_fail("h3maped 0x49b2b6 sample tile-byte records drifted: %s" % JSON.stringify(tile_samples))
 		return
+
+	var town_context: Dictionary = private_context.get("town_castle_phase_context", {})
+	if String(town_context.get("phase_id", "")) != "town_castle_phase_4a8d2c" \
+			or String(town_context.get("h3maped_anchor", "")) != "0x4a8d2c/0x4a8db2/0x4a93a2" \
+			or String(town_context.get("status", "")) != "private_context_ready" \
+			or not bool(town_context.get("materializes_private_town_candidates", false)) \
+			or bool(town_context.get("materializes_town_objects", true)) \
+			or bool(town_context.get("materializes_package_tiles", true)) \
+			or bool(town_context.get("adopts_into_runtime_grid", true)) \
+			or bool(town_context.get("public_package_output_allowed", true)) \
+			or int(town_context.get("source_player_min_castle_count", -1)) != 4 \
+			or int(town_context.get("assigned_player_min_castle_count", -1)) != 3 \
+			or int(town_context.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+			or int(town_context.get("scheduled_direct_minimum_object_count", -1)) != 3 \
+			or int(town_context.get("project_town_record_candidate_count", -1)) != 3 \
+			or int(town_context.get("project_player_start_candidate_count", -1)) != 3 \
+			or String(town_context.get("blocked_next", "")) != "roads_and_rivers_0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243":
+		_fail("h3maped town/castle private context drifted: %s" % JSON.stringify(town_context))
+		return
+	var town_stamping: Dictionary = town_context.get("direct_stamping_projection", {})
+	if String(town_stamping.get("status", "")) != "0x4a93a2_0x49ba89_direct_town_object_stamping_projection_private" \
+			or int(town_stamping.get("direct_candidate_scan_count", -1)) != 3 \
+			or int(town_stamping.get("direct_candidate_total", -1)) != 445 \
+			or int(town_stamping.get("direct_footprint_eligible_total", -1)) != 85 \
+			or int(town_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
+			or int(town_stamping.get("direct_unique_selection_count", -1)) != 2 \
+			or int(town_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
+			or int(town_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
+			or bool(town_stamping.get("runtime_package_adoption", true)) \
+			or bool(town_stamping.get("stamps_generated_cell_state", true)):
+		_fail("h3maped direct town stamping projection drifted: %s" % JSON.stringify(town_stamping))
+		return
+	var town_records: Array = town_stamping.get("records", [])
+	if town_records.size() != 3 \
+			or int(town_records[0].get("selected_x", -1)) != 26 \
+			or int(town_records[0].get("selected_y", -1)) != 16 \
+			or int(town_records[1].get("selected_x", -1)) != 23 \
+			or int(town_records[1].get("selected_y", -1)) != 23 \
+			or int(town_records[2].get("selected_x", -1)) != 18 \
+			or int(town_records[2].get("selected_y", -1)) != 5 \
+			or not bool(town_records[2].get("selected_from_random_tie", false)):
+		_fail("h3maped town record anchors drifted: %s" % JSON.stringify(town_records))
+		return
+	var town_adoption: Dictionary = town_context.get("project_town_adoption_candidate", {})
+	if String(town_adoption.get("status", "")) != "h3maped_project_town_adoption_candidate_private" \
+			or int(town_adoption.get("town_record_count", -1)) != 3 \
+			or int(town_adoption.get("player_start_count", -1)) != 3 \
+			or int(town_adoption.get("expected_player_count", -1)) != 3 \
+			or int(town_adoption.get("synchronized_player_start_count", -1)) != 3 \
+			or Array(town_adoption.get("owner_slots", [])) != [1, 2, 3] \
+			or bool(town_adoption.get("public_package_adoption", true)) \
+			or bool(town_adoption.get("runtime_grid_adoption", true)):
+		_fail("h3maped project town adoption candidate drifted: %s" % JSON.stringify(town_adoption))
+		return
+	var project_towns: Array = town_adoption.get("town_records", [])
+	var project_starts: Array = town_adoption.get("player_starts", [])
+	if project_towns.size() != 3 or project_starts.size() != 3:
+		_fail("h3maped project town/start candidate counts drifted: %s" % JSON.stringify(town_adoption))
+		return
+	for i in range(project_towns.size()):
+		if int(project_towns[i].get("x", -1)) != int(project_starts[i].get("x", -2)) \
+				or int(project_towns[i].get("y", -1)) != int(project_starts[i].get("y", -2)) \
+				or int(project_towns[i].get("level", -1)) != int(project_starts[i].get("level", -2)) \
+				or int(project_towns[i].get("owner_slot", -1)) != int(project_starts[i].get("owner_slot", -2)):
+			_fail("h3maped project starts are not synchronized to town records: %s" % JSON.stringify(town_adoption))
+			return
 
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
