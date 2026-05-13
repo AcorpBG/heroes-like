@@ -1101,6 +1101,32 @@ func _run() -> void:
 				or bool(constructor_tail.get("materialized_candidate_records", true)):
 		_fail("h3maped static constructor tail boundary drifted: %s" % JSON.stringify(constructor_tail))
 		return
+	var candidate_vtables: Dictionary = generic_selector.get("candidate_vtable_boundary", {})
+	var candidate_vtable_records: Array = candidate_vtables.get("records", [])
+	if String(generic_selector.get("candidate_vtable_boundary_status", "")) != "0x540ba0_0x540cac_vfunc_table_recovered_not_materialized" \
+				or String(candidate_vtables.get("source_range", "")) != "0x540ba0..0x540cac" \
+				or int(candidate_vtables.get("entry_size_bytes", -1)) != 0x10 \
+				or String(candidate_vtables.get("create_vfunc_offset", "")) != "+0x00" \
+				or String(candidate_vtables.get("value_vfunc_offset", "")) != "+0x04" \
+				or String(candidate_vtables.get("disabled_vfunc_offset", "")) != "+0x08" \
+				or int(candidate_vtables.get("record_count", -1)) != 17 \
+				or candidate_vtable_records.size() != 17 \
+				or String(candidate_vtable_records[0].get("vtable_address", "")) != "0x540ba0" \
+				or String(candidate_vtable_records[0].get("create_vfunc_address", "")) != "0x49c553" \
+				or String(candidate_vtable_records[0].get("value_vfunc_address", "")) != "0x49c54d" \
+				or String(candidate_vtable_records[0].get("disabled_vfunc_address", "")) != "0x49c54a" \
+				or String(candidate_vtable_records[2].get("vtable_address", "")) != "0x540bc0" \
+				or String(candidate_vtable_records[2].get("value_vfunc_address", "")) != "0x49c64b" \
+				or String(candidate_vtable_records[12].get("vtable_address", "")) != "0x540c60" \
+				or String(candidate_vtable_records[12].get("value_vfunc_address", "")) != "0x49ca8b" \
+				or String(candidate_vtable_records[12].get("disabled_vfunc_address", "")) != "0x49baf5" \
+				or String(candidate_vtable_records[16].get("vtable_address", "")) != "0x540ca0" \
+				or String(candidate_vtable_records[16].get("create_vfunc_address", "")) != "0x49cdb1" \
+				or String(candidate_vtable_records[16].get("value_vfunc_address", "")) != "0x49cd97" \
+				or bool(candidate_vtables.get("value_vfuncs_materialized", true)) \
+				or bool(candidate_vtables.get("create_vfuncs_materialized", true)):
+		_fail("h3maped candidate vtable boundary drifted: %s" % JSON.stringify(candidate_vtables))
+		return
 	if int(known_vector_gap.get("town_coordinate_record_count", -1)) != 3 \
 				or int(known_vector_gap.get("mine_minimum_record_count", -1)) != 18 \
 				or int(known_vector_gap.get("materialized_private_mine_coordinate_record_count", -1)) != 18 \
