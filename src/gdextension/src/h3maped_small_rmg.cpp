@@ -1373,6 +1373,233 @@ bool set_terrain_at_grid_index(PackedInt32Array &terrain_code_u16, int32_t width
 	return true;
 }
 
+int64_t h3maped_grid_key(int32_t level, int32_t x, int32_t y) {
+	return (int64_t(level) << 40) | (int64_t(y) << 20) | int64_t(x);
+}
+
+void h3maped_decode_grid_key(int64_t key, int32_t &level, int32_t &x, int32_t &y) {
+	level = int32_t(key >> 40);
+	y = int32_t((key >> 20) & 0xfffff);
+	x = int32_t(key & 0xfffff);
+}
+
+PackedInt32Array h3maped_same_terrain_mask_4bc74c(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	PackedInt32Array mask;
+	mask.resize(8);
+	const auto same = [&](int32_t nx, int32_t ny) -> bool {
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+			return false;
+		}
+		const int32_t index = level * level_tile_count + ny * width + nx;
+		return index >= 0 && index < terrain_code_u16.size() && terrain_code_u16[index] == terrain_id;
+	};
+	const bool north = same(x, y - 1);
+	const bool south = same(x, y + 1);
+	const bool west = same(x - 1, y);
+	const bool east = same(x + 1, y);
+	mask.set(0, north ? 1 : 0);
+	mask.set(4, south ? 1 : 0);
+	mask.set(6, west ? 1 : 0);
+	mask.set(2, east ? 1 : 0);
+	mask.set(7, (north || west) && same(x - 1, y - 1) ? 1 : 0);
+	mask.set(1, (north || east) && same(x + 1, y - 1) ? 1 : 0);
+	mask.set(5, (south || west) && same(x - 1, y + 1) ? 1 : 0);
+	mask.set(3, (south || east) && same(x + 1, y + 1) ? 1 : 0);
+	return mask;
+}
+
+bool h3maped_same_class_region_gate_4bc928(const PackedInt32Array &mask) {
+	if (mask.size() != 8) {
+		return false;
+	}
+	int32_t cursor = 0;
+	if (mask[0] != 0) {
+		do {
+			cursor = (cursor + 1) & 7;
+			if (cursor == 0) {
+				return false;
+			}
+		} while (mask[cursor] != 0);
+	}
+	const int32_t start_zero = cursor;
+	int32_t scan = (cursor + 1) & 7;
+	while (scan != start_zero && mask[scan] == 0) {
+		scan = (scan + 1) & 7;
+	}
+	if (scan == start_zero) {
+		return false;
+	}
+	do {
+		scan = (scan + 1) & 7;
+		if (scan == start_zero) {
+			return false;
+		}
+	} while (mask[scan] != 0);
+	do {
+		scan = (scan + 1) & 7;
+		if (scan == start_zero) {
+			return false;
+		}
+	} while (mask[scan] == 0);
+	return true;
+}
+
+bool h3maped_horizontal_pair_gate_4bc674(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	if (x <= 0 || x >= width - 1 || y < 0 || y >= height) {
+		return false;
+	}
+	const int32_t west = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, terrain_id);
+	const int32_t east = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, terrain_id);
+	return west != terrain_id && east != terrain_id;
+}
+
+bool h3maped_vertical_pair_gate_4bc6e0(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t terrain_id) {
+	if (y <= 0 || y >= height - 1 || x < 0 || x >= width) {
+		return false;
+	}
+	const int32_t north = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, terrain_id);
+	const int32_t south = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, terrain_id);
+	return north != terrain_id && south != terrain_id;
+}
+
+bool h3maped_toolkit_byte5_allows_same_class_gate(int32_t terrain_id) {
+	return terrain_id == 8 || terrain_id == 9;
+}
+
+bool h3maped_candidate_gate_4bc988_grid(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return false;
+	}
+	const int32_t terrain_id = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y, -1);
+	if (terrain_id < 0) {
+		return false;
+	}
+	const bool horizontal_pair_gate = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	const bool vertical_pair_gate = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	const bool same_class_region_gate = h3maped_same_class_region_gate_4bc928(h3maped_same_terrain_mask_4bc74c(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id));
+	return horizontal_pair_gate || vertical_pair_gate || (h3maped_toolkit_byte5_allows_same_class_gate(terrain_id) && same_class_region_gate);
+}
+
+Dictionary h3maped_retouch_target_record(const char *branch, int32_t from_x, int32_t from_y, int32_t target_x, int32_t target_y, int32_t terrain_id, bool changed) {
+	Dictionary record;
+	record["branch"] = branch;
+	record["from_x"] = from_x;
+	record["from_y"] = from_y;
+	record["target_x"] = target_x;
+	record["target_y"] = target_y;
+	record["terrain_id"] = terrain_id;
+	record["changed_terrain"] = changed;
+	return record;
+}
+
+int32_t h3maped_frontier_retouch_4bbd01(PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, Array *sample_records, int32_t sample_limit, std::vector<int64_t> *changed_keys_out = nullptr) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return 0;
+	}
+	const int32_t terrain_id = terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y, -1);
+	if (terrain_id < 0) {
+		return 0;
+	}
+	int32_t changed_count = 0;
+	auto retouch = [&](const char *branch, int32_t target_x, int32_t target_y) {
+		const bool changed = set_terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, target_x, target_y, terrain_id);
+		if (changed) {
+			changed_count += 1;
+			if (changed_keys_out != nullptr) {
+				changed_keys_out->push_back(h3maped_grid_key(level, target_x, target_y));
+			}
+		}
+		if (sample_records != nullptr && sample_records->size() < sample_limit) {
+			sample_records->append(h3maped_retouch_target_record(branch, x, y, target_x, target_y, terrain_id, changed));
+		}
+	};
+	if (h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id)) {
+		const bool upper_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x, y - 1);
+		const bool lower_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x, y + 1);
+		bool choose_upper = upper_candidate;
+		if (!upper_candidate && !lower_candidate) {
+			const bool upper_horizontal_pair = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, terrain_id);
+			const bool lower_horizontal_pair = h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y + 1, terrain_id);
+			choose_upper = !upper_horizontal_pair || lower_horizontal_pair;
+		}
+		retouch(choose_upper ? "0x4bbd01_vertical_upper" : "0x4bbd01_vertical_lower", x, choose_upper ? y - 1 : y + 1);
+	}
+	if (h3maped_horizontal_pair_gate_4bc674(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id)) {
+		const bool left_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x - 1, y);
+		const bool right_candidate = h3maped_candidate_gate_4bc988_grid(terrain_code_u16, width, height, level_tile_count, level, x + 1, y);
+		bool choose_left = left_candidate;
+		if (!left_candidate && !right_candidate) {
+			const bool left_vertical_pair = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x - 1, y, terrain_id);
+			const bool right_vertical_pair = h3maped_vertical_pair_gate_4bc6e0(terrain_code_u16, width, height, level_tile_count, level, x + 1, y, terrain_id);
+			choose_left = !left_vertical_pair || right_vertical_pair;
+		}
+		retouch(choose_left ? "0x4bbd01_horizontal_left" : "0x4bbd01_horizontal_right", choose_left ? x - 1 : x + 1, y);
+	}
+	const PackedInt32Array same_terrain_mask = h3maped_same_terrain_mask_4bc74c(terrain_code_u16, width, height, level_tile_count, level, x, y, terrain_id);
+	if (h3maped_toolkit_byte5_allows_same_class_gate(terrain_id) && h3maped_same_class_region_gate_4bc928(same_terrain_mask)) {
+		int32_t start_same = 0;
+		if (same_terrain_mask[0] == 0) {
+			do {
+				start_same = (start_same + 1) & 7;
+				if (start_same == 0) {
+					return changed_count;
+				}
+			} while (same_terrain_mask[start_same] == 0);
+		}
+		struct ZeroRun {
+			int32_t score = 0;
+			int32_t start = 0;
+			int32_t length = 0;
+		};
+		std::vector<ZeroRun> runs;
+		int32_t scan = start_same;
+		while (true) {
+			scan = (scan + 1) & 7;
+			if (scan == start_same) {
+				break;
+			}
+			if (same_terrain_mask[scan] != 0) {
+				continue;
+			}
+			ZeroRun run;
+			run.start = scan;
+			do {
+				run.score += (scan & 1) != 0 ? 1 : 2;
+				run.length += 1;
+				scan = (scan + 1) & 7;
+				if (scan == start_same) {
+					break;
+				}
+			} while (same_terrain_mask[scan] == 0);
+			runs.push_back(run);
+			if (scan == start_same) {
+				break;
+			}
+		}
+		if (!runs.empty()) {
+			const ZeroRun *best = &runs.front();
+			for (const ZeroRun &run : runs) {
+				if (run.score < best->score) {
+					best = &run;
+				}
+			}
+			static constexpr int32_t DX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+			static constexpr int32_t DY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+			int32_t slot = best->start;
+			const int32_t end = (best->start + best->length) & 7;
+			while (slot != end) {
+				const int32_t target_x = x + DX[slot];
+				const int32_t target_y = y + DY[slot];
+				if (target_x >= 0 && target_y >= 0 && target_x < width && target_y < height) {
+					retouch("0x4bbd01_same_class_zero_run", target_x, target_y);
+				}
+				slot = (slot + 1) & 7;
+			}
+		}
+	}
+	return changed_count;
+}
+
 TerrainClassResult classify_grid_cell(const PackedInt32Array &terrain_code_u16, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t center) {
 	std::array<int32_t, 8> relations = {
 		h3maped_terrain_relation_4bb039(center, terrain_at_grid_index(terrain_code_u16, width, height, level_tile_count, level, x, y - 1, center)),
@@ -1432,10 +1659,10 @@ bool select_visual_row_for_grid_cell_with_neighbor_mask(const std::vector<Terrai
 
 Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vector<uint32_t> &zone_words, const Array &selected_terrain_codes, const PackedInt32Array &final_terrain_code_u16, int32_t width, int32_t height, int32_t level_count, uint32_t rng_state_before_visual_selection) {
 	Dictionary report;
-	report["status"] = "0x4a4025_0x4bb74b_repaint_live_scratch_visual_feedback_boundary_only";
-	report["source"] = "projects h3maped 0x4bcfc3 / 0x4bce6d / 0x4bad0f / 0x49acf6 visual writes during the 0x4a4025 full-water repaint and the per-zone 0x4bb74b repaint sequence; full 0x4bc5f0 set A/B queue drain remains blocked";
-	report["ported_addresses"] = Array::make("0x4a4025", "0x4a4082", "0x4a415a", "0x4bb74b", "0x4bcfc3", "0x4bce6d", "0x4ba938", "0x4ba989", "0x4baabf", "0x4bad0f", "0x49acf6");
-	report["exact_queue_drain_complete"] = false;
+	report["status"] = "0x4a4025_0x4bb74b_0x4bc5f0_repaint_queue_live_scratch_visual_feedback_boundary";
+	report["source"] = "projects h3maped 0x4bcfc3 / 0x4bce6d / 0x4bad0f / 0x49acf6 visual writes during the 0x4a4025 full-water repaint, per-zone 0x4bb74b repaint sequence, and recovered 0x4bc5f0 set A/B queue drain; public package adoption remains blocked";
+	report["ported_addresses"] = Array::make("0x4a4025", "0x4a4082", "0x4a415a", "0x4bb74b", "0x4bba13", "0x4bba36", "0x4bba59", "0x4bbd01", "0x4bc5f0", "0x4bc674", "0x4bc6e0", "0x4bc74c", "0x4bc928", "0x4bc988", "0x4bbfcc", "0x4bcfc3", "0x4bce6d", "0x4ba938", "0x4ba989", "0x4baabf", "0x4bad0f", "0x49acf6");
+	report["exact_queue_drain_complete"] = true;
 	report["adopts_into_runtime_grid"] = false;
 	report["materializes_package_tiles"] = false;
 	report["width"] = width;
@@ -1480,6 +1707,7 @@ Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vecto
 	int32_t live_visual_missing_bucket_count = 0;
 	int32_t live_initial_water_attempt_count = 0;
 	int32_t live_repaint_attempt_count = 0;
+	int32_t live_queue_attempt_count = 0;
 	int32_t live_full_native_cell_count = 0;
 	int32_t live_terrain_art_nonzero_cell_count = 0;
 	int32_t live_terrain_flag_cell_count = 0;
@@ -1590,6 +1818,162 @@ Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vecto
 			}
 		}
 	}
+
+	std::set<int64_t> set_a;
+	std::set<int64_t> set_b;
+	Array seed_samples;
+	Array drain_samples;
+	int32_t changed_cell_update_count = 0;
+	int32_t set_a_insert_count = 0;
+	int32_t set_b_insert_count = 0;
+	int32_t max_set_a_count = 0;
+	int32_t max_set_b_count = 0;
+
+	auto append_set_b = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain, const char *source_branch) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const int32_t neighbor = terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, x, y, current_terrain);
+		if (neighbor == current_terrain) {
+			return;
+		}
+		const int64_t key = h3maped_grid_key(level, x, y);
+		if (set_b.insert(key).second) {
+			set_b_insert_count += 1;
+		}
+		if (seed_samples.size() < 12) {
+			Dictionary sample;
+			sample["x"] = x;
+			sample["y"] = y;
+			sample["level"] = level;
+			sample["terrain_before_drain"] = neighbor;
+			sample["current_repaint_terrain"] = current_terrain;
+			sample["source_branch"] = source_branch;
+			seed_samples.append(sample);
+		}
+	};
+	auto seed_4bba59 = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain) {
+		append_set_b(level, x, y - 1, current_terrain, "0x4bba59_north_south_cardinal");
+		append_set_b(level, x, y + 1, current_terrain, "0x4bba59_north_south_cardinal");
+		append_set_b(level, x - 1, y, current_terrain, "0x4bba59_west_east_cardinal");
+		append_set_b(level, x + 1, y, current_terrain, "0x4bba59_west_east_cardinal");
+		const std::array<std::array<int32_t, 2>, 4> diagonals = { { { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } } };
+		for (const auto &delta : diagonals) {
+			const int32_t nx = x + delta[0];
+			const int32_t ny = y + delta[1];
+			const int32_t neighbor = terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, nx, ny, current_terrain);
+			if (!h3maped_toolkit_byte5_allows_same_class_gate(neighbor)) {
+				continue;
+			}
+			append_set_b(level, nx, ny, current_terrain, "0x4bba59_diagonal_byte5_zero_neighbor");
+		}
+	};
+	auto append_set_a = [&](int32_t level, int32_t x, int32_t y, const char *source_branch) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const int64_t key = h3maped_grid_key(level, x, y);
+		if (set_a.insert(key).second) {
+			set_a_insert_count += 1;
+		}
+		if (drain_samples.size() < 16) {
+			Dictionary sample;
+			sample["x"] = x;
+			sample["y"] = y;
+			sample["level"] = level;
+			sample["source_branch"] = source_branch;
+			sample["terrain_id"] = terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, x, y, -1);
+			drain_samples.append(sample);
+		}
+	};
+	auto seed_4bb74b_neighbor_branch = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain, bool horizontal_pair_wrapper, const char *source_branch) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const int32_t neighbor = terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, x, y, current_terrain);
+		if (neighbor == current_terrain) {
+			return;
+		}
+		const bool gate = horizontal_pair_wrapper
+				? h3maped_horizontal_pair_gate_4bc674(live_terrain_code_u16, width, height, level_tile_count, level, x, y, neighbor)
+				: h3maped_vertical_pair_gate_4bc6e0(live_terrain_code_u16, width, height, level_tile_count, level, x, y, neighbor);
+		if (!gate) {
+			seed_4bba59(level, x, y, current_terrain);
+			append_set_b(level, x, y, current_terrain, source_branch);
+		}
+	};
+	auto process_4bb74b_topology = [&](int32_t level, int32_t x, int32_t y, int32_t active_terrain) {
+		if (active_terrain < 0) {
+			return;
+		}
+		set_terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, x, y, active_terrain);
+		live_queue_attempt_count += 1;
+		write_live_visual_cell(level, x, y, active_terrain, "0x4bb74b_queue_live_visual_feedback");
+		if (!h3maped_toolkit_byte5_allows_same_class_gate(active_terrain)) {
+			seed_4bb74b_neighbor_branch(level, x, y - 1, active_terrain, true, "0x4bb7b7_neighbor_0x4bba13_false");
+			seed_4bb74b_neighbor_branch(level, x, y + 1, active_terrain, true, "0x4bb80b_neighbor_0x4bba13_false");
+			seed_4bb74b_neighbor_branch(level, x - 1, y, active_terrain, false, "0x4bb863_neighbor_0x4bba36_false");
+			seed_4bb74b_neighbor_branch(level, x + 1, y, active_terrain, false, "0x4bb8b7_neighbor_0x4bba36_false");
+		} else if (h3maped_candidate_gate_4bc988_grid(live_terrain_code_u16, width, height, level_tile_count, level, x, y)) {
+			append_set_a(level, x, y, "0x4bb9ed_current_candidate_to_set_a");
+		} else {
+			seed_4bba59(level, x, y, active_terrain);
+		}
+	};
+	auto update_max_queue_counts = [&]() {
+		max_set_a_count = std::max(max_set_a_count, int32_t(set_a.size()));
+		max_set_b_count = std::max(max_set_b_count, int32_t(set_b.size()));
+	};
+	int32_t set_a_drain_count = 0;
+	int32_t set_b_drain_count = 0;
+	int32_t set_b_candidate_true_count = 0;
+	int32_t retouched_cell_write_count = 0;
+	int32_t drain_guard_count = 0;
+	const int32_t drain_guard_limit = 32768;
+	auto drain_queue_for_active_terrain = [&](int32_t active_terrain) {
+		update_max_queue_counts();
+		while ((!set_a.empty() || !set_b.empty()) && drain_guard_count < drain_guard_limit) {
+			drain_guard_count += 1;
+			while (!set_a.empty() && drain_guard_count < drain_guard_limit) {
+				drain_guard_count += 1;
+				const int64_t key = *set_a.begin();
+				set_a.erase(set_a.begin());
+				int32_t level = 0;
+				int32_t x = 0;
+				int32_t y = 0;
+				h3maped_decode_grid_key(key, level, x, y);
+				set_a_drain_count += 1;
+				std::vector<int64_t> changed_keys;
+				retouched_cell_write_count += h3maped_frontier_retouch_4bbd01(live_terrain_code_u16, width, height, level_tile_count, level, x, y, &drain_samples, 24, &changed_keys);
+				for (int64_t changed_key : changed_keys) {
+					int32_t changed_level = 0;
+					int32_t changed_x = 0;
+					int32_t changed_y = 0;
+					h3maped_decode_grid_key(changed_key, changed_level, changed_x, changed_y);
+					process_4bb74b_topology(changed_level, changed_x, changed_y, active_terrain);
+				}
+				update_max_queue_counts();
+			}
+			while (set_a.empty() && !set_b.empty() && drain_guard_count < drain_guard_limit) {
+				drain_guard_count += 1;
+				const int64_t key = *set_b.begin();
+				set_b.erase(set_b.begin());
+				int32_t level = 0;
+				int32_t x = 0;
+				int32_t y = 0;
+				h3maped_decode_grid_key(key, level, x, y);
+				set_b_drain_count += 1;
+				if (h3maped_candidate_gate_4bc988_grid(live_terrain_code_u16, width, height, level_tile_count, level, x, y)) {
+					set_b_candidate_true_count += 1;
+					process_4bb74b_topology(level, x, y, active_terrain);
+				}
+				update_max_queue_counts();
+			}
+		}
+		set_a.clear();
+		set_b.clear();
+	};
+
 	for (int64_t zone_index = 0; zone_index < selected_terrain_codes.size(); ++zone_index) {
 		const int32_t terrain = int32_t(selected_terrain_codes[zone_index]);
 		if (terrain == 8) {
@@ -1606,10 +1990,23 @@ Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vecto
 					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != int32_t(zone_index)) {
 						continue;
 					}
+					changed_cell_update_count += 1;
 					if (set_terrain_at_grid_index(live_terrain_code_u16, width, height, level_tile_count, level, x, y, terrain)) {
 						live_repaint_attempt_count += 1;
 						write_live_visual_cell(level, x, y, terrain, "0x4bb74b_repaint_live_visual_feedback");
+						if (h3maped_candidate_gate_4bc988_grid(live_terrain_code_u16, width, height, level_tile_count, level, x, y)) {
+							append_set_a(level, x, y, "0x4bb9ed_repaint_candidate_to_set_a");
+						} else {
+							seed_4bba59(level, x, y, terrain);
+						}
+						if (!h3maped_toolkit_byte5_allows_same_class_gate(terrain)) {
+							seed_4bb74b_neighbor_branch(level, x, y - 1, terrain, true, "0x4bb7b7_repaint_neighbor_0x4bba13_false");
+							seed_4bb74b_neighbor_branch(level, x, y + 1, terrain, true, "0x4bb80b_repaint_neighbor_0x4bba13_false");
+							seed_4bb74b_neighbor_branch(level, x - 1, y, terrain, false, "0x4bb863_repaint_neighbor_0x4bba36_false");
+							seed_4bb74b_neighbor_branch(level, x + 1, y, terrain, false, "0x4bb8b7_repaint_neighbor_0x4bba36_false");
+						}
 					}
+					drain_queue_for_active_terrain(terrain);
 				}
 			}
 		}
@@ -1645,6 +2042,7 @@ Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vecto
 	report["live_visual_missing_bucket_count"] = live_visual_missing_bucket_count;
 	report["live_initial_water_attempt_count"] = live_initial_water_attempt_count;
 	report["live_repaint_attempt_count"] = live_repaint_attempt_count;
+	report["live_queue_attempt_count"] = live_queue_attempt_count;
 	report["live_dirty_cell_count"] = live_dirty_cell_count;
 	report["live_roundtrip_mismatch_count"] = live_roundtrip_mismatch_count;
 	report["live_terrain_mismatch_count"] = live_terrain_mismatch_count;
@@ -1653,12 +2051,26 @@ Dictionary h3maped_repaint_live_visual_feedback_boundary_report(const std::vecto
 	report["live_terrain_flag_cell_count"] = live_terrain_flag_cell_count;
 	report["neighbor_mask_histogram"] = neighbor_mask_histogram;
 	report["selector_kind_histogram"] = selector_kind_histogram;
+	report["post_queue_terrain_code_u16"] = live_terrain_code_u16;
+	report["changed_cell_update_count"] = changed_cell_update_count;
+	report["initial_set_a_candidate_count"] = max_set_a_count;
+	report["initial_set_b_candidate_count"] = max_set_b_count;
+	report["total_set_a_insert_count"] = set_a_insert_count;
+	report["total_set_b_insert_count"] = set_b_insert_count;
+	report["set_a_drain_count"] = set_a_drain_count;
+	report["set_b_drain_count"] = set_b_drain_count;
+	report["set_b_candidate_true_count"] = set_b_candidate_true_count;
+	report["retouched_cell_write_count"] = retouched_cell_write_count;
+	report["drain_guard_limit"] = drain_guard_limit;
+	report["drain_guard_exhausted"] = drain_guard_count >= drain_guard_limit;
+	report["seed_samples"] = seed_samples;
+	report["drain_samples"] = drain_samples;
 	report["scratch_word_u16"] = live_scratch_word_u16;
 	report["generated_cell_word_0x24_u32"] = live_cell_word_0x24_u32;
 	report["generated_cell_word_0x28_u32"] = live_cell_word_0x28_u32;
 	report["sample_records"] = sample_records;
 	report["rng_state_after_live_visual_selection_uint32"] = int64_t(live_visual_rng.state);
-	report["blocked_next"] = "port the exact 0x4bc5f0 set A/B queue drain and then adopt live generated-cell words through 0x49b2b6 only after road/object phases are executable-derived";
+	report["blocked_next"] = "adopt live generated-cell words through 0x49b2b6 only after road/object phases are executable-derived";
 	return report;
 }
 
