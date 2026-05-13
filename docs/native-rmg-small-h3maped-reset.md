@@ -24,13 +24,13 @@ Medium, large, XL, water, islands, and underground generation are out of scope f
 
 ## Current Boundary
 
-2026-05-13 strict restart correction: the active public boundary is reset to h3maped binary verification, 36x36 one-level land scope gating, recovered size/water scoring, h3maped RNG template-selection evidence, an explicit executable-port backlog, and runtime generation refusal. It no longer exposes `active_generation_state`, `small_generation_state`, `private_generation_context`, private town/object ledgers, package payloads, or partial map output.
+2026-05-13 strict restart correction: the active public boundary is reset to h3maped binary verification, 36x36 one-level land scope gating, recovered size/water scoring, h3maped RNG template-selection evidence, a strict `0x4ac62a..0x4ac6ec` player-slot assignment port, an explicit executable-port backlog, and runtime generation refusal. It no longer exposes `active_generation_state`, `small_generation_state`, `private_generation_context`, private town/object ledgers, package payloads, or partial map output.
 
 The earlier overgrown active port remains archived at `src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp`; the previous phase ledger remains archived at `src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp`. Older archived ledgers remain evidence only.
 
-The active module must not expose `active_generation_state`, `small_generation_state`, `private_generation_context`, private town/object ledgers, or partial package payloads. Previous private player-slot, zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence only; they are not accepted as active generation progress. The next active implementation step is the narrow executable port of `0x4ac62a..0x4ac6ec` player-slot assignment over the selected template.
+The active module must not expose `active_generation_state`, `small_generation_state`, `private_generation_context`, private town/object ledgers, or partial package payloads. Previous private zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence only; they are not accepted as active generation progress. The next active implementation step is the narrow executable port of `0x4a218c` / `0x49b452` runtime-zone records over the selected template and player-slot mapping.
 
-Seed `1`, one human, three total players currently selects `h3maped_template_018` -> `translated_rmg_template_019_v1` through h3maped RNG first value `41` and selected vector index `2`. That is the only active strict boundary beyond binary/scope/score evidence. Player assignment, runtime zones, coordinates, terrain, towns, mines, rewards, roads, guards, blockers, package adoption, and final writeout remain pending executable ports.
+Seed `1`, one human, three total players currently selects `h3maped_template_018` -> `translated_rmg_template_019_v1` through h3maped RNG first value `41` and selected vector index `2`, then fills `generator+0xee0/+0xee4` assignment/mapping slots as `[0, 1, 2, -1, -1, -1, -1, -1]`. Runtime zones, coordinates, terrain, towns, mines, rewards, roads, guards, blockers, package adoption, and final writeout remain pending executable ports.
 
 Historical note: the section below describes the archived report-treadmill state before the correction above. It is preserved as failure evidence, not the active implementation contract.
 
@@ -80,8 +80,8 @@ Explicit translated-template requests do not bypass the reset gate.
 The restart must port these phases from `h3maped.exe` before public package output is allowed:
 
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
-2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (next required strict executable port).
-3. Runtime-zone records: `0x4a218c` / `0x49b452`. Town selector `0x49b3c1` must be consumed for coordinate-replay town-choice RNG when that phase is reintroduced.
+2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active strict executable port for `generator+0xee0/+0xee4` assignment/mapping slots only).
+3. Runtime-zone records: `0x4a218c` / `0x49b452` (next required strict executable port). Town selector `0x49b3c1` must be consumed for coordinate-replay town-choice RNG when that phase is reintroduced.
 4. Coordinate replay and zone-footprint phase: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x4a3a03`, `0x4cc788`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d`, and small-land `0x4a3710`.
 5. Terrain writeout and TerrainPlacement: `0x49b53d`, `0x4a3f27`, `0x4bcff5`, `0x4bb74b`, `0x4bc5f0`, and `0x49b2b6`.
 6. Town object placement: `0x4a8d2c`, `0x4a8db2`, `0x4a93a2`, `0x49aa93`, `0x49a09c`, `0x49b3c1`, `0x49ba89`, and `0x540a9c`.

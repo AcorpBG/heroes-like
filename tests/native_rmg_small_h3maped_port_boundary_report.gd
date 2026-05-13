@@ -59,6 +59,31 @@ func _run() -> void:
 		_fail("Strict h3maped template selection drifted: %s" % JSON.stringify(selection))
 		return
 
+	var player_slots: Dictionary = report.get("player_slot_assignment", {})
+	if String(player_slots.get("status", "")) != "active_strict_executable_port" \
+			or String(player_slots.get("source_range", "")) != "0x4ac62a..0x4ac6ec" \
+			or String(player_slots.get("assignment_slots_offset", "")) != "generator+0xee0" \
+			or String(player_slots.get("mapped_slots_offset", "")) != "generator+0xee4" \
+			or String(player_slots.get("binary_byte_prefix_0x4ac62a", "")) != "6a 09 8d be e0 0e 00 00 59 83 c8 ff f3 ab 33 d2" \
+			or Array(player_slots.get("raw_ee0_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or Array(player_slots.get("mapped_ee4_slots", [])) != [0, 1, 2, -1, -1, -1, -1, -1] \
+			or int(player_slots.get("assigned_player_count", -1)) != 3:
+		_fail("Strict h3maped player-slot assignment drifted: %s" % JSON.stringify(player_slots))
+		return
+	var assignments: Array = player_slots.get("assignment_records", [])
+	if assignments.size() != 3 \
+			or String(assignments[0].get("player_type", "")) != "human" \
+			or int(assignments[0].get("source_owner_index", -1)) != 0 \
+			or int(assignments[0].get("actual_player_color", -1)) != 0 \
+			or String(assignments[1].get("player_type", "")) != "computer" \
+			or int(assignments[1].get("source_owner_index", -1)) != 1 \
+			or int(assignments[1].get("actual_player_color", -1)) != 1 \
+			or String(assignments[2].get("player_type", "")) != "computer" \
+			or int(assignments[2].get("source_owner_index", -1)) != 2 \
+			or int(assignments[2].get("actual_player_color", -1)) != 2:
+		_fail("Strict h3maped player-slot records drifted: %s" % JSON.stringify(assignments))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -66,13 +91,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "player_slot_assignment_0x4ac62a_0x4ac6ec":
+			or String(strict_state.get("next_required_port", "")) != "runtime_zone_records_0x4a218c_0x49b452":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 10 \
-			or not pending_ports.has("player_slot_assignment:0x4ac62a..0x4ac6ec") \
+	if pending_ports.size() != 9 \
+			or not pending_ports.has("runtime_zone_records:0x4a218c_0x49b452") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -80,7 +105,7 @@ func _run() -> void:
 	var backlog: Array = report.get("fresh_phase_backlog", [])
 	if backlog.size() != 12 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
-			or String(backlog[1].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[9].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
