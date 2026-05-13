@@ -195,38 +195,53 @@ func _run() -> void:
 		return
 	if int(coordinate_replay.get("placement_step_count", -1)) != 18 \
 			or int(coordinate_replay.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18 \
-			or int(coordinate_replay.get("rng_event_count", -1)) != 18 \
-			or int(coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 316395082:
+			or int(coordinate_replay.get("town_choice_rng_calls_during_0x4a218c", -1)) != 4 \
+			or int(coordinate_replay.get("total_interleaved_rng_calls_during_0x4a218c", -1)) != 22 \
+			or int(coordinate_replay.get("rng_event_count", -1)) != 22 \
+			or int(coordinate_replay.get("rng_state_after_0x4a218c_replay_uint32", -1)) != 255755822 \
+			or String(coordinate_replay.get("town_choice_rng_status", "")) != "0x49b3c1_interleaved_allowed_town_choice_ported_inspection_only":
 		_fail("Coordinate replay RNG schedule drifted: %s" % JSON.stringify(coordinate_replay))
 		return
 	var bbox: Dictionary = coordinate_replay.get("bounding_box_rescale", {})
-	if int(bbox.get("min_y_before_rescale", 0)) != -11 \
-			or int(bbox.get("min_x_before_rescale", 0)) != -67 \
-			or int(bbox.get("max_y_before_rescale", 0)) != 30 \
-			or int(bbox.get("max_x_before_rescale", 0)) != 18 \
-			or int(bbox.get("height_before_rescale", 0)) != 41 \
-			or int(bbox.get("width_before_rescale", 0)) != 85 \
-			or int(bbox.get("selected_span_before_rescale", 0)) != 85 \
+	if int(bbox.get("min_y_before_rescale", 0)) != -26 \
+			or int(bbox.get("min_x_before_rescale", 0)) != -36 \
+			or int(bbox.get("max_y_before_rescale", 0)) != 58 \
+			or int(bbox.get("max_x_before_rescale", 0)) != 12 \
+			or int(bbox.get("height_before_rescale", 0)) != 84 \
+			or int(bbox.get("width_before_rescale", 0)) != 48 \
+			or int(bbox.get("selected_span_before_rescale", 0)) != 84 \
 			or int(bbox.get("map_span", 0)) != 36 \
-			or int(bbox.get("offset_y", 0)) != -33 \
-			or int(bbox.get("offset_x", 0)) != -67:
+			or int(bbox.get("offset_y", 0)) != -26 \
+			or int(bbox.get("offset_x", 0)) != -54:
 		_fail("Coordinate replay bbox rescale drifted: %s" % JSON.stringify(bbox))
 		return
 	var scaled: Array = coordinate_replay.get("scaled_zone_coordinates", [])
 	if scaled.size() != 6 \
-			or int(scaled[0].get("x_after_bbox_rescale", -1)) != 30 \
-			or int(scaled[0].get("y_after_bbox_rescale", -1)) != 16 \
-			or int(scaled[1].get("x_after_bbox_rescale", -1)) != 8 \
-			or int(scaled[1].get("y_after_bbox_rescale", -1)) != 13 \
-			or int(scaled[2].get("x_after_bbox_rescale", -1)) != 4 \
-			or int(scaled[2].get("y_after_bbox_rescale", -1)) != 21 \
-			or int(scaled[3].get("x_after_bbox_rescale", -1)) != 23 \
-			or int(scaled[3].get("y_after_bbox_rescale", -1)) != 21 \
-			or int(scaled[4].get("x_after_bbox_rescale", -1)) != 13 \
-			or int(scaled[4].get("y_after_bbox_rescale", -1)) != 21 \
-			or int(scaled[5].get("x_after_bbox_rescale", -1)) != 18 \
-			or int(scaled[5].get("y_after_bbox_rescale", -1)) != 13:
+			or int(scaled[0].get("x_after_bbox_rescale", -1)) != 23 \
+			or int(scaled[0].get("y_after_bbox_rescale", -1)) != 11 \
+			or int(scaled[1].get("x_after_bbox_rescale", -1)) != 21 \
+			or int(scaled[1].get("y_after_bbox_rescale", -1)) != 22 \
+			or int(scaled[2].get("x_after_bbox_rescale", -1)) != 12 \
+			or int(scaled[2].get("y_after_bbox_rescale", -1)) != 23 \
+			or int(scaled[3].get("x_after_bbox_rescale", -1)) != 18 \
+			or int(scaled[3].get("y_after_bbox_rescale", -1)) != 4 \
+			or int(scaled[4].get("x_after_bbox_rescale", -1)) != 18 \
+			or int(scaled[4].get("y_after_bbox_rescale", -1)) != 30 \
+			or int(scaled[5].get("x_after_bbox_rescale", -1)) != 12 \
+			or int(scaled[5].get("y_after_bbox_rescale", -1)) != 11:
 		_fail("Coordinate replay scaled zone coordinates drifted: %s" % JSON.stringify(scaled))
+		return
+	var runtime_after_towns: Array = coordinate_replay.get("runtime_zone_records_after_0x49b3c1", [])
+	if runtime_after_towns.size() != 6 \
+			or String(runtime_after_towns[0].get("faction_id", "")) != "elemental" \
+			or int(runtime_after_towns[0].get("town_choice_index", -1)) != 8 \
+			or String(runtime_after_towns[1].get("faction_id", "")) != "necropolis" \
+			or int(runtime_after_towns[1].get("town_choice_index", -1)) != 4 \
+			or String(runtime_after_towns[3].get("faction_id", "")) != "inferno" \
+			or int(runtime_after_towns[3].get("town_choice_index", -1)) != 3 \
+			or String(runtime_after_towns[4].get("faction_id", "")) != "fortress" \
+			or int(runtime_after_towns[4].get("town_choice_index", -1)) != 7:
+		_fail("0x49b3c1 runtime town choices drifted: %s" % JSON.stringify(runtime_after_towns))
 		return
 	var placement_steps: Array = coordinate_replay.get("placement_steps", [])
 	if placement_steps.size() != 18 \
@@ -235,6 +250,32 @@ func _run() -> void:
 			or int(placement_steps[0].get("selected_candidate", {}).get("x", -1)) != 0 \
 			or int(placement_steps[0].get("selected_candidate", {}).get("y", -1)) != 0:
 		_fail("Coordinate replay placement-step schedule drifted: %s" % JSON.stringify(placement_steps))
+		return
+
+	var terrain_selection: Dictionary = report.get("runtime_terrain_selection_49b53d", {})
+	if String(terrain_selection.get("status", "")) != "0x49b53d_runtime_terrain_selection_ported_inspection_only" \
+			or String(terrain_selection.get("function_address", "")) != "0x49b53d" \
+			or String(terrain_selection.get("town_to_terrain_table_address", "")) != "0x540908" \
+			or int(terrain_selection.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
+			or int(terrain_selection.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160:
+		_fail("0x49b53d runtime terrain selection identity drifted: %s" % JSON.stringify(terrain_selection))
+		return
+	if bool(terrain_selection.get("materializes_terrain_cells", true)) \
+			or bool(terrain_selection.get("materializes_terrain_art", true)) \
+			or bool(terrain_selection.get("materializes_map_cells", true)) \
+			or bool(terrain_selection.get("public_package_output_allowed", true)):
+		_fail("0x49b53d terrain selection must not materialize map output: %s" % JSON.stringify(terrain_selection))
+		return
+	if int(terrain_selection.get("selection_count", -1)) != 6 \
+			or Array(terrain_selection.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
+			or Array(terrain_selection.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or int(terrain_selection.get("match_to_town_count", -1)) != 4 \
+			or int(terrain_selection.get("allowed_flag_choice_count", -1)) != 2 \
+			or int(terrain_selection.get("blank_allowed_mask_count", -1)) != 0 \
+			or int(terrain_selection.get("forced_subterranean_count", -1)) != 0 \
+			or int(terrain_selection.get("rng_call_count", -1)) != 2 \
+			or String(terrain_selection.get("next_materialization_status", "")) != "pending_0x4a3f27_terrain_cell_writeout":
+		_fail("0x49b53d terrain selection counts drifted: %s" % JSON.stringify(terrain_selection))
 		return
 
 	var footprint_boundary: Dictionary = report.get("zone_footprint_phase_boundary", {})
@@ -465,14 +506,14 @@ func _run() -> void:
 	if int(polygon_split.get("runtime_split_point_count", -1)) != 6 \
 			or int(polygon_split.get("executed_split_call_count", -1)) != 6 \
 			or int(polygon_split.get("duplicate_skip_count", -1)) != 0 \
-			or int(polygon_split.get("edge_removal_branch_count", -1)) != 1 \
+			or int(polygon_split.get("edge_removal_branch_count", -1)) != 0 \
 			or int(polygon_split.get("pre_crossing_inserted_node_pair_count", -1)) != 6 \
-			or int(polygon_split.get("pre_crossing_inserted_bridge_pair_count", -1)) != 13 \
-			or int(polygon_split.get("crossing_cleanup_scan_count", -1)) != 31 \
+			or int(polygon_split.get("pre_crossing_inserted_bridge_pair_count", -1)) != 12 \
+			or int(polygon_split.get("crossing_cleanup_scan_count", -1)) != 34 \
 			or int(polygon_split.get("crossing_test_count", -1)) != 24 \
-			or int(polygon_split.get("crossing_collapse_count", -1)) != 6 \
+			or int(polygon_split.get("crossing_collapse_count", -1)) != 8 \
 			or int(polygon_split.get("initial_node_pair_count", -1)) != 5 \
-			or int(polygon_split.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 24 \
+			or int(polygon_split.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 23 \
 			or int(polygon_split.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23 \
 			or int(polygon_split.get("post_crossing_cleanup_active_node_count", -1)) != 46 \
 			or String(polygon_split.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported" \
@@ -492,13 +533,13 @@ func _run() -> void:
 			or source_walks.size() != 6 \
 			or finalized_steps.size() != 14 \
 			or int(split_steps[0].get("runtime_zone_index", -1)) != 0 \
-			or int(split_steps[0].get("x", -1)) != 30 \
-			or int(split_steps[0].get("y", -1)) != 16 \
-			or not bool(split_steps[4].get("edge_removal_branch", false)) \
-			or int(split_steps[4].get("bridge_pair_count", -1)) != 3 \
+			or int(split_steps[0].get("x", -1)) != 23 \
+			or int(split_steps[0].get("y", -1)) != 11 \
+			or bool(split_steps[4].get("edge_removal_branch", true)) \
+			or int(split_steps[4].get("bridge_pair_count", -1)) != 2 \
 			or int(split_steps[5].get("crossing_collapse_count", -1)) != 2 \
-			or int(source_walks[0].get("cycle_node_count", -1)) != 5 \
-			or int(source_walks[1].get("cycle_node_count", -1)) != 4 \
+			or int(source_walks[0].get("cycle_node_count", -1)) != 4 \
+			or int(source_walks[1].get("cycle_node_count", -1)) != 6 \
 			or int(source_walks[5].get("finalized_coordinate_count", -1)) != 5:
 		_fail("0x4ccb64 split steps/source-node walks drifted: %s" % JSON.stringify(polygon_split))
 		return
@@ -524,20 +565,20 @@ func _run() -> void:
 			or int(real_traversal.get("blocked_zone_count", -1)) != 0 \
 			or int(real_traversal.get("fallback_zone_count", -1)) != 0 \
 			or int(real_traversal.get("connector_segment_count", -1)) != 6 \
-			or int(real_traversal.get("wrap_segment_count", -1)) != 1 \
-			or int(real_traversal.get("final_segment_count", -1)) != 13 \
-			or int(real_traversal.get("appended_vertex_count", -1)) != 20 \
+			or int(real_traversal.get("wrap_segment_count", -1)) != 0 \
+			or int(real_traversal.get("final_segment_count", -1)) != 12 \
+			or int(real_traversal.get("appended_vertex_count", -1)) != 18 \
 			or int(real_traversal.get("skipped_unfinalized_node_count", -1)) != 0 \
 			or int(real_traversal.get("skipped_out_of_bounds_clip_count", -1)) != 12 \
 			or int(real_traversal.get("flagged_writer_segment_count", -1)) != 6 \
-			or int(real_traversal.get("deterministic_writer_segment_count", -1)) != 14 \
-			or int(real_traversal.get("randomized_rng_call_count", -1)) != 114 \
-			or int(real_traversal.get("randomized_inserted_midpoint_count", -1)) != 140 \
+			or int(real_traversal.get("deterministic_writer_segment_count", -1)) != 12 \
+			or int(real_traversal.get("randomized_rng_call_count", -1)) != 106 \
+			or int(real_traversal.get("randomized_inserted_midpoint_count", -1)) != 138 \
 			or int(real_traversal.get("randomized_max_pending_point_count", -1)) != 8 \
-			or int(real_traversal.get("rng_state_before_0x4a2777_uint32", -1)) != 316395082 \
-			or int(real_traversal.get("rng_state_after_0x4a2777_uint32", -1)) != 3257732100 \
-			or int(real_traversal.get("trace_write_count", -1)) != 326 \
-			or int(real_traversal.get("unique_cell_count", -1)) != 262 \
+			or int(real_traversal.get("rng_state_before_0x4a2777_uint32", -1)) != 255755822 \
+			or int(real_traversal.get("rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
+			or int(real_traversal.get("trace_write_count", -1)) != 301 \
+			or int(real_traversal.get("unique_cell_count", -1)) != 238 \
 			or int(real_traversal.get("out_of_bounds_write_count", -1)) != 0 \
 			or bool(real_traversal.get("loop_guard_exhausted", true)):
 		_fail("0x4a2777 traversal counts drifted: %s" % JSON.stringify(real_traversal))
@@ -545,23 +586,23 @@ func _run() -> void:
 	var traversal_zones: Array = real_traversal.get("zone_reports", [])
 	if traversal_zones.size() != 6 \
 			or String(traversal_zones[0].get("status", "")) != "0x4a2777_real_source_cycle_consumed" \
-			or int(traversal_zones[0].get("selected_segment_index", -1)) != 3 \
-			or int(traversal_zones[0].get("connector_from_x", -1)) != 35 \
-			or int(traversal_zones[0].get("connector_from_y", -1)) != 32 \
-			or int(traversal_zones[0].get("connector_to_x", -1)) != 23 \
-			or int(traversal_zones[0].get("connector_to_y", -1)) != 15 \
-			or int(traversal_zones[0].get("appended_vertex_count", -1)) != 2 \
+			or int(traversal_zones[0].get("selected_segment_index", -1)) != 0 \
+			or int(traversal_zones[0].get("connector_from_x", -1)) != 18 \
+			or int(traversal_zones[0].get("connector_from_y", -1)) != 10 \
+			or int(traversal_zones[0].get("connector_to_x", -1)) != 32 \
+			or int(traversal_zones[0].get("connector_to_y", -1)) != 0 \
+			or int(traversal_zones[0].get("appended_vertex_count", -1)) != 3 \
 			or int(traversal_zones[1].get("selected_segment_index", -1)) != 0 \
-			or int(traversal_zones[1].get("connector_from_x", -1)) != 13 \
-			or int(traversal_zones[1].get("connector_from_y", -1)) != 15 \
-			or int(traversal_zones[1].get("connector_to_x", -1)) != 8 \
-			or int(traversal_zones[1].get("connector_to_y", -1)) != 18 \
-			or int(traversal_zones[1].get("appended_vertex_count", -1)) != 5 \
-			or int(traversal_zones[1].get("segment_count", -1)) != 5 \
-			or int(traversal_zones[5].get("connector_from_x", -1)) != 23 \
-			or int(traversal_zones[5].get("connector_from_y", -1)) != 15 \
+			or int(traversal_zones[1].get("connector_from_x", -1)) != 18 \
+			or int(traversal_zones[1].get("connector_from_y", -1)) != 16 \
+			or int(traversal_zones[1].get("connector_to_x", -1)) != 35 \
+			or int(traversal_zones[1].get("connector_to_y", -1)) != 20 \
+			or int(traversal_zones[1].get("appended_vertex_count", -1)) != 4 \
+			or int(traversal_zones[1].get("segment_count", -1)) != 4 \
+			or int(traversal_zones[5].get("connector_from_x", -1)) != 18 \
+			or int(traversal_zones[5].get("connector_from_y", -1)) != 10 \
 			or int(traversal_zones[5].get("connector_to_x", -1)) != 18 \
-			or int(traversal_zones[5].get("connector_to_y", -1)) != 18 \
+			or int(traversal_zones[5].get("connector_to_y", -1)) != 16 \
 			or int(traversal_zones[5].get("appended_vertex_count", -1)) != 4:
 		_fail("0x4a2777 traversal zone cycle reports drifted: %s" % JSON.stringify(traversal_zones))
 		return
@@ -582,48 +623,48 @@ func _run() -> void:
 			or bool(span_fill.get("public_package_output_allowed", true)):
 		_fail("0x4a325d span-fill must remain private and stop before terrain/package output: %s" % JSON.stringify(span_fill))
 		return
-	if int(span_fill.get("boundary_unique_cell_count", -1)) != 262 \
-			or int(span_fill.get("boundary_trace_write_count", -1)) != 326 \
-			or int(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", -1)) != 3257732100 \
+	if int(span_fill.get("boundary_unique_cell_count", -1)) != 238 \
+			or int(span_fill.get("boundary_trace_write_count", -1)) != 301 \
+			or int(span_fill.get("boundary_rng_state_after_0x4a2777_uint32", -1)) != 264218432 \
 			or int(span_fill.get("runtime_zone_fill_attempt_count", -1)) != 6 \
 			or int(span_fill.get("filled_zone_count", -1)) != 6 \
-			or int(span_fill.get("seed_blocked_count", -1)) != 0 \
+			or int(span_fill.get("seed_blocked_count", -1)) != 1 \
 			or int(span_fill.get("missing_seed_count", -1)) != 0 \
 			or int(span_fill.get("seed_relocation_count", -1)) != 0 \
-			or int(span_fill.get("unique_filled_cell_count", -1)) != 762 \
-			or int(span_fill.get("total_boundary_or_filled_cell_count", -1)) != 1024 \
-			or int(span_fill.get("remaining_unassigned_cell_count", -1)) != 272 \
-			or int(span_fill.get("reserved_flag_cell_count", -1)) != 1024 \
-			or int(span_fill.get("pushed_span_count", -1)) != 111 \
-			or int(span_fill.get("popped_span_count", -1)) != 111 \
+			or int(span_fill.get("unique_filled_cell_count", -1)) != 869 \
+			or int(span_fill.get("total_boundary_or_filled_cell_count", -1)) != 1107 \
+			or int(span_fill.get("remaining_unassigned_cell_count", -1)) != 189 \
+			or int(span_fill.get("reserved_flag_cell_count", -1)) != 1107 \
+			or int(span_fill.get("pushed_span_count", -1)) != 93 \
+			or int(span_fill.get("popped_span_count", -1)) != 93 \
 			or int(span_fill.get("max_pending_span_count", -1)) != 3 \
 			or int(span_fill.get("out_of_bounds_span_count", -1)) != 0 \
-			or int(span_fill.get("blocked_initial_span_count", -1)) != 0:
+			or int(span_fill.get("blocked_initial_span_count", -1)) != 1:
 		_fail("0x4a325d span-fill counts drifted: %s" % JSON.stringify(span_fill))
 		return
 	var cells_by_zone_word: Dictionary = span_fill.get("cells_by_zone_word", {})
-	if int(cells_by_zone_word.get("0", -1)) != 266 \
-			or int(cells_by_zone_word.get("1", -1)) != 227 \
-			or int(cells_by_zone_word.get("2", -1)) != 204 \
-			or int(cells_by_zone_word.get("3", -1)) != 58 \
-			or int(cells_by_zone_word.get("4", -1)) != 152 \
-			or int(cells_by_zone_word.get("5", -1)) != 117:
+	if int(cells_by_zone_word.get("0", -1)) != 177 \
+			or int(cells_by_zone_word.get("1", -1)) != 91 \
+			or int(cells_by_zone_word.get("2", -1)) != 226 \
+			or int(cells_by_zone_word.get("3", -1)) != 177 \
+			or int(cells_by_zone_word.get("4", -1)) != 207 \
+			or int(cells_by_zone_word.get("5", -1)) != 229:
 		_fail("0x4a325d cells-by-zone distribution drifted: %s" % JSON.stringify(cells_by_zone_word))
 		return
 	var span_zones: Array = span_fill.get("zone_fill_reports", [])
 	if span_zones.size() != 6 \
-			or int(span_zones[0].get("seed_x", -1)) != 30 \
-			or int(span_zones[0].get("seed_y", -1)) != 16 \
-			or int(span_zones[0].get("filled_cell_count", -1)) != 229 \
-			or int(span_zones[1].get("seed_x", -1)) != 8 \
-			or int(span_zones[1].get("seed_y", -1)) != 13 \
-			or int(span_zones[1].get("filled_cell_count", -1)) != 186 \
-			or int(span_zones[2].get("filled_cell_count", -1)) != 161 \
-			or int(span_zones[3].get("filled_cell_count", -1)) != 15 \
-			or int(span_zones[4].get("filled_cell_count", -1)) != 100 \
-			or int(span_zones[5].get("seed_x", -1)) != 18 \
-			or int(span_zones[5].get("seed_y", -1)) != 13 \
-			or int(span_zones[5].get("filled_cell_count", -1)) != 71:
+			or int(span_zones[0].get("seed_x", -1)) != 23 \
+			or int(span_zones[0].get("seed_y", -1)) != 11 \
+			or int(span_zones[0].get("filled_cell_count", -1)) != 151 \
+			or int(span_zones[1].get("seed_x", -1)) != 21 \
+			or int(span_zones[1].get("seed_y", -1)) != 22 \
+			or int(span_zones[1].get("filled_cell_count", -1)) != 48 \
+			or int(span_zones[2].get("filled_cell_count", -1)) != 184 \
+			or int(span_zones[3].get("filled_cell_count", -1)) != 127 \
+			or int(span_zones[4].get("filled_cell_count", -1)) != 174 \
+			or int(span_zones[5].get("seed_x", -1)) != 12 \
+			or int(span_zones[5].get("seed_y", -1)) != 11 \
+			or int(span_zones[5].get("filled_cell_count", -1)) != 185:
 		_fail("0x4a325d per-zone fill reports drifted: %s" % JSON.stringify(span_zones))
 		return
 
