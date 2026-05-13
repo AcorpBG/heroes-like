@@ -362,6 +362,73 @@ func _run() -> void:
 		_fail("Strict h3maped runtime terrain selections drifted: %s" % JSON.stringify(terrain_selections))
 		return
 
+	var terrain_cell: Dictionary = report.get("terrain_cell_writeout", {})
+	var owner_low_counts: Array = terrain_cell.get("owner_low_byte_counts", [])
+	var terrain_code_counts: Array = terrain_cell.get("terrain_code_counts", [])
+	var terrain_project_counts: Dictionary = terrain_cell.get("terrain_project_counts", {})
+	if String(terrain_cell.get("phase_id", "")) != "terrain_cell_writeout" \
+			or String(terrain_cell.get("status", "")) != "active_strict_executable_port" \
+			or String(terrain_cell.get("h3maped_anchor", "")) != "0x4a3f27" \
+			or String(terrain_cell.get("source_range", "")) != "0x4a3f27/0x4a4025/0x4a4082/0x4a415a" \
+			or String(terrain_cell.get("binary_byte_prefix_0x4a3f27", "")) != "b8 1c a8 52 00 e8 9f 21 04 00 83 ec 5c 53 56 57" \
+			or String(terrain_cell.get("binary_byte_prefix_0x4a4025", "")) != "8d 43 0c 6a 04 6a 08 50 8d 4d e8 e8 c0 8f 01 00" \
+			or String(terrain_cell.get("binary_byte_prefix_0x4a4082", "")) != "8b 83 e4 10 00 00 85 c0 0f 84 15 01 00 00 8b 8b" \
+			or String(terrain_cell.get("binary_byte_prefix_0x4a415a", "")) != "56 56 57 8d 4d e0 ff 75 d4 e8 31 8f 01 00 ff 45" \
+			or String(terrain_cell.get("full_map_water_prefill_anchor", "")) != "0x4a4025" \
+			or String(terrain_cell.get("runtime_zone_scan_anchor", "")) != "0x4a4082" \
+			or String(terrain_cell.get("per_cell_repaint_anchor", "")) != "0x4a415a" \
+			or Array(terrain_cell.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
+			or Array(terrain_cell.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or int(terrain_cell.get("terrain_rng_call_count", -1)) != 2 \
+			or int(terrain_cell.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
+			or int(terrain_cell.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160 \
+			or int(terrain_cell.get("tile_count", -1)) != 1296 \
+			or int(terrain_cell.get("full_map_water_prefill_cell_count", -1)) != 1296 \
+			or int(terrain_cell.get("private_zone_word_cell_count", -1)) != 1296 \
+			or int(terrain_cell.get("assigned_owner_cell_count", -1)) != 1107 \
+			or int(terrain_cell.get("zone_repaint_cell_count", -1)) != 1107 \
+			or int(terrain_cell.get("unassigned_water_cell_count", -1)) != 189 \
+			or int(terrain_cell.get("reserved_cell_count", -1)) != 1107 \
+			or int(terrain_cell.get("span_fill_boundary_or_filled_cell_count", -1)) != 1107 \
+			or owner_low_counts.size() != 6 \
+			or int(owner_low_counts[0].get("cell_count", -1)) != 177 \
+			or int(owner_low_counts[1].get("cell_count", -1)) != 91 \
+			or int(owner_low_counts[2].get("cell_count", -1)) != 226 \
+			or int(owner_low_counts[3].get("cell_count", -1)) != 177 \
+			or int(owner_low_counts[4].get("cell_count", -1)) != 207 \
+			or int(owner_low_counts[5].get("cell_count", -1)) != 229 \
+			or terrain_code_counts.size() != 6 \
+			or int(terrain_code_counts[0].get("h3maped_terrain_id", -1)) != 0 \
+			or int(terrain_code_counts[0].get("cell_count", -1)) != 91 \
+			or int(terrain_code_counts[1].get("h3maped_terrain_id", -1)) != 2 \
+			or int(terrain_code_counts[1].get("cell_count", -1)) != 177 \
+			or int(terrain_code_counts[2].get("h3maped_terrain_id", -1)) != 4 \
+			or int(terrain_code_counts[2].get("cell_count", -1)) != 207 \
+			or int(terrain_code_counts[3].get("h3maped_terrain_id", -1)) != 5 \
+			or int(terrain_code_counts[3].get("cell_count", -1)) != 229 \
+			or int(terrain_code_counts[4].get("h3maped_terrain_id", -1)) != 7 \
+			or int(terrain_code_counts[4].get("cell_count", -1)) != 403 \
+			or int(terrain_code_counts[5].get("h3maped_terrain_id", -1)) != 8 \
+			or int(terrain_code_counts[5].get("cell_count", -1)) != 189 \
+			or int(terrain_project_counts.get("water", -1)) != 189 \
+			or int(terrain_project_counts.get("grass", -1)) != 177 \
+			or int(terrain_project_counts.get("dirt", -1)) != 91 \
+			or int(terrain_project_counts.get("lava", -1)) != 403 \
+			or int(terrain_project_counts.get("swamp", -1)) != 207 \
+			or int(terrain_project_counts.get("rough", -1)) != 229 \
+			or not bool(terrain_cell.get("materializes_private_terrain_cell_buffer", false)) \
+			or bool(terrain_cell.get("materializes_terrain_art", true)) \
+			or bool(terrain_cell.get("materializes_roads", true)) \
+			or bool(terrain_cell.get("materializes_objects", true)) \
+			or bool(terrain_cell.get("materializes_map_cells", true)) \
+			or bool(terrain_cell.get("materializes_runtime_players", true)) \
+			or bool(terrain_cell.get("materializes_package_tiles", true)) \
+			or bool(terrain_cell.get("materializes_public_output", true)) \
+			or bool(terrain_cell.get("public_package_output_allowed", true)) \
+			or String(terrain_cell.get("blocked_next", "")) != "terrainplacement_visual_tables_0x4bcff5":
+		_fail("Strict h3maped terrain cell writeout port drifted: %s" % JSON.stringify(terrain_cell))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -369,20 +436,19 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "terrain_cell_writeout_0x4a3f27":
+			or String(strict_state.get("next_required_port", "")) != "terrainplacement_visual_tables_0x4bcff5":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 6 \
-			or not pending_ports.has("terrain_cell_writeout:0x4a3f27") \
+	if pending_ports.size() != 5 \
 			or not pending_ports.has("terrainplacement:0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6") \
 			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 15 \
+	if backlog.size() != 16 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -392,10 +458,11 @@ func _run() -> void:
 			or String(backlog[6].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[7].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[8].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[9].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[9].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[10].get("status", "")) != "pending_strict_executable_port" \
 			or String(backlog[11].get("status", "")) != "pending_strict_executable_port" \
-			or String(backlog[12].get("status", "")) != "pending_runtime_port":
+			or String(backlog[12].get("status", "")) != "pending_strict_executable_port" \
+			or String(backlog[13].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
