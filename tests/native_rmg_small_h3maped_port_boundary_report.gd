@@ -656,6 +656,7 @@ func _run() -> void:
 	var visual_row_selection_samples: Array = visual_row_selection_contract.get("samples", [])
 	var copyback_gate: Dictionary = changed_cell_update.get("copyback_gate", {})
 	var adapter_writeback: Dictionary = copyback_gate.get("adapter_writeback", {})
+	var late_connection_overlap: Dictionary = footprint_schedule.get("late_connection_overlap_geometry", {})
 	if String(footprint_schedule.get("terrain_cell_writeout_status", "")) != "0x4a3f27_terrain_cell_writeout_from_real_0x4a325d_zone_words_ported_inspection_only" \
 			or int(terrain_cell_writeout.get("cell_count", -1)) != 1296 \
 			or int(terrain_cell_writeout.get("tile_byte_zero_terrain_cell_count", -1)) != 1296 \
@@ -677,6 +678,28 @@ func _run() -> void:
 			or bool(terrain_cell_writeout.get("project_grid_public_runtime_adoption", true)) \
 			or bool(terrain_cell_writeout.get("materializes_package_tiles", true)):
 		_fail("The 0x4a3f27 terrain-cell writeout inspection drifted: %s" % JSON.stringify(terrain_cell_writeout))
+		return
+	if String(footprint_schedule.get("late_connection_overlap_geometry_status", "")) != "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only" \
+			or int(late_connection_overlap.get("link_count", -1)) != 5 \
+			or int(late_connection_overlap.get("overlap_available_count", -1)) != 3 \
+			or int(late_connection_overlap.get("overlap_cell_total", -1)) != 472 \
+			or int(late_connection_overlap.get("overlap_zone_a_cell_total", -1)) != 184 \
+			or int(late_connection_overlap.get("overlap_zone_b_cell_total", -1)) != 278 \
+			or bool(late_connection_overlap.get("materializes_connection_geometry", true)) \
+			or bool(late_connection_overlap.get("materializes_connection_guards", true)):
+		_fail("The 0x4a6cf2 overlap-rectangle connection precondition drifted: %s" % JSON.stringify(late_connection_overlap))
+		return
+	var late_connection_records: Array = late_connection_overlap.get("records", [])
+	if late_connection_records.size() != 5 \
+			or int(late_connection_records[0].get("overlap_cell_count", -1)) != 174 \
+			or int(late_connection_records[0].get("overlap_zone_a_cell_count", -1)) != 65 \
+			or int(late_connection_records[0].get("overlap_zone_b_cell_count", -1)) != 104 \
+			or bool(late_connection_records[1].get("overlap_exists", true)) \
+			or bool(late_connection_records[2].get("overlap_exists", true)) \
+			or int(late_connection_records[3].get("overlap_cell_count", -1)) != 132 \
+			or int(late_connection_records[4].get("overlap_cell_count", -1)) != 166 \
+			or String(late_connection_overlap.get("wide_read_order", "")).find("after overlap rectangle") == -1:
+		_fail("The 0x4a6cf2 per-link overlap evidence drifted: %s" % JSON.stringify(late_connection_overlap))
 		return
 	if terrain_codes.size() != 1296 \
 			or generated_cell_0x24.size() != 1296 \

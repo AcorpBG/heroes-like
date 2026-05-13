@@ -4471,6 +4471,199 @@ Dictionary late_link_payload_postprocess_report(const Dictionary &normalized_con
 	return report;
 }
 
+Dictionary late_connection_overlap_geometry_report(const Array &runtime_zone_records, const Array &link_seeds, const Dictionary &terrain_cell_writeout) {
+	Dictionary report;
+	report["status"] = "0x4a6cf2_overlap_rectangle_connection_geometry_precondition_inspection_only";
+	report["source"] = "h3maped 0x4a6cf2 copies the two runtime-zone bounding rectangles, computes their overlap before reading Wide, scans generated cells inside that overlap, then later consumes Value/Wide/Border Guard";
+	report["ported_addresses"] = Array::make("0x4a6d52..0x4a6ddc", "0x4a6de2..0x4a6f4a", "0x4a707b..0x4a709a");
+	report["materializes_connection_geometry"] = false;
+	report["materializes_connection_guards"] = false;
+	report["shape_list_source_pending"] = "generator+0x6a8";
+	report["candidate_validation_pending"] = "0x49aa93";
+	report["wide_read_order"] = "after overlap rectangle and candidate endpoint geometry";
+
+	PackedInt32Array zone_word_u32 = terrain_cell_writeout.get("zone_word_u32", PackedInt32Array());
+	const int32_t width = int32_t(terrain_cell_writeout.get("map_width", 0));
+	const int32_t height = int32_t(terrain_cell_writeout.get("map_height", 0));
+	const int32_t level_count = std::max(1, int32_t(terrain_cell_writeout.get("level_count", 1)));
+	const int32_t expected_cell_count = width * height * level_count;
+	const bool grid_available = width > 0 && height > 0 && zone_word_u32.size() == expected_cell_count;
+	report["grid_available"] = grid_available;
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	if (!grid_available) {
+		report["records"] = Array();
+		report["link_count"] = 0;
+		report["overlap_available_count"] = 0;
+		report["blocked_reason"] = "missing 0x4a325d zone-word grid";
+		return report;
+	}
+
+	struct RuntimeBounds {
+		bool seen = false;
+		int32_t min_x = 0;
+		int32_t min_y = 0;
+		int32_t max_x = 0;
+		int32_t max_y = 0;
+		int32_t level = 0;
+		int32_t cell_count = 0;
+	};
+	std::vector<RuntimeBounds> bounds;
+	bounds.resize(size_t(runtime_zone_records.size()));
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t cell_index = level * width * height + y * width + x;
+				const uint32_t masked = uint32_t(int32_t(zone_word_u32[cell_index])) & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					continue;
+				}
+				const int32_t runtime_index = int32_t((masked >> 16U) & 0xffU);
+				if (runtime_index < 0 || runtime_index >= int32_t(bounds.size())) {
+					continue;
+				}
+				RuntimeBounds &runtime_bounds = bounds[size_t(runtime_index)];
+				if (!runtime_bounds.seen) {
+					runtime_bounds.seen = true;
+					runtime_bounds.min_x = x;
+					runtime_bounds.max_x = x;
+					runtime_bounds.min_y = y;
+					runtime_bounds.max_y = y;
+					runtime_bounds.level = level;
+				} else {
+					runtime_bounds.min_x = std::min(runtime_bounds.min_x, x);
+					runtime_bounds.max_x = std::max(runtime_bounds.max_x, x);
+					runtime_bounds.min_y = std::min(runtime_bounds.min_y, y);
+					runtime_bounds.max_y = std::max(runtime_bounds.max_y, y);
+				}
+				runtime_bounds.cell_count += 1;
+			}
+		}
+	}
+
+	Array bounds_report;
+	for (int64_t index = 0; index < runtime_zone_records.size(); ++index) {
+		Dictionary runtime_record;
+		if (Variant(runtime_zone_records[index]).get_type() == Variant::DICTIONARY) {
+			runtime_record = runtime_zone_records[index];
+		}
+		const RuntimeBounds &runtime_bounds = bounds[size_t(index)];
+		Dictionary item;
+		item["runtime_zone_index"] = int32_t(index);
+		item["source_zone_key"] = runtime_record.get("source_zone_key", "");
+		item["has_bounds"] = runtime_bounds.seen;
+		item["min_x"] = runtime_bounds.seen ? runtime_bounds.min_x : -1;
+		item["min_y"] = runtime_bounds.seen ? runtime_bounds.min_y : -1;
+		item["max_x"] = runtime_bounds.seen ? runtime_bounds.max_x : -1;
+		item["max_y"] = runtime_bounds.seen ? runtime_bounds.max_y : -1;
+		item["level"] = runtime_bounds.seen ? runtime_bounds.level : -1;
+		item["cell_count"] = runtime_bounds.cell_count;
+		bounds_report.append(item);
+	}
+
+	Array records;
+	int32_t overlap_available_count = 0;
+	int32_t overlap_cell_total = 0;
+	int32_t overlap_zone_a_cell_total = 0;
+	int32_t overlap_zone_b_cell_total = 0;
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = link_seeds[index];
+		const int32_t runtime_a = int32_t(link.get("runtime_zone_a", -1));
+		const int32_t runtime_b = int32_t(link.get("runtime_zone_b", -1));
+		Dictionary record;
+		record["link_index"] = link.get("link_index", index);
+		record["runtime_zone_a"] = runtime_a;
+		record["runtime_zone_b"] = runtime_b;
+		record["source_from_zone_key"] = link.get("source_from_zone_key", "");
+		record["source_to_zone_key"] = link.get("source_to_zone_key", "");
+		record["wide"] = link.get("wide", false);
+		record["border_guard"] = link.get("border_guard", false);
+		record["guard_value"] = link.get("guard_value", 0);
+		if (runtime_a < 0 || runtime_b < 0 || runtime_a >= int32_t(bounds.size()) || runtime_b >= int32_t(bounds.size())
+				|| !bounds[size_t(runtime_a)].seen || !bounds[size_t(runtime_b)].seen) {
+			record["status"] = "0x4a6cf2_missing_runtime_zone_bounds";
+			record["overlap_exists"] = false;
+			records.append(record);
+			continue;
+		}
+		const RuntimeBounds &a = bounds[size_t(runtime_a)];
+		const RuntimeBounds &b = bounds[size_t(runtime_b)];
+		const int32_t min_x = std::max(a.min_x, b.min_x);
+		const int32_t max_x = std::min(a.max_x, b.max_x);
+		const int32_t min_y = std::max(a.min_y, b.min_y);
+		const int32_t max_y = std::min(a.max_y, b.max_y);
+		const bool overlap_exists = min_x <= max_x && min_y <= max_y && a.level == b.level;
+		record["runtime_zone_a_bounds"] = bounds_report[runtime_a];
+		record["runtime_zone_b_bounds"] = bounds_report[runtime_b];
+		record["overlap_exists"] = overlap_exists;
+		record["overlap_min_x"] = overlap_exists ? min_x : -1;
+		record["overlap_min_y"] = overlap_exists ? min_y : -1;
+		record["overlap_max_x"] = overlap_exists ? max_x : -1;
+		record["overlap_max_y"] = overlap_exists ? max_y : -1;
+		record["overlap_level"] = overlap_exists ? a.level : -1;
+		int32_t overlap_cell_count = 0;
+		int32_t zone_a_cell_count = 0;
+		int32_t zone_b_cell_count = 0;
+		int32_t other_reserved_cell_count = 0;
+		Array preview;
+		if (overlap_exists) {
+			for (int32_t y = min_y; y <= max_y; ++y) {
+				for (int32_t x = min_x; x <= max_x; ++x) {
+					const int32_t cell_index = a.level * width * height + y * width + x;
+					const uint32_t masked = uint32_t(int32_t(zone_word_u32[cell_index])) & H3MAPED_UNASSIGNED_ZONE_WORD;
+					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+						continue;
+					}
+					const int32_t runtime_index = int32_t((masked >> 16U) & 0xffU);
+					overlap_cell_count += 1;
+					if (runtime_index == runtime_a) {
+						zone_a_cell_count += 1;
+					} else if (runtime_index == runtime_b) {
+						zone_b_cell_count += 1;
+					} else {
+						other_reserved_cell_count += 1;
+					}
+					if (preview.size() < 8) {
+						Dictionary cell;
+						cell["x"] = x;
+						cell["y"] = y;
+						cell["level"] = a.level;
+						cell["runtime_zone_index"] = runtime_index;
+						preview.append(cell);
+					}
+				}
+			}
+			overlap_available_count += 1;
+		}
+		record["overlap_cell_count"] = overlap_cell_count;
+		record["overlap_zone_a_cell_count"] = zone_a_cell_count;
+		record["overlap_zone_b_cell_count"] = zone_b_cell_count;
+		record["overlap_other_reserved_cell_count"] = other_reserved_cell_count;
+		record["overlap_reserved_cell_preview"] = preview;
+		record["status"] = overlap_exists
+				? String("0x4a6cf2_overlap_rect_available_pending_shape_list_0x6a8_and_0x49aa93_validation")
+				: String("0x4a6cf2_no_overlap_rect_later_helpers_or_fallback_required");
+		overlap_cell_total += overlap_cell_count;
+		overlap_zone_a_cell_total += zone_a_cell_count;
+		overlap_zone_b_cell_total += zone_b_cell_count;
+		records.append(record);
+	}
+
+	report["runtime_zone_bounds"] = bounds_report;
+	report["link_count"] = records.size();
+	report["overlap_available_count"] = overlap_available_count;
+	report["overlap_cell_total"] = overlap_cell_total;
+	report["overlap_zone_a_cell_total"] = overlap_zone_a_cell_total;
+	report["overlap_zone_b_cell_total"] = overlap_zone_b_cell_total;
+	report["records"] = records;
+	report["blocked_next"] = "port generator+0x6a8 candidate shape list, low-word score summing, 0x49aa93 two-sided validation, and endpoint object/guard stamping before runtime connection adoption";
+	return report;
+}
+
 Dictionary coordinate_candidate_replay_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &link_seeds, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	report["status"] = "0x4a17f5_0x4a1701_coordinate_candidate_replay_ported";
@@ -6949,7 +7142,7 @@ Dictionary town_castle_phase_schedule_report(const Dictionary &normalized_config
 	return report;
 }
 
-Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Dictionary &coordinate_replay, const Dictionary &terrain_selection) {
+Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, const Array &runtime_zone_records, const Array &link_seeds, const Dictionary &coordinate_replay, const Dictionary &terrain_selection) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_zone_footprint_schedule_ported";
 	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic fallback decision, and helper schedule before 0x4a2777/0x4a325d/0x4a3710 cell materialization";
@@ -7073,6 +7266,9 @@ Dictionary zone_footprint_schedule_report(const Dictionary &normalized_config, c
 	report["terrain_cell_writeout"] = terrain_cell_writeout;
 	report["terrain_cell_count"] = terrain_cell_writeout.get("cell_count", 0);
 	report["terrain_unassigned_water_cell_count"] = terrain_cell_writeout.get("unassigned_water_cell_count", 0);
+	Dictionary late_connection_overlap = late_connection_overlap_geometry_report(runtime_zone_records, link_seeds, terrain_cell_writeout);
+	report["late_connection_overlap_geometry_status"] = late_connection_overlap.get("status", "");
+	report["late_connection_overlap_geometry"] = late_connection_overlap;
 	Dictionary town_castle_phase = town_castle_phase_schedule_report(normalized_config, runtime_zone_records, coordinate_replay, terrain_selection, terrain_cell_writeout);
 	report["town_castle_phase_schedule_status"] = town_castle_phase.get("status", "");
 	report["town_castle_phase_schedule"] = town_castle_phase;
@@ -7838,7 +8034,7 @@ Dictionary runtime_zone_record_setup_report(const Dictionary &normalized_config,
 	Dictionary terrain_selection = runtime_terrain_selection_report(records, coordinate_replay);
 	report["terrain_selection_status"] = terrain_selection.get("status", "");
 	report["terrain_selection"] = terrain_selection;
-	Dictionary footprint_schedule = zone_footprint_schedule_report(normalized_config, records, coordinate_replay, terrain_selection);
+	Dictionary footprint_schedule = zone_footprint_schedule_report(normalized_config, records, endpoint_schedule.get("link_seeds", Array()), coordinate_replay, terrain_selection);
 	Dictionary finalizer = footprint_finalizer_4a3710_report(normalized_config, records, int32_t(footprint_schedule.get("total_matching_runtime_zones", 0)));
 	footprint_schedule["finalizer_status"] = finalizer.get("status", "");
 	footprint_schedule["finalizer"] = finalizer;
