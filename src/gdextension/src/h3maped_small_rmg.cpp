@@ -1062,7 +1062,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("player_slot_assignment", "0x4ac62a..0x4ac6ec", "active_strict_executable_port"));
 	backlog.append(phase_record("runtime_zone_records", "0x4a218c, 0x49b452", "active_strict_executable_port"));
 	backlog.append(phase_record("link_seed_setup", "0x4a1f3b", "active_strict_executable_port"));
-	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "pending_strict_executable_port"));
+	backlog.append(phase_record("coordinate_replay", "0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed", "active_strict_executable_port"));
 	backlog.append(phase_record("zone_footprints", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "pending_strict_executable_port"));
 	backlog.append(phase_record("terrain_and_terrainplacement", "0x49b53d, 0x4a3f27, 0x4bcff5, 0x4bb74b, 0x4bc5f0, 0x49b2b6", "pending_strict_executable_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "pending_strict_executable_port"));
@@ -1078,7 +1078,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, and h3maped RNG template-selection evidence only");
 	gaps.append("old private player-slot, zone, footprint, terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is a narrow executable port of 0x4a17f5/0x4a1701 coordinate candidate selection over the link seeds, not broad report expansion");
+	gaps.append("next implementation step is a narrow executable port of 0x4a3a03 zone-footprint source-node setup over the coordinate replay output, not broad report expansion");
 	return gaps;
 }
 
@@ -1101,9 +1101,9 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"template_rng_selection_boundary:0x4e7269_0x4e7276",
 			"player_slot_assignment:0x4ac62a..0x4ac6ec",
 			"runtime_zone_records:0x4a218c_0x49b452",
-			"link_seed_setup:0x4a1f3b");
+			"link_seed_setup:0x4a1f3b",
+			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed");
 	state["pending_strict_ports"] = Array::make(
-			"coordinate_replay:0x4a17f5_0x4a1701_0x4a1ad8_0x4a19ed",
 			"zone_footprints:0x4a3a03_0x4cc788_0x4ccb64_0x4ccdfc_0x4a2777_0x4a325d_0x4a3710",
 			"terrain_and_terrainplacement:0x49b53d_0x4a3f27_0x4bcff5_0x4bb74b_0x4bc5f0_0x49b2b6",
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
@@ -1116,7 +1116,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "coordinate_replay_0x4a17f5_0x4a1701";
+	state["next_required_port"] = "zone_footprints_0x4a3a03_0x4cc788";
 	return state;
 }
 
@@ -1789,8 +1789,8 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 	phase["materializes_public_output"] = false;
 	phase["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
 	if (level_count(normalized_config) != 1
-			|| String(runtime_zone_phase.get("status", "")) != "active_internal_state"
-			|| String(link_phase.get("status", "")) != "active_internal_state") {
+			|| (String(runtime_zone_phase.get("status", "")) != "active_internal_state" && String(runtime_zone_phase.get("status", "")) != "active_strict_executable_port")
+			|| (String(link_phase.get("status", "")) != "active_internal_state" && String(link_phase.get("status", "")) != "active_strict_executable_port")) {
 		return phase;
 	}
 
@@ -6152,6 +6152,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	link_seeds["binary_byte_prefix_0x4a1f3b"] = "b8 54 a7 52 00 e8 8b 41 04 00 83 ec 2c 8a 45 0b";
 	link_seeds["strict_port_scope"] = "link endpoint seed records only; no coordinates, guards, roads, blockers, or public output";
 	report["link_seed_setup"] = link_seeds;
+	const uint32_t replay_seed_state = uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0)));
+	Dictionary coordinate_replay = coordinate_replay_phase(normalized_config, runtime_zones, link_seeds, replay_seed_state);
+	coordinate_replay["status"] = String(coordinate_replay.get("status", "")) == "active_internal_state" ? String("active_strict_executable_port") : String(coordinate_replay.get("status", ""));
+	coordinate_replay["source_range"] = "0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed";
+	coordinate_replay["binary_byte_prefix_0x4a17f5"] = "55 8b ec 83 ec 38 8b 45 08 53 56 57 8b 5d 0c 8d";
+	coordinate_replay["binary_byte_prefix_0x4a1701"] = "55 8b ec 83 ec 34 8b 55 08 53 56 57 8d 72 10 8d";
+	coordinate_replay["binary_byte_prefix_0x4a1ad8"] = "55 8b ec 83 ec 40 83 65 f0 00 83 79 20 01 53 8b";
+	coordinate_replay["binary_byte_prefix_0x4a19ed"] = "55 8b ec 83 ec 14 8b 55 10 53 8b 5d 08 8b c1 8b";
+	coordinate_replay["strict_port_scope"] = "coordinate candidate replay, pruning, RNG choice, and bbox rescale only; no zone footprints, terrain, map cells, or public output";
+	report["coordinate_replay"] = coordinate_replay;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
