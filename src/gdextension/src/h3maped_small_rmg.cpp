@@ -35,6 +35,8 @@ struct TemplateEvidence {
 	int32_t zone_count;
 	int32_t connection_count;
 	const char *adapted_template_id;
+	uint8_t human_capable_source_owner_mask;
+	uint8_t player_capable_source_owner_mask;
 };
 
 struct H3MapedRng {
@@ -47,27 +49,27 @@ struct H3MapedRng {
 };
 
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
-	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "" },
-	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, "" },
-	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, "" },
-	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "" },
-	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, "" },
-	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, "" },
-	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, "" },
-	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "translated_rmg_template_019_v1" },
-	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, "" },
-	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "" },
-	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, "" },
-	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "" },
-	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, "" },
-	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "" },
-	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, "" },
-	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, "" },
-	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, "" },
-	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, "" },
-	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, "" },
-	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, "" },
-	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "" },
+	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "", 0xff, 0xff },
+	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, "", 0x03, 0x03 },
+	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "", 0x0f, 0x0f },
+	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, "", 0x03, 0x03 },
+	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, "", 0x03, 0x03 },
+	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, "", 0x03, 0x03 },
+	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "translated_rmg_template_019_v1", 0x0f, 0x0f },
+	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, "", 0x03, 0x03 },
+	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "", 0x0f, 0x0f },
+	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, "", 0x03, 0x03 },
+	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "", 0x0f, 0x0f },
+	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, "", 0x0f, 0x0f },
+	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, "", 0x0f, 0x0f },
+	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, "", 0x3f, 0x3f },
+	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, "", 0x03, 0x07 },
+	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, "", 0x07, 0x1f },
+	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, "", 0x07, 0x1f },
+	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "", 0x3f, 0x7f },
 };
 
 int32_t water_mode_code(const Dictionary &normalized_config) {
@@ -153,8 +155,130 @@ Dictionary template_to_dictionary(const TemplateEvidence &template_evidence) {
 	record["zone_count"] = template_evidence.zone_count;
 	record["connection_count"] = template_evidence.connection_count;
 	record["adapted_template_id"] = template_evidence.adapted_template_id;
+	record["human_capable_source_owner_mask"] = template_evidence.human_capable_source_owner_mask;
+	record["player_capable_source_owner_mask"] = template_evidence.player_capable_source_owner_mask;
 	record["source"] = "recovered h3maped template catalog parsed from /root/Downloads/h3maped.exe";
 	return record;
+}
+
+const TemplateEvidence *template_for_catalog_index(int32_t catalog_index) {
+	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
+		if (candidate.catalog_index == catalog_index) {
+			return &candidate;
+		}
+	}
+	return nullptr;
+}
+
+Array source_owner_indices_from_mask(uint8_t mask) {
+	Array indices;
+	for (int32_t index = 0; index < 8; ++index) {
+		if ((mask & (1U << index)) != 0) {
+			indices.append(index);
+		}
+	}
+	return indices;
+}
+
+Dictionary player_slot_assignment_context(const TemplateEvidence &selected_template, const Dictionary &normalized_config) {
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	const int32_t human_count = std::max(0, int32_t(constraints.get("human_count", 1)));
+	const int32_t player_count = std::max(human_count, int32_t(constraints.get("player_count", 2)));
+	Dictionary context;
+	context["phase_id"] = "player_slot_assignment";
+	context["h3maped_anchor"] = "0x4ac62a..0x4ac6ec";
+	context["status"] = "private_context_ready";
+	context["selected_color_bitmap_offset"] = "generator+0xed8";
+	context["assignment_slots_offset"] = "generator+0xee0";
+	context["mapped_slots_offset"] = "generator+0xee4";
+	context["human_capable_source_owner_mask"] = selected_template.human_capable_source_owner_mask;
+	context["player_capable_source_owner_mask"] = selected_template.player_capable_source_owner_mask;
+	context["human_capable_source_owner_indices"] = source_owner_indices_from_mask(selected_template.human_capable_source_owner_mask);
+	context["player_capable_source_owner_indices"] = source_owner_indices_from_mask(selected_template.player_capable_source_owner_mask);
+
+	Array selected_color_order;
+	Array assignment_slots;
+	Array mapped_slots;
+	for (int32_t index = 0; index < 8; ++index) {
+		selected_color_order.append(index);
+		assignment_slots.append(-1);
+		mapped_slots.append(-1);
+	}
+
+	Array assignments;
+	Array human_indices = context["human_capable_source_owner_indices"];
+	Array player_indices = context["player_capable_source_owner_indices"];
+	int32_t assigned_players = 0;
+	for (int32_t human = 0; human < human_count && human < human_indices.size(); ++human) {
+		const int32_t source_owner = int32_t(human_indices[human]);
+		assignment_slots[source_owner] = assigned_players;
+		mapped_slots[source_owner] = assigned_players;
+		Dictionary record;
+		record["player_slot"] = assigned_players + 1;
+		record["player_type"] = "human";
+		record["source_owner_index"] = source_owner;
+		record["actual_player_color"] = assigned_players;
+		assignments.append(record);
+		assigned_players += 1;
+	}
+	for (int32_t source_index = 0; assigned_players < player_count && source_index < player_indices.size(); ++source_index) {
+		const int32_t source_owner = int32_t(player_indices[source_index]);
+		if (int32_t(mapped_slots[source_owner]) != -1) {
+			continue;
+		}
+		assignment_slots[source_owner] = assigned_players;
+		mapped_slots[source_owner] = assigned_players;
+		Dictionary record;
+		record["player_slot"] = assigned_players + 1;
+		record["player_type"] = "computer";
+		record["source_owner_index"] = source_owner;
+		record["actual_player_color"] = assigned_players;
+		assignments.append(record);
+		assigned_players += 1;
+	}
+
+	context["selected_color_order"] = selected_color_order;
+	context["raw_ee0_slots"] = assignment_slots;
+	context["mapped_ee4_slots"] = mapped_slots;
+	context["assignment_records"] = assignments;
+	context["assigned_player_count"] = assigned_players;
+	context["requested_human_count"] = human_count;
+	context["requested_player_count"] = player_count;
+	context["materializes_runtime_players"] = false;
+	context["materializes_public_output"] = false;
+	context["blocked_next"] = "runtime_zone_records_0x4a218c";
+	return context;
+}
+
+Dictionary private_generation_context(const Dictionary &normalized_config) {
+	Dictionary context;
+	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
+	context["schema_version"] = 1;
+	context["status"] = "template_selection_only";
+	context["runtime_generation_allowed"] = false;
+	context["partial_materialized_payload_public_api"] = false;
+	Dictionary selection = selection_identity(normalized_config);
+	context["selection_identity"] = selection;
+	Array completed_phases;
+	if (!bool(selection.get("ok", false))) {
+		context["completed_phase_ids"] = completed_phases;
+		context["blocked_next"] = "template_selection";
+		return context;
+	}
+	completed_phases.append("template_selection");
+	const TemplateEvidence *selected_template = template_for_catalog_index(int32_t(selection.get("source_catalog_index", -1)));
+	if (selected_template != nullptr) {
+		context["player_context"] = player_slot_assignment_context(*selected_template, normalized_config);
+		completed_phases.append("player_slot_assignment");
+		context["status"] = "player_slot_assignment_private_context_ready";
+		context["blocked_next"] = "runtime_zone_records_0x4a218c";
+	} else {
+		context["status"] = "selected_template_record_missing";
+		context["blocked_next"] = "player_slot_assignment";
+	}
+	context["completed_phase_ids"] = completed_phases;
+	context["completed_phase_count"] = completed_phases.size();
+	return context;
 }
 
 Array accepted_templates(const Dictionary &normalized_config) {
@@ -211,7 +335,7 @@ Array restart_backlog() {
 		Dictionary phase;
 		phase["id"] = ids[index];
 		phase["h3maped_anchors"] = anchors[index];
-		phase["status"] = index == 0 ? String("active_boundary_only") : String("pending_strict_port");
+		phase["status"] = index == 0 ? String("active_boundary_only") : (index == 1 ? String("private_context_ready") : String("pending_strict_port"));
 		phase["materializes_public_output"] = false;
 		phases.append(phase);
 	}
@@ -303,6 +427,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["accepted_template_count"] = accepted.size();
 	report["accepted_templates"] = accepted;
 	report["selection_identity"] = selection_identity(normalized_config);
+	report["private_generation_context"] = private_generation_context(normalized_config);
 	report["restart_phase_backlog"] = restart_backlog();
 	report["materialized_phase_status"] = "none_after_fresh_restart";
 	report["blocked_before_materialization"] = "waiting_for_strict_h3maped_small_phase_ports_from_0x4ac552";
@@ -323,6 +448,7 @@ Dictionary generation_not_ready_result(const Dictionary &normalized_config, cons
 	result["partial_materialized_payload_public_api"] = false;
 	result["normalized_config"] = normalized_config;
 	result["h3maped_small_port"] = inspect_port(normalized_config);
+	result["private_generation_context"] = private_generation_context(normalized_config);
 	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["extension_profile"] = extension_profile;
 	return result;
