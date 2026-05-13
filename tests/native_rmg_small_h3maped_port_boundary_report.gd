@@ -537,6 +537,12 @@ func _run() -> void:
 			or int(object_vector_phase.get("reward_scheduler_preview_attempt_count", -1)) != 18 \
 			or int(object_vector_phase.get("reward_value_preview_rng_call_count", -1)) != 18 \
 			or int(object_vector_phase.get("reward_scheduler_budget_argument_total", -1)) != 300 \
+			or int(object_vector_phase.get("reward_object_lookup_count", -1)) != 18 \
+			or int(object_vector_phase.get("reward_object_lookup_selected_count", -1)) != 18 \
+			or int(object_vector_phase.get("reward_object_lookup_rng_call_count", -1)) != 18 \
+			or int(object_vector_phase.get("reward_candidate_scan_count", -1)) != 18 \
+			or int(object_vector_phase.get("reward_candidate_scan_eligible_total", -1)) <= 0 \
+			or int(object_vector_phase.get("reward_candidate_scan_weight_total", -1)) <= 0 \
 			or bool(object_vector_phase.get("reward_coordinate_commit_materialized", true)) \
 			or int(object_vector_phase.get("project_object_adoption_candidate_count", -1)) != 0 \
 			or String(object_vector_phase.get("blocked_next", "")) != "private_mine_reward_coordinate_filter_and_mutation_0x4aa603_0x4aa3e9":
@@ -576,8 +582,17 @@ func _run() -> void:
 			or int(reward_scheduler.get("scheduler_budget_argument_total", -1)) != 300 \
 			or int(reward_scheduler.get("value_preview_attempt_count", -1)) != 18 \
 			or int(reward_scheduler.get("value_preview_rng_call_count", -1)) != 18 \
+			or int(reward_scheduler.get("object_lookup_count", -1)) != 18 \
+			or int(reward_scheduler.get("object_lookup_selected_count", -1)) != 18 \
+			or int(reward_scheduler.get("object_lookup_rng_call_count", -1)) != 18 \
+			or int(reward_scheduler.get("candidate_scan_count", -1)) != 18 \
+			or int(reward_scheduler.get("candidate_scan_eligible_total", -1)) <= 0 \
+			or int(reward_scheduler.get("candidate_scan_weight_total", -1)) <= 0 \
 			or Array(reward_scheduler.get("scheduler_records", [])).size() != 6 \
 			or Array(reward_scheduler.get("value_preview_records", [])).size() != 18 \
+			or Array(reward_scheduler.get("object_lookup_records", [])).size() != 18 \
+			or String(reward_scheduler.get("candidate_scan_source", "")) != "proxy_backed_recovered_static_candidates_from_0x49f95a" \
+			or bool(reward_scheduler.get("candidate_scan_complete_vector_claim", true)) \
 			or String(reward_scheduler.get("coordinate_commit_anchor", "")) != "0x4aa9b7" \
 			or String(reward_scheduler.get("coordinate_filter_anchor", "")) != "0x4aa603" \
 			or String(reward_scheduler.get("final_object_commit_anchor", "")) != "0x4aa3e9" \
