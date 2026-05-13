@@ -811,6 +811,60 @@ Dictionary terrain_visual_row_selection_contract_report() {
 	return report;
 }
 
+uint32_t h3maped_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
+	return 1U
+			| ((uint32_t(terrain_id) & 0x0fU) << 1U)
+			| ((uint32_t(selected_row) & 0x7fU) << 5U)
+			| ((uint32_t(flag_a) & 0x01U) << 12U)
+			| ((uint32_t(flag_b) & 0x01U) << 13U);
+}
+
+Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
+	const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, flag_a, flag_b);
+	const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU)
+			| ((uint32_t(selected_row) & 0xffU) << 6U);
+	const uint32_t generated_cell_word_0x28 = ((uint32_t(flag_a) & 0x01U) << 15U)
+			| ((uint32_t(flag_b) & 0x01U) << 16U);
+	Dictionary sample;
+	sample["id"] = id;
+	sample["terrain_id"] = terrain_id;
+	sample["selected_row"] = selected_row;
+	sample["flag_a"] = flag_a;
+	sample["flag_b"] = flag_b;
+	sample["scratch_word_u16"] = int32_t(scratch_word);
+	sample["scratch_dirty_bit"] = int32_t(scratch_word & 0x01U);
+	sample["scratch_terrain_bits_1_4"] = int32_t((scratch_word >> 1U) & 0x0fU);
+	sample["scratch_art_bits_5_11"] = int32_t((scratch_word >> 5U) & 0x7fU);
+	sample["scratch_flag_a_bit_12"] = int32_t((scratch_word >> 12U) & 0x01U);
+	sample["scratch_flag_b_bit_13"] = int32_t((scratch_word >> 13U) & 0x01U);
+	sample["generated_cell_word_0x24_u32"] = int64_t(generated_cell_word_0x24);
+	sample["generated_cell_word_0x28_u32"] = int64_t(generated_cell_word_0x28);
+	sample["tile_byte_0_terrain_id"] = int32_t(generated_cell_word_0x24 & 0x3fU);
+	sample["tile_byte_1_terrain_art"] = int32_t((generated_cell_word_0x24 >> 6U) & 0xffU);
+	sample["tile_byte_6_terrain_flags"] = int32_t((generated_cell_word_0x28 >> 15U) & 0x03U);
+	return sample;
+}
+
+Dictionary terrain_scratch_write_contract_report() {
+	Dictionary report;
+	report["status"] = "0x4bad0f_scratch_word_and_0x49acf6_generated_cell_projection_ported_samples";
+	report["scratch_write_address"] = "0x4bad0f";
+	report["generated_cell_write_address"] = "0x49acf6";
+	report["scratch_word_contract"] = "bit0 dirty, bits1..4 terrain id, bits5..11 terrain art row, bit12 flag A, bit13 flag B";
+	report["generated_cell_contract"] = "cell+0x24 bits0..5 terrain id, bits6..13 terrain art; cell+0x28 bits15..16 terrain flags";
+	report["materializes_generated_cell_words"] = false;
+	report["materializes_package_tiles"] = false;
+	Array samples;
+	samples.append(terrain_scratch_write_sample("grass_full_row_60_flags_0_0", 2, 60, 0, 0));
+	samples.append(terrain_scratch_write_sample("grass_class_28_row_77_flags_1_0", 2, 77, 1, 0));
+	samples.append(terrain_scratch_write_sample("water_class_16_row_20_flags_0_0", 8, 20, 0, 0));
+	samples.append(terrain_scratch_write_sample("rock_class_8_row_11_cleared_flags", 9, 11, 0, 0));
+	report["sample_count"] = samples.size();
+	report["samples"] = samples;
+	report["blocked_next"] = "apply selected rows through the live 0x4bb74b/0x4bc5f0 scratch-feedback sequence before adopting generated-cell art/flag words";
+	return report;
+}
+
 Dictionary terrainplacement_visual_tables_4bcff5_report() {
 	Dictionary report;
 	report["status"] = "0x4bcff5_terrainplacement_visual_tables_toolkit_ported_inspection_only";
@@ -872,6 +926,7 @@ Dictionary terrainplacement_visual_tables_4bcff5_report() {
 	report["toolkit_constructor_records"] = constructor_records;
 	report["static_table_contracts"] = terrain_visual_static_table_contracts_report();
 	report["visual_row_selection_contract"] = terrain_visual_row_selection_contract_report();
+	report["scratch_write_contract"] = terrain_scratch_write_contract_report();
 	report["blocked_next"] = "port live 0x4bb74b/0x4bc5f0 TerrainPlacement scratch feedback and copy selected rows into generated-cell art/flag words before any public package output";
 	return report;
 }

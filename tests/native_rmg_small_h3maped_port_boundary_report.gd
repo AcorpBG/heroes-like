@@ -839,6 +839,38 @@ func _run() -> void:
 			or int(row_samples[3].get("out_flag_b", -1)) != 0:
 		_fail("TerrainPlacement row-selection samples drifted: %s" % JSON.stringify(row_samples))
 		return
+	var scratch_write: Dictionary = terrainplacement.get("scratch_write_contract", {})
+	var scratch_samples: Array = scratch_write.get("samples", [])
+	if String(scratch_write.get("status", "")) != "0x4bad0f_scratch_word_and_0x49acf6_generated_cell_projection_ported_samples" \
+			or String(scratch_write.get("scratch_write_address", "")) != "0x4bad0f" \
+			or String(scratch_write.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or bool(scratch_write.get("materializes_generated_cell_words", true)) \
+			or bool(scratch_write.get("materializes_package_tiles", true)) \
+			or int(scratch_write.get("sample_count", -1)) != 4 \
+			or scratch_samples.size() != 4:
+		_fail("TerrainPlacement scratch/writeback contract drifted: %s" % JSON.stringify(scratch_write))
+		return
+	if String(scratch_samples[0].get("id", "")) != "grass_full_row_60_flags_0_0" \
+			or int(scratch_samples[0].get("scratch_word_u16", -1)) != 1925 \
+			or int(scratch_samples[0].get("generated_cell_word_0x24_u32", -1)) != 3842 \
+			or int(scratch_samples[0].get("generated_cell_word_0x28_u32", -1)) != 0 \
+			or int(scratch_samples[0].get("tile_byte_1_terrain_art", -1)) != 60 \
+			or String(scratch_samples[1].get("id", "")) != "grass_class_28_row_77_flags_1_0" \
+			or int(scratch_samples[1].get("scratch_word_u16", -1)) != 6565 \
+			or int(scratch_samples[1].get("generated_cell_word_0x24_u32", -1)) != 4930 \
+			or int(scratch_samples[1].get("generated_cell_word_0x28_u32", -1)) != 32768 \
+			or int(scratch_samples[1].get("tile_byte_6_terrain_flags", -1)) != 1 \
+			or String(scratch_samples[2].get("id", "")) != "water_class_16_row_20_flags_0_0" \
+			or int(scratch_samples[2].get("scratch_word_u16", -1)) != 657 \
+			or int(scratch_samples[2].get("tile_byte_0_terrain_id", -1)) != 8 \
+			or int(scratch_samples[2].get("tile_byte_1_terrain_art", -1)) != 20 \
+			or String(scratch_samples[3].get("id", "")) != "rock_class_8_row_11_cleared_flags" \
+			or int(scratch_samples[3].get("scratch_word_u16", -1)) != 371 \
+			or int(scratch_samples[3].get("tile_byte_0_terrain_id", -1)) != 9 \
+			or int(scratch_samples[3].get("tile_byte_1_terrain_art", -1)) != 11 \
+			or int(scratch_samples[3].get("tile_byte_6_terrain_flags", -1)) != 0:
+		_fail("TerrainPlacement scratch/writeback samples drifted: %s" % JSON.stringify(scratch_samples))
+		return
 
 	var finalizer: Dictionary = report.get("footprint_finalizer_4a3710", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported_private" \
