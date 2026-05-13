@@ -114,12 +114,12 @@ func _run() -> void:
 
 	var private_context: Dictionary = report.get("private_generation_context", {})
 	if String(private_context.get("schema_id", "")) != "aurelion_h3maped_small_private_generation_context_v1" \
-			or String(private_context.get("status", "")) != "coordinate_replay_private_context_ready" \
-			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints"] \
-			or int(private_context.get("completed_phase_count", -1)) != 5 \
+			or String(private_context.get("status", "")) != "source_node_rectangle_private_context_ready" \
+			or Array(private_context.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle"] \
+			or int(private_context.get("completed_phase_count", -1)) != 7 \
 			or bool(private_context.get("runtime_generation_allowed", true)) \
 			or bool(private_context.get("partial_materialized_payload_public_api", true)):
-		_fail("Private generation context did not stop at the h3maped coordinate-replay phase: %s" % JSON.stringify(private_context))
+		_fail("Private generation context did not stop at the h3maped source-node rectangle phase: %s" % JSON.stringify(private_context))
 		return
 	var player_context: Dictionary = private_context.get("player_context", {})
 	if String(player_context.get("h3maped_anchor", "")) != "0x4ac62a..0x4ac6ec" \
@@ -265,13 +265,99 @@ func _run() -> void:
 		_fail("h3maped interleaved RNG events drifted: %s" % JSON.stringify(rng_events))
 		return
 
+	var zone_footprint_context: Dictionary = private_context.get("zone_footprint_context", {})
+	if String(zone_footprint_context.get("phase_id", "")) != "zone_footprint_phase_boundary" \
+			or String(zone_footprint_context.get("h3maped_anchor", "")) != "0x4a3a03" \
+			or String(zone_footprint_context.get("helper_sequence", "")) != "0x4a2777 -> 0x4a325d -> 0x4a3710" \
+			or String(zone_footprint_context.get("status", "")) != "private_context_ready" \
+			or int(zone_footprint_context.get("level_count", -1)) != 1 \
+			or int(zone_footprint_context.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(zone_footprint_context.get("total_collected_runtime_zone_count", -1)) != 6 \
+			or int(zone_footprint_context.get("synthetic_zone_appended_count", -1)) != 0 \
+			or String(zone_footprint_context.get("blocked_next", "")) != "source_node_rectangle_0x4cc788" \
+			or bool(zone_footprint_context.get("materializes_boundaries", true)) \
+			or bool(zone_footprint_context.get("materializes_span_fill", true)) \
+			or bool(zone_footprint_context.get("materializes_terrain", true)) \
+			or bool(zone_footprint_context.get("materializes_map_cells", true)) \
+			or bool(zone_footprint_context.get("materializes_public_output", true)):
+		_fail("h3maped zone-footprint scheduling context drifted: %s" % JSON.stringify(zone_footprint_context))
+		return
+	var per_level: Array = zone_footprint_context.get("per_level", [])
+	if per_level.size() != 1:
+		_fail("h3maped zone-footprint levels drifted: %s" % JSON.stringify(per_level))
+		return
+	var level_zero: Dictionary = per_level[0]
+	if int(level_zero.get("level", -1)) != 0 \
+			or Array(level_zero.get("collected_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
+			or int(level_zero.get("collected_runtime_zone_count", -1)) != 6 \
+			or int(level_zero.get("helper_call_input_count", -1)) != 6 \
+			or bool(level_zero.get("synthetic_zone_appended", true)) \
+			or String(level_zero.get("synthetic_zone_status", "")) != "not_applicable_small_one_level_land" \
+			or String(level_zero.get("helper_status", "")) != "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending":
+		_fail("h3maped zone-footprint level-zero context drifted: %s" % JSON.stringify(level_zero))
+		return
+	var helper_inputs: Array = level_zero.get("helper_call_inputs", [])
+	if helper_inputs.size() != 6 \
+			or String(helper_inputs[0].get("helper_address", "")) != "0x4a2777" \
+			or int(helper_inputs[0].get("runtime_zone_index", -1)) != 0 \
+			or int(helper_inputs[0].get("source_zone_id", -1)) != 1 \
+			or int(helper_inputs[0].get("level", -1)) != 0 \
+			or String(helper_inputs[0].get("input_status", "")) != "queued_for_0x4a2777_no_boundary_materialization" \
+			or int(helper_inputs[5].get("runtime_zone_index", -1)) != 5 \
+			or int(helper_inputs[5].get("source_zone_id", -1)) != 6:
+		_fail("h3maped zone-footprint helper inputs drifted: %s" % JSON.stringify(helper_inputs))
+		return
+
+	var source_node_rectangle: Dictionary = private_context.get("source_node_rectangle", {})
+	if String(source_node_rectangle.get("phase_id", "")) != "source_node_rectangle" \
+			or String(source_node_rectangle.get("h3maped_anchor", "")) != "0x4cc788" \
+			or String(source_node_rectangle.get("node_constructor_anchor", "")) != "0x4cc955" \
+			or String(source_node_rectangle.get("splitter_anchor", "")) != "0x4ccb64" \
+			or String(source_node_rectangle.get("locator_anchor", "")) != "0x4cca55" \
+			or String(source_node_rectangle.get("finalizer_anchor", "")) != "0x4ccdfc" \
+			or String(source_node_rectangle.get("status", "")) != "private_context_ready" \
+			or String(source_node_rectangle.get("blocked_next", "")) != "polygon_split_model_0x4ccb64_0x4ccdfc" \
+			or bool(source_node_rectangle.get("materializes_source_node_graph", true)) \
+			or bool(source_node_rectangle.get("materializes_boundaries", true)) \
+			or bool(source_node_rectangle.get("materializes_span_fill", true)) \
+			or bool(source_node_rectangle.get("materializes_terrain", true)) \
+			or bool(source_node_rectangle.get("materializes_map_cells", true)) \
+			or bool(source_node_rectangle.get("materializes_public_output", true)) \
+			or bool(source_node_rectangle.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("h3maped source-node rectangle context drifted: %s" % JSON.stringify(source_node_rectangle))
+		return
+	var bounds: Dictionary = source_node_rectangle.get("initial_bounds", {})
+	if int(bounds.get("min_x", 0)) != -200 \
+			or int(bounds.get("min_y", 0)) != -200 \
+			or int(bounds.get("max_x", 0)) != 400 \
+			or int(bounds.get("max_y", 0)) != 400 \
+			or String(bounds.get("constant_min_hex", "")) != "0xffffff38" \
+			or String(bounds.get("constant_max_hex", "")) != "0x190":
+		_fail("h3maped source-node rectangle bounds drifted: %s" % JSON.stringify(bounds))
+		return
+	var initial_edges: Array = source_node_rectangle.get("initial_edges", [])
+	if int(source_node_rectangle.get("initial_edge_count", -1)) != 4 \
+			or initial_edges.size() != 4 \
+			or String(initial_edges[0].get("id", "")) != "top" \
+			or int(initial_edges[0].get("from_x", 0)) != -200 \
+			or int(initial_edges[0].get("to_x", 0)) != 400 \
+			or String(initial_edges[0].get("next", "")) != "right" \
+			or String(initial_edges[1].get("id", "")) != "right" \
+			or String(initial_edges[1].get("next", "")) != "bottom" \
+			or String(initial_edges[2].get("id", "")) != "bottom" \
+			or String(initial_edges[2].get("next", "")) != "left" \
+			or String(initial_edges[3].get("id", "")) != "left" \
+			or String(initial_edges[3].get("next", "")) != "top":
+		_fail("h3maped source-node rectangle edges drifted: %s" % JSON.stringify(initial_edges))
+		return
+
 	var generated: Dictionary = service.generate_random_map(config)
 	if bool(generated.get("ok", true)) \
 			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
 			or String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Supported small generation must remain blocked by the fresh h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints"]:
+	if Array(generated.get("private_generation_context", {}).get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay_and_zone_footprints", "zone_footprint_phase_boundary", "source_node_rectangle"]:
 		_fail("Blocked generation result did not carry the same private phase context: %s" % JSON.stringify(generated))
 		return
 

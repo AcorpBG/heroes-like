@@ -886,6 +886,126 @@ Dictionary coordinate_replay_context(const Dictionary &normalized_config, const 
 	return context;
 }
 
+Dictionary zone_footprint_phase_context(const Dictionary &normalized_config, const Dictionary &runtime_zone_context, const Dictionary &coordinate_context) {
+	Dictionary context;
+	context["phase_id"] = "zone_footprint_phase_boundary";
+	context["h3maped_anchor"] = "0x4a3a03";
+	context["helper_sequence"] = "0x4a2777 -> 0x4a325d -> 0x4a3710";
+	context["synthetic_source_zone_id"] = "0xd4";
+	context["synthetic_triplets"] = "0xa0=100,0xa4=1000,0xa8=5,0xac=2000,0xb0=6000,0xb4=1";
+	context["status"] = "blocked_until_coordinate_replay";
+	context["materializes_boundaries"] = false;
+	context["materializes_span_fill"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_map_cells"] = false;
+	context["materializes_public_output"] = false;
+	context["blocked_next"] = "source_node_rectangle_0x4cc788";
+	if (String(coordinate_context.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array runtime_records = runtime_zone_context.get("runtime_zone_records", Array());
+	Array levels;
+	int32_t total_collected = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array zone_indices;
+		Array helper_inputs;
+		for (int32_t index = 0; index < runtime_records.size(); ++index) {
+			Dictionary record = runtime_records[index];
+			if (int32_t(record.get("level", 0)) != level) {
+				continue;
+			}
+			const int32_t runtime_index = int32_t(record.get("runtime_zone_index", index));
+			zone_indices.append(runtime_index);
+			Dictionary helper_input;
+			helper_input["call_order"] = helper_inputs.size();
+			helper_input["helper_address"] = "0x4a2777";
+			helper_input["runtime_zone_index"] = runtime_index;
+			helper_input["source_zone_id"] = record.get("source_zone_id", -1);
+			helper_input["level"] = level;
+			helper_input["input_status"] = "queued_for_0x4a2777_no_boundary_materialization";
+			helper_inputs.append(helper_input);
+		}
+		total_collected += zone_indices.size();
+		Dictionary level_record;
+		level_record["level"] = level;
+		level_record["collected_runtime_zone_indices"] = zone_indices;
+		level_record["collected_runtime_zone_count"] = zone_indices.size();
+		level_record["helper_call_inputs"] = helper_inputs;
+		level_record["helper_call_input_count"] = helper_inputs.size();
+		level_record["synthetic_zone_appended"] = false;
+		level_record["synthetic_zone_status"] = water_code == 0 && level_count == 1 ? String("not_applicable_small_one_level_land") : String("pending_water_or_multilevel_rule_port");
+		level_record["helper_status"] = "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending";
+		levels.append(level_record);
+	}
+
+	context["status"] = "private_context_ready";
+	context["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection and helper input scheduling";
+	context["level_count"] = level_count;
+	context["h3maped_water_mode_code"] = water_code;
+	context["per_level"] = levels;
+	context["total_collected_runtime_zone_count"] = total_collected;
+	context["synthetic_zone_appended_count"] = 0;
+	context["blocked_next"] = "source_node_rectangle_0x4cc788";
+	return context;
+}
+
+Dictionary source_node_rectangle_context(const Dictionary &zone_footprint_context) {
+	Dictionary context;
+	context["phase_id"] = "source_node_rectangle";
+	context["h3maped_anchor"] = "0x4cc788";
+	context["node_constructor_anchor"] = "0x4cc955";
+	context["splitter_anchor"] = "0x4ccb64";
+	context["locator_anchor"] = "0x4cca55";
+	context["finalizer_anchor"] = "0x4ccdfc";
+	context["status"] = "blocked_until_zone_footprint_phase";
+	context["materializes_source_node_graph"] = false;
+	context["materializes_boundaries"] = false;
+	context["materializes_span_fill"] = false;
+	context["materializes_terrain"] = false;
+	context["materializes_map_cells"] = false;
+	context["materializes_public_output"] = false;
+	context["feeds_real_0x4a2777_boundary"] = false;
+	context["blocked_next"] = "polygon_split_model_0x4ccb64_0x4ccdfc";
+	if (String(zone_footprint_context.get("status", "")) != "private_context_ready") {
+		return context;
+	}
+
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["constant_min_hex"] = "0xffffff38";
+	bounds["constant_max_hex"] = "0x190";
+
+	Array edges;
+	auto edge = [&](const char *id, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, const char *next) {
+		Dictionary item;
+		item["id"] = id;
+		item["from_x"] = from_x;
+		item["from_y"] = from_y;
+		item["to_x"] = to_x;
+		item["to_y"] = to_y;
+		item["next"] = next;
+		item["constructor"] = "0x4cc955";
+		return item;
+	};
+	edges.append(edge("top", -200, -200, 400, -200, "right"));
+	edges.append(edge("right", 400, -200, 400, 400, "bottom"));
+	edges.append(edge("bottom", 400, 400, -200, 400, "left"));
+	edges.append(edge("left", -200, 400, -200, -200, "top"));
+
+	context["status"] = "private_context_ready";
+	context["source"] = "h3maped 0x4cc788 initial source-node rectangle constants before 0x4ccb64 split insertions";
+	context["initial_bounds"] = bounds;
+	context["initial_edge_count"] = edges.size();
+	context["initial_edges"] = edges;
+	return context;
+}
+
 Dictionary private_generation_context(const Dictionary &normalized_config) {
 	Dictionary context;
 	context["schema_id"] = "aurelion_h3maped_small_private_generation_context_v1";
@@ -908,6 +1028,8 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 		const Dictionary runtime_zone_context = runtime_zone_records_context(*selected_template, player_context);
 		const Dictionary link_context = link_seed_context(*selected_template, runtime_zone_context);
 		const Dictionary coordinate_context = coordinate_replay_context(normalized_config, runtime_zone_context, link_context, uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0))));
+		const Dictionary zone_footprint_context = zone_footprint_phase_context(normalized_config, runtime_zone_context, coordinate_context);
+		const Dictionary source_node_rectangle = source_node_rectangle_context(zone_footprint_context);
 		context["player_context"] = player_context;
 		completed_phases.append("player_slot_assignment");
 		context["runtime_zone_context"] = runtime_zone_context;
@@ -919,8 +1041,22 @@ Dictionary private_generation_context(const Dictionary &normalized_config) {
 				context["coordinate_replay_context"] = coordinate_context;
 				if (String(coordinate_context.get("status", "")) == "private_context_ready") {
 					completed_phases.append("coordinate_replay_and_zone_footprints");
-					context["status"] = "coordinate_replay_private_context_ready";
-					context["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
+					context["zone_footprint_context"] = zone_footprint_context;
+					if (String(zone_footprint_context.get("status", "")) == "private_context_ready") {
+						completed_phases.append("zone_footprint_phase_boundary");
+						context["source_node_rectangle"] = source_node_rectangle;
+						if (String(source_node_rectangle.get("status", "")) == "private_context_ready") {
+							completed_phases.append("source_node_rectangle");
+							context["status"] = "source_node_rectangle_private_context_ready";
+							context["blocked_next"] = "polygon_split_model_0x4ccb64_0x4ccdfc";
+						} else {
+							context["status"] = "zone_footprint_phase_private_context_ready";
+							context["blocked_next"] = "source_node_rectangle_0x4cc788";
+						}
+					} else {
+						context["status"] = "coordinate_replay_private_context_ready";
+						context["blocked_next"] = "zone_footprint_source_nodes_0x4a3a03_0x4cc788";
+					}
 				} else {
 					context["status"] = "link_seed_private_context_ready";
 					context["blocked_next"] = "coordinate_replay_0x4a17f5_0x4a1701";
