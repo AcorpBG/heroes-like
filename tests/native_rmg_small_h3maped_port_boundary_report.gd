@@ -41,13 +41,13 @@ func _run() -> void:
 		return
 	var active_state: Dictionary = report.get("active_generation_state", {})
 	if String(active_state.get("schema_id", "")) != "aurelion_h3maped_small_active_generation_state_v1" \
-			or String(active_state.get("status", "")) != "terrainplacement_visual_tables_active_internal_state" \
-			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables"] \
+			or String(active_state.get("status", "")) != "terrainplacement_live_feedback_active_internal_state" \
+			or Array(active_state.get("completed_phase_ids", [])) != ["template_selection", "player_slot_assignment", "runtime_zone_records", "link_seed_setup", "coordinate_replay", "zone_footprints", "terrain_cell_writeout", "terrainplacement_visual_tables", "terrainplacement_live_feedback"] \
 			or bool(active_state.get("runtime_generation_allowed", true)) \
 			or bool(active_state.get("materializes_runtime_players", true)) \
 			or bool(active_state.get("materializes_map_cells", true)) \
 			or bool(active_state.get("materializes_public_output", true)) \
-			or String(active_state.get("blocked_next", "")) != "live_TerrainPlacement_0x4bb74b_0x4bc5f0_scratch_feedback":
+			or String(active_state.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
 		_fail("Fresh active generation state phase boundary drifted: %s" % JSON.stringify(active_state))
 		return
 	var player_phase: Dictionary = active_state.get("player_slot_assignment", {})
@@ -331,6 +331,58 @@ func _run() -> void:
 				or int(scratch_samples[sample_index].get("generated_cell_word_0x28_u32", -1)) != expected_generated_0x28[sample_index]:
 			_fail("h3maped scratch/writeback samples changed: %s" % JSON.stringify(scratch_samples))
 			return
+	var live_feedback: Dictionary = active_state.get("terrainplacement_live_feedback", {})
+	if String(live_feedback.get("phase_id", "")) != "terrainplacement_live_feedback" \
+			or String(live_feedback.get("h3maped_anchor", "")) != "0x4bb74b/0x4bc5f0" \
+			or String(live_feedback.get("full_water_repaint_address", "")) != "0x4a4025" \
+			or String(live_feedback.get("zone_repaint_loop_address", "")) != "0x4a4082" \
+			or String(live_feedback.get("single_cell_repaint_address", "")) != "0x4a415a" \
+			or String(live_feedback.get("changed_cell_update_address", "")) != "0x4bb74b" \
+			or String(live_feedback.get("neighbor_seed_address", "")) != "0x4bba59" \
+			or String(live_feedback.get("frontier_retouch_address", "")) != "0x4bbd01" \
+			or String(live_feedback.get("queue_drain_address", "")) != "0x4bc5f0" \
+			or String(live_feedback.get("candidate_gate_address", "")) != "0x4bc988" \
+			or String(live_feedback.get("visual_selector_address", "")) != "0x4bcfc3" \
+			or String(live_feedback.get("neighbor_mask_address", "")) != "0x4bce6d" \
+			or String(live_feedback.get("scratch_write_address", "")) != "0x4bad0f" \
+			or String(live_feedback.get("generated_cell_write_address", "")) != "0x49acf6" \
+			or String(live_feedback.get("status", "")) != "active_internal_state" \
+			or not bool(live_feedback.get("uses_live_scratch_neighbor_mask", false)) \
+			or not bool(live_feedback.get("materializes_private_generated_cell_words", false)) \
+			or bool(live_feedback.get("materializes_package_tiles", true)) \
+			or bool(live_feedback.get("project_grid_public_runtime_adoption", true)) \
+			or bool(live_feedback.get("public_package_output_allowed", true)) \
+			or not bool(live_feedback.get("visual_tables_decoded", false)) \
+			or int(live_feedback.get("tile_count", -1)) != 1296 \
+			or not bool(live_feedback.get("exact_queue_drain_complete", false)) \
+			or not bool(live_feedback.get("live_feedback_materialized", false)) \
+			or int(live_feedback.get("live_visual_attempt_count", -1)) != 2845 \
+			or int(live_feedback.get("live_visual_write_count", -1)) != 2845 \
+			or int(live_feedback.get("live_visual_missing_bucket_count", -1)) != 0 \
+			or int(live_feedback.get("live_initial_water_attempt_count", -1)) != 1296 \
+			or int(live_feedback.get("live_repaint_attempt_count", -1)) != 942 \
+			or int(live_feedback.get("live_queue_attempt_count", -1)) != 607 \
+			or int(live_feedback.get("live_dirty_cell_count", -1)) != 1296 \
+			or int(live_feedback.get("live_roundtrip_mismatch_count", -1)) != 0 \
+			or int(live_feedback.get("live_terrain_mismatch_count", -1)) != 0 \
+			or int(live_feedback.get("live_full_native_cell_count", -1)) != 1326 \
+			or int(live_feedback.get("live_terrain_art_nonzero_cell_count", -1)) != 2785 \
+			or int(live_feedback.get("live_terrain_flag_cell_count", -1)) != 1255 \
+			or int(live_feedback.get("post_queue_terrain_difference_count", -1)) != 181 \
+			or int(live_feedback.get("changed_cell_update_count", -1)) != 1107 \
+			or int(live_feedback.get("initial_set_a_candidate_count", -1)) != 1 \
+			or int(live_feedback.get("initial_set_b_candidate_count", -1)) != 46 \
+			or int(live_feedback.get("total_set_a_insert_count", -1)) != 176 \
+			or int(live_feedback.get("total_set_b_insert_count", -1)) != 10522 \
+			or int(live_feedback.get("set_a_drain_count", -1)) != 176 \
+			or int(live_feedback.get("set_b_drain_count", -1)) != 10522 \
+			or int(live_feedback.get("set_b_candidate_true_count", -1)) != 386 \
+			or int(live_feedback.get("retouched_cell_write_count", -1)) != 221 \
+			or bool(live_feedback.get("drain_guard_exhausted", true)) \
+			or int(live_feedback.get("rng_state_after_live_visual_selection_uint32", -1)) != 1452413421 \
+			or String(live_feedback.get("blocked_next", "")) != "private_0x49b2b6_tile_byte_writeback_candidate":
+		_fail("h3maped TerrainPlacement live feedback phase drifted: %s" % JSON.stringify(live_feedback))
+		return
 	if String(report.get("archived_report_treadmill_path", "")) != "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp":
 		_fail("The report-treadmill implementation was not archived: %s" % JSON.stringify(report))
 		return
@@ -377,7 +429,7 @@ func _run() -> void:
 			or String(backlog[5].get("id", "")) != "zone_footprints" \
 			or String(backlog[5].get("status", "")) != "active_internal_state" \
 			or String(backlog[6].get("id", "")) != "terrain_and_terrainplacement" \
-			or String(backlog[6].get("status", "")) != "terrainplacement_visual_tables_active_internal_state" \
+			or String(backlog[6].get("status", "")) != "terrainplacement_live_feedback_active_internal_state" \
 			or String(backlog[9].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[10].get("id", "")) != "connections_blockers_and_guards" \
 			or String(backlog[11].get("id", "")) != "final_h3m_writeout":
