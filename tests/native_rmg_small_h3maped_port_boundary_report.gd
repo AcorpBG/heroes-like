@@ -237,6 +237,78 @@ func _run() -> void:
 		_fail("Coordinate replay placement-step schedule drifted: %s" % JSON.stringify(placement_steps))
 		return
 
+	var footprint_boundary: Dictionary = report.get("zone_footprint_phase_boundary", {})
+	if String(footprint_boundary.get("status", "")) != "0x4a3a03_zone_footprint_phase_boundary_ported_inspection_only" \
+			or String(footprint_boundary.get("phase_address", "")) != "0x4a3a03" \
+			or String(footprint_boundary.get("helper_sequence", "")) != "0x4a2777 -> 0x4a325d -> 0x4a3710":
+		_fail("h3maped zone-footprint phase boundary drifted: %s" % JSON.stringify(footprint_boundary))
+		return
+	if int(footprint_boundary.get("level_count", -1)) != 1 \
+			or int(footprint_boundary.get("h3maped_water_mode_code", -1)) != 0 \
+			or int(footprint_boundary.get("total_collected_runtime_zone_count", -1)) != 6 \
+			or int(footprint_boundary.get("synthetic_zone_appended_count", -1)) != 0:
+		_fail("Small one-level land footprint collection should collect 6 runtime zones with no synthetic source zone: %s" % JSON.stringify(footprint_boundary))
+		return
+	if bool(footprint_boundary.get("materializes_boundaries", true)) \
+			or bool(footprint_boundary.get("materializes_span_fill", true)) \
+			or bool(footprint_boundary.get("materializes_terrain", true)) \
+			or bool(footprint_boundary.get("materializes_map_cells", true)):
+		_fail("Zone-footprint boundary must not materialize geometry or cells yet: %s" % JSON.stringify(footprint_boundary))
+		return
+	var level_records: Array = footprint_boundary.get("per_level", [])
+	if level_records.size() != 1 \
+			or Array(level_records[0].get("collected_runtime_zone_indices", [])) != [0, 1, 2, 3, 4, 5] \
+			or String(level_records[0].get("synthetic_zone_status", "")) != "not_applicable_small_one_level_land" \
+			or String(level_records[0].get("helper_status", "")) != "0x4a2777_inputs_queued_0x4a325d_0x4a3710_materialization_pending":
+		_fail("Per-level 0x4a3a03 footprint boundary drifted: %s" % JSON.stringify(level_records))
+		return
+	var helper_inputs: Array = level_records[0].get("helper_call_inputs", [])
+	if int(level_records[0].get("helper_call_input_count", -1)) != 6 \
+			or helper_inputs.size() != 6 \
+			or String(helper_inputs[0].get("helper_address", "")) != "0x4a2777" \
+			or int(helper_inputs[0].get("runtime_zone_index", -1)) != 0 \
+			or int(helper_inputs[0].get("source_zone_id", -1)) != 1 \
+			or String(helper_inputs[0].get("input_status", "")) != "queued_for_0x4a2777_no_boundary_materialization" \
+			or int(helper_inputs[5].get("runtime_zone_index", -1)) != 5 \
+			or int(helper_inputs[5].get("source_zone_id", -1)) != 6:
+		_fail("0x4a2777 helper input queue drifted: %s" % JSON.stringify(helper_inputs))
+		return
+
+	var source_node_rectangle: Dictionary = report.get("source_node_rectangle_4cc788", {})
+	if String(source_node_rectangle.get("status", "")) != "0x4cc788_initial_source_node_bounds_ported_inspection_only" \
+			or String(source_node_rectangle.get("function_address", "")) != "0x4cc788" \
+			or String(source_node_rectangle.get("node_constructor_address", "")) != "0x4cc955" \
+			or String(source_node_rectangle.get("splitter_address", "")) != "0x4ccb64" \
+			or String(source_node_rectangle.get("locator_address", "")) != "0x4cca55" \
+			or String(source_node_rectangle.get("finalizer_address", "")) != "0x4ccdfc":
+		_fail("0x4cc788 source-node rectangle boundary drifted: %s" % JSON.stringify(source_node_rectangle))
+		return
+	if bool(source_node_rectangle.get("materializes_boundaries", true)) \
+			or bool(source_node_rectangle.get("materializes_span_fill", true)) \
+			or bool(source_node_rectangle.get("materializes_terrain", true)) \
+			or bool(source_node_rectangle.get("materializes_map_cells", true)) \
+			or bool(source_node_rectangle.get("feeds_real_0x4a2777_boundary", true)):
+		_fail("0x4cc788 source-node rectangle must not feed generated output yet: %s" % JSON.stringify(source_node_rectangle))
+		return
+	var source_node_bounds: Dictionary = source_node_rectangle.get("initial_bounds", {})
+	var source_node_edges: Array = source_node_rectangle.get("initial_edges", [])
+	if int(source_node_bounds.get("min_x", 0)) != -200 \
+			or int(source_node_bounds.get("min_y", 0)) != -200 \
+			or int(source_node_bounds.get("max_x", 0)) != 400 \
+			or int(source_node_bounds.get("max_y", 0)) != 400 \
+			or String(source_node_bounds.get("constant_min_hex", "")) != "0xffffff38" \
+			or String(source_node_bounds.get("constant_max_hex", "")) != "0x190" \
+			or int(source_node_rectangle.get("initial_edge_count", -1)) != 4 \
+			or source_node_edges.size() != 4 \
+			or String(source_node_edges[0].get("id", "")) != "top" \
+			or int(source_node_edges[0].get("from_x", 0)) != -200 \
+			or int(source_node_edges[0].get("to_x", 0)) != 400 \
+			or String(source_node_edges[3].get("id", "")) != "left" \
+			or int(source_node_edges[3].get("from_y", 0)) != 400 \
+			or int(source_node_edges[3].get("to_y", 0)) != -200:
+		_fail("0x4cc788 source-node rectangle constants drifted: %s" % JSON.stringify(source_node_rectangle))
+		return
+
 	var backlog: Array = report.get("restart_phase_backlog", [])
 	if backlog.size() != 9:
 		_fail("The restart backlog should list the required executable phase ports only: %s" % JSON.stringify(backlog))
@@ -257,7 +329,11 @@ func _run() -> void:
 			or String(backlog[3].get("status", "")) != "active_inspection_only":
 		_fail("Coordinate replay should be active only as inspection evidence: %s" % JSON.stringify(backlog))
 		return
-	for index in range(4, backlog.size()):
+	if String(backlog[4].get("phase_id", "")) != "zone_footprints_and_terrain" \
+			or String(backlog[4].get("status", "")) != "active_phase_boundary_only":
+		_fail("Zone-footprint phase should be active only as a h3maped phase boundary: %s" % JSON.stringify(backlog))
+		return
+	for index in range(5, backlog.size()):
 		if String(backlog[index].get("status", "")) != "pending_strict_h3maped_port":
 			_fail("Non-template phases must remain pending strict executable ports: %s" % JSON.stringify(backlog))
 			return
