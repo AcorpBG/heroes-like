@@ -31,6 +31,7 @@ The active module is intentionally small again. It only:
 - ports player-slot assignment `0x4ac62a..0x4ac6ec` as inspection-only evidence, including `generator+0xed8`, `generator+0xee0`, and `generator+0xee4`;
 - ports runtime-zone record setup `0x4a218c` as inspection-only evidence from the recovered template catalog, including runtime vector offsets `generator+0x10e0/+0x10e4/+0x10e8` and `0x414`-byte record size;
 - ports the `0x4a3a03` zone-footprint phase boundary as inspection-only evidence: one level collects the six runtime zones, queues six `0x4a2777` helper inputs, small one-level land appends no synthetic `0xd4` source zone, and helper materialization remains pending;
+- ports the `0x4a2777` dependency `0x4a2b33` clip helper as inspection-only evidence, proving representative endpoint clipping against the active 36x36 h3maped rectangle without boundary/cell output;
 - records a strict restart backlog for the required executable phase ports;
 - refuses runtime generation.
 
@@ -58,7 +59,7 @@ The restart must port these phases from `h3maped.exe` before public package outp
 1. Template selection: `0x49f0cd`, `0x4ac597`, `0x4e7276`.
 2. Player-slot assignment: `0x4ac62a..0x4ac6ec` (active inspection only; no runtime player materialization).
 3. Runtime-zone records: `0x4a218c` (active inspection only; no coordinates, terrain, cells, or runtime players).
-4. Zone-footprint phase boundary: `0x4a3a03` (active inspection only; `0x4a2777` helper inputs queued, while `0x4a2777`, `0x4a325d`, and `0x4a3710` materialization remains pending).
+4. Zone-footprint phase boundary: `0x4a3a03` (active inspection only; `0x4a2777` helper inputs queued, and `0x4a2b33` clip helper ported inspection-only; `0x4a261a`, full `0x4a2777`, `0x4a325d`, and `0x4a3710` materialization remains pending).
 5. Terrain writeout: `0x4a3f27` (pending strict port).
 6. Town object placement: `0x4a8d2c`, `0x4a93a2`, `0x49ba89`.
 7. Roads and rivers: `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`.
