@@ -25118,7 +25118,9 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["scenario_package_extension"] = ".ascenario";
 	result["capabilities"] = capabilities();
 	result["native_rmg_generation_authority"] = "h3maped_small_reset_only";
-	result["native_rmg_runtime_generation_allowed"] = false;
+	result["native_rmg_runtime_generation_allowed"] = true;
+	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated_only";
+	result["native_rmg_production_ready"] = false;
 	result["native_rmg_active_reset_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["native_rmg_active_port_capability"] = "native_rmg_small_h3maped_port_boundary";
 	result["native_rmg_legacy_capability_policy"] = "inspection_debug_evidence_not_runtime_generation_authority";
@@ -25467,7 +25469,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	if (h3maped_small_rmg::supports_scope(normalized)) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-		return h3maped_small_rmg::generation_not_ready_result(normalized, extension_profile);
+		return h3maped_small_rmg::validator_gated_generation_result(normalized, extension_profile);
 	}
 	Dictionary reset_extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
 	return h3maped_small_rmg::archived_legacy_disabled_result(normalized, reset_extension_profile, native_rmg_runtime_policy_classification(normalized));

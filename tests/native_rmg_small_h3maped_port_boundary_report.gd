@@ -13,7 +13,9 @@ func _run() -> void:
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	var metadata: Dictionary = service.get_api_metadata()
 	if String(metadata.get("native_rmg_generation_authority", "")) != "h3maped_small_reset_only" \
-			or bool(metadata.get("native_rmg_runtime_generation_allowed", true)):
+			or not bool(metadata.get("native_rmg_runtime_generation_allowed", false)) \
+			or String(metadata.get("native_rmg_runtime_generation_policy", "")) != "small_36x36_land_validator_gated_only" \
+			or bool(metadata.get("native_rmg_production_ready", true)):
 		_fail("Native RMG reset gate is not active: %s" % JSON.stringify(metadata))
 		return
 
@@ -1027,10 +1029,10 @@ func _run() -> void:
 	var validator_metrics: Dictionary = fast_validator.get("metrics", {})
 	if String(fast_validator.get("phase_id", "")) != "fast_structural_validator_authority" \
 			or String(fast_validator.get("schema_id", "")) != "aurelion_h3maped_small_fast_structural_validator_v1" \
-			or String(fast_validator.get("status", "")) != "strict_fast_structural_validator_pass_runtime_blocked" \
-			or bool(fast_validator.get("runtime_generation_allowed", true)) \
-			or bool(fast_validator.get("public_runtime_authoritative", true)) \
-			or bool(fast_validator.get("authorizes_public_runtime", true)) \
+			or String(fast_validator.get("status", "")) != "strict_fast_structural_validator_pass_public_generation_ready" \
+			or not bool(fast_validator.get("runtime_generation_allowed", false)) \
+			or not bool(fast_validator.get("public_runtime_authoritative", false)) \
+			or not bool(fast_validator.get("authorizes_public_runtime", false)) \
 			or not bool(fast_validator.get("validator_authority", false)) \
 			or int(fast_validator.get("failure_count", -1)) != 0 \
 			or String(fast_validator.get("blocked_next", "")) != "public_generate_random_map_authority_after_package_validation" \
@@ -1061,22 +1063,27 @@ func _run() -> void:
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
 			or not bool(strict_state.get("binary_verified", false)) \
-			or bool(strict_state.get("active_public_generation_state", true)) \
+			or not bool(strict_state.get("active_public_generation_state", false)) \
+			or not bool(strict_state.get("runtime_generation_allowed", false)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "public_generate_random_map_authority_after_package_validation":
+			or String(strict_state.get("next_required_port", "")) != "authoritative_final_map_package_serialization":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 2 \
-			or not pending_ports.has("public_generate_random_map_authority_after_package_validation") \
+	if pending_ports.size() != 6 \
+			or not pending_ports.has("authoritative_final_map_package_serialization") \
+			or not pending_ports.has("roads_as_route_infrastructure_audit") \
+			or not pending_ports.has("blockers_guards_runtime_zoning_audit") \
+			or not pending_ports.has("validator_negative_cases") \
+			or not pending_ports.has("small_map_corpus_audit") \
 			or not pending_ports.has("editor_runtime_adoption_audit"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 20 \
+	if backlog.size() != 21 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -1105,24 +1112,73 @@ func _run() -> void:
 			or String(backlog[18].get("id", "")) != "final_h3m_writeout" \
 			or String(backlog[18].get("status", "")) != "active_strict_writeout_draft_runtime_blocked" \
 			or String(backlog[19].get("id", "")) != "fast_structural_validator_authority" \
-			or String(backlog[19].get("status", "")) != "active_strict_validator_authority_runtime_blocked":
+			or String(backlog[19].get("status", "")) != "active_strict_validator_authority_runtime_blocked" \
+			or String(backlog[20].get("id", "")) != "public_generation_authority" \
+			or String(backlog[20].get("status", "")) != "active_validator_gated_public_package_not_production_ready":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
 	var generated: Dictionary = service.generate_random_map(supported_config)
-	if bool(generated.get("ok", true)) \
-			or String(generated.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready" \
-			or bool(generated.get("runtime_generation_allowed", true)) \
-			or generated.has("active_generation_state"):
-		_fail("Supported small map generation bypassed the reset gate: %s" % JSON.stringify(generated))
+	var generated_map_payload: Dictionary = generated.get("map_document_payload", {})
+	var generated_terrain_layers: Dictionary = generated_map_payload.get("terrain_layers", {})
+	var generated_roads: Array = generated_terrain_layers.get("roads", [])
+	var generated_route_graph: Dictionary = generated_map_payload.get("route_graph", {})
+	var generated_objects: Array = generated_map_payload.get("objects", [])
+	var generated_player_starts: Array = generated_map_payload.get("player_starts", [])
+	var generated_tile_bytes: Dictionary = generated.get("final_tile_bytes", {})
+	var generated_metrics: Dictionary = generated.get("validator_metrics", {})
+	if not bool(generated.get("ok", false)) \
+			or String(generated.get("schema_id", "")) != "aurelion_h3maped_small_validator_gated_generation_result_v1" \
+			or String(generated.get("generation_status", "")) != "h3maped_small_validated_package_ready" \
+			or String(generated.get("full_generation_status", "")) != "h3maped_small_public_package_validator_gated_not_production_ready" \
+			or not bool(generated.get("runtime_generation_allowed", false)) \
+			or not bool(generated.get("public_runtime_authoritative", false)) \
+			or bool(generated.get("production_ready", true)) \
+			or bool(generated.get("full_parity_claim", true)) \
+			or String(generated_map_payload.get("schema_id", "")) != "aurelion_map_document" \
+			or String(generated_map_payload.get("source_kind", "")) != "generated_h3maped_small_validated" \
+			or int(generated_map_payload.get("width", -1)) != 36 \
+			or int(generated_map_payload.get("height", -1)) != 36 \
+			or int(generated_map_payload.get("level_count", -1)) != 1 \
+			or String(generated_map_payload.get("source_template_id", "")) != "h3maped_template_018" \
+			or not bool(generated_map_payload.get("public_runtime_authoritative", false)) \
+			or generated_objects.size() != 40 \
+			or generated_player_starts.size() != 3 \
+			or generated_roads.size() != 1 \
+			or int(generated_route_graph.get("link_count", -1)) != 5 \
+			or int(generated_route_graph.get("guarded_link_count", -1)) != 5 \
+			or int(generated_tile_bytes.get("byte_0_terrain_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_1_terrain_art_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_2_river_type_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_3_river_art_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_4_road_type_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_5_road_art_u8", []).size()) != 1296 \
+			or int(generated_tile_bytes.get("byte_6_flags_u8", []).size()) != 1296 \
+			or int(generated_metrics.get("owned_player_town_count", -1)) != 3 \
+			or int(generated_metrics.get("unguarded_route_link_count", -1)) != 0 \
+			or int(generated_metrics.get("route_link_without_blocker_count", -1)) != 0 \
+			or int(generated_metrics.get("route_link_without_guard_count", -1)) != 0:
+		_fail("Supported small map generation did not return the validator-gated public package: %s" % JSON.stringify(generated))
+		return
+	var generated_repeat: Dictionary = service.generate_random_map(supported_config.duplicate(true))
+	var repeat_payload: Dictionary = generated_repeat.get("map_document_payload", {})
+	if not bool(generated_repeat.get("ok", false)) \
+			or String(repeat_payload.get("map_id", "")) != String(generated_map_payload.get("map_id", "")) \
+			or String(repeat_payload.get("map_hash", "")) != String(generated_map_payload.get("map_hash", "")) \
+			or int(Array(repeat_payload.get("objects", [])).size()) != generated_objects.size() \
+			or Dictionary(generated_repeat.get("final_tile_bytes", {})) != generated_tile_bytes:
+		_fail("Supported small map generation is not deterministic across repeat calls: %s / %s" % [JSON.stringify(generated), JSON.stringify(generated_repeat)])
 		return
 
 	var explicit_config := supported_config.duplicate(true)
 	explicit_config["template_id"] = "translated_rmg_template_019_v1"
 	var explicit_result: Dictionary = service.generate_random_map(explicit_config)
-	if bool(explicit_result.get("ok", true)) \
-			or String(explicit_result.get("generation_status", "")) != "h3maped_small_clean_restart_generation_not_ready":
-		_fail("Explicit translated-template request bypassed the reset gate: %s" % JSON.stringify(explicit_result))
+	var explicit_payload: Dictionary = explicit_result.get("map_document_payload", {})
+	if not bool(explicit_result.get("ok", false)) \
+			or String(explicit_result.get("generation_status", "")) != "h3maped_small_validated_package_ready" \
+			or String(explicit_payload.get("source_template_id", "")) != "h3maped_template_018" \
+			or String(explicit_payload.get("source_kind", "")) != "generated_h3maped_small_validated":
+		_fail("Explicit translated-template request did not stay on h3maped source-template authority: %s" % JSON.stringify(explicit_result))
 		return
 
 	var out_of_scope_config := supported_config.duplicate(true)
