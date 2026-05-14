@@ -1140,7 +1140,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("terrain_tile_byte_writeback", "0x49b2b6", "active_strict_executable_port"));
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "active_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7, 0x4aa603, 0x4aa3e9", "active_strict_executable_port"));
-	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "pending_runtime_port"));
+	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893", "active_strict_private_boundary"));
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605", "pending_runtime_port"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "pending_runtime_port"));
 	return backlog;
@@ -1151,7 +1151,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("next implementation step is the strict road/river phase after the private reward coordinate filter/mutation boundary; runtime packages still remain blocked before roads, blockers, guards, and final writeout");
+	gaps.append("road/rivers work currently exposes the private 0x4ab52a coordinate-vector walk and 0x4aae7b low-word path-cost boundary only; 0x4ab37f/0x4b4243 road geometry, rivers, blockers, guards, and final writeout remain blocked");
 	return gaps;
 }
 
@@ -1186,9 +1186,11 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"terrain_tile_byte_writeback:0x49b2b6",
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
-			"private_reward_filter_and_mutation:0x4aa603_0x4aa3e9");
+			"private_reward_filter_and_mutation:0x4aa603_0x4aa3e9",
+			"roads_rivers_pair_iteration:0x4ab52a_0x4aae7b_candidate_low_words");
 	state["pending_strict_ports"] = Array::make(
-			"roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2",
+			"roads_rivers_road_toolkit_and_serialization:0x4ab37f_0x4b4243_0x49b2b6",
+			"connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2",
 			"final_h3m_writeout:0x49b2b6");
 	state["prohibited_runtime_sources"] = Array::make(
 			"catalog_auto_hash_selection",
@@ -1196,7 +1198,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "roads_rivers_blockers_guards_0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2";
+	state["next_required_port"] = "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards";
 	return state;
 }
 
@@ -8122,6 +8124,215 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	return phase;
 }
 
+Array generator_0x14b0_town_coordinate_records(const Dictionary &town_castle_phase) {
+	Array result;
+	Dictionary town_adoption = town_castle_phase.get("project_town_adoption_candidate", Dictionary());
+	Array town_records = town_adoption.get("town_records", Array());
+	for (int64_t town_index = 0; town_index < town_records.size(); ++town_index) {
+		if (Variant(town_records[town_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = town_records[town_index];
+		const int32_t x = int32_t(town.get("x", -1));
+		const int32_t y = int32_t(town.get("y", -1));
+		const int32_t level = int32_t(town.get("level", 0));
+		Dictionary record;
+		record["vector_index"] = result.size();
+		record["byte_offset_from_begin"] = int32_t(result.size()) * 12;
+		record["record_size_bytes"] = 12;
+		record["phase"] = "0x4a8d2c_0x4a93a2_town_castle";
+		record["append_address"] = "0x4a95af";
+		record["generator_0x14b0_append_materialized"] = true;
+		record["source_kind"] = "town";
+		record["source_runtime_zone_index"] = town.get("runtime_zone_index", -1);
+		record["source_zone_id"] = town.get("zone_id", -1);
+		record["owner_slot"] = town.get("owner_slot", -1);
+		record["x"] = x;
+		record["y"] = y;
+		record["level"] = level;
+		record["coordinate_triplet"] = Array::make(x, y, level);
+		record["complete_executable_vector_claim"] = false;
+		result.append(record);
+	}
+	return result;
+}
+
+bool h3maped_road_private_cell_traversable(const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, int64_t flat) {
+	if (flat < 0 || flat >= int64_t(zone_words.size()) || flat >= int64_t(cell_flags.size()) || flat >= int64_t(live_terrain_code.size())) {
+		return false;
+	}
+	const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+	if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || (cell_flags[size_t(flat)] & 0x10U) == 0U) {
+		return false;
+	}
+	const int32_t terrain_code = live_terrain_code[size_t(flat)] & 0x3f;
+	return terrain_code != 8 && terrain_code != 9;
+}
+
+Dictionary h3maped_private_road_pair_cost(const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, int32_t map_width, int32_t map_height, int32_t map_level_count, const Dictionary &from_record, const Dictionary &to_record) {
+	static constexpr std::array<std::array<int32_t, 3>, 8> ROAD_DIRECTION_COSTS = { {
+		{ 1, 0, 0x14 },
+		{ 1, 1, 0x3c },
+		{ 0, 1, 0x14 },
+		{ -1, 1, 0x3c },
+		{ -1, 0, 0x14 },
+		{ -1, -1, 0x3c },
+		{ 0, -1, 0x14 },
+		{ 1, -1, 0x3c },
+	} };
+	Dictionary result;
+	const int32_t from_x = int32_t(from_record.get("x", -1));
+	const int32_t from_y = int32_t(from_record.get("y", -1));
+	const int32_t from_level = int32_t(from_record.get("level", 0));
+	const int32_t to_x = int32_t(to_record.get("x", -1));
+	const int32_t to_y = int32_t(to_record.get("y", -1));
+	const int32_t to_level = int32_t(to_record.get("level", 0));
+	result["from_vector_index"] = from_record.get("vector_index", -1);
+	result["to_vector_index"] = to_record.get("vector_index", -1);
+	result["from"] = Array::make(from_x, from_y, from_level);
+	result["to"] = Array::make(to_x, to_y, to_level);
+	result["threshold_low_word"] = 0x7530;
+	result["cost_model"] = "private_0x4aae7b_like_low_word_scan_cardinal_0x14_diagonal_0x3c_no_road_overlay_fast_path_yet";
+	if (map_width <= 0 || map_height <= 0 || map_level_count <= 0 || from_level != to_level) {
+		result["status"] = "blocked_invalid_coordinate_records";
+		result["reachable_private"] = false;
+		result["accepted_by_threshold"] = false;
+		result["candidate_low_word"] = 0x7fff;
+		return result;
+	}
+	const int64_t start_flat = h3maped_cell_index(map_width, map_height, from_x, from_y, from_level);
+	const int64_t target_flat = h3maped_cell_index(map_width, map_height, to_x, to_y, to_level);
+	if (!h3maped_road_private_cell_traversable(zone_words, cell_flags, live_terrain_code, start_flat)
+			|| !h3maped_road_private_cell_traversable(zone_words, cell_flags, live_terrain_code, target_flat)) {
+		result["status"] = "blocked_endpoint_not_traversable";
+		result["reachable_private"] = false;
+		result["accepted_by_threshold"] = false;
+		result["candidate_low_word"] = 0x7fff;
+		return result;
+	}
+	const int32_t cell_count = map_width * map_height * map_level_count;
+	std::vector<int32_t> costs(size_t(std::max(0, cell_count)), 0x7fffffff);
+	std::vector<uint8_t> settled(size_t(std::max(0, cell_count)), 0);
+	costs[size_t(start_flat)] = 0;
+	int32_t visited_count = 0;
+	for (int32_t iteration = 0; iteration < cell_count; ++iteration) {
+		int64_t current_flat = -1;
+		int32_t current_cost = 0x7fffffff;
+		for (int64_t flat = 0; flat < int64_t(costs.size()); ++flat) {
+			if (settled[size_t(flat)] != 0 || costs[size_t(flat)] >= current_cost) {
+				continue;
+			}
+			current_flat = flat;
+			current_cost = costs[size_t(flat)];
+		}
+		if (current_flat < 0) {
+			break;
+		}
+		settled[size_t(current_flat)] = 1;
+		visited_count += 1;
+		if (current_flat == target_flat) {
+			break;
+		}
+		const int32_t current_level = int32_t(current_flat / int64_t(map_width * map_height));
+		const int32_t current_rem = int32_t(current_flat % int64_t(map_width * map_height));
+		const int32_t current_y = current_rem / map_width;
+		const int32_t current_x = current_rem % map_width;
+		for (const auto &direction : ROAD_DIRECTION_COSTS) {
+			const int32_t next_x = current_x + direction[0];
+			const int32_t next_y = current_y + direction[1];
+			const int64_t next_flat = h3maped_cell_index(map_width, map_height, next_x, next_y, current_level);
+			if (!h3maped_road_private_cell_traversable(zone_words, cell_flags, live_terrain_code, next_flat)) {
+				continue;
+			}
+			const int32_t next_cost = current_cost + direction[2];
+			if (next_cost < costs[size_t(next_flat)]) {
+				costs[size_t(next_flat)] = next_cost;
+			}
+		}
+	}
+	const int32_t low_word = target_flat >= 0 && target_flat < int64_t(costs.size()) && costs[size_t(target_flat)] != 0x7fffffff ? std::min(costs[size_t(target_flat)], 0x7fff) : 0x7fff;
+	result["status"] = low_word <= 0x7530 ? String("0x4aae7b_private_candidate_low_word_within_threshold") : String("0x4aae7b_private_candidate_low_word_rejected");
+	result["reachable_private"] = low_word != 0x7fff;
+	result["accepted_by_threshold"] = low_word <= 0x7530;
+	result["candidate_low_word"] = low_word;
+	result["visited_cell_count"] = visited_count;
+	result["public_road_geometry_materialized"] = false;
+	return result;
+}
+
+Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code) {
+	Dictionary phase;
+	phase["phase_id"] = "roads_and_rivers";
+	phase["status"] = "blocked_until_object_vector_phase";
+	phase["h3maped_anchor"] = "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243";
+	phase["coordinate_vector_begin_offset"] = "generator+0x14b0";
+	phase["coordinate_vector_end_offset"] = "generator+0x14b4";
+	phase["coordinate_vector_capacity_offset"] = "generator+0x14b8";
+	phase["coordinate_record_size_bytes"] = 12;
+	phase["candidate_accept_threshold_low_word"] = 0x7530;
+	phase["materializes_private_coordinate_vector_walk"] = false;
+	phase["materializes_private_candidate_low_words"] = false;
+	phase["materializes_public_roads"] = false;
+	phase["materializes_public_rivers"] = false;
+	phase["adopts_into_runtime_grid"] = false;
+	phase["public_package_output_allowed"] = false;
+	phase["blocked_next"] = "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards";
+	if (String(object_vector_phase.get("status", "")) != "active_strict_executable_port") {
+		return phase;
+	}
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const bool grid_available = map_width > 0
+			&& map_height > 0
+			&& expected_cell_count == int32_t(zone_words.size())
+			&& zone_words.size() == cell_flags.size()
+			&& zone_words.size() == live_terrain_code.size();
+	Array coordinate_records = generator_0x14b0_town_coordinate_records(town_castle_phase);
+	Array pair_records;
+	int32_t accepted_pair_count = 0;
+	if (grid_available) {
+		for (int64_t from_index = 0; from_index < coordinate_records.size(); ++from_index) {
+			if (Variant(coordinate_records[from_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary from_record = coordinate_records[from_index];
+			for (int64_t to_index = from_index + 1; to_index < coordinate_records.size(); ++to_index) {
+				if (Variant(coordinate_records[to_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary pair = h3maped_private_road_pair_cost(zone_words, cell_flags, live_terrain_code, map_width, map_height, map_level_count, from_record, Dictionary(coordinate_records[to_index]));
+				if (bool(pair.get("accepted_by_threshold", false))) {
+					accepted_pair_count += 1;
+				}
+				pair_records.append(pair);
+			}
+		}
+	}
+	phase["status"] = "active_strict_private_boundary";
+	phase["source"] = "private boundary for h3maped 0x4ab52a coordinate-vector walk and 0x4aae7b low-word route candidate test; 0x4ab37f/0x4b4243 route geometry and 0x49b2b6 overlay serialization are still unported";
+	phase["strict_port_scope"] = "generator+0x14b0 town coordinate records plus private pair low-word candidate costs only";
+	phase["grid_available"] = grid_available;
+	phase["generator_coordinate_records"] = coordinate_records;
+	phase["generator_coordinate_record_count"] = coordinate_records.size();
+	phase["generator_coordinate_record_source"] = "town/castle records appended by 0x4a95af; mine/reward local candidate vectors are intentionally excluded from this generator+0x14b0 road consumer";
+	phase["complete_executable_vector_claim"] = false;
+	phase["pair_candidate_records"] = pair_records;
+	phase["pair_candidate_iteration_count"] = pair_records.size();
+	phase["candidate_low_word_count"] = pair_records.size();
+	phase["candidate_accepted_by_threshold_count"] = accepted_pair_count;
+	phase["materializes_private_coordinate_vector_walk"] = true;
+	phase["materializes_private_candidate_low_words"] = true;
+	phase["materializes_public_roads"] = false;
+	phase["materializes_public_rivers"] = false;
+	phase["road_overlay_byte_4_materialized"] = false;
+	phase["road_overlay_byte_5_materialized"] = false;
+	phase["river_overlay_byte_2_materialized"] = false;
+	phase["river_overlay_byte_3_materialized"] = false;
+	return phase;
+}
+
 #if 0
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
 	Dictionary phase;
@@ -8490,6 +8701,13 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	object_vector["binary_byte_prefix_0x4aa3e9"] = "55 8b ec 83 ec 3c 53 8b 5d 08 56 57 8d 7b 54 8d";
 	object_vector["binary_byte_prefix_0x49f95a"] = "55 8b ec 83 ec 3c 53 56 57 6a 14 5f 89 4d f0 57";
 	report["mines_rewards_and_object_vector"] = object_vector;
+	Dictionary roads_rivers = roads_rivers_phase(normalized_config, town_castle, object_vector, zone_words, cell_flags, live_terrain_code);
+	roads_rivers["source_range"] = "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243";
+	roads_rivers["binary_byte_prefix_0x4ab52a"] = "55 8b ec 83 ec 2c 53 56 57 8b d9 e8 3c bd 03";
+	roads_rivers["binary_byte_prefix_0x4aae7b"] = "b8 47 ab 52 00 e8 4b b2 03 00 83 ec 7c 8a 45 13";
+	roads_rivers["binary_byte_prefix_0x4ab37f"] = "b8 6c ab 52 00 e8 47 ad 03 00 83 ec 64 80 65 f3";
+	roads_rivers["binary_byte_prefix_0x4b4243"] = "b8 24 b3 52 00 e8 83 1e 03 00 83 ec 0c 56 57 8b";
+	report["roads_and_rivers"] = roads_rivers;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();

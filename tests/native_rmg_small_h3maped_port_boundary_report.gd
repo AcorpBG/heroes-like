@@ -807,6 +807,44 @@ func _run() -> void:
 		_fail("Mines/rewards/object-vector nested boundaries drifted: %s / %s" % [JSON.stringify(mine_boundary), JSON.stringify(reward_boundary)])
 		return
 
+	var roads_rivers: Dictionary = report.get("roads_and_rivers", {})
+	var road_coordinate_records: Array = roads_rivers.get("generator_coordinate_records", [])
+	var road_pair_records: Array = roads_rivers.get("pair_candidate_records", [])
+	if String(roads_rivers.get("phase_id", "")) != "roads_and_rivers" \
+			or String(roads_rivers.get("status", "")) != "active_strict_private_boundary" \
+			or String(roads_rivers.get("h3maped_anchor", "")) != "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243" \
+			or String(roads_rivers.get("source_range", "")) != "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243" \
+			or String(roads_rivers.get("binary_byte_prefix_0x4ab52a", "")) != "55 8b ec 83 ec 2c 53 56 57 8b d9 e8 3c bd 03" \
+			or String(roads_rivers.get("binary_byte_prefix_0x4aae7b", "")) != "b8 47 ab 52 00 e8 4b b2 03 00 83 ec 7c 8a 45 13" \
+			or String(roads_rivers.get("binary_byte_prefix_0x4ab37f", "")) != "b8 6c ab 52 00 e8 47 ad 03 00 83 ec 64 80 65 f3" \
+			or String(roads_rivers.get("binary_byte_prefix_0x4b4243", "")) != "b8 24 b3 52 00 e8 83 1e 03 00 83 ec 0c 56 57 8b" \
+			or String(roads_rivers.get("coordinate_vector_begin_offset", "")) != "generator+0x14b0" \
+			or String(roads_rivers.get("coordinate_vector_end_offset", "")) != "generator+0x14b4" \
+			or String(roads_rivers.get("coordinate_vector_capacity_offset", "")) != "generator+0x14b8" \
+			or int(roads_rivers.get("coordinate_record_size_bytes", -1)) != 12 \
+			or int(roads_rivers.get("candidate_accept_threshold_low_word", -1)) != 0x7530 \
+			or not bool(roads_rivers.get("grid_available", false)) \
+			or int(roads_rivers.get("generator_coordinate_record_count", -1)) != 3 \
+			or road_coordinate_records.size() != 3 \
+			or int(road_coordinate_records[0].get("x", -1)) != int(town_records[0].get("x", -2)) \
+			or int(road_coordinate_records[1].get("y", -1)) != int(town_records[1].get("y", -2)) \
+			or bool(road_coordinate_records[0].get("complete_executable_vector_claim", true)) \
+			or int(roads_rivers.get("pair_candidate_iteration_count", -1)) != 3 \
+			or int(roads_rivers.get("candidate_low_word_count", -1)) != 3 \
+			or road_pair_records.size() != 3 \
+			or bool(roads_rivers.get("complete_executable_vector_claim", true)) \
+			or not bool(roads_rivers.get("materializes_private_coordinate_vector_walk", false)) \
+			or not bool(roads_rivers.get("materializes_private_candidate_low_words", false)) \
+			or bool(roads_rivers.get("materializes_public_roads", true)) \
+			or bool(roads_rivers.get("materializes_public_rivers", true)) \
+			or bool(roads_rivers.get("adopts_into_runtime_grid", true)) \
+			or bool(roads_rivers.get("public_package_output_allowed", true)) \
+			or bool(roads_rivers.get("road_overlay_byte_4_materialized", true)) \
+			or bool(roads_rivers.get("road_overlay_byte_5_materialized", true)) \
+			or String(roads_rivers.get("blocked_next", "")) != "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards":
+		_fail("Strict roads/rivers private boundary drifted: %s" % JSON.stringify(roads_rivers))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -814,13 +852,14 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "roads_rivers_blockers_guards_0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2":
+			or String(strict_state.get("next_required_port", "")) != "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 2 \
-			or not pending_ports.has("roads_rivers_blockers_guards:0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
+	if pending_ports.size() != 3 \
+			or not pending_ports.has("roads_rivers_road_toolkit_and_serialization:0x4ab37f_0x4b4243_0x49b2b6") \
+			or not pending_ports.has("connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
@@ -845,7 +884,8 @@ func _run() -> void:
 			or String(backlog[13].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[14].get("id", "")) != "mines_rewards_and_object_vector" \
 			or String(backlog[14].get("status", "")) != "active_strict_executable_port" \
-			or String(backlog[15].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[15].get("id", "")) != "roads_and_rivers" \
+			or String(backlog[15].get("status", "")) != "active_strict_private_boundary" \
 			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
 			or String(backlog[17].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
