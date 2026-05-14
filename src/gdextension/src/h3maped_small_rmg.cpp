@@ -1217,6 +1217,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605, 0x4a65a5, 0x4a5e03", "active_strict_private_connection_guards"));
 	backlog.append(phase_record("public_package_adoption", "strict private h3maped state to non-authoritative project package draft", "active_strict_package_draft_runtime_blocked"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "active_strict_writeout_draft_runtime_blocked"));
+	backlog.append(phase_record("fast_structural_validator_authority", "package/writeout structural validator before public generation authority", "active_strict_validator_authority_runtime_blocked"));
 	return backlog;
 }
 
@@ -1225,7 +1226,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption and final 0x49b2b6 writeout now emit non-authoritative drafts, while validator authority and runtime generation remain blocked");
+	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption, final 0x49b2b6 writeout, and fast structural validator authority now emit non-authoritative drafts, while public generation authority and editor/runtime adoption remain blocked");
 	return gaps;
 }
 
@@ -1264,9 +1265,9 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"roads_rivers_overlay_writeback:0x4ab52a_0x4aae7b_0x458a2f_0x458893_0x49b2b6",
 			"connections_blockers_guards_private:0x4a79a3_0x4a61bc_0x4a65a5_0x4a5e03",
 			"public_package_adoption_draft:private_h3maped_state_to_project_map_document_payload",
-			"final_0x49b2b6_writeout_draft:private_tile_bytes_and_package_object_payload");
+			"final_0x49b2b6_writeout_draft:private_tile_bytes_and_package_object_payload",
+			"fast_structural_validator_authority:package_writeout_draft_gate");
 	state["pending_strict_ports"] = Array::make(
-			"fast_structural_validator_authority",
 			"public_generate_random_map_authority_after_package_validation",
 			"editor_runtime_adoption_audit");
 	state["prohibited_runtime_sources"] = Array::make(
@@ -1275,7 +1276,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "fast_structural_validator_authority";
+	state["next_required_port"] = "public_generate_random_map_authority_after_package_validation";
 	return state;
 }
 
@@ -9859,6 +9860,223 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 	return phase;
 }
 
+Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_config, const Dictionary &package_adoption_phase, const Dictionary &final_writeout_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "fast_structural_validator_authority";
+	phase["schema_id"] = "aurelion_h3maped_small_fast_structural_validator_v1";
+	phase["schema_version"] = 1;
+	phase["status"] = "blocked_until_package_and_writeout_drafts";
+	phase["runtime_generation_allowed"] = false;
+	phase["public_runtime_authoritative"] = false;
+	phase["authorizes_public_runtime"] = false;
+	phase["blocked_next"] = "public_generate_random_map_authority_after_package_validation";
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	Dictionary map_payload = package_adoption_phase.get("map_document_payload", Dictionary());
+	Dictionary terrain_layers = map_payload.get("terrain_layers", Dictionary());
+	Dictionary terrain_layer = terrain_layers.get("terrain", Dictionary());
+	Array road_records = terrain_layers.get("roads", Array());
+	Array package_objects = map_payload.get("objects", Array());
+	Array player_starts = map_payload.get("player_starts", Array());
+	Dictionary route_graph = map_payload.get("route_graph", Dictionary());
+	Array route_links = route_graph.get("links", Array());
+	Dictionary tile_bytes = final_writeout_phase.get("tile_bytes", Dictionary());
+	PackedInt32Array byte_0 = tile_bytes.get("byte_0_terrain_u8", PackedInt32Array());
+	PackedInt32Array byte_1 = tile_bytes.get("byte_1_terrain_art_u8", PackedInt32Array());
+	PackedInt32Array byte_2 = tile_bytes.get("byte_2_river_type_u8", PackedInt32Array());
+	PackedInt32Array byte_3 = tile_bytes.get("byte_3_river_art_u8", PackedInt32Array());
+	PackedInt32Array byte_4 = tile_bytes.get("byte_4_road_type_u8", PackedInt32Array());
+	PackedInt32Array byte_5 = tile_bytes.get("byte_5_road_art_u8", PackedInt32Array());
+	PackedInt32Array byte_6 = tile_bytes.get("byte_6_flags_u8", PackedInt32Array());
+
+	Array failures;
+	auto add_failure = [&](const String &rule, const String &detail) {
+		Dictionary failure;
+		failure["rule"] = rule;
+		failure["detail"] = detail;
+		failures.append(failure);
+	};
+	if (String(package_adoption_phase.get("status", "")) != "strict_package_adoption_draft_materialized_runtime_blocked") {
+		add_failure("package_adoption_status", "package adoption draft must be materialized before validation");
+	}
+	if (String(final_writeout_phase.get("status", "")) != "strict_final_0x49b2b6_writeout_draft_runtime_blocked") {
+		add_failure("final_writeout_status", "final 0x49b2b6 writeout draft must be materialized before validation");
+	}
+	if (map_width <= 0 || map_height <= 0 || map_level_count <= 0 || expected_cell_count <= 0) {
+		add_failure("invalid_dimensions", "normalized small-map dimensions are invalid");
+	}
+	if (int32_t(map_payload.get("width", -1)) != map_width || int32_t(map_payload.get("height", -1)) != map_height || int32_t(map_payload.get("level_count", -1)) != map_level_count) {
+		add_failure("map_payload_dimensions", "map payload dimensions do not match normalized config");
+	}
+	if (int32_t(terrain_layer.get("tile_count", -1)) != expected_cell_count) {
+		add_failure("terrain_tile_count", "terrain layer tile count must match the normalized surface");
+	}
+	if (byte_0.size() != expected_cell_count || byte_1.size() != expected_cell_count || byte_2.size() != expected_cell_count || byte_3.size() != expected_cell_count || byte_4.size() != expected_cell_count || byte_5.size() != expected_cell_count || byte_6.size() != expected_cell_count) {
+		add_failure("final_tile_byte_arrays", "all seven final tile-byte arrays must match the normalized surface");
+	}
+	if (road_records.is_empty() || int32_t(final_writeout_phase.get("road_overlay_type_nonzero_count", 0)) <= 0) {
+		add_failure("road_overlay_present", "road overlay must have package records and nonzero final road bytes");
+	}
+
+	Dictionary seen_placement_ids;
+	Dictionary blocker_count_by_connection;
+	Dictionary guard_count_by_connection;
+	int32_t duplicate_placement_id_count = 0;
+	int32_t out_of_bounds_object_count = 0;
+	int32_t town_count = 0;
+	int32_t owned_player_town_count = 0;
+	int32_t mine_count = 0;
+	int32_t reward_count = 0;
+	int32_t blocker_count = 0;
+	int32_t blocking_blocker_count = 0;
+	int32_t guard_count = 0;
+	int32_t blocking_guard_count = 0;
+	for (int64_t index = 0; index < package_objects.size(); ++index) {
+		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = package_objects[index];
+		const String placement_id = String(object.get("placement_id", ""));
+		if (placement_id.is_empty() || seen_placement_ids.has(placement_id)) {
+			duplicate_placement_id_count += 1;
+		}
+		if (!placement_id.is_empty()) {
+			seen_placement_ids[placement_id] = true;
+		}
+		const int32_t x = int32_t(object.get("x", -1));
+		const int32_t y = int32_t(object.get("y", -1));
+		const int32_t level = int32_t(object.get("level", 0));
+		if (h3maped_cell_index(map_width, map_height, x, y, level) < 0) {
+			out_of_bounds_object_count += 1;
+		}
+		const String kind = String(object.get("kind", ""));
+		if (kind == "town") {
+			town_count += 1;
+			if (int32_t(object.get("owner_slot", 0)) > 0) {
+				owned_player_town_count += 1;
+			}
+		} else if (kind == "mine") {
+			mine_count += 1;
+		} else if (kind == "reward" || kind == "reward_reference") {
+			reward_count += 1;
+		} else if (kind == "connection_blocker") {
+			blocker_count += 1;
+			if (bool(object.get("blocking_body", false))) {
+				blocking_blocker_count += 1;
+			}
+			const String connection_id = String(object.get("connection_id", ""));
+			if (!connection_id.is_empty()) {
+				blocker_count_by_connection[connection_id] = int32_t(blocker_count_by_connection.get(connection_id, 0)) + 1;
+			}
+		} else if (kind == "guard") {
+			guard_count += 1;
+			if (bool(object.get("blocking_body", false)) && int32_t(object.get("guard_value", 0)) > 0) {
+				blocking_guard_count += 1;
+			}
+			const String connection_id = String(object.get("connection_id", ""));
+			if (!connection_id.is_empty()) {
+				guard_count_by_connection[connection_id] = int32_t(guard_count_by_connection.get(connection_id, 0)) + 1;
+			}
+		}
+	}
+	if (duplicate_placement_id_count != 0) {
+		add_failure("duplicate_placement_ids", "package objects must have unique non-empty placement ids");
+	}
+	if (out_of_bounds_object_count != 0) {
+		add_failure("out_of_bounds_objects", "all package objects must be inside the map bounds");
+	}
+	if (town_count <= 0 || owned_player_town_count != player_starts.size() || player_starts.is_empty()) {
+		add_failure("owned_start_towns", "each player start must have an owned town in the draft payload");
+	}
+	if (mine_count <= 0) {
+		add_failure("mines_present", "small land package draft must include mines");
+	}
+	if (reward_count <= 0) {
+		add_failure("rewards_present", "small land package draft must include reward objects");
+	}
+	if (blocker_count <= 0 || blocking_blocker_count != blocker_count) {
+		add_failure("blocking_connection_obstacles", "connection blockers must exist and have blocking body masks");
+	}
+	if (guard_count <= 0 || blocking_guard_count != guard_count) {
+		add_failure("blocking_connection_guards", "connection guards must exist, have positive guard values, and block movement");
+	}
+
+	int32_t guarded_link_count = 0;
+	int32_t unguarded_link_count = 0;
+	int32_t link_without_blocker_count = 0;
+	int32_t link_without_guard_count = 0;
+	for (int64_t index = 0; index < route_links.size(); ++index) {
+		if (Variant(route_links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = route_links[index];
+		const String connection_id = String(link.get("id", ""));
+		if (bool(link.get("guarded", false)) && int32_t(link.get("normal_guard_scaled_value", 0)) > 0) {
+			guarded_link_count += 1;
+		} else {
+			unguarded_link_count += 1;
+		}
+		if (int32_t(blocker_count_by_connection.get(connection_id, 0)) <= 0) {
+			link_without_blocker_count += 1;
+		}
+		if (int32_t(guard_count_by_connection.get(connection_id, 0)) <= 0) {
+			link_without_guard_count += 1;
+		}
+	}
+	if (route_links.is_empty()) {
+		add_failure("route_links_present", "route graph must contain recovered h3maped links");
+	}
+	if (unguarded_link_count != 0) {
+		add_failure("unguarded_zone_links", "every recovered route link must carry positive guard metadata");
+	}
+	if (link_without_blocker_count != 0 || link_without_guard_count != 0) {
+		add_failure("unguarded_route_barriers", "every recovered route link must have both blocker and guard package objects");
+	}
+
+	const bool pass = failures.is_empty();
+	Dictionary metrics;
+	metrics["width"] = map_width;
+	metrics["height"] = map_height;
+	metrics["level_count"] = map_level_count;
+	metrics["expected_tile_count"] = expected_cell_count;
+	metrics["terrain_tile_count"] = terrain_layer.get("tile_count", 0);
+	metrics["final_tile_byte_array_count"] = 7;
+	metrics["package_object_count"] = package_objects.size();
+	metrics["player_start_count"] = player_starts.size();
+	metrics["town_count"] = town_count;
+	metrics["owned_player_town_count"] = owned_player_town_count;
+	metrics["mine_count"] = mine_count;
+	metrics["reward_count"] = reward_count;
+	metrics["connection_blocker_count"] = blocker_count;
+	metrics["blocking_connection_blocker_count"] = blocking_blocker_count;
+	metrics["connection_guard_count"] = guard_count;
+	metrics["blocking_connection_guard_count"] = blocking_guard_count;
+	metrics["route_link_count"] = route_links.size();
+	metrics["guarded_route_link_count"] = guarded_link_count;
+	metrics["unguarded_route_link_count"] = unguarded_link_count;
+	metrics["route_link_without_blocker_count"] = link_without_blocker_count;
+	metrics["route_link_without_guard_count"] = link_without_guard_count;
+	metrics["road_record_count"] = road_records.size();
+	metrics["road_overlay_type_nonzero_count"] = final_writeout_phase.get("road_overlay_type_nonzero_count", 0);
+	metrics["duplicate_placement_id_count"] = duplicate_placement_id_count;
+	metrics["out_of_bounds_object_count"] = out_of_bounds_object_count;
+
+	phase["status"] = pass ? String("strict_fast_structural_validator_pass_runtime_blocked") : String("strict_fast_structural_validator_fail_runtime_blocked");
+	phase["source"] = "fast native structural validator over the non-authoritative h3maped package and final 0x49b2b6 writeout drafts; no Godot scene report required";
+	phase["validator_authority"] = pass;
+	phase["validator_runtime_ms_budget"] = 10;
+	phase["failure_count"] = failures.size();
+	phase["failures"] = failures;
+	phase["metrics"] = metrics;
+	phase["remaining_blockers"] = Array::make(
+			"public_generate_random_map_authority_after_package_validation",
+			"editor_runtime_adoption_audit");
+	return phase;
+}
+
 #if 0
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
 	Dictionary phase;
@@ -10248,6 +10466,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["public_package_adoption"] = package_adoption;
 	Dictionary final_writeout = h3maped_final_writeout_draft_phase(normalized_config, terrain_tile_byte_writeback, roads_rivers, package_adoption);
 	report["final_h3m_writeout"] = final_writeout;
+	Dictionary fast_validator = h3maped_fast_structural_validator_phase(normalized_config, package_adoption, final_writeout);
+	report["fast_structural_validator"] = fast_validator;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();

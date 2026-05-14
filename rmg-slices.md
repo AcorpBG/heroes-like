@@ -6,9 +6,9 @@ Current status: `in_progress`
 
 The current native RMG path is not production ready. The active reset scope is strict Small 36x36, one-level, land-only generation derived from `/root/Downloads/h3maped.exe` and the recovered h3maped spec. The generator must stay blocked until the executable-derived phases are actually ported and adopted into runtime map packages.
 
-Latest local boundary: private terrain, towns, mines, rewards, roads, connection blockers, guards, and final `0x49b2b6` tile-byte arrays now materialize into non-authoritative package/writeout drafts in the strict report. Public runtime package output is still blocked.
+Latest local boundary: private terrain, towns, mines, rewards, roads, connection blockers, guards, final `0x49b2b6` tile-byte arrays, and fast structural validator authority now materialize in the strict report. Public runtime package output is still blocked.
 
-Current local work target: make fast structural validator authority the next gate before enabling any public generation path. The final writeout draft is still not production output until the validator and editor/runtime adoption pass.
+Current local work target: wire public generation authority behind the strict validator, while keeping editor/runtime adoption audit as the final blocker before production confidence.
 
 ## Ground Rules
 
@@ -32,7 +32,8 @@ These boundaries are useful progress, but they are not production readiness:
 6. Road overlay bytes are materialized privately and included in the package draft.
 7. Connection blocker and guard records are materialized privately and included in the package draft.
 8. The final `0x49b2b6` writeout draft now combines terrain bytes, zero river bytes for the current small-land scope, road bytes, flip flags, and package object payload metadata.
-9. The package/writeout drafts currently contain the small-land core object families, but they are still non-authoritative and runtime-blocked.
+9. A fast native structural validator now checks the package/writeout drafts without launching a Godot report scene.
+10. The package/writeout drafts currently contain the small-land core object families, but they are still non-authoritative and runtime-blocked.
 
 ## Remaining Slices To Production Ready
 
@@ -44,18 +45,16 @@ These are the remaining implementation slices. They are ordered deliberately: do
    - Ensure seed/config replay is deterministic.
    - Exit condition: the same Small config and seed regenerate the same package structure and serialized map payload.
 
-2. **Build fast structural validator authority**
-   - Add a fast native/Python structural validator for generated packages instead of relying on slow Godot scene reports for map correctness.
-   - Validate zones, towns, player ownership, roads, guarded links, blockers, guards, mines, rewards, artifacts, traversability, and unreachable/unguarded paths.
-   - Specifically prove that blockers and guards enforce zone boundaries, not just that blocker/guard objects exist in the package.
-   - Keep Godot tests for editor/runtime integration only.
-   - Exit condition: the validator can reject bad Small packages quickly and deterministically without launching the full Godot engine.
-
-3. **Enable runtime generation only behind validator pass**
+2. **Enable runtime generation only behind validator pass**
    - `generate_random_map()` must remain blocked until the fast structural validator passes.
    - Public packages must be produced from the h3maped-derived package/writeout path only, not from catalog-auto fallback or translated-template runtime logic.
    - Public failure states must say which strict phase failed or which validator invariant failed.
    - Exit condition: `generate_random_map()` returns a public package only when final writeout and structural validation both pass.
+
+3. **Harden validator coverage with negative and corpus cases**
+   - Add bad-package fixtures or injected failure cases proving the validator rejects missing towns, missing player-start ownership, missing roads, unguarded links, missing blockers, missing guards, bad tile-byte sizes, duplicate ids, and out-of-bounds objects.
+   - Add corpus reporting once public generation is enabled.
+   - Exit condition: validator failures are proven by negative tests, not only by a single passing strict seed.
 
 4. **Finish roads as actual route infrastructure**
    - Roads are not complete just because road bytes exist in the private report.
@@ -102,6 +101,6 @@ These are the remaining implementation slices. They are ordered deliberately: do
 
 ## Immediate Next Step
 
-Start **fast structural validator authority**.
+Start **public generation authority after validator pass**.
 
-The strict package/writeout drafts now prove the private generated state can be shaped into project package tiles, package objects, and final tile-byte arrays without falling back to archived generator output. The next required output is making a fast structural validator the authority gate before `generate_random_map()` may return a public runtime package.
+The strict package/writeout drafts and fast validator now prove the current private generated state can be shaped into project package tiles, package objects, and final tile-byte arrays without falling back to archived generator output. The next required output is making `generate_random_map()` return this package only when the fast validator passes.
