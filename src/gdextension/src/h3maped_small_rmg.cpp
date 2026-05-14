@@ -1216,7 +1216,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893, 0x49b2b6", "active_strict_private_road_overlay"));
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605, 0x4a65a5, 0x4a5e03", "active_strict_private_connection_guards"));
 	backlog.append(phase_record("public_package_adoption", "strict private h3maped state to non-authoritative project package draft", "active_strict_package_draft_runtime_blocked"));
-	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "pending_runtime_port"));
+	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "active_strict_writeout_draft_runtime_blocked"));
 	return backlog;
 }
 
@@ -1225,7 +1225,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption now emits a non-authoritative package draft, while rivers, final writeout, validator authority, and runtime generation remain blocked");
+	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption and final 0x49b2b6 writeout now emit non-authoritative drafts, while validator authority and runtime generation remain blocked");
 	return gaps;
 }
 
@@ -1263,18 +1263,19 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"private_reward_filter_and_mutation:0x4aa603_0x4aa3e9",
 			"roads_rivers_overlay_writeback:0x4ab52a_0x4aae7b_0x458a2f_0x458893_0x49b2b6",
 			"connections_blockers_guards_private:0x4a79a3_0x4a61bc_0x4a65a5_0x4a5e03",
-			"public_package_adoption_draft:private_h3maped_state_to_project_map_document_payload");
+			"public_package_adoption_draft:private_h3maped_state_to_project_map_document_payload",
+			"final_0x49b2b6_writeout_draft:private_tile_bytes_and_package_object_payload");
 	state["pending_strict_ports"] = Array::make(
-			"rivers_overlay_writeback:0x4b4243_0x49b2b6",
-			"final_h3m_writeout:0x49b2b6",
-			"public_generate_random_map_authority_after_package_validation");
+			"fast_structural_validator_authority",
+			"public_generate_random_map_authority_after_package_validation",
+			"editor_runtime_adoption_audit");
 	state["prohibited_runtime_sources"] = Array::make(
 			"catalog_auto_hash_selection",
 			"owner_sample_exact_count_fitting",
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "rivers_overlay_writeback:0x4b4243_0x49b2b6";
+	state["next_required_port"] = "fast_structural_validator_authority";
 	return state;
 }
 
@@ -4795,6 +4796,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	Dictionary art_byte_histogram;
 	Dictionary flag_byte_histogram;
 	Array sample_tiles;
+	PackedInt32Array tile_byte_0_terrain_u8;
+	PackedInt32Array tile_byte_1_terrain_art_u8;
+	PackedInt32Array tile_byte_6_terrain_flags_u8;
 	int32_t terrain_mismatch_count = 0;
 	int32_t art_nonzero_count = 0;
 	int32_t flag_nonzero_count = 0;
@@ -4805,6 +4809,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 		const int32_t byte_0_terrain = int32_t(word_0x24 & 0x3fU);
 		const int32_t byte_1_art = int32_t((word_0x24 >> 6U) & 0xffU);
 		const int32_t byte_6_flags = int32_t((word_0x28 >> 15U) & 0x03U);
+		tile_byte_0_terrain_u8.append(byte_0_terrain);
+		tile_byte_1_terrain_art_u8.append(byte_1_art);
+		tile_byte_6_terrain_flags_u8.append(byte_6_flags);
 		const String terrain_key = String::num_int64(byte_0_terrain);
 		const String art_key = String::num_int64(byte_1_art);
 		const String flag_key = String::num_int64(byte_6_flags);
@@ -4850,6 +4857,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	phase["tile_byte_0_histogram"] = terrain_byte_histogram;
 	phase["tile_byte_1_art_histogram"] = art_byte_histogram;
 	phase["tile_byte_6_flag_histogram"] = flag_byte_histogram;
+	phase["tile_byte_0_terrain_u8"] = tile_byte_0_terrain_u8;
+	phase["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
+	phase["tile_byte_6_terrain_flags_u8"] = tile_byte_6_terrain_flags_u8;
 	phase["sample_tile_byte_records"] = sample_tiles;
 	phase["sample_tile_byte_record_count"] = sample_tiles.size();
 	return phase;
@@ -6355,6 +6365,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	Dictionary art_byte_histogram;
 	Dictionary flag_byte_histogram;
 	Array sample_tiles;
+	PackedInt32Array tile_byte_0_terrain_u8;
+	PackedInt32Array tile_byte_1_terrain_art_u8;
+	PackedInt32Array tile_byte_6_terrain_flags_u8;
 	int32_t terrain_mismatch_count = 0;
 	int32_t art_nonzero_count = 0;
 	int32_t flag_nonzero_count = 0;
@@ -6365,6 +6378,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 		const int32_t byte_0_terrain = int32_t(word_0x24 & 0x3fU);
 		const int32_t byte_1_art = int32_t((word_0x24 >> 6U) & 0xffU);
 		const int32_t byte_6_flags = int32_t((word_0x28 >> 15U) & 0x03U);
+		tile_byte_0_terrain_u8.append(byte_0_terrain);
+		tile_byte_1_terrain_art_u8.append(byte_1_art);
+		tile_byte_6_terrain_flags_u8.append(byte_6_flags);
 		const String terrain_key = String::num_int64(byte_0_terrain);
 		const String art_key = String::num_int64(byte_1_art);
 		const String flag_key = String::num_int64(byte_6_flags);
@@ -6410,6 +6426,9 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	phase["tile_byte_0_histogram"] = terrain_byte_histogram;
 	phase["tile_byte_1_art_histogram"] = art_byte_histogram;
 	phase["tile_byte_6_flag_histogram"] = flag_byte_histogram;
+	phase["tile_byte_0_terrain_u8"] = tile_byte_0_terrain_u8;
+	phase["tile_byte_1_terrain_art_u8"] = tile_byte_1_terrain_art_u8;
+	phase["tile_byte_6_terrain_flags_u8"] = tile_byte_6_terrain_flags_u8;
 	phase["sample_tile_byte_records"] = sample_tiles;
 	phase["sample_tile_byte_record_count"] = sample_tiles.size();
 	phase["blocked_next"] = "town_castle_phase_4a8d2c_0x4a8db2_0x4a93a2";
@@ -9717,6 +9736,129 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	return phase;
 }
 
+Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_config, const Dictionary &terrain_tile_byte_phase, const Dictionary &roads_rivers_phase, const Dictionary &package_adoption_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "final_h3m_writeout";
+	phase["schema_id"] = "aurelion_h3maped_small_final_49b2b6_writeout_draft_v1";
+	phase["schema_version"] = 1;
+	phase["status"] = "blocked_until_package_adoption_draft";
+	phase["h3maped_anchor"] = "0x49b2b6";
+	phase["runtime_generation_allowed"] = false;
+	phase["public_runtime_authoritative"] = false;
+	phase["materializes_final_serializer_draft"] = false;
+	phase["materializes_public_h3m"] = false;
+	phase["blocked_next"] = "public_generate_random_map_authority_after_package_validation";
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	PackedInt32Array terrain_byte_0 = terrain_tile_byte_phase.get("tile_byte_0_terrain_u8", PackedInt32Array());
+	PackedInt32Array terrain_byte_1 = terrain_tile_byte_phase.get("tile_byte_1_terrain_art_u8", PackedInt32Array());
+	PackedInt32Array terrain_byte_6 = terrain_tile_byte_phase.get("tile_byte_6_terrain_flags_u8", PackedInt32Array());
+	Dictionary road_serialization = roads_rivers_phase.get("road_overlay_serialization", Dictionary());
+	PackedInt32Array road_byte_4 = road_serialization.get("tile_byte_4_road_type_u8", PackedInt32Array());
+	PackedInt32Array road_byte_5 = road_serialization.get("tile_byte_5_road_art_u8", PackedInt32Array());
+	PackedInt32Array road_byte_6 = road_serialization.get("tile_byte_6_road_flags_u8", PackedInt32Array());
+	phase["expected_tile_byte_array_size"] = expected_cell_count;
+	phase["terrain_byte_0_size"] = terrain_byte_0.size();
+	phase["terrain_byte_1_size"] = terrain_byte_1.size();
+	phase["terrain_byte_6_size"] = terrain_byte_6.size();
+	phase["road_byte_4_size"] = road_byte_4.size();
+	phase["road_byte_5_size"] = road_byte_5.size();
+	phase["road_byte_6_size"] = road_byte_6.size();
+	phase["package_adoption_status"] = package_adoption_phase.get("status", "");
+	if (expected_cell_count <= 0
+			|| terrain_byte_0.size() != expected_cell_count
+			|| terrain_byte_1.size() != expected_cell_count
+			|| terrain_byte_6.size() != expected_cell_count
+			|| road_byte_4.size() != expected_cell_count
+			|| road_byte_5.size() != expected_cell_count
+			|| road_byte_6.size() != expected_cell_count
+			|| String(package_adoption_phase.get("status", "")) != "strict_package_adoption_draft_materialized_runtime_blocked") {
+		return phase;
+	}
+
+	PackedInt32Array river_byte_2;
+	PackedInt32Array river_byte_3;
+	PackedInt32Array final_byte_6;
+	int32_t road_type_nonzero_count = 0;
+	int32_t road_art_nonzero_count = 0;
+	int32_t road_flag_nonzero_count = 0;
+	int32_t terrain_flag_nonzero_count = 0;
+	for (int32_t index = 0; index < expected_cell_count; ++index) {
+		river_byte_2.append(0);
+		river_byte_3.append(0);
+		const int32_t terrain_flags = int32_t(terrain_byte_6[index]) & 0x03;
+		const int32_t road_flags = int32_t(road_byte_6[index]) & 0x30;
+		final_byte_6.append(terrain_flags | road_flags);
+		if (int32_t(road_byte_4[index]) != 0) {
+			road_type_nonzero_count += 1;
+		}
+		if (int32_t(road_byte_5[index]) != 0) {
+			road_art_nonzero_count += 1;
+		}
+		if (road_flags != 0) {
+			road_flag_nonzero_count += 1;
+		}
+		if (terrain_flags != 0) {
+			terrain_flag_nonzero_count += 1;
+		}
+	}
+
+	Dictionary tile_bytes;
+	tile_bytes["schema_id"] = "aurelion_h3maped_small_tile_bytes_0x49b2b6_draft_v1";
+	tile_bytes["byte_0_terrain_u8"] = terrain_byte_0;
+	tile_bytes["byte_1_terrain_art_u8"] = terrain_byte_1;
+	tile_bytes["byte_2_river_type_u8"] = river_byte_2;
+	tile_bytes["byte_3_river_art_u8"] = river_byte_3;
+	tile_bytes["byte_4_road_type_u8"] = road_byte_4;
+	tile_bytes["byte_5_road_art_u8"] = road_byte_5;
+	tile_bytes["byte_6_flags_u8"] = final_byte_6;
+
+	const bool draft_complete = bool(package_adoption_phase.get("materializes_package_draft", false))
+			&& int32_t(package_adoption_phase.get("package_object_count", 0)) > 0
+			&& road_type_nonzero_count > 0
+			&& river_byte_2.size() == expected_cell_count
+			&& river_byte_3.size() == expected_cell_count
+			&& final_byte_6.size() == expected_cell_count;
+	Dictionary structural_validation;
+	structural_validation["schema_id"] = "aurelion_h3maped_small_final_writeout_draft_validation_v1";
+	structural_validation["status"] = draft_complete ? String("draft_pass_runtime_blocked") : String("draft_failed_runtime_blocked");
+	structural_validation["runtime_generation_allowed"] = false;
+	structural_validation["tile_byte_array_count"] = 7;
+	structural_validation["tile_byte_array_size"] = expected_cell_count;
+	structural_validation["terrain_byte_count"] = terrain_byte_0.size();
+	structural_validation["river_byte_count"] = river_byte_2.size() + river_byte_3.size();
+	structural_validation["road_byte_count"] = road_byte_4.size() + road_byte_5.size();
+	structural_validation["final_flag_byte_count"] = final_byte_6.size();
+	structural_validation["package_object_count"] = package_adoption_phase.get("package_object_count", 0);
+	structural_validation["authorizes_public_runtime"] = false;
+
+	phase["status"] = draft_complete ? String("strict_final_0x49b2b6_writeout_draft_runtime_blocked") : String("strict_final_0x49b2b6_writeout_draft_incomplete_runtime_blocked");
+	phase["source"] = "strict final 0x49b2b6 tile-byte draft assembled from private terrain byte candidates, private road overlay bytes, zero river bytes for the current small-land scope, and the non-authoritative package draft object payload";
+	phase["materializes_final_serializer_draft"] = true;
+	phase["tile_byte_array_count"] = 7;
+	phase["tile_byte_array_size"] = expected_cell_count;
+	phase["terrain_tile_count"] = terrain_byte_0.size();
+	phase["terrain_art_nonzero_cell_count"] = int32_t(terrain_tile_byte_phase.get("terrain_art_nonzero_cell_count", 0));
+	phase["terrain_flag_nonzero_cell_count"] = terrain_flag_nonzero_count;
+	phase["river_overlay_type_nonzero_count"] = 0;
+	phase["river_overlay_art_nonzero_count"] = 0;
+	phase["road_overlay_type_nonzero_count"] = road_type_nonzero_count;
+	phase["road_overlay_art_nonzero_count"] = road_art_nonzero_count;
+	phase["road_overlay_flag_nonzero_count"] = road_flag_nonzero_count;
+	phase["package_object_count"] = package_adoption_phase.get("package_object_count", 0);
+	phase["package_route_link_count"] = Dictionary(Dictionary(package_adoption_phase.get("map_document_payload", Dictionary())).get("route_graph", Dictionary())).get("link_count", 0);
+	phase["tile_bytes"] = tile_bytes;
+	phase["structural_validation"] = structural_validation;
+	phase["remaining_blockers"] = Array::make(
+			"fast_structural_validator_authority",
+			"public_generate_random_map_authority_after_package_validation",
+			"editor_runtime_adoption_audit");
+	return phase;
+}
+
 #if 0
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
 	Dictionary phase;
@@ -10104,6 +10246,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["connections_blockers_guards"] = connections;
 	Dictionary package_adoption = h3maped_package_adoption_draft_phase(normalized_config, selection, live_terrain_code, town_castle, object_vector, roads_rivers, connections);
 	report["public_package_adoption"] = package_adoption;
+	Dictionary final_writeout = h3maped_final_writeout_draft_phase(normalized_config, terrain_tile_byte_writeback, roads_rivers, package_adoption);
+	report["final_h3m_writeout"] = final_writeout;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
