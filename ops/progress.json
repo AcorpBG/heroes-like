@@ -4,11 +4,11 @@
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
   "currentSliceId": "native-rmg-small-h3maped-port-10184",
-  "currentSliceTitle": "Native RMG Small h3maped Port 10184",
+  "currentSliceTitle": "Native RMG Small h3maped Port",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Strict small h3maped reset remains in progress. Active code currently reaches private roads/rivers pair-cost evidence only: 0x4ab52a consumes the current town/castle generator+0x14b0 records and 0x4aae7b low-word candidate costs are reported privately. Runtime package output remains blocked until 0x4ab37f/0x4b4243 road geometry/writeback, connection blockers/guards, and final writeout are strict executable-derived ports.",
+  "currentSliceNotes": "Road slice advanced: private accepted route chains now materialize h3maped-style road type/art/flip overlay bytes; public package adoption remains blocked until connection blockers/guards.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-14",
+  "updatedAt": "2026-05-14T21:11:14Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -94,8 +94,8 @@
         "No one-off owner-corpus exact-count fitting as runtime logic.",
         "No production-ready broad RMG claim."
       ],
-      "updatedAt": "2026-05-14",
-      "notes": "Strict small h3maped reset remains in progress. Active code currently reaches private roads/rivers pair-cost evidence only: 0x4ab52a consumes the current town/castle generator+0x14b0 records and 0x4aae7b low-word candidate costs are reported privately. Runtime package output remains blocked until 0x4ab37f/0x4b4243 road geometry/writeback, connection blockers/guards, and final writeout are strict executable-derived ports.",
+      "updatedAt": "2026-05-14T21:11:14Z",
+      "notes": "Road slice advanced: private accepted route chains now materialize h3maped-style road type/art/flip overlay bytes; public package adoption remains blocked until connection blockers/guards.",
       "validationResults": [
         "Strict roads/rivers private boundary on 2026-05-14: active h3maped_small_rmg.cpp now reports the narrow 0x4ab52a coordinate-vector walk and 0x4aae7b low-word path-cost candidate boundary without enabling runtime output. Focused report asserts byte prefixes for 0x4ab52a, 0x4aae7b, 0x4ab37f, and 0x4b4243, three town/castle generator+0x14b0 coordinate records from 0x4a95af, three pair candidate iterations against threshold 0x7530, private candidate low-word materialization, and no public road bytes, river bytes, runtime-grid adoption, package tiles, blockers, guards, or final writeout. Next required strict port is road toolkit geometry/writeback 0x4ab37f/0x4b4243 before connection blockers/guards 0x4a79a3 family. Validation passed: cmake --build .artifacts/map_persistence_native_build --parallel 2 and tests/native_rmg_small_h3maped_port_boundary_report.tscn.",
         "Corrective recovery on 2026-05-14: rejected the uncommitted generate_runtime_payload/road/connection/proxy blocker/guard runtime-output attempt, preserved its diff at .artifacts/rmg_recovery/rejected_h3maped_small_rmg_adapter_runtime_output_20260514.patch, restored h3maped_small_rmg.cpp, h3maped_small_rmg.hpp, map_package_service.cpp, and tests/native_rmg_small_h3maped_port_boundary_report.gd to the pushed strict blocked-generation baseline, and updated PLAN.md plus docs/native-rmg-small-h3maped-reset.md to make 0x4aa603/0x4aa3e9 the next strict port. cmake --build .artifacts/map_persistence_native_build --parallel 2, git diff --check, and tests/native_rmg_small_h3maped_port_boundary_report.tscn passed after the correction.",
@@ -326,7 +326,8 @@
       "evidenceHistory": [
         "Strict roads/rivers private boundary on 2026-05-14: active h3maped_small_rmg.cpp now reports the narrow 0x4ab52a coordinate-vector walk and 0x4aae7b low-word path-cost candidate boundary without enabling runtime output. Focused report asserts byte prefixes for 0x4ab52a, 0x4aae7b, 0x4ab37f, and 0x4b4243, three town/castle generator+0x14b0 coordinate records from 0x4a95af, three pair candidate iterations against threshold 0x7530, private candidate low-word materialization, and no public road bytes, river bytes, runtime-grid adoption, package tiles, blockers, guards, or final writeout. Next required strict port is road toolkit geometry/writeback 0x4ab37f/0x4b4243 before connection blockers/guards 0x4a79a3 family. Validation passed: cmake --build .artifacts/map_persistence_native_build --parallel 2 and tests/native_rmg_small_h3maped_port_boundary_report.tscn.",
         "Small h3maped runtime package adoption on 2026-05-14: supported seed 1 36x36 one-level land generation returns h3maped_small_runtime_package, materializes terrain/zones/player towns/mines/rewards/roads/blockers/guards, and convert_generated_payload accepts it as native-runtime-authoritative without claiming full parity."
-      ]
+      ],
+      "startedAt": "2026-05-14T21:11:14Z"
     },
     {
       "id": "native-rmg-generalized-policy-regate-10184",
