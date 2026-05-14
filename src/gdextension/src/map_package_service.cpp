@@ -24475,11 +24475,275 @@ Dictionary native_conversion_fail(const String &code, const String &message) {
 	return result;
 }
 
+Dictionary build_h3maped_small_package_session_adoption(const Dictionary &generated_map, const Dictionary &options) {
+	Dictionary map_state = Dictionary(generated_map.get("map_document_payload", Dictionary())).duplicate(true);
+	if (map_state.is_empty()) {
+		return native_conversion_fail("missing_h3maped_map_document_payload", "H3maped Small generation must include a map_document_payload for package/session adoption.");
+	}
+	const int32_t width = int32_t(map_state.get("width", 0));
+	const int32_t height = int32_t(map_state.get("height", 0));
+	const int32_t level_count = int32_t(map_state.get("level_count", 1));
+	if (width <= 0 || height <= 0 || level_count <= 0) {
+		return native_conversion_fail("invalid_h3maped_map_document_dimensions", "H3maped Small map_document_payload dimensions are invalid.");
+	}
+
+	Dictionary metadata = Dictionary(map_state.get("metadata", Dictionary())).duplicate(true);
+	metadata["package_session_adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	metadata["native_runtime_authoritative"] = true;
+	metadata["runtime_generation_allowed"] = true;
+	metadata["production_ready"] = false;
+	metadata["full_parity_claim"] = false;
+	metadata["no_authored_writeback"] = true;
+	metadata["source_generation_status"] = generated_map.get("generation_status", "");
+	metadata["validator_metrics"] = generated_map.get("validator_metrics", Dictionary());
+	map_state["metadata"] = metadata;
+
+	Ref<MapDocument> map_document;
+	map_document.instantiate();
+	map_document->configure(map_state);
+
+	const String map_id = map_document->get_map_id();
+	const String map_hash = map_document->get_map_hash();
+	const int32_t session_save_version = int32_t(options.get("session_save_version", 9));
+	const String scenario_id = String(options.get("scenario_id", String("h3maped_small_scenario_") + hash32_hex(map_id + String("|") + map_hash)));
+	const String feature_gate = String(options.get("feature_gate", "native_rmg_small_h3maped_validator_gated_public_package"));
+	const String session_key = scenario_id + String("|") + map_hash + String("|") + String::num_int64(session_save_version);
+	const String session_id = String("h3maped_small_session_") + hash32_hex(session_key);
+
+	Dictionary map_package_record;
+	map_package_record["schema_id"] = "aurelion_generated_map_package_record";
+	map_package_record["schema_version"] = 1;
+	map_package_record["package_kind"] = "native_rmg_h3maped_small_generated_map_record";
+	map_package_record["package_id"] = map_id + String(".amap");
+	map_package_record["map_id"] = map_id;
+	map_package_record["map_hash"] = map_hash;
+	map_package_record["source_kind"] = "generated";
+	map_package_record["storage_policy"] = "memory_only_no_authored_writeback";
+	map_package_record["path_policy"] = "not_written_by_default_validator_gated_cache_record";
+	map_package_record["feature_gate"] = feature_gate;
+	map_package_record["save_version_boundary"] = session_save_version;
+	map_package_record["save_version_bump"] = false;
+	map_package_record["authored_content_writeback"] = false;
+	map_package_record["validation_status"] = "pass";
+	map_package_record["full_generation_status"] = generated_map.get("full_generation_status", "");
+	map_package_record["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(map_package_record));
+
+	Dictionary map_ref;
+	map_ref["schema_id"] = MAP_SCHEMA_ID;
+	map_ref["schema_version"] = 1;
+	map_ref["map_id"] = map_id;
+	map_ref["map_hash"] = map_hash;
+	map_ref["package_id"] = map_package_record.get("package_id", "");
+	map_ref["package_hash"] = map_package_record.get("package_hash", "");
+	map_ref["source_kind"] = "generated";
+	map_ref["storage_policy"] = "memory_only_no_authored_writeback";
+
+	Array player_starts = map_state.get("player_starts", Array());
+	Array objects = map_state.get("objects", Array());
+	Array player_slots;
+	Array player_start_towns;
+	for (int64_t start_index = 0; start_index < player_starts.size(); ++start_index) {
+		if (Variant(player_starts[start_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary start = player_starts[start_index];
+		const int32_t player_slot = int32_t(start.get("player_slot", start_index));
+		Dictionary slot;
+		slot["player_slot"] = player_slot;
+		slot["source_owner_index"] = start.get("source_owner_index", player_slot);
+		slot["player_color"] = start.get("owner_color", player_slot);
+		slot["human"] = player_slot == 0;
+		slot["ai_controlled"] = player_slot != 0;
+		slot["faction_id"] = start.get("faction_id", "");
+		slot["team_id"] = String("team_") + String::num_int64(player_slot + 1);
+		player_slots.append(slot);
+
+		const String town_placement_id = String(start.get("town_placement_id", ""));
+		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+			if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary object = objects[object_index];
+			if (String(object.get("placement_id", "")) == town_placement_id) {
+				player_start_towns.append(object.duplicate(true));
+				break;
+			}
+		}
+	}
+
+	Array enemy_factions;
+	for (int64_t index = 0; index < player_slots.size(); ++index) {
+		Dictionary slot = player_slots[index];
+		if (bool(slot.get("ai_controlled", false))) {
+			Dictionary enemy;
+			enemy["faction_id"] = slot.get("faction_id", "");
+			enemy["player_slot"] = slot.get("player_slot", 0);
+			enemy["team_id"] = slot.get("team_id", "");
+			enemy_factions.append(enemy);
+		}
+	}
+
+	Dictionary start_contract;
+	start_contract["schema_id"] = "aurelion_native_rmg_start_contract_v1";
+	start_contract["player_starts"] = player_starts.duplicate(true);
+	start_contract["player_start_towns"] = player_start_towns;
+	start_contract["start_count"] = player_starts.size();
+	start_contract["start_town_count"] = player_start_towns.size();
+	start_contract["start_contract_source"] = "h3maped_small_validated_map_document_payload";
+	start_contract["primary_hero_id"] = String(options.get("hero_id", "hero_lyra"));
+
+	Dictionary availability;
+	availability["campaign"] = false;
+	availability["skirmish"] = false;
+	Dictionary selection;
+	selection["availability"] = availability;
+	selection["generated"] = true;
+	selection["package_session_adoption_bridge"] = true;
+	selection["player_facing"] = false;
+	selection["h3maped_small_validator_gated"] = true;
+
+	Dictionary scenario_state;
+	scenario_state["scenario_id"] = scenario_id;
+	scenario_state["scenario_hash"] = "";
+	scenario_state["map_ref"] = map_ref;
+	scenario_state["selection"] = selection;
+	scenario_state["player_slots"] = player_slots;
+	scenario_state["objectives"] = Dictionary();
+	scenario_state["script_hooks"] = Array();
+	scenario_state["enemy_factions"] = enemy_factions;
+	scenario_state["start_contract"] = start_contract;
+	scenario_state["scenario_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(scenario_state));
+
+	Ref<ScenarioDocument> scenario_document;
+	scenario_document.instantiate();
+	scenario_document->configure(scenario_state);
+
+	Dictionary scenario_package_record;
+	scenario_package_record["schema_id"] = "aurelion_generated_scenario_package_record";
+	scenario_package_record["schema_version"] = 1;
+	scenario_package_record["package_kind"] = "native_rmg_h3maped_small_generated_scenario_record";
+	scenario_package_record["package_id"] = scenario_id + String(".ascenario");
+	scenario_package_record["scenario_id"] = scenario_id;
+	scenario_package_record["scenario_hash"] = scenario_state.get("scenario_hash", "");
+	scenario_package_record["map_ref"] = map_ref;
+	scenario_package_record["storage_policy"] = "memory_only_no_authored_writeback";
+	scenario_package_record["path_policy"] = "not_written_by_default_validator_gated_cache_record";
+	scenario_package_record["feature_gate"] = feature_gate;
+	scenario_package_record["save_version_boundary"] = session_save_version;
+	scenario_package_record["save_version_bump"] = false;
+	scenario_package_record["authored_content_writeback"] = false;
+	scenario_package_record["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(scenario_package_record));
+
+	Dictionary scenario_ref;
+	scenario_ref["schema_id"] = SCENARIO_SCHEMA_ID;
+	scenario_ref["schema_version"] = 1;
+	scenario_ref["scenario_id"] = scenario_id;
+	scenario_ref["scenario_hash"] = scenario_state.get("scenario_hash", "");
+	scenario_ref["package_id"] = scenario_package_record.get("package_id", "");
+	scenario_ref["package_hash"] = scenario_package_record.get("package_hash", "");
+	scenario_ref["map_ref"] = map_ref;
+	scenario_ref["storage_policy"] = "memory_only_no_authored_writeback";
+
+	Dictionary session_boundary_record;
+	session_boundary_record["schema_id"] = "aurelion_native_random_map_session_boundary_v1";
+	session_boundary_record["schema_version"] = 1;
+	session_boundary_record["session_id"] = session_id;
+	session_boundary_record["scenario_id"] = scenario_id;
+	session_boundary_record["hero_id"] = start_contract.get("primary_hero_id", "hero_lyra");
+	session_boundary_record["launch_mode"] = "generated_draft";
+	session_boundary_record["game_state"] = "overworld";
+	session_boundary_record["save_version"] = session_save_version;
+	session_boundary_record["save_version_bump"] = false;
+	session_boundary_record["map_package_ref"] = map_ref;
+	session_boundary_record["scenario_package_ref"] = scenario_ref;
+	session_boundary_record["feature_gate"] = feature_gate;
+	session_boundary_record["generated_record_policy"] = "session_package_records_only";
+	session_boundary_record["authored_content_writeback"] = false;
+	session_boundary_record["runtime_call_site_adoption"] = true;
+	session_boundary_record["gdscript_fallback_untouched"] = false;
+	session_boundary_record["native_runtime_authoritative"] = true;
+	session_boundary_record["full_parity_claim"] = false;
+
+	Dictionary metrics;
+	metrics["width"] = width;
+	metrics["height"] = height;
+	metrics["level_count"] = level_count;
+	metrics["tile_count"] = map_document->get_tile_count();
+	metrics["map_document_object_count"] = map_document->get_object_count();
+	metrics["player_start_count"] = player_starts.size();
+	metrics["player_start_town_count"] = player_start_towns.size();
+	metrics["player_slot_count"] = player_slots.size();
+	metrics["route_link_count"] = Dictionary(map_state.get("route_graph", Dictionary())).get("link_count", 0);
+
+	Dictionary report;
+	report["schema_id"] = "aurelion_native_random_map_package_session_adoption_report_v1";
+	report["schema_version"] = 1;
+	report["status"] = "pass";
+	report["validation_status"] = "pass";
+	report["failure_count"] = 0;
+	report["warning_count"] = 0;
+	report["failures"] = Array();
+	report["warnings"] = Array();
+	report["metrics"] = metrics;
+	report["package_session_adoption_ready"] = true;
+	report["adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	report["native_runtime_authoritative"] = true;
+	report["runtime_call_site_adoption"] = true;
+	report["gdscript_source_of_truth"] = false;
+	report["gdscript_fallback_untouched"] = false;
+	report["full_parity_claim"] = false;
+	report["production_ready"] = false;
+	report["remaining_parity_slices"] = Array::make(
+			"authoritative_final_map_package_serialization",
+			"roads_as_route_infrastructure_audit",
+			"blockers_guards_runtime_zoning_audit",
+			"validator_negative_cases",
+			"small_map_corpus_audit",
+			"editor_runtime_adoption_audit");
+
+	Dictionary readiness;
+	readiness["gdscript_source_of_truth"] = false;
+	readiness["native_runtime_authoritative"] = true;
+	readiness["package_session_adoption_ready"] = true;
+	readiness["adoption_gate_status"] = "h3maped_small_validator_gated_not_production_ready";
+	readiness["production_ready"] = false;
+	readiness["full_parity_claim"] = false;
+	readiness["next_required_slices"] = report.get("remaining_parity_slices", Array());
+
+	Dictionary result;
+	result["ok"] = true;
+	result["status"] = "pass";
+	result["conversion_kind"] = "h3maped_small_validated_package_to_package_session_records";
+	result["adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	result["feature_gate"] = feature_gate;
+	result["map_document"] = map_document;
+	result["scenario_document"] = scenario_document;
+	result["map_package_record"] = map_package_record;
+	result["scenario_package_record"] = scenario_package_record;
+	result["session_boundary_record"] = session_boundary_record;
+	result["map_ref"] = map_ref;
+	result["scenario_ref"] = scenario_ref;
+	result["generated_identity"] = Dictionary();
+	result["validation_report"] = generated_map.get("fast_structural_validator", Dictionary());
+	result["provenance"] = Dictionary();
+	result["report"] = report;
+	result["readiness"] = readiness;
+	result["authored_content_writeback"] = false;
+	result["save_version_bump"] = false;
+	result["native_runtime_authoritative"] = true;
+	result["full_parity_claim"] = false;
+	result["production_ready"] = false;
+	return result;
+}
+
 Dictionary build_native_package_session_adoption(const Dictionary &generated_map, const Dictionary &options) {
 	if (!bool(generated_map.get("ok", false))) {
 		return native_conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.");
 	}
 	const String generated_status = String(generated_map.get("status", ""));
+	if (generated_status == "h3maped_small_validated_package_ready") {
+		return build_h3maped_small_package_session_adoption(generated_map, options);
+	}
 	if (generated_status != "partial_foundation" && generated_status != "scoped_structural_profile_supported" && generated_status != "owner_compared_translated_profile_supported" && generated_status != "translated_catalog_structural_profile_supported") {
 		return native_conversion_fail("unsupported_native_generation_status", "Native package/session adoption accepts partial foundation, scoped structural, broad translated structural, or owner-compared translated native output only.");
 	}

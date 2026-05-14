@@ -6,7 +6,7 @@ Current status: `in_progress`
 
 The current native RMG path is not production ready. The active reset scope is strict Small 36x36, one-level, land-only generation derived from `/root/Downloads/h3maped.exe` and the recovered h3maped spec. Public generation is allowed only for this supported scope and only behind the native fast structural validator.
 
-Latest local boundary: private terrain, towns, mines, rewards, roads, connection blockers, guards, final `0x49b2b6` tile-byte arrays, fast structural validator authority, and validator-gated public `generate_random_map()` output now materialize for strict Small land configs. The public result is still not production ready because authoritative serialization hardening, road/runtime behavior audit, blocker/guard runtime zoning audit, negative validator cases, corpus audit, and editor/runtime adoption are still pending.
+Latest local boundary: private terrain, towns, mines, rewards, roads, connection blockers, guards, final `0x49b2b6` tile-byte arrays, fast structural validator authority, validator-gated public `generate_random_map()` output, and direct `convert_generated_payload()` package/session document adoption now materialize for strict Small land configs. The public result is still not production ready because save/load/editor runtime adoption, road/runtime behavior audit, blocker/guard runtime zoning audit, negative validator cases, and corpus audit are still pending.
 
 Current local work target: harden the public package path into authoritative final map/package serialization and then audit editor/runtime adoption. Do not expand size, water, underground, or template breadth yet.
 
@@ -35,16 +35,17 @@ These boundaries are useful progress, but they are not production readiness:
 9. A fast native structural validator now checks the package/writeout drafts without launching a Godot report scene.
 10. The package/writeout drafts currently contain the small-land core object families.
 11. `generate_random_map()` now returns a public Small land package only when the fast structural validator passes; unsupported configs still return explicit blocked status.
+12. `convert_generated_payload()` now accepts the validator-gated h3maped Small result directly and produces `MapDocument` / `ScenarioDocument` package-session records without using the archived translated-generator adopter.
 
 ## Remaining Slices To Production Ready
 
 These are the remaining implementation slices. They are ordered deliberately: do not expand map sizes, water, underground, or template breadth until Small 36x36 one-level land generation is structurally correct in the editor and runtime. A private report entry, draft byte array, or passing positive-only report is not enough to mark a slice complete.
 
-1. **Authoritative final map/package serialization**
+1. **Save/load and editor package serialization**
    - Promote the final writeout from draft report data into the single serialization source for terrain bytes, river bytes, road bytes, flip flags, object records, object ownership, player starts, and package metadata.
    - Remove any old-generator handoff from the active h3maped reset path.
    - Keep seed/config replay deterministic.
-   - Exit condition: the same Small config and seed regenerate the same package structure and serialized map payload across repeated runs.
+   - Exit condition: the same Small config and seed regenerate the same package/session documents, save to `.amap` / `.ascenario`, reload cleanly, and appear in the editor map list.
 
 2. **Roads as real route infrastructure**
    - Roads are not complete until they are connected route data, package data, rendered editor/runtime data, and traversable gameplay data.
@@ -96,6 +97,6 @@ These are the remaining implementation slices. They are ordered deliberately: do
 
 ## Immediate Next Step
 
-Start **authoritative final map/package serialization**.
+Start **save/load and editor package serialization**.
 
-The strict package/writeout drafts and fast validator now feed validator-gated public output for the Small land scope without falling back to archived generator output. The next required output is turning that public package into the authoritative serialization path and proving repeatable package/writeout identity before editor/runtime adoption is treated as meaningful.
+The strict package/writeout drafts and fast validator now feed validator-gated public output and direct package/session document adoption for the Small land scope without falling back to archived generator output. The next required output is proving save/load identity and editor visibility before runtime adoption is treated as meaningful.
