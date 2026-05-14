@@ -810,8 +810,13 @@ func _run() -> void:
 	var roads_rivers: Dictionary = report.get("roads_and_rivers", {})
 	var road_coordinate_records: Array = roads_rivers.get("generator_coordinate_records", [])
 	var road_pair_records: Array = roads_rivers.get("pair_candidate_records", [])
+	var road_final_art: Dictionary = roads_rivers.get("road_final_art_materialization", {})
+	var road_serialization: Dictionary = roads_rivers.get("road_overlay_serialization", {})
+	var road_type_bytes: PackedInt32Array = road_serialization.get("tile_byte_4_road_type_u8", PackedInt32Array())
+	var road_art_bytes: PackedInt32Array = road_serialization.get("tile_byte_5_road_art_u8", PackedInt32Array())
+	var road_flag_bytes: PackedInt32Array = road_serialization.get("tile_byte_6_road_flags_u8", PackedInt32Array())
 	if String(roads_rivers.get("phase_id", "")) != "roads_and_rivers" \
-			or String(roads_rivers.get("status", "")) != "active_strict_private_boundary" \
+			or String(roads_rivers.get("status", "")) != "active_strict_private_road_overlay" \
 			or String(roads_rivers.get("h3maped_anchor", "")) != "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243" \
 			or String(roads_rivers.get("source_range", "")) != "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243" \
 			or String(roads_rivers.get("binary_byte_prefix_0x4ab52a", "")) != "55 8b ec 83 ec 2c 53 56 57 8b d9 e8 3c bd 03" \
@@ -835,14 +840,36 @@ func _run() -> void:
 			or bool(roads_rivers.get("complete_executable_vector_claim", true)) \
 			or not bool(roads_rivers.get("materializes_private_coordinate_vector_walk", false)) \
 			or not bool(roads_rivers.get("materializes_private_candidate_low_words", false)) \
+			or not bool(roads_rivers.get("materializes_private_road_geometry", false)) \
+			or not bool(roads_rivers.get("materializes_private_road_overlay_candidates", false)) \
+			or not bool(roads_rivers.get("materializes_serialized_road_overlay", false)) \
 			or bool(roads_rivers.get("materializes_public_roads", true)) \
 			or bool(roads_rivers.get("materializes_public_rivers", true)) \
 			or bool(roads_rivers.get("adopts_into_runtime_grid", true)) \
 			or bool(roads_rivers.get("public_package_output_allowed", true)) \
-			or bool(roads_rivers.get("road_overlay_byte_4_materialized", true)) \
-			or bool(roads_rivers.get("road_overlay_byte_5_materialized", true)) \
-			or String(roads_rivers.get("blocked_next", "")) != "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards":
-		_fail("Strict roads/rivers private boundary drifted: %s" % JSON.stringify(roads_rivers))
+			or not bool(roads_rivers.get("road_overlay_byte_4_materialized", false)) \
+			or not bool(roads_rivers.get("road_overlay_byte_5_materialized", false)) \
+			or not bool(roads_rivers.get("road_overlay_byte_6_materialized", false)) \
+			or int(roads_rivers.get("selected_road_type", 0)) < 1 \
+			or int(roads_rivers.get("selected_road_type", 0)) > 3 \
+			or int(roads_rivers.get("accepted_predecessor_chain_count", 0)) <= 0 \
+			or int(roads_rivers.get("road_overlay_cell_count", 0)) <= 0 \
+			or int(roads_rivers.get("road_overlay_art_nonzero_count", 0)) <= 0 \
+			or int(roads_rivers.get("road_overlay_cell_records", []).size()) != int(roads_rivers.get("road_overlay_cell_count", -1)) \
+			or String(road_final_art.get("status", "")) != "h3maped_0x458a2f_0x458893_private_road_art_materialized" \
+			or not bool(road_final_art.get("materializes_final_road_art", false)) \
+			or int(road_final_art.get("final_road_cell_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
+			or int(road_final_art.get("line_visit_call_count", 0)) <= 0 \
+			or int(road_final_art.get("final_write_count", 0)) <= 0 \
+			or String(road_serialization.get("status", "")) != "h3maped_0x49b2b6_road_overlay_bytes_materialized_private" \
+			or not bool(road_serialization.get("materializes_serialized_road_overlay", false)) \
+			or bool(road_serialization.get("materializes_serialized_river_overlay", true)) \
+			or int(road_serialization.get("road_overlay_cell_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
+			or road_type_bytes.size() != 1296 \
+			or road_art_bytes.size() != 1296 \
+			or road_flag_bytes.size() != 1296 \
+			or String(roads_rivers.get("blocked_next", "")) != "connections_blockers_guards_0x4a79a3_family_before_runtime_package_output":
+		_fail("Strict roads/rivers private road overlay drifted: %s" % JSON.stringify(roads_rivers))
 		return
 
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
@@ -852,14 +879,14 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "road_toolkit_geometry_0x4ab37f_0x4b4243_before_connection_blockers_guards":
+			or String(strict_state.get("next_required_port", "")) != "connections_blockers_guards_0x4a79a3_family_before_runtime_package_output":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 3 \
-			or not pending_ports.has("roads_rivers_road_toolkit_and_serialization:0x4ab37f_0x4b4243_0x49b2b6") \
-			or not pending_ports.has("connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2"):
+			or not pending_ports.has("connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2") \
+			or not pending_ports.has("rivers_overlay_writeback:0x4b4243_0x49b2b6"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
@@ -885,7 +912,7 @@ func _run() -> void:
 			or String(backlog[14].get("id", "")) != "mines_rewards_and_object_vector" \
 			or String(backlog[14].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[15].get("id", "")) != "roads_and_rivers" \
-			or String(backlog[15].get("status", "")) != "active_strict_private_boundary" \
+			or String(backlog[15].get("status", "")) != "active_strict_private_road_overlay" \
 			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
 			or String(backlog[17].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
