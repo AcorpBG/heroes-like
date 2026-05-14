@@ -1215,6 +1215,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7, 0x4aa603, 0x4aa3e9", "active_strict_executable_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893, 0x49b2b6", "active_strict_private_road_overlay"));
 	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605, 0x4a65a5, 0x4a5e03", "active_strict_private_connection_guards"));
+	backlog.append(phase_record("public_package_adoption", "strict private h3maped state to non-authoritative project package draft", "active_strict_package_draft_runtime_blocked"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "pending_runtime_port"));
 	return backlog;
 }
@@ -1224,7 +1225,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption, rivers, and final writeout remain blocked");
+	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption now emits a non-authoritative package draft, while rivers, final writeout, validator authority, and runtime generation remain blocked");
 	return gaps;
 }
 
@@ -1261,18 +1262,19 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
 			"private_reward_filter_and_mutation:0x4aa603_0x4aa3e9",
 			"roads_rivers_overlay_writeback:0x4ab52a_0x4aae7b_0x458a2f_0x458893_0x49b2b6",
-			"connections_blockers_guards_private:0x4a79a3_0x4a61bc_0x4a65a5_0x4a5e03");
+			"connections_blockers_guards_private:0x4a79a3_0x4a61bc_0x4a65a5_0x4a5e03",
+			"public_package_adoption_draft:private_h3maped_state_to_project_map_document_payload");
 	state["pending_strict_ports"] = Array::make(
-			"public_package_adoption_after_private_connection_guards",
 			"rivers_overlay_writeback:0x4b4243_0x49b2b6",
-			"final_h3m_writeout:0x49b2b6");
+			"final_h3m_writeout:0x49b2b6",
+			"public_generate_random_map_authority_after_package_validation");
 	state["prohibited_runtime_sources"] = Array::make(
 			"catalog_auto_hash_selection",
 			"owner_sample_exact_count_fitting",
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "public_package_adoption_after_private_connection_guards";
+	state["next_required_port"] = "rivers_overlay_writeback:0x4b4243_0x49b2b6";
 	return state;
 }
 
@@ -9355,6 +9357,366 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	return phase;
 }
 
+Dictionary h3maped_package_adoption_cell(int32_t x, int32_t y, int32_t level, int32_t flat_cell_index) {
+	Dictionary cell = h3_cell_dictionary(x, y, level);
+	cell["flat_cell_index"] = flat_cell_index;
+	return cell;
+}
+
+Dictionary h3maped_package_adoption_cell_from_record(const Dictionary &record) {
+	return h3maped_package_adoption_cell(
+			int32_t(record.get("x", -1)),
+			int32_t(record.get("y", -1)),
+			int32_t(record.get("level", 0)),
+			int32_t(record.get("flat_cell_index", -1)));
+}
+
+Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_config, const Dictionary &selection, const std::vector<int32_t> &live_terrain_code, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase) {
+	Dictionary phase;
+	phase["phase_id"] = "public_package_adoption";
+	phase["schema_id"] = "aurelion_h3maped_small_package_adoption_draft_v1";
+	phase["schema_version"] = 1;
+	phase["status"] = "blocked_until_private_connection_guards";
+	phase["runtime_generation_allowed"] = false;
+	phase["public_runtime_authoritative"] = false;
+	phase["materializes_package_draft"] = false;
+	phase["map_document_payload_materialized"] = false;
+	phase["blocked_next"] = "rivers_overlay_writeback_and_final_0x49b2b6_writeout_before_runtime_generation_allowed";
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t expected_cell_count = level_tile_count * map_level_count;
+	const bool terrain_available = map_width > 0
+			&& map_height > 0
+			&& map_level_count == 1
+			&& expected_cell_count > 0
+			&& int32_t(live_terrain_code.size()) == expected_cell_count;
+	if (!terrain_available
+			|| String(connections_phase.get("status", "")) != "active_strict_private_connection_guards") {
+		return phase;
+	}
+
+	Dictionary town_adoption = town_castle_phase.get("project_town_adoption_candidate", Dictionary());
+	Array town_records = town_adoption.get("town_records", Array());
+	Array player_starts = town_adoption.get("player_starts", Array());
+	Dictionary mine_boundary = object_vector_phase.get("mine_requirements_boundary", Dictionary());
+	Dictionary reward_boundary = object_vector_phase.get("reward_scheduler_boundary", Dictionary());
+	Array mine_records = mine_boundary.get("coordinate_records", Array());
+	Array reward_records = reward_boundary.get("coordinate_records", Array());
+	Array road_cells = roads_rivers_phase.get("road_overlay_cell_records", Array());
+	Array blocker_records = connections_phase.get("private_blocker_records", Array());
+	Array guard_records = connections_phase.get("private_guard_records", Array());
+
+	PackedInt32Array terrain_codes;
+	for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+		terrain_codes.append(live_terrain_code[size_t(flat)] & 0x3f);
+	}
+	Array terrain_levels;
+	terrain_levels.append(terrain_codes);
+
+	Array road_segments;
+	if (!road_cells.is_empty()) {
+		Dictionary road_segment;
+		road_segment["id"] = "h3maped_small_road_overlay_01";
+		road_segment["source"] = "h3maped_private_0x4ab52a_0x4aae7b_0x458a2f_0x458893_overlay";
+		road_segment["route_edge_id"] = "h3maped_small_private_road_overlay";
+		road_segment["overlay_id"] = "h3maped_small_road_overlay";
+		road_segment["road_class"] = "h3maped_private_surface_road";
+		road_segment["road_type_id"] = int32_t(roads_rivers_phase.get("selected_road_type", 0));
+		road_segment["tile_count"] = road_cells.size();
+		road_segment["cell_count"] = road_cells.size();
+		road_segment["tiles"] = road_cells;
+		road_segment["cells"] = road_cells;
+		road_segments.append(road_segment);
+	}
+
+	Dictionary terrain_layers;
+	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
+	terrain_layers["schema_version"] = 1;
+	terrain_layers["terrain_id_by_h3maped_code"] = Array::make("dirt", "sand", "grass", "snow", "swamp", "rough", "subterranean", "lava", "water", "rock");
+	Dictionary terrain_layer;
+	terrain_layer["encoding"] = "h3maped_terrain_code_u16_by_level";
+	terrain_layer["levels"] = terrain_levels;
+	terrain_layer["level_count"] = map_level_count;
+	terrain_layer["tile_count"] = expected_cell_count;
+	terrain_layers["terrain"] = terrain_layer;
+	terrain_layers["roads"] = road_segments;
+
+	Array package_objects;
+	int32_t owned_player_town_count = 0;
+	for (int64_t index = 0; index < town_records.size(); ++index) {
+		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = town_records[index];
+		object["package_kind"] = "town";
+		object["object_id"] = object.get("town_id", "");
+		object["package_adoption_source"] = "h3maped_private_0x49ba89_town_record";
+		object["package_surface_adoption_state"] = "strict_h3maped_private_record_materialized_for_package_draft";
+		object["public_runtime_authoritative"] = false;
+		if (int32_t(object.get("owner_slot", -1)) > 0) {
+			owned_player_town_count += 1;
+		}
+		package_objects.append(object);
+	}
+
+	for (int64_t index = 0; index < mine_records.size(); ++index) {
+		if (Variant(mine_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = mine_records[index];
+		const int32_t x = int32_t(source.get("x", -1));
+		const int32_t y = int32_t(source.get("y", -1));
+		const int32_t level = int32_t(source.get("level", 0));
+		Dictionary object;
+		object["placement_id"] = String("h3maped_small_mine_") + h3_slot_id_2(int32_t(index + 1));
+		object["kind"] = "mine";
+		object["package_kind"] = "mine";
+		object["object_id"] = source.get("native_proxy_object_id", "");
+		object["native_proxy_object_id"] = source.get("native_proxy_object_id", "");
+		object["source_runtime_zone_index"] = source.get("source_runtime_zone_index", -1);
+		object["source_zone_id"] = source.get("source_zone_id", -1);
+		object["mine_subtype"] = source.get("mine_subtype", -1);
+		object["resource_category_id"] = source.get("resource_category_id", "");
+		object["x"] = x;
+		object["y"] = y;
+		object["level"] = level;
+		object["primary_tile"] = h3_cell_dictionary(x, y, level);
+		object["body_tiles"] = Array::make(h3_cell_dictionary(x, y, level));
+		object["visit_tile"] = h3_cell_dictionary(x, y, level);
+		object["blocking_body"] = true;
+		object["passability_class"] = "blocking_visitable";
+		object["package_adoption_source"] = "h3maped_private_0x4a9911_0x4a9641_mine_coordinate_record";
+		object["public_runtime_authoritative"] = false;
+		package_objects.append(object);
+	}
+
+	for (int64_t index = 0; index < reward_records.size(); ++index) {
+		if (Variant(reward_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = reward_records[index];
+		const int32_t x = int32_t(source.get("x", -1));
+		const int32_t y = int32_t(source.get("y", -1));
+		const int32_t level = int32_t(source.get("level", 0));
+		Dictionary object;
+		object["placement_id"] = String("h3maped_small_reward_") + h3_slot_id_2(int32_t(index + 1));
+		object["kind"] = "reward_reference";
+		object["package_kind"] = "reward_reference";
+		object["object_id"] = source.get("native_proxy_object_id", "");
+		object["native_proxy_object_id"] = source.get("native_proxy_object_id", "");
+		object["native_proxy_family"] = source.get("native_proxy_family", "");
+		object["native_proxy_category"] = source.get("native_proxy_category", "");
+		object["reward_value"] = source.get("selected_value", 0);
+		object["reward_value_tier"] = source.get("reward_value_tier", "");
+		object["source_runtime_zone_index"] = source.get("source_runtime_zone_index", -1);
+		object["source_zone_id"] = source.get("source_zone_id", -1);
+		object["x"] = x;
+		object["y"] = y;
+		object["level"] = level;
+		object["primary_tile"] = h3_cell_dictionary(x, y, level);
+		object["body_tiles"] = Array::make(h3_cell_dictionary(x, y, level));
+		object["visit_tile"] = h3_cell_dictionary(x, y, level);
+		object["blocking_body"] = false;
+		object["passability_class"] = "passable_visit_on_enter";
+		object["package_adoption_source"] = "h3maped_private_0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record";
+		object["public_runtime_authoritative"] = false;
+		package_objects.append(object);
+	}
+
+	for (int64_t index = 0; index < blocker_records.size(); ++index) {
+		if (Variant(blocker_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = blocker_records[index];
+		Dictionary object;
+		object["placement_id"] = String("h3maped_small_connection_blocker_") + h3_slot_id_2(int32_t(index + 1));
+		object["kind"] = "connection_blocker";
+		object["package_kind"] = "decorative_obstacle";
+		object["object_id"] = "object_bramble_wall";
+		object["connection_id"] = source.get("connection_id", "");
+		object["runtime_zone_a"] = source.get("runtime_zone_a", -1);
+		object["runtime_zone_b"] = source.get("runtime_zone_b", -1);
+		object["guard_value"] = source.get("guard_value", 0);
+		object["x"] = source.get("x", -1);
+		object["y"] = source.get("y", -1);
+		object["level"] = source.get("level", 0);
+		object["flat_cell_index"] = source.get("flat_cell_index", -1);
+		object["primary_tile"] = h3maped_package_adoption_cell_from_record(source);
+		object["body_tiles"] = Array::make(h3maped_package_adoption_cell_from_record(source));
+		object["blocking_body"] = true;
+		object["passability_class"] = "blocking_non_visitable";
+		object["package_adoption_source"] = "h3maped_private_0x4a79a3_connection_blocker_cell";
+		object["public_runtime_authoritative"] = false;
+		package_objects.append(object);
+	}
+
+	for (int64_t index = 0; index < guard_records.size(); ++index) {
+		if (Variant(guard_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = guard_records[index];
+		Dictionary object;
+		object["placement_id"] = String("h3maped_small_connection_guard_") + h3_slot_id_2(int32_t(index + 1));
+		object["kind"] = "guard";
+		object["package_kind"] = "guard";
+		object["object_id"] = "encounter_h3maped_connection_guard";
+		object["connection_id"] = source.get("connection_id", "");
+		object["runtime_zone_a"] = source.get("runtime_zone_a", -1);
+		object["runtime_zone_b"] = source.get("runtime_zone_b", -1);
+		object["guard_value"] = source.get("guard_value", 0);
+		object["x"] = source.get("x", -1);
+		object["y"] = source.get("y", -1);
+		object["level"] = source.get("level", 0);
+		object["flat_cell_index"] = source.get("flat_cell_index", -1);
+		object["primary_tile"] = h3maped_package_adoption_cell_from_record(source);
+		object["body_tiles"] = Array::make(h3maped_package_adoption_cell_from_record(source));
+		object["visit_tile"] = h3maped_package_adoption_cell_from_record(source);
+		object["blocking_body"] = true;
+		object["passability_class"] = "neutral_stack_blocking";
+		object["package_adoption_source"] = "h3maped_private_0x4a5e03_connection_guard_record";
+		object["public_runtime_authoritative"] = false;
+		package_objects.append(object);
+	}
+
+	Dictionary seen_placement_ids;
+	int32_t duplicate_placement_id_count = 0;
+	int32_t out_of_bounds_object_count = 0;
+	for (int64_t index = 0; index < package_objects.size(); ++index) {
+		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = package_objects[index];
+		const String placement_id = String(object.get("placement_id", ""));
+		if (!placement_id.is_empty()) {
+			if (seen_placement_ids.has(placement_id)) {
+				duplicate_placement_id_count += 1;
+			}
+			seen_placement_ids[placement_id] = true;
+		}
+		const int32_t x = int32_t(object.get("x", -1));
+		const int32_t y = int32_t(object.get("y", -1));
+		const int32_t level = int32_t(object.get("level", 0));
+		if (h3maped_cell_index(map_width, map_height, x, y, level) < 0) {
+			out_of_bounds_object_count += 1;
+		}
+	}
+
+	int32_t player_start_town_sync_count = 0;
+	for (int64_t start_index = 0; start_index < player_starts.size(); ++start_index) {
+		if (Variant(player_starts[start_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary start = player_starts[start_index];
+		const String town_placement_id = String(start.get("town_placement_id", ""));
+		for (int64_t town_index = 0; town_index < town_records.size(); ++town_index) {
+			if (Variant(town_records[town_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary town = town_records[town_index];
+			if (String(town.get("placement_id", "")) == town_placement_id
+					&& int32_t(town.get("x", -1)) == int32_t(start.get("x", -2))
+					&& int32_t(town.get("y", -1)) == int32_t(start.get("y", -2))
+					&& int32_t(town.get("level", -1)) == int32_t(start.get("level", -2))) {
+				player_start_town_sync_count += 1;
+				break;
+			}
+		}
+	}
+
+	Array route_links;
+	Array connection_records = connections_phase.get("connection_records", Array());
+	for (int64_t index = 0; index < connection_records.size(); ++index) {
+		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = connection_records[index];
+		Dictionary link;
+		link["id"] = source.get("connection_id", String("h3maped_small_connection_") + h3_slot_id_2(int32_t(index + 1)));
+		link["runtime_zone_a"] = source.get("runtime_zone_a", -1);
+		link["runtime_zone_b"] = source.get("runtime_zone_b", -1);
+		link["raw_guard_value"] = source.get("raw_guard_value", 0);
+		link["normal_guard_scaled_value"] = source.get("normal_guard_scaled_value", 0);
+		link["guarded"] = int32_t(source.get("normal_guard_scaled_value", 0)) > 0;
+		link["geometry_success_helper"] = source.get("geometry_success_helper", "");
+		link["package_adoption_source"] = "h3maped_private_connection_record";
+		route_links.append(link);
+	}
+	Dictionary route_graph;
+	route_graph["schema_id"] = "aurelion_h3maped_small_route_graph_draft_v1";
+	route_graph["public_runtime_authoritative"] = false;
+	route_graph["links"] = route_links;
+	route_graph["link_count"] = route_links.size();
+	route_graph["guarded_link_count"] = int32_t(connections_phase.get("normal_guard_scaled_nonzero_count", 0));
+
+	Dictionary map_document;
+	map_document["schema_id"] = "aurelion_map_document";
+	map_document["schema_version"] = 1;
+	map_document["map_id"] = String("h3maped_small_draft_seed_") + String(normalized_config.get("seed", ""));
+	map_document["map_hash"] = String("draft:h3maped_small:") + String(normalized_config.get("seed", ""));
+	map_document["source_kind"] = "generated_h3maped_small_draft";
+	map_document["width"] = map_width;
+	map_document["height"] = map_height;
+	map_document["level_count"] = map_level_count;
+	map_document["source_template_id"] = selection.get("source_template_id", "");
+	map_document["source_catalog_index"] = selection.get("source_catalog_index", -1);
+	map_document["terrain_layers"] = terrain_layers;
+	map_document["route_graph"] = route_graph;
+	map_document["objects"] = package_objects;
+	map_document["player_starts"] = player_starts;
+	map_document["public_runtime_authoritative"] = false;
+
+	const bool draft_structurally_present = out_of_bounds_object_count == 0
+			&& duplicate_placement_id_count == 0
+			&& town_records.size() == player_starts.size()
+			&& player_start_town_sync_count == player_starts.size()
+			&& !road_cells.is_empty()
+			&& !blocker_records.is_empty()
+			&& !guard_records.is_empty();
+	Dictionary structural_validation;
+	structural_validation["schema_id"] = "aurelion_h3maped_small_package_draft_structural_validation_v1";
+	structural_validation["status"] = draft_structurally_present ? String("draft_pass_runtime_blocked") : String("draft_failed_runtime_blocked");
+	structural_validation["runtime_generation_allowed"] = false;
+	structural_validation["terrain_tile_count_matches_expected"] = terrain_codes.size() == expected_cell_count;
+	structural_validation["out_of_bounds_object_count"] = out_of_bounds_object_count;
+	structural_validation["duplicate_placement_id_count"] = duplicate_placement_id_count;
+	structural_validation["player_start_town_sync_count"] = player_start_town_sync_count;
+	structural_validation["road_overlay_present"] = !road_cells.is_empty();
+	structural_validation["connection_blockers_present"] = !blocker_records.is_empty();
+	structural_validation["connection_guards_present"] = !guard_records.is_empty();
+	structural_validation["authorizes_public_runtime"] = false;
+
+	phase["status"] = draft_structurally_present ? String("strict_package_adoption_draft_materialized_runtime_blocked") : String("strict_package_adoption_draft_incomplete_runtime_blocked");
+	phase["source"] = "strict h3maped private state adapted into a non-authoritative project package draft; no archived catalog-auto generator and no public runtime generation";
+	phase["materializes_package_draft"] = true;
+	phase["map_document_payload_materialized"] = true;
+	phase["package_tiles_materialized_from_private_state"] = true;
+	phase["package_objects_materialized_from_private_state"] = true;
+	phase["terrain_layer_level_count"] = map_level_count;
+	phase["terrain_tile_count"] = terrain_codes.size();
+	phase["road_package_segment_count"] = road_segments.size();
+	phase["road_package_tile_count"] = road_cells.size();
+	phase["town_package_object_count"] = town_records.size();
+	phase["owned_player_town_count"] = owned_player_town_count;
+	phase["neutral_town_package_object_count"] = 0;
+	phase["player_start_count"] = player_starts.size();
+	phase["player_start_town_sync_count"] = player_start_town_sync_count;
+	phase["mine_package_object_count"] = mine_records.size();
+	phase["reward_package_object_count"] = reward_records.size();
+	phase["connection_blocker_package_object_count"] = blocker_records.size();
+	phase["connection_guard_package_object_count"] = guard_records.size();
+	phase["package_object_count"] = package_objects.size();
+	phase["structural_validation"] = structural_validation;
+	phase["map_document_payload"] = map_document;
+	phase["remaining_blockers"] = Array::make(
+			"rivers_overlay_writeback:0x4b4243_0x49b2b6",
+			"final_h3m_writeout:0x49b2b6",
+			"public_generate_random_map_authority_after_package_validation");
+	return phase;
+}
+
 #if 0
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
 	Dictionary phase;
@@ -9740,6 +10102,8 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	connections["binary_byte_prefix_0x4a65a5"] = "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57";
 	connections["strict_port_scope"] = "private same-level owner-transition endpoint, blocker cell, and normal guard record materialization only; public runtime/package adoption remains blocked";
 	report["connections_blockers_guards"] = connections;
+	Dictionary package_adoption = h3maped_package_adoption_draft_phase(normalized_config, selection, live_terrain_code, town_castle, object_vector, roads_rivers, connections);
+	report["public_package_adoption"] = package_adoption;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
