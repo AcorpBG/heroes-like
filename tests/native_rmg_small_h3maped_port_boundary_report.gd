@@ -872,6 +872,55 @@ func _run() -> void:
 		_fail("Strict roads/rivers private road overlay drifted: %s" % JSON.stringify(roads_rivers))
 		return
 
+	var connections: Dictionary = report.get("connections_blockers_guards", {})
+	var connection_dispatch: Dictionary = connections.get("dispatch_summary", {})
+	var high_owner_propagation: Dictionary = connections.get("high_owner_propagation", {})
+	var transition_vectors: Dictionary = connections.get("transition_vectors", {})
+	var fallback_4a7605: Dictionary = connections.get("fallback_4a7605", {})
+	var connection_blockers: PackedInt32Array = connections.get("private_connection_blocker_u8", PackedInt32Array())
+	var connection_guards: PackedInt32Array = connections.get("private_connection_guard_u8", PackedInt32Array())
+	if String(connections.get("phase_id", "")) != "connections_blockers_and_guards" \
+			or String(connections.get("status", "")) != "active_strict_private_connection_guards" \
+			or String(connections.get("source_range", "")) != "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03" \
+			or String(connections.get("binary_byte_prefix_0x4a79a3", "")) != "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3" \
+			or String(connections.get("binary_byte_prefix_0x4a61bc", "")) != "b8 24 a9 52 00 e8 0a ff 03 00 83 ec 58 53 8b 55" \
+			or String(connections.get("binary_byte_prefix_0x4a696b", "")) != "b8 56 a9 52 00 e8 5b f7 03 00 83 ec 5c 8b 55 08" \
+			or String(connections.get("binary_byte_prefix_0x4a6cf2", "")) != "b8 7c a9 52 00 e8 d4 f3 03 00 83 ec 64 53 8b 55" \
+			or String(connections.get("binary_byte_prefix_0x4a7605", "")) != "b8 c4 a9 52 00 e8 c1 ea 03 00 83 ec 2c 53 56" \
+			or String(connections.get("binary_byte_prefix_0x4a65a5", "")) != "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57" \
+			or not bool(connections.get("grid_available", false)) \
+			or int(connections.get("link_seed_count", -1)) != 5 \
+			or int(connections.get("connection_record_count", -1)) != 5 \
+			or int(connections.get("transition_candidate_total", 0)) <= 0 \
+			or int(connections.get("materialized_connection_count", 0)) != 5 \
+			or int(connections.get("private_blocker_cell_count", 0)) != 10 \
+			or int(connections.get("private_guard_record_count", 0)) != 6 \
+			or int(connections.get("private_connection_guard_materialized_count", 0)) != 6 \
+			or not bool(connections.get("materializes_private_connection_geometry", false)) \
+			or not bool(connections.get("materializes_private_blocker_cells", false)) \
+			or not bool(connections.get("materializes_private_connection_guards", false)) \
+			or bool(connections.get("materializes_public_objects", true)) \
+			or bool(connections.get("adopts_into_runtime_grid", true)) \
+			or bool(connections.get("public_package_output_allowed", true)) \
+			or int(connections.get("normal_guard_scaled_nonzero_count", -1)) != 5 \
+			or String(high_owner_propagation.get("status", "")) != "0x4a5767_0x49a318_high_owner_channel_materialized_private" \
+			or int(high_owner_propagation.get("cross_owner_high_byte_write_count", 0)) <= 0 \
+			or String(transition_vectors.get("status", "")) != "0x4a79d8_transition_vectors_materialized_private" \
+			or int(transition_vectors.get("transition_candidate_count", 0)) <= 0 \
+			or String(fallback_4a7605.get("status", "")) != "0x4a7605_0x4a7312_private_dual_endpoint_fallback_materialized" \
+			or int(fallback_4a7605.get("attempt_count", -1)) != 1 \
+			or int(fallback_4a7605.get("selected_count", -1)) != 1 \
+			or String(connection_dispatch.get("status", "")) != "0x4a79a3_private_connection_dispatch_materialized" \
+			or int(connection_dispatch.get("link_count", -1)) != 5 \
+			or int(connection_dispatch.get("materialized_connection_count", -1)) != int(connections.get("materialized_connection_count", -2)) \
+			or int(connection_dispatch.get("rng_call_count", 0)) <= 0 \
+			or int(connection_dispatch.get("no_transition_candidate_count", -1)) != 0 \
+			or connection_blockers.size() != 1296 \
+			or connection_guards.size() != 1296 \
+			or String(connections.get("blocked_next", "")) != "public_package_adoption_after_private_connection_guards":
+		_fail("Strict connections/blockers/guards private port drifted: %s" % JSON.stringify(connections))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -879,13 +928,13 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "connections_blockers_guards_0x4a79a3_family_before_runtime_package_output":
+			or String(strict_state.get("next_required_port", "")) != "public_package_adoption_after_private_connection_guards":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 3 \
-			or not pending_ports.has("connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2") \
+			or not pending_ports.has("public_package_adoption_after_private_connection_guards") \
 			or not pending_ports.has("rivers_overlay_writeback:0x4b4243_0x49b2b6"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
@@ -913,7 +962,8 @@ func _run() -> void:
 			or String(backlog[14].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[15].get("id", "")) != "roads_and_rivers" \
 			or String(backlog[15].get("status", "")) != "active_strict_private_road_overlay" \
-			or String(backlog[16].get("status", "")) != "pending_runtime_port" \
+			or String(backlog[16].get("id", "")) != "connections_blockers_and_guards" \
+			or String(backlog[16].get("status", "")) != "active_strict_private_connection_guards" \
 			or String(backlog[17].get("status", "")) != "pending_runtime_port":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
