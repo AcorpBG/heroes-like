@@ -24,6 +24,8 @@ Medium, large, XL, water, islands, and underground generation are out of scope f
 
 ## Current Boundary
 
+2026-05-14 corrective execution note: the uncommitted attempt to turn incomplete roads, connection fallback helpers, proxy blockers/guards, and package adaptation into active runtime output is rejected. It is evidence only. The active code must return to the strict baseline where incomplete executable phases block generation. No `generate_runtime_payload` path may claim validation `"pass"` or public package adoption until the required h3maped functions are ported as executable-derived state. The next accepted implementation step is `0x4aa603` / `0x4aa3e9` reward coordinate filtering and generated-cell/object mutation. Roads and connection blockers/guards stay blocked until the complete object coordinate vector and mutation state exist.
+
 2026-05-13 strict restart correction: the active public boundary is reset to h3maped binary verification, 36x36 one-level land scope gating, recovered size/water scoring, h3maped RNG template-selection evidence, strict `0x4ac62a..0x4ac6ec` player-slot assignment, strict `0x4a218c` / `0x49b452` runtime-zone records, strict `0x4a1f3b` link-seed setup, strict `0x4a17f5` / `0x4a1701` / `0x4a1ad8` / `0x4a19ed` coordinate replay, strict `0x4a3a03` / `0x4cc788` / `0x4cc955` / `0x4ccb64` / `0x4ccdfc` zone-footprint source-node setup, strict `0x4a2777` / `0x4a2b33` / `0x4a261a` / `0x4a2413` / `0x4a325d` boundary and span fill, strict small-land `0x4a3710` / `0x49b61b` / `0x4a3554` footprint finalizer ordering, strict `0x49b53d` runtime terrain selection, strict `0x4a3f27` private terrain cell writeout, strict `0x4bcff5` TerrainPlacement visual-table/toolkit decoding, strict `0x4bb74b` / `0x4bc5f0` live TerrainPlacement repaint feedback, strict `0x49b2b6` terrain/art/flag tile-byte candidates, strict `0x4a8d2c` / `0x4a8db2` / `0x4a93a2` private town/castle candidates, strict `0x4a9d6a` / `0x4a9911` / `0x4aa354` / `0x4a9f1c` / `0x4aa9b7` private mines/rewards/object-vector prerequisites, an explicit executable-port backlog, and runtime generation refusal. It no longer exposes `active_generation_state`, `small_generation_state`, `private_generation_context`, private town/object ledgers, package payloads, or partial map output.
 
 The earlier overgrown active port remains archived at `src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp`; the previous phase ledger remains archived at `src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp`. Older archived ledgers remain evidence only.
@@ -94,6 +96,8 @@ The restart must port these phases from `h3maped.exe` before public package outp
 
 - No hash-based template selection as a substitute for h3maped behavior.
 - No sample-specific exact-count fitting in runtime generation.
+- No adapter/proxy fallback output for incomplete h3maped phases.
+- No self-declared validation pass for generated maps until the executable-derived phase chain actually covers the generated output.
 - No road clusters that merely look like road counts.
 - No blocker/decoration placement that passes counts while leaving unguarded open paths between zones.
 - No player-start repair pass that only patches owner/town fields after placement.
