@@ -25,10 +25,10 @@ constexpr const char *BINARY_PATH = "/root/Downloads/h3maped.exe";
 constexpr const char *BINARY_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37";
 constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
+constexpr const char *RMG_TEMPLATE_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
 constexpr const char *OBJECT_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json";
 constexpr const char *CRTRAITS_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_bmp/raw/crtraits.txt";
 constexpr const char *REWARD_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
-constexpr const char *PROJECT_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *ARCHIVED_REPORT_TREADMILL_PATH = "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp";
 constexpr const char *ARCHIVED_OVERGROWN_ACTIVE_PATH = "src/gdextension/src/archived_h3maped_small_rmg_overgrown_active_20260513.cpp";
 constexpr const char *ARCHIVED_PHASE_LEDGER_PATH = "src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp";
@@ -481,7 +481,7 @@ struct RuntimeLinkSeed {
 constexpr TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "", 0xff, 0xff },
 	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "", 0x0f, 0x0f },
-	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "translated_rmg_template_019_v1", 0x0f, 0x0f },
+	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "", 0x0f, 0x0f },
 	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "", 0x0f, 0x0f },
 	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "", 0x03, 0x03 },
 	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "", 0x0f, 0x0f },
@@ -638,8 +638,9 @@ Dictionary load_json_dictionary(const String &path) {
 	return result;
 }
 
-Dictionary find_project_template_record(const String &adapted_template_id, Dictionary &load_status) {
-	load_status = load_json_dictionary(PROJECT_TEMPLATE_CATALOG_PATH);
+Dictionary find_original_h3maped_template_record(const Dictionary &selection, Dictionary &load_status) {
+	load_status = load_json_dictionary(RMG_TEMPLATE_CATALOG_SOURCE_PATH);
+	load_status["semantic_source"] = "recovered_h3maped_template_catalog";
 	if (!bool(load_status.get("ok", false))) {
 		return Dictionary();
 	}
@@ -650,19 +651,65 @@ Dictionary find_project_template_record(const String &adapted_template_id, Dicti
 		return Dictionary();
 	}
 	Array templates = catalog.get("templates", Array());
-	for (int64_t index = 0; index < templates.size(); ++index) {
-		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
-			continue;
-		}
-		Dictionary candidate = templates[index];
-		if (String(candidate.get("id", "")) == adapted_template_id) {
-			return candidate;
+	const int32_t source_index = int32_t(selection.get("source_catalog_index", -1));
+	if (source_index < 0 || source_index >= templates.size() || Variant(templates[source_index]).get_type() != Variant::DICTIONARY) {
+		load_status["ok"] = false;
+		load_status["status"] = "source_catalog_index_not_found";
+		load_status["source_catalog_index"] = source_index;
+		return Dictionary();
+	}
+	Dictionary candidate = templates[source_index];
+	load_status["matched_source_catalog_index"] = source_index;
+	load_status["matched_template_name"] = candidate.get("name", "");
+	load_status["matched_zone_count"] = candidate.get("zone_count", 0);
+	load_status["matched_connection_count"] = candidate.get("connection_count", 0);
+	return candidate;
+}
+
+int32_t original_mine_value(const Dictionary &mines, const char *key) {
+	return int32_t(mines.get(key, 0));
+}
+
+int32_t h3maped_terrain_id_from_name(const String &terrain_name) {
+	if (terrain_name == "dirt") {
+		return 0;
+	}
+	if (terrain_name == "sand") {
+		return 1;
+	}
+	if (terrain_name == "grass") {
+		return 2;
+	}
+	if (terrain_name == "snow") {
+		return 3;
+	}
+	if (terrain_name == "swamp") {
+		return 4;
+	}
+	if (terrain_name == "rough") {
+		return 5;
+	}
+	if (terrain_name == "cave") {
+		return 6;
+	}
+	if (terrain_name == "lava") {
+		return 7;
+	}
+	if (terrain_name == "water") {
+		return 8;
+	}
+	return -1;
+}
+
+Array h3maped_terrain_ids_from_original_names(const Array &terrain_names) {
+	Array terrain_ids;
+	for (int64_t index = 0; index < terrain_names.size(); ++index) {
+		const int32_t terrain_id = h3maped_terrain_id_from_name(String(terrain_names[index]));
+		if (terrain_id >= 0) {
+			terrain_ids.append(terrain_id);
 		}
 	}
-	load_status["ok"] = false;
-	load_status["status"] = "adapted_template_not_found";
-	load_status["adapted_template_id"] = adapted_template_id;
-	return Dictionary();
+	return terrain_ids;
 }
 
 std::vector<H3ObjectRow> h3_object_rows_by_type_from_recovered_catalog(int32_t wanted_type_id, Dictionary &load_status) {
@@ -1229,7 +1276,7 @@ Dictionary player_slot_assignment_phase(const Dictionary &normalized_config, con
 Dictionary runtime_zone_records_phase(const Dictionary &selection, const Dictionary &player_phase) {
 	Dictionary phase;
 	phase["phase_id"] = "runtime_zone_records";
-	phase["status"] = "blocked_missing_project_template_catalog";
+	phase["status"] = "blocked_missing_original_h3maped_template_catalog";
 	phase["h3maped_anchor"] = "0x4a218c";
 	phase["initializer_anchor"] = "0x49b452";
 	phase["runtime_zone_vector_begin_offset"] = "generator+0x10e0";
@@ -1244,16 +1291,16 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 	phase["blocked_next"] = "coordinate_replay_and_zone_footprints_0x4a1f3b";
 
 	Dictionary catalog_load;
-	const String adapted_template_id = String(selection.get("adapted_template_id", ""));
-	Dictionary adapted_template = find_project_template_record(adapted_template_id, catalog_load);
-	phase["project_catalog_load"] = catalog_load;
-	phase["project_template_id"] = adapted_template_id;
-	if (adapted_template.is_empty() || Variant(adapted_template.get("zones", Variant())).get_type() != Variant::ARRAY) {
+	Dictionary original_template = find_original_h3maped_template_record(selection, catalog_load);
+	phase["original_template_catalog_load"] = catalog_load;
+	phase["original_template_source_catalog_index"] = selection.get("source_catalog_index", -1);
+	phase["project_template_bridge_enabled"] = false;
+	if (original_template.is_empty() || Variant(original_template.get("zones", Variant())).get_type() != Variant::ARRAY) {
 		return phase;
 	}
 
 	Array mapped_slots = player_phase.get("mapped_ee4_slots", Array());
-	Array zones = adapted_template.get("zones", Array());
+	Array zones = original_template.get("zones", Array());
 	Array runtime_records;
 	Array actual_owner_colors;
 	int32_t assigned_start_zone_count = 0;
@@ -1267,22 +1314,19 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 			continue;
 		}
 		Dictionary zone = zones[index];
-		Dictionary ownership = zone.get("ownership", Dictionary());
-		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
 		Dictionary player_towns = zone.get("player_towns", Dictionary());
 		Dictionary neutral_towns = zone.get("neutral_towns", Dictionary());
-		Dictionary town_policy = zone.get("town_policy", Dictionary());
-		Dictionary mine_requirements = zone.get("mine_requirements", Dictionary());
-		Dictionary minimum_by_category = mine_requirements.get("minimum_by_category", Dictionary());
-		Dictionary density_by_category = mine_requirements.get("density_by_category", Dictionary());
-		Dictionary terrain = zone.get("terrain", Dictionary());
+		Dictionary minimum_mines = zone.get("minimum_mines", Dictionary());
+		Dictionary mine_density = zone.get("mine_density", Dictionary());
+		Array allowed_towns = zone.get("allowed_towns", Array());
+		Array allowed_terrains = zone.get("allowed_terrains", Array());
 
-		const int32_t source_owner = int32_t(ownership.get("source_owner_index", -2));
+		const int32_t source_owner = int32_t(zone.get("ownership", -2));
 		int32_t actual_owner = -1;
 		if (source_owner >= 0 && source_owner < mapped_slots.size()) {
 			actual_owner = int32_t(mapped_slots[source_owner]);
 		}
-		const String role = String(zone.get("role", zone.get("type", "")));
+		const String role = String(zone.get("type", zone.get("role", "")));
 		if (role == "human_start") {
 			if (actual_owner >= 0) {
 				assigned_start_zone_count += 1;
@@ -1303,7 +1347,7 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 		record["runtime_index"] = runtime_records.size();
 		record["source_zone_id"] = zone.get("source_zone_id", zone.get("id", int32_t(index + 1)));
 		record["role"] = role;
-		record["source_bucket"] = grammar_source.get("source_bucket", -1);
+		record["source_bucket"] = zone.get("bucket", -1);
 		record["source_owner_index"] = source_owner;
 		record["actual_owner_color"] = actual_owner;
 		record["source_base_size"] = base_size;
@@ -1316,45 +1360,33 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 		record["neutral_min_castles"] = neutral_towns.get("min_castles", 0);
 		record["neutral_town_density"] = neutral_towns.get("town_density", 0);
 		record["neutral_castle_density"] = neutral_towns.get("castle_density", 0);
-		record["terrain_match_to_town"] = bool(terrain.get("match_to_faction", false));
-		record["terrain_policy"] = Array(terrain.get("allowed", Array())).is_empty() ? String("match_to_player_town") : String("all_land_h3");
-		record["project_allowed_faction_ids"] = town_policy.get("allowed_faction_ids", Array());
-		if (!Array(town_policy.get("allowed_faction_ids", Array())).is_empty()) {
-			Array allowed_h3_towns;
-			for (int32_t town_index = 0; town_index < int32_t(sizeof(H3MAPED_ALLOWED_MAIN_TOWNS) / sizeof(H3MAPED_ALLOWED_MAIN_TOWNS[0])); ++town_index) {
-				allowed_h3_towns.append(H3MAPED_ALLOWED_MAIN_TOWNS[town_index]);
-			}
-			record["allowed_faction_ids_for_49b3c1"] = allowed_h3_towns;
+		record["terrain_match_to_town"] = bool(zone.get("terrain_match_to_town", false));
+		record["terrain_policy"] = allowed_terrains.is_empty() ? String("match_to_player_town") : String("original_h3maped_allowed_terrains");
+		record["project_allowed_faction_ids"] = Array();
+		if (!allowed_towns.is_empty()) {
+			record["allowed_faction_ids_for_49b3c1"] = allowed_towns;
 		} else {
 			record["allowed_faction_ids_for_49b3c1"] = Array();
 		}
-		if (String(record["terrain_policy"]) == "all_land_h3") {
-			Array allowed_terrain_ids;
-			allowed_terrain_ids.append(0);
-			allowed_terrain_ids.append(1);
-			allowed_terrain_ids.append(2);
-			allowed_terrain_ids.append(3);
-			allowed_terrain_ids.append(4);
-			allowed_terrain_ids.append(5);
-			allowed_terrain_ids.append(7);
-			record["allowed_h3maped_terrain_ids_for_49b53d"] = allowed_terrain_ids;
+		if (!allowed_terrains.is_empty()) {
+			record["allowed_h3maped_terrain_ids_for_49b53d"] = h3maped_terrain_ids_from_original_names(allowed_terrains);
 		}
-		record["monster_strength"] = Dictionary(zone.get("monster_policy", Dictionary())).get("strength", "");
-		record["minimum_wood_mines"] = minimum_by_category.get("timber", 0);
-		record["minimum_mercury_mines"] = minimum_by_category.get("quicksilver", 0);
-		record["minimum_ore_mines"] = minimum_by_category.get("ore", 0);
-		record["minimum_sulfur_mines"] = minimum_by_category.get("ember_salt", 0);
-		record["minimum_crystal_mines"] = minimum_by_category.get("lens_crystal", 0);
-		record["minimum_gems_mines"] = minimum_by_category.get("cut_gems", 0);
-		record["minimum_gold_mines"] = minimum_by_category.get("gold", 0);
-		record["minimum_rare_mines"] = int32_t(minimum_by_category.get("gold", 0)) + int32_t(minimum_by_category.get("quicksilver", 0)) + int32_t(minimum_by_category.get("ember_salt", 0)) + int32_t(minimum_by_category.get("lens_crystal", 0)) + int32_t(minimum_by_category.get("cut_gems", 0));
-		record["mine_density_wood"] = density_by_category.get("timber", 0);
-		record["mine_density_mercury"] = density_by_category.get("quicksilver", 0);
-		record["mine_density_ore"] = density_by_category.get("ore", 0);
-		record["mine_density_sulfur"] = density_by_category.get("ember_salt", 0);
-		record["mine_density_crystal"] = density_by_category.get("lens_crystal", 0);
-		record["mine_density_gems"] = density_by_category.get("cut_gems", 0);
-		record["mine_density_gold"] = density_by_category.get("gold", 0);
+		record["monster_strength"] = zone.get("monster_strength", "");
+		record["minimum_wood_mines"] = original_mine_value(minimum_mines, "wood");
+		record["minimum_mercury_mines"] = original_mine_value(minimum_mines, "mercury");
+		record["minimum_ore_mines"] = original_mine_value(minimum_mines, "ore");
+		record["minimum_sulfur_mines"] = original_mine_value(minimum_mines, "sulfur");
+		record["minimum_crystal_mines"] = original_mine_value(minimum_mines, "crystal");
+		record["minimum_gems_mines"] = original_mine_value(minimum_mines, "gems");
+		record["minimum_gold_mines"] = original_mine_value(minimum_mines, "gold");
+		record["minimum_rare_mines"] = original_mine_value(minimum_mines, "gold") + original_mine_value(minimum_mines, "mercury") + original_mine_value(minimum_mines, "sulfur") + original_mine_value(minimum_mines, "crystal") + original_mine_value(minimum_mines, "gems");
+		record["mine_density_wood"] = original_mine_value(mine_density, "wood");
+		record["mine_density_mercury"] = original_mine_value(mine_density, "mercury");
+		record["mine_density_ore"] = original_mine_value(mine_density, "ore");
+		record["mine_density_sulfur"] = original_mine_value(mine_density, "sulfur");
+		record["mine_density_crystal"] = original_mine_value(mine_density, "crystal");
+		record["mine_density_gems"] = original_mine_value(mine_density, "gems");
+		record["mine_density_gold"] = original_mine_value(mine_density, "gold");
 		record["treasure_bands"] = zone.get("treasure_bands", Array());
 		runtime_records.append(record);
 		actual_owner_colors.append(actual_owner);
@@ -1364,7 +1396,8 @@ Dictionary runtime_zone_records_phase(const Dictionary &selection, const Diction
 		minimum_source_base_size = 0;
 	}
 	phase["status"] = "active_internal_state";
-	phase["source"] = "res://content/random_map_template_catalog.json imported from recovered h3maped template catalog";
+	phase["source"] = "original recovered h3maped rmg-template-catalog.json";
+	phase["original_template_name"] = original_template.get("name", "");
 	phase["runtime_zone_count"] = runtime_records.size();
 	phase["runtime_zone_records"] = runtime_records;
 	phase["actual_owner_colors_by_runtime_zone"] = actual_owner_colors;
@@ -1403,16 +1436,17 @@ Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary
 	}
 
 	Dictionary catalog_load;
-	Dictionary adapted_template = find_project_template_record(String(selection.get("adapted_template_id", "")), catalog_load);
-	phase["project_catalog_load"] = catalog_load;
-	if (adapted_template.is_empty() || Variant(adapted_template.get("links", Variant())).get_type() != Variant::ARRAY) {
-		phase["status"] = "blocked_missing_project_template_links";
+	Dictionary original_template = find_original_h3maped_template_record(selection, catalog_load);
+	phase["original_template_catalog_load"] = catalog_load;
+	phase["project_template_bridge_enabled"] = false;
+	if (original_template.is_empty() || Variant(original_template.get("connections", Variant())).get_type() != Variant::ARRAY) {
+		phase["status"] = "blocked_missing_original_h3maped_template_connections";
 		return phase;
 	}
 
 	const int32_t humans = human_count(normalized_config);
 	const int32_t players = player_count(normalized_config);
-	Array links = adapted_template.get("links", Array());
+	Array links = original_template.get("connections", Array());
 	Array seeds;
 	for (int64_t index = 0; index < links.size(); ++index) {
 		if (Variant(links[index]).get_type() != Variant::DICTIONARY) {
@@ -1422,20 +1456,19 @@ Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary
 		if (!player_filter_allows(link.get("player_filter", Dictionary()), humans, players)) {
 			continue;
 		}
-		Dictionary endpoints = link.get("source_endpoints", Dictionary());
-		const int32_t source_zone_a = int32_t(endpoints.get("zone1", 0));
-		const int32_t source_zone_b = int32_t(endpoints.get("zone2", 0));
+		const int32_t source_zone_a = int32_t(link.get("zone1", 0));
+		const int32_t source_zone_b = int32_t(link.get("zone2", 0));
 		if (source_zone_a <= 0 || source_zone_b <= 0) {
 			continue;
 		}
 		Dictionary seed;
 		seed["link_index"] = seeds.size();
-		seed["source_row"] = Dictionary(link.get("grammar_source", Dictionary())).get("source_row", -1);
+		seed["source_row"] = link.get("row", -1);
 		seed["source_zone_a"] = source_zone_a;
 		seed["source_zone_b"] = source_zone_b;
 		seed["runtime_zone_a"] = source_zone_a - 1;
 		seed["runtime_zone_b"] = source_zone_b - 1;
-		seed["guard_value"] = link.get("guard_value", Dictionary(link.get("guard", Dictionary())).get("value", 0));
+		seed["guard_value"] = link.get("value", 0);
 		seed["wide"] = bool(link.get("wide", false));
 		seed["border_guard"] = bool(link.get("border_guard", false));
 		seed["early_consumer"] = "0x4a1f3b_endpoint_only";
@@ -1444,7 +1477,8 @@ Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary
 	}
 
 	phase["status"] = "active_internal_state";
-	phase["source"] = "res://content/random_map_template_catalog.json recovered link rows consumed through h3maped 0x4a1f3b";
+	phase["source"] = "original recovered h3maped rmg-template-catalog.json connections consumed through h3maped 0x4a1f3b";
+	phase["original_template_name"] = original_template.get("name", "");
 	phase["link_seed_count"] = seeds.size();
 	phase["link_seeds"] = seeds;
 	return phase;
@@ -8252,6 +8286,8 @@ Dictionary selection_identity(const Dictionary &normalized_config) {
 	Dictionary result;
 	result["schema_id"] = "aurelion_native_rmg_small_h3maped_selection_identity_v2";
 	result["template_selection_mode"] = "h3maped_exe_rng";
+	result["template_semantic_source"] = RMG_TEMPLATE_CATALOG_SOURCE_PATH;
+	result["project_template_bridge_enabled"] = false;
 	result["rng_seed_setter_address"] = "0x4e7269";
 	result["rng_function_address"] = "0x4e7276";
 	result["rng_algorithm"] = "state = state * 0x343fd + 0x269ec3; return (state >> 16) & 0x7fff";
@@ -8290,6 +8326,7 @@ Dictionary selection_identity(const Dictionary &normalized_config) {
 	result["source_template_id"] = selected.get("id", "");
 	result["source_catalog_index"] = selected.get("source_catalog_index", -1);
 	result["adapted_template_id"] = selected.get("adapted_template_id", "");
+	result["adapted_template_id_legacy_disabled"] = selected.get("adapted_template_id", "");
 	result["selected_template"] = selected;
 	return result;
 }
