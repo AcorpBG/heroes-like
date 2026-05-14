@@ -1023,6 +1023,40 @@ func _run() -> void:
 		_fail("Strict final 0x49b2b6 writeout draft drifted: %s" % JSON.stringify(final_writeout))
 		return
 
+	var fast_validator: Dictionary = report.get("fast_structural_validator", {})
+	var validator_metrics: Dictionary = fast_validator.get("metrics", {})
+	if String(fast_validator.get("phase_id", "")) != "fast_structural_validator_authority" \
+			or String(fast_validator.get("schema_id", "")) != "aurelion_h3maped_small_fast_structural_validator_v1" \
+			or String(fast_validator.get("status", "")) != "strict_fast_structural_validator_pass_runtime_blocked" \
+			or bool(fast_validator.get("runtime_generation_allowed", true)) \
+			or bool(fast_validator.get("public_runtime_authoritative", true)) \
+			or bool(fast_validator.get("authorizes_public_runtime", true)) \
+			or not bool(fast_validator.get("validator_authority", false)) \
+			or int(fast_validator.get("failure_count", -1)) != 0 \
+			or String(fast_validator.get("blocked_next", "")) != "public_generate_random_map_authority_after_package_validation" \
+			or int(validator_metrics.get("expected_tile_count", -1)) != 1296 \
+			or int(validator_metrics.get("terrain_tile_count", -1)) != 1296 \
+			or int(validator_metrics.get("package_object_count", -1)) != 40 \
+			or int(validator_metrics.get("player_start_count", -1)) != 3 \
+			or int(validator_metrics.get("owned_player_town_count", -1)) != 3 \
+			or int(validator_metrics.get("mine_count", -1)) != 18 \
+			or int(validator_metrics.get("reward_count", -1)) != 3 \
+			or int(validator_metrics.get("connection_blocker_count", -1)) != 10 \
+			or int(validator_metrics.get("blocking_connection_blocker_count", -1)) != 10 \
+			or int(validator_metrics.get("connection_guard_count", -1)) != 6 \
+			or int(validator_metrics.get("blocking_connection_guard_count", -1)) != 6 \
+			or int(validator_metrics.get("route_link_count", -1)) != 5 \
+			or int(validator_metrics.get("guarded_route_link_count", -1)) != 5 \
+			or int(validator_metrics.get("unguarded_route_link_count", -1)) != 0 \
+			or int(validator_metrics.get("route_link_without_blocker_count", -1)) != 0 \
+			or int(validator_metrics.get("route_link_without_guard_count", -1)) != 0 \
+			or int(validator_metrics.get("road_record_count", -1)) != 1 \
+			or int(validator_metrics.get("road_overlay_type_nonzero_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
+			or int(validator_metrics.get("duplicate_placement_id_count", -1)) != 0 \
+			or int(validator_metrics.get("out_of_bounds_object_count", -1)) != 0:
+		_fail("Strict fast structural validator drifted: %s" % JSON.stringify(fast_validator))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -1030,20 +1064,19 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "fast_structural_validator_authority":
+			or String(strict_state.get("next_required_port", "")) != "public_generate_random_map_authority_after_package_validation":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
-	if pending_ports.size() != 3 \
-			or not pending_ports.has("fast_structural_validator_authority") \
+	if pending_ports.size() != 2 \
 			or not pending_ports.has("public_generate_random_map_authority_after_package_validation") \
 			or not pending_ports.has("editor_runtime_adoption_audit"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
 	var backlog: Array = report.get("fresh_phase_backlog", [])
-	if backlog.size() != 19 \
+	if backlog.size() != 20 \
 			or String(backlog[0].get("status", "")) != "active_strict_boundary" \
 			or String(backlog[1].get("status", "")) != "active_strict_executable_port" \
 			or String(backlog[2].get("status", "")) != "active_strict_executable_port" \
@@ -1069,7 +1102,10 @@ func _run() -> void:
 			or String(backlog[16].get("status", "")) != "active_strict_private_connection_guards" \
 			or String(backlog[17].get("id", "")) != "public_package_adoption" \
 			or String(backlog[17].get("status", "")) != "active_strict_package_draft_runtime_blocked" \
-			or String(backlog[18].get("status", "")) != "active_strict_writeout_draft_runtime_blocked":
+			or String(backlog[18].get("id", "")) != "final_h3m_writeout" \
+			or String(backlog[18].get("status", "")) != "active_strict_writeout_draft_runtime_blocked" \
+			or String(backlog[19].get("id", "")) != "fast_structural_validator_authority" \
+			or String(backlog[19].get("status", "")) != "active_strict_validator_authority_runtime_blocked":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
