@@ -978,6 +978,51 @@ func _run() -> void:
 		_fail("Strict public package adoption draft drifted: %s" % JSON.stringify(package_adoption))
 		return
 
+	var final_writeout: Dictionary = report.get("final_h3m_writeout", {})
+	var final_writeout_validation: Dictionary = final_writeout.get("structural_validation", {})
+	var tile_bytes: Dictionary = final_writeout.get("tile_bytes", {})
+	var final_byte_0: PackedInt32Array = tile_bytes.get("byte_0_terrain_u8", PackedInt32Array())
+	var final_byte_1: PackedInt32Array = tile_bytes.get("byte_1_terrain_art_u8", PackedInt32Array())
+	var final_byte_2: PackedInt32Array = tile_bytes.get("byte_2_river_type_u8", PackedInt32Array())
+	var final_byte_3: PackedInt32Array = tile_bytes.get("byte_3_river_art_u8", PackedInt32Array())
+	var final_byte_4: PackedInt32Array = tile_bytes.get("byte_4_road_type_u8", PackedInt32Array())
+	var final_byte_5: PackedInt32Array = tile_bytes.get("byte_5_road_art_u8", PackedInt32Array())
+	var final_byte_6: PackedInt32Array = tile_bytes.get("byte_6_flags_u8", PackedInt32Array())
+	if String(final_writeout.get("phase_id", "")) != "final_h3m_writeout" \
+			or String(final_writeout.get("schema_id", "")) != "aurelion_h3maped_small_final_49b2b6_writeout_draft_v1" \
+			or String(final_writeout.get("status", "")) != "strict_final_0x49b2b6_writeout_draft_runtime_blocked" \
+			or String(final_writeout.get("h3maped_anchor", "")) != "0x49b2b6" \
+			or bool(final_writeout.get("runtime_generation_allowed", true)) \
+			or bool(final_writeout.get("public_runtime_authoritative", true)) \
+			or bool(final_writeout.get("materializes_public_h3m", true)) \
+			or not bool(final_writeout.get("materializes_final_serializer_draft", false)) \
+			or int(final_writeout.get("tile_byte_array_count", -1)) != 7 \
+			or int(final_writeout.get("tile_byte_array_size", -1)) != 1296 \
+			or int(final_writeout.get("terrain_tile_count", -1)) != 1296 \
+			or int(final_writeout.get("package_object_count", -1)) != 40 \
+			or int(final_writeout.get("package_route_link_count", -1)) != 5 \
+			or int(final_writeout.get("river_overlay_type_nonzero_count", -1)) != 0 \
+			or int(final_writeout.get("river_overlay_art_nonzero_count", -1)) != 0 \
+			or int(final_writeout.get("road_overlay_type_nonzero_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
+			or int(final_writeout.get("road_overlay_art_nonzero_count", -1)) != int(roads_rivers.get("road_overlay_art_nonzero_count", -2)) \
+			or int(final_writeout.get("road_overlay_flag_nonzero_count", -1)) < 0 \
+			or String(final_writeout.get("blocked_next", "")) != "public_generate_random_map_authority_after_package_validation" \
+			or String(final_writeout_validation.get("status", "")) != "draft_pass_runtime_blocked" \
+			or bool(final_writeout_validation.get("runtime_generation_allowed", true)) \
+			or bool(final_writeout_validation.get("authorizes_public_runtime", true)) \
+			or int(final_writeout_validation.get("tile_byte_array_count", -1)) != 7 \
+			or int(final_writeout_validation.get("tile_byte_array_size", -1)) != 1296 \
+			or int(final_writeout_validation.get("package_object_count", -1)) != 40 \
+			or final_byte_0.size() != 1296 \
+			or final_byte_1.size() != 1296 \
+			or final_byte_2.size() != 1296 \
+			or final_byte_3.size() != 1296 \
+			or final_byte_4.size() != 1296 \
+			or final_byte_5.size() != 1296 \
+			or final_byte_6.size() != 1296:
+		_fail("Strict final 0x49b2b6 writeout draft drifted: %s" % JSON.stringify(final_writeout))
+		return
+
 	var strict_state: Dictionary = report.get("strict_restart_state", {})
 	if String(strict_state.get("schema_id", "")) != "aurelion_h3maped_small_strict_executable_restart_state_v1" \
 			or String(strict_state.get("status", "")) != "strict_executable_restart_scaffold_active" \
@@ -985,15 +1030,15 @@ func _run() -> void:
 			or bool(strict_state.get("active_public_generation_state", true)) \
 			or bool(strict_state.get("legacy_private_phase_ledgers_exposed", true)) \
 			or not bool(strict_state.get("legacy_private_phase_ledgers_archived_only", false)) \
-			or String(strict_state.get("next_required_port", "")) != "rivers_overlay_writeback:0x4b4243_0x49b2b6":
+			or String(strict_state.get("next_required_port", "")) != "fast_structural_validator_authority":
 		_fail("Strict executable restart state drifted: %s" % JSON.stringify(strict_state))
 		return
 
 	var pending_ports: Array = strict_state.get("pending_strict_ports", [])
 	if pending_ports.size() != 3 \
-			or not pending_ports.has("rivers_overlay_writeback:0x4b4243_0x49b2b6") \
-			or not pending_ports.has("final_h3m_writeout:0x49b2b6") \
-			or not pending_ports.has("public_generate_random_map_authority_after_package_validation"):
+			or not pending_ports.has("fast_structural_validator_authority") \
+			or not pending_ports.has("public_generate_random_map_authority_after_package_validation") \
+			or not pending_ports.has("editor_runtime_adoption_audit"):
 		_fail("Strict restart pending executable ports changed: %s" % JSON.stringify(pending_ports))
 		return
 
@@ -1024,7 +1069,7 @@ func _run() -> void:
 			or String(backlog[16].get("status", "")) != "active_strict_private_connection_guards" \
 			or String(backlog[17].get("id", "")) != "public_package_adoption" \
 			or String(backlog[17].get("status", "")) != "active_strict_package_draft_runtime_blocked" \
-			or String(backlog[18].get("status", "")) != "pending_runtime_port":
+			or String(backlog[18].get("status", "")) != "active_strict_writeout_draft_runtime_blocked":
 		_fail("Strict phase backlog drifted: %s" % JSON.stringify(backlog))
 		return
 
