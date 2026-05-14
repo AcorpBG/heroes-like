@@ -51,11 +51,14 @@ func _run() -> void:
 	var selection: Dictionary = report.get("selection_identity", {})
 	if not bool(selection.get("ok", false)) \
 			or String(selection.get("template_selection_mode", "")) != "h3maped_exe_rng" \
+			or String(selection.get("template_semantic_source", "")) != "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json" \
+			or bool(selection.get("project_template_bridge_enabled", true)) \
 			or String(selection.get("rng_function_address", "")) != "0x4e7276" \
 			or int(selection.get("rng_first_value", -1)) != 41 \
 			or int(selection.get("selected_vector_index", -1)) != 2 \
 			or String(selection.get("source_template_id", "")) != "h3maped_template_018" \
-			or String(selection.get("adapted_template_id", "")) != "translated_rmg_template_019_v1":
+			or int(selection.get("source_catalog_index", -1)) != 18 \
+			or String(selection.get("adapted_template_id", "")) != "":
 		_fail("Strict h3maped template selection drifted: %s" % JSON.stringify(selection))
 		return
 
@@ -115,7 +118,7 @@ func _run() -> void:
 			or int(runtime_records[0].get("min_player_castles", -1)) != 1 \
 			or String(runtime_records[2].get("role", "")) != "treasure" \
 			or int(runtime_records[2].get("actual_owner_color", 99)) != -1 \
-			or String(runtime_records[2].get("terrain_policy", "")) != "all_land_h3" \
+			or String(runtime_records[2].get("terrain_policy", "")) != "original_h3maped_allowed_terrains" \
 			or int(runtime_records[2].get("minimum_rare_mines", -1)) != 5 \
 			or int(runtime_records[4].get("source_owner_index", -1)) != 3 \
 			or int(runtime_records[4].get("actual_owner_color", 99)) != -1 \
