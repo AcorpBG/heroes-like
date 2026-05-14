@@ -1169,6 +1169,32 @@ func _run() -> void:
 			or Dictionary(generated_repeat.get("final_tile_bytes", {})) != generated_tile_bytes:
 		_fail("Supported small map generation is not deterministic across repeat calls: %s / %s" % [JSON.stringify(generated), JSON.stringify(generated_repeat)])
 		return
+	var adoption: Dictionary = service.convert_generated_payload(generated, {
+		"scenario_id": "h3maped_small_validator_gate_test",
+		"feature_gate": "native_rmg_small_h3maped_validator_gated_public_package_test",
+	})
+	var adopted_map_document: Variant = adoption.get("map_document", null)
+	var adopted_scenario_document: Variant = adoption.get("scenario_document", null)
+	var adoption_report: Dictionary = adoption.get("report", {})
+	var adoption_metrics: Dictionary = adoption_report.get("metrics", {})
+	if not bool(adoption.get("ok", false)) \
+			or String(adoption.get("status", "")) != "pass" \
+			or String(adoption.get("conversion_kind", "")) != "h3maped_small_validated_package_to_package_session_records" \
+			or String(adoption.get("adoption_status", "")) != "h3maped_small_validator_gated_not_production_ready" \
+			or adopted_map_document == null \
+			or adopted_scenario_document == null \
+			or int(adopted_map_document.get_width()) != 36 \
+			or int(adopted_map_document.get_height()) != 36 \
+			or int(adopted_map_document.get_level_count()) != 1 \
+			or int(adopted_map_document.get_object_count()) != 40 \
+			or String(adopted_map_document.get_source_kind()) != "generated_h3maped_small_validated" \
+			or int(adopted_scenario_document.get_start_contract().get("start_count", -1)) != 3 \
+			or int(adopted_scenario_document.get_start_contract().get("start_town_count", -1)) != 3 \
+			or not bool(adoption_report.get("package_session_adoption_ready", false)) \
+			or bool(adoption_report.get("production_ready", true)) \
+			or int(adoption_metrics.get("route_link_count", -1)) != 5:
+		_fail("Validator-gated public package did not adopt into package/session documents: %s" % JSON.stringify(adoption))
+		return
 
 	var explicit_config := supported_config.duplicate(true)
 	explicit_config["template_id"] = "translated_rmg_template_019_v1"
