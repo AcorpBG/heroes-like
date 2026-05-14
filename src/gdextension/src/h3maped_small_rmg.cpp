@@ -1214,7 +1214,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("town_object_placement", "0x4a8d2c, 0x4a8db2, 0x4a93a2", "active_strict_executable_port"));
 	backlog.append(phase_record("mines_rewards_and_object_vector", "0x4a9d6a, 0x4a9911, 0x4aa354, 0x4a9f1c, 0x4aa9b7, 0x4aa603, 0x4aa3e9", "active_strict_executable_port"));
 	backlog.append(phase_record("roads_and_rivers", "0x4ab52a, 0x4aae7b, 0x4ab37f, 0x4b4243, 0x458a2f, 0x458893, 0x49b2b6", "active_strict_private_road_overlay"));
-	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605", "pending_runtime_port"));
+	backlog.append(phase_record("connections_blockers_and_guards", "0x4a79a3, 0x4a61bc, 0x4a696b, 0x4a6cf2, 0x4a7605, 0x4a65a5, 0x4a5e03", "active_strict_private_connection_guards"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "pending_runtime_port"));
 	return backlog;
 }
@@ -1224,7 +1224,7 @@ Array current_gap_summary() {
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
 	gaps.append("runtime map packages remain blocked until each required phase is reintroduced as strict executable-derived generation state with project asset adaptation only at the final content reference layer");
-	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; public package adoption, rivers, blockers, guards, and final writeout remain blocked");
+	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; public package adoption, rivers, and final writeout remain blocked");
 	return gaps;
 }
 
@@ -1260,9 +1260,10 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"town_object_placement:0x4a8d2c_0x4a8db2_0x4a93a2",
 			"mines_rewards_and_object_vector:0x4a9d6a_0x4a9911_0x4aa354_0x4a9f1c_0x4aa9b7",
 			"private_reward_filter_and_mutation:0x4aa603_0x4aa3e9",
-			"roads_rivers_overlay_writeback:0x4ab52a_0x4aae7b_0x458a2f_0x458893_0x49b2b6");
+			"roads_rivers_overlay_writeback:0x4ab52a_0x4aae7b_0x458a2f_0x458893_0x49b2b6",
+			"connections_blockers_guards_private:0x4a79a3_0x4a61bc_0x4a65a5_0x4a5e03");
 	state["pending_strict_ports"] = Array::make(
-			"connections_blockers_and_guards:0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2",
+			"public_package_adoption_after_private_connection_guards",
 			"rivers_overlay_writeback:0x4b4243_0x49b2b6",
 			"final_h3m_writeout:0x49b2b6");
 	state["prohibited_runtime_sources"] = Array::make(
@@ -1271,7 +1272,7 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "connections_blockers_guards_0x4a79a3_family_before_runtime_package_output";
+	state["next_required_port"] = "public_package_adoption_after_private_connection_guards";
 	return state;
 }
 
@@ -1778,6 +1779,27 @@ String h3_slot_id_2(int32_t slot) {
 		return String("0") + String::num_int64(slot);
 	}
 	return String::num_int64(slot);
+}
+
+int32_t h3maped_strength_scaled_value_4a65a5(int32_t base_value, int32_t mode) {
+	static constexpr int32_t THRESHOLD_1[] = { 50000, 2500, 1500, 1000, 500, 0 };
+	static constexpr int32_t THRESHOLD_2[] = { 50000, 7500, 7500, 7500, 5000, 5000 };
+	static constexpr int32_t SLOPE_1[] = { 0, 2, 3, 4, 6, 6 };
+	static constexpr int32_t SLOPE_2[] = { 0, 2, 3, 4, 4, 6 };
+	const int32_t clamped_mode = std::max(0, std::min(5, mode));
+	const int32_t base = std::max(0, base_value);
+	int32_t value = 0;
+	if (base > THRESHOLD_1[clamped_mode]) {
+		value += ((base - THRESHOLD_1[clamped_mode]) * SLOPE_1[clamped_mode]) / 4;
+	}
+	if (base > THRESHOLD_2[clamped_mode]) {
+		value += ((base - THRESHOLD_2[clamped_mode]) * SLOPE_2[clamped_mode]) / 4;
+	}
+	return value < 2000 ? 0 : value;
+}
+
+int32_t h3maped_global_monster_strength_mode(const Dictionary &normalized_config) {
+	return std::max(0, std::min(5, int32_t(normalized_config.get("global_monster_strength_mode", 3))));
 }
 
 Array project_default_faction_pool() {
@@ -8719,6 +8741,620 @@ Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Diction
 	return phase;
 }
 
+Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config, const Dictionary &coordinate_phase, const Dictionary &link_phase, const Dictionary &roads_rivers_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code) {
+	static constexpr std::array<std::array<int32_t, 2>, 8> NEIGHBOR_DELTAS_0x5A2658 = { {
+		{ 1, 0 },
+		{ 1, 1 },
+		{ 0, 1 },
+		{ -1, 1 },
+		{ -1, 0 },
+		{ -1, -1 },
+		{ 0, -1 },
+		{ 1, -1 },
+	} };
+
+	Dictionary phase;
+	phase["phase_id"] = "connections_blockers_and_guards";
+	phase["status"] = "blocked_until_roads_and_link_seeds";
+	phase["h3maped_anchor"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
+	phase["dispatch_anchor"] = "0x4a79a3";
+	phase["primary_same_level_helper_anchor"] = "0x4a61bc";
+	phase["secondary_same_level_helper_anchor"] = "0x4a696b";
+	phase["cross_level_overlap_helper_anchor"] = "0x4a6cf2";
+	phase["second_pass_fallback_anchor"] = "0x4a7605";
+	phase["guard_value_scaler_anchor"] = "0x4a65a5";
+	phase["normal_guard_object_anchor"] = "0x4a5e03";
+	phase["border_guard_marker_anchor"] = "0x4a5e73/0x4a5a23";
+	phase["transition_vector_anchor"] = "0x4a79d8..0x4a7af9";
+	phase["high_owner_channel_anchor"] = "0x4a5767/0x49a318";
+	phase["materializes_private_connection_geometry"] = false;
+	phase["materializes_private_blocker_cells"] = false;
+	phase["materializes_private_connection_guards"] = false;
+	phase["materializes_public_objects"] = false;
+	phase["adopts_into_runtime_grid"] = false;
+	phase["public_package_output_allowed"] = false;
+	phase["blocked_next"] = "public_package_adoption_after_private_connection_guards";
+
+	const String link_status = String(link_phase.get("status", ""));
+	const String road_status = String(roads_rivers_phase.get("status", ""));
+	if ((link_status != "active_internal_state" && link_status != "active_strict_executable_port")
+			|| road_status != "active_strict_private_road_overlay") {
+		return phase;
+	}
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const bool grid_available = map_width > 0
+			&& map_height > 0
+			&& expected_cell_count == int32_t(zone_words.size())
+			&& zone_words.size() == cell_flags.size()
+			&& zone_words.size() == live_terrain_code.size();
+	PackedInt32Array private_blocker_u8;
+	PackedInt32Array private_guard_u8;
+	for (int32_t index = 0; index < expected_cell_count; ++index) {
+		private_blocker_u8.append(0);
+		private_guard_u8.append(0);
+	}
+
+	const uint32_t rng_seed = uint32_t(int64_t(Dictionary(roads_rivers_phase.get("road_final_art_materialization", Dictionary())).get("rng_state_after_final_art_uint32", 0)));
+	H3MapedRng rng { rng_seed };
+	const int32_t global_strength_mode = h3maped_global_monster_strength_mode(normalized_config);
+	Array link_seeds = link_phase.get("link_seeds", Array());
+	Array connection_records;
+	Array private_guard_records;
+	Array private_blocker_records;
+	int32_t transition_candidate_total = 0;
+	int32_t materialized_connection_count = 0;
+	int32_t materialized_guard_count = 0;
+	int32_t materialized_blocker_cell_count = 0;
+	int32_t rng_call_count = 0;
+	int32_t wide_suppressed_guard_count = 0;
+	int32_t scaled_nonzero_guard_count = 0;
+	int32_t raw_guard_link_count = 0;
+	int32_t border_guard_link_count = 0;
+	int32_t border_guard_marker_cell_count = 0;
+	int32_t no_transition_candidate_count = 0;
+	int32_t fallback_4a7605_attempt_count = 0;
+	int32_t fallback_4a7605_selected_count = 0;
+	int32_t fallback_4a7605_candidate_total = 0;
+	Array fallback_4a7605_records;
+
+	std::vector<int32_t> owner_low(size_t(std::max(0, expected_cell_count)), -1);
+	std::vector<int32_t> owner_high(size_t(std::max(0, expected_cell_count)), -1);
+	std::vector<int32_t> path_low(size_t(std::max(0, expected_cell_count)), 0x7d00);
+	std::vector<int32_t> path_high(size_t(std::max(0, expected_cell_count)), 0x7d00);
+	std::vector<int32_t> path_direction(size_t(std::max(0, expected_cell_count)), -1);
+	int32_t owner_low_materialized_count = 0;
+	if (grid_available) {
+		for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+			const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+			if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || (cell_flags[size_t(flat)] & 0x10U) == 0U) {
+				continue;
+			}
+			owner_low[size_t(flat)] = int32_t((masked >> 16U) & 0xffU);
+			owner_low_materialized_count += 1;
+		}
+	}
+
+	auto append_private_cell = [&](Array &records, PackedInt32Array &grid, int32_t flat, const String &kind, const String &connection_id, int32_t runtime_a, int32_t runtime_b, int32_t guard_value) {
+		if (flat < 0 || flat >= expected_cell_count) {
+			return false;
+		}
+		if (int32_t(grid[flat]) == 0) {
+			grid.set(flat, 1);
+		}
+		const int32_t level = flat / (map_width * map_height);
+		const int32_t remainder = flat % (map_width * map_height);
+		Dictionary record;
+		record["connection_id"] = connection_id;
+		record["kind"] = kind;
+		record["flat_cell_index"] = flat;
+		record["x"] = remainder % map_width;
+		record["y"] = remainder / map_width;
+		record["level"] = level;
+		record["runtime_zone_a"] = runtime_a;
+		record["runtime_zone_b"] = runtime_b;
+		record["guard_value"] = guard_value;
+		record["materialization_state"] = "private_h3maped_connection_cell_no_public_package_adoption";
+		records.append(record);
+		return true;
+	};
+	auto select_zone_endpoint_4a7312 = [&](int32_t runtime_owner, const PackedInt32Array &occupied_grid, int32_t &out_flat, int32_t &out_candidate_count, int32_t &out_rng_value, int32_t &out_selected_index) {
+		std::vector<int32_t> candidates;
+		if (grid_available && runtime_owner >= 0) {
+			for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+				if (owner_low[size_t(flat)] != runtime_owner
+						|| (cell_flags[size_t(flat)] & 0x10U) == 0U
+						|| live_terrain_code[size_t(flat)] == 8
+						|| live_terrain_code[size_t(flat)] == 9
+						|| int32_t(occupied_grid[flat]) != 0) {
+					continue;
+				}
+				candidates.push_back(flat);
+			}
+		}
+		out_candidate_count = int32_t(candidates.size());
+		if (candidates.empty()) {
+			out_flat = -1;
+			out_rng_value = -1;
+			out_selected_index = -1;
+			return false;
+		}
+		out_rng_value = rng.next();
+		rng_call_count += 1;
+		out_selected_index = out_rng_value % int32_t(candidates.size());
+		out_flat = candidates[size_t(out_selected_index)];
+		return true;
+	};
+
+	struct QueueNode {
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t level = 0;
+		int32_t score = 0;
+	};
+	struct TransitionCandidate {
+		int32_t side_flat = -1;
+		int32_t side_x = 0;
+		int32_t side_y = 0;
+		int32_t side_level = 0;
+		int32_t neighbor_flat = -1;
+		int32_t neighbor_x = 0;
+		int32_t neighbor_y = 0;
+		int32_t direction = -1;
+		int32_t low_owner = -1;
+		int32_t high_owner = -1;
+		int32_t neighbor_low_owner = -1;
+		int32_t path_score = 0x7d00;
+	};
+	Array high_owner_seed_reports;
+	int32_t high_owner_seed_attempt_count = 0;
+	int32_t high_owner_seed_blocked_count = 0;
+	int32_t high_owner_cross_write_count = 0;
+	int32_t high_owner_direction_write_count = 0;
+	int32_t high_owner_same_owner_relax_count = 0;
+	int32_t high_owner_popped_cell_count = 0;
+	int32_t max_high_owner_queue_size = 0;
+	auto propagate_high_owner = [&](int32_t source_owner, int32_t seed_x, int32_t seed_y, int32_t seed_level) {
+		std::vector<QueueNode> queue;
+		const int32_t seed_flat = int32_t(h3maped_cell_index(map_width, map_height, seed_x, seed_y, seed_level));
+		if (seed_flat < 0 || seed_flat >= expected_cell_count) {
+			return Dictionary();
+		}
+		path_low[size_t(seed_flat)] = 0;
+		queue.push_back(QueueNode { seed_x, seed_y, seed_level, 0 });
+		int32_t popped_count = 0;
+		int32_t same_owner_relax_count = 0;
+		int32_t cross_owner_write_count = 0;
+		int32_t direction_write_count = 0;
+		for (int32_t guard = 0; guard < expected_cell_count * 16 && !queue.empty(); ++guard) {
+			int32_t best_index = 0;
+			for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
+				if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
+					best_index = index;
+				}
+			}
+			const QueueNode node = queue[size_t(best_index)];
+			queue.erase(queue.begin() + best_index);
+			popped_count += 1;
+			high_owner_popped_cell_count += 1;
+			const int32_t node_flat = int32_t(h3maped_cell_index(map_width, map_height, node.x, node.y, node.level));
+			if (node_flat < 0 || node_flat >= expected_cell_count) {
+				continue;
+			}
+			const int32_t node_owner = owner_low[size_t(node_flat)];
+			const int32_t base_score = node_owner == source_owner ? path_low[size_t(node_flat)] : path_high[size_t(node_flat)];
+			if (base_score >= 0x7d00) {
+				continue;
+			}
+			for (int32_t direction = int32_t(NEIGHBOR_DELTAS_0x5A2658.size()) - 1; direction >= 0; --direction) {
+				const int32_t nx = node.x + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][0];
+				const int32_t ny = node.y + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][1];
+				const int64_t next_flat_64 = h3maped_cell_index(map_width, map_height, nx, ny, node.level);
+				if (next_flat_64 < 0 || next_flat_64 >= expected_cell_count) {
+					continue;
+				}
+				const int32_t next_flat = int32_t(next_flat_64);
+				const int32_t next_owner = owner_low[size_t(next_flat)];
+				if (next_owner < 0 || (cell_flags[size_t(next_flat)] & 0x10U) == 0U || live_terrain_code[size_t(next_flat)] == 9) {
+					continue;
+				}
+				if (next_owner == source_owner) {
+					const int32_t step = live_terrain_code[size_t(next_flat)] == 8 ? 10 : 1;
+					const int32_t candidate_score = base_score + step;
+					if (candidate_score < path_low[size_t(next_flat)]) {
+						path_low[size_t(next_flat)] = candidate_score;
+						queue.push_back(QueueNode { nx, ny, node.level, candidate_score });
+						same_owner_relax_count += 1;
+						high_owner_same_owner_relax_count += 1;
+					}
+				} else {
+					const int32_t candidate_score = base_score + 10;
+					if (candidate_score < path_high[size_t(next_flat)]) {
+						path_high[size_t(next_flat)] = candidate_score;
+						owner_high[size_t(next_flat)] = source_owner;
+						path_direction[size_t(next_flat)] = (direction + 4) & 7;
+						queue.push_back(QueueNode { nx, ny, node.level, candidate_score });
+						cross_owner_write_count += 1;
+						direction_write_count += 1;
+						high_owner_cross_write_count += 1;
+						high_owner_direction_write_count += 1;
+					}
+				}
+				max_high_owner_queue_size = std::max<int32_t>(max_high_owner_queue_size, int32_t(queue.size()));
+			}
+		}
+		Dictionary report;
+		report["popped_cell_count"] = popped_count;
+		report["same_owner_relax_count"] = same_owner_relax_count;
+		report["cross_owner_high_byte_write_count"] = cross_owner_write_count;
+		report["cross_owner_direction_write_count"] = direction_write_count;
+		return report;
+	};
+
+	Array scaled_coordinates = coordinate_phase.get("scaled_zone_coordinates", Array());
+	if (grid_available) {
+		for (int32_t index = 0; index < scaled_coordinates.size(); ++index) {
+			if (Variant(scaled_coordinates[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary coord = scaled_coordinates[index];
+			const int32_t seed_x = int32_t(coord.get("x_after_bbox_rescale", coord.get("x", 0)));
+			const int32_t seed_y = int32_t(coord.get("y_after_bbox_rescale", coord.get("y", 0)));
+			const int32_t seed_level = int32_t(coord.get("level", 0));
+			const int64_t seed_flat_64 = h3maped_cell_index(map_width, map_height, seed_x, seed_y, seed_level);
+			Dictionary seed_report;
+			seed_report["runtime_zone_index"] = coord.get("runtime_zone_index", index);
+			seed_report["seed_x"] = seed_x;
+			seed_report["seed_y"] = seed_y;
+			seed_report["seed_level"] = seed_level;
+			high_owner_seed_attempt_count += 1;
+			if (seed_flat_64 < 0 || seed_flat_64 >= expected_cell_count) {
+				seed_report["status"] = "blocked_seed_out_of_bounds";
+				high_owner_seed_blocked_count += 1;
+				high_owner_seed_reports.append(seed_report);
+				continue;
+			}
+			const int32_t seed_flat = int32_t(seed_flat_64);
+			const int32_t source_owner = owner_low[size_t(seed_flat)];
+			seed_report["source_owner_byte"] = source_owner;
+			if (source_owner < 0 || live_terrain_code[size_t(seed_flat)] == 9) {
+				seed_report["status"] = "blocked_seed_not_materialized_or_unowned";
+				high_owner_seed_blocked_count += 1;
+				high_owner_seed_reports.append(seed_report);
+				continue;
+			}
+			Dictionary propagation = propagate_high_owner(source_owner, seed_x, seed_y, seed_level);
+			seed_report["status"] = "0x49a318_seed_propagated_private";
+			seed_report["popped_cell_count"] = propagation.get("popped_cell_count", 0);
+			seed_report["same_owner_relax_count"] = propagation.get("same_owner_relax_count", 0);
+			seed_report["cross_owner_high_byte_write_count"] = propagation.get("cross_owner_high_byte_write_count", 0);
+			seed_report["cross_owner_direction_write_count"] = propagation.get("cross_owner_direction_write_count", 0);
+			high_owner_seed_reports.append(seed_report);
+		}
+	}
+
+	std::vector<TransitionCandidate> transition_candidates;
+	int32_t rejected_high_owner_sentinel_count = 0;
+	int32_t rejected_transition_terrain_count = 0;
+	int32_t rejected_transition_materialized_count = 0;
+	int32_t rejected_transition_direction_count = 0;
+	int32_t rejected_transition_neighbor_count = 0;
+	int32_t rejected_transition_same_low_owner_count = 0;
+	if (grid_available) {
+		for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+			if (owner_high[size_t(flat)] < 0) {
+				rejected_high_owner_sentinel_count += 1;
+				continue;
+			}
+			if ((cell_flags[size_t(flat)] & 0x10U) == 0U) {
+				rejected_transition_materialized_count += 1;
+				continue;
+			}
+			if (live_terrain_code[size_t(flat)] == 8 || live_terrain_code[size_t(flat)] == 9) {
+				rejected_transition_terrain_count += 1;
+				continue;
+			}
+			const int32_t direction = path_direction[size_t(flat)];
+			if (direction < 0 || direction >= int32_t(NEIGHBOR_DELTAS_0x5A2658.size())) {
+				rejected_transition_direction_count += 1;
+				continue;
+			}
+			const int32_t level = flat / (map_width * map_height);
+			const int32_t remainder = flat % (map_width * map_height);
+			const int32_t x = remainder % map_width;
+			const int32_t y = remainder / map_width;
+			const int64_t neighbor_flat_64 = h3maped_cell_index(map_width, map_height, x + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][0], y + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][1], level);
+			if (neighbor_flat_64 < 0 || neighbor_flat_64 >= expected_cell_count || live_terrain_code[size_t(neighbor_flat_64)] == 8 || live_terrain_code[size_t(neighbor_flat_64)] == 9) {
+				rejected_transition_neighbor_count += 1;
+				continue;
+			}
+			const int32_t neighbor_flat = int32_t(neighbor_flat_64);
+			if (owner_low[size_t(flat)] == owner_low[size_t(neighbor_flat)]) {
+				rejected_transition_same_low_owner_count += 1;
+				continue;
+			}
+			transition_candidates.push_back(TransitionCandidate {
+					flat,
+					x,
+					y,
+					level,
+					neighbor_flat,
+					x + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][0],
+					y + NEIGHBOR_DELTAS_0x5A2658[size_t(direction)][1],
+					direction,
+					owner_low[size_t(flat)],
+					owner_high[size_t(flat)],
+					owner_low[size_t(neighbor_flat)],
+					path_high[size_t(flat)] });
+		}
+	}
+
+	for (int32_t link_index = 0; link_index < link_seeds.size(); ++link_index) {
+		if (Variant(link_seeds[link_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary seed = link_seeds[link_index];
+		const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
+		const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
+		const int32_t raw_guard_value = int32_t(seed.get("guard_value", 0));
+		const bool wide = bool(seed.get("wide", false));
+		const bool border_guard = bool(seed.get("border_guard", false));
+		if (raw_guard_value > 0) {
+			raw_guard_link_count += 1;
+		}
+		if (wide) {
+			wide_suppressed_guard_count += 1;
+		}
+		if (border_guard) {
+			border_guard_link_count += 1;
+		}
+		const int32_t scaled_guard_value = wide ? 0 : h3maped_strength_scaled_value_4a65a5(raw_guard_value, global_strength_mode);
+		if (scaled_guard_value > 0) {
+			scaled_nonzero_guard_count += 1;
+		}
+		std::vector<const TransitionCandidate *> best_candidates;
+		int32_t best_path_score = 0x7d00;
+		int32_t a_to_b_candidate_count = 0;
+		int32_t b_to_a_candidate_count = 0;
+		for (const TransitionCandidate &candidate : transition_candidates) {
+			const bool a_to_b = candidate.low_owner == runtime_a && candidate.high_owner == runtime_b;
+			const bool b_to_a = candidate.low_owner == runtime_b && candidate.high_owner == runtime_a;
+			if (!a_to_b && !b_to_a) {
+				continue;
+			}
+			if (a_to_b) {
+				a_to_b_candidate_count += 1;
+			} else {
+				b_to_a_candidate_count += 1;
+			}
+			if (candidate.path_score < best_path_score) {
+				best_path_score = candidate.path_score;
+				best_candidates.clear();
+				best_candidates.push_back(&candidate);
+			} else if (candidate.path_score == best_path_score) {
+				best_candidates.push_back(&candidate);
+			}
+		}
+		transition_candidate_total += a_to_b_candidate_count + b_to_a_candidate_count;
+		Dictionary record;
+		const String connection_id = String("h3maped_small_connection_") + String::num_int64(link_index + 1);
+		record["connection_id"] = connection_id;
+		record["link_index"] = seed.get("link_index", link_index);
+		record["runtime_zone_a"] = runtime_a;
+		record["runtime_zone_b"] = runtime_b;
+		record["raw_guard_value"] = raw_guard_value;
+		record["wide"] = wide;
+		record["border_guard"] = border_guard;
+		record["normal_guard_global_strength_mode"] = global_strength_mode;
+		record["normal_guard_scaled_value"] = scaled_guard_value;
+		record["first_pass_helpers"] = Array::make("0x4a61bc", "0x4a696b", "0x4a6cf2");
+		record["second_pass_helpers"] = Array::make("0x4a696b", "0x4a7605");
+		record["candidate_scan_helper"] = "0x4a61bc";
+		record["candidate_scan_source"] = "0x4a79d8_transition_vectors_from_owner_low_high_bytes";
+		record["candidate_transition_vector_record_size_bytes"] = 12;
+		record["a_to_b_candidate_count"] = a_to_b_candidate_count;
+		record["b_to_a_candidate_count"] = b_to_a_candidate_count;
+		record["transition_candidate_count"] = a_to_b_candidate_count + b_to_a_candidate_count;
+		record["best_path_score"] = best_path_score == 0x7d00 ? -1 : best_path_score;
+		record["best_path_tie_candidate_count"] = int32_t(best_candidates.size());
+		record["materializes_public_output"] = false;
+		if (best_candidates.empty()) {
+			fallback_4a7605_attempt_count += 1;
+			Dictionary fallback_record;
+			fallback_record["connection_id"] = connection_id;
+			fallback_record["link_index"] = seed.get("link_index", link_index);
+			fallback_record["helper"] = "0x4a7605";
+			fallback_record["selection_helper"] = "0x4a7312";
+			fallback_record["runtime_zone_a"] = runtime_a;
+			fallback_record["runtime_zone_b"] = runtime_b;
+			int32_t endpoint_a_flat = -1;
+			int32_t endpoint_b_flat = -1;
+			int32_t endpoint_a_candidate_count = 0;
+			int32_t endpoint_b_candidate_count = 0;
+			int32_t endpoint_a_rng_value = -1;
+			int32_t endpoint_b_rng_value = -1;
+			int32_t endpoint_a_selected_index = -1;
+			int32_t endpoint_b_selected_index = -1;
+			const bool endpoint_a_selected = select_zone_endpoint_4a7312(runtime_a, private_blocker_u8, endpoint_a_flat, endpoint_a_candidate_count, endpoint_a_rng_value, endpoint_a_selected_index);
+			const bool endpoint_b_selected = select_zone_endpoint_4a7312(runtime_b, private_blocker_u8, endpoint_b_flat, endpoint_b_candidate_count, endpoint_b_rng_value, endpoint_b_selected_index);
+			fallback_4a7605_candidate_total += endpoint_a_candidate_count + endpoint_b_candidate_count;
+			fallback_record["endpoint_a_candidate_count"] = endpoint_a_candidate_count;
+			fallback_record["endpoint_b_candidate_count"] = endpoint_b_candidate_count;
+			fallback_record["endpoint_a_rng_value"] = endpoint_a_rng_value;
+			fallback_record["endpoint_b_rng_value"] = endpoint_b_rng_value;
+			fallback_record["endpoint_a_selected_index"] = endpoint_a_selected_index;
+			fallback_record["endpoint_b_selected_index"] = endpoint_b_selected_index;
+			if (!endpoint_a_selected || !endpoint_b_selected) {
+				no_transition_candidate_count += 1;
+				fallback_record["status"] = "0x4a7605_0x4a7312_endpoint_selection_failed";
+				fallback_4a7605_records.append(fallback_record);
+				record["status"] = "0x4a61bc_no_owner_low_high_transition_candidate";
+				record["fallback_status"] = "0x4a7605_0x4a7312_endpoint_selection_failed";
+				record["endpoint_coordinate_materialized"] = false;
+				connection_records.append(record);
+				continue;
+			}
+			fallback_4a7605_selected_count += 1;
+			fallback_record["status"] = "0x4a7605_dual_endpoint_objects_selected_private";
+			fallback_record["endpoint_a_flat_cell_index"] = endpoint_a_flat;
+			fallback_record["endpoint_b_flat_cell_index"] = endpoint_b_flat;
+			fallback_4a7605_records.append(fallback_record);
+			record["status"] = "0x4a7605_dual_endpoint_candidate_selected_private";
+			record["fallback_status"] = "0x4a7605_dual_endpoint_objects_selected_private";
+			record["geometry_success_helper"] = "0x4a7605";
+			record["endpoint_coordinate_materialized"] = true;
+			record["selected_endpoint_side_a_flat_cell_index"] = endpoint_a_flat;
+			record["selected_endpoint_side_b_flat_cell_index"] = endpoint_b_flat;
+			record["normal_guard_object_helper_address"] = scaled_guard_value > 0 ? String("0x4a5e03") : String("");
+			record["normal_guard_object_status"] = scaled_guard_value > 0 ? String("0x4a5e03_private_guard_record_materialized") : (wide ? String("suppressed_by_link_plus_0x08_wide") : String("no_scaled_guard_object"));
+			record["border_guard_status"] = border_guard ? String("0x4a5e73_0x4a5a23_private_marker_cells_materialized") : String("not_a_border_guard_link");
+			append_private_cell(private_blocker_records, private_blocker_u8, endpoint_a_flat, "connection_blocker_0x4a7605_endpoint_a", connection_id, runtime_a, runtime_b, scaled_guard_value);
+			append_private_cell(private_blocker_records, private_blocker_u8, endpoint_b_flat, "connection_blocker_0x4a7605_endpoint_b", connection_id, runtime_a, runtime_b, scaled_guard_value);
+			materialized_blocker_cell_count += 2;
+			if (scaled_guard_value > 0) {
+				append_private_cell(private_guard_records, private_guard_u8, endpoint_a_flat, "connection_guard_0x4a5e03_0x4a7605_endpoint_a", connection_id, runtime_a, runtime_b, scaled_guard_value);
+				append_private_cell(private_guard_records, private_guard_u8, endpoint_b_flat, "connection_guard_0x4a5e03_0x4a7605_endpoint_b", connection_id, runtime_a, runtime_b, scaled_guard_value);
+				materialized_guard_count += 2;
+			}
+			materialized_connection_count += 1;
+			connection_records.append(record);
+			continue;
+		}
+		const int32_t rng_value = rng.next();
+		rng_call_count += 1;
+		const int32_t selected_index = rng_value % int32_t(best_candidates.size());
+		const TransitionCandidate &selected = *best_candidates[size_t(selected_index)];
+		const int32_t side_a_flat = selected.side_flat;
+		const int32_t side_b_flat = selected.neighbor_flat;
+		Dictionary selected_side_a;
+		selected_side_a["side_a_flat_cell_index"] = side_a_flat;
+		selected_side_a["side_b_flat_cell_index"] = side_b_flat;
+		selected_side_a["x"] = selected.side_x;
+		selected_side_a["y"] = selected.side_y;
+		selected_side_a["level"] = selected.side_level;
+		selected_side_a["direction_index_0x5a2658"] = selected.direction;
+		selected_side_a["owner_low_byte"] = selected.low_owner;
+		selected_side_a["owner_high_byte"] = selected.high_owner;
+		selected_side_a["neighbor_owner_low_byte"] = selected.neighbor_low_owner;
+		selected_side_a["path_high_word_score"] = selected.path_score;
+		selected_side_a["candidate_score_source"] = "0x4a61bc_owner_low_high_transition_vector_best_score_private";
+		record["status"] = "0x4a61bc_same_level_transition_endpoint_materialized_private";
+		record["endpoint_coordinate_materialized"] = true;
+		record["selected_candidate_index"] = selected_index;
+		record["selected_candidate_rng_value"] = rng_value;
+		record["selected_endpoint_side_a"] = selected_side_a;
+		record["selected_endpoint_side_b_flat_cell_index"] = side_b_flat;
+		record["geometry_success_helper"] = "0x4a61bc";
+		record["normal_guard_object_helper_address"] = scaled_guard_value > 0 ? String("0x4a5e03") : String("");
+		record["normal_guard_object_status"] = scaled_guard_value > 0 ? String("0x4a5e03_private_guard_record_materialized") : (wide ? String("suppressed_by_link_plus_0x08_wide") : String("no_scaled_guard_object"));
+		record["border_guard_status"] = border_guard ? String("0x4a5e73_0x4a5a23_private_marker_cells_materialized") : String("not_a_border_guard_link");
+		append_private_cell(private_blocker_records, private_blocker_u8, side_a_flat, "connection_blocker_side_a", connection_id, runtime_a, runtime_b, scaled_guard_value);
+		append_private_cell(private_blocker_records, private_blocker_u8, side_b_flat, "connection_blocker_side_b", connection_id, runtime_a, runtime_b, scaled_guard_value);
+		materialized_blocker_cell_count += 2;
+		if (scaled_guard_value > 0) {
+			const int32_t guard_endpoint_rng_value = rng.next();
+			rng_call_count += 1;
+			const int32_t guard_endpoint_index = guard_endpoint_rng_value & 1;
+			const int32_t guard_flat = guard_endpoint_index == 0 ? side_a_flat : side_b_flat;
+			record["normal_guard_endpoint_rng_value"] = guard_endpoint_rng_value;
+			record["normal_guard_selected_endpoint_index"] = guard_endpoint_index;
+			append_private_cell(private_guard_records, private_guard_u8, guard_flat, "connection_guard_0x4a5e03", connection_id, runtime_a, runtime_b, scaled_guard_value);
+			materialized_guard_count += 1;
+		}
+		if (border_guard) {
+			for (int32_t marker = 0; marker < std::min<int32_t>(5, int32_t(NEIGHBOR_DELTAS_0x5A2658.size())); ++marker) {
+				const int32_t level = side_a_flat / (map_width * map_height);
+				const int32_t remainder = side_a_flat % (map_width * map_height);
+				const int32_t marker_x = remainder % map_width + NEIGHBOR_DELTAS_0x5A2658[size_t(marker)][0];
+				const int32_t marker_y = remainder / map_width + NEIGHBOR_DELTAS_0x5A2658[size_t(marker)][1];
+				const int64_t marker_flat = h3maped_cell_index(map_width, map_height, marker_x, marker_y, level);
+				if (append_private_cell(private_blocker_records, private_blocker_u8, int32_t(marker_flat), "border_guard_marker_0x4a5a23", connection_id, runtime_a, runtime_b, scaled_guard_value)) {
+					border_guard_marker_cell_count += 1;
+					materialized_blocker_cell_count += 1;
+				}
+			}
+		}
+		materialized_connection_count += 1;
+		connection_records.append(record);
+	}
+
+	Dictionary dispatch_summary;
+	dispatch_summary["status"] = materialized_connection_count > 0 ? String("0x4a79a3_private_connection_dispatch_materialized") : String("0x4a79a3_no_connection_geometry_materialized");
+	dispatch_summary["first_pass_range"] = "0x4a7b96..0x4a7c3d";
+	dispatch_summary["second_pass_range"] = "0x4a7c8f..0x4a7e71";
+	dispatch_summary["link_record_processed_marker_offset"] = "+0x0a";
+	dispatch_summary["link_count"] = link_seeds.size();
+	dispatch_summary["materialized_connection_count"] = materialized_connection_count;
+	dispatch_summary["no_transition_candidate_count"] = no_transition_candidate_count;
+	dispatch_summary["transition_candidate_total"] = transition_candidate_total;
+	dispatch_summary["rng_state_before_connection_dispatch_uint32"] = int64_t(rng_seed);
+	dispatch_summary["rng_call_count"] = rng_call_count;
+	dispatch_summary["rng_state_after_connection_dispatch_uint32"] = int64_t(rng.state);
+
+	phase["status"] = materialized_connection_count > 0 ? String("active_strict_private_connection_guards") : String("active_strict_connection_dispatch_no_geometry");
+	phase["source"] = "strict private 0x4a79a3 link post-processing over recovered link seeds: 0x4a79d8 transition-vector build from owner low/high channels, 0x4a61bc same-level endpoint selection, 0x4a65a5 guard value scaling, 0x4a5e03 private guard records, and 0x4a5e73/0x4a5a23 private border-marker cells where applicable";
+	phase["grid_available"] = grid_available;
+	phase["link_seed_count"] = link_seeds.size();
+	phase["connection_records"] = connection_records;
+	phase["connection_record_count"] = connection_records.size();
+	phase["dispatch_summary"] = dispatch_summary;
+	Dictionary high_owner_report;
+	high_owner_report["status"] = "0x4a5767_0x49a318_high_owner_channel_materialized_private";
+	high_owner_report["seed_attempt_count"] = high_owner_seed_attempt_count;
+	high_owner_report["seed_blocked_count"] = high_owner_seed_blocked_count;
+	high_owner_report["seed_reports"] = high_owner_seed_reports;
+	high_owner_report["owner_low_byte_materialized_count"] = owner_low_materialized_count;
+	high_owner_report["cross_owner_high_byte_write_count"] = high_owner_cross_write_count;
+	high_owner_report["cross_owner_direction_write_count"] = high_owner_direction_write_count;
+	high_owner_report["same_owner_relax_count"] = high_owner_same_owner_relax_count;
+	high_owner_report["popped_cell_count"] = high_owner_popped_cell_count;
+	high_owner_report["max_queue_size"] = max_high_owner_queue_size;
+	phase["high_owner_propagation"] = high_owner_report;
+	Dictionary transition_report;
+	transition_report["status"] = "0x4a79d8_transition_vectors_materialized_private";
+	transition_report["transition_candidate_count"] = int32_t(transition_candidates.size());
+	transition_report["directional_candidate_total"] = transition_candidate_total;
+	transition_report["rejected_high_owner_sentinel_count"] = rejected_high_owner_sentinel_count;
+	transition_report["rejected_terrain_count"] = rejected_transition_terrain_count;
+	transition_report["rejected_missing_materialized_count"] = rejected_transition_materialized_count;
+	transition_report["rejected_direction_count"] = rejected_transition_direction_count;
+	transition_report["rejected_neighbor_count"] = rejected_transition_neighbor_count;
+	transition_report["rejected_same_low_owner_count"] = rejected_transition_same_low_owner_count;
+	phase["transition_vectors"] = transition_report;
+	Dictionary fallback_4a7605_report;
+	fallback_4a7605_report["status"] = fallback_4a7605_attempt_count > 0 ? String("0x4a7605_0x4a7312_private_dual_endpoint_fallback_materialized") : String("not_needed");
+	fallback_4a7605_report["attempt_count"] = fallback_4a7605_attempt_count;
+	fallback_4a7605_report["selected_count"] = fallback_4a7605_selected_count;
+	fallback_4a7605_report["candidate_total"] = fallback_4a7605_candidate_total;
+	fallback_4a7605_report["records"] = fallback_4a7605_records;
+	phase["fallback_4a7605"] = fallback_4a7605_report;
+	phase["transition_candidate_total"] = transition_candidate_total;
+	phase["materialized_connection_count"] = materialized_connection_count;
+	phase["raw_guard_link_count"] = raw_guard_link_count;
+	phase["wide_suppressed_normal_guard_count"] = wide_suppressed_guard_count;
+	phase["normal_guard_global_strength_mode"] = global_strength_mode;
+	phase["normal_guard_scaled_nonzero_count"] = scaled_nonzero_guard_count;
+	phase["private_guard_records"] = private_guard_records;
+	phase["private_guard_record_count"] = private_guard_records.size();
+	phase["private_blocker_records"] = private_blocker_records;
+	phase["private_blocker_cell_count"] = materialized_blocker_cell_count;
+	phase["border_guard_link_count"] = border_guard_link_count;
+	phase["border_guard_marker_cell_count"] = border_guard_marker_cell_count;
+	phase["private_connection_blocker_u8"] = private_blocker_u8;
+	phase["private_connection_guard_u8"] = private_guard_u8;
+	phase["materializes_private_connection_geometry"] = materialized_connection_count > 0;
+	phase["materializes_private_blocker_cells"] = materialized_blocker_cell_count > 0;
+	phase["materializes_private_connection_guards"] = materialized_guard_count > 0;
+	phase["private_connection_guard_materialized_count"] = materialized_guard_count;
+	phase["materializes_public_objects"] = false;
+	phase["adopts_into_runtime_grid"] = false;
+	phase["public_package_output_allowed"] = false;
+	return phase;
+}
+
 #if 0
 Dictionary zone_footprint_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase) {
 	Dictionary phase;
@@ -9094,6 +9730,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	roads_rivers["binary_byte_prefix_0x4ab37f"] = "b8 6c ab 52 00 e8 47 ad 03 00 83 ec 64 80 65 f3";
 	roads_rivers["binary_byte_prefix_0x4b4243"] = "b8 24 b3 52 00 e8 83 1e 03 00 83 ec 0c 56 57 8b";
 	report["roads_and_rivers"] = roads_rivers;
+	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_replay, link_seeds, roads_rivers, zone_words, cell_flags, live_terrain_code);
+	connections["source_range"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
+	connections["binary_byte_prefix_0x4a79a3"] = "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3";
+	connections["binary_byte_prefix_0x4a61bc"] = "b8 24 a9 52 00 e8 0a ff 03 00 83 ec 58 53 8b 55";
+	connections["binary_byte_prefix_0x4a696b"] = "b8 56 a9 52 00 e8 5b f7 03 00 83 ec 5c 8b 55 08";
+	connections["binary_byte_prefix_0x4a6cf2"] = "b8 7c a9 52 00 e8 d4 f3 03 00 83 ec 64 53 8b 55";
+	connections["binary_byte_prefix_0x4a7605"] = "b8 c4 a9 52 00 e8 c1 ea 03 00 83 ec 2c 53 56";
+	connections["binary_byte_prefix_0x4a65a5"] = "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57";
+	connections["strict_port_scope"] = "private same-level owner-transition endpoint, blocker cell, and normal guard record materialization only; public runtime/package adoption remains blocked";
+	report["connections_blockers_guards"] = connections;
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
