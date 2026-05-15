@@ -661,31 +661,35 @@ func _run() -> void:
 			or String(town_castle.get("binary_byte_prefix_0x49a09c", "")) != "55 8b ec 51 51 8b 45 1c 80 65 ff 00 53 56 83 78" \
 			or String(town_castle.get("binary_byte_prefix_0x49b3c1", "")) != "56 57 33 ff 8b f1 33 c0 80 7c 06 41 00 74 01 47" \
 			or String(town_castle.get("binary_byte_prefix_0x49ba89", "")) != "8b 44 24 04 56 8b f1 c7 06 74 0a 54 00 89 46 04" \
-			or int(town_castle.get("source_player_min_castle_count", -1)) != 4 \
-			or int(town_castle.get("assigned_player_min_castle_count", -1)) != 3 \
-			or int(town_castle.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
-			or int(town_castle.get("scheduled_direct_minimum_object_count", -1)) != 3 \
-			or int(town_castle.get("scheduled_owned_player_town_count", -1)) != 3 \
-			or int(town_castle.get("project_town_record_candidate_count", -1)) != 3 \
-			or int(town_castle.get("project_player_start_candidate_count", -1)) != 3 \
-			or int(town_stamping.get("direct_candidate_scan_count", -1)) != 3 \
-			or int(town_stamping.get("direct_candidate_total", -1)) != 445 \
-			or int(town_stamping.get("direct_footprint_eligible_total", -1)) != 291 \
-			or int(town_stamping.get("direct_footprint_marked_cell_count", -1)) != 39 \
-			or int(town_stamping.get("direct_unique_selection_count", -1)) != 2 \
-			or int(town_stamping.get("direct_random_tie_selection_count", -1)) != 1 \
-			or int(town_stamping.get("direct_random_tie_rng_call_count", -1)) != 1 \
-			or int(town_stamping.get("direct_record_projection_count", -1)) != 3 \
-			or int(town_stamping.get("object_rng_state_before_0x4a93a2_uint32", -1)) != 2166683160 \
-			or int(town_stamping.get("object_rng_state_after_0x4a93a2_uint32", -1)) != 811474043 \
-			or int(town_adoption.get("town_record_count", -1)) != 3 \
-			or int(town_adoption.get("player_start_count", -1)) != 3 \
-			or int(town_adoption.get("synchronized_player_start_count", -1)) != 3 \
-			or town_records.size() != 3 \
-			or player_starts.size() != 3 \
-			or town_scheduled.size() != 3 \
-			or town_skipped.size() != 1 \
-			or town_projection_records.size() != 3 \
+				or int(town_castle.get("source_player_min_castle_count", -1)) != 4 \
+				or int(town_castle.get("assigned_player_min_castle_count", -1)) != 3 \
+				or int(town_castle.get("skipped_unassigned_player_start_min_castle_count", -1)) != 1 \
+				or int(town_castle.get("scheduled_inactive_player_neutralized_town_count", -1)) != 1 \
+				or int(town_castle.get("scheduled_neutral_minimum_town_count", -1)) != 0 \
+				or int(town_castle.get("scheduled_direct_minimum_object_count", -1)) != 4 \
+				or int(town_castle.get("scheduled_owned_player_town_count", -1)) != 3 \
+				or int(town_castle.get("project_town_record_candidate_count", -1)) != 4 \
+				or int(town_castle.get("project_player_start_candidate_count", -1)) != 3 \
+				or int(town_castle.get("project_neutral_town_candidate_count", -1)) != 1 \
+				or int(town_stamping.get("direct_candidate_scan_count", -1)) != 4 \
+				or int(town_stamping.get("direct_candidate_total", -1)) != 652 \
+				or int(town_stamping.get("direct_footprint_eligible_total", -1)) != 432 \
+				or int(town_stamping.get("direct_footprint_marked_cell_count", -1)) != 52 \
+				or int(town_stamping.get("direct_unique_selection_count", -1)) != 2 \
+				or int(town_stamping.get("direct_random_tie_selection_count", -1)) != 2 \
+				or int(town_stamping.get("direct_random_tie_rng_call_count", -1)) != 2 \
+				or int(town_stamping.get("direct_record_projection_count", -1)) != 4 \
+				or int(town_stamping.get("object_rng_state_before_0x4a93a2_uint32", -1)) != 2166683160 \
+				or int(town_stamping.get("object_rng_state_after_0x4a93a2_uint32", -1)) != 3289249106 \
+				or int(town_adoption.get("town_record_count", -1)) != 4 \
+				or int(town_adoption.get("neutral_town_count", -1)) != 1 \
+				or int(town_adoption.get("player_start_count", -1)) != 3 \
+				or int(town_adoption.get("synchronized_player_start_count", -1)) != 3 \
+				or town_records.size() != 4 \
+				or player_starts.size() != 3 \
+				or town_scheduled.size() != 4 \
+				or town_skipped.size() != 1 \
+				or town_projection_records.size() != 4 \
 			or not bool(town_castle.get("materializes_private_town_candidates", false)) \
 			or bool(town_castle.get("materializes_town_objects", true)) \
 			or bool(town_castle.get("materializes_package_tiles", true)) \
@@ -744,7 +748,7 @@ func _run() -> void:
 			or bool(object_vector.get("public_package_output_allowed", true)) \
 			or int(object_vector.get("materialized_private_mine_coordinate_record_count", -1)) != 17 \
 			or int(object_vector.get("materialized_private_reward_coordinate_record_count", -1)) != 3 \
-			or int(object_vector.get("partial_coordinate_record_count", -1)) != 23 \
+				or int(object_vector.get("partial_coordinate_record_count", -1)) != 24 \
 			or int(object_vector.get("candidate_vector_single_level_total_count", -1)) != 704 \
 			or int(object_vector.get("candidate_vector_materialized_static_subset_count", -1)) != 110 \
 			or int(object_vector.get("candidate_vector_materialized_monster_count", -1)) != 118 \
@@ -757,19 +761,19 @@ func _run() -> void:
 			or int(object_vector.get("reward_value_preview_rng_call_count", -1)) != 18 \
 			or int(object_vector.get("reward_scheduler_budget_argument_total", -1)) != 300 \
 			or int(object_vector.get("reward_object_lookup_count", -1)) != 18 \
-			or int(object_vector.get("reward_object_lookup_selected_count", -1)) != 10 \
-			or int(object_vector.get("reward_object_lookup_rng_call_count", -1)) != 10 \
-			or int(object_vector.get("reward_candidate_scan_count", -1)) != 18 \
-			or int(object_vector.get("reward_candidate_scan_eligible_total", -1)) != 46 \
-			or int(object_vector.get("reward_candidate_scan_weight_total", -1)) != 17130 \
-			or int(object_vector.get("reward_candidate_scan_rejected_template_total", -1)) != 104 \
-			or int(object_vector.get("reward_coordinate_scan_call_count", -1)) != 10 \
-			or int(object_vector.get("reward_coordinate_scan_candidate_total", -1)) != 156 \
+				or int(object_vector.get("reward_object_lookup_selected_count", -1)) != 12 \
+				or int(object_vector.get("reward_object_lookup_rng_call_count", -1)) != 12 \
+				or int(object_vector.get("reward_candidate_scan_count", -1)) != 18 \
+				or int(object_vector.get("reward_candidate_scan_eligible_total", -1)) != 44 \
+				or int(object_vector.get("reward_candidate_scan_weight_total", -1)) != 14600 \
+				or int(object_vector.get("reward_candidate_scan_rejected_template_total", -1)) != 110 \
+				or int(object_vector.get("reward_coordinate_scan_call_count", -1)) != 12 \
+				or int(object_vector.get("reward_coordinate_scan_candidate_total", -1)) != 177 \
 			or int(object_vector.get("reward_coordinate_rng_call_count", -1)) != 3 \
 			or int(object_vector.get("reward_generated_cell_mutated_body_count", -1)) != 4 \
 			or int(object_vector.get("reward_generated_cell_mutated_action_count", -1)) != 3 \
 			or int(object_vector.get("reward_generated_cell_score_depletion_call_count", -1)) != 3 \
-			or int(object_vector.get("reward_generated_cell_score_depletion_mutated_cell_count", -1)) != 3151 \
+				or int(object_vector.get("reward_generated_cell_score_depletion_mutated_cell_count", -1)) != 3127 \
 			or not bool(object_vector.get("reward_coordinate_commit_materialized", false)) \
 			or int(object_vector.get("project_object_adoption_candidate_count", -1)) != 0 \
 			or String(object_vector.get("blocked_next", "")) != "roads_rivers_blockers_guards_0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2":
@@ -781,27 +785,27 @@ func _run() -> void:
 			or int(mine_boundary.get("mine_template_selection_rng_call_count", -1)) != 18 \
 			or int(mine_boundary.get("mine_placement_rng_call_count", -1)) != 17 \
 			or int(mine_boundary.get("mine_placement_scan_call_count", -1)) != 18 \
-			or int(mine_boundary.get("mine_placement_candidate_total", -1)) != 1132 \
+				or int(mine_boundary.get("mine_placement_candidate_total", -1)) != 1106 \
 			or int(mine_boundary.get("mine_placement_selected_count", -1)) != 17 \
 			or int(mine_boundary.get("mine_placement_rejected_owner_count", -1)) != 2795 \
-			or int(mine_boundary.get("mine_placement_rejected_49aa93_count", -1)) != 2420 \
-			or int(mine_boundary.get("mine_placement_rejected_special_distance_count", -1)) != 27 \
-			or int(mine_boundary.get("mine_placement_marked_body_cell_count", -1)) != 78 \
-			or int(mine_boundary.get("object_rng_state_before_0x4a9911_uint32", -1)) != 811474043 \
-			or int(mine_boundary.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2954628476 \
+				or int(mine_boundary.get("mine_placement_rejected_49aa93_count", -1)) != 2434 \
+				or int(mine_boundary.get("mine_placement_rejected_special_distance_count", -1)) != 39 \
+				or int(mine_boundary.get("mine_placement_marked_body_cell_count", -1)) != 78 \
+				or int(mine_boundary.get("object_rng_state_before_0x4a9911_uint32", -1)) != 3289249106 \
+				or int(mine_boundary.get("object_rng_state_after_0x4a9911_0x4a9641_uint32", -1)) != 2346411599 \
 			or int(reward_boundary.get("total_treasure_band_count", -1)) != 18 \
 			or int(reward_boundary.get("eligible_reward_band_count", -1)) != 18 \
 			or int(reward_boundary.get("eligible_reward_density_sum", -1)) != 96 \
 			or int(reward_boundary.get("budget_base", -1)) != 800 \
 			or int(reward_boundary.get("scheduler_zone_count", -1)) != 6 \
 			or int(reward_boundary.get("scheduler_total_density_sum", -1)) != 96 \
-			or int(reward_boundary.get("preview_rng_state_before_0x4aa354_uint32", -1)) != 2954628476 \
-			or int(reward_boundary.get("preview_rng_state_after_0x4aa354_uint32", -1)) != 2125947405 \
-			or int(reward_boundary.get("private_generated_cell_word_0x20_owned_cell_count", -1)) != 1107 \
-			or int(reward_boundary.get("coordinate_scan_owner_match_total", -1)) != 1624 \
-			or int(reward_boundary.get("coordinate_scan_rejected_owner_count", -1)) != 11336 \
-			or int(reward_boundary.get("coordinate_scan_rejected_score_count", -1)) != 1124 \
-			or int(reward_boundary.get("coordinate_scan_rejected_filter_count", -1)) != 344 \
+				or int(reward_boundary.get("preview_rng_state_before_0x4aa354_uint32", -1)) != 2346411599 \
+				or int(reward_boundary.get("preview_rng_state_after_0x4aa354_uint32", -1)) != 362889206 \
+				or int(reward_boundary.get("private_generated_cell_word_0x20_owned_cell_count", -1)) != 1107 \
+				or int(reward_boundary.get("coordinate_scan_owner_match_total", -1)) != 2057 \
+				or int(reward_boundary.get("coordinate_scan_rejected_owner_count", -1)) != 13495 \
+				or int(reward_boundary.get("coordinate_scan_rejected_score_count", -1)) != 1620 \
+				or int(reward_boundary.get("coordinate_scan_rejected_filter_count", -1)) != 260 \
 			or int(reward_boundary.get("coordinate_selected_count", -1)) != 3 \
 			or String(selector_boundary.get("status", "")) != "selector_scan_weighted_choice_materialized_coordinate_commit_boundary_materialized_private_record_pending" \
 			or int(selector_boundary.get("global_limit_override_count", -1)) != 30 \
@@ -835,14 +839,14 @@ func _run() -> void:
 			or int(roads_rivers.get("coordinate_record_size_bytes", -1)) != 12 \
 			or int(roads_rivers.get("candidate_accept_threshold_low_word", -1)) != 0x7530 \
 			or not bool(roads_rivers.get("grid_available", false)) \
-			or int(roads_rivers.get("generator_coordinate_record_count", -1)) != 3 \
-			or road_coordinate_records.size() != 3 \
+				or int(roads_rivers.get("generator_coordinate_record_count", -1)) != 4 \
+				or road_coordinate_records.size() != 4 \
 			or int(road_coordinate_records[0].get("x", -1)) != int(town_records[0].get("x", -2)) \
 			or int(road_coordinate_records[1].get("y", -1)) != int(town_records[1].get("y", -2)) \
 			or bool(road_coordinate_records[0].get("complete_executable_vector_claim", true)) \
-			or int(roads_rivers.get("pair_candidate_iteration_count", -1)) != 3 \
-			or int(roads_rivers.get("candidate_low_word_count", -1)) != 3 \
-			or road_pair_records.size() != 3 \
+				or int(roads_rivers.get("pair_candidate_iteration_count", -1)) != 6 \
+				or int(roads_rivers.get("candidate_low_word_count", -1)) != 6 \
+				or road_pair_records.size() != 6 \
 			or bool(roads_rivers.get("complete_executable_vector_claim", true)) \
 			or not bool(roads_rivers.get("materializes_private_coordinate_vector_walk", false)) \
 			or not bool(roads_rivers.get("materializes_private_candidate_low_words", false)) \
@@ -982,7 +986,7 @@ func _run() -> void:
 			or int(upstream_bit_writer_sources.get("water_edge_0x4a4fc5_anchor_after_owner_zone_gate_count", -1)) != 0 \
 			or int(upstream_bit_writer_sources.get("water_edge_0x4a4fc5_rectangle_scan_cell_count", -1)) != 0 \
 			or int(upstream_bit_writer_sources.get("water_edge_0x4a4fc5_candidate_set_count", -1)) != 0 \
-			or int(upstream_bit_writer_sources.get("occupancy_0x49a932_set_count", -1)) != 119 \
+				or int(upstream_bit_writer_sources.get("occupancy_0x49a932_set_count", -1)) != 148 \
 			or int(upstream_bit_writer_sources.get("occupancy_0x49a932_clear_count", -1)) != 0 \
 			or bool(upstream_bit_writer_sources.get("temporary_owner_transition_fallback_active", true)) \
 			or int(upstream_bit_writer_sources.get("temporary_owner_transition_candidate_scan_count", -1)) != 346 \
@@ -1004,9 +1008,9 @@ func _run() -> void:
 			or int(generated_cell_bit_state.get("junction_0x4a89da_candidate_set_count", -1)) != 0 \
 			or int(generated_cell_bit_state.get("border_guard_marker_0x4a5a23_record_count", -1)) != int(connections.get("border_guard_marker_cell_count", -2)) \
 			or int(generated_cell_bit_state.get("decor_candidate_set_count", -1)) != 605 \
-			or int(generated_cell_bit_state.get("occupied_blocked_set_count", -1)) != 119 \
-			or int(generated_cell_bit_state.get("final_decor_candidate_bit_26_count", -1)) != 520 \
-			or int(generated_cell_bit_state.get("final_occupied_blocked_bit_27_count", -1)) != 119 \
+				or int(generated_cell_bit_state.get("occupied_blocked_set_count", -1)) != 148 \
+				or int(generated_cell_bit_state.get("final_decor_candidate_bit_26_count", -1)) != 491 \
+				or int(generated_cell_bit_state.get("final_occupied_blocked_bit_27_count", -1)) != 148 \
 			or not bool(generated_cell_bit_state.get("materializes_generated_cell_bit_26", false)) \
 			or not bool(generated_cell_bit_state.get("materializes_generated_cell_bit_27", false)) \
 			or not bool(generated_cell_bit_state.get("exact_upstream_bit_source_claim", false)):
@@ -1030,16 +1034,16 @@ func _run() -> void:
 			or int(decorative_filler.get("obstacle_row_type_limit_rejected_count", -1)) != 6 \
 			or int(decorative_filler.get("obstacle_row_template_missing_count", -1)) != 0 \
 			or int(decorative_filler.get("candidate_template_body_missing_count", -1)) != 2 \
-			or int(decorative_filler.get("generated_flagged_cell_count", -1)) != 520 \
-			or int(decorative_filler.get("budget_argument_to_0x49e700", -1)) != 531 \
-			or int(decorative_filler.get("budget_gate_denominator", -1)) != 1024 \
-			or int(decorative_filler.get("cell_call_count", -1)) != 520 \
-			or int(decorative_filler.get("initial_occupied_seed_cell_count", -1)) != 119 \
-			or int(decorative_filler.get("private_decorative_object_placement_count", -1)) != 73 \
-			or int(decorative_filler.get("private_remaining_candidate_0x49a932_lock_count", -1)) != 446 \
-			or int(decorative_filler.get("private_decorative_obstacle_record_count", -1)) != 519 \
-			or decorative_records.size() != 519 \
-			or int(decorative_filler.get("private_decorative_marked_body_cell_count", -1)) != 590 \
+				or int(decorative_filler.get("generated_flagged_cell_count", -1)) != 491 \
+				or int(decorative_filler.get("budget_argument_to_0x49e700", -1)) != 562 \
+				or int(decorative_filler.get("budget_gate_denominator", -1)) != 1024 \
+				or int(decorative_filler.get("cell_call_count", -1)) != 491 \
+				or int(decorative_filler.get("initial_occupied_seed_cell_count", -1)) != 148 \
+				or int(decorative_filler.get("private_decorative_object_placement_count", -1)) != 69 \
+				or int(decorative_filler.get("private_remaining_candidate_0x49a932_lock_count", -1)) != 415 \
+				or int(decorative_filler.get("private_decorative_obstacle_record_count", -1)) != 484 \
+				or decorative_records.size() != 484 \
+				or int(decorative_filler.get("private_decorative_marked_body_cell_count", -1)) != 549 \
 			or not bool(decorative_filler.get("materializes_private_decorative_obstacles", false)) \
 			or bool(decorative_filler.get("materializes_public_objects", true)) \
 			or bool(decorative_filler.get("public_package_output_allowed", true)):
@@ -1073,17 +1077,17 @@ func _run() -> void:
 			or not bool(package_adoption.get("package_objects_materialized_from_private_state", false)) \
 			or int(package_adoption.get("terrain_layer_level_count", -1)) != 1 \
 			or int(package_adoption.get("terrain_tile_count", -1)) != 1296 \
-			or int(package_adoption.get("town_package_object_count", -1)) != 3 \
-			or int(package_adoption.get("owned_player_town_count", -1)) != 3 \
-			or int(package_adoption.get("neutral_town_package_object_count", -1)) != 0 \
+				or int(package_adoption.get("town_package_object_count", -1)) != 4 \
+				or int(package_adoption.get("owned_player_town_count", -1)) != 3 \
+				or int(package_adoption.get("neutral_town_package_object_count", -1)) != 1 \
 			or int(package_adoption.get("player_start_count", -1)) != 3 \
 			or int(package_adoption.get("player_start_town_sync_count", -1)) != 3 \
 			or int(package_adoption.get("mine_package_object_count", -1)) != 17 \
 			or int(package_adoption.get("reward_package_object_count", -1)) != 3 \
 			or int(package_adoption.get("connection_blocker_package_object_count", -1)) != 10 \
 			or int(package_adoption.get("connection_guard_package_object_count", -1)) != 6 \
-			or int(package_adoption.get("decorative_obstacle_package_object_count", -1)) != 519 \
-			or int(package_adoption.get("package_object_count", -1)) != 558 \
+				or int(package_adoption.get("decorative_obstacle_package_object_count", -1)) != 484 \
+				or int(package_adoption.get("package_object_count", -1)) != 524 \
 			or int(package_adoption.get("road_package_segment_count", -1)) != int(roads_rivers.get("accepted_predecessor_chain_count", -2)) \
 			or int(package_adoption.get("road_package_tile_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
 			or int(package_adoption.get("road_package_route_edge_count", -1)) != int(package_adoption.get("road_package_segment_count", -2)) \
@@ -1114,7 +1118,7 @@ func _run() -> void:
 			or int(terrain_layers.get("road_unique_tile_count", -1)) != int(roads_rivers.get("road_overlay_cell_count", -2)) \
 			or int(terrain_layers.get("road_segment_cell_count", -1)) != int(package_adoption.get("road_package_segment_cell_count", -2)) \
 			or String(terrain_layers.get("h3maped_road_public_adoption_status", "")) != "h3maped_predecessor_chains_adopted_as_route_segments" \
-			or package_objects.size() != 558 \
+				or package_objects.size() != 524 \
 			or String(route_graph.get("schema_id", "")) != "aurelion_h3maped_small_route_graph_draft_v1" \
 			or bool(route_graph.get("public_runtime_authoritative", true)) \
 			or int(route_graph.get("edge_count", -1)) != road_records.size() \
@@ -1170,7 +1174,7 @@ func _run() -> void:
 			or int(final_writeout.get("tile_byte_array_count", -1)) != 7 \
 			or int(final_writeout.get("tile_byte_array_size", -1)) != 1296 \
 			or int(final_writeout.get("terrain_tile_count", -1)) != 1296 \
-			or int(final_writeout.get("package_object_count", -1)) != 558 \
+				or int(final_writeout.get("package_object_count", -1)) != 524 \
 			or int(final_writeout.get("package_route_link_count", -1)) != 5 \
 			or int(final_writeout.get("river_overlay_type_nonzero_count", -1)) != 0 \
 			or int(final_writeout.get("river_overlay_art_nonzero_count", -1)) != 0 \
@@ -1183,7 +1187,7 @@ func _run() -> void:
 			or bool(final_writeout_validation.get("authorizes_public_runtime", true)) \
 			or int(final_writeout_validation.get("tile_byte_array_count", -1)) != 7 \
 			or int(final_writeout_validation.get("tile_byte_array_size", -1)) != 1296 \
-			or int(final_writeout_validation.get("package_object_count", -1)) != 558 \
+				or int(final_writeout_validation.get("package_object_count", -1)) != 524 \
 			or final_byte_0.size() != 1296 \
 			or final_byte_1.size() != 1296 \
 			or final_byte_2.size() != 1296 \
@@ -1207,9 +1211,10 @@ func _run() -> void:
 			or String(fast_validator.get("blocked_next", "")) != "public_generate_random_map_authority_after_package_validation" \
 			or int(validator_metrics.get("expected_tile_count", -1)) != 1296 \
 			or int(validator_metrics.get("terrain_tile_count", -1)) != 1296 \
-			or int(validator_metrics.get("package_object_count", -1)) != 558 \
-			or int(validator_metrics.get("player_start_count", -1)) != 3 \
-			or int(validator_metrics.get("owned_player_town_count", -1)) != 3 \
+				or int(validator_metrics.get("package_object_count", -1)) != 524 \
+				or int(validator_metrics.get("player_start_count", -1)) != 3 \
+				or int(validator_metrics.get("owned_player_town_count", -1)) != 3 \
+				or int(validator_metrics.get("neutral_town_count", -1)) != 1 \
 			or int(validator_metrics.get("mine_count", -1)) != 17 \
 			or int(validator_metrics.get("reward_count", -1)) != 3 \
 			or int(validator_metrics.get("connection_blocker_count", -1)) != 10 \
@@ -1223,7 +1228,7 @@ func _run() -> void:
 			or int(validator_metrics.get("route_link_without_guard_count", -1)) != 0 \
 			or int(validator_metrics.get("road_record_count", -1)) != int(roads_rivers.get("accepted_predecessor_chain_count", -2)) \
 			or int(validator_metrics.get("road_route_edge_count", -1)) != int(validator_metrics.get("road_record_count", -2)) \
-			or int(validator_metrics.get("road_route_node_count", -1)) != 3 \
+				or int(validator_metrics.get("road_route_node_count", -1)) != 4 \
 			or int(validator_metrics.get("road_segment_disconnected_count", -1)) != 0 \
 			or int(validator_metrics.get("road_segment_without_route_edge_count", -1)) != 0 \
 			or int(validator_metrics.get("road_segment_missing_metadata_count", -1)) != 0 \
@@ -1322,7 +1327,7 @@ func _run() -> void:
 			or int(generated_map_payload.get("level_count", -1)) != 1 \
 			or String(generated_map_payload.get("source_template_id", "")) != "h3maped_template_018" \
 			or not bool(generated_map_payload.get("public_runtime_authoritative", false)) \
-			or generated_objects.size() != 558 \
+				or generated_objects.size() != 524 \
 			or generated_player_starts.size() != 3 \
 			or generated_roads.size() != int(roads_rivers.get("accepted_predecessor_chain_count", -2)) \
 			or int(generated_route_graph.get("edge_count", -1)) != generated_roads.size() \
@@ -1336,8 +1341,9 @@ func _run() -> void:
 			or int(generated_tile_bytes.get("byte_4_road_type_u8", []).size()) != 1296 \
 			or int(generated_tile_bytes.get("byte_5_road_art_u8", []).size()) != 1296 \
 			or int(generated_tile_bytes.get("byte_6_flags_u8", []).size()) != 1296 \
-			or int(generated_metrics.get("owned_player_town_count", -1)) != 3 \
-			or int(generated_metrics.get("package_object_count", -1)) != 558 \
+				or int(generated_metrics.get("owned_player_town_count", -1)) != 3 \
+				or int(generated_metrics.get("neutral_town_count", -1)) != 1 \
+				or int(generated_metrics.get("package_object_count", -1)) != 524 \
 			or int(generated_metrics.get("road_record_count", -1)) != generated_roads.size() \
 			or int(generated_metrics.get("road_route_edge_count", -1)) != generated_roads.size() \
 			or int(generated_metrics.get("road_segment_disconnected_count", -1)) != 0 \
@@ -1372,7 +1378,7 @@ func _run() -> void:
 			or int(adopted_map_document.get_width()) != 36 \
 			or int(adopted_map_document.get_height()) != 36 \
 			or int(adopted_map_document.get_level_count()) != 1 \
-			or int(adopted_map_document.get_object_count()) != 558 \
+				or int(adopted_map_document.get_object_count()) != 524 \
 			or String(adopted_map_document.get_source_kind()) != "generated_h3maped_small_validated" \
 			or int(adopted_scenario_document.get_start_contract().get("start_count", -1)) != 3 \
 			or int(adopted_scenario_document.get_start_contract().get("start_town_count", -1)) != 3 \
@@ -1384,7 +1390,7 @@ func _run() -> void:
 		return
 	var map_validation: Dictionary = service.validate_map_document(adopted_map_document)
 	if not bool(map_validation.get("ok", false)) \
-			or int(map_validation.get("report", {}).get("metrics", {}).get("object_count", -1)) != 558 \
+				or int(map_validation.get("report", {}).get("metrics", {}).get("object_count", -1)) != 524 \
 			or int(map_validation.get("report", {}).get("metrics", {}).get("road_count", -1)) != int(roads_rivers.get("accepted_predecessor_chain_count", -2)):
 		_fail("Validator-gated h3maped map document did not validate: %s" % JSON.stringify(map_validation))
 		return
@@ -1415,7 +1421,7 @@ func _run() -> void:
 			or loaded_map_document == null \
 			or loaded_scenario_document == null \
 			or String(loaded_map_document.get_map_hash()) != String(adopted_map_document.get_map_hash()) \
-			or int(loaded_map_document.get_object_count()) != 558 \
+				or int(loaded_map_document.get_object_count()) != 524 \
 			or int(loaded_scenario_document.get_start_contract().get("start_count", -1)) != 3:
 		_fail("Validator-gated h3maped packages did not round-trip through save/load: %s / %s" % [JSON.stringify(load_map), JSON.stringify(load_scenario)])
 		return
