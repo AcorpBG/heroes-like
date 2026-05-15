@@ -1260,6 +1260,7 @@ func _register_native_generated_random_map_scenario_from_payload(normalized_payl
 		"resource_nodes": overworld.get("resource_nodes", []) if overworld.get("resource_nodes", []) is Array else [],
 		"encounters": overworld.get("encounters", []) if overworld.get("encounters", []) is Array else [],
 		"map_objects": overworld.get("map_objects", []) if overworld.get("map_objects", []) is Array else [],
+		"objectives": _native_generated_restore_objectives(overworld),
 		"native_generated_package": {
 			"schema_id": "aurelion_native_rmg_disk_package_restore_record_v1",
 			"template_id": String(generated_identity.get("template_id", normalized_config.get("template_id", ""))),
@@ -1276,11 +1277,69 @@ func _register_native_generated_random_map_scenario_from_payload(normalized_payl
 			"ok": false,
 			"registered": false,
 			"message": "Native generated random-map save could not register package-backed scenario: %s" % String(registration.get("message", "")),
-		}
+	}
 	return {
 		"ok": true,
 		"registered": true,
 		"message": "Native generated random-map scenario restored from saved package provenance.",
+	}
+
+func _native_generated_restore_objectives(overworld: Dictionary) -> Dictionary:
+	var towns: Array = overworld.get("towns", []) if overworld.get("towns", []) is Array else []
+	var starting_town_id := ""
+	var rival_town_id := ""
+	for town_value in towns:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var placement_id := String(town.get("placement_id", ""))
+		if placement_id == "":
+			continue
+		var owner := String(town.get("owner", ""))
+		if starting_town_id == "" and owner == "player":
+			starting_town_id = placement_id
+			continue
+		if rival_town_id == "" and owner != "player":
+			rival_town_id = placement_id
+	if rival_town_id == "":
+		for town_value in towns:
+			if not (town_value is Dictionary):
+				continue
+			var placement_id := String(town_value.get("placement_id", ""))
+			if placement_id != "" and placement_id != starting_town_id:
+				rival_town_id = placement_id
+				break
+	var victory_objectives := []
+	var defeat_objectives := []
+	if rival_town_id != "":
+		victory_objectives.append({
+			"id": "generated_capture_rival_town",
+			"type": "town_owned_by_player",
+			"placement_id": rival_town_id,
+			"label": "Claim a generated rival town",
+			"generated_support": "ScenarioRules.town_owned_by_player",
+		})
+	else:
+		victory_objectives.append({
+			"id": "generated_hold_until_day_14",
+			"type": "day_at_least",
+			"day": 14,
+			"label": "Hold the generated frontier until Day 14",
+			"generated_support": "ScenarioRules.day_at_least",
+		})
+	if starting_town_id != "":
+		defeat_objectives.append({
+			"id": "generated_primary_town_lost",
+			"type": "town_not_owned_by_player",
+			"placement_id": starting_town_id,
+			"label": "Do not lose the generated starting town",
+			"generated_support": "ScenarioRules.town_not_owned_by_player",
+		})
+	return {
+		"victory_text": "Generated objective completed.",
+		"defeat_text": "Generated objective failed.",
+		"victory": victory_objectives,
+		"defeat": defeat_objectives,
 	}
 
 func _native_generated_restore_start(overworld: Dictionary) -> Dictionary:

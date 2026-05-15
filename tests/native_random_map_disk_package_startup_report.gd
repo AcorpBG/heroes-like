@@ -1,6 +1,7 @@
 extends Node
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_DISK_PACKAGE_STARTUP_REPORT"
 
@@ -25,7 +26,7 @@ func _run() -> void:
 	var authored_before := ContentService.load_json(ContentService.SCENARIOS_PATH).duplicate(true)
 	var authored_item_count := int(authored_before.get("items", []).size())
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		"native-rmg-disk-package-startup-10184",
+		"4",
 		"",
 		"",
 		3,
@@ -145,17 +146,32 @@ func _run() -> void:
 		_fail("Independent package load missed map_document.")
 		return
 	var package_surface := _package_surface_summary(loaded_document)
-	if String(package_surface.get("template_id", "")) != "translated_rmg_template_049_v1":
-		_fail("Player-facing Small package startup did not use the recovered translated template: %s" % JSON.stringify(package_surface))
+	if String(package_surface.get("source_template_authority", "")) != "h3maped_exe_rng" \
+			or not String(package_surface.get("source_template_id", "")).begins_with("h3maped_template_"):
+		_fail("Player-facing Small package startup did not use h3maped executable template authority: %s" % JSON.stringify(package_surface))
 		return
-	if int(package_surface.get("town_count", 0)) < 7 or int(package_surface.get("guard_count", 0)) < 40:
-		_fail("Player-facing Small package startup lost owner-like towns or guards: %s" % JSON.stringify(package_surface))
+	if int(package_surface.get("town_count", 0)) < 3 or int(package_surface.get("guard_count", 0)) <= 0:
+		_fail("Player-facing Small package startup lost h3maped owned towns or guards: %s" % JSON.stringify(package_surface))
 		return
 	if int(package_surface.get("road_unique_tile_count", 0)) != int(package_surface.get("source_road_cell_count", 0)):
-		_fail("Player-facing Small package startup saved road overlays that do not match native road cells: %s" % JSON.stringify(package_surface))
+		_fail("Player-facing Small package startup saved road overlays that do not match native unique road cells: %s" % JSON.stringify(package_surface))
 		return
-	if int(package_surface.get("road_tile_count", 0)) <= 0 or int(package_surface.get("zero_tile_road_count", 0)) != 0 or int(package_surface.get("road_duplicate_tile_count", 0)) != 0:
-		_fail("Player-facing Small package startup serialized empty or duplicate road records: %s" % JSON.stringify(package_surface))
+	if String(package_surface.get("h3maped_road_public_adoption_status", "")) != "h3maped_predecessor_chains_adopted_as_route_segments" \
+			or int(package_surface.get("h3maped_private_diagnostic_road_cell_count", 0)) <= 0:
+		_fail("Player-facing Small package startup lost h3maped public road adoption metadata: %s" % JSON.stringify(package_surface))
+		return
+	if int(package_surface.get("road_tile_count", 0)) <= 0 \
+			or int(package_surface.get("road_segment_cell_count", 0)) < int(package_surface.get("road_unique_tile_count", 0)) \
+			or int(package_surface.get("zero_tile_road_count", 0)) != 0:
+		_fail("Player-facing Small package startup serialized empty or invalid route road records: %s" % JSON.stringify(package_surface))
+		return
+	var runtime_block_surface := _runtime_block_surface_summary(session, loaded_document)
+	if int(runtime_block_surface.get("guard_block_tile_count", 0)) <= 0 \
+			or int(runtime_block_surface.get("connection_blocker_block_tile_count", 0)) <= 0 \
+			or int(runtime_block_surface.get("runtime_unblocked_required_tile_count", 0)) != 0 \
+			or int(runtime_block_surface.get("session_guard_count", 0)) != int(package_surface.get("guard_count", 0)) \
+			or int(runtime_block_surface.get("session_connection_blocker_count", 0)) != int(package_surface.get("connection_blocker_count", 0)):
+		_fail("Player-facing Small package guards/blockers do not agree with runtime pathing block surface: %s" % JSON.stringify(runtime_block_surface))
 		return
 	DirAccess.remove_absolute(map_path)
 	DirAccess.remove_absolute(scenario_path)
@@ -170,6 +186,7 @@ func _run() -> void:
 		"map_ref": session.overworld.get("map_package_ref", {}),
 		"scenario_ref": session.overworld.get("scenario_package_ref", {}),
 		"package_surface": package_surface,
+		"runtime_block_surface": runtime_block_surface,
 		"content_scenarios_json_used_for_startup": false,
 		"generated_draft_registry_used": false,
 	})])
@@ -199,10 +216,13 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 			else:
 				road_tile_lookup[key] = true
 	var counts := {}
+	var connection_blocker_count := 0
 	for index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(index)
 		var kind := String(object.get("kind", object.get("native_record_kind", object.get("category_id", "object"))))
 		counts[kind] = int(counts.get(kind, 0)) + 1
+		if kind == "connection_blocker":
+			connection_blocker_count += 1
 	var metadata: Dictionary = map_document.get_metadata()
 	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
 	var component_counts: Dictionary = metadata.get("component_counts", {}) if metadata.get("component_counts", {}) is Dictionary else {}
@@ -211,16 +231,70 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 		"height": int(map_document.get_height()),
 		"template_id": String(normalized.get("template_id", "")),
 		"profile_id": String(normalized.get("profile_id", "")),
+		"source_template_id": String(metadata.get("source_template_id", "")),
+		"source_template_authority": String(metadata.get("source_template_authority", "")),
 		"road_count": roads.size(),
 		"road_tile_count": road_tile_count,
 		"road_unique_tile_count": road_tile_lookup.size(),
 		"road_duplicate_tile_count": road_duplicate_tile_count,
 		"source_road_cell_count": int(component_counts.get("road_cell_count", 0)),
+		"road_segment_cell_count": int(component_counts.get("road_segment_cell_count", road_tile_count)),
+		"source_road_duplicate_tile_count": int(component_counts.get("road_duplicate_tile_count", 0)),
+		"h3maped_road_public_adoption_status": String(metadata.get("h3maped_road_public_adoption_status", "")),
+		"h3maped_private_diagnostic_road_cell_count": int(metadata.get("h3maped_private_diagnostic_road_cell_count", 0)),
 		"zero_tile_road_count": zero_tile_road_count,
 		"object_count": int(map_document.get_object_count()),
 		"town_count": int(counts.get("town", 0)),
 		"guard_count": int(counts.get("guard", 0)),
+		"connection_blocker_count": connection_blocker_count,
 		"object_counts_by_kind": counts,
+	}
+
+func _runtime_block_surface_summary(session: Variant, map_document: Variant) -> Dictionary:
+	var session_encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	var session_map_objects: Array = session.overworld.get("map_objects", []) if session.overworld.get("map_objects", []) is Array else []
+	var session_guard_count := 0
+	for encounter in session_encounters:
+		if encounter is Dictionary and String(encounter.get("kind", "")) == "guard":
+			session_guard_count += 1
+	var session_connection_blocker_count := 0
+	for object in session_map_objects:
+		if object is Dictionary and String(object.get("kind", "")) == "connection_blocker":
+			session_connection_blocker_count += 1
+	var guard_block_tile_count := 0
+	var connection_blocker_block_tile_count := 0
+	var runtime_unblocked_required_tiles := []
+	for index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(index)
+		var kind := String(object.get("kind", ""))
+		if not (kind in ["guard", "connection_blocker"]):
+			continue
+		var block_tiles: Array = object.get("package_block_tiles", []) if object.get("package_block_tiles", []) is Array else []
+		for tile in block_tiles:
+			if not (tile is Dictionary):
+				continue
+			var x := int(tile.get("x", -1))
+			var y := int(tile.get("y", -1))
+			if kind == "guard":
+				guard_block_tile_count += 1
+			else:
+				connection_blocker_block_tile_count += 1
+			if not OverworldRulesScript.tile_is_blocked(session, x, y):
+				runtime_unblocked_required_tiles.append({
+					"placement_id": String(object.get("placement_id", "")),
+					"kind": kind,
+					"x": x,
+					"y": y,
+					"level": int(tile.get("level", 0)),
+				})
+	return {
+		"session_guard_count": session_guard_count,
+		"session_connection_blocker_count": session_connection_blocker_count,
+		"guard_block_tile_count": guard_block_tile_count,
+		"connection_blocker_block_tile_count": connection_blocker_block_tile_count,
+		"runtime_unblocked_required_tile_count": runtime_unblocked_required_tiles.size(),
+		"runtime_unblocked_required_tiles": runtime_unblocked_required_tiles,
+		"runtime_pathing_source": "OverworldRules.tile_is_blocked_live_session_blocked_index",
 	}
 
 func _package_filename_is_clean(filename: String) -> bool:

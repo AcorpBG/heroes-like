@@ -38,6 +38,7 @@ public:
 	Dictionary inspect_package(String path, Dictionary options = Dictionary()) const;
 	Dictionary inspect_random_map_generator_data_model(Dictionary options = Dictionary()) const;
 	Dictionary inspect_h3maped_small_rmg_port(Dictionary config) const;
+	Dictionary inspect_h3maped_small_rmg_negative_validator_cases(Dictionary config) const;
 	Dictionary normalize_random_map_config(Dictionary config) const;
 	Dictionary random_map_config_identity(Dictionary config) const;
 	Dictionary generate_random_map(Dictionary config, Dictionary options = Dictionary()) const;

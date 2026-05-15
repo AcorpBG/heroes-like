@@ -476,6 +476,9 @@ func _roads_cache_signature(roads) -> int:
 			if tile_value is Dictionary:
 				signature = _combine_cache_signature(signature, int(tile_value.get("x", -1)))
 				signature = _combine_cache_signature(signature, int(tile_value.get("y", -1)))
+				signature = _combine_cache_signature(signature, hash(str(tile_value.get("h3maped_road_art_frame_id", ""))))
+				signature = _combine_cache_signature(signature, int(tile_value.get("h3maped_road_flip_a", 0)))
+				signature = _combine_cache_signature(signature, int(tile_value.get("h3maped_road_flip_b", 0)))
 			else:
 				signature = _combine_cache_signature(signature, hash(var_to_str(tile_value)))
 	return signature
@@ -596,6 +599,22 @@ func _canvas_draw_texture_rect(
 	transpose: bool = false
 ) -> void:
 	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, modulate, transpose)
+
+func _canvas_draw_texture_rect_flipped(
+	texture: Texture2D,
+	rect: Rect2,
+	flip_x: bool,
+	flip_y: bool,
+	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
+	transpose: bool = false
+) -> void:
+	var canvas := _current_draw_canvas_item()
+	if not flip_x and not flip_y:
+		canvas.draw_texture_rect(texture, rect, false, modulate, transpose)
+		return
+	canvas.draw_set_transform(rect.get_center(), 0.0, Vector2(-1.0 if flip_x else 1.0, -1.0 if flip_y else 1.0))
+	canvas.draw_texture_rect(texture, Rect2(rect.size * -0.5, rect.size), false, modulate, transpose)
+	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -1059,6 +1078,17 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 		_canvas_draw_circle(center, width * 0.46, road_color)
 
 func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bool:
+	var source_path := _h3maped_road_art_path_from_payload(road)
+	if source_path != "":
+		var source_texture = _terrain_art_texture(source_path)
+		if source_texture is Texture2D:
+			_canvas_draw_texture_rect_flipped(
+				source_texture,
+				rect,
+				int(road.get("h3maped_road_flip_a", 0)) != 0,
+				int(road.get("h3maped_road_flip_b", 0)) != 0
+			)
+			return true
 	var overlay_id := String(road.get("overlay_id", "road_dirt"))
 	var homm3_path := _homm3_road_art_path(overlay_id, tile)
 	if homm3_path != "":
@@ -3687,6 +3717,15 @@ func _homm3_road_art_path(overlay_id: String, tile: Vector2i) -> String:
 		return ""
 	return "%s/roads/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
 
+func _h3maped_road_art_path_from_payload(road: Dictionary) -> String:
+	var frame_id := String(road.get("h3maped_road_art_frame_id", "")).strip_edges()
+	if frame_id == "":
+		return ""
+	var atlas_id := String(road.get("h3maped_road_atlas", "dirtrd")).strip_edges()
+	if atlas_id == "":
+		atlas_id = "dirtrd"
+	return "%s/roads/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
+
 func _homm3_asset_root() -> String:
 	return String(_homm3_prototype.get("asset_root", "res://art/overworld/runtime/homm3_local_prototype")).strip_edges()
 
@@ -5005,7 +5044,7 @@ func _rebuild_road_tiles() -> void:
 			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
 			if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 				continue
-			_ensure_road_tile_payload(tile, overlay_id, road_id, role)
+			_ensure_road_tile_payload(tile, overlay_id, road_id, role, tile_value)
 	_rebuild_road_adjacency_connections()
 	_profile_add("road_index_rebuilds", 1)
 	_profile_end("road_index", profile_start, {
@@ -5159,7 +5198,7 @@ func _hero_index_signature_for(session) -> int:
 		return 0
 	return _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"])
 
-func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String) -> void:
+func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String, source_tile: Dictionary = {}) -> void:
 	var key := _tile_key(tile)
 	var payload: Dictionary = _road_tiles.get(key, {})
 	if payload.is_empty():
@@ -5197,6 +5236,18 @@ func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: Stri
 		payload["road_ids"] = road_ids
 		if String(payload.get("role", "")) == "":
 			payload["role"] = role
+	if source_tile.has("h3maped_road_art_frame_id"):
+		payload["h3maped_road_art_frame_id"] = String(source_tile.get("h3maped_road_art_frame_id", ""))
+	if source_tile.has("h3maped_road_art_index"):
+		payload["h3maped_road_art_index"] = int(source_tile.get("h3maped_road_art_index", 0))
+	if source_tile.has("h3maped_road_flip_a"):
+		payload["h3maped_road_flip_a"] = int(source_tile.get("h3maped_road_flip_a", 0))
+	if source_tile.has("h3maped_road_flip_b"):
+		payload["h3maped_road_flip_b"] = int(source_tile.get("h3maped_road_flip_b", 0))
+	if source_tile.has("h3maped_road_atlas"):
+		payload["h3maped_road_atlas"] = String(source_tile.get("h3maped_road_atlas", ""))
+	if source_tile.has("h3maped_road_type"):
+		payload["h3maped_road_type"] = int(source_tile.get("h3maped_road_type", 0))
 	_road_tiles[key] = payload
 
 func _rebuild_road_adjacency_connections() -> void:
@@ -5979,6 +6030,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 				continue
 			if detail_profile_enabled:
 				blocked_tile_lookup_count += 1
+			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next):
+				continue
 			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y):
 				continue
 			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y):

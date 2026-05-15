@@ -594,11 +594,8 @@ static func random_map_seed_requests_auto(seed: String) -> bool:
 	return normalized_seed == "" or normalized_seed == RANDOM_MAP_DEFAULT_SEED
 
 static func random_map_fresh_auto_seed() -> String:
-	return "%s-%d-%d" % [
-		RANDOM_MAP_AUTO_SEED_PREFIX,
-		Time.get_unix_time_from_system(),
-		Time.get_ticks_usec(),
-	]
+	var mixed_seed := hash("%d:%d" % [int(Time.get_unix_time_from_system()), Time.get_ticks_usec()]) & 0x7fffffff
+	return str(maxi(1, mixed_seed))
 
 static func random_map_player_count_options_for_template(template_id: String) -> Array:
 	return _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
@@ -700,7 +697,7 @@ static func build_random_map_player_config(
 		"profile": {
 			"id": "" if auto_catalog_selection else String(profile_option.get("id", normalized_profile_id)),
 			"template_id": normalized_template_id,
-			"guard_strength_profile": "core_low" if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
+			"guard_strength_profile": "normal" if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
 			"faction_ids": [] if auto_catalog_selection else profile_option.get("faction_ids", []),
 		},
 		"template_selection": {
@@ -953,7 +950,7 @@ static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> 
 	session.flags["generated_random_map_validation"] = setup.get("validation", {})
 	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
 	session.flags["generated_random_map_boundary"]["adoption_path"] = "native_rmg_generated_package_saved_loaded_from_disk" if not package_startup.is_empty() else "legacy_skirmish_session_only_no_authored_browser_or_campaign"
-	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = ContentService.has_generated_scenario_draft(session.scenario_id)
+	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = false if not package_startup.is_empty() else ContentService.has_generated_scenario_draft(session.scenario_id)
 	session.overworld["generated_random_map_provenance"] = setup.get("provenance", {})
 	session.overworld["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
 	session.overworld["generated_random_map_validation"] = setup.get("validation", {})
@@ -1104,7 +1101,8 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
 	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
 	var player_count := _scenario_document_player_count(scenario_document)
-	var generated := String(map_ref.get("source_kind", metadata.get("source_kind", "generated"))) == "generated"
+	var source_kind := String(map_ref.get("source_kind", metadata.get("source_kind", "generated")))
+	var generated := source_kind == "generated" or source_kind.begins_with("generated_")
 	if not generated:
 		return {
 			"ok": false,
@@ -1211,6 +1209,9 @@ static func _maps_folder_package_launch_validation(metadata: Dictionary, map_ref
 		normalized = identity.get("normalized_config", {}) if identity.get("normalized_config", {}) is Dictionary else {}
 	var template_id := String(normalized.get("template_id", metadata.get("template_id", map_ref.get("template_id", "")))).strip_edges()
 	var profile_id := String(normalized.get("profile_id", metadata.get("profile_id", map_ref.get("profile_id", "")))).strip_edges()
+	var source_template_id := String(metadata.get("source_template_id", map_ref.get("source_template_id", ""))).strip_edges()
+	var h3maped_source_authoritative := source_template_id.begins_with("h3maped_template_") \
+			and String(metadata.get("source_template_authority", "")).strip_edges() == "h3maped_exe_rng"
 	var full_generation_status := String(metadata.get("full_generation_status", normalized.get("full_generation_status", ""))).strip_edges()
 	var validation_status := String(metadata.get("validation_status", "pass")).strip_edges()
 	var component_counts: Dictionary = metadata.get("component_counts", {}) if metadata.get("component_counts", {}) is Dictionary else {}
@@ -1221,12 +1222,13 @@ static func _maps_folder_package_launch_validation(metadata: Dictionary, map_ref
 			"path": "map.metadata.native_runtime_authoritative",
 			"message": "Generated maps-folder packages must come from the runtime-authoritative native RMG package path.",
 		})
-	if template_id == "" or not template_id.begins_with("translated_rmg_template_"):
+	if not h3maped_source_authoritative and (template_id == "" or not template_id.begins_with("translated_rmg_template_")):
 		failures.append({
-			"code": "maps_folder_package_template_not_translated_rmg",
-			"path": "map.metadata.normalized_config.template_id",
-			"message": "Generated maps-folder packages must use a translated recovered RMG template, not legacy compact/foundation templates.",
+			"code": "maps_folder_package_template_not_recovered_rmg",
+			"path": "map.metadata.normalized_config.template_id|map.metadata.source_template_id",
+			"message": "Generated maps-folder packages must use translated recovered RMG template ids or h3maped executable source-template authority, not legacy compact/foundation templates.",
 			"template_id": template_id,
+			"source_template_id": source_template_id,
 		})
 	if profile_id == "border_gate_compact_profile_v1" or template_id == "border_gate_compact_v1":
 		failures.append({
@@ -1256,7 +1258,9 @@ static func _maps_folder_package_launch_validation(metadata: Dictionary, map_ref
 			"path": "map.metadata.component_counts.zone_count",
 			"message": "Generated maps-folder packages must preserve non-empty recovered-template zones.",
 		})
-	if int(component_counts.get("road_cell_count", 0)) <= 0:
+	var h3maped_road_public_adoption_status := String(metadata.get("h3maped_road_public_adoption_status", "")).strip_edges()
+	var h3maped_private_roads_pending := h3maped_road_public_adoption_status == "h3maped_final_road_overlay_private_until_complete_0x14b0_vector_and_public_adoption"
+	if int(component_counts.get("road_cell_count", 0)) <= 0 and not h3maped_private_roads_pending:
 		failures.append({
 			"code": "maps_folder_package_missing_roads",
 			"path": "map.metadata.component_counts.road_cell_count",
@@ -1275,6 +1279,8 @@ static func _maps_folder_package_launch_validation(metadata: Dictionary, map_ref
 		"error_code": "generated_package_launch_validation_failed" if not failures.is_empty() else "",
 		"template_id": template_id,
 		"profile_id": profile_id,
+		"source_template_id": source_template_id,
+		"h3maped_source_authoritative": h3maped_source_authoritative,
 		"full_generation_status": full_generation_status,
 		"native_runtime_authoritative": bool(metadata.get("native_runtime_authoritative", false)),
 		"validation_status": validation_status,
@@ -1698,13 +1704,16 @@ static func _native_random_map_generated_identity(generated: Dictionary, adoptio
 	var identity: Dictionary = generated.get("deterministic_identity", {}) if generated.get("deterministic_identity", {}) is Dictionary else {}
 	var scenario_ref: Dictionary = persisted.get("scenario_ref", {}) if persisted.get("scenario_ref", {}) is Dictionary else {}
 	var map_ref: Dictionary = persisted.get("map_ref", {}) if persisted.get("map_ref", {}) is Dictionary else {}
+	var stable_signature := String(identity.get("signature", ""))
+	var full_output_signature := String(generated.get("full_output_signature", generated.get("validation_report", {}).get("full_output_signature", "")))
 	return {
 		"scenario_id": String(scenario_ref.get("scenario_id", adoption.get("scenario_ref", {}).get("scenario_id", ""))),
 		"map_id": String(map_ref.get("map_id", identity.get("map_id", ""))),
 		"map_package_path": String(persisted.get("map_path", "")),
 		"scenario_package_path": String(persisted.get("scenario_path", "")),
-		"stable_signature": String(identity.get("signature", "")),
-		"full_output_signature": String(generated.get("full_output_signature", generated.get("validation_report", {}).get("full_output_signature", ""))),
+		"stable_signature": stable_signature,
+		"materialized_map_signature": stable_signature if stable_signature != "" else full_output_signature,
+		"full_output_signature": full_output_signature,
 		"generator_version": String(normalized.get("generator_version", "")),
 		"template_id": String(normalized.get("template_id", "")),
 		"profile_id": String(normalized.get("profile_id", "")),

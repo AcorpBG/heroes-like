@@ -24,7 +24,7 @@ func _run() -> void:
 
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup(
 		ScenarioSelectRulesScript.build_random_map_player_config(
-			"maps-folder-package-browser-integration-10184",
+			"1",
 			"",
 			"",
 			3,

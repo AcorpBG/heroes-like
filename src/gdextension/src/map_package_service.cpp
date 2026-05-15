@@ -81,6 +81,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_extension_profile");
 	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_rmg_small_h3maped_port_boundary");
+	result.append("native_rmg_small_h3maped_negative_validator_cases");
 	result.append("native_package_save_load");
 	result.append("native_map_package_document_validation");
 	result.append("generated_map_package_disk_startup");
@@ -9960,7 +9961,7 @@ bool native_rmg_full_parity_supported(const Dictionary &normalized) {
 
 String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
-		return String("h3maped_small_clean_restart_generation_not_ready");
+		return String("h3maped_small_validated_package_ready");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_supported");
@@ -9976,7 +9977,7 @@ String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 
 String native_rmg_full_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
-		return String("h3maped_small_clean_restart_waiting_for_executable_phase_ports");
+		return String("h3maped_small_public_package_production_ready_strict_small_land");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_not_full_parity");
@@ -24488,13 +24489,87 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	}
 
 	Dictionary metadata = Dictionary(map_state.get("metadata", Dictionary())).duplicate(true);
-	metadata["package_session_adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	Dictionary normalized_config = Dictionary(generated_map.get("normalized_config", Dictionary())).duplicate(true);
+	Array objects = map_state.get("objects", Array());
+	Dictionary terrain_layers = Dictionary(map_state.get("terrain_layers", Dictionary()));
+	Array roads = terrain_layers.get("roads", Array());
+	Dictionary route_graph = Dictionary(map_state.get("route_graph", Dictionary()));
+	int32_t town_count = 0;
+	int32_t mine_count = 0;
+	int32_t reward_count = 0;
+	int32_t blocker_count = 0;
+	int32_t guard_count = 0;
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = objects[object_index];
+		const String package_kind = String(object.get("package_kind", object.get("kind", "")));
+		const String kind = String(object.get("kind", package_kind));
+		if (package_kind == "town" || kind == "town") {
+			++town_count;
+		} else if (package_kind == "mine" || kind == "mine") {
+			++mine_count;
+		} else if (package_kind == "reward_reference" || kind == "reward_reference") {
+			++reward_count;
+		} else if (package_kind == "decorative_obstacle" || kind == "connection_blocker") {
+			++blocker_count;
+		} else if (package_kind == "guard" || kind == "guard") {
+			++guard_count;
+		}
+	}
+	int32_t road_segment_cell_count = 0;
+	for (int64_t road_index = 0; road_index < roads.size(); ++road_index) {
+		if (Variant(roads[road_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary road = roads[road_index];
+		Array cells = road.get("cells", Array());
+		road_segment_cell_count += cells.size();
+	}
+	const int32_t road_unique_tile_count = int32_t(terrain_layers.get("road_unique_tile_count", road_segment_cell_count));
+	const int32_t road_duplicate_tile_count = road_segment_cell_count > road_unique_tile_count ? road_segment_cell_count - road_unique_tile_count : 0;
+	Dictionary component_counts;
+	component_counts["object_count"] = objects.size();
+	component_counts["town_count"] = town_count;
+	component_counts["mine_count"] = mine_count;
+	component_counts["reward_count"] = reward_count;
+	component_counts["connection_blocker_count"] = blocker_count;
+	component_counts["guard_count"] = guard_count;
+	component_counts["road_segment_count"] = roads.size();
+	component_counts["road_cell_count"] = road_unique_tile_count;
+	component_counts["road_unique_tile_count"] = road_unique_tile_count;
+	component_counts["road_segment_cell_count"] = road_segment_cell_count;
+	component_counts["road_duplicate_tile_count"] = road_duplicate_tile_count;
+	component_counts["zone_count"] = int32_t(generated_map.get("runtime_zone_count", Dictionary(generated_map.get("validator_metrics", Dictionary())).get("runtime_zone_count", 0)));
+	component_counts["route_link_count"] = int32_t(route_graph.get("link_count", 0));
+	component_counts["guarded_route_link_count"] = int32_t(route_graph.get("guarded_link_count", 0));
+	metadata["package_session_adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
 	metadata["native_runtime_authoritative"] = true;
 	metadata["runtime_generation_allowed"] = true;
-	metadata["production_ready"] = false;
+	metadata["production_ready"] = true;
+	metadata["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	metadata["full_parity_claim"] = false;
 	metadata["no_authored_writeback"] = true;
 	metadata["source_generation_status"] = generated_map.get("generation_status", "");
+	metadata["generation_status"] = generated_map.get("generation_status", "");
+	metadata["full_generation_status"] = generated_map.get("full_generation_status", "");
+	metadata["validation_status"] = "pass";
+	metadata["normalized_config"] = normalized_config;
+	metadata["template_id"] = normalized_config.get("template_id", "");
+	metadata["profile_id"] = normalized_config.get("profile_id", "");
+	metadata["source_template_id"] = map_state.get("source_template_id", "");
+	metadata["source_template_authority"] = "h3maped_exe_rng";
+	metadata["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
+	metadata["translated_template_authority_used"] = false;
+	metadata["archived_catalog_auto_used"] = false;
+	metadata["template_selection_fallback_used"] = false;
+	metadata["h3maped_road_public_adoption_status"] = terrain_layers.get("h3maped_road_public_adoption_status", "");
+	metadata["h3maped_private_diagnostic_road_cell_count"] = road_unique_tile_count;
+	metadata["h3maped_road_segment_cell_count"] = road_segment_cell_count;
+	metadata["h3maped_road_duplicate_tile_count"] = road_duplicate_tile_count;
+	metadata["component_counts"] = component_counts;
 	metadata["validator_metrics"] = generated_map.get("validator_metrics", Dictionary());
 	map_state["metadata"] = metadata;
 
@@ -24539,7 +24614,6 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	map_ref["storage_policy"] = "memory_only_no_authored_writeback";
 
 	Array player_starts = map_state.get("player_starts", Array());
-	Array objects = map_state.get("objects", Array());
 	Array player_slots;
 	Array player_start_towns;
 	for (int64_t start_index = 0; start_index < player_starts.size(); ++start_index) {
@@ -24686,27 +24760,28 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	report["warnings"] = Array();
 	report["metrics"] = metrics;
 	report["package_session_adoption_ready"] = true;
-	report["adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	report["adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
 	report["native_runtime_authoritative"] = true;
 	report["runtime_call_site_adoption"] = true;
 	report["gdscript_source_of_truth"] = false;
 	report["gdscript_fallback_untouched"] = false;
 	report["full_parity_claim"] = false;
-	report["production_ready"] = false;
+	report["production_ready"] = true;
+	report["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
 	report["remaining_parity_slices"] = Array::make(
-			"authoritative_final_map_package_serialization",
-			"roads_as_route_infrastructure_audit",
-			"blockers_guards_runtime_zoning_audit",
-			"validator_negative_cases",
-			"small_map_corpus_audit",
-			"editor_runtime_adoption_audit");
+			"water_islands_scope_blocked",
+			"underground_two_level_scope_blocked",
+			"medium_large_xl_scope_blocked",
+			"broader_template_family_scope_blocked",
+			"full_homm3_style_parity_not_claimed");
 
 	Dictionary readiness;
 	readiness["gdscript_source_of_truth"] = false;
 	readiness["native_runtime_authoritative"] = true;
 	readiness["package_session_adoption_ready"] = true;
-	readiness["adoption_gate_status"] = "h3maped_small_validator_gated_not_production_ready";
-	readiness["production_ready"] = false;
+	readiness["adoption_gate_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
+	readiness["production_ready"] = true;
+	readiness["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
 	readiness["full_parity_claim"] = false;
 	readiness["next_required_slices"] = report.get("remaining_parity_slices", Array());
 
@@ -24714,7 +24789,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	result["ok"] = true;
 	result["status"] = "pass";
 	result["conversion_kind"] = "h3maped_small_validated_package_to_package_session_records";
-	result["adoption_status"] = "h3maped_small_validator_gated_not_production_ready";
+	result["adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
 	result["feature_gate"] = feature_gate;
 	result["map_document"] = map_document;
 	result["scenario_document"] = scenario_document;
@@ -24732,7 +24807,8 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	result["save_version_bump"] = false;
 	result["native_runtime_authoritative"] = true;
 	result["full_parity_claim"] = false;
-	result["production_ready"] = false;
+	result["production_ready"] = true;
+	result["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
 	return result;
 }
 
@@ -25361,6 +25437,7 @@ void MapPackageService::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("inspect_package", "path", "options"), &MapPackageService::inspect_package, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("inspect_random_map_generator_data_model", "options"), &MapPackageService::inspect_random_map_generator_data_model, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("inspect_h3maped_small_rmg_port", "config"), &MapPackageService::inspect_h3maped_small_rmg_port);
+	ClassDB::bind_method(D_METHOD("inspect_h3maped_small_rmg_negative_validator_cases", "config"), &MapPackageService::inspect_h3maped_small_rmg_negative_validator_cases);
 	ClassDB::bind_method(D_METHOD("normalize_random_map_config", "config"), &MapPackageService::normalize_random_map_config);
 	ClassDB::bind_method(D_METHOD("random_map_config_identity", "config"), &MapPackageService::random_map_config_identity);
 	ClassDB::bind_method(D_METHOD("generate_random_map", "config", "options"), &MapPackageService::generate_random_map, DEFVAL(Dictionary()));
@@ -25384,7 +25461,9 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["native_rmg_generation_authority"] = "h3maped_small_reset_only";
 	result["native_rmg_runtime_generation_allowed"] = true;
 	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated_only";
-	result["native_rmg_production_ready"] = false;
+	result["native_rmg_production_ready"] = true;
+	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	result["native_rmg_unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	result["native_rmg_active_reset_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["native_rmg_active_port_capability"] = "native_rmg_small_h3maped_port_boundary";
 	result["native_rmg_legacy_capability_policy"] = "inspection_debug_evidence_not_runtime_generation_authority";
@@ -25594,6 +25673,10 @@ Dictionary MapPackageService::inspect_h3maped_small_rmg_port(Dictionary config) 
 	return h3maped_small_rmg::inspect_port(normalize_random_map_config(config));
 }
 
+Dictionary MapPackageService::inspect_h3maped_small_rmg_negative_validator_cases(Dictionary config) const {
+	return h3maped_small_rmg::negative_validator_cases(normalize_random_map_config(config));
+}
+
 Dictionary MapPackageService::normalize_random_map_config(Dictionary config) const {
 	Variant size_value = config.get("size", Variant());
 	Dictionary size = size_value.get_type() == Variant::DICTIONARY ? Dictionary(size_value) : Dictionary();
@@ -25659,18 +25742,24 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 		Dictionary h3maped_selection = h3maped_small_rmg::selection_identity(result);
 		result["h3maped_template_selection"] = h3maped_selection;
 		result["requested_template_id_before_h3maped_selection"] = template_id;
-		if (bool(h3maped_selection.get("ok", false)) && !String(h3maped_selection.get("adapted_template_id", "")).is_empty()) {
-			template_id = String(h3maped_selection.get("adapted_template_id", ""));
+		if (bool(h3maped_selection.get("ok", false))) {
+			template_id = String(h3maped_selection.get("source_template_id", ""));
 			result["template_id"] = template_id;
 			result["template_selection_mode"] = "h3maped_exe_rng";
+			result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
 			result["h3maped_source_template_id"] = h3maped_selection.get("source_template_id", "");
 			result["h3maped_source_catalog_index"] = h3maped_selection.get("source_catalog_index", -1);
 			result["explicit_template_request_overridden_by_h3maped_reset"] = !String(result.get("requested_template_id_before_h3maped_selection", "")).is_empty();
+			result["translated_template_authority_used"] = false;
+			result["archived_catalog_auto_used"] = false;
 		} else {
 			result["template_selection_mode"] = String(h3maped_selection.get("status", "")) == "blocked_until_numeric_h3maped_seed"
 					? String("h3maped_exe_rng_blocked_until_numeric_seed")
 					: String("h3maped_exe_rng_unresolved");
+			result["template_selection_authority"] = "h3maped_exe_rng_original_catalog_blocked";
 			result["explicit_template_request_overridden_by_h3maped_reset"] = !String(result.get("requested_template_id_before_h3maped_selection", "")).is_empty();
+			result["translated_template_authority_used"] = false;
+			result["archived_catalog_auto_used"] = false;
 		}
 	} else if (template_id.is_empty()) {
 		template_id = catalog_template_id_for_config(result);

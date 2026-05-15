@@ -1600,6 +1600,66 @@ func _synchronized_player_starts_for_start_contract(generated_map: Dictionary) -
 		result.append(start)
 	return result
 
+func _native_generated_scenario_objectives(generated_map: Dictionary) -> Dictionary:
+	var towns: Array = generated_map.get("town_records", []) if generated_map.get("town_records", []) is Array else []
+	var starting_town_id := ""
+	var rival_town_id := ""
+	for town_value in towns:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var placement_id := String(town.get("placement_id", ""))
+		if placement_id == "":
+			continue
+		var owner := String(town.get("owner", ""))
+		var player_slot := int(town.get("player_slot", 0))
+		if starting_town_id == "" and (owner == "player" or player_slot == 1):
+			starting_town_id = placement_id
+			continue
+		if rival_town_id == "" and owner != "player":
+			rival_town_id = placement_id
+	if rival_town_id == "":
+		for town_value in towns:
+			if not (town_value is Dictionary):
+				continue
+			var placement_id := String(town_value.get("placement_id", ""))
+			if placement_id != "" and placement_id != starting_town_id:
+				rival_town_id = placement_id
+				break
+
+	var victory_objectives := []
+	var defeat_objectives := []
+	if rival_town_id != "":
+		victory_objectives.append({
+			"id": "generated_capture_rival_town",
+			"type": "town_owned_by_player",
+			"placement_id": rival_town_id,
+			"label": "Claim a generated rival town",
+			"generated_support": "ScenarioRules.town_owned_by_player",
+		})
+	else:
+		victory_objectives.append({
+			"id": "generated_hold_until_day_14",
+			"type": "day_at_least",
+			"day": 14,
+			"label": "Hold the generated frontier until Day 14",
+			"generated_support": "ScenarioRules.day_at_least",
+		})
+	if starting_town_id != "":
+		defeat_objectives.append({
+			"id": "generated_primary_town_lost",
+			"type": "town_not_owned_by_player",
+			"placement_id": starting_town_id,
+			"label": "Do not lose the generated starting town",
+			"generated_support": "ScenarioRules.town_not_owned_by_player",
+		})
+	return {
+		"victory_text": "Generated objective completed.",
+		"defeat_text": "Generated objective failed.",
+		"victory": victory_objectives,
+		"defeat": defeat_objectives,
+	}
+
 func _build_native_package_session_adoption(generated_map: Dictionary, options: Dictionary) -> Dictionary:
 	if not bool(generated_map.get("ok", false)):
 		return _conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.")
@@ -1718,7 +1778,7 @@ func _build_native_package_session_adoption(generated_map: Dictionary, options: 
 		"map_ref": map_ref,
 		"selection": selection,
 		"player_slots": player_slots.duplicate(true),
-		"objectives": {},
+		"objectives": _native_generated_scenario_objectives(generated_map),
 		"script_hooks": [],
 		"enemy_factions": enemy_factions,
 		"start_contract": start_contract,
