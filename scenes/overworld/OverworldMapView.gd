@@ -5865,6 +5865,11 @@ func _placement_debug_overlay_payload() -> Dictionary:
 		for node_value in resource_nodes:
 			if node_value is Dictionary:
 				_collect_resource_placement_debug_tiles(node_value, blocker_index, interactable_index, records)
+	var map_objects = _session.overworld.get("map_objects", [])
+	if map_objects is Array:
+		for object_value in map_objects:
+			if object_value is Dictionary:
+				_collect_map_object_placement_debug_tiles(object_value, blocker_index, records)
 	var artifact_nodes = _session.overworld.get("artifact_nodes", [])
 	if artifact_nodes is Array:
 		for node_value in artifact_nodes:
@@ -5918,6 +5923,43 @@ func _collect_resource_placement_debug_tiles(node: Dictionary, blocker_index: Di
 		_add_placement_debug_tile(interactable_index, Vector2i(int(node.get("x", -1)), int(node.get("y", -1))), "resource_action", placement_id)
 		interactable_count += 1
 	records.append(_placement_debug_record("resource", placement_id, blocker_count, interactable_count))
+
+func _collect_map_object_placement_debug_tiles(object: Dictionary, blocker_index: Dictionary, records: Array) -> void:
+	if not _map_object_blocks_debug_body_tiles(object):
+		return
+	var placement_id := String(object.get("placement_id", object.get("id", "")))
+	var blocker_count := 0
+	for tile in _map_object_debug_body_tiles(object):
+		if tile is Vector2i:
+			_add_placement_debug_tile(blocker_index, tile, "map_object_body", placement_id)
+			blocker_count += 1
+	records.append(_placement_debug_record("map_object", placement_id, blocker_count, 0))
+
+func _map_object_blocks_debug_body_tiles(object: Dictionary) -> bool:
+	var kind := String(object.get("kind", ""))
+	var family := String(object.get("object_family_id", object.get("family_id", "")))
+	return bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
+
+func _map_object_debug_body_tiles(object: Dictionary) -> Array:
+	var block_payload: Variant = object.get("package_block_tiles", null)
+	var body_tiles := _debug_tiles_from_payload_array(block_payload) if block_payload is Array else []
+	if body_tiles.is_empty() and block_payload is Array:
+		return []
+	if body_tiles.is_empty():
+		body_tiles = _debug_tiles_from_payload_array(object.get("body_tiles", []))
+	if body_tiles.is_empty():
+		body_tiles = [Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))]
+	return body_tiles
+
+func _debug_tiles_from_payload_array(values: Variant) -> Array:
+	var tiles := []
+	if not (values is Array):
+		return tiles
+	for value in values:
+		var tile := _tile_from_payload(value)
+		if tile.x >= 0 and tile.y >= 0:
+			tiles.append(tile)
+	return tiles
 
 func _placement_debug_record(kind: String, placement_id: String, blocker_count: int, interactable_count: int) -> Dictionary:
 	return {
