@@ -3,17 +3,17 @@
 	"document": {
 		"enemy_factions": [
 			{
-				"faction_id": "tower",
+				"faction_id": "faction_sunvault",
 				"player_slot": 1,
 				"team_id": "team_2"
 			},
 			{
-				"faction_id": "tower",
+				"faction_id": "faction_mireclaw",
 				"player_slot": 2,
 				"team_id": "team_3"
 			},
 			{
-				"faction_id": "inferno",
+				"faction_id": "faction_embercourt",
 				"player_slot": 3,
 				"team_id": "team_4"
 			}
@@ -21,7 +21,7 @@
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:2:h3maped_template_027",
 			"map_id": "h3maped_small_seed_2",
-			"package_hash": "fnv1a32:631dddf9",
+			"package_hash": "fnv1a32:74772ac7",
 			"package_id": "manual-strict_small_3p_seed_2.amap",
 			"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
 			"schema_id": "aurelion_map_document",
@@ -35,7 +35,7 @@
 		"player_slots": [
 			{
 				"ai_controlled": true,
-				"faction_id": "tower",
+				"faction_id": "faction_sunvault",
 				"human": false,
 				"player_color": 1,
 				"player_slot": 1,
@@ -44,7 +44,7 @@
 			},
 			{
 				"ai_controlled": true,
-				"faction_id": "tower",
+				"faction_id": "faction_mireclaw",
 				"human": false,
 				"player_color": 2,
 				"player_slot": 2,
@@ -53,7 +53,7 @@
 			},
 			{
 				"ai_controlled": true,
-				"faction_id": "inferno",
+				"faction_id": "faction_embercourt",
 				"human": false,
 				"player_color": 3,
 				"player_slot": 3,
@@ -61,7 +61,7 @@
 				"team_id": "team_4"
 			}
 		],
-		"scenario_hash": "fnv1a32:1472fe29",
+		"scenario_hash": "fnv1a32:a6b6be2a",
 		"scenario_id": "manual-strict_small_3p_seed_2",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,
@@ -161,8 +161,8 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "tower",
-					"h3maped_faction_id": "tower",
+					"faction_id": "faction_sunvault",
+					"h3maped_faction_id": "faction_sunvault",
 					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 0,
 					"h3maped_owner_scope": "player_owner_color",
@@ -186,7 +186,7 @@
 					"kind": "town",
 					"level": 0,
 					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
-					"object_id": "town_riverwatch",
+					"object_id": "town_prismhearth",
 					"owner": "player",
 					"owner_slot": 1,
 					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
@@ -371,7 +371,7 @@
 					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
 					"start_anchor": true,
 					"team_id": "team_01",
-					"town_id": "town_riverwatch",
+					"town_id": "town_prismhearth",
 					"visit_tile": {
 						"level": 0,
 						"x": 28,
@@ -465,15 +465,15 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "tower",
-					"h3maped_faction_id": "tower",
+					"faction_id": "faction_mireclaw",
+					"h3maped_faction_id": "faction_mireclaw",
 					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 1,
 					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_random_tie_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": true,
-					"h3maped_town_choice_index": 2,
+					"h3maped_town_choice_index": 5,
 					"hero_start_tile": {
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
@@ -490,7 +490,7 @@
 					"kind": "town",
 					"level": 0,
 					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
-					"object_id": "town_riverwatch",
+					"object_id": "town_duskfen",
 					"owner": "enemy",
 					"owner_slot": 2,
 					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
@@ -675,7 +675,7 @@
 					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
 					"start_anchor": true,
 					"team_id": "team_02",
-					"town_id": "town_riverwatch",
+					"town_id": "town_duskfen",
 					"visit_tile": {
 						"level": 0,
 						"x": 4,
@@ -769,15 +769,15 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "inferno",
-					"h3maped_faction_id": "inferno",
+					"faction_id": "faction_embercourt",
+					"h3maped_faction_id": "faction_embercourt",
 					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 2,
 					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": false,
-					"h3maped_town_choice_index": 3,
+					"h3maped_town_choice_index": 0,
 					"hero_start_tile": {
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
@@ -785,8 +785,8 @@
 						"selection_radius_from_town_coordinate": 2,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 21,
-						"y": 15
+						"x": 22,
+						"y": 18
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -971,8 +971,8 @@
 						"selection_radius_from_town_coordinate": 2,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 21,
-						"y": 15
+						"x": 22,
+						"y": 18
 					},
 					"runtime_zone_index": 2,
 					"settlement_category": "castle",
@@ -994,7 +994,7 @@
 			"player_starts": [
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "tower",
+					"faction_id": "faction_sunvault",
 					"level": 0,
 					"owner_slot": 1,
 					"player_slot": 1,
@@ -1004,7 +1004,7 @@
 					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
 					"start_id": "player_start_1",
 					"team_id": "team_01",
-					"town_id": "town_riverwatch",
+					"town_id": "town_prismhearth",
 					"town_placement_id": "native_rmg_town_start_01",
 					"x": 28,
 					"y": 16,
@@ -1013,7 +1013,7 @@
 				},
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "tower",
+					"faction_id": "faction_mireclaw",
 					"level": 0,
 					"owner_slot": 2,
 					"player_slot": 2,
@@ -1023,7 +1023,7 @@
 					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
 					"start_id": "player_start_2",
 					"team_id": "team_02",
-					"town_id": "town_riverwatch",
+					"town_id": "town_duskfen",
 					"town_placement_id": "native_rmg_town_start_02",
 					"x": 4,
 					"y": 17,
@@ -1032,7 +1032,7 @@
 				},
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "inferno",
+					"faction_id": "faction_embercourt",
 					"level": 0,
 					"owner_slot": 3,
 					"player_slot": 3,
@@ -1062,7 +1062,7 @@
 	"map_ref": {
 		"map_hash": "validated:h3maped_small:2:h3maped_template_027",
 		"map_id": "h3maped_small_seed_2",
-		"package_hash": "fnv1a32:631dddf9",
+		"package_hash": "fnv1a32:74772ac7",
 		"package_id": "manual-strict_small_3p_seed_2.amap",
 		"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
 		"schema_id": "aurelion_map_document",
@@ -1070,17 +1070,17 @@
 		"source_kind": "generated_h3maped_small_validated",
 		"storage_policy": "project_maps_generated_package"
 	},
-	"package_hash": "fnv1a32:e5d6a720",
+	"package_hash": "fnv1a32:d8bb4897",
 	"package_id": "manual-strict_small_3p_seed_2.ascenario",
 	"package_kind": "generated_scenario_package",
 	"path_policy": "manual_strict_small_land_inspection",
-	"scenario_hash": "fnv1a32:1472fe29",
+	"scenario_hash": "fnv1a32:a6b6be2a",
 	"scenario_id": "manual-strict_small_3p_seed_2",
 	"scenario_ref": {
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:2:h3maped_template_027",
 			"map_id": "h3maped_small_seed_2",
-			"package_hash": "fnv1a32:631dddf9",
+			"package_hash": "fnv1a32:74772ac7",
 			"package_id": "manual-strict_small_3p_seed_2.amap",
 			"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
 			"schema_id": "aurelion_map_document",
@@ -1088,10 +1088,10 @@
 			"source_kind": "generated_h3maped_small_validated",
 			"storage_policy": "project_maps_generated_package"
 		},
-		"package_hash": "fnv1a32:e5d6a720",
+		"package_hash": "fnv1a32:d8bb4897",
 		"package_id": "manual-strict_small_3p_seed_2.ascenario",
 		"package_path": "res://maps/manual-strict_small_3p_seed_2.ascenario",
-		"scenario_hash": "fnv1a32:1472fe29",
+		"scenario_hash": "fnv1a32:a6b6be2a",
 		"scenario_id": "manual-strict_small_3p_seed_2",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,

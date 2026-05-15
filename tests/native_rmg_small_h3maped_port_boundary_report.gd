@@ -61,7 +61,7 @@ func _run() -> void:
 			or int(selection.get("selected_vector_index", -1)) != 2 \
 			or String(selection.get("source_template_id", "")) != "h3maped_template_018" \
 			or int(selection.get("source_catalog_index", -1)) != 18 \
-			or String(selection.get("adapted_template_id", "")) != "":
+			or String(selection.get("adapted_template_id", "")) != "translated_rmg_template_019_v1":
 		_fail("Strict h3maped template selection drifted: %s" % JSON.stringify(selection))
 		return
 
@@ -335,8 +335,8 @@ func _run() -> void:
 			or int(runtime_terrain.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
 			or Array(runtime_terrain.get("town_choice_to_terrain_table", [])) != [2, 2, 3, 7, 0, 0, 5, 4, 2] \
 			or int(runtime_terrain.get("selection_count", -1)) != 6 \
-			or Array(runtime_terrain.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
-			or Array(runtime_terrain.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or Array(runtime_terrain.get("selected_h3maped_terrain_ids", [])) != [0, 0, 3, 2, 0, 5] \
+			or Array(runtime_terrain.get("selected_project_terrain_ids", [])) != ["dirt", "dirt", "snow", "grass", "dirt", "rough"] \
 			or int(runtime_terrain.get("match_to_town_count", -1)) != 4 \
 			or int(runtime_terrain.get("allowed_flag_choice_count", -1)) != 2 \
 			or int(runtime_terrain.get("blank_allowed_mask_count", -1)) != 0 \
@@ -355,14 +355,14 @@ func _run() -> void:
 			or terrain_selections.size() != 6:
 		_fail("Strict h3maped runtime terrain selection port drifted: %s" % JSON.stringify(runtime_terrain))
 		return
-	if String(terrain_selections[0].get("faction_id", "")) != "elemental" \
-			or int(terrain_selections[0].get("town_choice_index", -1)) != 8 \
-			or int(terrain_selections[0].get("selected_h3maped_terrain_id", -1)) != 2 \
+	if String(terrain_selections[0].get("faction_id", "")) != "faction_mireclaw" \
+			or int(terrain_selections[0].get("town_choice_index", -1)) != 5 \
+			or int(terrain_selections[0].get("selected_h3maped_terrain_id", -1)) != 0 \
 			or String(terrain_selections[0].get("source", "")) != "0x49b54c_0x49b55b_match_to_town_table_0x540908" \
 			or int(terrain_selections[2].get("rng_value", -1)) != 153 \
-			or int(terrain_selections[2].get("selected_allowed_ordinal", -1)) != 6 \
-			or int(terrain_selections[2].get("selected_h3maped_terrain_id", -1)) != 7 \
-			or String(terrain_selections[4].get("faction_id", "")) != "fortress" \
+			or int(terrain_selections[2].get("selected_allowed_ordinal", -1)) != 3 \
+			or int(terrain_selections[2].get("selected_h3maped_terrain_id", -1)) != 3 \
+			or String(terrain_selections[4].get("faction_id", "")) != "faction_veilmourn" \
 			or int(terrain_selections[5].get("rng_value", -1)) != 292 \
 			or int(terrain_selections[5].get("selected_h3maped_terrain_id", -1)) != 5:
 		_fail("Strict h3maped runtime terrain selections drifted: %s" % JSON.stringify(terrain_selections))
@@ -383,8 +383,8 @@ func _run() -> void:
 			or String(terrain_cell.get("full_map_water_prefill_anchor", "")) != "0x4a4025" \
 			or String(terrain_cell.get("runtime_zone_scan_anchor", "")) != "0x4a4082" \
 			or String(terrain_cell.get("per_cell_repaint_anchor", "")) != "0x4a415a" \
-			or Array(terrain_cell.get("selected_h3maped_terrain_ids", [])) != [2, 0, 7, 7, 4, 5] \
-			or Array(terrain_cell.get("selected_project_terrain_ids", [])) != ["grass", "dirt", "lava", "lava", "swamp", "rough"] \
+			or Array(terrain_cell.get("selected_h3maped_terrain_ids", [])) != Array(runtime_terrain.get("selected_h3maped_terrain_ids", [])) \
+			or Array(terrain_cell.get("selected_project_terrain_ids", [])) != Array(runtime_terrain.get("selected_project_terrain_ids", [])) \
 			or int(terrain_cell.get("terrain_rng_call_count", -1)) != 2 \
 			or int(terrain_cell.get("rng_state_before_0x49b53d_uint32", -1)) != 255755822 \
 			or int(terrain_cell.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160 \
@@ -403,24 +403,21 @@ func _run() -> void:
 			or int(owner_low_counts[3].get("cell_count", -1)) != 177 \
 			or int(owner_low_counts[4].get("cell_count", -1)) != 207 \
 			or int(owner_low_counts[5].get("cell_count", -1)) != 229 \
-			or terrain_code_counts.size() != 6 \
+			or terrain_code_counts.size() != 5 \
 			or int(terrain_code_counts[0].get("h3maped_terrain_id", -1)) != 0 \
-			or int(terrain_code_counts[0].get("cell_count", -1)) != 91 \
+			or int(terrain_code_counts[0].get("cell_count", -1)) != 475 \
 			or int(terrain_code_counts[1].get("h3maped_terrain_id", -1)) != 2 \
 			or int(terrain_code_counts[1].get("cell_count", -1)) != 177 \
-			or int(terrain_code_counts[2].get("h3maped_terrain_id", -1)) != 4 \
-			or int(terrain_code_counts[2].get("cell_count", -1)) != 207 \
+			or int(terrain_code_counts[2].get("h3maped_terrain_id", -1)) != 3 \
+			or int(terrain_code_counts[2].get("cell_count", -1)) != 226 \
 			or int(terrain_code_counts[3].get("h3maped_terrain_id", -1)) != 5 \
 			or int(terrain_code_counts[3].get("cell_count", -1)) != 229 \
-			or int(terrain_code_counts[4].get("h3maped_terrain_id", -1)) != 7 \
-			or int(terrain_code_counts[4].get("cell_count", -1)) != 403 \
-			or int(terrain_code_counts[5].get("h3maped_terrain_id", -1)) != 8 \
-			or int(terrain_code_counts[5].get("cell_count", -1)) != 189 \
+			or int(terrain_code_counts[4].get("h3maped_terrain_id", -1)) != 8 \
+			or int(terrain_code_counts[4].get("cell_count", -1)) != 189 \
 			or int(terrain_project_counts.get("water", -1)) != 189 \
 			or int(terrain_project_counts.get("grass", -1)) != 177 \
-			or int(terrain_project_counts.get("dirt", -1)) != 91 \
-			or int(terrain_project_counts.get("lava", -1)) != 403 \
-			or int(terrain_project_counts.get("swamp", -1)) != 207 \
+			or int(terrain_project_counts.get("dirt", -1)) != 475 \
+			or int(terrain_project_counts.get("snow", -1)) != 226 \
 			or int(terrain_project_counts.get("rough", -1)) != 229 \
 			or not bool(terrain_cell.get("materializes_private_terrain_cell_buffer", false)) \
 			or bool(terrain_cell.get("materializes_terrain_art", true)) \
@@ -1327,7 +1324,7 @@ func _run() -> void:
 			or int(generated_map_payload.get("level_count", -1)) != 1 \
 			or String(generated_map_payload.get("source_template_id", "")) != "h3maped_template_018" \
 			or not bool(generated_map_payload.get("public_runtime_authoritative", false)) \
-				or generated_objects.size() != 524 \
+				or generated_objects.size() != 547 \
 			or generated_player_starts.size() != 3 \
 			or generated_roads.size() != int(roads_rivers.get("accepted_predecessor_chain_count", -2)) \
 			or int(generated_route_graph.get("edge_count", -1)) != generated_roads.size() \
@@ -1343,7 +1340,7 @@ func _run() -> void:
 			or int(generated_tile_bytes.get("byte_6_flags_u8", []).size()) != 1296 \
 				or int(generated_metrics.get("owned_player_town_count", -1)) != 3 \
 				or int(generated_metrics.get("neutral_town_count", -1)) != 1 \
-				or int(generated_metrics.get("package_object_count", -1)) != 524 \
+				or int(generated_metrics.get("package_object_count", -1)) != 547 \
 			or int(generated_metrics.get("road_record_count", -1)) != generated_roads.size() \
 			or int(generated_metrics.get("road_route_edge_count", -1)) != generated_roads.size() \
 			or int(generated_metrics.get("road_segment_disconnected_count", -1)) != 0 \
@@ -1378,7 +1375,7 @@ func _run() -> void:
 			or int(adopted_map_document.get_width()) != 36 \
 			or int(adopted_map_document.get_height()) != 36 \
 			or int(adopted_map_document.get_level_count()) != 1 \
-				or int(adopted_map_document.get_object_count()) != 524 \
+				or int(adopted_map_document.get_object_count()) != 547 \
 			or String(adopted_map_document.get_source_kind()) != "generated_h3maped_small_validated" \
 			or int(adopted_scenario_document.get_start_contract().get("start_count", -1)) != 3 \
 			or int(adopted_scenario_document.get_start_contract().get("start_town_count", -1)) != 3 \
@@ -1390,7 +1387,7 @@ func _run() -> void:
 		return
 	var map_validation: Dictionary = service.validate_map_document(adopted_map_document)
 	if not bool(map_validation.get("ok", false)) \
-				or int(map_validation.get("report", {}).get("metrics", {}).get("object_count", -1)) != 524 \
+				or int(map_validation.get("report", {}).get("metrics", {}).get("object_count", -1)) != 547 \
 			or int(map_validation.get("report", {}).get("metrics", {}).get("road_count", -1)) != int(roads_rivers.get("accepted_predecessor_chain_count", -2)):
 		_fail("Validator-gated h3maped map document did not validate: %s" % JSON.stringify(map_validation))
 		return
@@ -1421,7 +1418,7 @@ func _run() -> void:
 			or loaded_map_document == null \
 			or loaded_scenario_document == null \
 			or String(loaded_map_document.get_map_hash()) != String(adopted_map_document.get_map_hash()) \
-				or int(loaded_map_document.get_object_count()) != 524 \
+				or int(loaded_map_document.get_object_count()) != 547 \
 			or int(loaded_scenario_document.get_start_contract().get("start_count", -1)) != 3:
 		_fail("Validator-gated h3maped packages did not round-trip through save/load: %s / %s" % [JSON.stringify(load_map), JSON.stringify(load_scenario)])
 		return
