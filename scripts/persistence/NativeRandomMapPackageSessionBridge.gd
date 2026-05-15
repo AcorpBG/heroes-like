@@ -239,17 +239,19 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 		if String(object.get("native_record_kind", object.get("kind", ""))) != "town" and String(object.get("kind", "")) != "town":
 			continue
 		var town_template := ContentService.get_town(String(object.get("town_id", "")))
+		var owner_slot := _int_or_default(object.get("owner_slot", object.get("player_slot", -1)), -1)
+		var player_slot := _int_or_default(object.get("player_slot", object.get("owner_slot", -1)), -1)
 		towns.append({
 			"placement_id": String(object.get("placement_id", "")),
 			"town_id": String(object.get("town_id", "")),
 			"x": int(object.get("x", 0)),
 			"y": int(object.get("y", 0)),
 			"owner": String(object.get("owner", "neutral")),
-			"owner_slot": int(object.get("owner_slot", object.get("player_slot", 0))),
-			"player_slot": int(object.get("player_slot", object.get("owner_slot", 0))),
+			"owner_slot": owner_slot,
+			"player_slot": player_slot,
 			"player_type": String(object.get("player_type", "")),
-				"team_id": String(object.get("team_id", "")),
-				"faction_id": String(object.get("faction_id", "")),
+					"team_id": String(object.get("team_id", "")),
+					"faction_id": String(object.get("faction_id", "")),
 				"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
 				"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
 				"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
@@ -262,6 +264,11 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			"garrison": town_template.get("garrison", []).duplicate(true) if town_template.get("garrison", []) is Array else [],
 		})
 	return towns
+
+static func _int_or_default(value: Variant, default_value: int) -> int:
+	if value == null:
+		return default_value
+	return int(value)
 
 static func _resource_nodes_from_document(map_document: Variant) -> Array:
 	var nodes := []

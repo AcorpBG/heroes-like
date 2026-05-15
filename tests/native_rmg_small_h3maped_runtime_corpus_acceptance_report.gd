@@ -191,12 +191,15 @@ func _validate_case_contract(
 		failures.append("production_ready_scope_missing")
 	if int(package_summary.get("player_slot_count", 0)) != player_count:
 		failures.append("player_slot_count_mismatch")
-	if int(package_summary.get("town_count", 0)) != player_count \
-			or int(package_summary.get("player_start_town_count", 0)) != player_count \
-			or int(package_summary.get("neutral_town_count", -1)) != 0:
-		failures.append("owned_start_town_contract_mismatch")
+	var package_town_count := int(package_summary.get("town_count", 0))
+	var package_start_town_count := int(package_summary.get("player_start_town_count", 0))
+	var package_neutral_town_count := int(package_summary.get("neutral_town_count", 0))
+	if package_start_town_count != player_count \
+			or package_town_count < package_start_town_count \
+			or package_neutral_town_count != package_town_count - package_start_town_count:
+		failures.append("h3maped_town_contract_mismatch")
 	if int(runtime_summary.get("town_count", 0)) != int(package_summary.get("town_count", 0)) \
-			or int(runtime_summary.get("start_slot_town_count", 0)) != player_count:
+			or int(runtime_summary.get("start_slot_town_count", 0)) != package_start_town_count:
 		failures.append("runtime_town_contract_mismatch")
 	if int(package_summary.get("road_unique_tile_count", 0)) <= 0 \
 			or int(package_summary.get("road_unique_tile_count", 0)) != int(runtime_summary.get("road_unique_tile_count", 0)):
@@ -269,7 +272,8 @@ func _runtime_summary(session: Variant) -> Dictionary:
 			continue
 		if String(town.get("owner", "")) == "player":
 			owned_towns += 1
-		if int(town.get("owner_slot", 0)) > 0 or bool(town.get("is_start_town", false)):
+		var owner_slot := _int_or_default(town.get("owner_slot", 0), 0)
+		if owner_slot > 0 or bool(town.get("is_start_town", false)):
 			start_slot_towns += 1
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	var guard_count := 0
@@ -496,11 +500,17 @@ func _object_counts(map_document: Variant) -> Dictionary:
 		counts[kind] = int(counts.get(kind, 0)) + 1
 		if kind == "town":
 			var owner := String(object.get("owner", "neutral"))
-			if bool(object.get("is_start_town", false)) or int(object.get("owner_slot", 0)) > 0:
+			var owner_slot := _int_or_default(object.get("owner_slot", 0), 0)
+			if bool(object.get("is_start_town", false)) or owner_slot > 0:
 				counts["player_start_town"] = int(counts.get("player_start_town", 0)) + 1
 			if owner == "neutral":
 				counts["neutral_town"] = int(counts.get("neutral_town", 0)) + 1
 	return counts
+
+func _int_or_default(value: Variant, default_value: int) -> int:
+	if value == null:
+		return default_value
+	return int(value)
 
 func _cleanup_generated_packages(map_path: String, scenario_path: String) -> void:
 	if map_path != "":

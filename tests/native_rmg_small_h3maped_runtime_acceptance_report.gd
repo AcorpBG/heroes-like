@@ -135,15 +135,18 @@ func _assert_package_runtime_acceptance(
 	if int(package_summary.get("width", 0)) != 36 or int(package_summary.get("height", 0)) != 36 or int(package_summary.get("level_count", 0)) != 1:
 		_fail("Package dimensions are outside strict Small one-level scope: %s" % JSON.stringify(package_summary))
 		return false
+	var package_town_count := int(package_summary.get("town_count", 0))
+	var package_start_town_count := int(package_summary.get("player_start_town_count", 0))
+	var package_neutral_town_count := int(package_summary.get("neutral_town_count", 0))
 	if int(package_summary.get("player_slot_count", 0)) != 3 \
-			or int(package_summary.get("town_count", 0)) != 3 \
-			or int(package_summary.get("player_start_town_count", 0)) != 3 \
-			or int(package_summary.get("neutral_town_count", -1)) != 0:
-		_fail("Package lost Small owned start-town contract: %s" % JSON.stringify(package_summary))
+			or package_start_town_count != 3 \
+			or package_town_count < package_start_town_count \
+			or package_neutral_town_count != package_town_count - package_start_town_count:
+		_fail("Package lost Small h3maped town contract: %s" % JSON.stringify(package_summary))
 		return false
 	if int(runtime_summary.get("town_count", 0)) != int(package_summary.get("town_count", 0)) \
-			or int(runtime_summary.get("start_slot_town_count", 0)) != int(package_summary.get("player_start_town_count", 0)):
-		_fail("Runtime towns do not match package owned start-town contract: runtime=%s package=%s" % [JSON.stringify(runtime_summary), JSON.stringify(package_summary)])
+			or int(runtime_summary.get("start_slot_town_count", 0)) != package_start_town_count:
+		_fail("Runtime towns do not match package h3maped town contract: runtime=%s package=%s" % [JSON.stringify(runtime_summary), JSON.stringify(package_summary)])
 		return false
 	if int(package_summary.get("road_unique_tile_count", 0)) <= 0 \
 			or int(package_summary.get("road_unique_tile_count", 0)) != int(runtime_summary.get("road_unique_tile_count", 0)):
@@ -254,7 +257,8 @@ func _runtime_summary(session: Variant) -> Dictionary:
 			continue
 		if String(town.get("owner", "")) == "player":
 			owned_towns += 1
-		if int(town.get("owner_slot", 0)) > 0 or bool(town.get("is_start_town", false)):
+		var owner_slot := _int_or_default(town.get("owner_slot", 0), 0)
+		if owner_slot > 0 or bool(town.get("is_start_town", false)):
 			start_slot_towns += 1
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	var guard_count := 0
@@ -613,11 +617,17 @@ func _object_counts(map_document: Variant) -> Dictionary:
 		counts[kind] = int(counts.get(kind, 0)) + 1
 		if kind == "town":
 			var owner := String(object.get("owner", "neutral"))
-			if bool(object.get("is_start_town", false)) or int(object.get("owner_slot", 0)) > 0:
+			var owner_slot := _int_or_default(object.get("owner_slot", 0), 0)
+			if bool(object.get("is_start_town", false)) or owner_slot > 0:
 				counts["player_start_town"] = int(counts.get("player_start_town", 0)) + 1
 			if owner == "neutral":
 				counts["neutral_town"] = int(counts.get("neutral_town", 0)) + 1
 	return counts
+
+func _int_or_default(value: Variant, default_value: int) -> int:
+	if value == null:
+		return default_value
+	return int(value)
 
 func _reveal_full_map(session: Variant, map_size: Vector2i) -> void:
 	var visible := []

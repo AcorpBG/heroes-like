@@ -3,22 +3,22 @@
 	"document": {
 		"enemy_factions": [
 			{
-				"faction_id": "faction_embercourt",
+				"faction_id": "dungeon",
 				"player_slot": 1,
 				"team_id": "team_2"
 			},
 			{
-				"faction_id": "faction_mireclaw",
+				"faction_id": "rampart",
 				"player_slot": 2,
 				"team_id": "team_3"
 			},
 			{
-				"faction_id": "faction_sunvault",
+				"faction_id": "stronghold",
 				"player_slot": 3,
 				"team_id": "team_4"
 			},
 			{
-				"faction_id": "faction_thornwake",
+				"faction_id": "necropolis",
 				"player_slot": 4,
 				"team_id": "team_5"
 			}
@@ -26,7 +26,7 @@
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:3:h3maped_template_000",
 			"map_id": "h3maped_small_seed_3",
-			"package_hash": "fnv1a32:7dab50c3",
+			"package_hash": "fnv1a32:a42229c7",
 			"package_id": "manual-strict_small_4p_seed_3.amap",
 			"package_path": "res://maps/manual-strict_small_4p_seed_3.amap",
 			"schema_id": "aurelion_map_document",
@@ -40,7 +40,7 @@
 		"player_slots": [
 			{
 				"ai_controlled": true,
-				"faction_id": "faction_embercourt",
+				"faction_id": "dungeon",
 				"human": false,
 				"player_color": 1,
 				"player_slot": 1,
@@ -49,7 +49,7 @@
 			},
 			{
 				"ai_controlled": true,
-				"faction_id": "faction_mireclaw",
+				"faction_id": "rampart",
 				"human": false,
 				"player_color": 2,
 				"player_slot": 2,
@@ -58,7 +58,7 @@
 			},
 			{
 				"ai_controlled": true,
-				"faction_id": "faction_sunvault",
+				"faction_id": "stronghold",
 				"human": false,
 				"player_color": 3,
 				"player_slot": 3,
@@ -67,7 +67,7 @@
 			},
 			{
 				"ai_controlled": true,
-				"faction_id": "faction_thornwake",
+				"faction_id": "necropolis",
 				"human": false,
 				"player_color": 4,
 				"player_slot": 4,
@@ -75,7 +75,7 @@
 				"team_id": "team_5"
 			}
 		],
-		"scenario_hash": "fnv1a32:e55f9f90",
+		"scenario_hash": "fnv1a32:32b6d259",
 		"scenario_id": "manual-strict_small_4p_seed_3",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,
@@ -175,9 +175,11 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "faction_embercourt",
+					"faction_id": "dungeon",
 					"h3maped_faction_id": "dungeon",
+					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 0,
+					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": false,
@@ -186,11 +188,11 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 2,
+						"selection_radius_from_town_coordinate": 5,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 17,
-						"y": 17
+						"x": 21,
+						"y": 16
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -372,11 +374,11 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 2,
+						"selection_radius_from_town_coordinate": 5,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 17,
-						"y": 17
+						"x": 21,
+						"y": 16
 					},
 					"runtime_zone_index": 0,
 					"settlement_category": "castle",
@@ -477,9 +479,11 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "faction_mireclaw",
+					"faction_id": "rampart",
 					"h3maped_faction_id": "rampart",
+					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 1,
+					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": false,
@@ -488,10 +492,10 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 3,
+						"selection_radius_from_town_coordinate": 2,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 19,
+						"x": 18,
 						"y": 11
 					},
 					"is_capital": true,
@@ -500,7 +504,7 @@
 					"kind": "town",
 					"level": 0,
 					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
-					"object_id": "town_duskfen",
+					"object_id": "town_riverwatch",
 					"owner": "enemy",
 					"owner_slot": 2,
 					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
@@ -674,10 +678,10 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 3,
+						"selection_radius_from_town_coordinate": 2,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 19,
+						"x": 18,
 						"y": 11
 					},
 					"runtime_zone_index": 1,
@@ -685,7 +689,7 @@
 					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
 					"start_anchor": true,
 					"team_id": "team_02",
-					"town_id": "town_duskfen",
+					"town_id": "town_riverwatch",
 					"visit_tile": {
 						"level": 0,
 						"x": 17,
@@ -779,9 +783,11 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "faction_sunvault",
+					"faction_id": "stronghold",
 					"h3maped_faction_id": "stronghold",
+					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 2,
+					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_random_tie_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": true,
@@ -790,11 +796,11 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 3,
+						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
 						"x": 21,
-						"y": 16
+						"y": 18
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -802,7 +808,7 @@
 					"kind": "town",
 					"level": 0,
 					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
-					"object_id": "town_prismhearth",
+					"object_id": "town_riverwatch",
 					"owner": "enemy",
 					"owner_slot": 3,
 					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
@@ -976,18 +982,18 @@
 						"level": 0,
 						"selection_adjacent_unblocked_package_road": true,
 						"selection_package_road_reachable_steps": 1,
-						"selection_radius_from_town_coordinate": 3,
+						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
 						"x": 21,
-						"y": 16
+						"y": 18
 					},
 					"runtime_zone_index": 2,
 					"settlement_category": "castle",
 					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
 					"start_anchor": true,
 					"team_id": "team_03",
-					"town_id": "town_prismhearth",
+					"town_id": "town_riverwatch",
 					"visit_tile": {
 						"level": 0,
 						"x": 20,
@@ -1081,9 +1087,11 @@
 						}
 					],
 					"capital_role": "player_start",
-					"faction_id": "faction_thornwake",
+					"faction_id": "necropolis",
 					"h3maped_faction_id": "necropolis",
+					"h3maped_object_category_field": "+0x24",
 					"h3maped_owner_color": 3,
+					"h3maped_owner_scope": "player_owner_color",
 					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
 					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
 					"h3maped_selected_from_random_tie": false,
@@ -1095,8 +1103,8 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 15,
-						"y": 20
+						"x": 16,
+						"y": 21
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -1104,7 +1112,7 @@
 					"kind": "town",
 					"level": 0,
 					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
-					"object_id": "town_thornwake_graftroot_caravan",
+					"object_id": "town_riverwatch",
 					"owner": "enemy",
 					"owner_slot": 4,
 					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
@@ -1281,15 +1289,15 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": true,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 15,
-						"y": 20
+						"x": 16,
+						"y": 21
 					},
 					"runtime_zone_index": 3,
 					"settlement_category": "castle",
 					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
 					"start_anchor": true,
 					"team_id": "team_04",
-					"town_id": "town_thornwake_graftroot_caravan",
+					"town_id": "town_riverwatch",
 					"visit_tile": {
 						"level": 0,
 						"x": 16,
@@ -1304,7 +1312,7 @@
 			"player_starts": [
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "faction_embercourt",
+					"faction_id": "dungeon",
 					"level": 0,
 					"owner_slot": 1,
 					"player_slot": 1,
@@ -1323,7 +1331,7 @@
 				},
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "faction_mireclaw",
+					"faction_id": "rampart",
 					"level": 0,
 					"owner_slot": 2,
 					"player_slot": 2,
@@ -1333,7 +1341,7 @@
 					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
 					"start_id": "player_start_2",
 					"team_id": "team_02",
-					"town_id": "town_duskfen",
+					"town_id": "town_riverwatch",
 					"town_placement_id": "native_rmg_town_start_02",
 					"x": 17,
 					"y": 12,
@@ -1342,7 +1350,7 @@
 				},
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "faction_sunvault",
+					"faction_id": "stronghold",
 					"level": 0,
 					"owner_slot": 3,
 					"player_slot": 3,
@@ -1352,7 +1360,7 @@
 					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
 					"start_id": "player_start_3",
 					"team_id": "team_03",
-					"town_id": "town_prismhearth",
+					"town_id": "town_riverwatch",
 					"town_placement_id": "native_rmg_town_start_03",
 					"x": 20,
 					"y": 18,
@@ -1361,7 +1369,7 @@
 				},
 				{
 					"bounds_status": "h3maped_footprint_checked",
-					"faction_id": "faction_thornwake",
+					"faction_id": "necropolis",
 					"level": 0,
 					"owner_slot": 4,
 					"player_slot": 4,
@@ -1371,7 +1379,7 @@
 					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
 					"start_id": "player_start_4",
 					"team_id": "team_04",
-					"town_id": "town_thornwake_graftroot_caravan",
+					"town_id": "town_riverwatch",
 					"town_placement_id": "native_rmg_town_start_04",
 					"x": 16,
 					"y": 20,
@@ -1391,7 +1399,7 @@
 	"map_ref": {
 		"map_hash": "validated:h3maped_small:3:h3maped_template_000",
 		"map_id": "h3maped_small_seed_3",
-		"package_hash": "fnv1a32:7dab50c3",
+		"package_hash": "fnv1a32:a42229c7",
 		"package_id": "manual-strict_small_4p_seed_3.amap",
 		"package_path": "res://maps/manual-strict_small_4p_seed_3.amap",
 		"schema_id": "aurelion_map_document",
@@ -1399,17 +1407,17 @@
 		"source_kind": "generated_h3maped_small_validated",
 		"storage_policy": "project_maps_generated_package"
 	},
-	"package_hash": "fnv1a32:0bf2b384",
+	"package_hash": "fnv1a32:b35bb930",
 	"package_id": "manual-strict_small_4p_seed_3.ascenario",
 	"package_kind": "generated_scenario_package",
 	"path_policy": "manual_strict_small_land_inspection",
-	"scenario_hash": "fnv1a32:e55f9f90",
+	"scenario_hash": "fnv1a32:32b6d259",
 	"scenario_id": "manual-strict_small_4p_seed_3",
 	"scenario_ref": {
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:3:h3maped_template_000",
 			"map_id": "h3maped_small_seed_3",
-			"package_hash": "fnv1a32:7dab50c3",
+			"package_hash": "fnv1a32:a42229c7",
 			"package_id": "manual-strict_small_4p_seed_3.amap",
 			"package_path": "res://maps/manual-strict_small_4p_seed_3.amap",
 			"schema_id": "aurelion_map_document",
@@ -1417,10 +1425,10 @@
 			"source_kind": "generated_h3maped_small_validated",
 			"storage_policy": "project_maps_generated_package"
 		},
-		"package_hash": "fnv1a32:0bf2b384",
+		"package_hash": "fnv1a32:b35bb930",
 		"package_id": "manual-strict_small_4p_seed_3.ascenario",
 		"package_path": "res://maps/manual-strict_small_4p_seed_3.ascenario",
-		"scenario_hash": "fnv1a32:e55f9f90",
+		"scenario_hash": "fnv1a32:32b6d259",
 		"scenario_id": "manual-strict_small_4p_seed_3",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,

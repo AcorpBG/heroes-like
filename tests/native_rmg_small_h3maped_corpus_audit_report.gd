@@ -113,6 +113,12 @@ func _run_case(service: Variant, seed: String, player_count: int) -> Dictionary:
 	var package_adoption: Dictionary = report.get("public_package_adoption", {}) if report.get("public_package_adoption", {}) is Dictionary else {}
 	if String(package_adoption.get("status", "")) != "strict_package_adoption_draft_materialized_runtime_blocked":
 		failures.append("package_adoption_status_not_materialized")
+	var town_castle: Dictionary = report.get("town_castle_phase", {}) if report.get("town_castle_phase", {}) is Dictionary else {}
+	var scheduled_owned_towns := int(town_castle.get("scheduled_owned_player_town_count", 0))
+	var scheduled_neutral_minimum_towns := int(town_castle.get("scheduled_neutral_minimum_town_count", 0))
+	var scheduled_inactive_neutralized_towns := int(town_castle.get("scheduled_inactive_player_neutralized_town_count", 0))
+	var expected_town_count := scheduled_owned_towns + scheduled_neutral_minimum_towns + scheduled_inactive_neutralized_towns
+	var expected_neutral_town_count := scheduled_neutral_minimum_towns + scheduled_inactive_neutralized_towns
 	var final_writeout: Dictionary = report.get("final_h3m_writeout", {}) if report.get("final_h3m_writeout", {}) is Dictionary else {}
 	if String(final_writeout.get("status", "")) != "strict_final_0x49b2b6_writeout_draft_runtime_blocked":
 		failures.append("final_writeout_status_not_ready")
@@ -135,6 +141,12 @@ func _run_case(service: Variant, seed: String, player_count: int) -> Dictionary:
 	_check_metric(metrics, "out_of_bounds_object_count", 0, failures)
 	if int(metrics.get("town_count", 0)) < player_count:
 		failures.append("town_count_below_player_count")
+	if expected_town_count > 0 and int(metrics.get("town_count", 0)) != expected_town_count:
+		failures.append("town_count_expected_h3maped_scheduled_%d_got_%d" % [expected_town_count, int(metrics.get("town_count", 0))])
+	if int(metrics.get("neutral_town_count", 0)) != expected_neutral_town_count:
+		failures.append("neutral_town_count_expected_h3maped_scheduled_%d_got_%d" % [expected_neutral_town_count, int(metrics.get("neutral_town_count", 0))])
+	if expected_neutral_town_count > 0 and int(metrics.get("town_count", 0)) <= player_count:
+		failures.append("inactive_or_neutral_source_towns_not_materialized")
 	if int(metrics.get("mine_count", 0)) <= 0:
 		failures.append("mine_count_missing")
 	if int(metrics.get("reward_count", 0)) <= 0:
@@ -191,6 +203,9 @@ func _run_case(service: Variant, seed: String, player_count: int) -> Dictionary:
 	summary["source_template_authority"] = _source_template_authority(generated)
 	summary["package_object_count"] = int(metrics.get("package_object_count", 0))
 	summary["town_count"] = int(metrics.get("town_count", 0))
+	summary["neutral_town_count"] = int(metrics.get("neutral_town_count", 0))
+	summary["h3maped_scheduled_town_count"] = expected_town_count
+	summary["h3maped_scheduled_neutral_town_count"] = expected_neutral_town_count
 	summary["mine_count"] = int(metrics.get("mine_count", 0))
 	summary["reward_count"] = int(metrics.get("reward_count", 0))
 	summary["connection_blocker_count"] = int(metrics.get("connection_blocker_count", 0))
