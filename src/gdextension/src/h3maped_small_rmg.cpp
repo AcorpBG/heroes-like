@@ -2367,14 +2367,14 @@ void prune_candidates_4a1ad8_single_level(const RuntimeZoneSeed &current_templat
 		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
 		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
 		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
-		best_metric = std::min(best_metric, std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x));
+		best_metric = std::min(best_metric, std::max(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x));
 	}
 	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
 		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
 		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
 		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
 		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
-		const int32_t metric = std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x);
+		const int32_t metric = std::max(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x);
 		return best_metric < metric;
 	}), candidates.end());
 }
@@ -11718,6 +11718,16 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	Array blocker_records = connections_phase.get("private_blocker_records", Array());
 	Array guard_records = connections_phase.get("private_guard_records", Array());
 	Array decorative_obstacle_records = decorative_filler_phase.get("private_decorative_obstacle_records", Array());
+	Dictionary connection_guard_flat_keys;
+	for (int64_t index = 0; index < guard_records.size(); ++index) {
+		if (Variant(guard_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const int32_t flat = int32_t(Dictionary(guard_records[index]).get("flat_cell_index", -1));
+		if (flat >= 0) {
+			connection_guard_flat_keys[String::num_int64(flat)] = true;
+		}
+	}
 
 	PackedInt32Array terrain_codes;
 	for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
@@ -11872,10 +11882,17 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	terrain_layers["h3maped_road_public_adoption_status"] = "h3maped_predecessor_chains_adopted_as_route_segments";
 
 	Array package_objects;
+	Dictionary package_guard_occupied_flats;
+	Dictionary package_connection_guard_object_index_by_flat;
 	int32_t owned_player_town_count = 0;
 	int32_t neutral_town_count = 0;
+	int32_t mine_guard_package_object_count = 0;
+	int32_t mine_guard_skipped_duplicate_count = 0;
 	int32_t primary_category_package_object_count = 0;
 	int32_t primary_category_guard_package_object_count = 0;
+	int32_t primary_category_guard_skipped_duplicate_count = 0;
+	int32_t connection_guard_package_object_count = 0;
+	int32_t connection_guard_skipped_duplicate_count = 0;
 	for (int64_t index = 0; index < town_records.size(); ++index) {
 		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -11941,6 +11958,12 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			continue;
 		}
 		Dictionary source = mine_guard_records[index];
+		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
+		const String flat_key = String::num_int64(flat);
+		if (flat < 0 || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+			mine_guard_skipped_duplicate_count += 1;
+			continue;
+		}
 		Dictionary object;
 		object["placement_id"] = String("h3maped_small_mine_guard_") + h3_slot_id_2(int32_t(index + 1));
 		object["kind"] = "guard";
@@ -11968,7 +11991,9 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["package_block_tile_count"] = control_tiles.size();
 		object["package_adoption_source"] = "h3maped_private_0x4a9911_mine_guard_0x4a960a_0x4a65a5";
 		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
 		package_objects.append(object);
+		mine_guard_package_object_count += 1;
 	}
 
 	for (int64_t index = 0; index < mine_adjacent_resource_records.size(); ++index) {
@@ -12072,6 +12097,12 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		const int32_t x = int32_t(source.get("x", -1));
 		const int32_t y = int32_t(source.get("y", -1));
 		const int32_t level = int32_t(source.get("level", 0));
+		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
+		const String flat_key = String::num_int64(flat);
+		if (flat < 0 || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+			primary_category_guard_skipped_duplicate_count += 1;
+			continue;
+		}
 		Dictionary object;
 		object["placement_id"] = String("h3maped_small_primary_guard_") + h3_slot_id_2(int32_t(index + 1));
 		object["kind"] = "guard";
@@ -12099,6 +12130,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["package_block_tile_count"] = control_tiles.size();
 		object["package_adoption_source"] = "h3maped_private_0x4a901a_primary_category_guard_0x4a65a5";
 		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
 		package_objects.append(object);
 		primary_category_guard_package_object_count += 1;
 	}
@@ -12194,12 +12226,49 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			continue;
 		}
 		Dictionary source = guard_records[index];
+		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
+		const String flat_key = String::num_int64(flat);
+		if (flat < 0) {
+			connection_guard_skipped_duplicate_count += 1;
+			continue;
+		}
+		const String connection_id = String(source.get("connection_id", ""));
+		if (package_guard_occupied_flats.has(flat_key)) {
+			if (package_connection_guard_object_index_by_flat.has(flat_key)) {
+				const int64_t existing_object_index = int64_t(package_connection_guard_object_index_by_flat.get(flat_key, -1));
+				if (existing_object_index >= 0 && existing_object_index < package_objects.size()
+						&& Variant(package_objects[existing_object_index]).get_type() == Variant::DICTIONARY) {
+					Dictionary existing_object = package_objects[existing_object_index];
+					Array shared_connection_ids = existing_object.get("connection_ids", Array());
+					bool has_connection_id = connection_id.is_empty();
+					for (int64_t shared_index = 0; shared_index < shared_connection_ids.size(); ++shared_index) {
+						if (String(shared_connection_ids[shared_index]) == connection_id) {
+							has_connection_id = true;
+							break;
+						}
+					}
+					if (!has_connection_id) {
+						shared_connection_ids.append(connection_id);
+					}
+					existing_object["connection_ids"] = shared_connection_ids;
+					existing_object["shared_connection_guard"] = shared_connection_ids.size() > 1;
+					existing_object["shared_connection_guard_count"] = shared_connection_ids.size();
+					existing_object["package_guard_duplicate_cell_policy"] = "single_guard_object_shared_by_recovered_route_links";
+					const int32_t merged_guard_value = std::max(int32_t(existing_object.get("guard_value", 0)), int32_t(source.get("guard_value", 0)));
+					existing_object["guard_value"] = merged_guard_value;
+					package_objects[existing_object_index] = existing_object;
+				}
+			}
+			connection_guard_skipped_duplicate_count += 1;
+			continue;
+		}
 		Dictionary object;
 		object["placement_id"] = String("h3maped_small_connection_guard_") + h3_slot_id_2(int32_t(index + 1));
 		object["kind"] = "guard";
 		object["package_kind"] = "guard";
 		object["object_id"] = "encounter_h3maped_connection_guard";
-		object["connection_id"] = source.get("connection_id", "");
+		object["connection_id"] = connection_id;
+		object["connection_ids"] = connection_id.is_empty() ? Array() : Array::make(connection_id);
 		object["runtime_zone_a"] = source.get("runtime_zone_a", -1);
 		object["runtime_zone_b"] = source.get("runtime_zone_b", -1);
 		object["guard_value"] = source.get("guard_value", 0);
@@ -12220,7 +12289,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["package_block_tile_count"] = control_tiles.size();
 		object["package_adoption_source"] = "h3maped_private_0x4a5e03_connection_guard_record";
 		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
+		package_connection_guard_object_index_by_flat[flat_key] = package_objects.size();
 		package_objects.append(object);
+		connection_guard_package_object_count += 1;
 	}
 
 	for (int64_t index = 0; index < decorative_obstacle_records.size(); ++index) {
@@ -12624,14 +12696,17 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	phase["player_start_count"] = player_starts.size();
 	phase["player_start_town_sync_count"] = player_start_town_sync_count;
 	phase["mine_package_object_count"] = mine_records.size();
-	phase["mine_guard_package_object_count"] = mine_guard_records.size();
+	phase["mine_guard_package_object_count"] = mine_guard_package_object_count;
+	phase["mine_guard_skipped_duplicate_package_cell_count"] = mine_guard_skipped_duplicate_count;
 	phase["mine_adjacent_resource_package_object_count"] = mine_adjacent_resource_records.size();
 	phase["primary_category_package_object_count"] = primary_category_package_object_count;
 	phase["scenic_object_package_object_count"] = primary_category_package_object_count;
 	phase["primary_category_guard_package_object_count"] = primary_category_guard_package_object_count;
+	phase["primary_category_guard_skipped_duplicate_package_cell_count"] = primary_category_guard_skipped_duplicate_count;
 	phase["reward_package_object_count"] = reward_records.size();
 	phase["connection_blocker_package_object_count"] = blocker_records.size();
-	phase["connection_guard_package_object_count"] = guard_records.size();
+	phase["connection_guard_package_object_count"] = connection_guard_package_object_count;
+	phase["connection_guard_skipped_duplicate_package_cell_count"] = connection_guard_skipped_duplicate_count;
 	phase["decorative_obstacle_package_object_count"] = decorative_obstacle_records.size();
 	phase["package_object_count"] = package_objects.size();
 	phase["structural_validation"] = structural_validation;
@@ -12972,9 +13047,31 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 			if (bool(object.get("blocking_body", false)) && int32_t(object.get("guard_value", 0)) > 0) {
 				blocking_guard_count += 1;
 			}
+			Array connection_ids;
+			if (Variant(object.get("connection_ids", Variant())).get_type() == Variant::ARRAY) {
+				connection_ids = object.get("connection_ids", Array());
+			}
 			const String connection_id = String(object.get("connection_id", ""));
 			if (!connection_id.is_empty()) {
-				guard_count_by_connection[connection_id] = int32_t(guard_count_by_connection.get(connection_id, 0)) + 1;
+				bool has_primary_connection_id = false;
+				for (int64_t connection_index = 0; connection_index < connection_ids.size(); ++connection_index) {
+					if (String(connection_ids[connection_index]) == connection_id) {
+						has_primary_connection_id = true;
+						break;
+					}
+				}
+				if (!has_primary_connection_id) {
+					connection_ids.append(connection_id);
+				}
+			}
+			Dictionary counted_connection_ids;
+			for (int64_t connection_index = 0; connection_index < connection_ids.size(); ++connection_index) {
+				const String guard_connection_id = String(connection_ids[connection_index]);
+				if (guard_connection_id.is_empty() || counted_connection_ids.has(guard_connection_id)) {
+					continue;
+				}
+				counted_connection_ids[guard_connection_id] = true;
+				guard_count_by_connection[guard_connection_id] = int32_t(guard_count_by_connection.get(guard_connection_id, 0)) + 1;
 			}
 		}
 	}
