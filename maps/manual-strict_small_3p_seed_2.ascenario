@@ -1,0 +1,1098 @@
+{
+	"authored_content_writeback": false,
+	"document": {
+		"enemy_factions": [
+			{
+				"faction_id": "faction_embercourt",
+				"player_slot": 1,
+				"team_id": "team_2"
+			},
+			{
+				"faction_id": "faction_mireclaw",
+				"player_slot": 2,
+				"team_id": "team_3"
+			},
+			{
+				"faction_id": "faction_sunvault",
+				"player_slot": 3,
+				"team_id": "team_4"
+			}
+		],
+		"map_ref": {
+			"map_hash": "validated:h3maped_small:2:h3maped_template_027",
+			"map_id": "h3maped_small_seed_2",
+			"package_hash": "fnv1a32:3ca113e6",
+			"package_id": "manual-strict_small_3p_seed_2.amap",
+			"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
+			"schema_id": "aurelion_map_document",
+			"schema_version": 1.0,
+			"source_kind": "generated_h3maped_small_validated",
+			"storage_policy": "project_maps_generated_package"
+		},
+		"objectives": {
+
+		},
+		"player_slots": [
+			{
+				"ai_controlled": true,
+				"faction_id": "faction_embercourt",
+				"human": false,
+				"player_color": 1,
+				"player_slot": 1,
+				"source_owner_index": 1,
+				"team_id": "team_2"
+			},
+			{
+				"ai_controlled": true,
+				"faction_id": "faction_mireclaw",
+				"human": false,
+				"player_color": 2,
+				"player_slot": 2,
+				"source_owner_index": 2,
+				"team_id": "team_3"
+			},
+			{
+				"ai_controlled": true,
+				"faction_id": "faction_sunvault",
+				"human": false,
+				"player_color": 3,
+				"player_slot": 3,
+				"source_owner_index": 3,
+				"team_id": "team_4"
+			}
+		],
+		"scenario_hash": "fnv1a32:ce2bba71",
+		"scenario_id": "manual-strict_small_3p_seed_2",
+		"schema_id": "aurelion_scenario_document",
+		"schema_version": 1,
+		"script_hooks": [],
+		"selection": {
+			"availability": {
+				"campaign": false,
+				"skirmish": false
+			},
+			"generated": true,
+			"h3maped_small_validator_gated": true,
+			"package_session_adoption_bridge": true,
+			"player_facing": false
+		},
+		"start_contract": {
+			"player_start_towns": [
+				{
+					"action_tiles": [
+						{
+							"level": 0,
+							"x": 26,
+							"y": 11
+						}
+					],
+					"approach_tiles": [
+						{
+							"level": 0,
+							"x": 26,
+							"y": 11
+						}
+					],
+					"body_tiles": [
+						{
+							"level": 0,
+							"x": 28,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 28,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 13
+						}
+					],
+					"capital_role": "player_start",
+					"faction_id": "faction_embercourt",
+					"h3maped_faction_id": "tower",
+					"h3maped_owner_color": 0,
+					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
+					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
+					"h3maped_selected_from_random_tie": false,
+					"h3maped_town_choice_index": 2,
+					"hero_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": false,
+						"selection_package_road_reachable_steps": 3,
+						"selection_radius_from_town_coordinate": 1,
+						"selection_removed_removable_start_block_mask": false,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 28,
+						"y": 15
+					},
+					"is_capital": true,
+					"is_castle": true,
+					"is_start_town": true,
+					"kind": "town",
+					"level": 0,
+					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
+					"object_id": "town_riverwatch",
+					"owner": "player",
+					"owner_slot": 1,
+					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
+					"package_block_tile_count": 13,
+					"package_block_tiles": [
+						{
+							"level": 0,
+							"x": 28,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 28,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 13
+						}
+					],
+					"package_body_tile_count": 13,
+					"package_body_tiles": [
+						{
+							"level": 0,
+							"x": 28,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 28,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 24,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 27,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 26,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 25,
+							"y": 13
+						}
+					],
+					"package_kind": "town",
+					"package_pathing_materialization_state": "body_visit_block_masks_materialized_for_generated_package_surface",
+					"package_surface_adoption_state": "strict_h3maped_private_record_materialized_for_package_draft",
+					"package_town_action_tile_policy": "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start",
+					"package_visit_tile_count": 1,
+					"package_visit_tiles": [
+						{
+							"level": 0,
+							"x": 28,
+							"y": 16
+						}
+					],
+					"passability": {
+						"blocking_body": true,
+						"passability_class": "blocking_visitable",
+						"visitable": true
+					},
+					"placement_id": "native_rmg_town_start_01",
+					"player_slot": 1,
+					"player_type": "human",
+					"primary_tile": {
+						"level": 0,
+						"x": 28,
+						"y": 16
+					},
+					"public_runtime_authoritative": true,
+					"record_type": "player_start_town",
+					"runtime_generation_allowed": true,
+					"runtime_start_reachable_road_steps": 3,
+					"runtime_start_selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+					"runtime_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": false,
+						"selection_package_road_reachable_steps": 3,
+						"selection_radius_from_town_coordinate": 1,
+						"selection_removed_removable_start_block_mask": false,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 28,
+						"y": 15
+					},
+					"runtime_zone_index": 0,
+					"settlement_category": "castle",
+					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
+					"start_anchor": true,
+					"team_id": "team_01",
+					"town_id": "town_riverwatch",
+					"visit_tile": {
+						"level": 0,
+						"x": 28,
+						"y": 16
+					},
+					"x": 28,
+					"y": 16,
+					"zone_id": 1.0,
+					"zone_role": "human_start"
+				},
+				{
+					"action_tiles": [
+						{
+							"level": 0,
+							"x": 2,
+							"y": 12
+						}
+					],
+					"approach_tiles": [
+						{
+							"level": 0,
+							"x": 2,
+							"y": 12
+						}
+					],
+					"body_tiles": [
+						{
+							"level": 0,
+							"x": 4,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 4,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 14
+						}
+					],
+					"capital_role": "player_start",
+					"faction_id": "faction_mireclaw",
+					"h3maped_faction_id": "tower",
+					"h3maped_owner_color": 1,
+					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
+					"h3maped_record_status": "0x4a93a2_random_tie_0x49aa93_town_footprint_candidate_record_projection_private",
+					"h3maped_selected_from_random_tie": true,
+					"h3maped_town_choice_index": 2,
+					"hero_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": true,
+						"selection_package_road_reachable_steps": 1,
+						"selection_radius_from_town_coordinate": 1,
+						"selection_removed_removable_start_block_mask": true,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 3,
+						"y": 17
+					},
+					"is_capital": true,
+					"is_castle": true,
+					"is_start_town": true,
+					"kind": "town",
+					"level": 0,
+					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
+					"object_id": "town_duskfen",
+					"owner": "enemy",
+					"owner_slot": 2,
+					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
+					"package_block_tile_count": 13,
+					"package_block_tiles": [
+						{
+							"level": 0,
+							"x": 4,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 4,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 14
+						}
+					],
+					"package_body_tile_count": 13,
+					"package_body_tiles": [
+						{
+							"level": 0,
+							"x": 4,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 4,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 0,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 3,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 2,
+							"y": 14
+						},
+						{
+							"level": 0,
+							"x": 1,
+							"y": 14
+						}
+					],
+					"package_kind": "town",
+					"package_pathing_materialization_state": "body_visit_block_masks_materialized_for_generated_package_surface",
+					"package_surface_adoption_state": "strict_h3maped_private_record_materialized_for_package_draft",
+					"package_town_action_tile_policy": "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start",
+					"package_visit_tile_count": 1,
+					"package_visit_tiles": [
+						{
+							"level": 0,
+							"x": 4,
+							"y": 17
+						}
+					],
+					"passability": {
+						"blocking_body": true,
+						"passability_class": "blocking_visitable",
+						"visitable": true
+					},
+					"placement_id": "native_rmg_town_start_02",
+					"player_slot": 2,
+					"player_type": "computer",
+					"primary_tile": {
+						"level": 0,
+						"x": 4,
+						"y": 17
+					},
+					"public_runtime_authoritative": true,
+					"record_type": "player_start_town",
+					"runtime_generation_allowed": true,
+					"runtime_start_reachable_road_steps": 1,
+					"runtime_start_selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+					"runtime_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": true,
+						"selection_package_road_reachable_steps": 1,
+						"selection_radius_from_town_coordinate": 1,
+						"selection_removed_removable_start_block_mask": true,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 3,
+						"y": 17
+					},
+					"runtime_zone_index": 1,
+					"settlement_category": "castle",
+					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
+					"start_anchor": true,
+					"team_id": "team_02",
+					"town_id": "town_duskfen",
+					"visit_tile": {
+						"level": 0,
+						"x": 4,
+						"y": 17
+					},
+					"x": 4,
+					"y": 17,
+					"zone_id": 2.0,
+					"zone_role": "human_start"
+				},
+				{
+					"action_tiles": [
+						{
+							"level": 0,
+							"x": 20,
+							"y": 11
+						}
+					],
+					"approach_tiles": [
+						{
+							"level": 0,
+							"x": 20,
+							"y": 11
+						}
+					],
+					"body_tiles": [
+						{
+							"level": 0,
+							"x": 22,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 22,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 13
+						}
+					],
+					"capital_role": "player_start",
+					"faction_id": "faction_sunvault",
+					"h3maped_faction_id": "inferno",
+					"h3maped_owner_color": 2,
+					"h3maped_record_projection_status": "0x49ba89_0x540a9c_record_fields_projected_no_package_adoption",
+					"h3maped_record_status": "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private",
+					"h3maped_selected_from_random_tie": false,
+					"h3maped_town_choice_index": 3,
+					"hero_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": true,
+						"selection_package_road_reachable_steps": 1,
+						"selection_radius_from_town_coordinate": 3,
+						"selection_removed_removable_start_block_mask": true,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 20,
+						"y": 15
+					},
+					"is_capital": true,
+					"is_castle": true,
+					"is_start_town": true,
+					"kind": "town",
+					"level": 0,
+					"materialization_state": "h3maped_private_town_record_candidate_no_public_package_adoption",
+					"object_id": "town_prismhearth",
+					"owner": "enemy",
+					"owner_slot": 3,
+					"package_adoption_source": "h3maped_private_0x49ba89_town_record",
+					"package_block_tile_count": 13,
+					"package_block_tiles": [
+						{
+							"level": 0,
+							"x": 22,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 22,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 13
+						}
+					],
+					"package_body_tile_count": 13,
+					"package_body_tiles": [
+						{
+							"level": 0,
+							"x": 22,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 11
+						},
+						{
+							"level": 0,
+							"x": 22,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 18,
+							"y": 12
+						},
+						{
+							"level": 0,
+							"x": 21,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 20,
+							"y": 13
+						},
+						{
+							"level": 0,
+							"x": 19,
+							"y": 13
+						}
+					],
+					"package_kind": "town",
+					"package_pathing_materialization_state": "body_visit_block_masks_materialized_for_generated_package_surface",
+					"package_surface_adoption_state": "strict_h3maped_private_record_materialized_for_package_draft",
+					"package_town_action_tile_policy": "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start",
+					"package_visit_tile_count": 1,
+					"package_visit_tiles": [
+						{
+							"level": 0,
+							"x": 22,
+							"y": 16
+						}
+					],
+					"passability": {
+						"blocking_body": true,
+						"passability_class": "blocking_visitable",
+						"visitable": true
+					},
+					"placement_id": "native_rmg_town_start_03",
+					"player_slot": 3,
+					"player_type": "computer",
+					"primary_tile": {
+						"level": 0,
+						"x": 22,
+						"y": 16
+					},
+					"public_runtime_authoritative": true,
+					"record_type": "player_start_town",
+					"runtime_generation_allowed": true,
+					"runtime_start_reachable_road_steps": 1,
+					"runtime_start_selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+					"runtime_start_tile": {
+						"level": 0,
+						"selection_adjacent_unblocked_package_road": true,
+						"selection_package_road_reachable_steps": 1,
+						"selection_radius_from_town_coordinate": 3,
+						"selection_removed_removable_start_block_mask": true,
+						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
+						"x": 20,
+						"y": 15
+					},
+					"runtime_zone_index": 2,
+					"settlement_category": "castle",
+					"source_algorithm": "h3maped_0x4a8d2c_0x4a93a2_0x49aa93_0x49ba89",
+					"start_anchor": true,
+					"team_id": "team_03",
+					"town_id": "town_prismhearth",
+					"visit_tile": {
+						"level": 0,
+						"x": 22,
+						"y": 16
+					},
+					"x": 22,
+					"y": 16,
+					"zone_id": 3.0,
+					"zone_role": "human_start"
+				}
+			],
+			"player_starts": [
+				{
+					"bounds_status": "h3maped_footprint_checked",
+					"faction_id": "faction_embercourt",
+					"level": 0,
+					"owner_slot": 1,
+					"player_slot": 1,
+					"player_type": "human",
+					"primary_town_anchor_status": "materialized_as_h3maped_town_record_candidate",
+					"spacing_model": "h3maped_runtime_zone_anchor_and_0x49aa93_footprint_gate",
+					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
+					"start_id": "player_start_1",
+					"team_id": "team_01",
+					"town_id": "town_riverwatch",
+					"town_placement_id": "native_rmg_town_start_01",
+					"x": 28,
+					"y": 16,
+					"zone_id": 1.0,
+					"zone_role": "human_start"
+				},
+				{
+					"bounds_status": "h3maped_footprint_checked",
+					"faction_id": "faction_mireclaw",
+					"level": 0,
+					"owner_slot": 2,
+					"player_slot": 2,
+					"player_type": "computer",
+					"primary_town_anchor_status": "materialized_as_h3maped_town_record_candidate",
+					"spacing_model": "h3maped_runtime_zone_anchor_and_0x49aa93_footprint_gate",
+					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
+					"start_id": "player_start_2",
+					"team_id": "team_02",
+					"town_id": "town_duskfen",
+					"town_placement_id": "native_rmg_town_start_02",
+					"x": 4,
+					"y": 17,
+					"zone_id": 2.0,
+					"zone_role": "human_start"
+				},
+				{
+					"bounds_status": "h3maped_footprint_checked",
+					"faction_id": "faction_sunvault",
+					"level": 0,
+					"owner_slot": 3,
+					"player_slot": 3,
+					"player_type": "computer",
+					"primary_town_anchor_status": "materialized_as_h3maped_town_record_candidate",
+					"spacing_model": "h3maped_runtime_zone_anchor_and_0x49aa93_footprint_gate",
+					"start_contract_source": "h3maped_0x4a93a2_town_record_candidate",
+					"start_id": "player_start_3",
+					"team_id": "team_03",
+					"town_id": "town_prismhearth",
+					"town_placement_id": "native_rmg_town_start_03",
+					"x": 22,
+					"y": 16,
+					"zone_id": 3.0,
+					"zone_role": "human_start"
+				}
+			],
+			"primary_hero_id": "hero_lyra",
+			"schema_id": "aurelion_native_rmg_start_contract_v1",
+			"start_contract_source": "h3maped_small_validated_map_document_payload",
+			"start_count": 3,
+			"start_town_count": 3
+		}
+	},
+	"document_kind": "scenario",
+	"legacy_json_scenario_record": false,
+	"map_ref": {
+		"map_hash": "validated:h3maped_small:2:h3maped_template_027",
+		"map_id": "h3maped_small_seed_2",
+		"package_hash": "fnv1a32:3ca113e6",
+		"package_id": "manual-strict_small_3p_seed_2.amap",
+		"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
+		"schema_id": "aurelion_map_document",
+		"schema_version": 1.0,
+		"source_kind": "generated_h3maped_small_validated",
+		"storage_policy": "project_maps_generated_package"
+	},
+	"package_hash": "fnv1a32:d08eb669",
+	"package_id": "manual-strict_small_3p_seed_2.ascenario",
+	"package_kind": "generated_scenario_package",
+	"path_policy": "manual_strict_small_land_inspection",
+	"scenario_hash": "fnv1a32:ce2bba71",
+	"scenario_id": "manual-strict_small_3p_seed_2",
+	"scenario_ref": {
+		"map_ref": {
+			"map_hash": "validated:h3maped_small:2:h3maped_template_027",
+			"map_id": "h3maped_small_seed_2",
+			"package_hash": "fnv1a32:3ca113e6",
+			"package_id": "manual-strict_small_3p_seed_2.amap",
+			"package_path": "res://maps/manual-strict_small_3p_seed_2.amap",
+			"schema_id": "aurelion_map_document",
+			"schema_version": 1.0,
+			"source_kind": "generated_h3maped_small_validated",
+			"storage_policy": "project_maps_generated_package"
+		},
+		"package_hash": "fnv1a32:d08eb669",
+		"package_id": "manual-strict_small_3p_seed_2.ascenario",
+		"package_path": "res://maps/manual-strict_small_3p_seed_2.ascenario",
+		"scenario_hash": "fnv1a32:ce2bba71",
+		"scenario_id": "manual-strict_small_3p_seed_2",
+		"schema_id": "aurelion_scenario_document",
+		"schema_version": 1,
+		"storage_policy": "project_maps_generated_package"
+	},
+	"schema_id": "aurelion_scenario_package",
+	"schema_version": 1,
+	"source_kind": "generated",
+	"storage_policy": "project_maps_generated_package"
+}
