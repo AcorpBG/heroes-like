@@ -16,7 +16,7 @@
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:1:h3maped_template_048",
 			"map_id": "h3maped_small_seed_1",
-			"package_hash": "fnv1a32:3b6b1b4c",
+			"package_hash": "fnv1a32:a181f3d1",
 			"package_id": "manual-strict_small_2p_seed_1.amap",
 			"package_path": "res://maps/manual-strict_small_2p_seed_1.amap",
 			"schema_id": "aurelion_map_document",
@@ -47,7 +47,7 @@
 				"team_id": "team_3"
 			}
 		],
-		"scenario_hash": "fnv1a32:1e5f2cc1",
+		"scenario_hash": "fnv1a32:606c54bc",
 		"scenario_id": "manual-strict_small_2p_seed_1",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,
@@ -68,82 +68,82 @@
 					"action_tiles": [
 						{
 							"level": 0,
-							"x": 5,
-							"y": 7
+							"x": 16,
+							"y": 13
 						}
 					],
 					"approach_tiles": [
 						{
 							"level": 0,
-							"x": 5,
-							"y": 7
+							"x": 16,
+							"y": 13
 						}
 					],
 					"body_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 7
+							"x": 18,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 7
+							"x": 17,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 7
+							"x": 16,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 7
+							"x": 15,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 7
+							"x": 14,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 7,
-							"y": 8
+							"x": 18,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 8
+							"x": 17,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 8
+							"x": 16,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 8
+							"x": 15,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 8
+							"x": 14,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 9
+							"x": 17,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 9
+							"x": 16,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 9
+							"x": 15,
+							"y": 15
 						}
 					],
 					"capital_role": "player_start",
@@ -163,8 +163,8 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": false,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 7,
-						"y": 13
+						"x": 18,
+						"y": 19
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -180,136 +180,136 @@
 					"package_block_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 7
+							"x": 18,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 7
+							"x": 17,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 7
+							"x": 16,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 7
+							"x": 15,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 7
+							"x": 14,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 7,
-							"y": 8
+							"x": 18,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 8
+							"x": 17,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 8
+							"x": 16,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 8
+							"x": 15,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 8
+							"x": 14,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 9
+							"x": 17,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 9
+							"x": 16,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 9
+							"x": 15,
+							"y": 15
 						}
 					],
 					"package_body_tile_count": 13,
 					"package_body_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 7
+							"x": 18,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 7
+							"x": 17,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 7
+							"x": 16,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 7
+							"x": 15,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 7
+							"x": 14,
+							"y": 13
 						},
 						{
 							"level": 0,
-							"x": 7,
-							"y": 8
+							"x": 18,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 8
+							"x": 17,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 8
+							"x": 16,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 8
+							"x": 15,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 8
+							"x": 14,
+							"y": 14
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 9
+							"x": 17,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 9
+							"x": 16,
+							"y": 15
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 9
+							"x": 15,
+							"y": 15
 						}
 					],
 					"package_kind": "town",
@@ -320,8 +320,8 @@
 					"package_visit_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 12
+							"x": 18,
+							"y": 18
 						}
 					],
 					"passability": {
@@ -334,8 +334,8 @@
 					"player_type": "human",
 					"primary_tile": {
 						"level": 0,
-						"x": 7,
-						"y": 12
+						"x": 18,
+						"y": 18
 					},
 					"public_runtime_authoritative": true,
 					"record_type": "player_start_town",
@@ -349,8 +349,8 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": false,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 7,
-						"y": 13
+						"x": 18,
+						"y": 19
 					},
 					"runtime_zone_index": 0,
 					"settlement_category": "castle",
@@ -360,11 +360,11 @@
 					"town_id": "town_duskfen",
 					"visit_tile": {
 						"level": 0,
-						"x": 7,
-						"y": 12
+						"x": 18,
+						"y": 18
 					},
-					"x": 7,
-					"y": 12,
+					"x": 18,
+					"y": 18,
 					"zone_id": 1.0,
 					"zone_role": "human_start"
 				},
@@ -372,82 +372,82 @@
 					"action_tiles": [
 						{
 							"level": 0,
-							"x": 5,
-							"y": 19
+							"x": 8,
+							"y": 22
 						}
 					],
 					"approach_tiles": [
 						{
 							"level": 0,
-							"x": 5,
-							"y": 19
+							"x": 8,
+							"y": 22
 						}
 					],
 					"body_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 19
+							"x": 10,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 19
+							"x": 9,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 4,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 3,
-							"y": 19
+							"x": 8,
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 7,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 20
+							"x": 10,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 20
+							"x": 9,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 20
+							"x": 8,
+							"y": 23
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 23
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 21
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 21
+							"x": 9,
+							"y": 24
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 21
+							"x": 8,
+							"y": 24
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 24
 						}
 					],
 					"capital_role": "player_start",
@@ -467,8 +467,8 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": false,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 6,
-						"y": 24
+						"x": 9,
+						"y": 27
 					},
 					"is_capital": true,
 					"is_castle": true,
@@ -484,136 +484,136 @@
 					"package_block_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 19
+							"x": 10,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 19
+							"x": 9,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 4,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 3,
-							"y": 19
+							"x": 8,
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 7,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 20
+							"x": 10,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 20
+							"x": 9,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 20
+							"x": 8,
+							"y": 23
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 23
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 21
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 21
+							"x": 9,
+							"y": 24
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 21
+							"x": 8,
+							"y": 24
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 24
 						}
 					],
 					"package_body_tile_count": 13,
 					"package_body_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 19
+							"x": 10,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 6,
-							"y": 19
+							"x": 9,
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 4,
-							"y": 19
-						},
-						{
-							"level": 0,
-							"x": 3,
-							"y": 19
+							"x": 8,
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 7,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 20
+							"y": 22
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 20
+							"x": 10,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 20
+							"x": 9,
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 3,
-							"y": 20
+							"x": 8,
+							"y": 23
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 23
 						},
 						{
 							"level": 0,
 							"x": 6,
-							"y": 21
+							"y": 23
 						},
 						{
 							"level": 0,
-							"x": 5,
-							"y": 21
+							"x": 9,
+							"y": 24
 						},
 						{
 							"level": 0,
-							"x": 4,
-							"y": 21
+							"x": 8,
+							"y": 24
+						},
+						{
+							"level": 0,
+							"x": 7,
+							"y": 24
 						}
 					],
 					"package_kind": "town",
@@ -624,8 +624,8 @@
 					"package_visit_tiles": [
 						{
 							"level": 0,
-							"x": 7,
-							"y": 24
+							"x": 10,
+							"y": 27
 						}
 					],
 					"passability": {
@@ -638,8 +638,8 @@
 					"player_type": "computer",
 					"primary_tile": {
 						"level": 0,
-						"x": 7,
-						"y": 24
+						"x": 10,
+						"y": 27
 					},
 					"public_runtime_authoritative": true,
 					"record_type": "player_start_town",
@@ -653,8 +653,8 @@
 						"selection_radius_from_town_coordinate": 1,
 						"selection_removed_removable_start_block_mask": false,
 						"selection_source": "h3maped_town_coordinate_package_mask_reachable_road_runtime_start",
-						"x": 6,
-						"y": 24
+						"x": 9,
+						"y": 27
 					},
 					"runtime_zone_index": 1,
 					"settlement_category": "castle",
@@ -664,11 +664,11 @@
 					"town_id": "town_veilmourn_bellwake_harbor",
 					"visit_tile": {
 						"level": 0,
-						"x": 7,
-						"y": 24
+						"x": 10,
+						"y": 27
 					},
-					"x": 7,
-					"y": 24,
+					"x": 10,
+					"y": 27,
 					"zone_id": 2.0,
 					"zone_role": "human_start"
 				}
@@ -688,8 +688,8 @@
 					"team_id": "team_01",
 					"town_id": "town_duskfen",
 					"town_placement_id": "native_rmg_town_start_01",
-					"x": 7,
-					"y": 12,
+					"x": 18,
+					"y": 18,
 					"zone_id": 1.0,
 					"zone_role": "human_start"
 				},
@@ -707,8 +707,8 @@
 					"team_id": "team_02",
 					"town_id": "town_veilmourn_bellwake_harbor",
 					"town_placement_id": "native_rmg_town_start_02",
-					"x": 7,
-					"y": 24,
+					"x": 10,
+					"y": 27,
 					"zone_id": 2.0,
 					"zone_role": "human_start"
 				}
@@ -725,7 +725,7 @@
 	"map_ref": {
 		"map_hash": "validated:h3maped_small:1:h3maped_template_048",
 		"map_id": "h3maped_small_seed_1",
-		"package_hash": "fnv1a32:3b6b1b4c",
+		"package_hash": "fnv1a32:a181f3d1",
 		"package_id": "manual-strict_small_2p_seed_1.amap",
 		"package_path": "res://maps/manual-strict_small_2p_seed_1.amap",
 		"schema_id": "aurelion_map_document",
@@ -733,17 +733,17 @@
 		"source_kind": "generated_h3maped_small_validated",
 		"storage_policy": "project_maps_generated_package"
 	},
-	"package_hash": "fnv1a32:456b6ccb",
+	"package_hash": "fnv1a32:9ec41bf9",
 	"package_id": "manual-strict_small_2p_seed_1.ascenario",
 	"package_kind": "generated_scenario_package",
 	"path_policy": "manual_strict_small_land_inspection",
-	"scenario_hash": "fnv1a32:1e5f2cc1",
+	"scenario_hash": "fnv1a32:606c54bc",
 	"scenario_id": "manual-strict_small_2p_seed_1",
 	"scenario_ref": {
 		"map_ref": {
 			"map_hash": "validated:h3maped_small:1:h3maped_template_048",
 			"map_id": "h3maped_small_seed_1",
-			"package_hash": "fnv1a32:3b6b1b4c",
+			"package_hash": "fnv1a32:a181f3d1",
 			"package_id": "manual-strict_small_2p_seed_1.amap",
 			"package_path": "res://maps/manual-strict_small_2p_seed_1.amap",
 			"schema_id": "aurelion_map_document",
@@ -751,10 +751,10 @@
 			"source_kind": "generated_h3maped_small_validated",
 			"storage_policy": "project_maps_generated_package"
 		},
-		"package_hash": "fnv1a32:456b6ccb",
+		"package_hash": "fnv1a32:9ec41bf9",
 		"package_id": "manual-strict_small_2p_seed_1.ascenario",
 		"package_path": "res://maps/manual-strict_small_2p_seed_1.ascenario",
-		"scenario_hash": "fnv1a32:1e5f2cc1",
+		"scenario_hash": "fnv1a32:606c54bc",
 		"scenario_id": "manual-strict_small_2p_seed_1",
 		"schema_id": "aurelion_scenario_document",
 		"schema_version": 1,
