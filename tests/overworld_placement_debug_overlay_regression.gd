@@ -35,6 +35,10 @@ func _assert_map_view_overlay_tiles() -> Dictionary:
 		failures.append("Generated runtime resource body tile 13,10 was not red/blocker.")
 	if not _tile_present(snapshot.get("interactable_tiles", []), Vector2i(12, 11), "resource_visit", "overlay_runtime_yard"):
 		failures.append("Generated runtime visit tile 12,11 was not yellow/interactable.")
+	if not _tile_present(snapshot.get("blocker_tiles", []), Vector2i(15, 10), "map_object_body", "overlay_package_blocker"):
+		failures.append("Generated package map object blocker tile 15,10 was not red/blocker.")
+	if not _tile_present(snapshot.get("blocker_tiles", []), Vector2i(16, 10), "map_object_body", "overlay_package_blocker"):
+		failures.append("Generated package map object blocker tile 16,10 was not red/blocker.")
 	if not _tile_present(snapshot.get("interactable_tiles", []), Vector2i(8, 8), "town_entry", "overlay_town"):
 		failures.append("Town entry tile was not yellow/interactable.")
 	if not _tile_present(snapshot.get("blocker_tiles", []), Vector2i(7, 7), "town_body", "overlay_town"):
@@ -148,6 +152,18 @@ func _fixture_session():
 				"body_tiles": [{"x": 12, "y": 10}, {"x": 13, "y": 10}],
 				"visit_tile": {"x": 12, "y": 11},
 				"blocking_body": true,
+			},
+		],
+		"map_objects": [
+			{
+				"placement_id": "overlay_package_blocker",
+				"object_id": "runtime_overlay_package_blocker",
+				"kind": "connection_blocker",
+				"object_family_id": "connection_blocker",
+				"x": 15,
+				"y": 10,
+				"blocking_body": true,
+				"package_block_tiles": [{"x": 15, "y": 10}, {"x": 16, "y": 10}],
 			},
 		],
 		"artifact_nodes": [{"placement_id": "overlay_artifact", "artifact_id": "artifact_bastion_gorget", "x": 3, "y": 3, "collected": false}],
