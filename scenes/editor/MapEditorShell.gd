@@ -43,6 +43,7 @@ const PROPERTY_ENCOUNTER_DIFFICULTY := "difficulty"
 const PROPERTY_COLLECTED := "collected"
 const TOWN_OWNER_OPTIONS := ["neutral", "player", "enemy"]
 const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scripted"]
+const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
 
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
@@ -104,6 +105,7 @@ var _terrain_paint_order := 0
 var _last_terrain_placement_result := {}
 var _authored_baseline_cache = null
 var _authored_baseline_cache_id := ""
+var _placement_debug_overlay_enabled := false
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -117,6 +119,12 @@ func _ready() -> void:
 	if returned_session != null and _resume_working_copy_from_memory(returned_session):
 		return
 	_refresh_state()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY:
+			_set_placement_debug_overlay_enabled(not _placement_debug_overlay_enabled)
+			get_viewport().set_input_as_handled()
 
 func _connect_ui() -> void:
 	_map_package_picker.item_selected.connect(_on_map_package_selected)
@@ -3018,6 +3026,7 @@ func _sync_preview() -> void:
 	var map_size := OverworldRules.derive_map_size(_session)
 	var map_data: Array = _session.overworld.get("map", [])
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
+	_map_view.set_placement_debug_overlay_enabled(_placement_debug_overlay_enabled)
 	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]
 	if _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
 		var terrain_paint_tooltip := String(_editor_terrain_paint_check_payload().get("tooltip", "")).strip_edges()
@@ -3072,6 +3081,8 @@ func _refresh_labels() -> void:
 	]
 	if _dirty:
 		state_line = "%s | Unsaved in memory" % state_line
+	if _placement_debug_overlay_enabled:
+		state_line = "%s | F4 blockers" % state_line
 	var authoring_validation := _scenario_authoring_validation_payload()
 	var authoring_warning_count := int(authoring_validation.get("warning_count", 0))
 	if authoring_warning_count > 0:
@@ -3156,6 +3167,13 @@ func _refresh_labels() -> void:
 		status_lines.append(_last_message)
 	_set_compact_label(_status_label, "\n".join(status_lines), 4)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
+
+func _set_placement_debug_overlay_enabled(enabled: bool) -> void:
+	_placement_debug_overlay_enabled = enabled
+	if _map_view != null and _map_view.has_method("set_placement_debug_overlay_enabled"):
+		_map_view.call("set_placement_debug_overlay_enabled", enabled)
+	_last_message = "F4 blockers view %s." % ("enabled" if enabled else "disabled")
+	_refresh_labels()
 
 func _current_scenario_display_name() -> String:
 	if _session == null:
@@ -6635,6 +6653,7 @@ func validation_snapshot() -> Dictionary:
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
 		"map_tooltip": _map_view.tooltip_text if _map_view != null else "",
+		"placement_debug_overlay_enabled": _placement_debug_overlay_enabled,
 		"object_preview_check": _editor_object_preview_check_payload(),
 		"object_preview_check_text": String(_editor_object_preview_check_payload().get("text", "")),
 		"object_preview_check_tooltip": String(_editor_object_preview_check_payload().get("tooltip", "")),
@@ -6692,6 +6711,15 @@ func validation_snapshot() -> Dictionary:
 		"scenario_authoring_validation": _scenario_authoring_validation_payload(),
 		"tile_inspection": _tile_inspection_payload(_selected_tile),
 		"map_viewport": _map_view.call("validation_view_metrics") if _map_view != null and _map_view.has_method("validation_view_metrics") else {},
+	}
+
+func validation_placement_debug_overlay_snapshot() -> Dictionary:
+	var map_view := {}
+	if _map_view != null and _map_view.has_method("validation_placement_debug_overlay_snapshot"):
+		map_view = _map_view.call("validation_placement_debug_overlay_snapshot")
+	return {
+		"enabled": _placement_debug_overlay_enabled,
+		"map_view": map_view,
 	}
 
 func _map_package_picker_labels() -> Array:

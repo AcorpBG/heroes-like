@@ -117,6 +117,31 @@ func _run() -> void:
 		_cleanup(map_path, scenario_path)
 		_fail("Loaded editor UI still exposed old scenario dropdown copy: %s" % JSON.stringify(loaded))
 		return
+	var initial_overlay: Dictionary = shell.call("validation_placement_debug_overlay_snapshot") if shell.has_method("validation_placement_debug_overlay_snapshot") else {}
+	if bool(initial_overlay.get("enabled", true)):
+		_cleanup(map_path, scenario_path)
+		_fail("Editor F4 blocker overlay should start disabled: %s" % JSON.stringify(initial_overlay))
+		return
+	shell._unhandled_input(_f4_event())
+	await get_tree().process_frame
+	var enabled_overlay: Dictionary = shell.call("validation_placement_debug_overlay_snapshot")
+	var enabled_map_overlay: Dictionary = enabled_overlay.get("map_view", {}) if enabled_overlay.get("map_view", {}) is Dictionary else {}
+	if not bool(enabled_overlay.get("enabled", false)) or not bool(enabled_map_overlay.get("enabled", false)):
+		_cleanup(map_path, scenario_path)
+		_fail("Editor F4 did not enable the blocker overlay: %s" % JSON.stringify(enabled_overlay))
+		return
+	if not _has_map_object_blocker_overlay(enabled_overlay):
+		_cleanup(map_path, scenario_path)
+		_fail("Editor F4 overlay did not expose generated package map object blockers: %s" % JSON.stringify(enabled_overlay))
+		return
+	shell._unhandled_input(_f4_event())
+	await get_tree().process_frame
+	var disabled_overlay: Dictionary = shell.call("validation_placement_debug_overlay_snapshot")
+	var disabled_map_overlay: Dictionary = disabled_overlay.get("map_view", {}) if disabled_overlay.get("map_view", {}) is Dictionary else {}
+	if bool(disabled_overlay.get("enabled", true)) or bool(disabled_map_overlay.get("enabled", true)):
+		_cleanup(map_path, scenario_path)
+		_fail("Editor F4 did not disable the blocker overlay: %s" % JSON.stringify(disabled_overlay))
+		return
 
 	_cleanup(map_path, scenario_path)
 	ContentService.clear_generated_scenario_drafts()
@@ -131,6 +156,26 @@ func _run() -> void:
 		"authored_json_scenarios_used": false,
 	})])
 	get_tree().quit(0)
+
+func _f4_event() -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = KEY_F4
+	event.physical_keycode = KEY_F4
+	event.pressed = true
+	return event
+
+func _has_map_object_blocker_overlay(snapshot: Dictionary) -> bool:
+	var map_view: Dictionary = snapshot.get("map_view", {}) if snapshot.get("map_view", {}) is Dictionary else {}
+	var blocker_tiles: Array = map_view.get("blocker_tiles", []) if map_view.get("blocker_tiles", []) is Array else []
+	for tile_value in blocker_tiles:
+		if not (tile_value is Dictionary):
+			continue
+		var tile: Dictionary = tile_value
+		var kinds: Array = tile.get("kinds", []) if tile.get("kinds", []) is Array else []
+		var placement_ids: Array = tile.get("placement_ids", []) if tile.get("placement_ids", []) is Array else []
+		if "map_object_body" in kinds and not placement_ids.is_empty():
+			return true
+	return false
 
 func _any_label_contains(labels: Array, needle: String) -> bool:
 	for label in labels:
