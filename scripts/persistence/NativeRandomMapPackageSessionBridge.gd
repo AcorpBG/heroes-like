@@ -60,6 +60,20 @@ static func build_session_from_adoption(
 		"generated_random_map_identity": adoption.get("generated_identity", {}),
 		"generated_random_map_validation": adoption.get("validation_report", {}),
 	}
+	var draft_registration := {
+		"ok": true,
+		"status": "skipped_package_session_uses_loaded_documents",
+		"generated_scenario_draft_registry": false,
+	}
+	if bool(options.get("register_generated_scenario_draft", false)):
+		draft_registration = _register_generated_scenario_draft_from_documents(
+			scenario_id,
+			map_document,
+			scenario_document,
+			overworld_state,
+			hero_id_from_doc,
+			start
+		)
 	var session := SessionStateStoreScript.new_session_data(
 		session_id,
 		scenario_id,
@@ -92,6 +106,7 @@ static func build_session_from_adoption(
 		"scenario_package_ref": scenario_ref,
 		"generated_random_map_provenance": adoption.get("provenance", {}),
 		"generated_random_map_validation": adoption.get("validation_report", {}),
+		"native_random_map_scenario_draft_registration": draft_registration,
 	}
 	OverworldRulesScript.normalize_overworld_state(session)
 	return session
@@ -129,6 +144,16 @@ static func _primary_start(adoption: Dictionary) -> Dictionary:
 		var start_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
 		for town_value in start_towns:
 			if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+				var hero_start_tile: Dictionary = town_value.get("hero_start_tile", town_value.get("runtime_start_tile", {})) if town_value.get("hero_start_tile", town_value.get("runtime_start_tile", {})) is Dictionary else {}
+				if not hero_start_tile.is_empty():
+					return {"x": int(hero_start_tile.get("x", town_value.get("x", 0))), "y": int(hero_start_tile.get("y", town_value.get("y", 0)))}
+				var visit_tile: Dictionary = town_value.get("visit_tile", {}) if town_value.get("visit_tile", {}) is Dictionary else {}
+				if not visit_tile.is_empty():
+					return {"x": int(visit_tile.get("x", town_value.get("x", 0))), "y": int(visit_tile.get("y", town_value.get("y", 0)))}
+				var package_visit_tiles: Array = town_value.get("package_visit_tiles", []) if town_value.get("package_visit_tiles", []) is Array else []
+				if not package_visit_tiles.is_empty() and package_visit_tiles[0] is Dictionary:
+					var package_visit: Dictionary = package_visit_tiles[0]
+					return {"x": int(package_visit.get("x", town_value.get("x", 0))), "y": int(package_visit.get("y", town_value.get("y", 0)))}
 				return {"x": int(town_value.get("x", 0)), "y": int(town_value.get("y", 0))}
 		var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
 		if not starts.is_empty() and starts[0] is Dictionary:
@@ -220,6 +245,18 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			"x": int(object.get("x", 0)),
 			"y": int(object.get("y", 0)),
 			"owner": String(object.get("owner", "neutral")),
+			"owner_slot": int(object.get("owner_slot", object.get("player_slot", 0))),
+			"player_slot": int(object.get("player_slot", object.get("owner_slot", 0))),
+			"player_type": String(object.get("player_type", "")),
+				"team_id": String(object.get("team_id", "")),
+				"faction_id": String(object.get("faction_id", "")),
+				"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
+				"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
+				"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
+				"package_block_tiles": object.get("package_block_tiles", []).duplicate(true) if object.get("package_block_tiles", []) is Array else [],
+				"visit_tile": object.get("visit_tile", {}).duplicate(true) if object.get("visit_tile", {}) is Dictionary else {},
+				"package_visit_tiles": object.get("package_visit_tiles", []).duplicate(true) if object.get("package_visit_tiles", []) is Array else [],
+				"blocking_body": bool(object.get("blocking_body", true)),
 			"built_buildings": town_template.get("starting_building_ids", []).duplicate(true) if town_template.get("starting_building_ids", []) is Array else [],
 			"available_recruits": {},
 			"garrison": town_template.get("garrison", []).duplicate(true) if town_template.get("garrison", []) is Array else [],
@@ -232,9 +269,13 @@ static func _resource_nodes_from_document(map_document: Variant) -> Array:
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]):
 			continue
-		if String(object.get("site_id", "")) == "":
+		var site_id := _resource_site_id_for_object(object)
+		if site_id == "":
 			continue
 		var node: Dictionary = object.duplicate(true)
+		node["site_id"] = site_id
+		if String(node.get("object_id", "")) == "":
+			node["object_id"] = String(object.get("native_proxy_object_id", ""))
 		node["collected"] = false
 		nodes.append(node)
 	return nodes
@@ -278,6 +319,8 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 			continue
 		if kind == "guard" or native_kind == "guard":
 			continue
+		if kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"] or native_kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]:
+			continue
 		var family := String(object.get("object_family_id", object.get("family_id", "")))
 		if kind != "decorative_obstacle" and family != "decorative_obstacle" and String(object.get("object_id", "")) == "":
 			continue
@@ -287,6 +330,72 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 		node["collected"] = false
 		objects.append(node)
 	return objects
+
+static func _resource_site_id_for_object(object: Dictionary) -> String:
+	var site_id := String(object.get("site_id", "")).strip_edges()
+	if site_id != "":
+		return site_id
+	site_id = String(object.get("native_proxy_site_id", "")).strip_edges()
+	if site_id != "":
+		return site_id
+	var object_id := String(object.get("object_id", object.get("native_proxy_object_id", ""))).strip_edges()
+	if object_id == "":
+		return ""
+	var map_object := ContentService.get_map_object(object_id)
+	return String(map_object.get("resource_site_id", "")).strip_edges()
+
+static func _register_generated_scenario_draft_from_documents(
+	scenario_id: String,
+	map_document: Variant,
+	scenario_document: Variant,
+	overworld_state: Dictionary,
+	hero_id: String,
+	start: Dictionary
+) -> Dictionary:
+	if scenario_id == "" or map_document == null or scenario_document == null:
+		return {"ok": false, "message": "Package-backed generated scenario draft is missing required documents."}
+	var selection: Dictionary = scenario_document.get_selection() if scenario_document.has_method("get_selection") else {}
+	var objectives: Dictionary = scenario_document.get_objectives() if scenario_document.has_method("get_objectives") else {}
+	var scenario_record := {
+		"id": scenario_id,
+		"name": String(selection.get("name", scenario_id)),
+		"generated": true,
+		"source": "native_rmg_disk_package_runtime",
+		"selection": selection,
+		"map_size": overworld_state.get("map_size", {}),
+		"map": overworld_state.get("map", []),
+		"player_faction_id": _player_faction_from_document(scenario_document, overworld_state),
+		"starting_hero_id": hero_id,
+		"hero_id": hero_id,
+		"starting_position": start,
+		"towns": overworld_state.get("towns", []),
+		"resource_nodes": overworld_state.get("resource_nodes", []),
+		"artifact_nodes": overworld_state.get("artifact_nodes", []),
+		"encounters": overworld_state.get("encounters", []),
+		"map_objects": overworld_state.get("map_objects", []),
+		"objectives": objectives,
+		"script_hooks": scenario_document.get_script_hooks() if scenario_document.has_method("get_script_hooks") else [],
+		"enemy_factions": scenario_document.get_enemy_factions() if scenario_document.has_method("get_enemy_factions") else [],
+		"native_generated_package": {
+			"schema_id": "aurelion_native_rmg_disk_package_runtime_record_v1",
+			"map_ref": overworld_state.get("map_package_ref", {}),
+			"scenario_ref": overworld_state.get("scenario_package_ref", {}),
+		},
+	}
+	return ContentService.register_generated_scenario_draft(scenario_record, overworld_state.get("terrain_layers", {}))
+
+static func _player_faction_from_document(scenario_document: Variant, overworld_state: Dictionary) -> String:
+	if scenario_document != null and scenario_document.has_method("get_start_contract"):
+		var start_contract: Dictionary = scenario_document.get_start_contract()
+		var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
+		for start in starts:
+			if start is Dictionary and String(start.get("owner", "")) == "player":
+				return String(start.get("faction_id", ""))
+	var towns: Array = overworld_state.get("towns", []) if overworld_state.get("towns", []) is Array else []
+	for town in towns:
+		if town is Dictionary and String(town.get("owner", "")) == "player":
+			return String(town.get("faction_id", ""))
+	return "faction_embercourt"
 
 static func _enemy_states_from_document(scenario_document: Variant) -> Array:
 	var enemies := []

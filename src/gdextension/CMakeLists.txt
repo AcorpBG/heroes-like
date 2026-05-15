@@ -36,10 +36,18 @@ target_link_libraries(aurelion_map_persistence PRIVATE godot::cpp)
 
 target_compile_definitions(aurelion_map_persistence PRIVATE GDEXTENSION)
 
+if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	target_link_options(aurelion_map_persistence PRIVATE -static-libgcc -static-libstdc++)
+endif()
+
+set(AURELION_OUTPUT_PREFIX "")
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	set(AURELION_GODOT_PLATFORM "linux")
+	set(AURELION_OUTPUT_PREFIX "lib")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR WIN32)
 	set(AURELION_GODOT_PLATFORM "windows")
+	set(AURELION_OUTPUT_PREFIX "")
 else()
 	message(FATAL_ERROR "Unsupported GDExtension target platform '${CMAKE_SYSTEM_NAME}'. Add Godot library naming rules before building this target.")
 endif()
@@ -61,6 +69,7 @@ set_target_properties(aurelion_map_persistence PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
 	RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
 	ARCHIVE_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+	PREFIX "${AURELION_OUTPUT_PREFIX}"
 	OUTPUT_NAME "aurelion_map_persistence.${AURELION_GODOT_PLATFORM}.${AURELION_GODOT_TARGET}.${AURELION_GODOT_ARCH}"
 )
 

@@ -14,7 +14,7 @@ func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup(
 		ScenarioSelectRulesScript.build_random_map_player_config(
-			"map-editor-load-map-package-10184",
+			"1",
 			"",
 			"",
 			3,
@@ -107,6 +107,11 @@ func _run() -> void:
 	if map_ref.is_empty() or scenario_ref.is_empty():
 		_cleanup(map_path, scenario_path)
 		_fail("Loaded editor working copy missed package refs: %s" % JSON.stringify(loaded))
+		return
+	var index_status: Dictionary = loaded.get("map_package_index_status", {}) if loaded.get("map_package_index_status", {}) is Dictionary else {}
+	if int(index_status.get("entry_count", 0)) <= 0:
+		_cleanup(map_path, scenario_path)
+		_fail("Loaded editor snapshot did not preserve package index visibility: %s" % JSON.stringify(loaded))
 		return
 	if _active_copy_mentions_legacy_scenario_dropdown(loaded):
 		_cleanup(map_path, scenario_path)

@@ -514,6 +514,8 @@ static func try_move_along_route(
 		var previous: Vector2i = path[index - 1]
 		if maxi(abs(tile.x - previous.x), abs(tile.y - previous.y)) != 1:
 			return {"ok": false, "message": "The selected route is not contiguous.", "route_steps": []}
+		if tile_step_cuts_blocked_corner(session, previous, tile):
+			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
 		if _tile_blocks_route_step(session, tile, index == path.size() - 1):
 			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
 		if index < path.size() - 1 and tile_has_route_interaction(session, tile.x, tile.y):
@@ -1796,6 +1798,15 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	return tile_has_route_interaction(session, x, y)
 
+static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i) -> bool:
+	var dx := to_tile.x - from_tile.x
+	var dy := to_tile.y - from_tile.y
+	if abs(dx) != 1 or abs(dy) != 1:
+		return false
+	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
+	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
+	return tile_is_blocked(session, side_a.x, side_a.y) and tile_is_blocked(session, side_b.x, side_b.y)
+
 static func _tile_blocks_route_step(session: SessionStateStoreScript.SessionData, tile: Vector2i, is_destination: bool) -> bool:
 	if not tile_is_blocked(session, tile.x, tile.y):
 		return false
@@ -1949,8 +1960,8 @@ static func _encounter_handoff_event_facts(encounter: Dictionary) -> Dictionary:
 		"family": "encounter",
 		"placement_id": placement_id,
 		"encounter_handoff_placement_ids": [placement_id] if placement_id != "" else [],
-		"blocks_changed": false,
-		"body_tiles_changed": false,
+		"blocks_changed": true,
+		"body_tiles_changed": true,
 		"contract_known": true,
 		"requires_full_scenario_eval": true,
 		"fallback_reason": "battle_handoff",
@@ -2067,6 +2078,13 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 			var town = towns[town_index]
 			if town is Dictionary:
 				town_by_tile[_tile_key(Vector2i(int(town.get("x", -1)), int(town.get("y", -1))))] = town_index
+				var visit_tile = town.get("visit_tile", {})
+				if visit_tile is Dictionary and not visit_tile.is_empty():
+					town_by_tile[_tile_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1))))] = town_index
+				var package_visit_tiles: Array = town.get("package_visit_tiles", []) if town.get("package_visit_tiles", []) is Array else []
+				for tile_value in package_visit_tiles:
+					if tile_value is Dictionary:
+						town_by_tile[_tile_key(Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1))))] = town_index
 				var placement_id := String(town.get("placement_id", ""))
 				if placement_id != "":
 					index["town_by_placement"][placement_id] = town_index
@@ -2129,6 +2147,25 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 	var index := {}
 	if session == null:
 		return index
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		_append_generated_body_tiles_to_blocked_index(index, town_value, true)
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if is_encounter_resolved(session, encounter):
+			continue
+		_append_generated_body_tiles_to_blocked_index(index, encounter, bool(encounter.get("blocking_body", true)))
+	for object_value in session.overworld.get("map_objects", []):
+		if not (object_value is Dictionary):
+			continue
+		var object: Dictionary = object_value
+		var kind := String(object.get("kind", ""))
+		var family := String(object.get("object_family_id", object.get("family_id", "")))
+		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
+		_append_generated_body_tiles_to_blocked_index(index, object, blocks_body)
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -2140,6 +2177,21 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 			if body_tile is Vector2i:
 				index[_tile_key(body_tile)] = true
 	return index
+
+static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, placement: Dictionary, blocks_body: bool) -> void:
+	if not blocks_body:
+		return
+	var block_payload: Variant = placement.get("package_block_tiles", null)
+	var body_tiles := _world_tiles_from_payload_array(block_payload) if block_payload is Array else []
+	if body_tiles.is_empty() and block_payload is Array:
+		return
+	if body_tiles.is_empty():
+		body_tiles = _world_tiles_from_payload_array(placement.get("body_tiles", []))
+	if body_tiles.is_empty():
+		body_tiles = [Vector2i(int(placement.get("x", -1)), int(placement.get("y", -1)))]
+	for body_tile in body_tiles:
+		if body_tile is Vector2i and body_tile.x >= 0 and body_tile.y >= 0:
+			index[_tile_key(body_tile)] = true
 
 static func _map_object_for_resource_node(node: Dictionary) -> Dictionary:
 	var object_id := String(node.get("object_id", "")).strip_edges()
@@ -2161,6 +2213,8 @@ static func _map_object_blocks_body_tiles(map_object: Dictionary) -> bool:
 	return not bool(map_object.get("passable", true))
 
 static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dictionary) -> bool:
+	if node.get("package_block_tiles", null) is Array:
+		return not _world_tiles_from_payload_array(node.get("package_block_tiles", [])).is_empty()
 	if map_object.is_empty():
 		return bool(node.get("blocking_body", false))
 	var passability_class := String(map_object.get("passability_class", ""))
@@ -2172,7 +2226,10 @@ static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dicti
 
 static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
 	if _resource_node_has_runtime_object_contract(placement):
-		var runtime_tiles := _world_tiles_from_payload_array(placement.get("body_tiles", []))
+		var runtime_tiles := _world_tiles_from_payload_array(placement.get("package_block_tiles", []))
+		if not runtime_tiles.is_empty():
+			return runtime_tiles
+		runtime_tiles = _world_tiles_from_payload_array(placement.get("body_tiles", []))
 		if not runtime_tiles.is_empty():
 			return runtime_tiles
 	var tiles := []
@@ -2187,11 +2244,11 @@ static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dict
 	return tiles
 
 static func _resource_node_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
-	if String(map_object.get("passability_class", "")) == "passable_visit_on_enter":
-		return [Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))]
 	if _resource_node_has_runtime_visit_tile(placement):
 		var visit_tile: Dictionary = placement.get("visit_tile", {})
 		return [Vector2i(int(visit_tile.get("x", 0)), int(visit_tile.get("y", 0)))]
+	if String(map_object.get("passability_class", "")) == "passable_visit_on_enter":
+		return [Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))]
 	return _map_object_world_interaction_tiles(map_object, placement)
 
 static func _map_object_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
@@ -4683,11 +4740,35 @@ static func _normalize_towns(towns: Array) -> Array:
 			"front": _normalize_town_front_state(town.get("front", {})),
 			"occupation": _normalize_town_occupation_state(town.get("occupation", {})),
 		}
+		_copy_town_runtime_metadata(normalized_town, town)
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 		if not town.has("available_recruits") or not (town.get("available_recruits") is Dictionary):
 			normalized_town["available_recruits"] = _seed_recruits_for_town(normalized_town)
 		normalized.append(normalized_town)
 	return normalized
+
+static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
+	for key in [
+		"owner_slot",
+		"player_slot",
+		"player_type",
+		"team_id",
+		"faction_id",
+		"is_start_town",
+		"start_anchor",
+		"body_tiles",
+		"blocking_body",
+		"approach_tiles",
+		"visit_tile",
+		"package_visit_tiles",
+		"package_body_tiles",
+		"package_block_tiles",
+		"passability_class",
+		"zone_id",
+		"zone_role",
+	]:
+		if source.has(key):
+			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _normalize_resource_nodes(nodes: Array) -> Array:
 	var normalized := []

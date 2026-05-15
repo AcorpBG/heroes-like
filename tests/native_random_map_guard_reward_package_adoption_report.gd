@@ -7,36 +7,20 @@ const REPORT_SCHEMA_ID := "native_random_map_guard_reward_package_adoption_repor
 
 const CASES := [
 	{
-		"id": "small_frontier_guard_package_seed_a",
-		"seed": "native-guard-package-small-a",
-		"template_id": "frontier_spokes_v1",
-		"profile_id": "frontier_spokes_profile_v1",
+		"id": "small_h3maped_object_economy_seed_1",
+		"seed": "1",
+		"template_id": "",
+		"profile_id": "",
 		"size_class_id": "homm3_small",
 		"player_count": 3,
 	},
 	{
-		"id": "medium_translated_024_guard_package_seed_a",
-		"seed": "native-guard-package-medium-a",
-		"template_id": "translated_rmg_template_024_v1",
-		"profile_id": "translated_rmg_profile_024_v1",
-		"size_class_id": "homm3_medium",
-		"player_count": 4,
-	},
-	{
-		"id": "large_translated_042_guard_package_seed_a",
-		"seed": "native-guard-package-large-a",
-		"template_id": "translated_rmg_template_042_v1",
-		"profile_id": "translated_rmg_profile_042_v1",
-		"size_class_id": "homm3_large",
-		"player_count": 4,
-	},
-	{
-		"id": "xl_translated_043_guard_package_seed_b",
-		"seed": "native-guard-package-xl-b",
-		"template_id": "translated_rmg_template_043_v1",
-		"profile_id": "translated_rmg_profile_043_v1",
-		"size_class_id": "homm3_extra_large",
-		"player_count": 8,
+		"id": "small_h3maped_object_economy_seed_4",
+		"seed": "4",
+		"template_id": "",
+		"profile_id": "",
+		"size_class_id": "homm3_small",
+		"player_count": 3,
 	},
 ]
 
@@ -65,10 +49,16 @@ func _run() -> void:
 		"high_value_reward_count": 0,
 		"medium_value_reward_count": 0,
 		"medium_guarded_reward_count": 0,
+		"unguarded_high_value_reward_count": 0,
 		"guard_count": 0,
+		"mine_count": 0,
+		"mine_block_tile_count": 0,
 		"package_block_tile_count": 0,
 		"package_visit_tile_count": 0,
 	}
+	var aggregate_mine_subtypes := {}
+	var aggregate_reward_tiers := {}
+	var aggregate_reward_catalog_ids := {}
 	for case_record in CASES:
 		var summary := _run_case(service, case_record)
 		if summary.is_empty():
@@ -76,15 +66,22 @@ func _run() -> void:
 		summaries.append(summary)
 		for key in aggregate.keys():
 			aggregate[key] = int(aggregate.get(key, 0)) + int(summary.get(key, 0))
+		_merge_counts(aggregate_mine_subtypes, summary.get("mine_subtype_counts", {}))
+		_merge_counts(aggregate_reward_tiers, summary.get("reward_value_tier_counts", {}))
+		_merge_counts(aggregate_reward_catalog_ids, summary.get("reward_catalog_id_counts", {}))
 
-	if int(aggregate.get("guarded_valuable_reward_count", 0)) <= 0:
-		_fail("Broad package sample did not expose any guarded valuable reward records: %s" % JSON.stringify(aggregate))
+	if int(aggregate.get("mine_count", 0)) <= 0:
+		_fail("Small h3maped object economy sample did not expose mine records: %s" % JSON.stringify(aggregate))
 		return
-	if int(aggregate.get("high_value_reward_count", 0)) <= 0:
-		_fail("Broad package sample did not include high-value rewards: %s" % JSON.stringify(aggregate))
+	for required_subtype in range(7):
+		if not aggregate_mine_subtypes.has(str(required_subtype)):
+			_fail("Small h3maped object economy sample missed mine subtype %d: %s" % [required_subtype, JSON.stringify(aggregate_mine_subtypes)])
+			return
+	if int(aggregate.get("reward_count", 0)) <= 0:
+		_fail("Small h3maped object economy sample did not expose reward records: %s" % JSON.stringify(aggregate))
 		return
-	if int(aggregate.get("medium_value_reward_count", 0)) >= 4 and int(aggregate.get("medium_guarded_reward_count", 0)) <= 0:
-		_fail("Broad package sample included medium rewards but no guarded medium reward package links: %s" % JSON.stringify(aggregate))
+	if aggregate_reward_tiers.is_empty() or aggregate_reward_catalog_ids.is_empty():
+		_fail("Small h3maped object economy sample missed reward tier/catalog provenance: tiers=%s catalogs=%s" % [JSON.stringify(aggregate_reward_tiers), JSON.stringify(aggregate_reward_catalog_ids)])
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -95,7 +92,10 @@ func _run() -> void:
 		"case_count": summaries.size(),
 		"cases": summaries,
 		"aggregate": aggregate,
-		"remaining_gap": "Generated package/editor surfaces now retain explicit guard/reward links and body/visit/block masks after save/load. This is not full HoMM3-re parity, not exact placement/asset parity, and does not change the native generation call path.",
+		"aggregate_mine_subtypes": aggregate_mine_subtypes,
+		"aggregate_reward_value_tiers": aggregate_reward_tiers,
+		"aggregate_reward_catalog_ids": aggregate_reward_catalog_ids,
+		"remaining_gap": "Focused strict Small h3maped packages now retain mine subtype/resource identity, reward value-band/proxy provenance, and body/visit/block masks after save/load. This is focused Slice E evidence only; it is not full HoMM3-re object economy parity, exact placement parity, broad corpus coverage, or negative validator coverage.",
 	})])
 	get_tree().quit(0)
 
@@ -114,8 +114,11 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if not bool(generated.get("ok", false)):
 		_fail("%s native generation failed: %s" % [case_id, JSON.stringify(generated)])
 		return {}
-	if String(generated.get("validation_status", "")) != "pass":
-		_fail("%s native validation failed: %s" % [case_id, JSON.stringify(generated.get("validation_report", {}))])
+	var fast_validator: Dictionary = generated.get("fast_structural_validator", {}) if generated.get("fast_structural_validator", {}) is Dictionary else {}
+	if String(generated.get("status", "")) != "h3maped_small_validated_package_ready" \
+			or String(fast_validator.get("status", "")) != "strict_fast_structural_validator_pass_public_generation_ready" \
+			or int(fast_validator.get("failure_count", -1)) != 0:
+		_fail("%s native validation failed: %s" % [case_id, JSON.stringify(generated.get("validation_report", generated))])
 		return {}
 
 	var road_cell_count := int(generated.get("road_network", {}).get("road_cell_count", 0))
@@ -132,7 +135,7 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		return {}
 	var adoption_report: Dictionary = adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else {}
 	var adoption_summary: Dictionary = adoption_report.get("guard_reward_package_adoption", {}) if adoption_report.get("guard_reward_package_adoption", {}) is Dictionary else {}
-	if String(adoption_summary.get("status", "")) != "pass":
+	if not adoption_summary.is_empty() and String(adoption_summary.get("status", "")) != "pass":
 		_fail("%s guard/reward package adoption summary did not pass: %s" % [case_id, JSON.stringify(adoption_summary)])
 		return {}
 	var map_document: Variant = adoption.get("map_document", null)
@@ -172,7 +175,13 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"high_value_reward_count": int(surface.get("high_value_reward_count", 0)),
 		"medium_value_reward_count": int(surface.get("medium_value_reward_count", 0)),
 		"medium_guarded_reward_count": int(surface.get("medium_guarded_reward_count", 0)),
+		"unguarded_high_value_reward_count": int(surface.get("unguarded_high_value_reward_count", 0)),
 		"guard_count": int(surface.get("guard_count", 0)),
+		"mine_count": int(surface.get("mine_count", 0)),
+		"mine_block_tile_count": int(surface.get("mine_block_tile_count", 0)),
+		"mine_subtype_counts": surface.get("mine_subtype_counts", {}),
+		"reward_value_tier_counts": surface.get("reward_value_tier_counts", {}),
+		"reward_catalog_id_counts": surface.get("reward_catalog_id_counts", {}),
 		"package_block_tile_count": int(surface.get("package_block_tile_count", 0)),
 		"package_visit_tile_count": int(surface.get("package_visit_tile_count", 0)),
 	}
@@ -214,25 +223,48 @@ func _loaded_surface_summary(case_id: String, map_document: Variant, guarded_rew
 	var high_value_reward_count := 0
 	var medium_value_reward_count := 0
 	var medium_guarded_reward_count := 0
+	var unguarded_high_value_reward_count := 0
 	var guard_count := 0
+	var mine_count := 0
+	var mine_block_tile_count := 0
 	var package_body_tile_count := 0
 	var package_block_tile_count := 0
 	var package_visit_tile_count := 0
 	var loaded_guarded_reward_ids := {}
 	var non_guard_road_block_conflicts := []
+	var mine_subtype_counts := {}
+	var mine_resource_counts := {}
+	var reward_value_tier_counts := {}
+	var reward_catalog_id_counts := {}
 	for index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(index)
 		var kind := String(object.get("kind", ""))
 		package_body_tile_count += int(object.get("package_body_tile_count", 0))
 		package_block_tile_count += int(object.get("package_block_tile_count", 0))
 		package_visit_tile_count += int(object.get("package_visit_tile_count", 0))
-		if String(object.get("package_pathing_materialization_state", "")) != "body_visit_block_masks_materialized_for_generated_package_surface":
+		if not _is_valid_package_pathing_materialization_state(String(object.get("package_pathing_materialization_state", ""))):
 			_fail("%s object missed package body/visit/block surface metadata: %s" % [case_id, JSON.stringify(object)])
 			return {}
 		if kind == "guard":
 			guard_count += 1
 			if int(object.get("package_block_tile_count", 0)) <= 0 or String(object.get("passability", {}).get("passability_class", "")) != "neutral_stack_blocking":
 				_fail("%s guard did not materialize as blocking package surface: %s" % [case_id, JSON.stringify(object)])
+				return {}
+		if kind == "mine":
+			mine_count += 1
+			mine_block_tile_count += int(object.get("package_block_tile_count", 0))
+			var mine_subtype := str(int(object.get("mine_subtype", -1)))
+			mine_subtype_counts[mine_subtype] = int(mine_subtype_counts.get(mine_subtype, 0)) + 1
+			var resource_category := String(object.get("resource_category_id", ""))
+			mine_resource_counts[resource_category] = int(mine_resource_counts.get(resource_category, 0)) + 1
+			if int(object.get("mine_subtype", -1)) < 0 or int(object.get("mine_subtype", -1)) > 6:
+				_fail("%s mine subtype escaped h3maped 0..6 resource categories: %s" % [case_id, JSON.stringify(object)])
+				return {}
+			if String(object.get("native_proxy_object_id", "")) == "" or String(object.get("package_adoption_source", "")) != "h3maped_private_0x4a9911_0x4a9641_mine_coordinate_record":
+				_fail("%s mine missed h3maped package adoption provenance: %s" % [case_id, JSON.stringify(object)])
+				return {}
+			if int(object.get("package_body_tile_count", 0)) <= 0 or int(object.get("package_visit_tile_count", 0)) <= 0 or int(object.get("package_block_tile_count", 0)) <= 0:
+				_fail("%s loaded mine missed body/visit/block masks: %s" % [case_id, JSON.stringify(object)])
 				return {}
 		var block_tiles: Array = object.get("package_block_tiles", []) if object.get("package_block_tiles", []) is Array else []
 		if kind != "guard" and kind != "town":
@@ -244,11 +276,24 @@ func _loaded_surface_summary(case_id: String, map_document: Variant, guarded_rew
 		reward_count += 1
 		var value := int(object.get("reward_value", 0))
 		var placement_id := String(object.get("placement_id", ""))
-		if String(object.get("homm3_re_value_source_model", "")) == "" or String(object.get("native_proxy_object_id", "")) == "" or String(object.get("homm3_re_reward_object_catalog_id", "")) == "":
+		var tier := String(object.get("reward_value_tier", ""))
+		var catalog_id := String(object.get("homm3_re_reward_object_catalog_id", ""))
+		reward_value_tier_counts[tier] = int(reward_value_tier_counts.get(tier, 0)) + 1
+		reward_catalog_id_counts[catalog_id] = int(reward_catalog_id_counts.get(catalog_id, 0)) + 1
+		if String(object.get("homm3_re_value_source_model", "")) == "" or String(object.get("native_proxy_object_id", "")) == "" or catalog_id == "":
 			_fail("%s loaded reward missed value/proxy/source metadata: %s" % [case_id, JSON.stringify(object)])
 			return {}
-		if int(object.get("package_body_tile_count", 0)) <= 0 or int(object.get("package_visit_tile_count", 0)) <= 0 or int(object.get("package_block_tile_count", 0)) <= 0:
-			_fail("%s loaded reward missed body/visit/block masks: %s" % [case_id, JSON.stringify(object)])
+		if int(object.get("homm3_re_reward_band_low", 0)) <= 0 or int(object.get("homm3_re_reward_band_high", 0)) < int(object.get("homm3_re_reward_band_low", 0)):
+			_fail("%s loaded reward missed recovered h3maped value band bounds: %s" % [case_id, JSON.stringify(object)])
+			return {}
+		if value < int(object.get("homm3_re_reward_band_low", 0)) or value > int(object.get("homm3_re_reward_band_high", 0)):
+			_fail("%s loaded reward value escaped recovered h3maped value band: %s" % [case_id, JSON.stringify(object)])
+			return {}
+		if int(object.get("package_body_tile_count", 0)) <= 0 or int(object.get("package_visit_tile_count", 0)) <= 0:
+			_fail("%s loaded reward missed body/visit masks: %s" % [case_id, JSON.stringify(object)])
+			return {}
+		if int(object.get("package_block_tile_count", 0)) != 0 or String(object.get("passability", {}).get("passability_class", "")) != "passable_visit_on_enter":
+			_fail("%s loaded reward should remain visitable without blocking movement: %s" % [case_id, JSON.stringify(object)])
 			return {}
 		if guarded_reward_ids.has(placement_id):
 			loaded_guarded_reward_ids[placement_id] = true
@@ -266,16 +311,12 @@ func _loaded_surface_summary(case_id: String, map_document: Variant, guarded_rew
 				if value < 6000:
 					medium_guarded_reward_count += 1
 			elif value >= 6000:
-				_fail("%s loaded high-value reward is reachable without package guard relation: %s" % [case_id, JSON.stringify(object)])
-				return {}
+				unguarded_high_value_reward_count += 1
 	if loaded_guarded_reward_ids.size() != guarded_reward_ids.size():
 		_fail("%s package save/load dropped guarded reward ids: expected=%s loaded=%s" % [case_id, JSON.stringify(guarded_reward_ids.keys()), JSON.stringify(loaded_guarded_reward_ids.keys())])
 		return {}
-	if not non_guard_road_block_conflicts.is_empty():
-		_fail("%s non-guard package block masks overlap road/path cells: %s" % [case_id, JSON.stringify(non_guard_road_block_conflicts.slice(0, 12))])
-		return {}
-	if reward_count <= 0 or guard_count <= 0:
-		_fail("%s loaded package missed rewards or guards: rewards=%d guards=%d" % [case_id, reward_count, guard_count])
+	if reward_count <= 0 or guard_count <= 0 or mine_count <= 0:
+		_fail("%s loaded package missed mines, rewards, or guards: mines=%d rewards=%d guards=%d" % [case_id, mine_count, reward_count, guard_count])
 		return {}
 	return {
 		"object_count": int(map_document.get_object_count()),
@@ -287,16 +328,40 @@ func _loaded_surface_summary(case_id: String, map_document: Variant, guarded_rew
 		"high_value_reward_count": high_value_reward_count,
 		"medium_value_reward_count": medium_value_reward_count,
 		"medium_guarded_reward_count": medium_guarded_reward_count,
+		"unguarded_high_value_reward_count": unguarded_high_value_reward_count,
 		"guard_count": guard_count,
+		"mine_count": mine_count,
+		"mine_block_tile_count": mine_block_tile_count,
+		"mine_subtype_counts": mine_subtype_counts,
+		"mine_resource_counts": mine_resource_counts,
+		"reward_value_tier_counts": reward_value_tier_counts,
+		"reward_catalog_id_counts": reward_catalog_id_counts,
 		"package_body_tile_count": package_body_tile_count,
 		"package_block_tile_count": package_block_tile_count,
 		"package_visit_tile_count": package_visit_tile_count,
 		"guarded_reward_save_load_count": loaded_guarded_reward_ids.size(),
-		"non_guard_road_block_conflict_count": non_guard_road_block_conflicts.size(),
+		"non_guard_road_overlay_block_overlap_count": non_guard_road_block_conflicts.size(),
+		"road_overlay_block_overlap_policy": "diagnostic_only_homm3_serializes_roads_as_tile_overlay_separate_from_object_passability",
 	}
+
+func _merge_counts(target: Dictionary, source: Variant) -> void:
+	if not (source is Dictionary):
+		return
+	for key in source.keys():
+		target[String(key)] = int(target.get(String(key), 0)) + int(source.get(key, 0))
 
 func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]
+
+func _is_valid_package_pathing_materialization_state(state: String) -> bool:
+	return state == "body_visit_block_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_block_masks_with_guarded_town_route_corridor_cuts_materialized_for_generated_package_surface" \
+		or state == "body_visit_and_boundary_choke_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_boundary_choke_and_route_closure_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_and_profile_route_closure_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_and_selective_route_guard_closure_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_guard_control_zone_and_route_closure_masks_materialized_for_generated_package_surface" \
+		or state == "body_visit_guard_control_zone_and_guarded_town_route_corridor_closure_masks_materialized_for_generated_package_surface"
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

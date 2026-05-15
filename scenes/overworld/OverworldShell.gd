@@ -5326,6 +5326,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 				continue
 			if debug_timing_enabled:
 				blocked_tile_lookup_count += 1
+			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
+				continue
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
 				continue
 			if next != goal and OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
@@ -7483,6 +7485,8 @@ func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 		var tile: Vector2i = start + direction
 		if not _tile_in_bounds(tile):
 			continue
+		if OverworldRules.tile_step_cuts_blocked_corner(_session, start, tile):
+			continue
 		if OverworldRules.tile_is_blocked(_session, tile.x, tile.y):
 			continue
 		if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):
@@ -7789,6 +7793,8 @@ func _build_validation_path(
 		for direction in DIRECTIONS:
 			var next: Vector2i = current + direction
 			if not _tile_in_bounds(next):
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
 				continue
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
 				continue

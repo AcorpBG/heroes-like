@@ -51,7 +51,11 @@ func _run() -> void:
 		"timing_policy": "per_case_generation_conversion_save_wall_msec_with_compact_native_profile",
 		"cases": [],
 	}
-	for case in cases:
+	for case_index in range(cases.size()):
+		var case: Dictionary = cases[case_index]
+		var config: Dictionary = case.get("config", {})
+		config["seed"] = str(case_index + 1)
+		case["config"] = config
 		var record := _export_case(service, case, output_dir, absolute_output_dir)
 		manifest["cases"].append(record)
 		if String(record.get("status", "")) == "exported":
