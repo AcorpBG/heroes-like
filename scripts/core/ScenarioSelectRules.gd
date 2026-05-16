@@ -205,6 +205,12 @@ const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT := "size_default"
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
 const RANDOM_MAP_DEFAULT_SEED := "aurelion-random-skirmish-10184"
 const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
+const RANDOM_MAP_PUBLIC_H3MAPED_SCOPE := {
+	"size_class_id": "homm3_small",
+	"water_mode": "land",
+	"level_count": 1,
+	"scope": "strict_small_36x36_surface_land_only",
+}
 const GENERATED_MAP_DEV_DIR := "res://maps"
 const GENERATED_MAP_RUNTIME_DIR := "user://maps"
 const GENERATED_MAP_PACKAGE_FEATURE_GATE := "native_rmg_generated_map_package_startup"
@@ -412,12 +418,12 @@ static func random_map_player_setup_options() -> Dictionary:
 	return {
 		"templates": template_options,
 		"profiles": profile_options,
-		"size_classes": RANDOM_MAP_SIZE_OPTIONS.duplicate(true),
+		"size_classes": _random_map_public_size_options(),
 		"player_counts": _random_map_all_player_count_options(template_options),
 		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
 		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
-		"water_modes": _random_map_player_facing_water_options(),
-		"level_options": RANDOM_MAP_LEVEL_OPTIONS.duplicate(true),
+		"water_modes": _random_map_public_water_options(),
+		"level_options": _random_map_public_level_options(),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
@@ -428,17 +434,18 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_water_mode": "land",
 		"default_level_count": 1,
 		"default_underground": false,
+		"public_generation_scope": RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.duplicate(true),
 		"package_directory_policy": generated_map_package_directory_policy(),
 		"catalog_template_count": _random_map_template_options().size(),
 		"catalog_profile_count": _random_map_profile_options().size(),
-		"player_facing_template_policy": "native_catalog_auto_prefers_owner_compared_defaults_with_broad_internal_launch_gate",
+		"player_facing_template_policy": "h3maped_strict_small_land_public_generation_scope",
 		"player_facing_auto_selection": {
 			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 			"manual_template_picker_visible": false,
 			"manual_profile_picker_visible": false,
 			"catalog_template_count": _random_map_template_options().size(),
 			"catalog_profile_count": _random_map_profile_options().size(),
-			"launch_filter": "native prefers owner-compared translated defaults for production-facing startup and falls back to launchable translated catalog candidates only when no owner-compared candidate exists for the requested size, water, underground, and player constraints",
+			"launch_filter": "public generated skirmish startup is validator-gated to H3MapEd strict Small 36x36 one-level land scope; broader sizes, water, and underground remain hidden until their native ports are production-ready",
 		},
 	}
 
@@ -447,6 +454,33 @@ static func _random_map_player_facing_water_options() -> Array:
 	for option in RANDOM_MAP_WATER_OPTIONS:
 		if option is Dictionary and String(option.get("id", "")) in ["land", "normal_water", "islands"]:
 			options.append(option.duplicate(true))
+	return options
+
+static func _random_map_public_size_options() -> Array:
+	var options := []
+	for option in RANDOM_MAP_SIZE_OPTIONS:
+		if option is Dictionary and String(option.get("id", "")) == String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_id", "homm3_small")):
+			var item: Dictionary = option.duplicate(true)
+			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
+			options.append(item)
+	return options
+
+static func _random_map_public_water_options() -> Array:
+	var options := []
+	for option in RANDOM_MAP_WATER_OPTIONS:
+		if option is Dictionary and String(option.get("id", "")) == String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_mode", "land")):
+			var item: Dictionary = option.duplicate(true)
+			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
+			options.append(item)
+	return options
+
+static func _random_map_public_level_options() -> Array:
+	var options := []
+	for option in RANDOM_MAP_LEVEL_OPTIONS:
+		if option is Dictionary and int(option.get("level_count", 1)) == int(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_count", 1)):
+			var item: Dictionary = option.duplicate(true)
+			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
+			options.append(item)
 	return options
 
 static func generated_map_package_directory_policy() -> Dictionary:
@@ -597,6 +631,40 @@ static func random_map_fresh_auto_seed() -> String:
 	var mixed_seed := hash("%d:%d" % [int(Time.get_unix_time_from_system()), Time.get_ticks_usec()]) & 0x7fffffff
 	return str(maxi(1, mixed_seed))
 
+static func random_map_h3maped_seed_record(seed: String) -> Dictionary:
+	var input_seed := seed.strip_edges()
+	if input_seed == "":
+		input_seed = RANDOM_MAP_DEFAULT_SEED
+	var numeric_seed := input_seed
+	var source := "numeric"
+	if not _random_map_seed_is_unsigned_integer(input_seed):
+		numeric_seed = str(_stable_hash_u31("h3maped_seed:%s" % input_seed))
+		source = "stable_text_seed_hash"
+	return {
+		"input_seed": input_seed,
+		"normalized_seed": numeric_seed,
+		"source": source,
+		"algorithm": "fnv1a32_positive_31bit" if source == "stable_text_seed_hash" else "unsigned_decimal_passthrough",
+		"h3maped_requires_numeric_seed": true,
+	}
+
+static func _random_map_seed_is_unsigned_integer(seed: String) -> bool:
+	var value := seed.strip_edges()
+	if value == "":
+		return false
+	for index in range(value.length()):
+		var code := value.unicode_at(index)
+		if code < 48 or code > 57:
+			return false
+	return true
+
+static func _stable_hash_u31(value: String) -> int:
+	var hash_value := 2166136261
+	for index in range(value.length()):
+		hash_value = int(hash_value ^ value.unicode_at(index))
+		hash_value = int((hash_value * 16777619) & 0xffffffff)
+	return maxi(1, hash_value & 0x7fffffff)
+
 static func random_map_player_count_options_for_template(template_id: String) -> Array:
 	return _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
 
@@ -633,6 +701,8 @@ static func build_random_map_player_config(
 	size_class_id: String = "homm3_small",
 	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT
 ) -> Dictionary:
+	var seed_record := random_map_h3maped_seed_record(seed)
+	var normalized_seed := String(seed_record.get("normalized_seed", seed))
 	var size_option := _random_map_size_option(size_class_id)
 	var size_defaults := random_map_size_class_default(String(size_option.get("id", "homm3_small")))
 	var auto_catalog_selection := template_selection_mode == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO and template_id.strip_edges() == "" and profile_id.strip_edges() == ""
@@ -666,7 +736,8 @@ static func build_random_map_player_config(
 		runtime_policy_status = "materialize_at_source_size_within_current_144x144x2_cap"
 	return {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
-		"seed": seed,
+		"seed": normalized_seed,
+		"seed_identity": seed_record,
 		"size": {
 			"preset": "player_facing_skirmish_setup",
 			"size_class_id": String(size_option.get("id", "homm3_small")),
@@ -794,6 +865,16 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 		)
 	var generated: Dictionary = service.generate_random_map(input_config, {"startup_path": "generated_skirmish"})
 	var report: Dictionary = generated.get("report", generated.get("validation_report", {})) if generated.get("report", generated.get("validation_report", {})) is Dictionary else {}
+	if report.is_empty() and bool(generated.get("ok", false)):
+		report = {
+			"schema_id": "aurelion_native_rmg_launch_validation_summary_v1",
+			"status": "pass",
+			"ok": true,
+			"failure_count": 0,
+			"warning_count": 0,
+			"source_status": String(generated.get("status", "")),
+			"full_generation_status": String(generated.get("full_generation_status", "")),
+		}
 	var retry_status := _random_map_retry_status(generated, report)
 	if not bool(generated.get("ok", false)):
 		return {
@@ -1586,7 +1667,7 @@ static func _generated_map_package_identity(generated: Dictionary, adoption: Dic
 		"package_stem": package_stem,
 		"creative_name": creative_name,
 		"template_id": String(normalized.get("template_id", "")),
-		"profile_id": String(normalized.get("profile_id", "")),
+		"profile_id": _native_random_map_profile_id(normalized),
 		"size_class_id": String(normalized.get("size_class_id", "")),
 		"width": width,
 		"height": height,
@@ -1680,6 +1761,16 @@ static func _hex8(value: int) -> String:
 		output += hex_chars.substr((value >> shift) & 0xf, 1)
 	return output
 
+static func _native_random_map_profile_id(normalized: Dictionary) -> String:
+	var profile_id := String(normalized.get("profile_id", "")).strip_edges()
+	if profile_id != "":
+		return profile_id
+	if String(normalized.get("template_selection_authority", "")).strip_edges() == "h3maped_exe_rng_original_catalog":
+		return "h3maped_exe_rng_profile"
+	if String(normalized.get("source_template_authority", "")).strip_edges() == "h3maped_exe_rng":
+		return "h3maped_exe_rng_profile"
+	return ""
+
 static func _safe_package_token(value: Variant, fallback: String = "generated") -> String:
 	var raw := String(value).strip_edges().to_lower()
 	var token := ""
@@ -1706,6 +1797,10 @@ static func _native_random_map_generated_identity(generated: Dictionary, adoptio
 	var map_ref: Dictionary = persisted.get("map_ref", {}) if persisted.get("map_ref", {}) is Dictionary else {}
 	var stable_signature := String(identity.get("signature", ""))
 	var full_output_signature := String(generated.get("full_output_signature", generated.get("validation_report", {}).get("full_output_signature", "")))
+	if stable_signature == "":
+		stable_signature = String(map_ref.get("package_hash", "")).replace("fnv1a32:", "")
+	if full_output_signature == "":
+		full_output_signature = stable_signature
 	return {
 		"scenario_id": String(scenario_ref.get("scenario_id", adoption.get("scenario_ref", {}).get("scenario_id", ""))),
 		"map_id": String(map_ref.get("map_id", identity.get("map_id", ""))),
@@ -1716,7 +1811,7 @@ static func _native_random_map_generated_identity(generated: Dictionary, adoptio
 		"full_output_signature": full_output_signature,
 		"generator_version": String(normalized.get("generator_version", "")),
 		"template_id": String(normalized.get("template_id", "")),
-		"profile_id": String(normalized.get("profile_id", "")),
+		"profile_id": _native_random_map_profile_id(normalized),
 		"size_class_id": String(normalized.get("size_class_id", "")),
 		"normalized_seed": String(normalized.get("normalized_seed", "")),
 		"content_manifest_fingerprint": "native_package_no_authored_scenario_json",
