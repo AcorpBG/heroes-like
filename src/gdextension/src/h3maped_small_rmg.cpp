@@ -5289,7 +5289,33 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	int32_t skipped_unassigned_player_start_min_castle_count = 0;
 	int32_t neutral_minimum_town_castle_count = 0;
 	int32_t density_schedule_count = 0;
-	int32_t weighted_continuation_zone_floor_schedule_count = 0;
+	int32_t weighted_continuation_count_repeat_schedule_count = 0;
+	int32_t weighted_continuation_density_schedule_count = 0;
+	int32_t weighted_continuation_density_retired_count = 0;
+
+	auto append_weighted_town_schedule = [&](Array &target, int32_t runtime_index, const Dictionary &runtime, int32_t owner_color, const String &owner_scope, bool has_castle, const String &source_field, int32_t source_count_value, int32_t source_density_value, int32_t density_budget_argument, int32_t density_iteration, int32_t density_counter_before, int32_t density_counter_after) {
+		Dictionary scheduled;
+		scheduled["phase"] = "0x4a8db2_weighted_continuation_town_castle";
+		scheduled["helper"] = "0x4a901a";
+		scheduled["runtime_zone_index"] = runtime_index;
+		scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
+		scheduled["owner_color"] = owner_color;
+		scheduled["owner_scope"] = owner_scope;
+		scheduled["has_castle"] = has_castle;
+		scheduled["h3maped_object_category_field"] = source_field;
+		scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
+		scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
+		scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
+		scheduled["object_materialization_blocked"] = true;
+		scheduled["source_count_value"] = source_count_value;
+		scheduled["source_density_value"] = source_density_value;
+		scheduled["density_budget_argument"] = density_budget_argument;
+		scheduled["density_iteration"] = density_iteration;
+		scheduled["density_counter_before"] = density_counter_before;
+		scheduled["density_counter_after"] = density_counter_after;
+		scheduled["same_type_neutral_flag_source_0x40"] = bool(runtime.get("towns_are_same_type", false));
+		target.append(scheduled);
+	};
 
 	for (int64_t index = 0; index < runtime_zone_records.size(); ++index) {
 		if (Variant(runtime_zone_records[index]).get_type() != Variant::DICTIONARY) {
@@ -5306,6 +5332,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		const int32_t neutral_min_castles = int32_t(runtime.get("neutral_min_castles", 0));
 		const int32_t neutral_town_density = int32_t(runtime.get("neutral_town_density", 0));
 		const int32_t neutral_castle_density = int32_t(runtime.get("neutral_castle_density", 0));
+		const bool same_type_neutral_towns = bool(runtime.get("towns_are_same_type", false));
 
 		source_player_min_town_count += player_min_towns;
 		source_player_min_castle_count += player_min_castles;
@@ -5403,52 +5430,67 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 				assigned_neutral_min_town_count += 1;
 			}
 		}
-	}
 
-	const int32_t weighted_continuation_zone_floor_target = int32_t(runtime_zone_records.size());
-	if (weighted_continuation_zone_floor_target > 0 && scheduled_records.size() < weighted_continuation_zone_floor_target) {
-		std::vector<int32_t> scheduled_count_by_runtime(size_t(weighted_continuation_zone_floor_target), 0);
-		for (int64_t scheduled_index = 0; scheduled_index < scheduled_records.size(); ++scheduled_index) {
-			if (Variant(scheduled_records[scheduled_index]).get_type() != Variant::DICTIONARY) {
+		struct WeightedTownCategory {
+			const char *source_count_field;
+			const char *source_density_field;
+			int32_t count_value;
+			int32_t density_value;
+			int32_t owner_color;
+			const char *owner_scope;
+			bool has_castle;
+			int32_t counter;
+		};
+		std::array<WeightedTownCategory, 4> weighted_categories = { {
+			{ "+0x24", "+0x2c", player_min_castles, player_castle_density, owner_color, "player_weighted_count_castle", true, 0 },
+			{ "+0x20", "+0x28", player_min_towns, player_town_density, owner_color, "player_weighted_count_town", false, 0 },
+			{ "+0x34", "+0x3c", neutral_min_castles, neutral_castle_density, -1, same_type_neutral_towns ? "neutral_weighted_same_type_castle" : "neutral_weighted_fallback_castle", true, 0 },
+			{ "+0x30", "+0x38", neutral_min_towns, neutral_town_density, -1, same_type_neutral_towns ? "neutral_weighted_same_type_town" : "neutral_weighted_fallback_town", false, 0 },
+		} };
+		for (const WeightedTownCategory &category : weighted_categories) {
+			if (category.count_value <= 0 || category.owner_color >= 0) {
 				continue;
 			}
-			const int32_t runtime_index = int32_t(Dictionary(scheduled_records[scheduled_index]).get("runtime_zone_index", -1));
-			if (runtime_index >= 0 && runtime_index < weighted_continuation_zone_floor_target) {
-				scheduled_count_by_runtime[size_t(runtime_index)] += 1;
+			for (int32_t ordinal = 0; ordinal < category.count_value; ++ordinal) {
+				append_weighted_town_schedule(scheduled_records, runtime_index, runtime, category.owner_color, category.owner_scope, category.has_castle, category.source_count_field, category.count_value, category.density_value, 0, ordinal, 0, 0);
+				weighted_continuation_count_repeat_schedule_count += 1;
 			}
 		}
-		for (int32_t pass = 0; pass < 2 && scheduled_records.size() < weighted_continuation_zone_floor_target; ++pass) {
-			for (int64_t index = 0; index < runtime_zone_records.size() && scheduled_records.size() < weighted_continuation_zone_floor_target; ++index) {
-				if (Variant(runtime_zone_records[index]).get_type() != Variant::DICTIONARY) {
-					continue;
+		int32_t density_total = 0;
+		for (const WeightedTownCategory &category : weighted_categories) {
+			if (category.density_value > 0 && category.owner_color < 0) {
+				density_total += category.density_value;
+			}
+		}
+		if (density_total > 0) {
+			const int32_t density_budget_argument = std::max<int32_t>(1, 0x320 / density_total);
+			const int32_t density_attempt_cap = std::max<int32_t>(1, std::min<int32_t>(density_total, 16));
+			std::vector<uint8_t> retired(weighted_categories.size(), 0);
+			for (int32_t attempt = 0; attempt < density_attempt_cap; ++attempt) {
+				int32_t selected_category = -1;
+				int32_t selected_counter = 0;
+				for (int32_t category_index = 0; category_index < int32_t(weighted_categories.size()); ++category_index) {
+					const WeightedTownCategory &category = weighted_categories[size_t(category_index)];
+					if (retired[size_t(category_index)] != 0 || category.density_value <= 0 || category.owner_color >= 0) {
+						continue;
+					}
+					if (selected_category < 0 || category.counter < selected_counter) {
+						selected_category = category_index;
+						selected_counter = category.counter;
+					}
 				}
-				Dictionary runtime = runtime_zone_records[index];
-				const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", index)));
-				if (runtime_index < 0 || runtime_index >= weighted_continuation_zone_floor_target) {
-					continue;
+				if (selected_category < 0) {
+					break;
 				}
-				if (pass == 0 && scheduled_count_by_runtime[size_t(runtime_index)] > 0) {
-					continue;
+				WeightedTownCategory &category = weighted_categories[size_t(selected_category)];
+				const int32_t counter_before = category.counter;
+				category.counter += std::max<int32_t>(1, density_total / std::max<int32_t>(1, category.density_value));
+				append_weighted_town_schedule(scheduled_records, runtime_index, runtime, category.owner_color, category.owner_scope, category.has_castle, category.source_density_field, category.count_value, category.density_value, density_budget_argument, attempt, counter_before, category.counter);
+				weighted_continuation_density_schedule_count += 1;
+				if (category.counter >= density_total) {
+					retired[size_t(selected_category)] = 1;
+					weighted_continuation_density_retired_count += 1;
 				}
-
-				Dictionary scheduled;
-				scheduled["phase"] = "0x4a8db2_weighted_continuation_zone_floor_neutral_town";
-				scheduled["helper"] = "0x4a901a";
-				scheduled["runtime_zone_index"] = runtime_index;
-				scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
-				scheduled["owner_color"] = -1;
-				scheduled["owner_scope"] = "neutral_weighted_continuation";
-				scheduled["has_castle"] = false;
-				scheduled["h3maped_object_category_field"] = "+0x28/+0x2c/+0x38/+0x3c_weighted_continuation";
-				scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
-				scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
-				scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
-				scheduled["object_materialization_blocked"] = true;
-				scheduled["weighted_continuation_target_count"] = weighted_continuation_zone_floor_target;
-				scheduled["weighted_continuation_pass"] = pass;
-				scheduled_records.append(scheduled);
-				scheduled_count_by_runtime[size_t(runtime_index)] += 1;
-				weighted_continuation_zone_floor_schedule_count += 1;
 			}
 		}
 	}
@@ -5536,6 +5578,8 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		int32_t footprint_rejected_collision_count = 0;
 		int32_t closest_footprint_distance = 0x7fffffff;
 		Array closest_footprint_candidates;
+		Array weighted_footprint_candidates;
+		const int32_t weighted_budget_argument = int32_t(scheduled.get("density_budget_argument", 0));
 
 		for (int32_t level = 0; level < map_level_count; ++level) {
 			if (level != anchor_level) {
@@ -5553,6 +5597,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 						continue;
 					}
 					const int32_t distance = h3maped_distance_truncate_local(anchor_x, anchor_y, x, y);
+					const int32_t generated_score = int32_t(zone_words[size_t(cell_index)] & 0xffffU);
 					candidate_count += 1;
 					if (distance < closest_distance) {
 						closest_distance = distance;
@@ -5610,6 +5655,16 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 					}
 
 					footprint_eligible_count += 1;
+					if (!weighted_continuation_record || generated_score >= weighted_budget_argument) {
+						Dictionary weighted_candidate;
+						weighted_candidate["x"] = x;
+						weighted_candidate["y"] = y;
+						weighted_candidate["level"] = level;
+						weighted_candidate["distance_to_runtime_anchor"] = distance;
+						weighted_candidate["score_low_word"] = generated_score;
+						weighted_candidate["body_cell_count"] = int32_t(town_body_points.size());
+						weighted_footprint_candidates.append(weighted_candidate);
+					}
 					if (distance < closest_footprint_distance) {
 						closest_footprint_distance = distance;
 						closest_footprint_candidates.clear();
@@ -5620,6 +5675,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 						candidate["y"] = y;
 						candidate["level"] = level;
 						candidate["distance_to_runtime_anchor"] = distance;
+						candidate["score_low_word"] = generated_score;
 						candidate["body_cell_count"] = int32_t(town_body_points.size());
 						closest_footprint_candidates.append(candidate);
 					}
@@ -5645,6 +5701,8 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		record["closest_footprint_distance"] = footprint_eligible_count > 0 ? closest_footprint_distance : -1;
 		record["closest_footprint_candidate_count"] = closest_footprint_candidates.size();
 		record["closest_footprint_candidates"] = closest_footprint_candidates;
+		record["weighted_budget_argument"] = weighted_budget_argument;
+		record["weighted_footprint_candidate_count"] = weighted_footprint_candidates.size();
 		record["full_0x49aa93_status"] = footprint_eligible_count > 0
 				? String("0x49aa93_0x49a09c_town_footprint_gate_ported_for_zone_words_no_package_adoption")
 				: String("0x49aa93_0x49a09c_town_footprint_gate_no_eligible_candidates");
@@ -5660,7 +5718,21 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			bool selected_from_random_tie = false;
 			int32_t random_tie_rng_value = -1;
 			int32_t random_tie_selected_index = -1;
-			if (closest_footprint_candidates.size() == 1 && Variant(closest_footprint_candidates[0]).get_type() == Variant::DICTIONARY) {
+			if (weighted_continuation_record) {
+				if (weighted_footprint_candidates.is_empty()) {
+					record["status"] = "0x4a901a_weighted_town_footprint_gate_no_budget_candidates";
+					direct_footprint_missing_count += 1;
+					direct_stamping_records.append(record);
+					continue;
+				}
+				random_tie_rng_value = object_rng.next();
+				direct_random_tie_rng_call_count += 1;
+				random_tie_selected_index = random_tie_rng_value % int32_t(weighted_footprint_candidates.size());
+				selected = weighted_footprint_candidates[random_tie_selected_index];
+				selected_from_random_tie = true;
+				record["status"] = "0x4a901a_weighted_random_0x49aa93_town_footprint_candidate_record_projection_private";
+				direct_random_tie_selection_count += 1;
+			} else if (closest_footprint_candidates.size() == 1 && Variant(closest_footprint_candidates[0]).get_type() == Variant::DICTIONARY) {
 				selected = closest_footprint_candidates[0];
 				record["status"] = "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private";
 				direct_unique_selection_count += 1;
@@ -5901,8 +5973,11 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	phase["skipped_unassigned_player_start_min_castle_count"] = skipped_unassigned_player_start_min_castle_count;
 	phase["neutral_minimum_town_castle_count"] = neutral_minimum_town_castle_count;
 	phase["density_schedule_count"] = density_schedule_count;
-	phase["weighted_continuation_zone_floor_target"] = weighted_continuation_zone_floor_target;
-	phase["weighted_continuation_zone_floor_schedule_count"] = weighted_continuation_zone_floor_schedule_count;
+	phase["weighted_continuation_zone_floor_target"] = 0;
+	phase["weighted_continuation_zone_floor_schedule_count"] = 0;
+	phase["weighted_continuation_count_repeat_schedule_count"] = weighted_continuation_count_repeat_schedule_count;
+	phase["weighted_continuation_density_schedule_count"] = weighted_continuation_density_schedule_count;
+	phase["weighted_continuation_density_retired_count"] = weighted_continuation_density_retired_count;
 	phase["scheduled_direct_minimum_object_count"] = scheduled_records.size();
 	phase["scheduled_owned_player_town_count"] = assigned_player_min_town_count + assigned_player_min_castle_count;
 	phase["scheduled_neutral_minimum_town_count"] = assigned_neutral_min_town_count + assigned_neutral_min_castle_count;
@@ -6361,13 +6436,16 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		return true;
 	};
 
-	auto source_zone_primary_category_target = [](const Dictionary &runtime) {
-		const int32_t base_size = std::max(1, int32_t(runtime.get("source_base_size", 8)));
+	auto source_zone_primary_category_target_4a8db2 = [](const Dictionary &runtime) {
 		const int32_t density_weight = std::max(0, int32_t(runtime.get("player_town_density", 0)))
 				+ std::max(0, int32_t(runtime.get("player_castle_density", 0)))
 				+ std::max(0, int32_t(runtime.get("neutral_town_density", 0)))
 				+ std::max(0, int32_t(runtime.get("neutral_castle_density", 0)));
-		return std::max(4, std::min(10, (base_size * 3) / 4 + density_weight / 2));
+		const int32_t minimum_weight = std::max(0, int32_t(runtime.get("player_min_towns", 0)))
+				+ std::max(0, int32_t(runtime.get("player_min_castles", 0)))
+				+ std::max(0, int32_t(runtime.get("neutral_min_towns", 0)))
+				+ std::max(0, int32_t(runtime.get("neutral_min_castles", 0)));
+		return density_weight > 0 ? density_weight : minimum_weight;
 	};
 
 	static constexpr int32_t PRIMARY_SCENIC_OBJECT_TYPES[] = {
@@ -6785,7 +6863,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		Dictionary scaled = scaled_by_runtime.get(String::num_int64(runtime_index), Dictionary());
 		const int32_t anchor_level = int32_t(scaled.get("level", 0));
 		const std::vector<H3ObjectRow> eligible_templates = primary_category_eligible_templates(runtime_terrain_id);
-		const int32_t target_count = source_zone_primary_category_target(runtime);
+		const int32_t target_count = source_zone_primary_category_target_4a8db2(runtime);
 		primary_category_schedule_target_total += target_count;
 		for (int32_t ordinal = 0; ordinal < target_count; ++ordinal) {
 			Dictionary placement;
@@ -7014,7 +7092,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	Dictionary primary_category_boundary;
 	primary_category_boundary["status"] = "0x4a8db2_0x4a901a_primary_category_objects_projected_private";
-	primary_category_boundary["source"] = "weighted primary category placement over source town/castle density fields with recovered object templates adapted as project scenic_object records at package boundary";
+	primary_category_boundary["source"] = "weighted primary category placement driven directly by source 0x4a8db2 count/density fields with recovered object templates adapted as project scenic_object records at package boundary";
 	primary_category_boundary["source_field_offsets"] = "+0x28/+0x2c/+0x38/+0x3c";
 	primary_category_boundary["object_record_constructor_anchor"] = "0x49ba89";
 	primary_category_boundary["object_record_vtable_anchor"] = "0x540a9c";
@@ -7579,7 +7657,31 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	return phase;
 }
 
-Array generator_0x14b0_town_coordinate_records(const Dictionary &town_castle_phase) {
+void append_generator_0x14b0_coordinate_record(Array &result, const Dictionary &source, const String &source_kind, const String &phase, const String &append_address, const Variant &source_zone_id, const Variant &runtime_zone_index, const Variant &owner_slot) {
+	const int32_t x = int32_t(source.get("x", -1));
+	const int32_t y = int32_t(source.get("y", -1));
+	const int32_t level = int32_t(source.get("level", 0));
+	Dictionary record;
+	record["vector_index"] = result.size();
+	record["byte_offset_from_begin"] = int32_t(result.size()) * 12;
+	record["record_size_bytes"] = 12;
+	record["phase"] = phase;
+	record["append_address"] = append_address;
+	record["generator_0x14b0_append_materialized"] = true;
+	record["source_kind"] = source_kind;
+	record["source_runtime_zone_index"] = runtime_zone_index;
+	record["source_zone_id"] = source_zone_id;
+	record["owner_slot"] = owner_slot;
+	record["placement_id"] = source.get("placement_id", "");
+	record["x"] = x;
+	record["y"] = y;
+	record["level"] = level;
+	record["coordinate_triplet"] = Array::make(x, y, level);
+	record["complete_executable_vector_claim"] = true;
+	result.append(record);
+}
+
+Array generator_0x14b0_coordinate_records(const Dictionary &town_castle_phase, const Dictionary &object_vector_phase) {
 	Array result;
 	Dictionary town_adoption = town_castle_phase.get("project_town_adoption_candidate", Dictionary());
 	Array town_records = town_adoption.get("town_records", Array());
@@ -7588,26 +7690,15 @@ Array generator_0x14b0_town_coordinate_records(const Dictionary &town_castle_pha
 			continue;
 		}
 		Dictionary town = town_records[town_index];
-		const int32_t x = int32_t(town.get("x", -1));
-		const int32_t y = int32_t(town.get("y", -1));
-		const int32_t level = int32_t(town.get("level", 0));
-		Dictionary record;
-		record["vector_index"] = result.size();
-		record["byte_offset_from_begin"] = int32_t(result.size()) * 12;
-		record["record_size_bytes"] = 12;
-		record["phase"] = "0x4a8d2c_0x4a93a2_town_castle";
-		record["append_address"] = "0x4a95af";
-		record["generator_0x14b0_append_materialized"] = true;
-		record["source_kind"] = "town";
-		record["source_runtime_zone_index"] = town.get("runtime_zone_index", -1);
-		record["source_zone_id"] = town.get("zone_id", -1);
-		record["owner_slot"] = town.get("owner_slot", -1);
-		record["x"] = x;
-		record["y"] = y;
-		record["level"] = level;
-		record["coordinate_triplet"] = Array::make(x, y, level);
-		record["complete_executable_vector_claim"] = false;
-		result.append(record);
+		append_generator_0x14b0_coordinate_record(result, town, "town", String(town.get("source_algorithm", "0x4a8d2c_0x4a93a2_town_castle")), "0x4a95af", town.get("zone_id", -1), town.get("runtime_zone_index", -1), town.get("owner_slot", -1));
+	}
+	Dictionary mine_boundary = object_vector_phase.get("mine_requirements_boundary", Dictionary());
+	Array mine_records = mine_boundary.get("coordinate_records", Array());
+	for (int64_t index = 0; index < mine_records.size(); ++index) {
+		if (Variant(mine_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = mine_records[index];
+			append_generator_0x14b0_coordinate_record(result, record, "mine", String(record.get("phase", "0x4a9911_0x4a9641_mine")), String(record.get("append_address", "0x49ba89")), record.get("source_zone_id", -1), record.get("source_runtime_zone_index", -1), -1);
+		}
 	}
 	return result;
 }
@@ -7797,10 +7888,76 @@ Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Diction
 			&& expected_cell_count == int32_t(zone_words.size())
 			&& zone_words.size() == cell_flags.size()
 			&& zone_words.size() == live_terrain_code.size();
-	Array coordinate_records = generator_0x14b0_town_coordinate_records(town_castle_phase);
+	Array coordinate_records = generator_0x14b0_coordinate_records(town_castle_phase, object_vector_phase);
+	std::vector<int32_t> town_route_indices;
+	std::vector<int32_t> mine_route_indices;
+	for (int64_t index = 0; index < coordinate_records.size(); ++index) {
+		if (Variant(coordinate_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = coordinate_records[index];
+		const String source_kind = String(record.get("source_kind", ""));
+		if (source_kind == "town") {
+			town_route_indices.push_back(int32_t(index));
+		} else if (source_kind == "mine") {
+			mine_route_indices.push_back(int32_t(index));
+		}
+	}
+	std::map<int32_t, int32_t> nearest_town_route_index_by_mine_index;
+	for (int32_t mine_index : mine_route_indices) {
+		if (mine_index < 0 || mine_index >= int32_t(coordinate_records.size()) || Variant(coordinate_records[mine_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary mine = coordinate_records[mine_index];
+		const int32_t mine_x = int32_t(mine.get("x", -1));
+		const int32_t mine_y = int32_t(mine.get("y", -1));
+		const int32_t mine_level = int32_t(mine.get("level", 0));
+		int32_t best_town_index = -1;
+		int32_t best_distance = 0x7fffffff;
+		for (int32_t town_index : town_route_indices) {
+			if (town_index < 0 || town_index >= int32_t(coordinate_records.size()) || Variant(coordinate_records[town_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary town = coordinate_records[town_index];
+			if (int32_t(town.get("level", 0)) != mine_level) {
+				continue;
+			}
+			const int32_t distance = h3maped_distance_truncate_local(mine_x, mine_y, int32_t(town.get("x", -1)), int32_t(town.get("y", -1)));
+			if (distance < best_distance) {
+				best_distance = distance;
+				best_town_index = town_index;
+			}
+		}
+		if (best_town_index >= 0) {
+			nearest_town_route_index_by_mine_index[mine_index] = best_town_index;
+		}
+	}
+	auto route_pair_allowed = [&](int32_t from_index, int32_t to_index) {
+		if (from_index < 0 || to_index < 0 || from_index >= int32_t(coordinate_records.size()) || to_index >= int32_t(coordinate_records.size())) {
+			return false;
+		}
+		if (Variant(coordinate_records[from_index]).get_type() != Variant::DICTIONARY || Variant(coordinate_records[to_index]).get_type() != Variant::DICTIONARY) {
+			return false;
+		}
+		const String from_kind = String(Dictionary(coordinate_records[from_index]).get("source_kind", ""));
+		const String to_kind = String(Dictionary(coordinate_records[to_index]).get("source_kind", ""));
+		if (from_kind == "town" && to_kind == "town") {
+			return true;
+		}
+		if (from_kind == "mine" && to_kind == "town") {
+			const auto found = nearest_town_route_index_by_mine_index.find(from_index);
+			return found != nearest_town_route_index_by_mine_index.end() && found->second == to_index;
+		}
+		if (from_kind == "town" && to_kind == "mine") {
+			const auto found = nearest_town_route_index_by_mine_index.find(to_index);
+			return found != nearest_town_route_index_by_mine_index.end() && found->second == from_index;
+		}
+		return false;
+	};
 	Array pair_records;
 	int32_t accepted_pair_count = 0;
 	int32_t accepted_chain_count = 0;
+	int32_t skipped_unbounded_pair_count = 0;
 	if (grid_available) {
 		for (int64_t from_index = 0; from_index < coordinate_records.size(); ++from_index) {
 			if (Variant(coordinate_records[from_index]).get_type() != Variant::DICTIONARY) {
@@ -7809,6 +7966,10 @@ Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Diction
 			Dictionary from_record = coordinate_records[from_index];
 			for (int64_t to_index = from_index + 1; to_index < coordinate_records.size(); ++to_index) {
 				if (Variant(coordinate_records[to_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				if (!route_pair_allowed(int32_t(from_index), int32_t(to_index))) {
+					skipped_unbounded_pair_count += 1;
 					continue;
 				}
 				Dictionary pair = h3maped_private_road_pair_cost(zone_words, cell_flags, live_terrain_code, map_width, map_height, map_level_count, from_record, Dictionary(coordinate_records[to_index]));
@@ -8065,12 +8226,16 @@ Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Diction
 
 	phase["status"] = "active_strict_private_road_overlay";
 	phase["source"] = "strict private port of h3maped 0x4ab52a coordinate-vector walk, 0x4aae7b low-word route candidate test, 0x458e61 road cell marking, 0x458a2f/0x458893 road art/flip selection, and 0x49b2b6 road overlay byte staging";
-	phase["strict_port_scope"] = "generator+0x14b0 town coordinate records, accepted private pair low-word chains, road type/art/flip overlay bytes; public package adoption remains blocked behind connection blockers and guards";
+	phase["strict_port_scope"] = "generator+0x14b0 strategic route endpoint coordinate records, accepted private pair low-word chains, road type/art/flip overlay bytes; public package adoption remains blocked behind connection blockers and guards";
 	phase["grid_available"] = grid_available;
 	phase["generator_coordinate_records"] = coordinate_records;
 	phase["generator_coordinate_record_count"] = coordinate_records.size();
-	phase["generator_coordinate_record_source"] = "town/castle records appended by 0x4a95af; mine/reward local candidate vectors are intentionally excluded from this generator+0x14b0 road consumer";
+	phase["generator_coordinate_record_source"] = "town and mine objective records staged into the native generator+0x14b0 route consumer; town-town pairs plus each mine's nearest town pair are routed to avoid unbounded object-pair expansion";
 	phase["complete_executable_vector_claim"] = false;
+	phase["town_route_endpoint_count"] = int32_t(town_route_indices.size());
+	phase["mine_route_endpoint_count"] = int32_t(mine_route_indices.size());
+	phase["mine_nearest_town_route_pair_count"] = int32_t(nearest_town_route_index_by_mine_index.size());
+	phase["skipped_unbounded_route_pair_count"] = skipped_unbounded_pair_count;
 	phase["pair_candidate_records"] = pair_records;
 	phase["pair_candidate_iteration_count"] = pair_records.size();
 	phase["candidate_low_word_count"] = pair_records.size();
@@ -9915,11 +10080,9 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 		Dictionary body_cell = h3_cell_dictionary(x, y, level);
 		body_cell["flat_cell_index"] = flat;
 		object_occupied[size_t(flat)] = 1;
-		private_decorative_u8.set(flat, 1);
 		live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
 		live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
 		remaining_candidate_lock_count += 1;
-		marked_body_cell_count += 1;
 	}
 
 	phase["status"] = "active_strict_private_decorative_obstacle_filler";
@@ -9953,6 +10116,7 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 	phase["private_decorative_object_placement_count"] = placement_count;
 	phase["private_remaining_candidate_0x49a932_lock_count"] = remaining_candidate_lock_count;
 	phase["decorative_candidate_lock_not_public_object_count"] = remaining_candidate_lock_count;
+	phase["remaining_candidate_lock_materialization"] = "h3maped_0x49a932_non_object_occupancy_only";
 	phase["private_decorative_blocker_u8"] = private_decorative_u8;
 	phase["private_decorative_marked_body_cell_count"] = marked_body_cell_count;
 	phase["rng_state_before_0x49e700_uint32"] = int64_t(rng_state_before);
@@ -10076,7 +10240,7 @@ Dictionary h3maped_road_cell_with_route_metadata(const Dictionary &source_cell, 
 	Dictionary cell = source_cell.duplicate(true);
 	cell["route_edge_id"] = route_edge_id;
 	cell["route_order"] = route_order;
-	cell["road_class"] = "h3maped_town_route_road";
+	cell["road_class"] = "h3maped_object_route_road";
 	cell["road_type_id"] = h3maped_road_type_id_for_type(road_type);
 	cell["h3maped_road_type"] = road_type;
 	cell["h3maped_road_atlas"] = h3maped_road_atlas_for_type(road_type);
@@ -10127,6 +10291,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	Array reward_records = reward_boundary.get("coordinate_records", Array());
 	Array road_cells = roads_rivers_phase.get("road_overlay_cell_records", Array());
 	Array road_pair_records = roads_rivers_phase.get("pair_candidate_records", Array());
+	Array route_coordinate_records = roads_rivers_phase.get("generator_coordinate_records", Array());
 	Array blocker_records = connections_phase.get("private_blocker_records", Array());
 	Array guard_records = connections_phase.get("private_guard_records", Array());
 	Array decorative_obstacle_records = decorative_filler_phase.get("private_decorative_obstacle_records", Array());
@@ -10165,21 +10330,24 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	Dictionary route_nodes;
 	int32_t route_segment_cell_total = 0;
 	int32_t route_segment_disconnected_count = 0;
-	for (int64_t index = 0; index < town_records.size(); ++index) {
-		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
+	auto route_node_id_for_vector_index = [](int32_t vector_index) {
+		return String("h3maped_small_route_node_") + h3_slot_id_2(vector_index + 1);
+	};
+	for (int64_t index = 0; index < route_coordinate_records.size(); ++index) {
+		if (Variant(route_coordinate_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
-		Dictionary town = town_records[index];
+		Dictionary coordinate = route_coordinate_records[index];
 		Dictionary node;
-			const int32_t vector_index = int32_t(town.get("vector_index", index));
-			const String node_id = String("h3maped_small_town_node_") + h3_slot_id_2(vector_index + 1);
-			node["id"] = node_id;
-			node["node_kind"] = int32_t(town.get("owner_slot", -1)) > 0 ? String("owned_town") : String("neutral_town");
-			node["placement_id"] = town.get("placement_id", "");
-		node["runtime_zone_index"] = town.get("runtime_zone_index", town.get("source_runtime_zone_index", -1));
-		node["x"] = town.get("x", -1);
-		node["y"] = town.get("y", -1);
-		node["level"] = town.get("level", 0);
+		const int32_t vector_index = int32_t(coordinate.get("vector_index", index));
+		const String node_id = route_node_id_for_vector_index(vector_index);
+		node["id"] = node_id;
+		node["node_kind"] = coordinate.get("source_kind", "object_coordinate");
+		node["placement_id"] = coordinate.get("placement_id", "");
+		node["runtime_zone_index"] = coordinate.get("runtime_zone_index", coordinate.get("source_runtime_zone_index", -1));
+		node["x"] = coordinate.get("x", -1);
+		node["y"] = coordinate.get("y", -1);
+		node["level"] = coordinate.get("level", 0);
 		node["source_vector_index"] = vector_index;
 		route_nodes[node_id] = node;
 	}
@@ -10243,15 +10411,15 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		road_segment["source"] = "h3maped_private_0x4ab52a_0x4aae7b_predecessor_chain_route";
 		road_segment["route_edge_id"] = route_edge_id;
 		road_segment["overlay_id"] = "h3maped_small_road_overlay";
-		road_segment["role"] = "town_route";
-		road_segment["road_class"] = "h3maped_town_route_road";
+		road_segment["role"] = "object_route";
+		road_segment["road_class"] = "h3maped_object_route_road";
 		road_segment["road_type_id"] = selected_road_type_id;
 		road_segment["h3maped_road_type"] = selected_road_type;
 		road_segment["h3maped_road_atlas"] = selected_road_atlas;
 		road_segment["from_vector_index"] = from_vector_index;
 		road_segment["to_vector_index"] = to_vector_index;
-		road_segment["from_node_id"] = String("h3maped_small_town_node_") + h3_slot_id_2(from_vector_index + 1);
-		road_segment["to_node_id"] = String("h3maped_small_town_node_") + h3_slot_id_2(to_vector_index + 1);
+		road_segment["from_node_id"] = route_node_id_for_vector_index(from_vector_index);
+		road_segment["to_node_id"] = route_node_id_for_vector_index(to_vector_index);
 		road_segment["candidate_low_word"] = pair.get("candidate_low_word", 0);
 		road_segment["connected_cell_chain"] = connected;
 		road_segment["tile_count"] = segment_cells.size();
@@ -10262,7 +10430,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 
 		Dictionary edge;
 		edge["id"] = route_edge_id;
-		edge["edge_kind"] = "h3maped_town_road_route";
+		edge["edge_kind"] = "h3maped_object_road_route";
 		edge["from_node_id"] = road_segment.get("from_node_id", "");
 		edge["to_node_id"] = road_segment.get("to_node_id", "");
 		edge["road_segment_id"] = segment_id;
@@ -10318,11 +10486,16 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Array body_tiles = h3maped_package_cell_array_from_variant(object.get("body_tiles", Array::make(object.get("primary_tile", Dictionary()))));
 		Dictionary primary_tile = object.get("primary_tile", h3_cell_dictionary(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0))));
 		Array visit_tiles = Array::make(primary_tile);
-		object["action_tiles"] = h3maped_package_cell_array_from_variant(object.get("approach_tiles", Array()));
+		Array action_tiles = h3maped_package_cell_array_from_variant(object.get("approach_tiles", Array()));
+		object["action_tiles"] = action_tiles;
 		object["visit_tile"] = primary_tile;
 		object["package_town_action_tile_policy"] = "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start";
 		h3maped_apply_package_pathing_surface(object, body_tiles, visit_tiles, true, "blocking_visitable");
-		Array block_tiles = h3maped_package_cells_excluding(body_tiles, visit_tiles);
+		Array non_blocking_town_tiles = visit_tiles.duplicate(true);
+		for (int64_t action_index = 0; action_index < action_tiles.size(); ++action_index) {
+			non_blocking_town_tiles.append(action_tiles[action_index]);
+		}
+		Array block_tiles = h3maped_package_cells_excluding(body_tiles, non_blocking_town_tiles);
 		object["package_block_tiles"] = block_tiles;
 		object["package_block_tile_count"] = block_tiles.size();
 		if (int32_t(object.get("owner_slot", -1)) > 0) {
@@ -10742,6 +10915,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	}
 
 	Dictionary package_block_keys;
+	Dictionary non_removable_package_block_keys;
 	Dictionary removable_runtime_start_block_keys;
 	Dictionary package_interaction_keys;
 	Dictionary road_keys;
@@ -10770,6 +10944,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		const String object_kind = String(object.get("kind", ""));
 		if (object_kind == "decorative_obstacle") {
 			add_cell_keys(removable_runtime_start_block_keys, object_block_tiles);
+		} else {
+			add_cell_keys(non_removable_package_block_keys, object_block_tiles);
 		}
 		add_cell_keys(package_interaction_keys, h3maped_package_cell_array_from_variant(object.get("package_visit_tiles", Array())));
 		add_cell_keys(package_interaction_keys, h3maped_package_cell_array_from_variant(object.get("visit_tile", Dictionary())));
@@ -10809,7 +10985,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	};
 	auto road_reachable_step_count_from = [&](int32_t start_x, int32_t start_y, int32_t level) {
 		const String start_key = tile_key_for_xyz(start_x, start_y, level);
-		if ((package_block_keys.has(start_key) && !removable_runtime_start_block_keys.has(start_key))
+		if (non_removable_package_block_keys.has(start_key)
+				|| (package_block_keys.has(start_key) && !removable_runtime_start_block_keys.has(start_key))
 				|| road_keys.has(start_key)
 				|| !terrain_passable_for_start(start_x, start_y, level)) {
 			return -1;
@@ -10882,7 +11059,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 						continue;
 					}
 					const String key = tile_key_for_xyz(x, y, level);
-					if ((package_block_keys.has(key) && !removable_runtime_start_block_keys.has(key)) || road_keys.has(key)) {
+					if (non_removable_package_block_keys.has(key)
+							|| (package_block_keys.has(key) && !removable_runtime_start_block_keys.has(key))
+							|| road_keys.has(key)
+							|| package_interaction_keys.has(key)) {
 						continue;
 					}
 					const int32_t reachable_road_steps = road_reachable_step_count_from(x, y, level);
@@ -10956,6 +11136,24 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			object["runtime_start_block_mask_policy"] = "selected_runtime_start_tile_takes_precedence_over_decorative_obstacle_masks_only";
 			package_objects[index] = object;
 		}
+	}
+	int32_t removed_runtime_start_decorative_object_count = 0;
+	Array runtime_start_filtered_package_objects;
+	for (int64_t index = 0; index < package_objects.size(); ++index) {
+		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
+			runtime_start_filtered_package_objects.append(package_objects[index]);
+			continue;
+		}
+		Dictionary object = package_objects[index];
+		if (String(object.get("kind", "")) == "decorative_obstacle"
+				&& selected_runtime_start_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(object)))) {
+			removed_runtime_start_decorative_object_count += 1;
+			continue;
+		}
+		runtime_start_filtered_package_objects.append(object);
+	}
+	if (removed_runtime_start_decorative_object_count > 0) {
+		package_objects = runtime_start_filtered_package_objects;
 	}
 
 	Dictionary seen_placement_ids;
