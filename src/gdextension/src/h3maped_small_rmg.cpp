@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <map>
 #include <set>
 #include <string>
@@ -32,6 +33,7 @@ constexpr const char *RMG_TEMPLATE_CATALOG_SOURCE_PATH = "/root/.openclaw/worksp
 constexpr const char *RMG_IMPORTED_TEMPLATE_CATALOG_PATH = "res://content/random_map_template_catalog.json";
 constexpr const char *OBJECT_CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json";
 constexpr const char *OBJECT_DECORATION_OBSTACLES_CSV_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv";
+constexpr const char *OBJECT_DECORATION_OBSTACLE_PROXY_CATALOG_PATH = "res://content/homm3_re_obstacle_proxy_catalog.json";
 constexpr const char *CRTRAITS_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_bmp/raw/crtraits.txt";
 constexpr const char *REWARD_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
 constexpr const char *ARCHIVED_REPORT_TREADMILL_PATH = "src/gdextension/src/archived_h3maped_small_rmg_report_treadmill_20260513.cpp";
@@ -331,6 +333,15 @@ struct TerrainVisualGridTables {
 	std::vector<TerrainVisualRow> water_rows;
 	std::vector<TerrainVisualRow> rock_rows;
 };
+
+bool external_h3maped_evidence_disabled() {
+	const char *value = std::getenv("AURELION_H3MAPED_DISABLE_EXTERNAL_EVIDENCE");
+	return value != nullptr && value[0] != '\0' && std::strcmp(value, "0") != 0 && std::strcmp(value, "false") != 0 && std::strcmp(value, "FALSE") != 0;
+}
+
+bool external_h3maped_file_exists(const char *path) {
+	return !external_h3maped_evidence_disabled() && FileAccess::file_exists(path);
+}
 
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 constexpr uint32_t H3MAPED_CELL_DECOR_CANDIDATE_BIT_26 = 1U << 26U;
@@ -912,8 +923,35 @@ std::vector<H3DecorationObstacleRow> h3maped_decoration_obstacle_rows_from_recov
 	load_status["ok"] = false;
 	load_status["path"] = OBJECT_DECORATION_OBSTACLES_CSV_PATH;
 	load_status["semantic_source"] = "recovered_h3maped_rand_trn_obstacle_fixture";
-	if (!FileAccess::file_exists(OBJECT_DECORATION_OBSTACLES_CSV_PATH)) {
-		load_status["status"] = "missing_csv_file";
+	if (!external_h3maped_file_exists(OBJECT_DECORATION_OBSTACLES_CSV_PATH)) {
+		Dictionary proxy_load = load_json_dictionary(OBJECT_DECORATION_OBSTACLE_PROXY_CATALOG_PATH);
+		load_status["fallback_path"] = OBJECT_DECORATION_OBSTACLE_PROXY_CATALOG_PATH;
+		load_status["fallback_status"] = proxy_load.get("status", "");
+		if (!bool(proxy_load.get("ok", false))) {
+			load_status["status"] = external_h3maped_evidence_disabled() ? String("external_evidence_disabled_and_proxy_catalog_missing") : String("missing_csv_file_and_proxy_catalog_missing");
+			return rows;
+		}
+		Dictionary catalog = proxy_load.get("data", Dictionary());
+		Array proxy_rows = catalog.get("rows", Array());
+		for (int64_t index = 0; index < proxy_rows.size(); ++index) {
+			if (Variant(proxy_rows[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary item = proxy_rows[index];
+			H3DecorationObstacleRow row;
+			row.obstacle_id = int32_t(item.get("obstacle_id", index + 1));
+			row.name = item.get("semantic_name", "");
+			row.type_id = int32_t(item.get("type_id", -1));
+			row.type_name = item.get("type_name", "");
+			row.subtype_id = int32_t(item.get("subtype", 0));
+			row.terrain_id = int32_t(item.get("terrain_id", -1));
+			row.terrain_name = item.get("terrain_name", "");
+			row.mapped_template_count = std::max<int32_t>(1, int32_t(item.get("mapped_template_count", 1)));
+			rows.push_back(row);
+		}
+		load_status["ok"] = !rows.empty();
+		load_status["status"] = rows.empty() ? String("proxy_catalog_empty") : String("loaded_repo_local_proxy_catalog");
+		load_status["row_count"] = int32_t(rows.size());
 		return rows;
 	}
 	Ref<FileAccess> file = FileAccess::open(OBJECT_DECORATION_OBSTACLES_CSV_PATH, FileAccess::READ);
@@ -1088,8 +1126,70 @@ Array h3maped_terrain_ids_from_original_names(const Array &terrain_names) {
 
 std::vector<H3ObjectRow> h3_object_rows_by_type_from_recovered_catalog(int32_t wanted_type_id, Dictionary &load_status) {
 	std::vector<H3ObjectRow> rows;
-	load_status = load_json_dictionary(OBJECT_CATALOG_SOURCE_PATH);
+	const String one_cell_passability_mask = "111111111111111111111111111111111111111101111111";
+	const String one_cell_action_mask = "000000000000000000000000000000000000000010000000";
+	if (!external_h3maped_evidence_disabled()) {
+		load_status = load_json_dictionary(OBJECT_CATALOG_SOURCE_PATH);
+	}
 	if (!bool(load_status.get("ok", false))) {
+		Dictionary fallback_load = load_json_dictionary(OBJECT_DECORATION_OBSTACLE_PROXY_CATALOG_PATH);
+		load_status["fallback_path"] = OBJECT_DECORATION_OBSTACLE_PROXY_CATALOG_PATH;
+		load_status["fallback_status"] = fallback_load.get("status", "");
+		if (bool(fallback_load.get("ok", false))) {
+			Dictionary catalog = fallback_load.get("data", Dictionary());
+			Array proxy_rows = catalog.get("rows", Array());
+			for (int64_t index = 0; index < proxy_rows.size(); ++index) {
+				if (Variant(proxy_rows[index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary item = proxy_rows[index];
+				if (int32_t(item.get("type_id", -1)) != wanted_type_id) {
+					continue;
+				}
+				H3ObjectRow row;
+				row.source_line = int32_t(item.get("rand_trn_source_row", index + 1));
+				row.def_name = String(item.get("primary_def_template_ref", "")) + String("#repo-local-structural-proxy");
+				row.passability_mask = one_cell_passability_mask;
+				row.action_mask = one_cell_action_mask;
+				row.terrain_mask_primary = "111111111";
+				row.terrain_mask_secondary = "111111111";
+				row.type_id = wanted_type_id;
+				row.subtype_id = int32_t(item.get("subtype", 0));
+				rows.push_back(row);
+			}
+		}
+		if (rows.empty()) {
+			Dictionary reward_load = load_json_dictionary(REWARD_PROXY_CATALOG_PATH);
+			load_status["reward_fallback_path"] = REWARD_PROXY_CATALOG_PATH;
+			load_status["reward_fallback_status"] = reward_load.get("status", "");
+			if (bool(reward_load.get("ok", false))) {
+				Dictionary catalog = reward_load.get("data", Dictionary());
+				Array entries = catalog.get("entries", Array());
+				for (int64_t index = 0; index < entries.size(); ++index) {
+					if (Variant(entries[index]).get_type() != Variant::DICTIONARY) {
+						continue;
+					}
+					Dictionary item = entries[index];
+					if (int32_t(item.get("homm3_re_object_type_id", -1)) != wanted_type_id) {
+						continue;
+					}
+					H3ObjectRow row;
+					row.source_line = int32_t(item.get("homm3_re_object_source_row", index + 1));
+					row.def_name = String(item.get("homm3_re_object_def_ref", "")) + String("#repo-local-reward-proxy");
+					row.passability_mask = one_cell_passability_mask;
+					row.action_mask = one_cell_action_mask;
+					row.terrain_mask_primary = "111111111";
+					row.terrain_mask_secondary = "111111111";
+					row.type_id = wanted_type_id;
+					row.subtype_id = int32_t(item.get("homm3_re_object_subtype", 0));
+					rows.push_back(row);
+				}
+			}
+		}
+		load_status["ok"] = !rows.empty();
+		load_status["status"] = rows.empty() ? String("missing_object_catalog_and_no_repo_local_proxy_rows") : String("loaded_repo_local_structural_proxy_rows");
+		load_status["matched_type_id"] = wanted_type_id;
+		load_status["matched_row_count"] = int32_t(rows.size());
 		return rows;
 	}
 	Dictionary catalog = load_status.get("data", Dictionary());
@@ -1434,9 +1534,10 @@ Dictionary binary_verification() {
 	report["expected_sha256"] = BINARY_SHA256;
 	report["expected_size_bytes"] = BINARY_SIZE_BYTES;
 	report["format"] = "PE32 GUI Intel 80386 Windows executable";
-	if (!FileAccess::file_exists(BINARY_PATH)) {
+	if (!external_h3maped_file_exists(BINARY_PATH)) {
 		report["ok"] = false;
-		report["status"] = "missing";
+		report["external_evidence_disabled"] = external_h3maped_evidence_disabled();
+		report["status"] = external_h3maped_evidence_disabled() ? String("external_evidence_disabled") : String("missing");
 		return report;
 	}
 	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
@@ -3955,6 +4056,95 @@ std::vector<TerrainVisualRow> decode_terrain_visual_rows(Ref<FileAccess> &file, 
 	return rows;
 }
 
+static constexpr TerrainVisualRow H3_TERRAIN_VISUAL_NORMAL_ROWS[] = {
+	{ 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 },
+	{ 4, 0, 0 }, { 4, 0, 0 }, { 4, 0, 0 }, { 4, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 },
+	{ 6, 0, 0 }, { 6, 0, 0 }, { 7, 0, 0 }, { 7, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 },
+	{ 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 },
+	{ 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 12, 0, 0 }, { 12, 0, 0 }, { 13, 0, 0 }, { 13, 0, 0 },
+	{ 14, 0, 0 }, { 15, 0, 0 }, { 16, 0, 0 }, { 17, 0, 0 }, { 18, 0, 0 }, { 19, 0, 0 }, { 20, 0, 0 }, { 21, 0, 0 },
+	{ 22, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 0, 0, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+	{ 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+	{ 0, 1, 0 }, { 23, 0, 0 }, { 24, 0, 0 }, { 25, 0, 0 }, { 26, 0, 0 }, { 28, 0, 0 }, { 27, 0, 0 },
+};
+
+static constexpr TerrainVisualRow H3_TERRAIN_VISUAL_DIRT_ROWS[] = {
+	{ 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 },
+	{ 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 },
+	{ 12, 0, 0 }, { 12, 0, 0 }, { 13, 0, 0 }, { 13, 0, 0 }, { 16, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+	{ 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+	{ 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 24, 0, 0 },
+};
+
+static constexpr TerrainVisualRow H3_TERRAIN_VISUAL_SAND_ROWS[] = {
+	{ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+	{ 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 },
+};
+
+static constexpr TerrainVisualRow H3_TERRAIN_VISUAL_WATER_ROWS[] = {
+	{ 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 8, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 }, { 9, 0, 0 },
+	{ 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 }, { 11, 0, 0 },
+	{ 12, 0, 0 }, { 12, 0, 0 }, { 13, 0, 0 }, { 13, 0, 0 }, { 16, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 0, 0, 0 },
+};
+
+static constexpr TerrainVisualRow H3_TERRAIN_VISUAL_ROCK_ROWS[] = {
+	{ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+	{ 8, 0, 0 }, { 8, 0, 0 }, { 8, 1, 0 }, { 8, 1, 0 }, { 8, 0, 1 }, { 8, 0, 1 }, { 8, 1, 1 }, { 8, 1, 1 },
+	{ 9, 0, 0 }, { 9, 0, 0 }, { 9, 1, 0 }, { 9, 1, 0 }, { 10, 0, 0 }, { 10, 0, 0 }, { 10, 0, 1 }, { 10, 0, 1 },
+	{ 11, 0, 0 }, { 11, 0, 0 }, { 11, 1, 0 }, { 11, 1, 0 }, { 11, 0, 1 }, { 11, 0, 1 }, { 11, 1, 1 }, { 11, 1, 1 },
+	{ 12, 0, 0 }, { 12, 0, 0 }, { 12, 1, 0 }, { 12, 1, 0 }, { 12, 0, 1 }, { 12, 0, 1 }, { 12, 1, 1 }, { 12, 1, 1 },
+	{ 13, 0, 0 }, { 13, 0, 0 }, { 13, 1, 0 }, { 13, 1, 0 }, { 13, 0, 1 }, { 13, 0, 1 }, { 13, 1, 1 }, { 13, 1, 1 },
+};
+
+std::vector<TerrainVisualRow> terrain_visual_rows_from_embedded(const TerrainVisualRow *rows, size_t row_count) {
+	return std::vector<TerrainVisualRow>(rows, rows + row_count);
+}
+
+bool load_terrain_visual_grid_tables(TerrainVisualGridTables &tables, Dictionary *load_status = nullptr) {
+	if (load_status != nullptr) {
+		(*load_status)["binary_path"] = BINARY_PATH;
+		(*load_status)["external_evidence_disabled"] = external_h3maped_evidence_disabled();
+	}
+	if (external_h3maped_file_exists(BINARY_PATH)) {
+		Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
+		if (!file.is_null() && file->is_open()) {
+			tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
+			tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
+			tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
+			tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
+			tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+			const bool decoded = tables.dirt_rows.size() == 46 && tables.sand_rows.size() == 24 && tables.normal_rows.size() == 79 && tables.water_rows.size() == 33 && tables.rock_rows.size() == 48;
+			if (decoded) {
+				if (load_status != nullptr) {
+					(*load_status)["status"] = "decoded_from_h3maped_exe";
+					(*load_status)["source"] = "external_verified_development_evidence";
+				}
+				return true;
+			}
+			if (load_status != nullptr) {
+				(*load_status)["binary_decode_status"] = "visual_table_decode_failed";
+			}
+		} else if (load_status != nullptr) {
+			(*load_status)["binary_decode_status"] = "h3maped_exe_unreadable";
+		}
+	}
+	tables.dirt_rows = terrain_visual_rows_from_embedded(H3_TERRAIN_VISUAL_DIRT_ROWS, sizeof(H3_TERRAIN_VISUAL_DIRT_ROWS) / sizeof(H3_TERRAIN_VISUAL_DIRT_ROWS[0]));
+	tables.sand_rows = terrain_visual_rows_from_embedded(H3_TERRAIN_VISUAL_SAND_ROWS, sizeof(H3_TERRAIN_VISUAL_SAND_ROWS) / sizeof(H3_TERRAIN_VISUAL_SAND_ROWS[0]));
+	tables.normal_rows = terrain_visual_rows_from_embedded(H3_TERRAIN_VISUAL_NORMAL_ROWS, sizeof(H3_TERRAIN_VISUAL_NORMAL_ROWS) / sizeof(H3_TERRAIN_VISUAL_NORMAL_ROWS[0]));
+	tables.water_rows = terrain_visual_rows_from_embedded(H3_TERRAIN_VISUAL_WATER_ROWS, sizeof(H3_TERRAIN_VISUAL_WATER_ROWS) / sizeof(H3_TERRAIN_VISUAL_WATER_ROWS[0]));
+	tables.rock_rows = terrain_visual_rows_from_embedded(H3_TERRAIN_VISUAL_ROCK_ROWS, sizeof(H3_TERRAIN_VISUAL_ROCK_ROWS) / sizeof(H3_TERRAIN_VISUAL_ROCK_ROWS[0]));
+	if (load_status != nullptr) {
+		(*load_status)["status"] = "loaded_embedded_recovered_visual_tables";
+		(*load_status)["source"] = "compiled_recovered_h3maped_static_rows";
+	}
+	return true;
+}
+
 Dictionary terrain_visual_table_summary(const char *id, const char *terrain_ids, const char *address, int64_t table_va, int32_t expected_row_count, const std::vector<TerrainVisualRow> &rows) {
 	Dictionary summary;
 	summary["id"] = id;
@@ -4116,21 +4306,14 @@ Dictionary terrainplacement_visual_tables_phase(const Dictionary &terrain_cell_p
 	if (String(terrain_cell_phase.get("status", "")) != "active_strict_executable_port") {
 		return phase;
 	}
-	if (!FileAccess::file_exists(BINARY_PATH)) {
-		phase["status"] = "h3maped_exe_missing";
-		return phase;
-	}
-	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
-	if (file.is_null() || !file->is_open()) {
-		phase["status"] = "h3maped_exe_unreadable";
-		return phase;
-	}
-
-	const std::vector<TerrainVisualRow> normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
-	const std::vector<TerrainVisualRow> dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
-	const std::vector<TerrainVisualRow> sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
-	const std::vector<TerrainVisualRow> water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
-	const std::vector<TerrainVisualRow> rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+	TerrainVisualGridTables tables;
+	Dictionary visual_table_load;
+	load_terrain_visual_grid_tables(tables, &visual_table_load);
+	const std::vector<TerrainVisualRow> &normal_rows = tables.normal_rows;
+	const std::vector<TerrainVisualRow> &dirt_rows = tables.dirt_rows;
+	const std::vector<TerrainVisualRow> &sand_rows = tables.sand_rows;
+	const std::vector<TerrainVisualRow> &water_rows = tables.water_rows;
+	const std::vector<TerrainVisualRow> &rock_rows = tables.rock_rows;
 
 	Array table_summaries;
 	table_summaries.append(terrain_visual_table_summary("normal_land_terrain_ids_2_7", "2,3,4,5,6,7", "0x543108", 0x543108, 79, normal_rows));
@@ -4177,7 +4360,8 @@ Dictionary terrainplacement_visual_tables_phase(const Dictionary &terrain_cell_p
 	scratch_samples.append(terrain_scratch_write_sample("rock_class_8_row_11_cleared_flags", 9, 11, 0, 0));
 
 	phase["status"] = decoded_total == 230 ? String("active_strict_executable_port") : String("visual_table_decode_failed");
-	phase["source"] = "h3maped 0x4bcff5 TerrainPlacement visual table/toolkit boundary decoded directly from /root/Downloads/h3maped.exe; no hashed terrain art approximation and no public package adoption";
+	phase["source"] = "h3maped 0x4bcff5 TerrainPlacement visual table/toolkit boundary from recovered static rows; no hashed terrain art approximation and no public package adoption";
+	phase["visual_table_load"] = visual_table_load;
 	phase["strict_port_scope"] = "static TerrainPlacement visual row/toolkit metadata and bounded selector/scratch samples only; no live repaint feedback, map cells, package tiles, or public output";
 	phase["table_count"] = table_summaries.size();
 	phase["visual_table_count"] = table_summaries.size();
@@ -4767,22 +4951,11 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	}
 
 	TerrainVisualGridTables tables;
-	if (!FileAccess::file_exists(BINARY_PATH)) {
-		phase["status"] = "h3maped_exe_missing";
-		return phase;
-	}
-	Ref<FileAccess> file = FileAccess::open(BINARY_PATH, FileAccess::READ);
-	if (file.is_null() || !file->is_open()) {
-		phase["status"] = "h3maped_exe_unreadable";
-		return phase;
-	}
-	tables.dirt_rows = decode_terrain_visual_rows(file, 0x543380, 46);
-	tables.sand_rows = decode_terrain_visual_rows(file, 0x5434f0, 24);
-	tables.normal_rows = decode_terrain_visual_rows(file, 0x543108, 79);
-	tables.water_rows = decode_terrain_visual_rows(file, 0x5435b0, 33);
-	tables.rock_rows = decode_terrain_visual_rows(file, 0x542f88, 48);
+	Dictionary visual_table_load;
+	load_terrain_visual_grid_tables(tables, &visual_table_load);
 	const bool visual_tables_decoded = tables.dirt_rows.size() == 46 && tables.sand_rows.size() == 24 && tables.normal_rows.size() == 79 && tables.water_rows.size() == 33 && tables.rock_rows.size() == 48;
 	phase["visual_tables_decoded"] = visual_tables_decoded;
+	phase["visual_table_load"] = visual_table_load;
 	if (!visual_tables_decoded) {
 		phase["status"] = "visual_table_decode_failed";
 		return phase;
@@ -7696,14 +7869,14 @@ Dictionary h3_single_level_monster_candidate_summary() {
 	boundary["extended_monster_loop_materialized"] = false;
 
 	Array sample_records;
-	if (!FileAccess::file_exists(CRTRAITS_SOURCE_PATH)) {
-		boundary["load_status"] = "missing_crtraits_source";
+	if (!external_h3maped_file_exists(CRTRAITS_SOURCE_PATH)) {
+		boundary["load_status"] = external_h3maped_evidence_disabled() ? String("external_evidence_disabled") : String("missing_crtraits_source");
 		boundary["candidate_record_count"] = 0;
 		boundary["records_sample"] = sample_records;
 		return boundary;
 	}
-	if (!FileAccess::file_exists(BINARY_PATH)) {
-		boundary["load_status"] = "missing_h3maped_binary";
+	if (!external_h3maped_file_exists(BINARY_PATH)) {
+		boundary["load_status"] = external_h3maped_evidence_disabled() ? String("external_evidence_disabled") : String("missing_h3maped_binary");
 		boundary["candidate_record_count"] = 0;
 		boundary["records_sample"] = sample_records;
 		return boundary;
