@@ -2201,7 +2201,10 @@ static func _random_map_retry_attempt_config(input_config: Dictionary, attempt_i
 	if attempt_index > 0 and retry_policy.get("fallback_config", {}) is Dictionary and not retry_policy.get("fallback_config", {}).is_empty():
 		config = retry_policy.get("fallback_config", {}).duplicate(true)
 	if attempt_index > 0 and String(retry_policy.get("mode", "")).find("seed_salt") >= 0:
-		config["seed"] = "%s:retry_%d" % [String(config.get("seed", "0")), attempt_index]
+		var salted_seed := "%s:retry_%d" % [String(config.get("seed", "0")), attempt_index]
+		var seed_record := random_map_h3maped_seed_record(salted_seed)
+		config["seed"] = String(seed_record.get("normalized_seed", salted_seed))
+		config["seed_identity"] = seed_record
 	return config
 
 static func _random_map_setup_attempt_record(
