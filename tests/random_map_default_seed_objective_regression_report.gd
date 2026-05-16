@@ -120,8 +120,11 @@ func _assert_explicit_seed_determinism() -> Dictionary:
 		return {}
 	var first_signature := _materialized_signature(first)
 	var second_signature := _materialized_signature(second)
-	if String(first.get("normalized_seed", "")) != seed or String(second.get("normalized_seed", "")) != seed:
-		_fail("Explicit seed was not preserved as the effective seed.")
+	if String(first.get("seed_input", "")) != seed or String(second.get("seed_input", "")) != seed:
+		_fail("Explicit seed input was not preserved.")
+		return {}
+	if String(first.get("normalized_seed", "")) == "" or String(first.get("normalized_seed", "")) != String(second.get("normalized_seed", "")):
+		_fail("Explicit seed did not normalize deterministically.")
 		return {}
 	if first_signature == "" or first_signature != second_signature:
 		_fail("Explicit same seed did not reproduce the same generated topology signature.")
@@ -192,7 +195,7 @@ func _materialized_signature(setup: Dictionary) -> String:
 	return String(setup.get("generated_identity", {}).get("materialized_map_signature", ""))
 
 func _objective_ids(session: SessionStateStoreScript.SessionData) -> Array:
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := ScenarioRulesScript.scenario_record_for_session(session)
 	var objectives: Dictionary = scenario.get("objectives", {}) if scenario.get("objectives", {}) is Dictionary else {}
 	var ids := []
 	for bucket in ["victory", "defeat"]:

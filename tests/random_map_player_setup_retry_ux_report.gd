@@ -63,7 +63,7 @@ func _run() -> void:
 		"normal",
 		{"max_attempts": 1, "mode": "none"}
 	)
-	if not _assert_legacy_compact_launch_blocked(legacy_compact_setup):
+	if not _assert_legacy_compact_launch_normalized(legacy_compact_setup):
 		return
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
@@ -313,20 +313,17 @@ func _assert_medium_islands_player_surface(snapshot: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_legacy_compact_launch_blocked(setup: Dictionary) -> bool:
-	if bool(setup.get("ok", false)):
-		_fail("Legacy compact generated setup unexpectedly produced a launchable package: %s" % JSON.stringify(setup))
+func _assert_legacy_compact_launch_normalized(setup: Dictionary) -> bool:
+	if not bool(setup.get("ok", false)):
+		_fail("Public Small/Land setup did not override stale compact template/profile into native h3maped generation: %s" % JSON.stringify(setup))
 		return false
-	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
-	if String(setup.get("error_code", validation.get("error_code", ""))) != "native_rmg_legacy_compact_launch_blocked":
-		_fail("Legacy compact setup did not report the compact launch blocker: %s" % JSON.stringify(setup))
+	if not String(setup.get("template_id", "")).begins_with("h3maped_template_"):
+		_fail("Public Small/Land setup did not resolve an h3maped template after stale compact override: %s" % JSON.stringify(setup))
 		return false
-	var failures: Array = validation.get("failures", []) if validation.get("failures", []) is Array else []
-	for failure in failures:
-		if failure is Dictionary and String(failure.get("code", "")) == "native_rmg_legacy_compact_launch_blocked":
-			return true
-	_fail("Legacy compact setup did not preserve failure evidence: %s" % JSON.stringify(validation))
-	return false
+	if String(setup.get("profile_id", "")) != "h3maped_exe_rng_profile":
+		_fail("Public Small/Land setup did not resolve the h3maped executable profile after stale compact override: %s" % JSON.stringify(setup))
+		return false
+	return true
 
 func _assert_session_boundary(launch_result: Dictionary) -> bool:
 	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
