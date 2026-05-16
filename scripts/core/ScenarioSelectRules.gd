@@ -198,7 +198,7 @@ const RANDOM_MAP_LEVEL_OPTIONS := [
 	{"id": "surface_underground", "label": "Surface + Underground (2 Levels)", "level_count": 2, "underground": true},
 ]
 const RANDOM_MAP_PLAYER_RETRY_POLICY := {
-	"max_attempts": 2,
+	"max_attempts": 5,
 	"mode": "seed_salt",
 }
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT := "size_default"
