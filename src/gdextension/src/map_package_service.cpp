@@ -9826,10 +9826,9 @@ Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normal
 	report["schema_version"] = 1;
 	report["status"] = supported_scope ? (accepted_templates.size() > 0 ? String("h3maped_small_template_vector_recovered") : String("h3maped_small_no_accepted_templates")) : String("unsupported_scope");
 	report["scope"] = "small_36x36_surface_land_only";
-	report["h3maped_binary_path"] = "/root/Downloads/h3maped.exe";
-	report["h3maped_binary_sha256"] = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37";
-	report["spec_path"] = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
-	report["catalog_path"] = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
+	report["compiled_h3maped_data_source"] = "compiled:h3maped_small_rmg_embedded_data";
+	report["h3maped_reference_sha256"] = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37";
+	report["catalog_source"] = "compiled:h3maped_small_rmg_embedded_data/random_map_template_catalog_json";
 	report["template_loader_address"] = "0x49f0cd";
 	report["main_phase_runner_address"] = "0x4ac552";
 	report["rng_function_address"] = "0x4e7276";
