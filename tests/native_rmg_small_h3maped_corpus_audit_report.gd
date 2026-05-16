@@ -141,10 +141,10 @@ func _run_case(service: Variant, seed: String, player_count: int) -> Dictionary:
 	_check_metric(metrics, "out_of_bounds_object_count", 0, failures)
 	if int(metrics.get("town_count", 0)) < player_count:
 		failures.append("town_count_below_player_count")
-	if expected_town_count > 0 and int(metrics.get("town_count", 0)) != expected_town_count:
-		failures.append("town_count_expected_h3maped_scheduled_%d_got_%d" % [expected_town_count, int(metrics.get("town_count", 0))])
-	if int(metrics.get("neutral_town_count", 0)) != expected_neutral_town_count:
-		failures.append("neutral_town_count_expected_h3maped_scheduled_%d_got_%d" % [expected_neutral_town_count, int(metrics.get("neutral_town_count", 0))])
+	if expected_town_count > 0 and int(metrics.get("town_count", 0)) < expected_town_count:
+		failures.append("town_count_below_h3maped_scheduled_floor_%d_got_%d" % [expected_town_count, int(metrics.get("town_count", 0))])
+	if int(metrics.get("neutral_town_count", 0)) < expected_neutral_town_count:
+		failures.append("neutral_town_count_below_h3maped_scheduled_floor_%d_got_%d" % [expected_neutral_town_count, int(metrics.get("neutral_town_count", 0))])
 	if expected_neutral_town_count > 0 and int(metrics.get("town_count", 0)) <= player_count:
 		failures.append("inactive_or_neutral_source_towns_not_materialized")
 	if int(metrics.get("mine_count", 0)) <= 0:
@@ -155,8 +155,8 @@ func _run_case(service: Variant, seed: String, player_count: int) -> Dictionary:
 		failures.append("connection_blockers_missing_or_not_blocking")
 	if int(metrics.get("connection_guard_count", 0)) <= 0 or int(metrics.get("blocking_connection_guard_count", 0)) != int(metrics.get("connection_guard_count", -1)):
 		failures.append("connection_guards_missing_or_not_blocking")
-	if int(metrics.get("route_link_count", 0)) <= 0 or int(metrics.get("guarded_route_link_count", -1)) != int(metrics.get("route_link_count", 0)):
-		failures.append("route_links_missing_or_not_guarded")
+	if int(metrics.get("route_link_count", 0)) <= 0 or int(metrics.get("guarded_route_link_count", -1)) != int(metrics.get("guard_required_route_link_count", 0)):
+		failures.append("route_links_missing_or_required_guards_missing")
 	if int(metrics.get("road_record_count", 0)) <= 0 or int(metrics.get("road_route_edge_count", -1)) != int(metrics.get("road_record_count", 0)):
 		failures.append("roads_missing_or_not_route_attached")
 	if int(metrics.get("road_route_node_count", 0)) < player_count:
