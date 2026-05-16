@@ -4569,6 +4569,8 @@ nonGoals:
 - No claim of binary-compatible `.h3m` output.
 - No generated map package clutter committed under runtime maps.
 - No save-version bump or campaign adoption until a child adoption slice explicitly gates it.
+currentEvidence:
+- 2026-05-16: strict Small-land validator-blocked root causes were fixed in the active h3maped Small path: `0x4a6cf2`-style connection fallback for missing blockers/guards, requested-player owner-mask template eligibility, and guard-required route-link validation for zero-value/wide-suppressed links. Linux and Windows GDExtension libraries were rebuilt, the exact failed 2p Small seed `1270881600` is covered by the public template matrix report, and the skirmish menu 2p Small land launch path validates again. Remaining RMG reset work is diagnostic recalibration for the deep port-boundary report and broader unsupported-mode parity, not a fallback to the archived generator.
 
 id: `native-rmg-homm3-spec-gap-audit-10184`
 phase: `phase-3-homm3-style-rmg-rework`

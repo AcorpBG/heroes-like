@@ -10,7 +10,7 @@ func _run() -> void:
 		_fail("MapPackageService native class is not available.")
 		return
 	var service: Variant = ClassDB.instantiate("MapPackageService")
-	var supported_config := _small_land_config("1", 3)
+	var supported_config := _small_land_config("11", 3)
 	var identity: Dictionary = service.random_map_config_identity(supported_config)
 	var normalized: Dictionary = identity.get("normalized_config", {}) if identity.get("normalized_config", {}) is Dictionary else {}
 	var selection: Dictionary = normalized.get("h3maped_template_selection", {}) if normalized.get("h3maped_template_selection", {}) is Dictionary else {}

@@ -720,6 +720,23 @@ Dictionary template_record(const TemplateEvidence &candidate) {
 	return item;
 }
 
+int32_t count_owner_mask_bits(uint8_t mask) {
+	int32_t count = 0;
+	for (int32_t index = 0; index < 8; ++index) {
+		if ((mask & uint8_t(1U << uint32_t(index))) != 0) {
+			count += 1;
+		}
+	}
+	return count;
+}
+
+bool template_record_supports_requested_players(const Dictionary &record, int32_t humans, int32_t players) {
+	const uint8_t human_mask = uint8_t(int32_t(record.get("human_capable_source_owner_mask", 0)) & 0xff);
+	const uint8_t player_mask = uint8_t(int32_t(record.get("player_capable_source_owner_mask", 0)) & 0xff);
+	return count_owner_mask_bits(human_mask) >= humans
+			&& count_owner_mask_bits(player_mask) >= players;
+}
+
 int32_t h3maped_imported_source_owner_index(const Dictionary &zone) {
 	Variant ownership_value = zone.get("ownership", Variant());
 	if (ownership_value.get_type() == Variant::DICTIONARY) {
@@ -1348,6 +1365,9 @@ Array accepted_templates(const Dictionary &normalized_config) {
 			if (int32_t(record.get("human_capable_source_owner_mask", 0)) == 0 || int32_t(record.get("player_capable_source_owner_mask", 0)) == 0) {
 				continue;
 			}
+			if (!template_record_supports_requested_players(record, humans, players)) {
+				continue;
+			}
 			accepted.append(record);
 		}
 		if (!accepted.is_empty()) {
@@ -1383,6 +1403,9 @@ Array accepted_templates(const Dictionary &normalized_config) {
 			if (int32_t(record.get("human_capable_source_owner_mask", 0)) == 0 || int32_t(record.get("player_capable_source_owner_mask", 0)) == 0) {
 				continue;
 			}
+			if (!template_record_supports_requested_players(record, humans, players)) {
+				continue;
+			}
 			accepted.append(record);
 		}
 		if (!accepted.is_empty()) {
@@ -1396,7 +1419,11 @@ Array accepted_templates(const Dictionary &normalized_config) {
 		if (humans < candidate.min_humans || humans > candidate.max_humans || players < candidate.min_total_players || players > candidate.max_total_players || players < humans) {
 			continue;
 		}
-		accepted.append(template_record(candidate));
+		Dictionary record = template_record(candidate);
+		if (!template_record_supports_requested_players(record, humans, players)) {
+			continue;
+		}
+		accepted.append(record);
 	}
 	return accepted;
 }
@@ -7850,7 +7877,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
 	const int32_t map_level_count = std::max(1, level_count(normalized_config));
-	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t expected_cell_count = level_tile_count * map_level_count;
 	const bool grid_available = map_width > 0
 			&& map_height > 0
 			&& expected_cell_count == int32_t(zone_words.size())
@@ -9536,7 +9564,8 @@ Dictionary roads_rivers_phase(const Dictionary &normalized_config, const Diction
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
 	const int32_t map_level_count = std::max(1, level_count(normalized_config));
-	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t expected_cell_count = level_tile_count * map_level_count;
 	const bool grid_available = map_width > 0
 			&& map_height > 0
 			&& expected_cell_count == int32_t(zone_words.size())
@@ -9891,7 +9920,8 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
 	const int32_t map_level_count = std::max(1, level_count(normalized_config));
-	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t expected_cell_count = level_tile_count * map_level_count;
 	const bool grid_available = map_width > 0
 			&& map_height > 0
 			&& expected_cell_count == int32_t(zone_words.size())
@@ -9930,6 +9960,10 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	int32_t fallback_4a7605_selected_count = 0;
 	int32_t fallback_4a7605_candidate_total = 0;
 	Array fallback_4a7605_records;
+	int32_t fallback_4a6cf2_attempt_count = 0;
+	int32_t fallback_4a6cf2_selected_count = 0;
+	int32_t fallback_4a6cf2_candidate_total = 0;
+	Array fallback_4a6cf2_records;
 
 	auto append_runtime_zone_relation_0x49b3fb = [&](int32_t runtime_zone, int32_t neighbor_runtime_zone, const Dictionary &seed) {
 		if (runtime_zone < 0 || neighbor_runtime_zone < 0) {
@@ -10071,6 +10105,83 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 		out_selected_index = out_rng_value % int32_t(candidates.size());
 		out_flat = candidates[size_t(out_selected_index)];
 		return true;
+	};
+	auto zone_word_matches_runtime = [](uint32_t zone_word, int32_t runtime_owner, int32_t source_zone_id) {
+		const uint32_t masked = zone_word & H3MAPED_UNASSIGNED_ZONE_WORD;
+		if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			return false;
+		}
+		const int32_t word_zone_id = int32_t((masked >> 16U) & 0xffU);
+		return (source_zone_id > 0 && word_zone_id == source_zone_id)
+				|| (runtime_owner >= 0 && word_zone_id == runtime_owner)
+				|| (runtime_owner >= 0 && word_zone_id == runtime_owner + 1);
+	};
+	auto select_zone_pair_4a6cf2 = [&](int32_t runtime_a, int32_t runtime_b, int32_t source_zone_a, int32_t source_zone_b, const PackedInt32Array &occupied_grid, int32_t &out_a_flat, int32_t &out_b_flat, int32_t &out_a_candidate_count, int32_t &out_b_candidate_count, int32_t &out_pair_score) {
+		std::vector<int32_t> a_candidates;
+		std::vector<int32_t> b_candidates;
+		if (grid_available && int32_t(zone_words.size()) == expected_cell_count && runtime_a >= 0 && runtime_b >= 0) {
+			for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+				if (live_terrain_code[size_t(flat)] == 8
+						|| live_terrain_code[size_t(flat)] == 9
+						|| int32_t(occupied_grid[flat]) != 0) {
+					continue;
+				}
+				const uint32_t word = zone_words[size_t(flat)];
+				if (zone_word_matches_runtime(word, runtime_a, source_zone_a)) {
+					a_candidates.push_back(flat);
+				}
+				if (zone_word_matches_runtime(word, runtime_b, source_zone_b)) {
+					b_candidates.push_back(flat);
+				}
+			}
+		}
+		out_a_candidate_count = int32_t(a_candidates.size());
+		out_b_candidate_count = int32_t(b_candidates.size());
+		out_a_flat = -1;
+		out_b_flat = -1;
+		out_pair_score = -1;
+		if (a_candidates.empty() || b_candidates.empty()) {
+			return false;
+		}
+		int32_t best_score = 0x7fffffff;
+		for (const int32_t a_flat : a_candidates) {
+			const int32_t a_level = a_flat / level_tile_count;
+			const int32_t a_remainder = a_flat % level_tile_count;
+			const int32_t a_x = a_remainder % map_width;
+			const int32_t a_y = a_remainder / map_width;
+			for (const int32_t b_flat : b_candidates) {
+				const int32_t b_level = b_flat / level_tile_count;
+				if (a_level != b_level) {
+					continue;
+				}
+				const int32_t b_remainder = b_flat % level_tile_count;
+				const int32_t b_x = b_remainder % map_width;
+				const int32_t b_y = b_remainder / map_width;
+				const int32_t dx = b_x - a_x;
+				const int32_t dy = b_y - a_y;
+				const int32_t score = dx * dx + dy * dy;
+				if (score < best_score) {
+					best_score = score;
+					out_a_flat = a_flat;
+					out_b_flat = b_flat;
+				}
+			}
+		}
+		out_pair_score = best_score == 0x7fffffff ? -1 : best_score;
+		return out_a_flat >= 0 && out_b_flat >= 0;
+	};
+	auto connection_direction_between = [&](int32_t a_flat, int32_t b_flat) {
+		if (a_flat < 0 || b_flat < 0) {
+			return -1;
+		}
+		const int32_t a_remainder = a_flat % level_tile_count;
+		const int32_t b_remainder = b_flat % level_tile_count;
+		const int32_t dx = (b_remainder % map_width) - (a_remainder % map_width);
+		const int32_t dy = (b_remainder / map_width) - (a_remainder / map_width);
+		if (std::abs(dx) >= std::abs(dy)) {
+			return dx >= 0 ? 2 : 6;
+		}
+		return dy >= 0 ? 4 : 0;
 	};
 
 	struct QueueNode {
@@ -10346,6 +10457,59 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 		record["best_path_tie_candidate_count"] = int32_t(best_candidates.size());
 		record["materializes_public_output"] = false;
 		if (best_candidates.empty()) {
+			const int32_t source_zone_a = int32_t(seed.get("source_zone_a", runtime_a + 1));
+			const int32_t source_zone_b = int32_t(seed.get("source_zone_b", runtime_b + 1));
+			int32_t zone_pair_a_flat = -1;
+			int32_t zone_pair_b_flat = -1;
+			int32_t zone_pair_a_candidate_count = 0;
+			int32_t zone_pair_b_candidate_count = 0;
+			int32_t zone_pair_score = -1;
+			fallback_4a6cf2_attempt_count += 1;
+			const bool zone_pair_selected = select_zone_pair_4a6cf2(runtime_a, runtime_b, source_zone_a, source_zone_b, private_blocker_u8, zone_pair_a_flat, zone_pair_b_flat, zone_pair_a_candidate_count, zone_pair_b_candidate_count, zone_pair_score);
+			fallback_4a6cf2_candidate_total += zone_pair_a_candidate_count + zone_pair_b_candidate_count;
+			Dictionary zone_pair_record;
+			zone_pair_record["connection_id"] = connection_id;
+			zone_pair_record["link_index"] = seed.get("link_index", link_index);
+			zone_pair_record["helper"] = "0x4a6cf2";
+			zone_pair_record["selection_source"] = "zone_word_overlap_rectangle_connector_fallback";
+			zone_pair_record["runtime_zone_a"] = runtime_a;
+			zone_pair_record["runtime_zone_b"] = runtime_b;
+			zone_pair_record["source_zone_a"] = source_zone_a;
+			zone_pair_record["source_zone_b"] = source_zone_b;
+			zone_pair_record["endpoint_a_candidate_count"] = zone_pair_a_candidate_count;
+			zone_pair_record["endpoint_b_candidate_count"] = zone_pair_b_candidate_count;
+			zone_pair_record["best_pair_score"] = zone_pair_score;
+			if (zone_pair_selected) {
+				fallback_4a6cf2_selected_count += 1;
+				const int32_t fallback_direction = connection_direction_between(zone_pair_a_flat, zone_pair_b_flat);
+				zone_pair_record["status"] = "0x4a6cf2_zone_pair_endpoint_objects_selected_private";
+				zone_pair_record["endpoint_a_flat_cell_index"] = zone_pair_a_flat;
+				zone_pair_record["endpoint_b_flat_cell_index"] = zone_pair_b_flat;
+				zone_pair_record["direction_index_0x5a2658"] = fallback_direction;
+				fallback_4a6cf2_records.append(zone_pair_record);
+				record["status"] = "0x4a6cf2_zone_pair_endpoint_materialized_private";
+				record["fallback_status"] = "0x4a6cf2_zone_pair_endpoint_objects_selected_private";
+				record["geometry_success_helper"] = "0x4a6cf2";
+				record["endpoint_coordinate_materialized"] = true;
+				record["selected_endpoint_side_a_flat_cell_index"] = zone_pair_a_flat;
+				record["selected_endpoint_side_b_flat_cell_index"] = zone_pair_b_flat;
+				record["selected_zone_pair_score"] = zone_pair_score;
+				record["normal_guard_object_helper_address"] = scaled_guard_value > 0 ? String("0x4a5e03") : String("");
+				record["normal_guard_object_status"] = scaled_guard_value > 0 ? String("0x4a5e03_private_guard_record_materialized") : (wide ? String("suppressed_by_link_plus_0x08_wide") : String("no_scaled_guard_object"));
+				record["border_guard_status"] = border_guard ? String("0x4a5e73_0x4a5a23_private_marker_cells_materialized") : String("not_a_border_guard_link");
+				append_private_cell(private_blocker_records, private_blocker_u8, zone_pair_a_flat, "connection_blocker_0x4a6cf2_endpoint_a", connection_id, runtime_a, runtime_b, scaled_guard_value, connection_blocker_body_tiles(zone_pair_a_flat, fallback_direction));
+				append_private_cell(private_blocker_records, private_blocker_u8, zone_pair_b_flat, "connection_blocker_0x4a6cf2_endpoint_b", connection_id, runtime_a, runtime_b, scaled_guard_value, connection_blocker_body_tiles(zone_pair_b_flat, fallback_direction));
+				materialized_blocker_cell_count += 2;
+				if (scaled_guard_value > 0) {
+					append_private_cell(private_guard_records, private_guard_u8, zone_pair_a_flat, "connection_guard_0x4a5e03_0x4a6cf2_endpoint_a", connection_id, runtime_a, runtime_b, scaled_guard_value, Array());
+					materialized_guard_count += 1;
+				}
+				materialized_connection_count += 1;
+				connection_records.append(record);
+				continue;
+			}
+			zone_pair_record["status"] = "0x4a6cf2_zone_pair_endpoint_selection_failed";
+			fallback_4a6cf2_records.append(zone_pair_record);
 			fallback_4a7605_attempt_count += 1;
 			Dictionary fallback_record;
 			fallback_record["connection_id"] = connection_id;
@@ -10479,7 +10643,7 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	dispatch_summary["rng_state_after_connection_dispatch_uint32"] = int64_t(rng.state);
 
 	phase["status"] = materialized_connection_count > 0 ? String("active_strict_private_connection_guards") : String("active_strict_connection_dispatch_no_geometry");
-	phase["source"] = "strict private 0x4a79a3 link post-processing over recovered link seeds: 0x4a79d8 transition-vector build from owner low/high channels, 0x4a61bc same-level endpoint selection, 0x4a65a5 guard value scaling, 0x4a5e03 private guard records, and 0x4a5e73/0x4a5a23 private border-marker cells where applicable";
+	phase["source"] = "strict private 0x4a79a3 link post-processing over recovered link seeds: 0x4a79d8 transition-vector build from owner low/high channels, 0x4a61bc same-level endpoint selection, 0x4a6cf2 zone-pair endpoint fallback, 0x4a7605/0x4a7312 second-pass endpoint fallback, 0x4a65a5 guard value scaling, 0x4a5e03 private guard records, and 0x4a5e73/0x4a5a23 private border-marker cells where applicable";
 	phase["grid_available"] = grid_available;
 	phase["link_seed_count"] = link_seeds.size();
 	phase["connection_records"] = connection_records;
@@ -10515,6 +10679,13 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	fallback_4a7605_report["candidate_total"] = fallback_4a7605_candidate_total;
 	fallback_4a7605_report["records"] = fallback_4a7605_records;
 	phase["fallback_4a7605"] = fallback_4a7605_report;
+	Dictionary fallback_4a6cf2_report;
+	fallback_4a6cf2_report["status"] = fallback_4a6cf2_attempt_count > 0 ? (fallback_4a6cf2_selected_count > 0 ? String("0x4a6cf2_private_zone_pair_endpoint_fallback_materialized") : String("0x4a6cf2_private_zone_pair_endpoint_fallback_failed")) : String("not_needed");
+	fallback_4a6cf2_report["attempt_count"] = fallback_4a6cf2_attempt_count;
+	fallback_4a6cf2_report["selected_count"] = fallback_4a6cf2_selected_count;
+	fallback_4a6cf2_report["candidate_total"] = fallback_4a6cf2_candidate_total;
+	fallback_4a6cf2_report["records"] = fallback_4a6cf2_records;
+	phase["fallback_4a6cf2"] = fallback_4a6cf2_report;
 	phase["transition_candidate_total"] = transition_candidate_total;
 	phase["runtime_zone_relation_vectors_0x49b3fb"] = runtime_zone_relation_vectors_0x49b3fb;
 	phase["runtime_zone_relation_record_count_0x49b3fb"] = runtime_zone_relation_record_count_0x49b3fb;
@@ -12622,6 +12793,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		link["runtime_zone_b"] = source.get("runtime_zone_b", -1);
 		link["raw_guard_value"] = source.get("raw_guard_value", 0);
 		link["normal_guard_scaled_value"] = source.get("normal_guard_scaled_value", 0);
+		link["wide"] = bool(source.get("wide", false));
+		link["border_guard"] = bool(source.get("border_guard", false));
+		link["normal_guard_required"] = int32_t(source.get("raw_guard_value", 0)) > 0 && !bool(source.get("wide", false));
+		link["normal_guard_suppressed_by_wide"] = bool(source.get("wide", false)) && int32_t(source.get("normal_guard_scaled_value", 0)) == 0;
 		link["guarded"] = int32_t(source.get("normal_guard_scaled_value", 0)) > 0;
 		link["geometry_success_helper"] = source.get("geometry_success_helper", "");
 		link["package_adoption_source"] = "h3maped_private_connection_record";
@@ -13114,6 +13289,9 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 
 	int32_t guarded_link_count = 0;
 	int32_t unguarded_link_count = 0;
+	int32_t wide_suppressed_link_count = 0;
+	int32_t guard_required_link_count = 0;
+	int32_t normal_guard_not_required_link_count = 0;
 	int32_t link_without_blocker_count = 0;
 	int32_t link_without_guard_count = 0;
 	for (int64_t index = 0; index < route_links.size(); ++index) {
@@ -13122,15 +13300,27 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 		}
 		Dictionary link = route_links[index];
 		const String connection_id = String(link.get("id", ""));
+		const bool wide_suppressed = bool(link.get("wide", false))
+				&& int32_t(link.get("raw_guard_value", 0)) > 0
+				&& int32_t(link.get("normal_guard_scaled_value", 0)) == 0;
+		const bool normal_guard_required = int32_t(link.get("raw_guard_value", 0)) > 0
+				&& !bool(link.get("wide", false));
 		if (bool(link.get("guarded", false)) && int32_t(link.get("normal_guard_scaled_value", 0)) > 0) {
 			guarded_link_count += 1;
+			guard_required_link_count += 1;
+		} else if (wide_suppressed) {
+			wide_suppressed_link_count += 1;
+			normal_guard_not_required_link_count += 1;
+		} else if (!normal_guard_required) {
+			normal_guard_not_required_link_count += 1;
 		} else {
 			unguarded_link_count += 1;
+			guard_required_link_count += 1;
 		}
 		if (int32_t(blocker_count_by_connection.get(connection_id, 0)) <= 0) {
 			link_without_blocker_count += 1;
 		}
-		if (int32_t(guard_count_by_connection.get(connection_id, 0)) <= 0) {
+		if (normal_guard_required && int32_t(guard_count_by_connection.get(connection_id, 0)) <= 0) {
 			link_without_guard_count += 1;
 		}
 	}
@@ -13164,7 +13354,10 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	metrics["connection_guard_count"] = guard_count;
 	metrics["blocking_connection_guard_count"] = blocking_guard_count;
 	metrics["route_link_count"] = route_links.size();
+	metrics["guard_required_route_link_count"] = guard_required_link_count;
+	metrics["normal_guard_not_required_route_link_count"] = normal_guard_not_required_link_count;
 	metrics["guarded_route_link_count"] = guarded_link_count;
+	metrics["wide_suppressed_route_link_count"] = wide_suppressed_link_count;
 	metrics["unguarded_route_link_count"] = unguarded_link_count;
 	metrics["route_link_without_blocker_count"] = link_without_blocker_count;
 	metrics["route_link_without_guard_count"] = link_without_guard_count;
