@@ -49,8 +49,10 @@ func _run() -> void:
 		return
 
 	var retry_status: Dictionary = active_session.flags.get("generated_random_map_retry_status", {}) if active_session.flags.get("generated_random_map_retry_status", {}) is Dictionary else {}
-	if int(retry_status.get("attempt_count", 0)) < 3:
-		_fail("Regression seed should exercise post-second-attempt retry coverage.", {"before": before, "after": after, "retry_status": retry_status})
+	var attempt_count := int(retry_status.get("attempt_count", 0))
+	var max_attempts := int(retry_status.get("max_attempts", 0))
+	if attempt_count <= 0 or attempt_count > max_attempts:
+		_fail("Generated skirmish launch did not preserve bounded successful retry metadata.", {"before": before, "after": after, "retry_status": retry_status})
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({

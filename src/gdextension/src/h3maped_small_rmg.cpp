@@ -592,6 +592,15 @@ constexpr TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, "", 0x3f, 0x7f },
 };
 
+bool strict_small_land_public_template_evidence_id(const String &template_id) {
+	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
+		if (template_id == String(candidate.id)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 constexpr const char *H3MAPED_ALLOWED_MAIN_TOWNS[] = {
 	"castle",
 	"rampart",
@@ -1333,6 +1342,9 @@ Array accepted_templates(const Dictionary &normalized_config) {
 				continue;
 			}
 			Dictionary record = template_record_from_imported_catalog(source, int32_t(template_index));
+			if (!strict_small_land_public_template_evidence_id(String(record.get("id", "")))) {
+				continue;
+			}
 			if (int32_t(record.get("human_capable_source_owner_mask", 0)) == 0 || int32_t(record.get("player_capable_source_owner_mask", 0)) == 0) {
 				continue;
 			}
@@ -1365,6 +1377,9 @@ Array accepted_templates(const Dictionary &normalized_config) {
 				continue;
 			}
 			Dictionary record = template_record_from_recovered_catalog(source, int32_t(template_index));
+			if (!strict_small_land_public_template_evidence_id(String(record.get("id", "")))) {
+				continue;
+			}
 			if (int32_t(record.get("human_capable_source_owner_mask", 0)) == 0 || int32_t(record.get("player_capable_source_owner_mask", 0)) == 0) {
 				continue;
 			}
