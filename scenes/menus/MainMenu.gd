@@ -1987,7 +1987,11 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 	}
 
 func _generated_underground_supported() -> bool:
-	return true
+	var level_options: Array = ScenarioSelectRulesScript.random_map_player_setup_options().get("level_options", [])
+	for option in level_options:
+		if option is Dictionary and int(option.get("level_count", 1)) > 1:
+			return true
+	return false
 
 func _generated_random_map_internal_template_provenance() -> Dictionary:
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
