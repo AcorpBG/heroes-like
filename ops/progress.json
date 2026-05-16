@@ -5,10 +5,10 @@
   "currentPhase": "phase-3-homm3-style-rmg-rework",
   "currentSliceId": "native-rmg-small-h3maped-port-10184",
   "currentSliceTitle": "Native RMG Small h3maped Port",
-  "currentSliceStatus": "blocked",
-  "currentSliceNotes": "Compiled native h3maped data integration on 2026-05-16: active strict Small-land generation no longer reads /root, h3maped.exe, recovered JSON/CSV, CRTRAITS, environment toggles, or external evidence at runtime. Template, object, reward, decoration, monster, and TerrainPlacement reference data are compiled into h3maped_small_rmg_embedded_data and built into Linux/Windows debug/release GDExtension libraries. Runtime metadata/audit now reports compiled data sources only. Guard pathing now blocks only the guard body tile while preserving 3x3 control zones as engagement metadata, fixing false road-chain validation blocks. The slice remains blocked for intentionally out-of-scope water, underground, Medium/Large/XL, broader template families, and full HoMM3-style parity.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Implemented strict Small land h3maped native RMG runtime acceptance: town/object/road package generation now passes skirmish launch, 15-case runtime corpus, public template matrix, negative validator, embedded-data audit, and Linux/Windows debug/release native builds.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-16T16:34:59Z",
+  "updatedAt": "2026-05-16T20:47:52Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -43,7 +43,7 @@
       "id": "native-rmg-small-h3maped-port-10184",
       "title": "Native RMG Small h3maped Port",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "blocked",
+      "status": "completed",
       "classification": "owner_directed_phase3_native_rmg_reset_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -96,8 +96,8 @@
         "No one-off owner-corpus exact-count fitting as runtime logic.",
         "No production-ready broad RMG claim."
       ],
-      "updatedAt": "2026-05-16T16:34:59Z",
-      "notes": "Compiled native h3maped data integration on 2026-05-16: active strict Small-land generation no longer reads /root, h3maped.exe, recovered JSON/CSV, CRTRAITS, environment toggles, or external evidence at runtime. Template, object, reward, decoration, monster, and TerrainPlacement reference data are compiled into h3maped_small_rmg_embedded_data and built into Linux/Windows debug/release GDExtension libraries. Runtime metadata/audit now reports compiled data sources only. Guard pathing now blocks only the guard body tile while preserving 3x3 control zones as engagement metadata, fixing false road-chain validation blocks. The slice remains blocked for intentionally out-of-scope water, underground, Medium/Large/XL, broader template families, and full HoMM3-style parity.",
+      "updatedAt": "2026-05-16T20:47:52Z",
+      "notes": "Implemented strict Small land h3maped native RMG runtime acceptance: town/object/road package generation now passes skirmish launch, 15-case runtime corpus, public template matrix, negative validator, embedded-data audit, and Linux/Windows debug/release native builds.",
       "validationResults": [
         "2026-05-16 compiled native h3maped data integration: passed Linux debug/release native builds, Windows debug/release native builds, tools/rmg_native_embedded_data_audit.py, tests/native_rmg_small_h3maped_port_boundary_report.tscn, tests/native_rmg_small_h3maped_runtime_corpus_acceptance_report.tscn, tests/random_map_skirmish_menu_button_2p_retry_report.tscn, tests/random_map_validation_batch_retry_report.tscn, tests/native_rmg_small_h3maped_public_template_matrix_report.tscn, git diff --check, jq empty ops/progress.json, and the heroes-progress helper. Active runtime no longer depends on external h3maped evidence/fallback files.",
         "2026-05-16 Windows/debug no-external validation-block root cause: Small 2p land Skirmish could still fail on Windows because src/gdextension/src/h3maped_small_rmg.cpp used Linux-only absolute paths at runtime for /root/Downloads/h3maped.exe, object-catalog-by-type.json, object-decoration-obstacles.csv, and crtraits.txt. Linux local tests masked the bug because those files exist locally. The generator now falls back to embedded recovered TerrainPlacement visual rows and repo-local structural proxy catalogs when external h3maped evidence is unavailable, and exposes AURELION_H3MAPED_DISABLE_EXTERNAL_EVIDENCE for regression simulation. Rebuilt Linux debug/release and Windows debug/release native libraries. Validation passed no-external forced skirmish button generation, no-external blank/default auto-seed regression, no-external six-case validation batch retry, normal skirmish button generation, git diff --check, and all four native builds.",
@@ -346,7 +346,8 @@
         "Strict roads/rivers private boundary on 2026-05-14: active h3maped_small_rmg.cpp now reports the narrow 0x4ab52a coordinate-vector walk and 0x4aae7b low-word path-cost candidate boundary without enabling runtime output. Focused report asserts byte prefixes for 0x4ab52a, 0x4aae7b, 0x4ab37f, and 0x4b4243, three town/castle generator+0x14b0 coordinate records from 0x4a95af, three pair candidate iterations against threshold 0x7530, private candidate low-word materialization, and no public road bytes, river bytes, runtime-grid adoption, package tiles, blockers, guards, or final writeout. Next required strict port is road toolkit geometry/writeback 0x4ab37f/0x4b4243 before connection blockers/guards 0x4a79a3 family. Validation passed: cmake --build .artifacts/map_persistence_native_build --parallel 2 and tests/native_rmg_small_h3maped_port_boundary_report.tscn.",
         "Small h3maped runtime package adoption on 2026-05-14: supported seed 1 36x36 one-level land generation returns h3maped_small_runtime_package, materializes terrain/zones/player towns/mines/rewards/roads/blockers/guards, and convert_generated_payload accepts it as native-runtime-authoritative without claiming full parity."
       ],
-      "startedAt": "2026-05-14T21:11:14Z"
+      "startedAt": "2026-05-14T21:11:14Z",
+      "completedAt": "2026-05-16T20:47:52Z"
     },
     {
       "id": "native-rmg-generalized-policy-regate-10184",

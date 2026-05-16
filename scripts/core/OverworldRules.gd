@@ -2225,6 +2225,10 @@ static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dicti
 	return _map_object_blocks_body_tiles(map_object)
 
 static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	if placement.get("package_block_tiles", null) is Array:
+		var package_tiles := _world_tiles_from_payload_array(placement.get("package_block_tiles", []))
+		if not package_tiles.is_empty():
+			return package_tiles
 	if _resource_node_has_runtime_object_contract(placement):
 		var runtime_tiles := _world_tiles_from_payload_array(placement.get("package_block_tiles", []))
 		if not runtime_tiles.is_empty():
@@ -4819,6 +4823,10 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"blocking_body",
 		"approach_tiles",
 		"visit_tile",
+		"package_body_tiles",
+		"package_block_tiles",
+		"package_visit_tiles",
+		"passability_class",
 		"pathing_status",
 		"object_footprint_catalog_ref",
 		"footprint",
