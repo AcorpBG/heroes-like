@@ -805,9 +805,10 @@ static func build_random_map_skirmish_setup_with_retry(
 	var max_attempts := int(policy.get("max_attempts", 1))
 	var attempts := []
 	var final_setup := {}
+	var launch_config := _random_map_public_h3maped_launch_config(input_config)
 	for attempt_index in range(max_attempts):
-		var attempt_config := _random_map_retry_attempt_config(input_config, attempt_index, policy)
-		var attempt_setup := build_random_map_skirmish_setup(attempt_config, difficulty_id)
+		var attempt_config := _random_map_retry_attempt_config(launch_config, attempt_index, policy)
+		var attempt_setup := _build_random_map_skirmish_setup_single_attempt(attempt_config, difficulty_id)
 		var attempt_record := _random_map_setup_attempt_record(attempt_setup, attempt_config, attempt_index + 1, max_attempts)
 		attempts.append(attempt_record)
 		if bool(attempt_setup.get("ok", false)):
@@ -855,6 +856,9 @@ static func build_random_map_skirmish_setup_with_retry(
 	}
 
 static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
+	return build_random_map_skirmish_setup_with_retry(input_config, difficulty_id, RANDOM_MAP_PLAYER_RETRY_POLICY)
+
+static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
 	var service: Variant = _native_map_package_service()
 	if service == null:
@@ -874,6 +878,27 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 			"warning_count": 0,
 			"source_status": String(generated.get("status", "")),
 			"full_generation_status": String(generated.get("full_generation_status", "")),
+		}
+	elif report.is_empty():
+		var failure_code := String(generated.get("error_code", generated.get("status", "native_random_map_generation_failed")))
+		var failure_message := String(generated.get("message", "Native generated-map startup failed before validation report emission."))
+		var failure_detail := failure_code
+		if failure_message != "":
+			failure_detail = "%s | %s" % [failure_code, failure_message]
+		report = {
+			"schema_id": "aurelion_native_rmg_launch_validation_summary_v1",
+			"status": "fail",
+			"validation_status": "fail",
+			"ok": false,
+			"failure_count": 1,
+			"warning_count": 0,
+			"failures": [failure_detail],
+			"source_status": String(generated.get("status", "")),
+			"generation_status": String(generated.get("generation_status", "")),
+			"full_generation_status": String(generated.get("full_generation_status", "")),
+			"error_code": failure_code,
+			"message": failure_message,
+			"normalized_config": generated.get("normalized_config", {}),
 		}
 	var retry_status := _random_map_retry_status(generated, report)
 	if not bool(generated.get("ok", false)):
@@ -969,7 +994,7 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 	}
 
 static func start_random_map_skirmish_session(input_config: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
-	var setup := build_random_map_skirmish_setup(input_config, difficulty_id)
+	var setup := build_random_map_skirmish_setup_with_retry(input_config, difficulty_id, RANDOM_MAP_PLAYER_RETRY_POLICY)
 	return _start_random_map_skirmish_session_from_setup(setup)
 
 static func start_random_map_skirmish_session_with_retry(
@@ -2195,6 +2220,37 @@ static func _random_map_retry_policy(retry_policy: Dictionary) -> Dictionary:
 	if String(policy.get("mode", "")) == "":
 		policy["mode"] = "none"
 	return policy
+
+static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -> Dictionary:
+	var size: Dictionary = input_config.get("size", {}) if input_config.get("size", {}) is Dictionary else {}
+	var player_constraints: Dictionary = input_config.get("player_constraints", input_config.get("players", {})) if input_config.get("player_constraints", input_config.get("players", {})) is Dictionary else {}
+	var size_class_id := String(size.get("size_class_id", input_config.get("size_class_id", "")))
+	var water_mode := String(size.get("water_mode", input_config.get("water_mode", "land")))
+	var level_count := int(size.get("level_count", input_config.get("level_count", 1)))
+	if size_class_id != String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_id", "homm3_small")):
+		return input_config.duplicate(true)
+	if water_mode != String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_mode", "land")):
+		return input_config.duplicate(true)
+	if level_count != int(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_count", 1)):
+		return input_config.duplicate(true)
+	var seed_source := String(input_config.get("seed_source", "explicit"))
+	var seed_identity: Dictionary = input_config.get("seed_identity", {}) if input_config.get("seed_identity", {}) is Dictionary else {}
+	var source_seed := String(input_config.get("seed", ""))
+	if seed_source != "auto_on_launch":
+		source_seed = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
+	var config := build_random_map_player_config(
+		source_seed,
+		"",
+		"",
+		int(player_constraints.get("player_count", 3)),
+		water_mode,
+		false,
+		size_class_id,
+		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
+	config["seed_source"] = seed_source
+	config["seed_input"] = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
+	return config
 
 static func _random_map_retry_attempt_config(input_config: Dictionary, attempt_index: int, retry_policy: Dictionary) -> Dictionary:
 	var config := input_config.duplicate(true)

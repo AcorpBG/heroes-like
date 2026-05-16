@@ -24386,6 +24386,94 @@ Array synchronized_player_starts_for_start_contract(const Dictionary &generated_
 	return result;
 }
 
+bool record_is_town_like(const Dictionary &record) {
+	const String kind = String(record.get("native_record_kind", record.get("kind", "")));
+	if (kind == "town") {
+		return true;
+	}
+	return !String(record.get("town_id", "")).strip_edges().is_empty();
+}
+
+Dictionary native_generated_scenario_objectives_for_towns(const Array &records) {
+	String starting_town_id;
+	String rival_town_id;
+	for (int64_t index = 0; index < records.size(); ++index) {
+		if (Variant(records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(records[index]);
+		if (!record_is_town_like(town)) {
+			continue;
+		}
+		const String placement_id = String(town.get("placement_id", ""));
+		if (placement_id.strip_edges().is_empty()) {
+			continue;
+		}
+		const String owner = String(town.get("owner", ""));
+		const int32_t owner_slot = int32_t(town.get("owner_slot", -1));
+		const int32_t player_slot = int32_t(town.get("player_slot", -1));
+		const bool player_start = owner == "player" || owner_slot == 0 || player_slot == 0;
+		if (starting_town_id.is_empty() && player_start) {
+			starting_town_id = placement_id;
+			continue;
+		}
+		if (rival_town_id.is_empty() && owner != "player") {
+			rival_town_id = placement_id;
+		}
+	}
+	if (rival_town_id.is_empty()) {
+		for (int64_t index = 0; index < records.size(); ++index) {
+			if (Variant(records[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary town = Dictionary(records[index]);
+			if (!record_is_town_like(town)) {
+				continue;
+			}
+			const String placement_id = String(town.get("placement_id", ""));
+			if (!placement_id.strip_edges().is_empty() && placement_id != starting_town_id) {
+				rival_town_id = placement_id;
+				break;
+			}
+		}
+	}
+
+	Array victory_objectives;
+	Array defeat_objectives;
+	if (!rival_town_id.is_empty()) {
+		Dictionary objective;
+		objective["id"] = "generated_capture_rival_town";
+		objective["type"] = "town_owned_by_player";
+		objective["placement_id"] = rival_town_id;
+		objective["label"] = "Claim a generated rival town";
+		objective["generated_support"] = "ScenarioRules.town_owned_by_player";
+		victory_objectives.append(objective);
+	} else {
+		Dictionary objective;
+		objective["id"] = "generated_hold_until_day_14";
+		objective["type"] = "day_at_least";
+		objective["day"] = 14;
+		objective["label"] = "Hold the generated frontier until Day 14";
+		objective["generated_support"] = "ScenarioRules.day_at_least";
+		victory_objectives.append(objective);
+	}
+	if (!starting_town_id.is_empty()) {
+		Dictionary objective;
+		objective["id"] = "generated_primary_town_lost";
+		objective["type"] = "town_not_owned_by_player";
+		objective["placement_id"] = starting_town_id;
+		objective["label"] = "Do not lose the generated starting town";
+		objective["generated_support"] = "ScenarioRules.town_not_owned_by_player";
+		defeat_objectives.append(objective);
+	}
+	Dictionary objectives;
+	objectives["victory_text"] = "Generated objective completed.";
+	objectives["defeat_text"] = "Generated objective failed.";
+	objectives["victory"] = victory_objectives;
+	objectives["defeat"] = defeat_objectives;
+	return objectives;
+}
+
 Dictionary guard_reward_package_adoption_summary(const Array &objects) {
 	int32_t reward_count = 0;
 	int32_t valuable_reward_count = 0;
@@ -24682,7 +24770,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	scenario_state["map_ref"] = map_ref;
 	scenario_state["selection"] = selection;
 	scenario_state["player_slots"] = player_slots;
-	scenario_state["objectives"] = Dictionary();
+	scenario_state["objectives"] = native_generated_scenario_objectives_for_towns(objects);
 	scenario_state["script_hooks"] = Array();
 	scenario_state["enemy_factions"] = enemy_factions;
 	scenario_state["start_contract"] = start_contract;
@@ -24991,7 +25079,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	scenario_state["map_ref"] = map_ref;
 	scenario_state["selection"] = selection;
 	scenario_state["player_slots"] = player_slots.duplicate(true);
-	scenario_state["objectives"] = Dictionary();
+	scenario_state["objectives"] = native_generated_scenario_objectives_for_towns(generated_map.get("town_records", Array()));
 	scenario_state["script_hooks"] = Array();
 	scenario_state["enemy_factions"] = enemy_factions;
 	scenario_state["start_contract"] = start_contract;

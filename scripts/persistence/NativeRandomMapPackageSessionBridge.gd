@@ -60,6 +60,16 @@ static func build_session_from_adoption(
 		"generated_random_map_identity": adoption.get("generated_identity", {}),
 		"generated_random_map_validation": adoption.get("validation_report", {}),
 	}
+	var runtime_scenario_record := _runtime_scenario_record_from_documents(
+		scenario_id,
+		map_document,
+		scenario_document,
+		overworld_state,
+		hero_id_from_doc,
+		start
+	)
+	if not runtime_scenario_record.is_empty():
+		overworld_state["native_random_map_runtime_scenario_record"] = runtime_scenario_record
 	var draft_registration := {
 		"ok": true,
 		"status": "skipped_package_session_uses_loaded_documents",
@@ -106,6 +116,7 @@ static func build_session_from_adoption(
 		"scenario_package_ref": scenario_ref,
 		"generated_random_map_provenance": adoption.get("provenance", {}),
 		"generated_random_map_validation": adoption.get("validation_report", {}),
+		"native_random_map_runtime_scenario_record": runtime_scenario_record,
 		"native_random_map_scenario_draft_registration": draft_registration,
 	}
 	OverworldRulesScript.normalize_overworld_state(session)
@@ -361,9 +372,31 @@ static func _register_generated_scenario_draft_from_documents(
 ) -> Dictionary:
 	if scenario_id == "" or map_document == null or scenario_document == null:
 		return {"ok": false, "message": "Package-backed generated scenario draft is missing required documents."}
+	var scenario_record := _runtime_scenario_record_from_documents(
+		scenario_id,
+		map_document,
+		scenario_document,
+		overworld_state,
+		hero_id,
+		start
+	)
+	if scenario_record.is_empty():
+		return {"ok": false, "message": "Package-backed generated scenario draft could not build a scenario record."}
+	return ContentService.register_generated_scenario_draft(scenario_record, overworld_state.get("terrain_layers", {}))
+
+static func _runtime_scenario_record_from_documents(
+	scenario_id: String,
+	map_document: Variant,
+	scenario_document: Variant,
+	overworld_state: Dictionary,
+	hero_id: String,
+	start: Dictionary
+) -> Dictionary:
+	if scenario_id == "" or map_document == null or scenario_document == null:
+		return {}
 	var selection: Dictionary = scenario_document.get_selection() if scenario_document.has_method("get_selection") else {}
 	var objectives: Dictionary = scenario_document.get_objectives() if scenario_document.has_method("get_objectives") else {}
-	var scenario_record := {
+	return {
 		"id": scenario_id,
 		"name": String(selection.get("name", scenario_id)),
 		"generated": true,
@@ -389,7 +422,6 @@ static func _register_generated_scenario_draft_from_documents(
 			"scenario_ref": overworld_state.get("scenario_package_ref", {}),
 		},
 	}
-	return ContentService.register_generated_scenario_draft(scenario_record, overworld_state.get("terrain_layers", {}))
 
 static func _player_faction_from_document(scenario_document: Variant, overworld_state: Dictionary) -> String:
 	if scenario_document != null and scenario_document.has_method("get_start_contract"):

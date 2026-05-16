@@ -34,6 +34,17 @@ static func normalize_scenario_state(session: SessionStateStoreScript.SessionDat
 	_scenario_script_rules().normalize_script_state(session)
 	_enemy_turn_rules().normalize_enemy_states(session)
 
+static func scenario_record_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.scenario_id == "":
+		return {}
+	var runtime_record: Dictionary = session.flags.get("native_random_map_runtime_scenario_record", {}) if session.flags.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
+	if not runtime_record.is_empty() and String(runtime_record.get("id", "")) == session.scenario_id:
+		return runtime_record
+	runtime_record = session.overworld.get("native_random_map_runtime_scenario_record", {}) if session.overworld.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
+	if not runtime_record.is_empty() and String(runtime_record.get("id", "")) == session.scenario_id:
+		return runtime_record
+	return ContentService.get_scenario(session.scenario_id)
+
 static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
 	if session == null or session.scenario_id == "":
@@ -41,7 +52,7 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 	if session.scenario_status != "in_progress":
 		return {"status": session.scenario_status, "message": session.scenario_summary}
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var script_result: Dictionary = _scenario_script_rules().process_hooks(session)
 	var script_message := String(script_result.get("message", ""))
 	var objectives = scenario.get("objectives", {})
@@ -490,7 +501,7 @@ static func get_objective(
 ) -> Dictionary:
 	if session == null or session.scenario_id == "" or objective_id == "":
 		return {}
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return {}
@@ -508,7 +519,7 @@ static func get_objective(
 
 static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_scenario_state(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return "No authored objectives."
@@ -556,7 +567,7 @@ static func describe_scenario_launch_preview(
 	_overworld_rules().normalize_overworld_state(session)
 	normalize_scenario_state(session)
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var scenario_name := String(scenario.get("name", session.scenario_id))
 	var mode_label: String = _scenario_select_rules().launch_mode_label(normalized_mode)
 	var launch_context := context_label if context_label != "" else scenario_name
@@ -602,7 +613,7 @@ static func describe_session_progress_recap(
 		return "Progress Recap\nNo active scenario progress is available." if include_header else ""
 	_overworld_rules().normalize_overworld_state(session)
 	normalize_scenario_state(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	if scenario.is_empty():
 		return "Progress Recap\nScenario progress is unavailable." if include_header else ""
 
@@ -641,7 +652,7 @@ static func describe_session_operational_board(session: SessionStateStoreScript.
 		return "Operational board unavailable."
 	_overworld_rules().normalize_overworld_state(session)
 	normalize_scenario_state(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	if scenario.is_empty():
 		return "Operational board unavailable."
 
@@ -682,7 +693,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		}
 
 	_overworld_rules().normalize_overworld_state(session)
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
 	var status_label := String(session.scenario_status).capitalize()
 	var model := {
@@ -986,7 +997,7 @@ static func _progress_recap_next_step_line(session: SessionStateStoreScript.Sess
 static func _objective_progress_counts(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {}
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return {}
@@ -1011,7 +1022,7 @@ static func _objective_progress_counts(session: SessionStateStoreScript.SessionD
 	return counts
 
 static func _next_unmet_victory_objective_label(session: SessionStateStoreScript.SessionData) -> String:
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return ""
@@ -1023,7 +1034,7 @@ static func _next_unmet_victory_objective_label(session: SessionStateStoreScript
 	return ""
 
 static func _completed_objective_labels(session: SessionStateStoreScript.SessionData, limit: int) -> Array:
-	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario := scenario_record_for_session(session)
 	var objectives = scenario.get("objectives", {})
 	var labels := []
 	if not (objectives is Dictionary):
