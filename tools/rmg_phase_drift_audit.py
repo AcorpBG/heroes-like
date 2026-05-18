@@ -210,12 +210,18 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
     expected_identity = {
         "seed": str(controlled_identity.get("seed", get_path(controlled_manifest, "inputs.seed", ""))),
         "players": as_int(controlled_identity.get("players", get_path(controlled_manifest, "inputs.players", 0))),
-        "source_template_id": controlled_identity.get("source_template_id"),
-        "source_catalog_index": controlled_identity.get("source_catalog_index"),
+        "source_template_id": controlled_identity.get("observed_source_template_id", controlled_identity.get("source_template_id")),
+        "source_catalog_index": controlled_identity.get("observed_source_catalog_index", controlled_identity.get("source_catalog_index")),
     }
     evidence = {
         "native_identity": native_identity,
         "controlled_identity": expected_identity,
+        "requested_controlled_identity": {
+            "source_template_id": controlled_identity.get("source_template_id"),
+            "source_catalog_index": controlled_identity.get("source_catalog_index"),
+            "requested_seed": controlled_identity.get("requested_seed", get_path(controlled_manifest, "inputs.seed", "")),
+        },
+        "observed_template": controlled_identity.get("observed_template", controlled_identity.get("observed_template_name", "")),
         "controlled_manifest_status": controlled_status,
         "controlled_manifest": controlled_manifest.get("output_dir", ""),
         "owner_h3m_path": str(h3m_path),
@@ -250,6 +256,24 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
     }
     evidence["mismatches"] = mismatches
     if mismatches:
+        if "seed" in mismatches:
+            return finding(
+                "reference-alignment",
+                "seed/template evidence",
+                "critical",
+                "seed_control_failed",
+                evidence,
+                "fix h3maped seed injection until saved H3M summary seed matches the native requested seed before interpreting phase deltas",
+            )
+        if "source_template_id" in mismatches or "source_catalog_index" in mismatches:
+            return finding(
+                "reference-alignment",
+                "seed/template evidence",
+                "critical",
+                "template_selection_drift",
+                evidence,
+                "align native accepted-template filtering and PRNG template selection with h3maped before interpreting placement/object deltas",
+            )
         return finding(
             "reference-alignment",
             "seed/template evidence",
