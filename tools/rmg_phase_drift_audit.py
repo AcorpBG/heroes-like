@@ -164,7 +164,99 @@ def finding(
     }
 
 
-def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path) -> dict[str, Any]:
+def load_controlled_manifest(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    return json.loads(path.read_text())
+
+
+def resolve_h3m_path(controlled_manifest: dict[str, Any] | None, h3m_path: Path | None) -> Path:
+    if h3m_path is not None:
+        return h3m_path
+    if controlled_manifest and controlled_manifest.get("status") == "ready":
+        output_path = get_path(controlled_manifest, "outputs.h3m_path", "")
+        if output_path:
+            return Path(str(output_path))
+    return DEFAULT_H3M
+
+
+def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, controlled_manifest: dict[str, Any] | None) -> dict[str, Any]:
+    selection = snapshot.get("selection_identity", {}) if isinstance(snapshot.get("selection_identity"), dict) else {}
+    config = snapshot.get("config", {}) if isinstance(snapshot.get("config"), dict) else {}
+    player_constraints = config.get("player_constraints", {}) if isinstance(config.get("player_constraints"), dict) else {}
+    native_identity = {
+        "seed": str(config.get("seed", "")),
+        "players": as_int(player_constraints.get("player_count")),
+        "source_template_id": selection.get("source_template_id"),
+        "source_catalog_index": selection.get("source_catalog_index"),
+    }
+    if controlled_manifest is None:
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "critical",
+            "reference_alignment_unknown",
+            {
+                "native_identity": native_identity,
+                "owner_h3m_path": str(h3m_path),
+                "source_kind": "shipped_h3m_uncontrolled",
+                "reason": "The H3M file exposes final facts but not the original RMG RNG seed/template selection trace. Exact per-seed parity cannot be asserted without a controlled h3maped.exe manifest.",
+            },
+            "produce controlled h3maped.exe reference outputs with tools/rmg_h3maped_controlled_reference.py before accepting exact placement parity claims",
+        )
+
+    controlled_status = str(controlled_manifest.get("status", ""))
+    controlled_identity = controlled_manifest.get("controlled_identity", {}) if isinstance(controlled_manifest.get("controlled_identity"), dict) else {}
+    expected_identity = {
+        "seed": str(controlled_identity.get("seed", get_path(controlled_manifest, "inputs.seed", ""))),
+        "players": as_int(controlled_identity.get("players", get_path(controlled_manifest, "inputs.players", 0))),
+        "source_template_id": controlled_identity.get("source_template_id"),
+        "source_catalog_index": controlled_identity.get("source_catalog_index"),
+    }
+    evidence = {
+        "native_identity": native_identity,
+        "controlled_identity": expected_identity,
+        "controlled_manifest_status": controlled_status,
+        "controlled_manifest": controlled_manifest.get("output_dir", ""),
+        "owner_h3m_path": str(h3m_path),
+    }
+    if controlled_status != "ready":
+        evidence["blocker"] = controlled_manifest.get("blocker", controlled_manifest.get("error", "controlled manifest is not ready"))
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "critical",
+            "controlled_reference_blocked",
+            evidence,
+            "finish deterministic h3maped.exe reference generation or explicitly ingest a controlled H3M with seed/template identity",
+        )
+
+    mismatches = {
+        key: {"native": native_identity.get(key), "controlled": expected_identity.get(key)}
+        for key in expected_identity
+        if str(native_identity.get(key, "")) != str(expected_identity.get(key, ""))
+    }
+    evidence["mismatches"] = mismatches
+    if mismatches:
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "critical",
+            "reference_alignment_mismatch",
+            evidence,
+            "rerun native generation and h3maped.exe reference with identical seed/player/template identity before interpreting deltas as parity drift",
+        )
+    return finding(
+        "reference-alignment",
+        "seed/template evidence",
+        "info",
+        "reference_alignment_pass",
+        evidence,
+        "interpret remaining deltas as same-identity native-vs-h3maped behavior drift",
+    )
+
+
+def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, controlled_manifest: dict[str, Any] | None = None) -> dict[str, Any]:
     owner_metrics = fast_audit.parse_h3m(h3m_path)
     native_metrics = fast_audit.load_amap(amap_path)
     owner_records = parse_h3m_records(h3m_path)
@@ -232,23 +324,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path) -> d
     }
 
     findings: list[dict[str, Any]] = []
-    selection = snapshot.get("selection_identity", {}) if isinstance(snapshot.get("selection_identity"), dict) else {}
-    findings.append(
-        finding(
-            "reference-alignment",
-            "seed/template evidence",
-            "critical",
-            "reference_alignment_unknown",
-            {
-                "native_seed": snapshot.get("config", {}).get("seed"),
-                "native_source_template_id": selection.get("source_template_id"),
-                "native_source_catalog_index": selection.get("source_catalog_index"),
-                "owner_h3m_path": str(h3m_path),
-                "reason": "The shipped H3M file exposes final facts but not the original RMG RNG seed/template selection trace. Exact per-seed parity cannot be asserted until the native run is bound to the same reference identity or a new h3maped.exe run is generated with known inputs.",
-            },
-            "bind native/h3maped comparisons by recovered seed/template or produce controlled h3maped reference outputs before accepting exact placement parity claims",
-        )
-    )
+    findings.append(reference_alignment_finding(snapshot, h3m_path, controlled_manifest))
 
     owner_towns = as_int(owner.get("counts_by_category", {}).get("town"))
     native_towns = as_int(native.get("counts_by_category", {}).get("town"))
@@ -412,8 +488,9 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path) -> d
             "phase_snapshot": str(snapshot.get("phase_snapshot_path", DEFAULT_SNAPSHOT)),
             "h3m": str(h3m_path),
             "amap": str(amap_path),
+            "controlled_reference_manifest": str(controlled_manifest.get("output_dir", "")) if controlled_manifest else "",
         },
-        "scope": "strict Small 36x36 one-level land, S-RandomNumberofplayers.h3m versus native generated AMAP",
+        "scope": "strict Small 36x36 one-level land; controlled h3maped manifest required for same-identity parity claims, shipped H3M allowed only as uncontrolled corpus sanity",
         "reference_alignment": findings[0],
         "final_deltas": final_deltas,
         "owner_metrics": owner,
@@ -424,7 +501,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path) -> d
         "package_phase_counts": package_counts,
         "root_cause_findings": findings,
         "implementation_order": [
-            "Bind comparison identity: prove same h3maped seed/template or generate controlled h3maped reference outputs.",
+            "Bind comparison identity: generate or ingest controlled h3maped.exe reference outputs with seed/template metadata.",
             "Fix town/castle private scheduling and zone coordinate placement before object count tuning.",
             "Fix reward coordinate commit and artifact/resource materialization in the object vector phase.",
             "Fix road endpoint vector and pair acceptance; do not compensate in package serialization.",
@@ -467,7 +544,8 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--phase-snapshot", type=Path, default=DEFAULT_SNAPSHOT)
-    parser.add_argument("--h3m", type=Path, default=DEFAULT_H3M)
+    parser.add_argument("--h3m", type=Path)
+    parser.add_argument("--controlled-reference-manifest", type=Path)
     parser.add_argument("--amap", type=Path)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--pretty", action="store_true")
@@ -475,11 +553,13 @@ def main() -> int:
     args = parser.parse_args()
 
     snapshot = json.loads(args.phase_snapshot.read_text())
+    controlled_manifest = load_controlled_manifest(args.controlled_reference_manifest)
+    h3m_path = resolve_h3m_path(controlled_manifest, args.h3m)
     amap_path = args.amap or Path(str(snapshot.get("native_amap_path", "")))
     if not amap_path:
         parser.error("--amap is required when phase snapshot does not include native_amap_path")
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    report = build_report(snapshot, args.h3m, amap_path)
+    report = build_report(snapshot, h3m_path, amap_path, controlled_manifest)
     json_path = args.out_dir / "phase_drift_report.json"
     md_path = args.out_dir / "phase_drift_report.md"
     json_path.write_text(json.dumps(report, indent=2 if args.pretty else None, sort_keys=True) + "\n")
