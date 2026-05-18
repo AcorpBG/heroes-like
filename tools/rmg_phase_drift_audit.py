@@ -219,6 +219,8 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
         "controlled_manifest_status": controlled_status,
         "controlled_manifest": controlled_manifest.get("output_dir", ""),
         "owner_h3m_path": str(h3m_path),
+        "seed_control": controlled_manifest.get("seed_control", {}),
+        "same_seed_parity_supported": bool(controlled_identity.get("same_seed_parity_supported")),
     }
     if controlled_status != "ready":
         evidence["blocker"] = controlled_manifest.get("blocker", controlled_manifest.get("error", "controlled manifest is not ready"))
@@ -229,6 +231,16 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
             "controlled_reference_blocked",
             evidence,
             "finish deterministic h3maped.exe reference generation through a committed runner before interpreting exact parity",
+        )
+
+    if not bool(controlled_identity.get("same_seed_parity_supported")):
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "critical",
+            "controlled_reference_observed_seed_only",
+            evidence,
+            "recover and implement h3maped seed injection or entrypoint-level generation before interpreting deltas as same-seed parity drift",
         )
 
     mismatches = {

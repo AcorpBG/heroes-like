@@ -14,16 +14,45 @@ import hashlib
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+import rmg_fast_audit as fast_audit  # noqa: E402
 
 
 DEFAULT_H3MAPED_EXE = Path("/root/Downloads/h3maped.exe")
 EXPECTED_H3MAPED_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37"
 DEFAULT_OUT_ROOT = Path(".artifacts/rmg_h3maped_controlled_reference")
+DEFAULT_WINEPREFIX = Path(".artifacts/wine/h3maped")
+REQUIRED_RESOURCE_LODS = ("h3bitmap.lod", "h3sprite.lod", "h3ab_bmp.lod", "h3ab_spr.lod")
+
+SIZE_COORDS = {
+    "small": (341, 413),
+    "medium": (341, 432),
+    "large": (439, 413),
+    "extra_large": (439, 432),
+}
+WATER_COORDS = {
+    "random": (340, 647),
+    "land": (449, 647),
+    "mixed": (557, 647),
+    "water": (665, 647),
+}
+MONSTER_COORDS = {
+    "random": (340, 697),
+    "weak": (449, 697),
+    "normal": (557, 697),
+    "strong": (665, 697),
+}
 
 
 def utc_now() -> str:
@@ -54,8 +83,20 @@ def write_markdown(manifest: dict[str, Any], path: Path) -> None:
         f"- Water: `{inputs.get('water', '')}`",
         f"- Source template: `{identity.get('source_template_id', '')}`",
         f"- Source catalog index: `{identity.get('source_catalog_index', '')}`",
+        f"- Same-seed parity supported: `{identity.get('same_seed_parity_supported', '')}`",
         "",
     ]
+    seed_control = manifest.get("seed_control", {})
+    if seed_control:
+        lines.extend(
+            [
+                "## Seed Control",
+                "",
+                f"- Status: `{seed_control.get('status', '')}`",
+                f"- Reason: {seed_control.get('reason', '')}",
+                "",
+            ]
+        )
     if manifest.get("status") != "ready":
         lines.extend([
             "## Blocker",
@@ -78,9 +119,12 @@ def backend_report() -> dict[str, Any]:
         "os_name": os.name,
         "is_windows_host": os.name == "nt",
         "wine": shutil.which("wine"),
+        "wineboot": shutil.which("wineboot"),
+        "wineserver": shutil.which("wineserver"),
         "xvfb_run": shutil.which("xvfb-run"),
         "xdotool": shutil.which("xdotool"),
-        "automation_backend": "not_configured",
+        "scrot": shutil.which("scrot"),
+        "automation_backend": "wine_xvfb_xdotool_mfc_dialog_v1",
     }
 
 
@@ -122,13 +166,24 @@ def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> d
             "level_count": int(args.level_count),
             "water": args.water,
             "template_id": args.template_id,
+            "monster_strength": args.monster_strength,
         },
         "controlled_identity": {
-            "seed": str(args.seed),
+            "requested_seed": str(args.seed),
+            "seed": "",
             "players": int(args.players),
             "source_template_id": args.source_template_id,
             "source_catalog_index": args.source_catalog_index,
-            "identity_authority": "pending_h3maped_runner",
+            "same_seed_parity_supported": False,
+            "identity_authority": "h3maped_gui_generated_output_observed_seed_unavailable",
+        },
+        "seed_control": {
+            "status": "unsupported_by_public_h3maped_ui",
+            "reason": (
+                "The recovered h3maped File/New random-map dialog exposes size, levels, player counts, water, "
+                "and monster strength, but no seed entry. This runner therefore generates real h3maped outputs "
+                "and marks them unsafe for same-seed parity claims until a memory/API seed injection path is recovered."
+            ),
         },
         "backend": backend_report(),
     }
@@ -143,6 +198,261 @@ def write_manifest(manifest: dict[str, Any], out_dir: Path, pretty: bool) -> tup
     return manifest_path, md_path
 
 
+def command_output(command: list[str]) -> str:
+    probe = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+    return probe.stdout.strip()
+
+
+def find_lod(source_dir: Path, name: str) -> Path | None:
+    candidates = [source_dir / "Data", source_dir / "data", source_dir]
+    lowered = name.lower()
+    for base in candidates:
+        if not base.exists():
+            continue
+        direct = base / name
+        if direct.exists():
+            return direct
+        for child in base.iterdir():
+            if child.name.lower() == lowered and child.is_file():
+                return child
+    return None
+
+
+def symlink_or_copy(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists() or destination.is_symlink():
+        destination.unlink()
+    try:
+        destination.symlink_to(source)
+    except OSError:
+        shutil.copy2(source, destination)
+
+
+def prepare_runtime_layout(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
+    runtime_dir = out_dir / "runtime"
+    data_dir = runtime_dir / "Data"
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+    data_dir.mkdir(parents=True, exist_ok=True)
+    symlink_or_copy(args.h3maped_exe.resolve(), runtime_dir / "h3maped.exe")
+
+    resource_source_dir = args.resource_dir or args.h3maped_exe.parent
+    resources: dict[str, str] = {}
+    missing: list[str] = []
+    for name in REQUIRED_RESOURCE_LODS:
+        source = find_lod(resource_source_dir, name)
+        if source is None:
+            missing.append(name)
+            continue
+        target = data_dir / name
+        symlink_or_copy(source.resolve(), target)
+        resources[name] = str(source.resolve())
+    return {
+        "runtime_dir": runtime_dir,
+        "data_dir": data_dir,
+        "resources": resources,
+        "missing": missing,
+        "resource_source_dir": str(resource_source_dir),
+    }
+
+
+def repeat_key(key: str, count: int) -> str:
+    return "\n".join(f"xdotool key {key}" for _ in range(max(0, count)))
+
+
+def automation_script(args: argparse.Namespace, out_dir: Path, runtime: dict[str, Any], save_name: str) -> str:
+    runtime_dir = Path(runtime["runtime_dir"]).resolve()
+    screenshot_dir = (out_dir / "screenshots").resolve()
+    screenshot_dir.mkdir(parents=True, exist_ok=True)
+    size_x, size_y = SIZE_COORDS[args.size]
+    water_x, water_y = WATER_COORDS[args.water]
+    monster_x, monster_y = MONSTER_COORDS[args.monster_strength]
+    computer_only_players = args.computer_only_players
+    player_downs = repeat_key("Down", args.players)
+    computer_downs = repeat_key("Down", computer_only_players + 1)
+    level_click = "xdotool mousemove 328 466 click 1" if args.level_count == 1 else ":"
+    backspaces = repeat_key("BackSpace", 80)
+    return f"""#!/usr/bin/env bash
+set -euo pipefail
+export WINEPREFIX={str(args.wineprefix.resolve())!r}
+export WINEARCH=win32
+cd {str(runtime_dir)!r}
+rm -f {save_name!r} /{save_name!r}
+
+screen() {{
+  scrot {str(screenshot_dir)!r}/"$1".png || true
+}}
+
+wait_for_main() {{
+  for _ in $(seq 1 80); do
+    if xdotool search --onlyvisible --name 'Heroes of Might' >/tmp/h3maped_window_ids 2>/dev/null; then
+      return 0
+    fi
+    sleep 0.25
+  done
+  return 1
+}}
+
+wait_for_named() {{
+  local name="$1"
+  for _ in $(seq 1 40); do
+    if xdotool search --onlyvisible --name "$name" >/tmp/h3maped_named_window_ids 2>/dev/null; then
+      return 0
+    fi
+    sleep 0.25
+  done
+  return 1
+}}
+
+open_new_dialog() {{
+  xdotool key Alt+f
+  sleep 0.2
+  xdotool key n
+  if wait_for_named 'New Map'; then
+    return 0
+  fi
+  xdotool mousemove 18 41 click 1
+  sleep 0.2
+  xdotool mousemove 35 61 click 1
+  wait_for_named 'New Map'
+}}
+
+wineboot -u >/dev/null 2>&1 || true
+wine ./h3maped.exe >{str((out_dir / "h3maped_wine.log").resolve())!r} 2>&1 &
+H3MAPED_PID=$!
+cleanup() {{
+  kill "$H3MAPED_PID" >/dev/null 2>&1 || true
+  wineserver -k >/dev/null 2>&1 || true
+}}
+trap cleanup EXIT
+
+wait_for_main
+sleep 3
+screen 01_main
+
+H3MAPED_WINDOW="$(head -n 1 /tmp/h3maped_window_ids)"
+xdotool windowfocus "$H3MAPED_WINDOW" || true
+open_new_dialog
+sleep 0.2
+screen 02_new_dialog
+xdotool mousemove {size_x} {size_y} click 1
+{level_click}
+xdotool mousemove 328 486 click 1
+sleep 0.1
+
+xdotool mousemove 528 538 click 1
+sleep 0.1
+{player_downs}
+xdotool key Return
+sleep 0.1
+
+xdotool mousemove 744 538 click 1
+sleep 0.1
+{computer_downs}
+xdotool key Return
+sleep 0.1
+
+xdotool mousemove {water_x} {water_y} click 1
+xdotool mousemove {monster_x} {monster_y} click 1
+screen 03_random_options
+
+xdotool mousemove 592 311 click 1
+sleep 4
+screen 04_generated
+
+xdotool key Alt+f
+sleep 0.2
+xdotool key a
+sleep 0.6
+screen 05_save_as
+xdotool mousemove 469 466 click 1
+xdotool key End
+{backspaces}
+xdotool type --clearmodifiers {save_name!r}
+xdotool key Return
+sleep 1
+screen 06_after_save
+
+if [[ ! -f {save_name!r} && ! -f /{save_name!r} ]]; then
+  xdotool mousemove 642 467 click 1
+  sleep 1
+  screen 07_after_save_retry
+fi
+
+candidate="$(find . -maxdepth 1 -type f -name '*{save_name}' | head -n 1 || true)"
+if [[ -f /{save_name!r} ]]; then
+  mv /{save_name!r} {str((out_dir / save_name).resolve())!r}
+elif [[ -f {save_name!r} ]]; then
+  cp {save_name!r} {str((out_dir / save_name).resolve())!r}
+elif [[ -n "$candidate" && -f "$candidate" ]]; then
+  cp "$candidate" {str((out_dir / save_name).resolve())!r}
+else
+  exit 42
+fi
+"""
+
+
+def extract_generation_summary(h3m_path: Path) -> dict[str, Any]:
+    data = fast_audit.load_bytes(h3m_path)
+    text = data.decode("latin-1", "ignore")
+    marker = "Map created by the Random Map Generator"
+    offset = text.find(marker)
+    if offset < 0:
+        return {
+            "status": "missing",
+            "reason": "No plaintext h3maped random-map description string was found in the saved H3M.",
+        }
+    end = text.find("\x00", offset)
+    if end < 0:
+        end = min(len(text), offset + 512)
+    summary_text = text[offset:end]
+    parsed: dict[str, Any] = {}
+    match = re.search(
+        r"Template was (?P<template>.*?), Random seed was (?P<seed>-?\d+), size (?P<size>\d+), "
+        r"levels (?P<levels>\d+), humans (?P<humans>\d+), computers (?P<computers>\d+), "
+        r"water (?P<water>.*?), monsters (?P<monsters>-?\d+)",
+        summary_text,
+    )
+    if match:
+        parsed = {
+            "template": match.group("template"),
+            "seed": int(match.group("seed")),
+            "size": int(match.group("size")),
+            "levels": int(match.group("levels")),
+            "humans": int(match.group("humans")),
+            "computers": int(match.group("computers")),
+            "water": match.group("water"),
+            "monsters": int(match.group("monsters")),
+        }
+    return {"status": "found", "text": summary_text, "parsed": parsed}
+
+
+def run_automation(args: argparse.Namespace, out_dir: Path, runtime: dict[str, Any]) -> dict[str, Any]:
+    save_name = f"h3maped_{args.case}.h3m"
+    script_path = out_dir / "run_h3maped_gui.sh"
+    script_path.write_text(automation_script(args, out_dir, runtime, save_name))
+    script_path.chmod(0o755)
+    env = os.environ.copy()
+    env["WINEPREFIX"] = str(args.wineprefix.resolve())
+    env["WINEARCH"] = "win32"
+    proc = subprocess.run(
+        ["xvfb-run", "-a", "-s", "-screen 0 1280x1024x24", "bash", str(script_path.resolve())],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        env=env,
+        timeout=args.timeout_seconds,
+        check=False,
+    )
+    output_h3m = out_dir / save_name
+    return {
+        "returncode": proc.returncode,
+        "stdout": proc.stdout,
+        "script": str(script_path),
+        "output_h3m": output_h3m,
+        "screenshots": sorted(str(path) for path in (out_dir / "screenshots").glob("*.png")),
+    }
+
+
 def run_generate(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
     manifest = build_base_manifest(args, out_dir, "generate")
     if manifest["h3maped"].get("status") != "verified":
@@ -152,16 +462,81 @@ def run_generate(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
 
     backend = manifest["backend"]
     if backend.get("wine"):
-        probe_cmd = [str(backend["wine"]), "--version"]
-        probe = subprocess.run(probe_cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
-        backend["wine_version"] = probe.stdout.strip()
+        backend["wine_version"] = command_output([str(backend["wine"]), "--version"])
+    missing_tools = [name for name in ["wine", "wineboot", "wineserver", "xvfb_run", "xdotool", "scrot"] if not backend.get(name)]
+    if missing_tools:
+        manifest["status"] = "blocked_missing_runner_prerequisite"
+        manifest["blocker"] = f"Missing required h3maped GUI automation tools: {', '.join(missing_tools)}."
+        return manifest
 
-    manifest["status"] = "blocked_missing_runner_backend"
-    manifest["blocker"] = (
-        "No committed h3maped.exe GUI automation backend exists in this repository. "
-        "Install and wire a deterministic Windows/Wine automation runner. "
-        "This tool intentionally refuses shipped H3M corpus files and caller-supplied maps as parity references."
-    )
+    runtime = prepare_runtime_layout(args, out_dir)
+    manifest["runtime_layout"] = {
+        "runtime_dir": str(runtime["runtime_dir"]),
+        "data_dir": str(runtime["data_dir"]),
+        "resources": runtime["resources"],
+        "resource_source_dir": runtime["resource_source_dir"],
+    }
+    if runtime["missing"]:
+        manifest["status"] = "blocked_missing_h3maped_resources"
+        manifest["blocker"] = (
+            "h3maped.exe launched from Wine requires HoMM3 LOD resources under a Data/ directory. "
+            f"Missing resources: {', '.join(runtime['missing'])}."
+        )
+        return manifest
+
+    try:
+        automation = run_automation(args, out_dir, runtime)
+    except subprocess.TimeoutExpired as exc:
+        manifest["status"] = "blocked_h3maped_automation_timeout"
+        manifest["blocker"] = f"h3maped GUI automation exceeded {args.timeout_seconds} seconds."
+        manifest["automation"] = {"timeout_seconds": args.timeout_seconds, "stdout": exc.stdout or ""}
+        return manifest
+
+    manifest["automation"] = {
+        "returncode": automation["returncode"],
+        "script": automation["script"],
+        "screenshots": automation["screenshots"],
+        "stdout": automation["stdout"],
+    }
+    h3m_path = Path(automation["output_h3m"])
+    if automation["returncode"] != 0 or not h3m_path.exists():
+        manifest["status"] = "blocked_h3maped_output_missing"
+        manifest["blocker"] = "h3maped GUI automation completed without a generated H3M output."
+        return manifest
+
+    metrics = fast_audit.parse_h3m(h3m_path)
+    compact = fast_audit.compact_metrics(metrics)
+    validation = {
+        "parsed": metrics.get("status") == "parsed",
+        "width_matches": int(metrics.get("width", 0)) == int(args.width),
+        "height_matches": int(metrics.get("height", 0)) == int(args.height),
+        "level_count_matches": int(metrics.get("level_count", 0)) == int(args.level_count),
+        "object_count_positive": int(metrics.get("object_count", 0)) > 0,
+    }
+    if not all(validation.values()):
+        manifest["status"] = "blocked_generated_h3m_validation_failed"
+        manifest["blocker"] = "The h3maped-generated H3M exists but failed structural validation."
+        manifest["validation"] = validation
+        manifest["metrics"] = {"compact": compact}
+        return manifest
+
+    manifest["status"] = "ready"
+    manifest["outputs"] = {
+        "h3m_path": str(h3m_path),
+        "h3m_sha256": sha256_file(h3m_path),
+        "automation_script": automation["script"],
+        "screenshots": automation["screenshots"],
+    }
+    manifest["validation"] = validation
+    generation_summary = extract_generation_summary(h3m_path)
+    manifest["generation_summary"] = generation_summary
+    parsed_summary = generation_summary.get("parsed", {}) if isinstance(generation_summary, dict) else {}
+    if parsed_summary:
+        manifest["controlled_identity"]["seed"] = str(parsed_summary.get("seed", ""))
+        manifest["controlled_identity"]["observed_template"] = parsed_summary.get("template", "")
+        manifest["controlled_identity"]["observed_humans"] = parsed_summary.get("humans", 0)
+        manifest["controlled_identity"]["observed_computers"] = parsed_summary.get("computers", 0)
+    manifest["metrics"] = {"compact": compact}
     return manifest
 
 
@@ -175,11 +550,16 @@ def main() -> int:
     parser.add_argument("--width", type=int, default=36)
     parser.add_argument("--height", type=int, default=36)
     parser.add_argument("--level-count", type=int, default=1)
-    parser.add_argument("--water", default="land", choices=["land", "water", "mixed"])
+    parser.add_argument("--water", default="land", choices=sorted(WATER_COORDS))
+    parser.add_argument("--monster-strength", default="random", choices=sorted(MONSTER_COORDS))
+    parser.add_argument("--computer-only-players", type=int, default=0)
     parser.add_argument("--template-id", default="")
     parser.add_argument("--source-template-id", default="")
     parser.add_argument("--source-catalog-index", type=int)
     parser.add_argument("--h3maped-exe", type=Path, default=DEFAULT_H3MAPED_EXE)
+    parser.add_argument("--resource-dir", type=Path, help="Directory containing HoMM3 LOD resources, defaulting to the h3maped.exe directory")
+    parser.add_argument("--wineprefix", type=Path, default=DEFAULT_WINEPREFIX)
+    parser.add_argument("--timeout-seconds", type=int, default=90)
     parser.add_argument("--out-root", type=Path, default=DEFAULT_OUT_ROOT)
     parser.add_argument("--allow-blocked", action="store_true", help="Return success while writing a blocked manifest")
     parser.add_argument("--pretty", action="store_true")
