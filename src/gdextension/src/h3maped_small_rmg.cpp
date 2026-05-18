@@ -1135,6 +1135,16 @@ std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_terrain(const s
 	return result;
 }
 
+std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype(const std::vector<H3ObjectRow> &rows, int32_t subtype) {
+	std::vector<H3ObjectRow> result;
+	for (const H3ObjectRow &row : rows) {
+		if (row.subtype_id == subtype) {
+			result.push_back(row);
+		}
+	}
+	return result;
+}
+
 int32_t h3maped_global_type_limit_5a26e4(int32_t type_id) {
 	static constexpr H3ObjectLimitOverride OVERRIDES[] = {
 		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
@@ -6529,8 +6539,17 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				placement["runtime_h3maped_terrain_id"] = runtime_terrain_id;
 				std::vector<H3ObjectRow> terrain_filtered_templates = filtered_h3_object_rows_for_subtype_and_terrain(mine_template_rows, field.subtype, runtime_terrain_id);
 				placement["matched_template_count_after_terrain_filter"] = int32_t(terrain_filtered_templates.size());
+				placement["terrain_filter_fallback_address"] = "0x4a9d6a/0x4a9911";
+				if (terrain_filtered_templates.empty()) {
+					terrain_filtered_templates = filtered_h3_object_rows_for_subtype(mine_template_rows, field.subtype);
+					placement["terrain_filter_fallback_status"] = terrain_filtered_templates.empty() ? String("fallback_no_subtype_rows") : String("fallback_without_terrain_bitset");
+					placement["matched_template_count_after_terrain_fallback"] = int32_t(terrain_filtered_templates.size());
+				} else {
+					placement["terrain_filter_fallback_status"] = "not_needed";
+					placement["matched_template_count_after_terrain_fallback"] = int32_t(terrain_filtered_templates.size());
+				}
 				if (terrain_filtered_templates.empty() || !grid_available) {
-					placement["status"] = terrain_filtered_templates.empty() ? String("blocked_no_0x42cc99_terrain_matching_mine_template_rows") : String("blocked_missing_generated_cell_grid");
+					placement["status"] = terrain_filtered_templates.empty() ? String("blocked_no_0x42cc99_matching_mine_template_rows") : String("blocked_missing_generated_cell_grid");
 					mine_placement_records.append(placement);
 					continue;
 				}
@@ -6782,12 +6801,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement["mine_guard_status"] = "0x4a65a5_scaled_guard_value_zero";
 				}
 
-				const int32_t adjacent_resource_source_index = int32_t(mine_coordinate_records.size());
-				if ((adjacent_resource_source_index % 4) == 0) {
-					placement["adjacent_resource_status"] = "0x4a9911_adjacent_resource_small_map_density_tempered";
-					placement["adjacent_resource_density_policy"] = "h3maped_0x4a9911_reward_sidecar_tempered_after_required_mine_pass";
-					continue;
-				}
+				placement["adjacent_resource_density_policy"] = "h3maped_0x4a9911_calls_0x4a9e40_after_successful_mine_placement";
 				mine_adjacent_resource_placement_attempt_count += 1;
 				SingleTilePlacementCandidate resource_candidate;
 				if (find_adjacent_single_tile_candidate(selected.x, selected.y, selected.level, runtime_index, 2, true, resource_candidate)) {
@@ -8893,7 +8907,8 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 				materialized_blocker_cell_count += 2;
 				if (scaled_guard_value > 0) {
 					append_private_cell(private_guard_records, private_guard_u8, zone_pair_a_flat, "connection_guard_0x4a5e03_0x4a6cf2_endpoint_a", connection_id, runtime_a, runtime_b, scaled_guard_value, Array());
-					materialized_guard_count += 1;
+					append_private_cell(private_guard_records, private_guard_u8, zone_pair_b_flat, "connection_guard_0x4a5e03_0x4a6cf2_endpoint_b", connection_id, runtime_a, runtime_b, scaled_guard_value, Array());
+					materialized_guard_count += 2;
 				}
 				materialized_connection_count += 1;
 				connection_records.append(record);

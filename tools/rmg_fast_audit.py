@@ -442,6 +442,7 @@ def semantic_from_amap(doc: dict[str, Any]) -> dict[str, Any]:
         kind = str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object"))))
         block_tiles = obj.get("package_block_tiles", obj.get("body_tiles", []))
         object_block_tiles = obj.get("package_body_tiles", obj.get("body_tiles", [])) if kind == "guard" else block_tiles
+        guard_control_tiles = obj.get("package_guard_control_zone_tiles", []) if kind == "guard" else []
         for tile in object_block_tiles:
             key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
             state["object_blocked"].add(key)
@@ -450,6 +451,9 @@ def semantic_from_amap(doc: dict[str, Any]) -> dict[str, Any]:
             state["guarded_blocked"].add(key)
             if kind == "guard":
                 state["guard_controlled"].add(key)
+        for tile in guard_control_tiles:
+            key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
+            state["guard_controlled"].add(key)
         if kind == "town":
             visit_points = obj.get("package_visit_tiles") or obj.get("approach_tiles") or [{"x": int(obj.get("x", 0)), "y": int(obj.get("y", 0))}]
             state["towns"].append({"id": str(obj.get("placement_id", "")), "x": int(obj.get("x", 0)), "y": int(obj.get("y", 0)), "visit_points": visit_points})
