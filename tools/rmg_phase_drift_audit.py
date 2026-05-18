@@ -228,7 +228,7 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
             "critical",
             "controlled_reference_blocked",
             evidence,
-            "finish deterministic h3maped.exe reference generation or explicitly ingest a controlled H3M with seed/template identity",
+            "finish deterministic h3maped.exe reference generation through a committed runner before interpreting exact parity",
         )
 
     mismatches = {
@@ -501,7 +501,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
         "package_phase_counts": package_counts,
         "root_cause_findings": findings,
         "implementation_order": [
-            "Bind comparison identity: generate or ingest controlled h3maped.exe reference outputs with seed/template metadata.",
+            "Bind comparison identity: generate controlled h3maped.exe reference outputs with seed/template metadata through a committed runner.",
             "Fix town/castle private scheduling and zone coordinate placement before object count tuning.",
             "Fix reward coordinate commit and artifact/resource materialization in the object vector phase.",
             "Fix road endpoint vector and pair acceptance; do not compensate in package serialization.",

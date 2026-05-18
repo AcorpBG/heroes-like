@@ -6539,14 +6539,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				placement["runtime_h3maped_terrain_id"] = runtime_terrain_id;
 				std::vector<H3ObjectRow> terrain_filtered_templates = filtered_h3_object_rows_for_subtype_and_terrain(mine_template_rows, field.subtype, runtime_terrain_id);
 				placement["matched_template_count_after_terrain_filter"] = int32_t(terrain_filtered_templates.size());
-				placement["terrain_filter_fallback_address"] = "0x4a9d6a/0x4a9911";
+				placement["terrain_filter_second_pass_address"] = "0x4a9d6a/0x4a9911";
 				if (terrain_filtered_templates.empty()) {
 					terrain_filtered_templates = filtered_h3_object_rows_for_subtype(mine_template_rows, field.subtype);
-					placement["terrain_filter_fallback_status"] = terrain_filtered_templates.empty() ? String("fallback_no_subtype_rows") : String("fallback_without_terrain_bitset");
-					placement["matched_template_count_after_terrain_fallback"] = int32_t(terrain_filtered_templates.size());
+					placement["terrain_filter_second_pass_status"] = terrain_filtered_templates.empty() ? String("second_pass_no_subtype_rows") : String("second_pass_without_terrain_bitset");
+					placement["matched_template_count_after_terrain_second_pass"] = int32_t(terrain_filtered_templates.size());
 				} else {
-					placement["terrain_filter_fallback_status"] = "not_needed";
-					placement["matched_template_count_after_terrain_fallback"] = int32_t(terrain_filtered_templates.size());
+					placement["terrain_filter_second_pass_status"] = "not_needed";
+					placement["matched_template_count_after_terrain_second_pass"] = int32_t(terrain_filtered_templates.size());
 				}
 				if (terrain_filtered_templates.empty() || !grid_available) {
 					placement["status"] = terrain_filtered_templates.empty() ? String("blocked_no_0x42cc99_matching_mine_template_rows") : String("blocked_missing_generated_cell_grid");
