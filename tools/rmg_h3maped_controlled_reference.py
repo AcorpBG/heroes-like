@@ -34,6 +34,12 @@ EXPECTED_H3MAPED_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96
 DEFAULT_OUT_ROOT = Path(".artifacts/rmg_h3maped_controlled_reference")
 DEFAULT_WINEPREFIX = Path(".artifacts/wine/h3maped")
 REQUIRED_RESOURCE_LODS = ("h3bitmap.lod", "h3sprite.lod", "h3ab_bmp.lod", "h3ab_spr.lod")
+HOMM3_RE_TEMPLATE_CATALOG = Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json")
+
+SEED_PATCH_WRITE_FILE_OFFSET = 0x9D9C4
+SEED_PATCH_SECOND_POP_FILE_OFFSET = 0x9D9D2
+SEED_PATCH_ORIGINAL_BYTES = bytes.fromhex("57 e8 c3 9d 04 00 ff 37")
+SEED_PATCH_ORIGINAL_SECOND_POP = 0x59
 
 SIZE_COORDS = {
     "small": (341, 413),
@@ -178,12 +184,9 @@ def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> d
             "identity_authority": "h3maped_gui_generated_output_observed_seed_unavailable",
         },
         "seed_control": {
-            "status": "unsupported_by_public_h3maped_ui",
-            "reason": (
-                "The recovered h3maped File/New random-map dialog exposes size, levels, player counts, water, "
-                "and monster strength, but no seed entry. This runner therefore generates real h3maped outputs "
-                "and marks them unsafe for same-seed parity claims until a memory/API seed injection path is recovered."
-            ),
+            "mode": args.seed_control_mode,
+            "status": "pending",
+            "reason": "",
         },
         "backend": backend_report(),
     }
@@ -228,12 +231,76 @@ def symlink_or_copy(source: Path, destination: Path) -> None:
         shutil.copy2(source, destination)
 
 
+def parse_requested_seed(seed: str) -> int:
+    value = int(str(seed), 0)
+    if value < -(2**31) or value > 0xFFFFFFFF:
+        raise ValueError(f"seed out of 32-bit range: {seed}")
+    return value & 0xFFFFFFFF
+
+
+def patch_h3maped_seed(runtime_exe: Path, seed: int) -> dict[str, Any]:
+    data = bytearray(runtime_exe.read_bytes())
+    original = bytes(data[SEED_PATCH_WRITE_FILE_OFFSET : SEED_PATCH_WRITE_FILE_OFFSET + len(SEED_PATCH_ORIGINAL_BYTES)])
+    original_second_pop = data[SEED_PATCH_SECOND_POP_FILE_OFFSET]
+    if original != SEED_PATCH_ORIGINAL_BYTES or original_second_pop != SEED_PATCH_ORIGINAL_SECOND_POP:
+        return {
+            "status": "blocked_unexpected_seed_patch_bytes",
+            "write_file_offset": hex(SEED_PATCH_WRITE_FILE_OFFSET),
+            "expected_bytes": SEED_PATCH_ORIGINAL_BYTES.hex(" "),
+            "actual_bytes": original.hex(" "),
+            "second_pop_file_offset": hex(SEED_PATCH_SECOND_POP_FILE_OFFSET),
+            "expected_second_pop": hex(SEED_PATCH_ORIGINAL_SECOND_POP),
+            "actual_second_pop": hex(original_second_pop),
+        }
+
+    patch = b"\xc7\x07" + seed.to_bytes(4, "little", signed=False) + b"\xff\x37"
+    data[SEED_PATCH_WRITE_FILE_OFFSET : SEED_PATCH_WRITE_FILE_OFFSET + len(patch)] = patch
+    data[SEED_PATCH_SECOND_POP_FILE_OFFSET] = 0x90
+    runtime_exe.write_bytes(data)
+    return {
+        "status": "patched",
+        "strategy": "artifact_pe_patch_type_random_map_generator_seed_ctor",
+        "requested_seed_uint32": seed,
+        "patched_exe": str(runtime_exe),
+        "patched_sha256": sha256_file(runtime_exe),
+        "write_virtual_address": "0x49d9c4",
+        "write_file_offset": hex(SEED_PATCH_WRITE_FILE_OFFSET),
+        "write_patch_bytes": patch.hex(" "),
+        "second_pop_virtual_address": "0x49d9d2",
+        "second_pop_file_offset": hex(SEED_PATCH_SECOND_POP_FILE_OFFSET),
+        "second_pop_patch_byte": "90",
+        "evidence": (
+            "Replaces push/call to 0x4e778d seed source with mov dword ptr [edi], seed; "
+            "push dword ptr [edi], then preserves h3maped's own 0x4e7269 RNG seed setter."
+        ),
+    }
+
+
+def template_identity_from_observed_name(name: str) -> dict[str, Any]:
+    if not name or not HOMM3_RE_TEMPLATE_CATALOG.exists():
+        return {}
+    parsed = json.loads(HOMM3_RE_TEMPLATE_CATALOG.read_text())
+    templates = parsed.get("templates", parsed if isinstance(parsed, list) else [])
+    for index, entry in enumerate(templates):
+        if str(entry.get("name", "")) == name:
+            return {
+                "observed_source_template_id": f"h3maped_template_{index:03d}",
+                "observed_source_catalog_index": index,
+                "observed_template_name": name,
+            }
+    return {"observed_template_name": name, "observed_template_catalog_lookup": "not_found"}
+
+
 def prepare_runtime_layout(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
     runtime_dir = out_dir / "runtime"
     data_dir = runtime_dir / "Data"
     runtime_dir.mkdir(parents=True, exist_ok=True)
     data_dir.mkdir(parents=True, exist_ok=True)
-    symlink_or_copy(args.h3maped_exe.resolve(), runtime_dir / "h3maped.exe")
+    runtime_exe = runtime_dir / "h3maped.exe"
+    shutil.copy2(args.h3maped_exe.resolve(), runtime_exe)
+    seed_patch: dict[str, Any] = {"status": "not_requested", "mode": args.seed_control_mode}
+    if args.seed_control_mode == "pe-patch":
+        seed_patch = patch_h3maped_seed(runtime_exe, parse_requested_seed(args.seed))
 
     resource_source_dir = args.resource_dir or args.h3maped_exe.parent
     resources: dict[str, str] = {}
@@ -252,6 +319,8 @@ def prepare_runtime_layout(args: argparse.Namespace, out_dir: Path) -> dict[str,
         "resources": resources,
         "missing": missing,
         "resource_source_dir": str(resource_source_dir),
+        "runtime_exe": runtime_exe,
+        "seed_patch": seed_patch,
     }
 
 
@@ -261,6 +330,8 @@ def repeat_key(key: str, count: int) -> str:
 
 def automation_script(args: argparse.Namespace, out_dir: Path, runtime: dict[str, Any], save_name: str) -> str:
     runtime_dir = Path(runtime["runtime_dir"]).resolve()
+    output_h3m = (out_dir / save_name).resolve()
+    reference_root = out_dir.parent.resolve()
     screenshot_dir = (out_dir / "screenshots").resolve()
     screenshot_dir.mkdir(parents=True, exist_ok=True)
     size_x, size_y = SIZE_COORDS[args.size]
@@ -276,15 +347,29 @@ set -euo pipefail
 export WINEPREFIX={str(args.wineprefix.resolve())!r}
 export WINEARCH=win32
 cd {str(runtime_dir)!r}
-rm -f {save_name!r} /{save_name!r}
+rm -f {save_name!r} /{save_name!r} {str(output_h3m)!r}
+find {str(reference_root)!r} -type f -name {save_name!r} -delete || true
 
 screen() {{
   scrot {str(screenshot_dir)!r}/"$1".png || true
 }}
 
 wait_for_main() {{
+  rm -f /tmp/h3maped_window_ids
   for _ in $(seq 1 80); do
-    if xdotool search --onlyvisible --name 'Heroes of Might' >/tmp/h3maped_window_ids 2>/dev/null; then
+    if xdotool search --onlyvisible --name 'Heroes of Might' | tail -n 1 >/tmp/h3maped_window_ids 2>/dev/null; then
+      if [[ -s /tmp/h3maped_window_ids ]]; then
+        return 0
+      fi
+    fi
+    sleep 0.25
+  done
+  return 1
+}}
+
+wait_for_generated() {{
+  for _ in $(seq 1 80); do
+    if ! xdotool search --onlyvisible --name 'Generating map' >/dev/null 2>&1; then
       return 0
     fi
     sleep 0.25
@@ -329,8 +414,6 @@ wait_for_main
 sleep 3
 screen 01_main
 
-H3MAPED_WINDOW="$(head -n 1 /tmp/h3maped_window_ids)"
-xdotool windowfocus "$H3MAPED_WINDOW" || true
 open_new_dialog
 sleep 0.2
 screen 02_new_dialog
@@ -356,12 +439,12 @@ xdotool mousemove {monster_x} {monster_y} click 1
 screen 03_random_options
 
 xdotool mousemove 592 311 click 1
-sleep 4
+sleep {args.generation_wait_seconds}
 screen 04_generated
 
-xdotool key Alt+f
+xdotool mousemove 18 41 click 1
 sleep 0.2
-xdotool key a
+xdotool mousemove 45 114 click 1
 sleep 0.6
 screen 05_save_as
 xdotool mousemove 469 466 click 1
@@ -369,17 +452,34 @@ xdotool key End
 {backspaces}
 xdotool type --clearmodifiers {save_name!r}
 xdotool key Return
-sleep 1
+for _ in $(seq 1 20); do
+  if [[ -f {save_name!r} || -f /{save_name!r} || -f {str(output_h3m)!r} ]]; then
+    break
+  fi
+  active_window="$(xdotool getactivewindow 2>/dev/null || true)"
+  if [[ -n "$active_window" ]]; then
+    xdotool windowactivate --sync "$active_window" key Return || true
+    sleep 0.2
+    xdotool windowactivate --sync "$active_window" key space || true
+  fi
+  xdotool mousemove 607 545 click --delay 200 1 || true
+  xdotool key Alt+y || true
+  sleep 0.5
+done
 screen 06_after_save
 
-if [[ ! -f {save_name!r} && ! -f /{save_name!r} ]]; then
+if [[ ! -f {save_name!r} && ! -f /{save_name!r} && ! -f {str(output_h3m)!r} ]]; then
   xdotool mousemove 642 467 click 1
+  sleep 0.4
+  xdotool mousemove 607 545 click --delay 200 1 || true
   sleep 1
   screen 07_after_save_retry
 fi
 
-candidate="$(find . -maxdepth 1 -type f -name '*{save_name}' | head -n 1 || true)"
-if [[ -f /{save_name!r} ]]; then
+candidate="$(find {str(reference_root)!r} -type f -name {save_name!r} | head -n 1 || true)"
+if [[ -f {str(output_h3m)!r} ]]; then
+  :
+elif [[ -f /{save_name!r} ]]; then
   mv /{save_name!r} {str((out_dir / save_name).resolve())!r}
 elif [[ -f {save_name!r} ]]; then
   cp {save_name!r} {str((out_dir / save_name).resolve())!r}
@@ -469,13 +569,24 @@ def run_generate(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
         manifest["blocker"] = f"Missing required h3maped GUI automation tools: {', '.join(missing_tools)}."
         return manifest
 
-    runtime = prepare_runtime_layout(args, out_dir)
+    try:
+        runtime = prepare_runtime_layout(args, out_dir)
+    except ValueError as exc:
+        manifest["status"] = "blocked_invalid_seed"
+        manifest["blocker"] = str(exc)
+        return manifest
     manifest["runtime_layout"] = {
         "runtime_dir": str(runtime["runtime_dir"]),
         "data_dir": str(runtime["data_dir"]),
+        "runtime_exe": str(runtime["runtime_exe"]),
         "resources": runtime["resources"],
         "resource_source_dir": runtime["resource_source_dir"],
     }
+    manifest["seed_control"]["patch"] = runtime["seed_patch"]
+    if runtime["seed_patch"].get("status", "").startswith("blocked_"):
+        manifest["status"] = runtime["seed_patch"]["status"]
+        manifest["blocker"] = "The artifact h3maped.exe seed-control patch did not match the pinned executable bytes."
+        return manifest
     if runtime["missing"]:
         manifest["status"] = "blocked_missing_h3maped_resources"
         manifest["blocker"] = (
@@ -536,6 +647,29 @@ def run_generate(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
         manifest["controlled_identity"]["observed_template"] = parsed_summary.get("template", "")
         manifest["controlled_identity"]["observed_humans"] = parsed_summary.get("humans", 0)
         manifest["controlled_identity"]["observed_computers"] = parsed_summary.get("computers", 0)
+        manifest["controlled_identity"].update(template_identity_from_observed_name(str(parsed_summary.get("template", ""))))
+
+    observed_seed = str(manifest["controlled_identity"].get("seed", ""))
+    requested_seed = str(parse_requested_seed(args.seed))
+    if args.seed_control_mode == "pe-patch":
+        if observed_seed != requested_seed:
+            manifest["status"] = "blocked_seed_control_mismatch"
+            manifest["blocker"] = (
+                f"Seed-control patch ran, but saved H3M summary seed `{observed_seed}` did not match requested seed `{requested_seed}`."
+            )
+            manifest["seed_control"]["status"] = "mismatch"
+            manifest["seed_control"]["reason"] = manifest["blocker"]
+            manifest["metrics"] = {"compact": compact}
+            return manifest
+        manifest["controlled_identity"]["same_seed_parity_supported"] = True
+        manifest["controlled_identity"]["identity_authority"] = "artifact_pe_patch_verified_by_saved_h3m_summary"
+        manifest["seed_control"]["status"] = "controlled"
+        manifest["seed_control"]["reason"] = "Artifact copy of h3maped.exe was patched at the recovered generator seed initialization site and the saved H3M summary seed matched the requested seed."
+    else:
+        manifest["seed_control"]["status"] = "observed_only"
+        manifest["seed_control"]["reason"] = (
+            "The public h3maped GUI has no seed entry; this manifest records the observed generated seed only."
+        )
     manifest["metrics"] = {"compact": compact}
     return manifest
 
@@ -560,6 +694,8 @@ def main() -> int:
     parser.add_argument("--resource-dir", type=Path, help="Directory containing HoMM3 LOD resources, defaulting to the h3maped.exe directory")
     parser.add_argument("--wineprefix", type=Path, default=DEFAULT_WINEPREFIX)
     parser.add_argument("--timeout-seconds", type=int, default=90)
+    parser.add_argument("--generation-wait-seconds", type=int, default=12)
+    parser.add_argument("--seed-control-mode", choices=["pe-patch", "observed-gui"], default="pe-patch")
     parser.add_argument("--out-root", type=Path, default=DEFAULT_OUT_ROOT)
     parser.add_argument("--allow-blocked", action="store_true", help="Return success while writing a blocked manifest")
     parser.add_argument("--pretty", action="store_true")
