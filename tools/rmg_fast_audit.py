@@ -293,20 +293,25 @@ def terrain_blocked_from_h3m(data: bytes, tile_offset: int, width: int, level: i
 
 def semantic_from_h3m(data: bytes, tile_offset: int, records: list[dict[str, Any]], width: int, level_count: int) -> dict[str, Any]:
     states = {
-        str(level): {"terrain_blocked": terrain_blocked_from_h3m(data, tile_offset, width, level), "object_blocked": set(), "guarded_blocked": set(), "guard_controlled": set(), "towns": []}
+        str(level): {"terrain_blocked": terrain_blocked_from_h3m(data, tile_offset, width, level), "object_blocked": set(), "guarded_blocked": set(), "movement_blocked": set(), "guarded_movement_blocked": set(), "guard_controlled": set(), "towns": []}
         for level in range(level_count)
     }
     for record in records:
         level_key = str(int(record.get("level", 0)))
-        state = states.setdefault(level_key, {"terrain_blocked": set(), "object_blocked": set(), "guarded_blocked": set(), "guard_controlled": set(), "towns": []})
+        state = states.setdefault(level_key, {"terrain_blocked": set(), "object_blocked": set(), "guarded_blocked": set(), "movement_blocked": set(), "guarded_movement_blocked": set(), "guard_controlled": set(), "towns": []})
         category = h3m_category(record)
         for point in mask_points(record, False, width, width):
-            state["object_blocked"].add(point_key(point["x"], point["y"]))
-            state["guarded_blocked"].add(point_key(point["x"], point["y"]))
+            key = point_key(point["x"], point["y"])
+            state["object_blocked"].add(key)
+            state["guarded_blocked"].add(key)
+            state["movement_blocked"].add(key)
+            state["guarded_movement_blocked"].add(key)
         if category == "guard":
             for point in guard_control_points(record, width, width):
-                state["guard_controlled"].add(point_key(point["x"], point["y"]))
-                state["guarded_blocked"].add(point_key(point["x"], point["y"]))
+                key = point_key(point["x"], point["y"])
+                state["guard_controlled"].add(key)
+                state["guarded_blocked"].add(key)
+                state["guarded_movement_blocked"].add(key)
         if category == "town":
             visit_points = mask_points(record, True, width, width) or [{"x": int(record.get("x", 0)), "y": int(record.get("y", 0))}]
             state["towns"].append({"id": f"owner_town_{level_key}_{len(state['towns']) + 1:02d}", "x": int(record.get("x", 0)), "y": int(record.get("y", 0)), "visit_points": visit_points})
@@ -433,27 +438,31 @@ def semantic_from_amap(doc: dict[str, Any]) -> dict[str, Any]:
     height = int(doc.get("height", 0))
     level_count = int(doc.get("level_count", 1))
     states = {
-        str(level): {"terrain_blocked": native_terrain_blocked(doc, level), "object_blocked": set(), "guarded_blocked": set(), "guard_controlled": set(), "towns": []}
+        str(level): {"terrain_blocked": native_terrain_blocked(doc, level), "object_blocked": set(), "guarded_blocked": set(), "movement_blocked": set(), "guarded_movement_blocked": set(), "guard_controlled": set(), "towns": []}
         for level in range(level_count)
     }
     for obj in doc.get("objects", []):
         level_key = str(int(obj.get("level", 0)))
-        state = states.setdefault(level_key, {"terrain_blocked": set(), "object_blocked": set(), "guarded_blocked": set(), "guard_controlled": set(), "towns": []})
+        state = states.setdefault(level_key, {"terrain_blocked": set(), "object_blocked": set(), "guarded_blocked": set(), "movement_blocked": set(), "guarded_movement_blocked": set(), "guard_controlled": set(), "towns": []})
         kind = str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object"))))
         block_tiles = obj.get("package_block_tiles", obj.get("body_tiles", []))
-        object_block_tiles = obj.get("package_body_tiles", obj.get("body_tiles", [])) if kind == "guard" else block_tiles
+        object_block_tiles = obj.get("package_body_tiles", obj.get("body_tiles", []))
         guard_control_tiles = obj.get("package_guard_control_zone_tiles", []) if kind == "guard" else []
         for tile in object_block_tiles:
             key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
             state["object_blocked"].add(key)
+            state["guarded_blocked"].add(key)
         for tile in block_tiles:
             key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
-            state["guarded_blocked"].add(key)
+            state["movement_blocked"].add(key)
+            state["guarded_movement_blocked"].add(key)
             if kind == "guard":
                 state["guard_controlled"].add(key)
         for tile in guard_control_tiles:
             key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
             state["guard_controlled"].add(key)
+            state["guarded_blocked"].add(key)
+            state["guarded_movement_blocked"].add(key)
         if kind == "town":
             visit_points = obj.get("package_visit_tiles") or obj.get("approach_tiles") or [{"x": int(obj.get("x", 0)), "y": int(obj.get("y", 0))}]
             state["towns"].append({"id": str(obj.get("placement_id", "")), "x": int(obj.get("x", 0)), "y": int(obj.get("y", 0)), "visit_points": visit_points})
@@ -519,7 +528,7 @@ def town_pair_topology(blocked: set[str], width: int, height: int, towns: list[d
 def semantic_summary(states: dict[str, dict[str, Any]], width: int, height: int) -> dict[str, Any]:
     by_level: dict[str, Any] = {}
     nearest_values: list[int] = []
-    object_route_total = guarded_route_total = guard_controlled_total = 0
+    object_route_total = guarded_route_total = movement_route_total = guarded_movement_route_total = guard_controlled_total = 0
     for level_key, state in sorted(states.items()):
         towns = state["towns"]
         nearest = nearest_manhattan([(int(t["x"]), int(t["y"])) for t in towns])
@@ -527,10 +536,16 @@ def semantic_summary(states: dict[str, dict[str, Any]], width: int, height: int)
             nearest_values.append(nearest)
         object_blocked = set(state["terrain_blocked"]) | set(state["object_blocked"])
         guarded_blocked = set(state["terrain_blocked"]) | set(state["guarded_blocked"])
+        movement_blocked = set(state["terrain_blocked"]) | set(state["movement_blocked"])
+        guarded_movement_blocked = set(state["terrain_blocked"]) | set(state["guarded_movement_blocked"])
         object_topology = town_pair_topology(object_blocked, width, height, towns)
         guarded_topology = town_pair_topology(guarded_blocked, width, height, towns)
+        movement_topology = town_pair_topology(movement_blocked, width, height, towns)
+        guarded_movement_topology = town_pair_topology(guarded_movement_blocked, width, height, towns)
         object_route_total += int(object_topology["reachable_pair_count"])
         guarded_route_total += int(guarded_topology["reachable_pair_count"])
+        movement_route_total += int(movement_topology["reachable_pair_count"])
+        guarded_movement_route_total += int(guarded_movement_topology["reachable_pair_count"])
         guard_controlled_total += len(state["guard_controlled"])
         by_level[level_key] = {
             "town_count": len(towns),
@@ -538,15 +553,21 @@ def semantic_summary(states: dict[str, dict[str, Any]], width: int, height: int)
             "terrain_blocked_tile_count": len(state["terrain_blocked"]),
             "object_blocked_tile_count": len(state["object_blocked"]),
             "guarded_blocked_tile_count": len(state["guarded_blocked"]),
+            "movement_blocked_tile_count": len(state["movement_blocked"]),
+            "guarded_movement_blocked_tile_count": len(state["guarded_movement_blocked"]),
             "guard_controlled_tile_count": len(state["guard_controlled"]),
             "object_route_topology": object_topology,
             "guarded_route_topology": guarded_topology,
+            "movement_route_topology": movement_topology,
+            "guarded_movement_route_topology": guarded_movement_topology,
         }
     return {
         "by_level": by_level,
         "nearest_town_manhattan_min": min(nearest_values) if nearest_values else 0,
         "object_route_reachable_pair_count_total": object_route_total,
         "guarded_route_reachable_pair_count_total": guarded_route_total,
+        "movement_route_reachable_pair_count_total": movement_route_total,
+        "guarded_movement_route_reachable_pair_count_total": guarded_movement_route_total,
         "guard_controlled_tile_count_total": guard_controlled_total,
     }
 

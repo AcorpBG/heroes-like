@@ -15,6 +15,11 @@ func _run() -> void:
 	var case_id := _arg_value("--case-id", DEFAULT_CASE_ID)
 	var owner_path := _arg_value("--owner", DEFAULT_OWNER_PATH)
 	var seed := _arg_value("--seed", DEFAULT_SEED)
+	var player_count := int(_arg_value("--players", "3"))
+	var human_players := int(_arg_value("--human-players", "1"))
+	var water_mode := _arg_value("--water", "land")
+	var level_count := int(_arg_value("--level-count", "1"))
+	var size_class_id := _arg_value("--size-class-id", "homm3_small")
 	var absolute_output_dir := ProjectSettings.globalize_path(output_dir)
 	var mkdir_error := DirAccess.make_dir_recursive_absolute(absolute_output_dir)
 	if mkdir_error != OK:
@@ -39,12 +44,13 @@ func _run() -> void:
 		seed,
 		"",
 		"",
-		3,
-		"land",
-		false,
-		"homm3_small",
+		player_count,
+		water_mode,
+		level_count > 1,
+		size_class_id,
 		ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)
+	config["player_constraints"]["human_count"] = human_players
 	var inspection_started_msec := Time.get_ticks_msec()
 	var inspection: Dictionary = service.inspect_h3maped_small_rmg_port(config)
 	var inspection_wall_msec := Time.get_ticks_msec() - inspection_started_msec
@@ -90,6 +96,7 @@ func _run() -> void:
 		"normalized_config": generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {},
 		"selection_identity": _summarize_value(inspection.get("selection_identity", {}), 3),
 		"phase_summaries": _phase_summaries(inspection),
+		"road_comparison_inputs": _road_comparison_inputs(inspection),
 		"package_adoption": adoption_summary,
 	}
 	var report_path := absolute_output_dir.path_join("phase_snapshot.json")
@@ -125,6 +132,32 @@ func _adoption_summary(adoption: Dictionary, adoption_wall_msec: int, service: V
 	result["save_status"] = String((save_result.get("report", {}) as Dictionary).get("status", "")) if save_result.get("report", {}) is Dictionary else ""
 	result["package_hash"] = String(save_result.get("package_hash", ""))
 	return result
+
+func _road_comparison_inputs(report: Dictionary) -> Dictionary:
+	var roads: Dictionary = report.get("roads_and_rivers", {}) if report.get("roads_and_rivers", {}) is Dictionary else {}
+	var serialization: Dictionary = roads.get("road_overlay_serialization", {}) if roads.get("road_overlay_serialization", {}) is Dictionary else {}
+	return {
+		"schema_id": "rmg_native_private_road_comparison_inputs_v1",
+		"status": String(roads.get("status", "")),
+		"generator_coordinate_records": roads.get("generator_coordinate_records", []),
+		"generator_coordinate_record_count": int(roads.get("generator_coordinate_record_count", 0)),
+		"excluded_local_coordinate_records": roads.get("excluded_local_coordinate_records", []),
+		"excluded_local_coordinate_record_count": int(roads.get("excluded_local_coordinate_record_count", 0)),
+		"complete_executable_vector_claim": bool(roads.get("complete_executable_vector_claim", false)),
+		"complete_executable_vector_blocker": String(roads.get("complete_executable_vector_blocker", "")),
+		"route_pair_policy": String(roads.get("route_pair_policy", "")),
+		"pair_candidate_records": roads.get("pair_candidate_records", []),
+		"pair_candidate_iteration_count": int(roads.get("pair_candidate_iteration_count", 0)),
+		"accepted_chain_records": roads.get("accepted_chain_records", []),
+		"accepted_predecessor_chain_count": int(roads.get("accepted_predecessor_chain_count", 0)),
+		"road_overlay_cell_records": roads.get("road_overlay_cell_records", []),
+		"road_overlay_cell_count": int(roads.get("road_overlay_cell_count", 0)),
+		"selected_road_type": int(roads.get("selected_road_type", 0)),
+		"road_eligibility_bit_25_status": String(roads.get("road_eligibility_bit_25_status", "")),
+		"tile_byte_4_road_type_u8": serialization.get("tile_byte_4_road_type_u8", PackedInt32Array()),
+		"tile_byte_5_road_art_u8": serialization.get("tile_byte_5_road_art_u8", PackedInt32Array()),
+		"tile_byte_6_road_flags_u8": serialization.get("tile_byte_6_road_flags_u8", PackedInt32Array()),
+	}
 
 func _phase_summaries(report: Dictionary) -> Dictionary:
 	var result := {}
