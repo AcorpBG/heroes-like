@@ -38,6 +38,54 @@ def as_int(value: Any, default: int = 0) -> int:
         return default
 
 
+def reward_coordinate_selected_count(phase: dict[str, Any]) -> int:
+    """Read the selected reward count from the phase-level export, with legacy fallback."""
+    direct = get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_selected_count", None)
+    if direct is not None:
+        return as_int(direct)
+    return as_int(get_path(phase, "mines_rewards_and_object_vector.reward_scheduler_boundary.coordinate_selected_count"))
+
+
+def port_fidelity_summary(phase: dict[str, Any]) -> dict[str, Any]:
+    object_phase = get_path(phase, "mines_rewards_and_object_vector", {})
+    reward_boundary = get_path(phase, "mines_rewards_and_object_vector.reward_scheduler_boundary", {})
+    primary_boundary = get_path(phase, "mines_rewards_and_object_vector.primary_category_boundary", {})
+    mine_boundary = get_path(phase, "mines_rewards_and_object_vector.mine_requirements_boundary", {})
+    projected_count = as_int(get_path(phase, "mines_rewards_and_object_vector.projected_private_record_count"))
+    recovery_count = as_int(get_path(phase, "mines_rewards_and_object_vector.recovery_fallback_record_count"))
+    projected_domains: list[str] = []
+    if as_int(mine_boundary.get("materialized_private_mine_coordinate_record_count")) > 0:
+        projected_domains.append("mine_coordinates")
+    if as_int(mine_boundary.get("materialized_private_mine_guard_record_count")) > 0:
+        projected_domains.append("mine_guards")
+    if as_int(mine_boundary.get("materialized_private_adjacent_resource_record_count")) > 0:
+        projected_domains.append("mine_adjacent_resources")
+    if as_int(primary_boundary.get("materialized_private_primary_category_record_count")) > 0:
+        projected_domains.append("primary_category_objects")
+    if as_int(primary_boundary.get("materialized_private_primary_category_guard_record_count")) > 0:
+        projected_domains.append("primary_category_guards")
+    if as_int(reward_boundary.get("materialized_private_reward_coordinate_record_count")) > 0:
+        projected_domains.append("reward_coordinates")
+    if as_int(reward_boundary.get("reward_guard_coordinate_record_count")) > 0:
+        projected_domains.append("reward_guards")
+    if as_int(reward_boundary.get("object_lookup_selected_count")) > 0:
+        projected_domains.append("reward_candidate_proxy_lookup")
+    return {
+        "status": "exact_port_claim" if bool(object_phase.get("complete_object_reward_guard_exact_port_claim", False)) else "projected_semantics_remaining",
+        "port_fidelity": str(object_phase.get("port_fidelity", "")),
+        "exact_port_claim": bool(object_phase.get("exact_port_claim", False)),
+        "complete_object_reward_guard_exact_port_claim": bool(object_phase.get("complete_object_reward_guard_exact_port_claim", False)),
+        "exactness_blocker": str(object_phase.get("exactness_blocker", "")),
+        "projected_private_record_count": projected_count,
+        "recovery_fallback_record_count": recovery_count,
+        "projected_domains": projected_domains,
+        "reward_coordinate_selected_count": reward_coordinate_selected_count(phase),
+        "reward_coordinate_score_gate_recovery_selected_count": as_int(reward_boundary.get("coordinate_score_gate_recovery_selected_count")),
+        "reward_candidate_scan_complete_vector_claim": bool(reward_boundary.get("candidate_scan_complete_vector_claim", False)),
+        "primary_category_exact_port_claim": bool(primary_boundary.get("exact_port_claim", False)),
+    }
+
+
 def parse_h3m_records(path: Path) -> list[dict[str, Any]]:
     data = fast_audit.load_bytes(path)
     width = fast_audit.u32(data, 5)
@@ -450,7 +498,7 @@ def build_earliest_divergence_report(
             "owner_reward_category_count": owner_rewards,
             "native_reward_category_count": native_rewards,
             "lookup_selected_count": get_path(phase, "mines_rewards_and_object_vector.reward_object_lookup_selected_count", None),
-            "coordinate_selected_count": get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_selected_count", None),
+            "coordinate_selected_count": reward_coordinate_selected_count(phase),
             "private_reward_coordinate_count": get_path(phase, "mines_rewards_and_object_vector.materialized_private_reward_coordinate_record_count", None),
             "candidate_scan_eligible_total": get_path(phase, "mines_rewards_and_object_vector.reward_candidate_scan_eligible_total", None),
             "score_gate_recovery_scan_count": get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_score_gate_recovery_scan_count", None),
@@ -641,6 +689,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
     native = compact_metrics(native_metrics)
     phase = snapshot.get("phase_summaries", {}) if isinstance(snapshot.get("phase_summaries"), dict) else {}
     package_phase = phase.get("public_package_adoption", {}) if isinstance(phase.get("public_package_adoption"), dict) else {}
+    fidelity = port_fidelity_summary(phase)
 
     private_counts = {
         "town": as_int(get_path(phase, "town_castle_phase.project_town_record_candidate_count")),
@@ -651,8 +700,10 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
         "reward_guard": as_int(get_path(phase, "mines_rewards_and_object_vector.materialized_private_reward_guard_record_count")),
         "reward_lookup_selected": as_int(get_path(phase, "mines_rewards_and_object_vector.reward_object_lookup_selected_count")),
         "reward_candidate_scan_eligible": as_int(get_path(phase, "mines_rewards_and_object_vector.reward_candidate_scan_eligible_total")),
-        "reward_coordinate_selected": as_int(get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_selected_count")),
+        "reward_coordinate_selected": reward_coordinate_selected_count(phase),
         "reward_coordinate_score_gate_recovery_selected": as_int(get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_score_gate_recovery_selected_count")),
+        "projected_private_records": as_int(fidelity.get("projected_private_record_count")),
+        "recovery_fallback_records": as_int(fidelity.get("recovery_fallback_record_count")),
         "road_overlay_cells": as_int(get_path(phase, "roads_and_rivers.road_overlay_cell_count")),
         "road_coordinate_records": as_int(get_path(phase, "roads_and_rivers.generator_coordinate_record_count")),
         "road_pair_candidates": as_int(get_path(phase, "roads_and_rivers.pair_candidate_iteration_count")),
@@ -719,6 +770,26 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
 
     findings: list[dict[str, Any]] = []
     findings.append(reference_finding)
+    if fidelity.get("status") == "projected_semantics_remaining":
+        findings.append(
+            finding(
+                "object-reward-guard-port-fidelity",
+                "projected semantics vs exact executable port",
+                "high",
+                "projected_semantics_remaining",
+                {
+                    "port_fidelity": fidelity.get("port_fidelity"),
+                    "projected_private_record_count": fidelity.get("projected_private_record_count"),
+                    "recovery_fallback_record_count": fidelity.get("recovery_fallback_record_count"),
+                    "projected_domains": fidelity.get("projected_domains"),
+                    "reward_coordinate_selected_count": fidelity.get("reward_coordinate_selected_count"),
+                    "reward_coordinate_score_gate_recovery_selected_count": fidelity.get("reward_coordinate_score_gate_recovery_selected_count"),
+                    "reward_candidate_scan_complete_vector_claim": fidelity.get("reward_candidate_scan_complete_vector_claim"),
+                    "exactness_blocker": fidelity.get("exactness_blocker"),
+                },
+                "replace projected reward/object/guard candidate lookup, coordinate commit, generated-cell mutation, and guard adjacent-cell writers with executable-equivalent ports before interpreting final count deltas as exact h3maped parity",
+            )
+        )
 
     owner_towns = as_int(owner.get("counts_by_category", {}).get("town"))
     native_towns = as_int(native.get("counts_by_category", {}).get("town"))
@@ -905,6 +976,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
         "owner_detail": owner_detail,
         "native_detail": native_extra,
         "earliest_divergence": earliest_divergence,
+        "port_fidelity_summary": fidelity,
         "road_comparison": road_report,
         "private_phase_counts": private_counts,
         "package_phase_counts": package_counts,
@@ -950,6 +1022,17 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         for item in earliest.get("ordered_phase_checks", []):
             if isinstance(item, dict):
                 lines.append(f"- `{item.get('phase')}`: `{item.get('status')}` / `{item.get('classification')}`")
+    fidelity = report.get("port_fidelity_summary", {})
+    if isinstance(fidelity, dict):
+        lines.extend([
+            "",
+            "## Port Fidelity",
+            "",
+            f"- Status: `{fidelity.get('status')}`",
+            f"- Projected private records: `{fidelity.get('projected_private_record_count')}`",
+            f"- Recovery fallback records: `{fidelity.get('recovery_fallback_record_count')}`",
+            f"- Projected domains: `{', '.join(fidelity.get('projected_domains', []))}`",
+        ])
     road = report.get("road_comparison", {})
     if isinstance(road, dict):
         lines.extend([

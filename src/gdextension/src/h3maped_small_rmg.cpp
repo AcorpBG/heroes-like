@@ -6767,6 +6767,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				mine_placement_selected_count += 1;
 				mine_placement_marked_body_cell_count += marked_cells;
 				placement["status"] = "0x4a9911_0x4a9641_mine_coordinate_record_projected_private";
+				placement["port_fidelity"] = "projected_semantics";
+				placement["exact_port_claim"] = false;
+				placement["exactness_blocker"] = "0x4a9911/0x4a9641 coordinate/object mutation ordering is recovered enough for usable placement but not proven as an exact executable port";
 				placement["placement_constraint_rng_value"] = placement_rng_value;
 				placement["placement_constraint_selected_index"] = selected_index;
 				placement["placement_constraint_selected_x"] = selected.x;
@@ -6805,6 +6808,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				coordinate_record["body_tiles"] = mine_body_tiles;
 				coordinate_record["body_tile_count"] = mine_body_tiles.size();
 				coordinate_record["complete_executable_vector_claim"] = false;
+				coordinate_record["port_fidelity"] = "projected_semantics";
+				coordinate_record["exact_port_claim"] = false;
+				coordinate_record["exactness_blocker"] = "0x4a9911/0x4a9641 mine local coordinate vector is package-visible but not part of the road generator+0x14b0 endpoint vector";
 				mine_coordinate_records.append(coordinate_record);
 				if (density_placement) {
 					mine_density_coordinate_record_count += 1;
@@ -6843,6 +6849,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						guard_record["distance_squared_from_mine"] = guard_candidate.distance_squared;
 						guard_record["placement_score_low_word"] = guard_candidate.score;
 						guard_record["source_algorithm"] = "h3maped_0x4a9911_mine_guard_value_0x4a960a_0x4a65a5";
+						guard_record["port_fidelity"] = "projected_semantics";
+						guard_record["exact_port_claim"] = false;
+						guard_record["exactness_blocker"] = "mine guard value scaling is anchored to 0x4a65a5, while adjacent-cell selection remains a projected private placement";
 						mine_guard_records.append(guard_record);
 						mine_guard_coordinate_record_count += 1;
 						placement["mine_guard_status"] = "0x4a9911_adjacent_mine_guard_record_projected_private";
@@ -6907,6 +6916,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					resource_record["distance_squared_from_mine"] = resource_candidate.distance_squared;
 					resource_record["placement_score_low_word"] = resource_candidate.score;
 					resource_record["source_algorithm"] = "h3maped_0x4a9911_calls_0x4a9e40_type_0x4f_resource_subtype_category";
+					resource_record["port_fidelity"] = "projected_semantics";
+					resource_record["exact_port_claim"] = false;
+					resource_record["exactness_blocker"] = "adjacent mine resource placement uses recovered 0x4a9911/0x4a9e40 intent with projected adjacent-cell materialization";
 					mine_adjacent_resource_records.append(resource_record);
 					mine_adjacent_resource_coordinate_record_count += 1;
 					placement["mine_adjacent_resource_status"] = "0x4a9911_adjacent_resource_record_projected_private";
@@ -7059,6 +7071,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			primary_category_score_depletion_call_count += 1;
 			primary_category_score_depletion_mutated_cell_count += score_depleted_cells;
 			placement["status"] = "0x4a901a_primary_category_object_record_projected_private";
+			placement["port_fidelity"] = "projected_semantics";
+			placement["exact_port_claim"] = false;
+			placement["exactness_blocker"] = "0x4a901a weighted primary category placement uses recovered templates and generated-cell gates, but object constructor/order semantics are not fully proven";
 			placement["placement_id"] = String("h3maped_small_primary_object_") + h3_slot_id_2(primary_category_selected_count + 1);
 			placement["coordinate_rng_value"] = coordinate_rng_value;
 			placement["selected_x"] = selected.x;
@@ -7117,6 +7132,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						guard_record["distance_squared_from_primary_object"] = guard_candidate.distance_squared;
 						guard_record["placement_score_low_word"] = guard_candidate.score;
 						guard_record["source_algorithm"] = "h3maped_0x4a901a_primary_category_guard_0x4a65a5";
+						guard_record["port_fidelity"] = "projected_semantics";
+						guard_record["exact_port_claim"] = false;
+						guard_record["exactness_blocker"] = "primary-category guard writer is value-anchored but still uses projected adjacent-cell selection";
 						primary_category_guard_records.append(guard_record);
 						primary_category_guard_coordinate_record_count += 1;
 					}
@@ -7168,6 +7186,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	Dictionary primary_category_boundary;
 	primary_category_boundary["status"] = "0x4a8db2_0x4a901a_primary_category_objects_projected_private";
+	primary_category_boundary["port_fidelity"] = "projected_semantics";
+	primary_category_boundary["exact_port_claim"] = false;
+	primary_category_boundary["exactness_blocker"] = "0x4a901a candidate vector, object construction, and guard side effects are not yet an exact executable-equivalent port";
 	primary_category_boundary["source"] = "weighted primary category placement driven directly by source 0x4a8db2 count/density fields with recovered object templates adapted as project scenic_object records at package boundary";
 	primary_category_boundary["source_field_offsets"] = "+0x28/+0x2c/+0x38/+0x3c";
 	primary_category_boundary["object_record_constructor_anchor"] = "0x49ba89";
@@ -7342,6 +7363,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			value_record["commit_helper"] = "0x4aa9b7";
 			value_record["commit_materialized"] = false;
 			value_record["coordinate_vector_append_pending"] = true;
+			value_record["port_fidelity"] = "projected_semantics";
+			value_record["exact_port_claim"] = false;
+			value_record["exactness_blocker"] = "reward value scheduling is anchored to recovered 0x4aab7e/0x4aa354 fields, while downstream object commit remains projected";
 
 			const int32_t object_lookup_min_value = selected_value / 4;
 			const int32_t object_lookup_max_value = selected_value;
@@ -7364,6 +7388,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["primary_value_divisor"] = 4;
 			object_lookup["scan_source"] = "proxy_backed_recovered_static_candidates_from_0x49f95a";
 			object_lookup["scan_complete_candidate_vector_claim"] = false;
+			object_lookup["port_fidelity"] = "projected_semantics";
+			object_lookup["exact_port_claim"] = false;
+			object_lookup["exactness_blocker"] = "0x4a9f1c candidate vector is backed by recovered static/proxy catalog rows, not a complete executable candidate table replay";
 			object_lookup["proxy_catalog_source"] = COMPILED_REWARD_PROXY_SOURCE;
 			object_lookup["proxy_adaptation_policy"] = "h3maped_type_subtype_to_original_runtime_proxy";
 			object_lookup["eligible_candidate_count"] = object_selection.eligible_count;
@@ -7569,6 +7596,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					reward_generated_cell_score_depletion_call_count += 1;
 					reward_generated_cell_score_depletion_mutated_cell_count += score_depleted_cells;
 					placement_record["status"] = "0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record_projected_private";
+					placement_record["port_fidelity"] = score_gate_recovery_used ? String("recovery_fallback") : String("projected_semantics");
+					placement_record["exact_port_claim"] = false;
+					placement_record["exactness_blocker"] = score_gate_recovery_used ? String("score-gate recovery bypasses the exact 0x4aa9b7 threshold semantics to keep usable placement after generated-cell score depletion") : String("0x4aa9b7/0x4aa603/0x4aa3e9 coordinate commit and object mutation order is not yet a complete executable port");
 					placement_record["coordinate_rng_value"] = coordinate_rng_value;
 					placement_record["selected_coordinate_index"] = selected_coordinate_index;
 					placement_record["selected_x"] = selected_coordinate.x;
@@ -7631,6 +7661,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						coordinate_record["visit_tiles"] = reward_action_tiles;
 						coordinate_record["visit_tile"] = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
 						coordinate_record["complete_executable_vector_claim"] = false;
+						coordinate_record["port_fidelity"] = score_gate_recovery_used ? String("recovery_fallback") : String("projected_semantics");
+						coordinate_record["exact_port_claim"] = false;
+						coordinate_record["score_gate_recovery_used"] = score_gate_recovery_used;
+						coordinate_record["exactness_blocker"] = score_gate_recovery_used ? String("coordinate came from native recovery fallback after exact score threshold produced no candidates") : String("reward object local coordinate vector and generated-cell mutation order are not fully proven against 0x4aa9b7/0x4aa3e9");
 						reward_coordinate_records.append(coordinate_record);
 						const int32_t reward_guard_value = h3maped_strength_scaled_value_4a65a5(selected_value, mine_guard_strength_mode);
 						placement_record["reward_guard_base_value"] = selected_value;
@@ -7663,6 +7697,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["distance_squared_from_reward"] = guard_candidate.distance_squared;
 								guard_record["placement_score_low_word"] = guard_candidate.score;
 								guard_record["source_algorithm"] = "h3maped_reward_guard_projection_0x4a65a5_adjacent_valid_cell";
+								guard_record["port_fidelity"] = "projected_semantics";
+								guard_record["exact_port_claim"] = false;
+								guard_record["exactness_blocker"] = "reward guard value scaling is anchored to 0x4a65a5, while guard producer and adjacent-cell selection are still projected";
 								reward_guard_records.append(guard_record);
 								reward_guard_coordinate_record_count += 1;
 								placement_record["reward_guard_status"] = "reward_guard_record_materialized";
@@ -7722,6 +7759,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	Dictionary reward_scheduler;
 	reward_scheduler["status"] = "0x4aab7e_per_zone_reward_band_scheduler_preview_private";
+	reward_scheduler["port_fidelity"] = "projected_semantics_with_recovery_fallbacks";
+	reward_scheduler["exact_port_claim"] = false;
+	reward_scheduler["exactness_blocker"] = "0x4aa354 reward value selection is represented, but 0x4a9f1c candidate vectors and 0x4aa9b7/0x4aa3e9 object mutation are not yet exact";
 	reward_scheduler["total_treasure_band_count"] = total_treasure_band_count;
 	reward_scheduler["eligible_reward_band_count"] = eligible_reward_band_count;
 	reward_scheduler["eligible_reward_density_sum"] = reward_density_sum;
@@ -7779,9 +7819,24 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	Dictionary monster_summary = h3_single_level_monster_candidate_summary();
 	Dictionary vector_order = h3_single_level_candidate_vector_order_boundary();
 	Dictionary selector = h3_candidate_selector_boundary();
+	const int64_t projected_private_record_count =
+			int64_t(mine_coordinate_records.size()) +
+			int64_t(mine_guard_records.size()) +
+			int64_t(mine_adjacent_resource_records.size()) +
+			int64_t(primary_category_records.size()) +
+			int64_t(primary_category_guard_records.size()) +
+			int64_t(reward_coordinate_records.size()) +
+			int64_t(reward_guard_records.size());
+	const int64_t recovery_fallback_record_count = reward_coordinate_score_gate_recovery_selected_count;
 
 	phase["status"] = "active_strict_executable_port";
 	phase["source"] = "private object-vector prerequisite boundary from recovered h3maped candidate builder, mine/reward schedulers, and generic value-banded selector; no coordinate commit or runtime object adoption yet";
+	phase["port_fidelity"] = "projected_semantics_with_recovery_fallbacks";
+	phase["exact_port_claim"] = false;
+	phase["complete_object_reward_guard_exact_port_claim"] = false;
+	phase["exactness_blocker"] = "mine/reward/primary object coordinates, object constructors, blocker footprints, and guard adjacent-cell producers still include projected semantics; roads and package adoption must consume this as non-exact upstream state";
+	phase["projected_private_record_count"] = projected_private_record_count;
+	phase["recovery_fallback_record_count"] = recovery_fallback_record_count;
 	phase["mine_requirements_boundary"] = mine_requirements;
 	phase["primary_category_boundary"] = primary_category_boundary;
 	phase["reward_scheduler_boundary"] = reward_scheduler;
@@ -7813,6 +7868,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_candidate_scan_rejected_template_total"] = reward_candidate_scan_rejected_template_total;
 	phase["reward_coordinate_scan_call_count"] = reward_coordinate_scan_call_count;
 	phase["reward_coordinate_scan_candidate_total"] = reward_coordinate_scan_candidate_total;
+	phase["reward_coordinate_selected_count"] = reward_coordinate_selected_count;
 	phase["reward_coordinate_score_gate_recovery_scan_count"] = reward_coordinate_score_gate_recovery_scan_count;
 	phase["reward_coordinate_score_gate_recovery_candidate_total"] = reward_coordinate_score_gate_recovery_candidate_total;
 	phase["reward_coordinate_score_gate_recovery_selected_count"] = reward_coordinate_score_gate_recovery_selected_count;
