@@ -52,33 +52,40 @@ def port_fidelity_summary(phase: dict[str, Any]) -> dict[str, Any]:
     primary_boundary = get_path(phase, "mines_rewards_and_object_vector.primary_category_boundary", {})
     mine_boundary = get_path(phase, "mines_rewards_and_object_vector.mine_requirements_boundary", {})
     projected_count = as_int(get_path(phase, "mines_rewards_and_object_vector.projected_private_record_count"))
+    coordinate_commit_aligned_count = as_int(get_path(phase, "mines_rewards_and_object_vector.coordinate_commit_aligned_record_count"))
     recovery_count = as_int(get_path(phase, "mines_rewards_and_object_vector.recovery_fallback_record_count"))
     projected_domains: list[str] = []
+    aligned_domains: list[str] = []
     if as_int(mine_boundary.get("materialized_private_mine_coordinate_record_count")) > 0:
         projected_domains.append("mine_coordinates")
     if as_int(mine_boundary.get("materialized_private_mine_guard_record_count")) > 0:
-        projected_domains.append("mine_guards")
+        aligned_domains.append("mine_guard_coordinates")
     if as_int(mine_boundary.get("materialized_private_adjacent_resource_record_count")) > 0:
         projected_domains.append("mine_adjacent_resources")
     if as_int(primary_boundary.get("materialized_private_primary_category_record_count")) > 0:
-        projected_domains.append("primary_category_objects")
+        projected_domains.append("primary_category_object_proxy_catalog")
+        aligned_domains.append("primary_category_coordinates")
     if as_int(primary_boundary.get("materialized_private_primary_category_guard_record_count")) > 0:
-        projected_domains.append("primary_category_guards")
+        aligned_domains.append("primary_category_guard_coordinates")
     if as_int(reward_boundary.get("materialized_private_reward_coordinate_record_count")) > 0:
-        projected_domains.append("reward_coordinates")
-    if as_int(reward_boundary.get("reward_guard_coordinate_record_count")) > 0:
-        projected_domains.append("reward_guards")
-    if as_int(reward_boundary.get("object_lookup_selected_count")) > 0:
         projected_domains.append("reward_candidate_proxy_lookup")
+        aligned_domains.append("reward_coordinates")
+    if as_int(reward_boundary.get("reward_guard_coordinate_record_count")) > 0:
+        aligned_domains.append("reward_guard_coordinates")
+    if as_int(reward_boundary.get("object_lookup_selected_count")) > 0:
+        if "reward_candidate_proxy_lookup" not in projected_domains:
+            projected_domains.append("reward_candidate_proxy_lookup")
     return {
         "status": "exact_port_claim" if bool(object_phase.get("complete_object_reward_guard_exact_port_claim", False)) else "projected_semantics_remaining",
         "port_fidelity": str(object_phase.get("port_fidelity", "")),
         "exact_port_claim": bool(object_phase.get("exact_port_claim", False)),
         "complete_object_reward_guard_exact_port_claim": bool(object_phase.get("complete_object_reward_guard_exact_port_claim", False)),
         "exactness_blocker": str(object_phase.get("exactness_blocker", "")),
+        "coordinate_commit_aligned_record_count": coordinate_commit_aligned_count,
         "projected_private_record_count": projected_count,
         "recovery_fallback_record_count": recovery_count,
         "projected_domains": projected_domains,
+        "coordinate_commit_aligned_domains": aligned_domains,
         "reward_coordinate_selected_count": reward_coordinate_selected_count(phase),
         "reward_coordinate_score_gate_recovery_selected_count": as_int(reward_boundary.get("coordinate_score_gate_recovery_selected_count")),
         "reward_candidate_scan_complete_vector_claim": bool(reward_boundary.get("candidate_scan_complete_vector_claim", False)),
@@ -1029,8 +1036,10 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
             "## Port Fidelity",
             "",
             f"- Status: `{fidelity.get('status')}`",
+            f"- Coordinate-commit aligned records: `{fidelity.get('coordinate_commit_aligned_record_count')}`",
             f"- Projected private records: `{fidelity.get('projected_private_record_count')}`",
             f"- Recovery fallback records: `{fidelity.get('recovery_fallback_record_count')}`",
+            f"- Coordinate-commit aligned domains: `{', '.join(fidelity.get('coordinate_commit_aligned_domains', []))}`",
             f"- Projected domains: `{', '.join(fidelity.get('projected_domains', []))}`",
         ])
     road = report.get("road_comparison", {})
