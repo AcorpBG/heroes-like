@@ -17,9 +17,18 @@ func _run() -> void:
 	var seed := _arg_value("--seed", DEFAULT_SEED)
 	var player_count := int(_arg_value("--players", "3"))
 	var human_players := int(_arg_value("--human-players", "1"))
+	var controlled_reference_manifest_path := _arg_value("--controlled-reference-manifest", "")
 	var water_mode := _arg_value("--water", "land")
 	var level_count := int(_arg_value("--level-count", "1"))
 	var size_class_id := _arg_value("--size-class-id", "homm3_small")
+	var controlled_reference_manifest := {}
+	if controlled_reference_manifest_path != "":
+		controlled_reference_manifest = _read_json_file(controlled_reference_manifest_path)
+		var controlled_identity: Dictionary = controlled_reference_manifest.get("controlled_identity", {}) if controlled_reference_manifest.get("controlled_identity", {}) is Dictionary else {}
+		if not controlled_identity.is_empty():
+			seed = String(controlled_identity.get("seed", controlled_identity.get("requested_seed", seed)))
+			player_count = int(controlled_identity.get("players", player_count))
+			human_players = int(controlled_identity.get("observed_humans", human_players))
 	var absolute_output_dir := ProjectSettings.globalize_path(output_dir)
 	var mkdir_error := DirAccess.make_dir_recursive_absolute(absolute_output_dir)
 	if mkdir_error != OK:
@@ -51,6 +60,7 @@ func _run() -> void:
 		ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)
 	config["player_constraints"]["human_count"] = human_players
+	config["player_constraints"]["computer_count"] = max(0, player_count - human_players)
 	var inspection_started_msec := Time.get_ticks_msec()
 	var inspection: Dictionary = service.inspect_h3maped_small_rmg_port(config)
 	var inspection_wall_msec := Time.get_ticks_msec() - inspection_started_msec
@@ -81,6 +91,8 @@ func _run() -> void:
 		"status": "snapshotted" if bool(inspection.get("ok", false)) else "inspection_failed",
 		"case_id": case_id,
 		"owner_h3m_path": owner_path,
+		"controlled_reference_manifest_path": controlled_reference_manifest_path,
+		"controlled_reference_manifest_identity": controlled_reference_manifest.get("controlled_identity", {}) if controlled_reference_manifest.get("controlled_identity", {}) is Dictionary else {},
 		"output_dir": output_dir,
 		"absolute_output_dir": absolute_output_dir,
 		"native_amap_path": native_path if bool(adoption_summary.get("save_ok", false)) else "",
@@ -246,6 +258,17 @@ func _write_json(path: String, payload: Dictionary) -> void:
 	if file != null:
 		file.store_string(JSON.stringify(payload, "\t"))
 		file.close()
+
+func _read_json_file(path: String) -> Dictionary:
+	var resolved_path := path
+	if not path.begins_with("res://") and not path.begins_with("user://") and not path.is_absolute_path():
+		resolved_path = ProjectSettings.globalize_path(path)
+	var file := FileAccess.open(resolved_path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	return parsed if parsed is Dictionary else {}
 
 func _write_markdown(path: String, report: Dictionary) -> void:
 	var lines := []

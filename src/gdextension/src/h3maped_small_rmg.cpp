@@ -5441,9 +5441,31 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	int32_t skipped_unassigned_player_start_min_castle_count = 0;
 	int32_t neutral_minimum_town_castle_count = 0;
 	int32_t density_schedule_count = 0;
+	int32_t direct_first_success_schedule_count = 0;
 	int32_t weighted_continuation_count_repeat_schedule_count = 0;
 	int32_t weighted_continuation_density_schedule_count = 0;
 	int32_t weighted_continuation_density_retired_count = 0;
+
+	auto append_direct_town_schedule = [&](Array &target, int32_t runtime_index, const Dictionary &runtime, int32_t owner_color, const String &owner_scope, bool has_castle, const String &source_field, const String &phase_id, int32_t priority_ordinal) {
+		Dictionary scheduled;
+		scheduled["phase"] = phase_id;
+		scheduled["helper"] = "0x4a93a2";
+		scheduled["runtime_zone_index"] = runtime_index;
+		scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
+		scheduled["owner_color"] = owner_color;
+		scheduled["owner_scope"] = owner_scope;
+		scheduled["has_castle"] = has_castle;
+		scheduled["h3maped_object_category_field"] = source_field;
+		scheduled["direct_priority_ordinal"] = priority_ordinal;
+		scheduled["direct_schedule_policy"] = "0x4a8d2c_first_success_per_runtime_zone";
+		scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
+		scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
+		scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
+		scheduled["object_materialization_blocked"] = true;
+		target.append(scheduled);
+		scheduled_owner_colors.append(owner_color);
+		direct_first_success_schedule_count += 1;
+	};
 
 	auto append_weighted_town_schedule = [&](Array &target, int32_t runtime_index, const Dictionary &runtime, int32_t owner_color, const String &owner_scope, bool has_castle, const String &source_field, int32_t source_count_value, int32_t source_density_value, int32_t density_budget_argument, int32_t density_iteration, int32_t density_counter_before, int32_t density_counter_after) {
 		Dictionary scheduled;
@@ -5467,6 +5489,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		scheduled["density_counter_after"] = density_counter_after;
 		scheduled["same_type_neutral_flag_source_0x40"] = bool(runtime.get("towns_are_same_type", false));
 		target.append(scheduled);
+		scheduled_owner_colors.append(owner_color);
 	};
 
 	for (int64_t index = 0; index < runtime_zone_records.size(); ++index) {
@@ -5508,79 +5531,34 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			skipped_records.append(skipped);
 		}
 
-		if (owner_color >= 0) {
-			for (int32_t object_index = 0; object_index < direct_owned_count; ++object_index) {
-				const bool has_castle = object_index >= player_min_towns;
-				Dictionary scheduled;
-				scheduled["phase"] = has_castle ? String("0x4a8d2c_direct_player_minimum_castle") : String("0x4a8d2c_direct_player_minimum_town");
-				scheduled["helper"] = "0x4a93a2";
-				scheduled["runtime_zone_index"] = runtime_index;
-				scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
-				scheduled["owner_color"] = owner_color;
-				scheduled["owner_scope"] = "player";
-				scheduled["has_castle"] = has_castle;
-				scheduled["h3maped_object_category_field"] = has_castle ? String("+0x24") : String("+0x20");
-				scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
-				scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
-				scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
-				scheduled["object_materialization_blocked"] = true;
-				scheduled_records.append(scheduled);
-				scheduled_owner_colors.append(owner_color);
-				if (has_castle) {
-					assigned_player_min_castle_count += 1;
-				} else {
-					assigned_player_min_town_count += 1;
-				}
-			}
-		} else {
-			for (int32_t object_index = 0; object_index < direct_owned_count; ++object_index) {
-				const bool has_castle = object_index >= player_min_towns;
-				Dictionary scheduled;
-				scheduled["phase"] = has_castle ? String("0x4a8d2c_direct_inactive_player_minimum_castle_owner_minus_one") : String("0x4a8d2c_direct_inactive_player_minimum_town_owner_minus_one");
-				scheduled["helper"] = "0x4a93a2";
-				scheduled["runtime_zone_index"] = runtime_index;
-				scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
-				scheduled["owner_color"] = -1;
-				scheduled["owner_scope"] = "inactive_player_source_neutralized";
-				scheduled["has_castle"] = has_castle;
-				scheduled["h3maped_object_category_field"] = has_castle ? String("+0x24") : String("+0x20");
-				scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
-				scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
-				scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
-				scheduled["object_materialization_blocked"] = true;
-				scheduled_records.append(scheduled);
-				scheduled_owner_colors.append(-1);
-				if (has_castle) {
-					assigned_inactive_player_min_castle_count += 1;
-				} else {
-					assigned_inactive_player_min_town_count += 1;
-				}
-			}
-		}
-
-		const int32_t direct_neutral_count = neutral_min_towns + neutral_min_castles;
-		for (int32_t object_index = 0; object_index < direct_neutral_count; ++object_index) {
-			const bool has_castle = object_index >= neutral_min_towns;
-			Dictionary scheduled;
-			scheduled["phase"] = has_castle ? String("0x4a8d2c_direct_neutral_minimum_castle") : String("0x4a8d2c_direct_neutral_minimum_town");
-			scheduled["helper"] = "0x4a93a2";
-			scheduled["runtime_zone_index"] = runtime_index;
-			scheduled["source_zone_id"] = runtime.get("source_zone_id", -1);
-			scheduled["owner_color"] = -1;
-			scheduled["owner_scope"] = "neutral";
-			scheduled["has_castle"] = has_castle;
-			scheduled["h3maped_object_category_field"] = has_castle ? String("+0x34") : String("+0x30");
-			scheduled["town_choice_index"] = runtime_index < town_choice_by_runtime.size() ? int32_t(town_choice_by_runtime[runtime_index]) : -1;
-			scheduled["selected_h3maped_terrain_id"] = runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
-			scheduled["selected_project_terrain_id"] = runtime_index < selected_project_terrain_ids.size() ? String(selected_project_terrain_ids[runtime_index]) : String();
-			scheduled["object_materialization_blocked"] = true;
-			scheduled_records.append(scheduled);
-			scheduled_owner_colors.append(-1);
-			if (has_castle) {
-				assigned_neutral_min_castle_count += 1;
-			} else {
-				assigned_neutral_min_town_count += 1;
-			}
+		int32_t direct_player_min_castles_consumed = 0;
+		int32_t direct_player_min_towns_consumed = 0;
+		int32_t direct_neutral_min_castles_consumed = 0;
+		int32_t direct_neutral_min_towns_consumed = 0;
+		if (owner_color >= 0 && player_min_castles > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, owner_color, "player", true, "+0x24", "0x4a8d2c_direct_player_minimum_castle_first_success", 0);
+			assigned_player_min_castle_count += 1;
+			direct_player_min_castles_consumed = 1;
+		} else if (owner_color >= 0 && player_min_towns > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, owner_color, "player", false, "+0x20", "0x4a8d2c_direct_player_minimum_town_first_success", 1);
+			assigned_player_min_town_count += 1;
+			direct_player_min_towns_consumed = 1;
+		} else if (owner_color < 0 && player_min_castles > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, -1, "inactive_player_source_neutralized", true, "+0x24", "0x4a8d2c_direct_inactive_player_minimum_castle_owner_minus_one_first_success", 2);
+			assigned_inactive_player_min_castle_count += 1;
+			direct_player_min_castles_consumed = 1;
+		} else if (owner_color < 0 && player_min_towns > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, -1, "inactive_player_source_neutralized", false, "+0x20", "0x4a8d2c_direct_inactive_player_minimum_town_owner_minus_one_first_success", 3);
+			assigned_inactive_player_min_town_count += 1;
+			direct_player_min_towns_consumed = 1;
+		} else if (neutral_min_castles > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, -1, "neutral", true, "+0x34", "0x4a8d2c_direct_neutral_minimum_castle_first_success", 4);
+			assigned_neutral_min_castle_count += 1;
+			direct_neutral_min_castles_consumed = 1;
+		} else if (neutral_min_towns > 0) {
+			append_direct_town_schedule(scheduled_records, runtime_index, runtime, -1, "neutral", false, "+0x30", "0x4a8d2c_direct_neutral_minimum_town_first_success", 5);
+			assigned_neutral_min_town_count += 1;
+			direct_neutral_min_towns_consumed = 1;
 		}
 
 		struct WeightedTownCategory {
@@ -5588,26 +5566,23 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			const char *source_density_field;
 			int32_t count_value;
 			int32_t density_value;
+			int32_t direct_consumed_count;
 			int32_t owner_color;
 			const char *owner_scope;
 			bool has_castle;
 			int32_t counter;
 		};
 		std::array<WeightedTownCategory, 4> weighted_categories = { {
-			{ "+0x24", "+0x2c", player_min_castles, player_castle_density, owner_color, "player_weighted_count_castle", true, 0 },
-			{ "+0x20", "+0x28", player_min_towns, player_town_density, owner_color, "player_weighted_count_town", false, 0 },
-			{ "+0x34", "+0x3c", neutral_min_castles, neutral_castle_density, -1, same_type_neutral_towns ? "neutral_weighted_same_type_castle" : "neutral_weighted_fallback_castle", true, 0 },
-			{ "+0x30", "+0x38", neutral_min_towns, neutral_town_density, -1, same_type_neutral_towns ? "neutral_weighted_same_type_town" : "neutral_weighted_fallback_town", false, 0 },
+			{ "+0x24", "+0x2c", player_min_castles, player_castle_density, direct_player_min_castles_consumed, owner_color, "player_weighted_count_castle", true, 0 },
+			{ "+0x20", "+0x28", player_min_towns, player_town_density, direct_player_min_towns_consumed, owner_color, "player_weighted_count_town", false, 0 },
+			{ "+0x34", "+0x3c", neutral_min_castles, neutral_castle_density, direct_neutral_min_castles_consumed, -1, same_type_neutral_towns ? "neutral_weighted_same_type_castle" : "neutral_weighted_fallback_castle", true, 0 },
+			{ "+0x30", "+0x38", neutral_min_towns, neutral_town_density, direct_neutral_min_towns_consumed, -1, same_type_neutral_towns ? "neutral_weighted_same_type_town" : "neutral_weighted_fallback_town", false, 0 },
 		} };
 		for (const WeightedTownCategory &category : weighted_categories) {
-			if (category.count_value <= 0 || category.owner_color >= 0) {
+			if (category.count_value <= 0) {
 				continue;
 			}
-			const String source_count_field = String(category.source_count_field);
-			const int32_t direct_consumed_count = category.has_castle
-					? (source_count_field == String("+0x24") ? player_min_castles : neutral_min_castles)
-					: (source_count_field == String("+0x20") ? player_min_towns : neutral_min_towns);
-			const int32_t remaining_count = std::max(0, category.count_value - direct_consumed_count);
+			const int32_t remaining_count = std::max(0, category.count_value - category.direct_consumed_count);
 			for (int32_t ordinal = 0; ordinal < remaining_count; ++ordinal) {
 				append_weighted_town_schedule(scheduled_records, runtime_index, runtime, category.owner_color, category.owner_scope, category.has_castle, category.source_count_field, category.count_value, category.density_value, 0, ordinal, 0, 0);
 				weighted_continuation_count_repeat_schedule_count += 1;
@@ -5615,7 +5590,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		}
 		int32_t density_total = 0;
 		for (const WeightedTownCategory &category : weighted_categories) {
-			if (category.density_value > 0 && category.owner_color < 0) {
+			if (category.density_value > 0) {
 				density_total += category.density_value;
 			}
 		}
@@ -5628,7 +5603,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 				int32_t selected_counter = 0;
 				for (int32_t category_index = 0; category_index < int32_t(weighted_categories.size()); ++category_index) {
 					const WeightedTownCategory &category = weighted_categories[size_t(category_index)];
-					if (retired[size_t(category_index)] != 0 || category.density_value <= 0 || category.owner_color >= 0) {
+					if (retired[size_t(category_index)] != 0 || category.density_value <= 0) {
 						continue;
 					}
 					if (selected_category < 0 || category.counter < selected_counter) {
@@ -5760,7 +5735,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 						closest_distance = distance;
 						closest_candidates.clear();
 					}
-					if (distance == closest_distance && closest_candidates.size() < 16) {
+					if (distance == closest_distance) {
 						Dictionary candidate;
 						candidate["x"] = x;
 						candidate["y"] = y;
@@ -5826,7 +5801,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 						closest_footprint_distance = distance;
 						closest_footprint_candidates.clear();
 					}
-					if (distance == closest_footprint_distance && closest_footprint_candidates.size() < 16) {
+					if (distance == closest_footprint_distance) {
 						Dictionary candidate;
 						candidate["x"] = x;
 						candidate["y"] = y;
@@ -6130,12 +6105,17 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	phase["skipped_unassigned_player_start_min_castle_count"] = skipped_unassigned_player_start_min_castle_count;
 	phase["neutral_minimum_town_castle_count"] = neutral_minimum_town_castle_count;
 	phase["density_schedule_count"] = density_schedule_count;
+	phase["direct_schedule_policy"] = "0x4a8d2c_first_success_per_runtime_zone_then_0x4a8db2_weighted_continuation";
+	phase["direct_schedule_priority_order"] = "active_player_castle,active_player_town,inactive_player_castle,inactive_player_town,neutral_castle,neutral_town";
+	phase["direct_first_success_schedule_count"] = direct_first_success_schedule_count;
+	phase["weighted_continuation_includes_player_owned_categories"] = true;
 	phase["weighted_continuation_zone_floor_target"] = 0;
 	phase["weighted_continuation_zone_floor_schedule_count"] = 0;
 	phase["weighted_continuation_count_repeat_schedule_count"] = weighted_continuation_count_repeat_schedule_count;
 	phase["weighted_continuation_density_schedule_count"] = weighted_continuation_density_schedule_count;
 	phase["weighted_continuation_density_retired_count"] = weighted_continuation_density_retired_count;
-	phase["scheduled_direct_minimum_object_count"] = scheduled_records.size();
+	phase["scheduled_direct_minimum_object_count"] = direct_first_success_schedule_count;
+	phase["scheduled_total_town_object_candidate_count"] = scheduled_records.size();
 	phase["scheduled_owned_player_town_count"] = assigned_player_min_town_count + assigned_player_min_castle_count;
 	phase["scheduled_neutral_minimum_town_count"] = assigned_neutral_min_town_count + assigned_neutral_min_castle_count;
 	phase["scheduled_inactive_player_neutralized_town_count"] = assigned_inactive_player_min_town_count + assigned_inactive_player_min_castle_count;
