@@ -573,13 +573,23 @@ def resolve_h3m_path(controlled_manifest: dict[str, Any] | None, h3m_path: Path 
     return DEFAULT_H3M
 
 
+def controlled_template_identity_is_hard(controlled_identity: dict[str, Any]) -> bool:
+    authority = str(controlled_identity.get("identity_authority", ""))
+    if "recovered_from_misplaced_save" in authority:
+        return False
+    return bool(controlled_identity.get("same_seed_parity_supported"))
+
+
 def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, controlled_manifest: dict[str, Any] | None) -> dict[str, Any]:
     selection = snapshot.get("selection_identity", {}) if isinstance(snapshot.get("selection_identity"), dict) else {}
+    selection_diagnostics = snapshot.get("selection_diagnostics", {}) if isinstance(snapshot.get("selection_diagnostics"), dict) else {}
     config = snapshot.get("config", {}) if isinstance(snapshot.get("config"), dict) else {}
     player_constraints = config.get("player_constraints", {}) if isinstance(config.get("player_constraints"), dict) else {}
     native_identity = {
         "seed": str(config.get("seed", "")),
         "players": as_int(player_constraints.get("player_count")),
+        "humans": as_int(player_constraints.get("human_count")),
+        "computers": as_int(player_constraints.get("computer_count")),
         "source_template_id": selection.get("source_template_id"),
         "source_catalog_index": selection.get("source_catalog_index"),
     }
@@ -599,16 +609,44 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
         )
 
     controlled_status = str(controlled_manifest.get("status", ""))
+    controlled_inputs = controlled_manifest.get("inputs", {}) if isinstance(controlled_manifest.get("inputs"), dict) else {}
     controlled_identity = controlled_manifest.get("controlled_identity", {}) if isinstance(controlled_manifest.get("controlled_identity"), dict) else {}
+    requested_players = as_int(controlled_inputs.get("players", controlled_identity.get("players", 0)))
+    requested_humans = as_int(controlled_inputs.get("human_players", controlled_identity.get("requested_humans", 0)))
+    requested_computers = as_int(controlled_inputs.get("computer_only_players", max(0, requested_players - requested_humans)))
+    observed_source_template_id = controlled_identity.get("observed_source_template_id", controlled_identity.get("source_template_id"))
+    observed_source_catalog_index = controlled_identity.get("observed_source_catalog_index", controlled_identity.get("source_catalog_index"))
     expected_identity = {
-        "seed": str(controlled_identity.get("seed", get_path(controlled_manifest, "inputs.seed", ""))),
-        "players": as_int(controlled_identity.get("players", get_path(controlled_manifest, "inputs.players", 0))),
-        "source_template_id": controlled_identity.get("observed_source_template_id", controlled_identity.get("source_template_id")),
-        "source_catalog_index": controlled_identity.get("observed_source_catalog_index", controlled_identity.get("source_catalog_index")),
+        "seed": str(controlled_inputs.get("seed", controlled_identity.get("requested_seed", controlled_identity.get("seed", "")))),
+        "players": requested_players,
+        "humans": requested_humans,
+        "computers": requested_computers,
+        "source_template_id": observed_source_template_id,
+        "source_catalog_index": observed_source_catalog_index,
     }
+    requested_selector_identity = {
+        "seed": expected_identity["seed"],
+        "players": requested_players,
+        "humans": requested_humans,
+        "computers": requested_computers,
+    }
+    observed_saved_h3m_identity = {
+        "seed": str(controlled_identity.get("seed", "")),
+        "humans": as_int(controlled_identity.get("observed_humans", 0)),
+        "computers": as_int(controlled_identity.get("observed_computers", 0)),
+        "template": controlled_identity.get("observed_template", controlled_identity.get("observed_template_name", "")),
+        "source_template_id": observed_source_template_id,
+        "source_catalog_index": observed_source_catalog_index,
+    }
+    hard_template_identity = controlled_template_identity_is_hard(controlled_identity)
     evidence = {
         "native_identity": native_identity,
         "controlled_identity": expected_identity,
+        "requested_selector_identity": requested_selector_identity,
+        "observed_saved_h3m_identity": observed_saved_h3m_identity,
+        "template_identity_authority": controlled_identity.get("identity_authority", ""),
+        "template_identity_hard_gate": hard_template_identity,
+        "native_selection_diagnostics": selection_diagnostics,
         "requested_controlled_identity": {
             "source_template_id": controlled_identity.get("source_template_id"),
             "source_catalog_index": controlled_identity.get("source_catalog_index"),
@@ -642,14 +680,22 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
             "recover and implement h3maped seed injection or entrypoint-level generation before interpreting deltas as same-seed parity drift",
         )
 
-    mismatches = {
+    input_mismatches = {
         key: {"native": native_identity.get(key), "controlled": expected_identity.get(key)}
-        for key in expected_identity
+        for key in ("seed", "players", "humans", "computers")
         if str(native_identity.get(key, "")) != str(expected_identity.get(key, ""))
     }
+    template_mismatches = {
+        key: {"native": native_identity.get(key), "controlled": expected_identity.get(key)}
+        for key in ("source_template_id", "source_catalog_index")
+        if str(expected_identity.get(key, "")) not in {"", "None"}
+        and str(native_identity.get(key, "")) != str(expected_identity.get(key, ""))
+    }
+    mismatches = dict(input_mismatches)
+    mismatches.update(template_mismatches)
     evidence["mismatches"] = mismatches
-    if mismatches:
-        if "seed" in mismatches:
+    if input_mismatches:
+        if "seed" in input_mismatches:
             return finding(
                 "reference-alignment",
                 "seed/template evidence",
@@ -658,15 +704,6 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
                 evidence,
                 "fix h3maped seed injection until saved H3M summary seed matches the native requested seed before interpreting phase deltas",
             )
-        if "source_template_id" in mismatches or "source_catalog_index" in mismatches:
-            return finding(
-                "reference-alignment",
-                "seed/template evidence",
-                "critical",
-                "template_selection_drift",
-                evidence,
-                "align native accepted-template filtering and PRNG template selection with h3maped before interpreting placement/object deltas",
-            )
         return finding(
             "reference-alignment",
             "seed/template evidence",
@@ -674,6 +711,24 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
             "reference_alignment_mismatch",
             evidence,
             "rerun native generation and h3maped.exe reference with identical seed/player/template identity before interpreting deltas as parity drift",
+        )
+    if template_mismatches and not hard_template_identity:
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "medium",
+            "controlled_reference_template_identity_unverified",
+            evidence,
+            "regenerate this controlled h3maped reference from a direct output path before treating the recovered template identity as a hard native selector mismatch",
+        )
+    if template_mismatches:
+        return finding(
+            "reference-alignment",
+            "seed/template evidence",
+            "critical",
+            "template_selection_drift",
+            evidence,
+            "align native accepted-template filtering and PRNG template selection with h3maped before interpreting placement/object deltas",
         )
     return finding(
         "reference-alignment",
