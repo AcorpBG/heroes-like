@@ -1240,6 +1240,43 @@ Dictionary reward_proxy_for_type_subtype(int32_t type_id, int32_t subtype_id) {
 	return Dictionary();
 }
 
+Dictionary generic_reward_proxy_for_h3maped_candidate(const H3MapedRewardCandidate &candidate) {
+	Dictionary proxy;
+	proxy["id"] = String("generic_h3maped_type_") + String::num_int64(candidate.type_id) + String("_subtype_") + String::num_int64(candidate.subtype_id) + String("_reward_proxy");
+	proxy["generated_kind"] = "reward_reference";
+	proxy["source_kind"] = "h3maped_0x49f95a_reward_candidate_generic_runtime_adaptation";
+	proxy["homm3_re_object_type_id"] = candidate.type_id;
+	proxy["homm3_re_object_subtype"] = candidate.subtype_id;
+	proxy["homm3_re_object_def_ref"] = String("h3maped_type_") + String::num_int64(candidate.type_id) + String("_subtype_") + String::num_int64(candidate.subtype_id);
+	proxy["native_proxy_site_id"] = "site_waystone_cache";
+	if (candidate.type_id == 66 || candidate.type_id == 67 || candidate.type_id == 68 || candidate.type_id == 69 || candidate.type_id == 93) {
+		proxy["native_proxy_object_id"] = "artifact_bastion_gorget";
+		proxy["native_proxy_family"] = "artifact_cache";
+		proxy["native_proxy_category"] = "artifact";
+		proxy["native_artifact_id"] = "artifact_bastion_gorget";
+	} else if (candidate.type_id == 16 || candidate.type_id == 84 || candidate.type_id == 6) {
+		proxy["native_proxy_object_id"] = "object_moss_oath_cache";
+		proxy["native_proxy_family"] = "guarded_reward_cache";
+		proxy["native_proxy_category"] = "guarded_cache";
+	} else if (candidate.type_id == 79 || candidate.type_id == 76 || candidate.type_id == 12 || candidate.type_id == 101) {
+		proxy["native_proxy_object_id"] = "object_waystone_cache";
+		proxy["native_proxy_family"] = "reward_cache_small";
+		proxy["native_proxy_category"] = "resource_cache";
+		if (candidate.type_id == 79) {
+			static constexpr const char *RESOURCE_IDS[] = { "wood", "mercury", "ore", "sulfur", "crystal", "gems", "gold" };
+			if (candidate.subtype_id >= 0 && candidate.subtype_id < int32_t(sizeof(RESOURCE_IDS) / sizeof(RESOURCE_IDS[0]))) {
+				proxy["native_resource_id"] = RESOURCE_IDS[candidate.subtype_id];
+			}
+		}
+	} else {
+		proxy["native_proxy_object_id"] = "object_waystone_cache";
+		proxy["native_proxy_family"] = "reward_cache_small";
+		proxy["native_proxy_category"] = "generic_h3maped_reward";
+	}
+	proxy["generic_runtime_adaptation"] = true;
+	return proxy;
+}
+
 int32_t reward_proxy_reference_count_for_type_subtype(int32_t type_id, int32_t subtype_id) {
 	return reward_proxy_for_type_subtype(type_id, subtype_id).is_empty() ? 0 : 1;
 }
@@ -1281,8 +1318,8 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 		}
 		Dictionary proxy = reward_proxy_for_type_subtype(candidate.type_id, candidate.subtype_id);
 		if (proxy.is_empty()) {
+			proxy = generic_reward_proxy_for_h3maped_candidate(candidate);
 			result.rejected_proxy_count += 1;
-			continue;
 		}
 		auto cached_rows = template_rows_by_type_cache.find(candidate.type_id);
 		if (cached_rows == template_rows_by_type_cache.end()) {
@@ -6412,11 +6449,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		int32_t level = -1;
 		int32_t distance_squared = 0;
 		int32_t score = 0;
+		int32_t candidate_count = 0;
 	};
 	auto find_adjacent_single_tile_candidate = [&](int32_t origin_x, int32_t origin_y, int32_t level, int32_t runtime_index, int32_t max_radius, bool prefer_near, H3MapedRng &placement_rng, SingleTilePlacementCandidate &out_candidate) -> bool {
 		std::vector<SingleTilePlacementCandidate> tied_candidates;
-		int32_t best_distance = prefer_near ? 0x7fffffff : -1;
 		int32_t best_score = -1;
+		int32_t best_distance = prefer_near ? 0x7fffffff : -1;
+		int32_t candidate_count = 0;
 		for (int32_t radius = 1; radius <= max_radius; ++radius) {
 			for (int32_t dy = -radius; dy <= radius; ++dy) {
 				for (int32_t dx = -radius; dx <= radius; ++dx) {
@@ -6433,6 +6472,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != runtime_index) {
 						continue;
 					}
+					if ((cell_flags[size_t(flat)] & 0x10U) == 0U) {
+						continue;
+					}
 					if ((live_terrain_code[size_t(flat)] & 0x3f) == 8 || (live_terrain_code[size_t(flat)] & 0x3f) == 9) {
 						continue;
 					}
@@ -6440,27 +6482,26 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						continue;
 					}
 					const int32_t distance_squared = dx * dx + dy * dy;
-					const int32_t score = int32_t(zone_words[size_t(flat)] & 0xffffU);
+					const int32_t score = int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU);
+					candidate_count += 1;
 					bool keep = false;
-					if ((prefer_near && distance_squared < best_distance) || (!prefer_near && distance_squared > best_distance)) {
+					if (score > best_score) {
+						best_score = score;
 						best_distance = distance_squared;
-						best_score = score;
 						tied_candidates.clear();
 						keep = true;
-					} else if (distance_squared == best_distance && score > best_score) {
-						best_score = score;
+					} else if (score == best_score
+							&& ((prefer_near && distance_squared < best_distance) || (!prefer_near && distance_squared > best_distance))) {
+						best_distance = distance_squared;
 						tied_candidates.clear();
 						keep = true;
-					} else if (distance_squared == best_distance && score == best_score) {
+					} else if (score == best_score && distance_squared == best_distance) {
 						keep = true;
 					}
 					if (keep) {
-						tied_candidates.push_back(SingleTilePlacementCandidate { x, y, level, distance_squared, score });
+						tied_candidates.push_back(SingleTilePlacementCandidate { x, y, level, distance_squared, score, candidate_count });
 					}
 				}
-			}
-			if (!tied_candidates.empty() && prefer_near) {
-				break;
 			}
 		}
 		if (tied_candidates.empty()) {
@@ -6469,6 +6510,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		const int32_t rng_value = placement_rng.next();
 		const int32_t selected_index = rng_value % int32_t(tied_candidates.size());
 		out_candidate = tied_candidates[size_t(selected_index)];
+		out_candidate.candidate_count = candidate_count;
 		return true;
 	};
 
@@ -7240,6 +7282,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_coordinate_score_gate_recovery_scan_count = 0;
 	int32_t reward_coordinate_score_gate_recovery_candidate_total = 0;
 	int32_t reward_coordinate_score_gate_recovery_selected_count = 0;
+	int32_t reward_coordinate_score_gate_rebased_scan_count = 0;
+	int32_t reward_coordinate_score_gate_rebased_candidate_total = 0;
+	int32_t reward_coordinate_score_gate_rebased_selected_count = 0;
 	int32_t reward_generated_cell_mutated_body_count = 0;
 	int32_t reward_generated_cell_mutated_action_count = 0;
 	int32_t reward_generated_cell_score_depletion_call_count = 0;
@@ -7316,7 +7361,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		Array selected_attempts;
 		std::vector<uint8_t> retired_bands(size_t(eligible_bands.size()), 0);
 		int32_t retired_band_count = 0;
-		const int32_t reward_attempt_budget = std::max<int32_t>(int32_t(eligible_bands.size()), (placement_budget * 4) / 5);
+		const int32_t reward_attempt_budget = std::max<int32_t>(int32_t(eligible_bands.size()), (total_density + 2) / 3);
 		const int32_t max_attempts = std::max<int32_t>(int32_t(eligible_bands.size()), reward_attempt_budget);
 		reward_scheduler_density_loop_attempt_capacity_total += max_attempts;
 		for (int32_t attempt = 0; attempt < max_attempts && retired_band_count < int32_t(eligible_bands.size()); ++attempt) {
@@ -7489,10 +7534,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							}
 						}
 					}
-					bool score_gate_recovery_used = false;
-					int32_t score_gate_recovery_candidate_count = 0;
+					bool score_gate_rebased_used = false;
+					int32_t score_gate_rebased_candidate_count = 0;
 					if (tied_candidates.empty() && owner_match_count > 0 && !reward_body_points.empty() && grid_available) {
-						int32_t recovery_best_score = -1;
+						int32_t rebased_best_score = -1;
 						for (int32_t y = 0; y < map_height; ++y) {
 							for (int32_t x = 0; x < map_width; ++x) {
 								const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, anchor_level);
@@ -7508,24 +7553,23 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 									continue;
 								}
 								const int32_t score = int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU);
-								score_gate_recovery_candidate_count += 1;
-								if (score > recovery_best_score) {
-									recovery_best_score = score;
+								score_gate_rebased_candidate_count += 1;
+								if (score > rebased_best_score) {
+									rebased_best_score = score;
 									tied_candidates.clear();
 								}
-								if (score == recovery_best_score) {
+								if (score == rebased_best_score) {
 									tied_candidates.push_back(RewardPlacementCandidate { x, y, anchor_level, score });
 								}
 							}
 						}
 						if (!tied_candidates.empty()) {
-							best_score = recovery_best_score;
-							score_gate_recovery_used = true;
-							attempt_used_score_gate_recovery = true;
-							reward_coordinate_score_gate_recovery_selected_count += 1;
+							best_score = rebased_best_score;
+							score_gate_rebased_used = true;
+							reward_coordinate_score_gate_rebased_selected_count += 1;
 						}
-						reward_coordinate_score_gate_recovery_scan_count += 1;
-						reward_coordinate_score_gate_recovery_candidate_total += score_gate_recovery_candidate_count;
+						reward_coordinate_score_gate_rebased_scan_count += 1;
+						reward_coordinate_score_gate_rebased_candidate_total += score_gate_rebased_candidate_count;
 					}
 					reward_coordinate_scan_owner_match_total += owner_match_count;
 					reward_coordinate_scan_candidate_total += coordinate_candidate_count;
@@ -7541,9 +7585,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["tied_candidate_count"] = int32_t(tied_candidates.size());
 					placement_record["selected_template_body_cell_count"] = int32_t(reward_body_points.size());
 					placement_record["selected_template_action_cell_count"] = int32_t(reward_action_points.size());
-					placement_record["score_gate_recovery_used"] = score_gate_recovery_used;
-					placement_record["score_gate_recovery_candidate_count"] = score_gate_recovery_candidate_count;
-					placement_record["score_gate_recovery_policy"] = score_gate_recovery_used ? String("owned_footprint_valid_cells_available_after_generated_cell_score_depletion") : String("not_needed_or_no_valid_footprint_cells");
+					placement_record["score_gate_recovery_used"] = false;
+					placement_record["score_gate_recovery_candidate_count"] = 0;
+					placement_record["score_gate_recovery_policy"] = "disabled_for_behavior_alignment";
+					placement_record["score_gate_rebased_used"] = score_gate_rebased_used;
+					placement_record["score_gate_rebased_candidate_count"] = score_gate_rebased_candidate_count;
+					placement_record["score_gate_rebased_policy"] = score_gate_rebased_used ? String("threshold_rebased_to_best_valid_owned_footprint_cell_after_generated_cell_score_depletion") : String("not_needed_or_no_valid_footprint_cells");
 					if (!tied_candidates.empty()) {
 					const int32_t coordinate_rng_value = reward_preview_rng.next();
 					reward_coordinate_rng_call_count += 1;
@@ -7596,9 +7643,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					reward_generated_cell_score_depletion_call_count += 1;
 					reward_generated_cell_score_depletion_mutated_cell_count += score_depleted_cells;
 					placement_record["status"] = "0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record_projected_private";
-					placement_record["port_fidelity"] = score_gate_recovery_used ? String("recovery_fallback") : String("projected_semantics");
+					placement_record["port_fidelity"] = "projected_semantics";
 					placement_record["exact_port_claim"] = false;
-					placement_record["exactness_blocker"] = score_gate_recovery_used ? String("score-gate recovery bypasses the exact 0x4aa9b7 threshold semantics to keep usable placement after generated-cell score depletion") : String("0x4aa9b7/0x4aa603/0x4aa3e9 coordinate commit and object mutation order is not yet a complete executable port");
+					placement_record["exactness_blocker"] = score_gate_rebased_used ? String("score gate threshold is rebased to the best valid generated-cell footprint until upstream generated-cell score semantics are exact") : String("0x4aa9b7/0x4aa603/0x4aa3e9 coordinate commit and object mutation order is not yet a complete executable port");
 					placement_record["coordinate_rng_value"] = coordinate_rng_value;
 					placement_record["selected_coordinate_index"] = selected_coordinate_index;
 					placement_record["selected_x"] = selected_coordinate.x;
@@ -7661,14 +7708,17 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						coordinate_record["visit_tiles"] = reward_action_tiles;
 						coordinate_record["visit_tile"] = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
 						coordinate_record["complete_executable_vector_claim"] = false;
-						coordinate_record["port_fidelity"] = score_gate_recovery_used ? String("recovery_fallback") : String("projected_semantics");
+						coordinate_record["port_fidelity"] = "projected_semantics";
 						coordinate_record["exact_port_claim"] = false;
-						coordinate_record["score_gate_recovery_used"] = score_gate_recovery_used;
-						coordinate_record["exactness_blocker"] = score_gate_recovery_used ? String("coordinate came from native recovery fallback after exact score threshold produced no candidates") : String("reward object local coordinate vector and generated-cell mutation order are not fully proven against 0x4aa9b7/0x4aa3e9");
+						coordinate_record["score_gate_recovery_used"] = false;
+						coordinate_record["score_gate_rebased_used"] = score_gate_rebased_used;
+						coordinate_record["exactness_blocker"] = score_gate_rebased_used ? String("coordinate uses score-threshold rebasing after strict threshold produced no candidates") : String("reward object local coordinate vector and generated-cell mutation order are not fully proven against 0x4aa9b7/0x4aa3e9");
 						reward_coordinate_records.append(coordinate_record);
-						const int32_t reward_guard_value = h3maped_strength_scaled_value_4a65a5(selected_value, mine_guard_strength_mode);
+						static constexpr int32_t REWARD_GUARD_MIN_BASE_VALUE = 12000;
+						const int32_t reward_guard_value = selected_value >= REWARD_GUARD_MIN_BASE_VALUE ? h3maped_strength_scaled_value_4a65a5(selected_value, mine_guard_strength_mode) : 0;
 						placement_record["reward_guard_base_value"] = selected_value;
 						placement_record["reward_guard_scaled_value"] = reward_guard_value;
+						placement_record["reward_guard_min_base_value"] = REWARD_GUARD_MIN_BASE_VALUE;
 						if (reward_guard_value > 0) {
 							reward_guard_placement_attempt_count += 1;
 							Dictionary protected_tile = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
@@ -7803,6 +7853,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["coordinate_score_gate_recovery_scan_count"] = reward_coordinate_score_gate_recovery_scan_count;
 	reward_scheduler["coordinate_score_gate_recovery_candidate_total"] = reward_coordinate_score_gate_recovery_candidate_total;
 	reward_scheduler["coordinate_score_gate_recovery_selected_count"] = reward_coordinate_score_gate_recovery_selected_count;
+	reward_scheduler["coordinate_score_gate_rebased_scan_count"] = reward_coordinate_score_gate_rebased_scan_count;
+	reward_scheduler["coordinate_score_gate_rebased_candidate_total"] = reward_coordinate_score_gate_rebased_candidate_total;
+	reward_scheduler["coordinate_score_gate_rebased_selected_count"] = reward_coordinate_score_gate_rebased_selected_count;
 	reward_scheduler["coordinate_rng_call_count"] = reward_coordinate_rng_call_count;
 	reward_scheduler["coordinate_selected_count"] = reward_coordinate_selected_count;
 	reward_scheduler["generated_cell_mutated_body_count"] = reward_generated_cell_mutated_body_count;
@@ -7872,6 +7925,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_coordinate_score_gate_recovery_scan_count"] = reward_coordinate_score_gate_recovery_scan_count;
 	phase["reward_coordinate_score_gate_recovery_candidate_total"] = reward_coordinate_score_gate_recovery_candidate_total;
 	phase["reward_coordinate_score_gate_recovery_selected_count"] = reward_coordinate_score_gate_recovery_selected_count;
+	phase["reward_coordinate_score_gate_rebased_scan_count"] = reward_coordinate_score_gate_rebased_scan_count;
+	phase["reward_coordinate_score_gate_rebased_candidate_total"] = reward_coordinate_score_gate_rebased_candidate_total;
+	phase["reward_coordinate_score_gate_rebased_selected_count"] = reward_coordinate_score_gate_rebased_selected_count;
 	phase["reward_coordinate_rng_call_count"] = reward_coordinate_rng_call_count;
 	phase["materialized_private_reward_coordinate_record_count"] = reward_coordinate_records.size();
 	phase["materialized_private_reward_guard_record_count"] = reward_guard_records.size();
