@@ -2168,7 +2168,7 @@ int32_t h3maped_4a54a7_deplete_generated_cell_scores(std::vector<uint32_t> &gene
 		if (current_flat < 0 || current_flat >= int64_t(generated_cell_word_0x20.size())) {
 			continue;
 		}
-		const int32_t base_score = int32_t(generated_cell_word_0x20[size_t(current_flat)] & 0xffffU) + 2;
+		const int32_t base_score = int32_t(generated_cell_word_0x20[size_t(current_flat)] & 0xffffU);
 		for (int32_t direction_index = 0; direction_index < int32_t(DIRECTION_TABLE_0x5A2658.size()); ++direction_index) {
 			const int32_t next_x = current.x + DIRECTION_TABLE_0x5A2658[size_t(direction_index)][0];
 			const int32_t next_y = current.y + DIRECTION_TABLE_0x5A2658[size_t(direction_index)][1];
@@ -2176,7 +2176,7 @@ int32_t h3maped_4a54a7_deplete_generated_cell_scores(std::vector<uint32_t> &gene
 			if (next_flat < 0 || next_flat >= int64_t(generated_cell_word_0x20.size())) {
 				continue;
 			}
-			const int32_t candidate_score = base_score + (direction_index & 1);
+			const int32_t candidate_score = base_score + ((direction_index & 1) != 0 ? 14 : 10);
 			const uint32_t next_word = generated_cell_word_0x20[size_t(next_flat)];
 			const int32_t current_score = int32_t(next_word & 0xffffU);
 			if (candidate_score >= current_score || candidate_score > 0xffff) {
@@ -6599,6 +6599,58 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		return true;
 	};
 
+	auto find_guard_single_tile_candidate = [&](int32_t origin_x, int32_t origin_y, int32_t level, int32_t runtime_index, int32_t max_radius, H3MapedRng &placement_rng, SingleTilePlacementCandidate &out_candidate) -> bool {
+		std::vector<SingleTilePlacementCandidate> tied_candidates;
+		std::vector<H3MaskPoint> guard_body_points;
+		guard_body_points.push_back(H3MaskPoint { 0, 0 });
+		int32_t best_score = -1;
+		int32_t candidate_count = 0;
+		if (!grid_available) {
+			return false;
+		}
+		for (int32_t radius = 1; radius <= max_radius; ++radius) {
+			for (int32_t dy = -radius; dy <= radius; ++dy) {
+				for (int32_t dx = -radius; dx <= radius; ++dx) {
+					if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+						continue;
+					}
+					const int32_t x = origin_x + dx;
+					const int32_t y = origin_y + dy;
+					const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, level);
+					if (flat < 0 || flat >= expected_cell_count) {
+						continue;
+					}
+					const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+					if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != runtime_index) {
+						continue;
+					}
+					const H3FootprintGateResult footprint = h3maped_49a09c_circular_mask_gate(guard_body_points, zone_words, cell_flags, live_terrain_code, object_occupied, map_width, map_height, map_level_count, x, y, level, runtime_index, false);
+					if (!footprint.pass) {
+						continue;
+					}
+					const int32_t distance_squared = dx * dx + dy * dy;
+					const int32_t score = int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU);
+					candidate_count += 1;
+					if (score > best_score) {
+						best_score = score;
+						tied_candidates.clear();
+					}
+					if (score == best_score) {
+						tied_candidates.push_back(SingleTilePlacementCandidate { x, y, level, distance_squared, score, candidate_count });
+					}
+				}
+			}
+		}
+		if (tied_candidates.empty()) {
+			return false;
+		}
+		const int32_t rng_value = placement_rng.next();
+		const int32_t selected_index = rng_value % int32_t(tied_candidates.size());
+		out_candidate = tied_candidates[size_t(selected_index)];
+		out_candidate.candidate_count = candidate_count;
+		return true;
+	};
+
 	auto source_zone_primary_category_target_4a8db2 = [](const Dictionary &runtime) {
 		const int32_t density_weight = std::max(0, int32_t(runtime.get("player_town_density", 0)))
 				+ std::max(0, int32_t(runtime.get("player_castle_density", 0)))
@@ -6951,7 +7003,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				if (scaled_guard_value > 0) {
 					mine_guard_placement_attempt_count += 1;
 					SingleTilePlacementCandidate guard_candidate;
-					if (find_adjacent_single_tile_candidate(selected.x, selected.y, selected.level, runtime_index, 3, true, object_rng, guard_candidate)) {
+					if (find_guard_single_tile_candidate(selected.x, selected.y, selected.level, runtime_index, 3, object_rng, guard_candidate)) {
 						const int64_t guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
 						if (guard_flat >= 0 && guard_flat < expected_cell_count) {
 							object_occupied[size_t(guard_flat)] = 1;
@@ -6976,12 +7028,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						guard_record["distance_squared_from_mine"] = guard_candidate.distance_squared;
 						guard_record["placement_score_low_word"] = guard_candidate.score;
 						guard_record["source_algorithm"] = "h3maped_0x4a9911_mine_guard_value_0x4a960a_0x4a65a5";
-						guard_record["port_fidelity"] = "projected_semantics";
+						guard_record["port_fidelity"] = "guard_coordinate_commit_aligned";
+						guard_record["guard_value_exact"] = true;
+						guard_record["guard_coordinate_port_fidelity"] = "generated_cell_score_and_0x49a09c_single_tile_guard_gate";
 						guard_record["exact_port_claim"] = false;
-						guard_record["exactness_blocker"] = "mine guard value scaling is anchored to 0x4a65a5, while adjacent-cell selection remains a projected private placement";
+						guard_record["exactness_blocker"] = "mine guard value and coordinate selection are generated-cell aligned; exact monster object constructor/adoption remains translated to project content";
 						mine_guard_records.append(guard_record);
 						mine_guard_coordinate_record_count += 1;
-						placement["mine_guard_status"] = "0x4a9911_adjacent_mine_guard_record_projected_private";
+						placement["mine_guard_status"] = "0x4a9911_mine_guard_record_generated_cell_score_aligned_private";
 						placement["mine_guard_x"] = guard_candidate.x;
 						placement["mine_guard_y"] = guard_candidate.y;
 					} else {
@@ -7095,10 +7149,6 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			std::vector<H3MaskPoint> body_points = source_body_points;
 			const std::vector<H3MaskPoint> action_points = h3_text_mask_points(selected_template.action_mask, true);
 			const int32_t source_template_body_cell_count = int32_t(body_points.size());
-			if (body_points.size() > 4) {
-				body_points.clear();
-				body_points.push_back(H3MaskPoint { 0, 0 });
-			}
 			placement["selected_template_rng_value"] = template_rng_value;
 			placement["selected_template_source_line"] = selected_template.source_line;
 			placement["selected_template_def_name"] = selected_template.def_name;
@@ -7106,7 +7156,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			placement["homm3_re_object_subtype_id"] = selected_template.subtype_id;
 			placement["selected_template_source_body_cell_count"] = source_template_body_cell_count;
 			placement["selected_template_body_cell_count"] = int32_t(body_points.size());
-			placement["primary_category_placement_footprint_policy"] = source_template_body_cell_count > 4 ? String("bounded_single_anchor_for_small_map_primary_category") : String("source_template_body_mask");
+			placement["primary_category_placement_footprint_policy"] = "source_template_body_mask";
+			placement["full_source_footprint_used"] = true;
 			placement["selected_template_action_cell_count"] = int32_t(action_points.size());
 
 			struct PrimaryPlacementCandidate {
@@ -7198,9 +7249,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			primary_category_score_depletion_call_count += 1;
 			primary_category_score_depletion_mutated_cell_count += score_depleted_cells;
 			placement["status"] = "0x4a901a_primary_category_object_record_projected_private";
-			placement["port_fidelity"] = "projected_semantics";
+			placement["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
+			placement["coordinate_commit_port_fidelity"] = "0x4a901a_generated_cell_score_and_source_footprint_aligned";
 			placement["exact_port_claim"] = false;
-			placement["exactness_blocker"] = "0x4a901a weighted primary category placement uses recovered templates and generated-cell gates, but object constructor/order semantics are not fully proven";
+			placement["exactness_blocker"] = "0x4a901a coordinate commit now uses full source footprints and generated-cell score gates, but candidate catalog/object constructor semantics remain proxy-backed";
 			placement["placement_id"] = String("h3maped_small_primary_object_") + h3_slot_id_2(primary_category_selected_count + 1);
 			placement["coordinate_rng_value"] = coordinate_rng_value;
 			placement["selected_x"] = selected.x;
@@ -7235,7 +7287,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					primary_category_guard_placement_attempt_count += 1;
 					Dictionary protected_tile = action_tiles.is_empty() ? h3_cell_dictionary(selected.x, selected.y, selected.level) : Dictionary(action_tiles[0]);
 					SingleTilePlacementCandidate guard_candidate;
-						if (find_adjacent_single_tile_candidate(int32_t(protected_tile.get("x", selected.x)), int32_t(protected_tile.get("y", selected.y)), selected.level, runtime_index, 5, true, object_rng, guard_candidate)) {
+					if (find_guard_single_tile_candidate(int32_t(protected_tile.get("x", selected.x)), int32_t(protected_tile.get("y", selected.y)), selected.level, runtime_index, 5, object_rng, guard_candidate)) {
 						const int64_t guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
 						if (guard_flat >= 0 && guard_flat < expected_cell_count) {
 							object_occupied[size_t(guard_flat)] = 1;
@@ -7259,9 +7311,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						guard_record["distance_squared_from_primary_object"] = guard_candidate.distance_squared;
 						guard_record["placement_score_low_word"] = guard_candidate.score;
 						guard_record["source_algorithm"] = "h3maped_0x4a901a_primary_category_guard_0x4a65a5";
-						guard_record["port_fidelity"] = "projected_semantics";
+						guard_record["port_fidelity"] = "guard_coordinate_commit_aligned";
+						guard_record["guard_value_exact"] = true;
+						guard_record["guard_coordinate_port_fidelity"] = "generated_cell_score_and_0x49a09c_single_tile_guard_gate";
 						guard_record["exact_port_claim"] = false;
-						guard_record["exactness_blocker"] = "primary-category guard writer is value-anchored but still uses projected adjacent-cell selection";
+						guard_record["exactness_blocker"] = "guard value and coordinate selection are generated-cell aligned; exact monster object constructor/adoption remains translated to project content";
 						primary_category_guard_records.append(guard_record);
 						primary_category_guard_coordinate_record_count += 1;
 					}
@@ -7619,43 +7673,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							}
 						}
 					}
-					bool score_gate_rebased_used = false;
-					int32_t score_gate_rebased_candidate_count = 0;
-					if (tied_candidates.empty() && owner_match_count > 0 && !reward_body_points.empty() && grid_available) {
-						int32_t rebased_best_score = -1;
-						for (int32_t y = 0; y < map_height; ++y) {
-							for (int32_t x = 0; x < map_width; ++x) {
-								const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, anchor_level);
-								if (flat < 0 || flat >= expected_cell_count) {
-									continue;
-								}
-								const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
-								if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || int32_t((masked >> 16U) & 0xffU) != runtime_index) {
-									continue;
-								}
-								const H3FootprintGateResult footprint = h3maped_49a09c_circular_mask_gate(reward_body_points, zone_words, cell_flags, live_terrain_code, object_occupied, map_width, map_height, map_level_count, x, y, anchor_level, runtime_index, false);
-								if (!footprint.pass) {
-									continue;
-								}
-								const int32_t score = int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU);
-								score_gate_rebased_candidate_count += 1;
-								if (score > rebased_best_score) {
-									rebased_best_score = score;
-									tied_candidates.clear();
-								}
-								if (score == rebased_best_score) {
-									tied_candidates.push_back(RewardPlacementCandidate { x, y, anchor_level, score });
-								}
-							}
-						}
-						if (!tied_candidates.empty()) {
-							best_score = rebased_best_score;
-							score_gate_rebased_used = true;
-							reward_coordinate_score_gate_rebased_selected_count += 1;
-						}
-						reward_coordinate_score_gate_rebased_scan_count += 1;
-						reward_coordinate_score_gate_rebased_candidate_total += score_gate_rebased_candidate_count;
-					}
+					const bool score_gate_rebased_used = false;
+					const int32_t score_gate_rebased_candidate_count = 0;
 					reward_coordinate_scan_owner_match_total += owner_match_count;
 					reward_coordinate_scan_candidate_total += coordinate_candidate_count;
 					reward_coordinate_scan_rejected_owner_count += rejected_owner_count;
@@ -7675,7 +7694,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["score_gate_recovery_policy"] = "disabled_for_behavior_alignment";
 					placement_record["score_gate_rebased_used"] = score_gate_rebased_used;
 					placement_record["score_gate_rebased_candidate_count"] = score_gate_rebased_candidate_count;
-					placement_record["score_gate_rebased_policy"] = score_gate_rebased_used ? String("threshold_rebased_to_best_valid_owned_footprint_cell_after_generated_cell_score_depletion") : String("not_needed_or_no_valid_footprint_cells");
+					placement_record["score_gate_rebased_policy"] = "disabled_for_exact_commit_alignment";
 					if (!tied_candidates.empty()) {
 					const int32_t coordinate_rng_value = reward_preview_rng.next();
 					reward_coordinate_rng_call_count += 1;
@@ -7728,9 +7747,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					reward_generated_cell_score_depletion_call_count += 1;
 					reward_generated_cell_score_depletion_mutated_cell_count += score_depleted_cells;
 					placement_record["status"] = "0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record_projected_private";
-					placement_record["port_fidelity"] = "projected_semantics";
+					placement_record["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
+					placement_record["coordinate_commit_port_fidelity"] = "0x4aa9b7_0x4aa603_0x4aa3e9_generated_cell_score_and_source_footprint_aligned";
 					placement_record["exact_port_claim"] = false;
-					placement_record["exactness_blocker"] = score_gate_rebased_used ? String("score gate threshold is rebased to the best valid generated-cell footprint until upstream generated-cell score semantics are exact") : String("0x4aa9b7/0x4aa603/0x4aa3e9 coordinate commit and object mutation order is not yet a complete executable port");
+					placement_record["exactness_blocker"] = "reward coordinate commit now keeps the executable score threshold and source footprint gates, but reward object catalog selection remains proxy-backed";
 					placement_record["coordinate_rng_value"] = coordinate_rng_value;
 					placement_record["selected_coordinate_index"] = selected_coordinate_index;
 					placement_record["selected_x"] = selected_coordinate.x;
@@ -7793,11 +7813,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						coordinate_record["visit_tiles"] = reward_action_tiles;
 						coordinate_record["visit_tile"] = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
 						coordinate_record["complete_executable_vector_claim"] = false;
-						coordinate_record["port_fidelity"] = "projected_semantics";
+						coordinate_record["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
+						coordinate_record["coordinate_commit_port_fidelity"] = "0x4aa9b7_0x4aa603_0x4aa3e9_generated_cell_score_and_source_footprint_aligned";
 						coordinate_record["exact_port_claim"] = false;
 						coordinate_record["score_gate_recovery_used"] = false;
 						coordinate_record["score_gate_rebased_used"] = score_gate_rebased_used;
-						coordinate_record["exactness_blocker"] = score_gate_rebased_used ? String("coordinate uses score-threshold rebasing after strict threshold produced no candidates") : String("reward object local coordinate vector and generated-cell mutation order are not fully proven against 0x4aa9b7/0x4aa3e9");
+						coordinate_record["exactness_blocker"] = "reward coordinate commit now keeps the executable score threshold and generated-cell mutation order; reward object catalog selection remains proxy-backed";
 						reward_coordinate_records.append(coordinate_record);
 						static constexpr int32_t REWARD_GUARD_MIN_BASE_VALUE = 12000;
 						const int32_t reward_guard_value = selected_value >= REWARD_GUARD_MIN_BASE_VALUE ? h3maped_strength_scaled_value_4a65a5(selected_value, mine_guard_strength_mode) : 0;
@@ -7808,7 +7829,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							reward_guard_placement_attempt_count += 1;
 							Dictionary protected_tile = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
 							SingleTilePlacementCandidate guard_candidate;
-							if (find_adjacent_single_tile_candidate(int32_t(protected_tile.get("x", selected_coordinate.x)), int32_t(protected_tile.get("y", selected_coordinate.y)), selected_coordinate.level, runtime_index, 5, true, reward_preview_rng, guard_candidate)) {
+							if (find_guard_single_tile_candidate(int32_t(protected_tile.get("x", selected_coordinate.x)), int32_t(protected_tile.get("y", selected_coordinate.y)), selected_coordinate.level, runtime_index, 5, reward_preview_rng, guard_candidate)) {
 								const int64_t guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
 								if (guard_flat >= 0 && guard_flat < expected_cell_count) {
 									object_occupied[size_t(guard_flat)] = 1;
@@ -7831,10 +7852,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["coordinate_triplet"] = Array::make(guard_candidate.x, guard_candidate.y, guard_candidate.level);
 								guard_record["distance_squared_from_reward"] = guard_candidate.distance_squared;
 								guard_record["placement_score_low_word"] = guard_candidate.score;
-								guard_record["source_algorithm"] = "h3maped_reward_guard_projection_0x4a65a5_adjacent_valid_cell";
-								guard_record["port_fidelity"] = "projected_semantics";
+								guard_record["source_algorithm"] = "h3maped_reward_guard_0x4a65a5_generated_cell_score_guard_gate";
+								guard_record["port_fidelity"] = "guard_coordinate_commit_aligned";
+								guard_record["guard_value_exact"] = true;
+								guard_record["guard_coordinate_port_fidelity"] = "generated_cell_score_and_0x49a09c_single_tile_guard_gate";
 								guard_record["exact_port_claim"] = false;
-								guard_record["exactness_blocker"] = "reward guard value scaling is anchored to 0x4a65a5, while guard producer and adjacent-cell selection are still projected";
+								guard_record["exactness_blocker"] = "reward guard value and coordinate selection are generated-cell aligned; exact monster object constructor/adoption remains translated to project content";
 								reward_guard_records.append(guard_record);
 								reward_guard_coordinate_record_count += 1;
 								placement_record["reward_guard_status"] = "reward_guard_record_materialized";
@@ -7957,22 +7980,26 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	Dictionary monster_summary = h3_single_level_monster_candidate_summary();
 	Dictionary vector_order = h3_single_level_candidate_vector_order_boundary();
 	Dictionary selector = h3_candidate_selector_boundary();
-	const int64_t projected_private_record_count =
-			int64_t(mine_coordinate_records.size()) +
-			int64_t(mine_guard_records.size()) +
-			int64_t(mine_adjacent_resource_records.size()) +
+	const int64_t coordinate_commit_aligned_record_count =
 			int64_t(primary_category_records.size()) +
 			int64_t(primary_category_guard_records.size()) +
 			int64_t(reward_coordinate_records.size()) +
-			int64_t(reward_guard_records.size());
+			int64_t(reward_guard_records.size()) +
+			int64_t(mine_guard_records.size());
+	const int64_t projected_private_record_count =
+			int64_t(mine_coordinate_records.size()) +
+			int64_t(mine_adjacent_resource_records.size()) +
+			int64_t(primary_category_records.size()) +
+			int64_t(reward_coordinate_records.size());
 	const int64_t recovery_fallback_record_count = reward_coordinate_score_gate_recovery_selected_count;
 
 	phase["status"] = "active_strict_executable_port";
-	phase["source"] = "private object-vector prerequisite boundary from recovered h3maped candidate builder, mine/reward schedulers, and generic value-banded selector; no coordinate commit or runtime object adoption yet";
-	phase["port_fidelity"] = "projected_semantics_with_recovery_fallbacks";
+	phase["source"] = "private object-vector prerequisite boundary from recovered h3maped candidate builder, mine/reward schedulers, generic value-banded selector, and generated-cell coordinate commit helpers";
+	phase["port_fidelity"] = "coordinate_commit_aligned_with_proxy_catalog_gaps";
 	phase["exact_port_claim"] = false;
 	phase["complete_object_reward_guard_exact_port_claim"] = false;
-	phase["exactness_blocker"] = "mine/reward/primary object coordinates, object constructors, blocker footprints, and guard adjacent-cell producers still include projected semantics; roads and package adoption must consume this as non-exact upstream state";
+	phase["exactness_blocker"] = "primary/reward coordinate commits and guard coordinates now use generated-cell score and full footprint gates, but mine coordinates, adjacent resources, object constructors, and reward/primary proxy catalogs are not yet complete executable ports";
+	phase["coordinate_commit_aligned_record_count"] = coordinate_commit_aligned_record_count;
 	phase["projected_private_record_count"] = projected_private_record_count;
 	phase["recovery_fallback_record_count"] = recovery_fallback_record_count;
 	phase["mine_requirements_boundary"] = mine_requirements;
