@@ -12324,6 +12324,21 @@ Dictionary selection_identity(const Dictionary &normalized_config) {
 	result["runtime_generation_allowed"] = false;
 	const Array accepted = accepted_templates(normalized_config);
 	result["accepted_template_count"] = accepted.size();
+	Array accepted_template_ids;
+	Array accepted_source_catalog_indices;
+	Array accepted_source_names;
+	for (int64_t accepted_index = 0; accepted_index < accepted.size(); ++accepted_index) {
+		if (Variant(accepted[accepted_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary accepted_record = accepted[accepted_index];
+		accepted_template_ids.append(String(accepted_record.get("id", "")));
+		accepted_source_catalog_indices.append(int32_t(accepted_record.get("source_catalog_index", -1)));
+		accepted_source_names.append(String(accepted_record.get("source_name", "")));
+	}
+	result["accepted_template_ids"] = accepted_template_ids;
+	result["accepted_source_catalog_indices"] = accepted_source_catalog_indices;
+	result["accepted_source_names"] = accepted_source_names;
 	if (!supports_scope(normalized_config)) {
 		result["ok"] = false;
 		result["status"] = "unsupported_scope";

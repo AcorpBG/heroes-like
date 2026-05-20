@@ -17,6 +17,7 @@ func _run() -> void:
 	var seed := _arg_value("--seed", DEFAULT_SEED)
 	var player_count := int(_arg_value("--players", "3"))
 	var human_players := int(_arg_value("--human-players", "1"))
+	var computer_players := max(0, player_count - human_players)
 	var controlled_reference_manifest_path := _arg_value("--controlled-reference-manifest", "")
 	var water_mode := _arg_value("--water", "land")
 	var level_count := int(_arg_value("--level-count", "1"))
@@ -24,11 +25,19 @@ func _run() -> void:
 	var controlled_reference_manifest := {}
 	if controlled_reference_manifest_path != "":
 		controlled_reference_manifest = _read_json_file(controlled_reference_manifest_path)
+		var controlled_inputs: Dictionary = controlled_reference_manifest.get("inputs", {}) if controlled_reference_manifest.get("inputs", {}) is Dictionary else {}
 		var controlled_identity: Dictionary = controlled_reference_manifest.get("controlled_identity", {}) if controlled_reference_manifest.get("controlled_identity", {}) is Dictionary else {}
-		if not controlled_identity.is_empty():
-			seed = String(controlled_identity.get("seed", controlled_identity.get("requested_seed", seed)))
+		if not controlled_inputs.is_empty():
+			seed = String(controlled_inputs.get("seed", seed))
+			player_count = int(controlled_inputs.get("players", player_count))
+			human_players = int(controlled_inputs.get("human_players", human_players))
+			computer_players = int(controlled_inputs.get("computer_only_players", max(0, player_count - human_players)))
+			water_mode = String(controlled_inputs.get("water", water_mode))
+			level_count = int(controlled_inputs.get("level_count", level_count))
+		elif not controlled_identity.is_empty():
+			seed = String(controlled_identity.get("requested_seed", controlled_identity.get("seed", seed)))
 			player_count = int(controlled_identity.get("players", player_count))
-			human_players = int(controlled_identity.get("observed_humans", human_players))
+			computer_players = max(0, player_count - human_players)
 	var absolute_output_dir := ProjectSettings.globalize_path(output_dir)
 	var mkdir_error := DirAccess.make_dir_recursive_absolute(absolute_output_dir)
 	if mkdir_error != OK:
@@ -60,7 +69,7 @@ func _run() -> void:
 		ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)
 	config["player_constraints"]["human_count"] = human_players
-	config["player_constraints"]["computer_count"] = max(0, player_count - human_players)
+	config["player_constraints"]["computer_count"] = computer_players
 	var inspection_started_msec := Time.get_ticks_msec()
 	var inspection: Dictionary = service.inspect_h3maped_small_rmg_port(config)
 	var inspection_wall_msec := Time.get_ticks_msec() - inspection_started_msec
@@ -92,6 +101,7 @@ func _run() -> void:
 		"case_id": case_id,
 		"owner_h3m_path": owner_path,
 		"controlled_reference_manifest_path": controlled_reference_manifest_path,
+		"controlled_reference_manifest_inputs": controlled_reference_manifest.get("inputs", {}) if controlled_reference_manifest.get("inputs", {}) is Dictionary else {},
 		"controlled_reference_manifest_identity": controlled_reference_manifest.get("controlled_identity", {}) if controlled_reference_manifest.get("controlled_identity", {}) is Dictionary else {},
 		"output_dir": output_dir,
 		"absolute_output_dir": absolute_output_dir,
@@ -107,6 +117,7 @@ func _run() -> void:
 		},
 		"normalized_config": generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {},
 		"selection_identity": _summarize_value(inspection.get("selection_identity", {}), 3),
+		"selection_diagnostics": _selection_diagnostics(inspection),
 		"phase_summaries": _phase_summaries(inspection),
 		"road_comparison_inputs": _road_comparison_inputs(inspection),
 		"package_adoption": adoption_summary,
@@ -116,6 +127,31 @@ func _run() -> void:
 	_write_json(report_path, report)
 	_write_markdown(absolute_output_dir.path_join("phase_snapshot.md"), report)
 	_finish(report, 0 if bool(inspection.get("ok", false)) else 1)
+
+func _selection_diagnostics(inspection: Dictionary) -> Dictionary:
+	var selection: Dictionary = inspection.get("selection_identity", {}) if inspection.get("selection_identity", {}) is Dictionary else {}
+	var accepted: Array = inspection.get("accepted_templates", []) if inspection.get("accepted_templates", []) is Array else []
+	var ids := []
+	var catalog_indices := []
+	var names := []
+	for value in accepted:
+		if not value is Dictionary:
+			continue
+		var record: Dictionary = value
+		ids.append(String(record.get("id", "")))
+		catalog_indices.append(int(record.get("source_catalog_index", -1)))
+		names.append(String(record.get("source_name", "")))
+	return {
+		"schema_id": "rmg_h3maped_template_selection_diagnostics_v1",
+		"accepted_template_count": accepted.size(),
+		"accepted_template_ids": ids,
+		"accepted_source_catalog_indices": catalog_indices,
+		"accepted_source_names": names,
+		"rng_first_value": int(selection.get("rng_first_value", -1)),
+		"selected_vector_index": int(selection.get("selected_vector_index", -1)),
+		"source_template_id": String(selection.get("source_template_id", "")),
+		"source_catalog_index": int(selection.get("source_catalog_index", -1)),
+	}
 
 func _adoption_summary(adoption: Dictionary, adoption_wall_msec: int, service: Variant, native_path: String) -> Dictionary:
 	var result := {
