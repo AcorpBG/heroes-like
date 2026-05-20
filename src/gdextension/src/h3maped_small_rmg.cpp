@@ -736,6 +736,13 @@ bool template_record_supports_requested_players(const Dictionary &record, int32_
 			&& count_owner_mask_bits(player_mask) >= players;
 }
 
+bool h3maped_template_filter_allows(const Dictionary &filter, int32_t humans, int32_t players) {
+	return humans >= int32_t(filter.get("min_human", 0))
+			&& humans <= int32_t(filter.get("max_human", 8))
+			&& players >= int32_t(filter.get("min_total", 0))
+			&& players <= int32_t(filter.get("max_total", 8));
+}
+
 int32_t h3maped_imported_source_owner_index(const Dictionary &zone) {
 	Variant ownership_value = zone.get("ownership", Variant());
 	if (ownership_value.get_type() == Variant::DICTIONARY) {
@@ -754,7 +761,7 @@ int32_t h3maped_imported_source_owner_index(const Dictionary &zone) {
 	return -2;
 }
 
-Dictionary template_record_from_recovered_catalog(const Dictionary &source, int32_t catalog_index) {
+Dictionary template_record_from_recovered_catalog(const Dictionary &source, int32_t catalog_index, int32_t requested_humans, int32_t requested_players) {
 	Dictionary item;
 	item["id"] = String("h3maped_template_") + h3_slot_id_3_local(catalog_index);
 	item["source_catalog_index"] = catalog_index;
@@ -766,17 +773,21 @@ Dictionary template_record_from_recovered_catalog(const Dictionary &source, int3
 	item["max_humans"] = human_range.size() >= 2 ? int32_t(human_range[1]) : 0;
 	item["min_total_players"] = player_range.size() >= 1 ? int32_t(player_range[0]) : 0;
 	item["max_total_players"] = player_range.size() >= 2 ? int32_t(player_range[1]) : 0;
-	item["zone_count"] = int32_t(source.get("zone_count", 0));
-	item["connection_count"] = int32_t(source.get("connection_count", 0));
+	Array zones = source.get("zones", Array());
+	Array links = source.get("connections", source.get("links", Array()));
 	item["adapted_template_id"] = "";
 	uint8_t human_mask = 0;
 	uint8_t player_mask = 0;
-	Array zones = source.get("zones", Array());
+	int32_t filtered_zone_count = 0;
 	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
 		if (Variant(zones[zone_index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
 		Dictionary zone = zones[zone_index];
+		if (requested_humans >= 0 && requested_players >= 0 && !h3maped_template_filter_allows(zone.get("player_filter", Dictionary()), requested_humans, requested_players)) {
+			continue;
+		}
+		filtered_zone_count += 1;
 		const int32_t owner = int32_t(zone.get("ownership", -1));
 		if (owner < 0 || owner >= 8) {
 			continue;
@@ -789,6 +800,21 @@ Dictionary template_record_from_recovered_catalog(const Dictionary &source, int3
 			player_mask |= uint8_t(1U << owner);
 		}
 	}
+	int32_t filtered_connection_count = 0;
+	for (int64_t link_index = 0; link_index < links.size(); ++link_index) {
+		if (Variant(links[link_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = links[link_index];
+		if (requested_humans >= 0 && requested_players >= 0 && !h3maped_template_filter_allows(link.get("player_filter", Dictionary()), requested_humans, requested_players)) {
+			continue;
+		}
+		filtered_connection_count += 1;
+	}
+	item["zone_count"] = requested_humans >= 0 && requested_players >= 0 ? filtered_zone_count : int32_t(source.get("zone_count", zones.size()));
+	item["connection_count"] = requested_humans >= 0 && requested_players >= 0 ? filtered_connection_count : int32_t(source.get("connection_count", links.size()));
+	item["unfiltered_zone_count"] = int32_t(source.get("zone_count", zones.size()));
+	item["unfiltered_connection_count"] = int32_t(source.get("connection_count", links.size()));
 	item["human_capable_source_owner_mask"] = int32_t(human_mask);
 	item["player_capable_source_owner_mask"] = int32_t(player_mask);
 	item["source_name"] = source.get("name", "");
@@ -796,7 +822,7 @@ Dictionary template_record_from_recovered_catalog(const Dictionary &source, int3
 	return item;
 }
 
-Dictionary template_record_from_imported_catalog(const Dictionary &source, int32_t imported_index) {
+Dictionary template_record_from_imported_catalog(const Dictionary &source, int32_t imported_index, int32_t requested_humans, int32_t requested_players) {
 	Dictionary provenance = source.get("import_provenance", Dictionary());
 	const int32_t imported_source_index = int32_t(provenance.get("source_template_index", imported_index + 1));
 	const int32_t source_catalog_index = imported_source_index > 0 ? imported_source_index - 1 : imported_index;
@@ -808,11 +834,16 @@ Dictionary template_record_from_imported_catalog(const Dictionary &source, int32
 	Array links = source.get("links", Array());
 	uint8_t human_mask = 0;
 	uint8_t player_mask = 0;
+	int32_t filtered_zone_count = 0;
 	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
 		if (Variant(zones[zone_index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
 		Dictionary zone = zones[zone_index];
+		if (requested_humans >= 0 && requested_players >= 0 && !h3maped_template_filter_allows(zone.get("player_filter", Dictionary()), requested_humans, requested_players)) {
+			continue;
+		}
+		filtered_zone_count += 1;
 		const int32_t owner = h3maped_imported_source_owner_index(zone);
 		if (owner < 0 || owner >= 8) {
 			continue;
@@ -825,18 +856,33 @@ Dictionary template_record_from_imported_catalog(const Dictionary &source, int32
 			player_mask = uint8_t(player_mask | uint8_t(1U << uint32_t(owner)));
 		}
 	}
+	int32_t filtered_connection_count = 0;
+	for (int64_t link_index = 0; link_index < links.size(); ++link_index) {
+		if (Variant(links[link_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = links[link_index];
+		if (requested_humans >= 0 && requested_players >= 0 && !h3maped_template_filter_allows(link.get("player_filter", Dictionary()), requested_humans, requested_players)) {
+			continue;
+		}
+		filtered_connection_count += 1;
+	}
 
 	Dictionary item;
 	item["id"] = String("h3maped_template_") + h3_slot_id_3_local(source_catalog_index);
 	item["source_catalog_index"] = source_catalog_index;
+	item["source_catalog_entry_index"] = imported_index;
+	item["imported_source_template_index_one_based"] = imported_source_index;
 	item["min_size_score"] = int32_t(size.get("min", 0));
 	item["max_size_score"] = int32_t(size.get("max", 0));
 	item["min_humans"] = int32_t(humans.get("min", 0));
 	item["max_humans"] = int32_t(humans.get("max", 0));
 	item["min_total_players"] = int32_t(total.get("min", 0));
 	item["max_total_players"] = int32_t(total.get("max", 0));
-	item["zone_count"] = zones.size();
-	item["connection_count"] = links.size();
+	item["zone_count"] = requested_humans >= 0 && requested_players >= 0 ? filtered_zone_count : int32_t(zones.size());
+	item["connection_count"] = requested_humans >= 0 && requested_players >= 0 ? filtered_connection_count : int32_t(links.size());
+	item["unfiltered_zone_count"] = int32_t(zones.size());
+	item["unfiltered_connection_count"] = int32_t(links.size());
 	item["adapted_template_id"] = source.get("id", "");
 	item["human_capable_source_owner_mask"] = int32_t(human_mask);
 	item["player_capable_source_owner_mask"] = int32_t(player_mask);
@@ -972,18 +1018,39 @@ Dictionary find_original_h3maped_template_record(const Dictionary &selection, Di
 		return Dictionary();
 	}
 	Array templates = catalog.get("templates", Array());
-	if (source_index < 0 || source_index >= templates.size() || Variant(templates[source_index]).get_type() != Variant::DICTIONARY) {
-		load_status["ok"] = false;
-		load_status["status"] = "compiled_source_catalog_index_not_found";
-		load_status["source_catalog_index"] = source_index;
-		return Dictionary();
+	const int32_t imported_source_index = source_index + 1;
+	for (int64_t template_index = 0; template_index < templates.size(); ++template_index) {
+		if (Variant(templates[template_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = templates[template_index];
+		Dictionary provenance = candidate.get("import_provenance", Dictionary());
+		if (int32_t(provenance.get("source_template_index", -1)) != imported_source_index) {
+			continue;
+		}
+		load_status["matched_source_catalog_index"] = source_index;
+		load_status["matched_source_catalog_entry_index"] = int32_t(template_index);
+		load_status["matched_imported_source_template_index_one_based"] = imported_source_index;
+		load_status["matched_template_name"] = candidate.get("label", candidate.get("name", ""));
+		load_status["matched_zone_count"] = int32_t(Array(candidate.get("zones", Array())).size());
+		load_status["matched_connection_count"] = int32_t(Array(candidate.get("links", Array())).size());
+		return candidate;
 	}
-	Dictionary candidate = templates[source_index];
-	load_status["matched_source_catalog_index"] = source_index;
-	load_status["matched_template_name"] = candidate.get("name", "");
-	load_status["matched_zone_count"] = candidate.get("zone_count", 0);
-	load_status["matched_connection_count"] = candidate.get("connection_count", 0);
-	return candidate;
+	if (source_index >= 0 && source_index < templates.size() && Variant(templates[source_index]).get_type() == Variant::DICTIONARY) {
+		Dictionary candidate = templates[source_index];
+		load_status["matched_source_catalog_index"] = source_index;
+		load_status["matched_source_catalog_entry_index"] = source_index;
+		load_status["matched_template_name"] = candidate.get("label", candidate.get("name", ""));
+		load_status["matched_zone_count"] = int32_t(Array(candidate.get("zones", Array())).size());
+		load_status["matched_connection_count"] = int32_t(Array(candidate.get("links", Array())).size());
+		load_status["status"] = "compiled_source_catalog_index_legacy_array_fallback";
+		return candidate;
+	}
+	load_status["ok"] = false;
+	load_status["status"] = "compiled_source_catalog_index_not_found";
+	load_status["source_catalog_index"] = source_index;
+	load_status["imported_source_template_index_one_based"] = imported_source_index;
+	return Dictionary();
 }
 
 int32_t original_mine_value(const Dictionary &mines, const char *key) {
@@ -1368,14 +1435,32 @@ Array accepted_templates(const Dictionary &normalized_config) {
 	if (!supports_scope(normalized_config)) {
 		return accepted;
 	}
-	for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
-		if (score < candidate.min_size_score || score > candidate.max_size_score) {
+	Dictionary catalog_load = load_compiled_template_catalog();
+	if (!bool(catalog_load.get("ok", false))) {
+		return accepted;
+	}
+	Dictionary catalog = catalog_load.get("data", Dictionary());
+	if (Variant(catalog.get("templates", Variant())).get_type() != Variant::ARRAY) {
+		return accepted;
+	}
+	Array templates = catalog.get("templates", Array());
+	for (int64_t template_index = 0; template_index < templates.size(); ++template_index) {
+		if (Variant(templates[template_index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
-		if (humans < candidate.min_humans || humans > candidate.max_humans || players < candidate.min_total_players || players > candidate.max_total_players || players < humans) {
+		Dictionary source = templates[template_index];
+		Dictionary provenance = source.get("import_provenance", Dictionary());
+		const int32_t imported_source_index = int32_t(provenance.get("source_template_index", -1));
+		const bool imported_schema = imported_source_index > 0;
+		Dictionary record = imported_schema
+				? template_record_from_imported_catalog(source, int32_t(template_index), humans, players)
+				: template_record_from_recovered_catalog(source, int32_t(template_index), humans, players);
+		if (score < int32_t(record.get("min_size_score", 0)) || score > int32_t(record.get("max_size_score", 0))) {
 			continue;
 		}
-		Dictionary record = template_record(candidate);
+		if (humans < int32_t(record.get("min_humans", 0)) || humans > int32_t(record.get("max_humans", 0)) || players < int32_t(record.get("min_total_players", 0)) || players > int32_t(record.get("max_total_players", 0)) || players < humans) {
+			continue;
+		}
 		if (!template_record_supports_requested_players(record, humans, players)) {
 			continue;
 		}

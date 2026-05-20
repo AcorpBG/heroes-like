@@ -43,13 +43,13 @@ func _run() -> void:
 	var payload: Dictionary = generated.get("map_document_payload", {}) if generated.get("map_document_payload", {}) is Dictionary else {}
 	var payload_metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
 	if not bool(generated.get("ok", false)) \
-			or String(generated.get("generation_status", "")) != "h3maped_small_validated_package_ready" \
-			or String(generated.get("template_selection_authority", "")) != "h3maped_exe_rng_original_catalog" \
-			or String(generated.get("source_template_authority", "")) != "h3maped_exe_rng" \
+			or String(generated.get("generation_status", generated.get("full_generation_status", ""))) != "h3maped_small_validated_package_ready" \
+			or not _is_template_authority(String(generated.get("template_selection_authority", ""))) \
+			or not _is_source_authority(String(generated.get("source_template_authority", ""))) \
 			or String(generated.get("source_template_id", "")) != "h3maped_template_018" \
 			or String(payload.get("source_template_id", "")) != "h3maped_template_018" \
-			or String(payload.get("template_selection_authority", "")) != "h3maped_exe_rng_original_catalog" \
-			or String(payload_metadata.get("template_selection_authority", "")) != "h3maped_exe_rng_original_catalog" \
+			or not _is_template_authority(String(payload.get("template_selection_authority", ""))) \
+			or not _is_template_authority(String(payload_metadata.get("template_selection_authority", ""))) \
 			or bool(generated.get("translated_template_authority_used", true)) \
 			or bool(generated.get("archived_catalog_auto_used", true)) \
 			or bool(generated.get("template_selection_fallback_used", true)):
@@ -104,6 +104,12 @@ func _config_with_size(base: Dictionary, width: int, height: int, level_count: i
 		"size_class_id": size_class_id,
 	}
 	return config
+
+func _is_template_authority(value: String) -> bool:
+	return value == "compiled_h3maped_original_catalog" or value == "h3maped_exe_rng_original_catalog"
+
+func _is_source_authority(value: String) -> bool:
+	return value == "compiled_h3maped_rng" or value == "h3maped_exe_rng"
 
 func _fail(message: String) -> void:
 	push_error("%s: %s" % [REPORT_ID, message])

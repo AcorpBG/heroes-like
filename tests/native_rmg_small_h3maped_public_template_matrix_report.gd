@@ -5,10 +5,18 @@ const REPORT_SCHEMA_ID := "native_rmg_small_h3maped_public_template_matrix_repor
 
 const EXPECTED_2P_3P_TEMPLATES := [
 	"h3maped_template_000",
+	"h3maped_template_010",
+	"h3maped_template_011",
 	"h3maped_template_012",
+	"h3maped_template_013",
+	"h3maped_template_014",
+	"h3maped_template_017",
 	"h3maped_template_018",
+	"h3maped_template_019",
 	"h3maped_template_020",
+	"h3maped_template_021",
 	"h3maped_template_022",
+	"h3maped_template_023",
 	"h3maped_template_024",
 	"h3maped_template_027",
 	"h3maped_template_028",
@@ -45,7 +53,7 @@ const EXPECTED_4P_TEMPLATES := [
 	"h3maped_template_047",
 	"h3maped_template_048",
 ]
-const SEEDS_FOR_13_ACCEPTED := ["28", "92", "1", "9", "73", "137", "2", "58", "122", "3", "43", "107", "4"]
+const SEEDS_FOR_21_ACCEPTED := ["14", "8", "21", "2", "28", "9", "3", "29", "10", "4", "17", "11", "5", "18", "12", "25", "6", "32", "13", "7", "1"]
 const SEEDS_FOR_12_ACCEPTED := ["3", "7", "11", "4", "8", "1", "5", "20", "9", "2", "6", "10"]
 const SEEDS_FOR_11_ACCEPTED := ["12", "2", "9", "6", "3", "10", "7", "4", "1", "8", "5"]
 const EXACT_REGRESSION_SEED := "1270881600"
@@ -68,10 +76,10 @@ func _run() -> void:
 	var seen_by_player_count := {2: {}, 3: {}, 4: {}}
 	var exact := _run_case(service, EXACT_REGRESSION_SEED, 2, "exact_failed_seed_1270881600")
 	cases.append(exact)
-	if not bool(exact.get("ok", false)) or String(exact.get("source_template_id", "")) != "h3maped_template_012":
+	if not bool(exact.get("ok", false)) or String(exact.get("source_template_id", "")) != "h3maped_template_028":
 		failures.append(exact)
 
-	for seed in SEEDS_FOR_13_ACCEPTED:
+	for seed in SEEDS_FOR_21_ACCEPTED:
 		var summary_2p := _run_case(service, String(seed), 2, "matrix_2p_seed_%s" % seed)
 		cases.append(summary_2p)
 		seen_by_player_count[2][String(summary_2p.get("source_template_id", ""))] = true
