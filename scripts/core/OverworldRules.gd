@@ -1563,6 +1563,10 @@ static func get_active_context(session: SessionStateStoreScript.SessionData) -> 
 	if not is_tile_visible(session, pos.x, pos.y):
 		return {"type": "empty"}
 
+	var guard_result := _find_guard_engagement_at_tile(session, pos.x, pos.y)
+	if int(guard_result.get("index", -1)) >= 0:
+		return {"type": "encounter", "encounter": guard_result.get("encounter", {})}
+
 	var town_result := _find_active_town(session)
 	if int(town_result.get("index", -1)) >= 0:
 		return {"type": "town", "town": town_result.get("town", {})}
@@ -1591,7 +1595,13 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 		var encounter = encounters[int(encounter_index)] if encounters is Array and int(encounter_index) >= 0 and int(encounter_index) < encounters.size() else {}
 		if encounter is Dictionary and not is_encounter_resolved(session, encounter):
 			return encounter
+	var guard_result := _find_guard_engagement_at_tile(session, pos.x, pos.y)
+	if int(guard_result.get("index", -1)) >= 0:
+		return guard_result.get("encounter", {})
 	return {}
+
+static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	return _find_guard_engagement_at_tile(session, x, y).get("encounter", {})
 
 static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -1755,6 +1765,8 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_spatial_lookup_count", 0)) + 1
 	var tile := Vector2i(x, y)
 	var lookup_index := _spatial_lookup_index(session)
+	if int(_find_guard_engagement_at_tile(session, x, y).get("index", -1)) >= 0:
+		return true
 	var towns = session.overworld.get("towns", [])
 	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
 	var town_index := int(town_by_tile.get(_tile_key(tile), -1))
@@ -2070,6 +2082,7 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 		"artifact_by_placement": {},
 		"encounter_by_tile": {},
 		"encounter_by_placement": {},
+		"guard_engagement_by_tile": {},
 	}
 	var towns = session.overworld.get("towns", [])
 	if towns is Array:
@@ -2129,6 +2142,14 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 					_tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))),
 					encounter_index
 				)
+				if _encounter_has_guard_engagement_surface(encounter):
+					for engagement_tile in _guard_engagement_world_tiles(encounter):
+						if engagement_tile is Vector2i:
+							_append_spatial_lookup_entry(
+								index["guard_engagement_by_tile"],
+								_tile_key(engagement_tile),
+								encounter_index
+							)
 	return index
 
 static func _append_spatial_lookup_entry(index_value: Variant, key: String, entry_index: int) -> void:
@@ -2138,6 +2159,43 @@ static func _append_spatial_lookup_entry(index_value: Variant, key: String, entr
 	var entries: Array = index.get(key, []) if index.get(key, []) is Array else []
 	entries.append(entry_index)
 	index[key] = entries
+
+static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	if session == null:
+		return {"index": -1, "encounter": {}}
+	var encounters = session.overworld.get("encounters", [])
+	var lookup_index := _spatial_lookup_index(session)
+	for encounter_index in _spatial_lookup_entries(lookup_index, "guard_engagement_by_tile", Vector2i(x, y)):
+		var index := int(encounter_index)
+		var encounter = encounters[index] if encounters is Array and index >= 0 and index < encounters.size() else {}
+		if encounter is Dictionary and not is_encounter_resolved(session, encounter):
+			return {"index": index, "encounter": encounter}
+	return {"index": -1, "encounter": {}}
+
+static func _encounter_has_guard_engagement_surface(encounter: Dictionary) -> bool:
+	if encounter.is_empty():
+		return false
+	var kind := String(encounter.get("kind", encounter.get("package_kind", encounter.get("native_record_kind", ""))))
+	var package_kind := String(encounter.get("package_kind", ""))
+	var native_kind := String(encounter.get("native_record_kind", ""))
+	if kind == "guard" or package_kind == "guard" or native_kind == "guard":
+		return true
+	if encounter.get("package_guard_engagement_tiles", null) is Array:
+		return true
+	if encounter.get("package_guard_control_zone_tiles", null) is Array:
+		return true
+	return String(encounter.get("guard_kind", "")).strip_edges() != ""
+
+static func _guard_engagement_world_tiles(encounter: Dictionary) -> Array:
+	for key in ["package_guard_engagement_tiles", "package_guard_control_zone_tiles", "guard_control_zone_tiles"]:
+		var tiles = encounter.get(key, null)
+		if tiles is Array:
+			var world_tiles := _world_tiles_from_payload_array(tiles)
+			if not world_tiles.is_empty():
+				return world_tiles
+	if not _encounter_has_guard_engagement_surface(encounter):
+		return []
+	return [Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))]
 
 static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vector2i) -> Array:
 	var table: Dictionary = index.get(name, {}) if index.get(name, {}) is Dictionary else {}
