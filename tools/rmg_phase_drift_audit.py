@@ -193,6 +193,152 @@ def native_detail(amap_path: Path) -> dict[str, Any]:
     }
 
 
+def tile_key_from_record(tile: Any) -> str:
+    if not isinstance(tile, dict):
+        return ""
+    return f"{as_int(tile.get('level'), 0)}:{fast_audit.point_key(as_int(tile.get('x'), -1), as_int(tile.get('y'), -1))}"
+
+
+def tile_keys(tiles: Any) -> set[str]:
+    if not isinstance(tiles, list):
+        return set()
+    return {key for key in (tile_key_from_record(tile) for tile in tiles) if key}
+
+
+def h3m_blocker_guard_records(path: Path) -> list[dict[str, Any]]:
+    data = fast_audit.load_bytes(path)
+    width = fast_audit.u32(data, 5)
+    records = parse_h3m_records(path)
+    result: list[dict[str, Any]] = []
+    for record in records:
+        category = fast_audit.h3m_category(record)
+        body_points = fast_audit.mask_points(record, False, width, width)
+        if not body_points and category != "guard":
+            continue
+        action_points = fast_audit.mask_points(record, True, width, width)
+        guard_control = fast_audit.guard_control_points(record, width, width) if category == "guard" else []
+        result.append(
+            {
+                "object_index": as_int(record.get("object_index"), -1),
+                "type_id": as_int(record.get("type_id"), -1),
+                "type_name": str(record.get("type_name", "")),
+                "subtype": as_int(record.get("subtype"), -1),
+                "def_name": str(record.get("def_name", "")),
+                "x": as_int(record.get("x"), -1),
+                "y": as_int(record.get("y"), -1),
+                "level": as_int(record.get("level"), 0),
+                "category": category,
+                "body_tiles": body_points,
+                "body_tile_count": len(body_points),
+                "action_tiles": action_points,
+                "action_tile_count": len(action_points),
+                "guard_control_tiles": guard_control,
+                "guard_control_tile_count": len(guard_control),
+            }
+        )
+    return result
+
+
+def native_blocker_guard_records(amap_path: Path) -> list[dict[str, Any]]:
+    package = json.loads(amap_path.read_text())
+    doc = package.get("document", package)
+    result: list[dict[str, Any]] = []
+    for obj in doc.get("objects", []):
+        if not isinstance(obj, dict):
+            continue
+        body_tiles = obj.get("package_body_tiles", obj.get("body_tiles", []))
+        block_tiles = obj.get("package_block_tiles", [])
+        visit_tiles = obj.get("package_visit_tiles", obj.get("visit_tiles", []))
+        guard_control_tiles = obj.get("package_guard_control_zone_tiles", [])
+        result.append(
+            {
+                "placement_id": str(obj.get("placement_id", "")),
+                "kind": str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object")))),
+                "object_id": str(obj.get("object_id", obj.get("asset_id", ""))),
+                "source_def_name": str(obj.get("selected_template_def_name", obj.get("homm3_re_object_def_ref", ""))),
+                "source_type_id": as_int(obj.get("h3maped_type_id", obj.get("homm3_re_object_type_id", -1)), -1),
+                "source_subtype": as_int(obj.get("h3maped_subtype_id", obj.get("homm3_re_object_subtype_id", -1)), -1),
+                "x": as_int(obj.get("x"), -1),
+                "y": as_int(obj.get("y"), -1),
+                "level": as_int(obj.get("level"), 0),
+                "body_tiles": body_tiles if isinstance(body_tiles, list) else [],
+                "body_tile_count": len(body_tiles) if isinstance(body_tiles, list) else 0,
+                "block_tiles": block_tiles if isinstance(block_tiles, list) else [],
+                "block_tile_count": len(block_tiles) if isinstance(block_tiles, list) else 0,
+                "visit_tiles": visit_tiles if isinstance(visit_tiles, list) else [],
+                "visit_tile_count": len(visit_tiles) if isinstance(visit_tiles, list) else 0,
+                "guard_control_tiles": guard_control_tiles if isinstance(guard_control_tiles, list) else [],
+                "guard_control_tile_count": len(guard_control_tiles) if isinstance(guard_control_tiles, list) else 0,
+                "package_adoption_source": str(obj.get("package_adoption_source", "")),
+                "has_trim_marker": any(
+                    key in obj
+                    for key in [
+                        "runtime_start_block_mask_removed_count",
+                        "runtime_start_block_mask_policy",
+                        "package_guarded_corridor_cleared_tile_count",
+                        "package_guarded_corridor_policy",
+                    ]
+                ),
+            }
+        )
+    return result
+
+
+def blocker_guard_surface_report(h3m_path: Path, amap_path: Path) -> dict[str, Any]:
+    h3m_records = h3m_blocker_guard_records(h3m_path)
+    native_records = native_blocker_guard_records(amap_path)
+    h3maped_blocking_kinds = {"town", "mine", "reward_reference", "scenic_object", "connection_blocker", "decorative_obstacle", "guard"}
+    gaps: list[dict[str, Any]] = []
+    violations: list[dict[str, Any]] = []
+    for record in native_records:
+        body = tile_keys(record.get("body_tiles"))
+        block = tile_keys(record.get("block_tiles"))
+        guard_control = tile_keys(record.get("guard_control_tiles"))
+        body_minus_block = sorted(body - block)
+        block_minus_body = sorted(block - body)
+        if body_minus_block or block_minus_body:
+            gap = {
+                "placement_id": record.get("placement_id"),
+                "kind": record.get("kind"),
+                "object_id": record.get("object_id"),
+                "source_def_name": record.get("source_def_name"),
+                "body_tile_count": record.get("body_tile_count"),
+                "block_tile_count": record.get("block_tile_count"),
+                "body_without_block_count": len(body_minus_block),
+                "block_without_body_count": len(block_minus_body),
+                "sample_body_without_block": body_minus_block[:12],
+                "sample_block_without_body": block_minus_body[:12],
+            }
+            gaps.append(gap)
+            if record.get("kind") in h3maped_blocking_kinds and body:
+                violations.append({"invariant": "h3maped_body_equals_block", **gap})
+        if record.get("kind") == "guard" and body and not body.issubset(block):
+            violations.append({"invariant": "guard_body_tile_is_blocking", "placement_id": record.get("placement_id"), "missing_body_tiles": sorted(body - block)[:12]})
+        if record.get("kind") == "guard" and guard_control and block == guard_control and block != body:
+            violations.append({"invariant": "guard_control_replaced_body_blocking", "placement_id": record.get("placement_id")})
+        if record.get("has_trim_marker"):
+            violations.append({"invariant": "no_package_adoption_trim_markers", "placement_id": record.get("placement_id"), "kind": record.get("kind")})
+    top_gaps = sorted(gaps, key=lambda item: (as_int(item.get("body_without_block_count")), as_int(item.get("body_tile_count"))), reverse=True)[:25]
+    return {
+        "schema_id": "rmg_h3m_native_blocker_guard_surface_report_v1",
+        "status": "pass" if not violations else "fail",
+        "h3m_object_count": len(h3m_records),
+        "native_object_count": len(native_records),
+        "h3m_objects": h3m_records,
+        "native_objects": native_records,
+        "body_vs_block_gap_count": len(gaps),
+        "top_body_vs_block_gaps": top_gaps,
+        "invariant_violation_count": len(violations),
+        "invariant_violations": violations,
+        "invariants": {
+            "h3maped_body_equals_block_for_source_body_objects": not any(item.get("invariant") == "h3maped_body_equals_block" for item in violations),
+            "guard_body_tile_is_blocking": not any(item.get("invariant") == "guard_body_tile_is_blocking" for item in violations),
+            "guard_control_tiles_are_metadata": not any(item.get("invariant") == "guard_control_replaced_body_blocking" for item in violations),
+            "no_package_adoption_trim_markers": not any(item.get("invariant") == "no_package_adoption_trim_markers" for item in violations),
+        },
+    }
+
+
 def h3m_road_detail(path: Path) -> dict[str, Any]:
     data = fast_audit.load_bytes(path)
     width = fast_audit.u32(data, 5)
@@ -747,6 +893,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
     owner_detail = h3m_detail(owner_records)
     native_extra = native_detail(amap_path)
     road_report = road_comparison_report(snapshot, h3m_path, amap_path)
+    blocker_guard_report = blocker_guard_surface_report(h3m_path, amap_path)
     owner = compact_metrics(owner_metrics)
     native = compact_metrics(native_metrics)
     phase = snapshot.get("phase_summaries", {}) if isinstance(snapshot.get("phase_summaries"), dict) else {}
@@ -832,6 +979,22 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
 
     findings: list[dict[str, Any]] = []
     findings.append(reference_finding)
+    if blocker_guard_report.get("status") != "pass":
+        findings.append(
+            finding(
+                "exact-h3m-blocker-guard-surface",
+                "per-object body/block/guard-control masks",
+                "critical",
+                "package_adaptation_drift",
+                {
+                    "body_vs_block_gap_count": blocker_guard_report.get("body_vs_block_gap_count"),
+                    "invariant_violation_count": blocker_guard_report.get("invariant_violation_count"),
+                    "invariants": blocker_guard_report.get("invariants"),
+                    "top_body_vs_block_gaps": blocker_guard_report.get("top_body_vs_block_gaps", [])[:10],
+                },
+                "public_package_adoption must keep recovered H3M non-passable body masks as package_block_tiles; visit/action/guard-control metadata must not trim or replace blocker bodies",
+            )
+        )
     if fidelity.get("status") == "projected_semantics_remaining":
         findings.append(
             finding(
@@ -996,7 +1159,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
                     "package_decorative_count": package_counts["decorative"],
                     "native_surface_by_kind": native_extra["surface_by_kind"],
                 },
-                "public_package_adoption object body/action masks; package_body_tiles should preserve recovered H3M footprint while package_block_tiles remains the runtime movement surface",
+                "public_package_adoption object body/action masks; package_body_tiles and package_block_tiles must both preserve recovered H3M non-passable footprints while visit/action/control tiles remain metadata",
             )
         )
 
@@ -1040,6 +1203,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
         "earliest_divergence": earliest_divergence,
         "port_fidelity_summary": fidelity,
         "road_comparison": road_report,
+        "blocker_guard_surface_report": blocker_guard_report,
         "private_phase_counts": private_counts,
         "package_phase_counts": package_counts,
         "root_cause_findings": findings,
@@ -1049,7 +1213,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
             "Fix town/castle private scheduling and zone coordinate placement before road or object count tuning.",
             "Fix mine density and reward coordinate commit in the object vector phase.",
             "Fix road endpoint vector and pair acceptance only after upstream endpoints/RNG converge.",
-            "Re-evaluate package body/action footprints from recovered object masks after private object placement converges.",
+            "Keep package block masks equal to recovered H3M non-passable body masks; treat action, visit, and guard-control tiles only as interaction metadata.",
             "Re-run this audit and the fresh H3M/native corpus comparison after each phase repair.",
         ],
     }
@@ -1111,6 +1275,22 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
             f"- Excluded local object coordinates: `{get_path(road, 'native_private.excluded_local_coordinate_count')}`",
             f"- Route pair policy: `{get_path(road, 'native_private.route_pair_policy')}`",
         ])
+    blocker_guard = report.get("blocker_guard_surface_report", {})
+    if isinstance(blocker_guard, dict):
+        lines.extend([
+            "",
+            "## Blocker Guard Surface",
+            "",
+            f"- Status: `{blocker_guard.get('status')}`",
+            f"- H3M/native inspected objects: `{blocker_guard.get('h3m_object_count')}` / `{blocker_guard.get('native_object_count')}`",
+            f"- Body/block gap count: `{blocker_guard.get('body_vs_block_gap_count')}`",
+            f"- Invariant violations: `{blocker_guard.get('invariant_violation_count')}`",
+        ])
+        for item in blocker_guard.get("top_body_vs_block_gaps", [])[:10]:
+            if isinstance(item, dict):
+                lines.append(
+                    f"- `{item.get('placement_id')}` `{item.get('kind')}` `{item.get('object_id')}` body `{item.get('body_tile_count')}` block `{item.get('block_tile_count')}` missing `{item.get('body_without_block_count')}`"
+                )
     lines.extend(["", "## Root Cause Findings", ""])
     for item in report.get("root_cause_findings", []):
         lines.append(f"### {item['id']}")

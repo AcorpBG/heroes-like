@@ -320,6 +320,9 @@ static func _encounters_from_document(map_document: Variant) -> Array:
 		var encounter_id := String(encounter.get("encounter_id", ""))
 		if encounter_id == "":
 			encounter_id = String(encounter.get("object_id", ""))
+		if encounter_id != "" and ContentService.get_encounter(encounter_id).is_empty():
+			encounter["native_guard_object_id"] = encounter_id
+			encounter_id = ""
 		if encounter_id == "":
 			encounter_id = "encounter_mire_raid"
 		encounter["encounter_id"] = encounter_id

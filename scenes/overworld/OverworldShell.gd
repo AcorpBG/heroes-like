@@ -5522,6 +5522,10 @@ func _encounter_at(x: int, y: int) -> Dictionary:
 			if not OverworldRules.is_encounter_resolved(_session, encounter):
 				_refresh_cache[cache_key] = encounter
 				return encounter
+	var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, x, y)
+	if not guard_encounter.is_empty():
+		_refresh_cache[cache_key] = guard_encounter
+		return guard_encounter
 	_refresh_cache[cache_key] = {}
 	return {}
 
@@ -7217,6 +7221,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 	var route_plan := _validation_route_plan(target_kind, owner_id, placement_id)
 	if not bool(route_plan.get("ok", false)):
 		return route_plan
+	target_kind = String(route_plan.get("target_kind", target_kind))
 
 	var hero_pos := OverworldRules.hero_position(_session)
 	var target: Dictionary = route_plan.get("target", {})
@@ -7508,6 +7513,7 @@ func _validation_route_plan(target_kind: String, owner_id: String = "", placemen
 	var hero_pos := OverworldRules.hero_position(_session)
 	var best_target := {}
 	var best_path: Array = []
+	var best_target_kind := target_kind
 	var best_priority := 999999
 	for candidate in _validation_targets(target_kind, owner_id, placement_id):
 		if not (candidate is Dictionary):
@@ -7516,20 +7522,40 @@ func _validation_route_plan(target_kind: String, owner_id: String = "", placemen
 		if not _tile_in_bounds(tile):
 			continue
 		var target_placement_id := String(candidate.get("placement_id", ""))
-		var path := _build_validation_path(
-			hero_pos,
-			tile,
-			target_kind in ["town", "encounter", "resource", "artifact"],
-			target_kind,
-			target_placement_id
-		)
+		var candidate_target: Dictionary = candidate
+		var candidate_target_kind := target_kind
+		var path: Array = []
+		if target_kind in ["town", "resource", "artifact"]:
+			var direct_path := _build_validation_path(
+				hero_pos,
+				tile,
+				false,
+				target_kind,
+				target_placement_id
+			)
+			var guard_gate := _validation_first_guard_engagement_on_path(direct_path)
+			if guard_gate.is_empty() and target_kind == "town" and String(candidate.get("owner", "neutral")) != "player":
+				guard_gate = _validation_nearest_guard_engagement_target(hero_pos, direct_path)
+			if not guard_gate.is_empty():
+				path = guard_gate.get("path", [])
+				candidate_target = guard_gate.get("target", {})
+				candidate_target_kind = "encounter"
+		if path.is_empty():
+			path = _build_validation_path(
+				hero_pos,
+				tile,
+				target_kind in ["town", "encounter", "resource", "artifact"],
+				target_kind,
+				target_placement_id
+			)
 		if path.is_empty():
 			continue
-		var priority := _validation_target_priority(target_kind, candidate)
+		var priority := _validation_target_priority(candidate_target_kind, candidate_target)
 		if best_target.is_empty() or priority < best_priority or (priority == best_priority and path.size() < best_path.size()):
-			best_target = candidate
+			best_target = candidate_target
 			best_path = path
 			best_priority = priority
+			best_target_kind = candidate_target_kind
 	if best_target.is_empty():
 		return {
 			"ok": false,
@@ -7539,11 +7565,86 @@ func _validation_route_plan(target_kind: String, owner_id: String = "", placemen
 		}
 	return {
 		"ok": true,
-		"target_kind": target_kind,
+		"target_kind": best_target_kind,
 		"target": best_target.duplicate(true),
 		"path": best_path.duplicate(true),
 		"distance": maxi(0, best_path.size() - 1),
 	}
+
+func _validation_first_guard_engagement_on_path(path: Array) -> Dictionary:
+	if path.size() <= 1:
+		return {}
+	for index in range(1, path.size()):
+		if not (path[index] is Vector2i):
+			continue
+		var tile: Vector2i = path[index]
+		var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, tile.x, tile.y)
+		if guard_encounter.is_empty():
+			continue
+		var target := guard_encounter.duplicate(true)
+		target["guard_body_x"] = int(guard_encounter.get("x", tile.x))
+		target["guard_body_y"] = int(guard_encounter.get("y", tile.y))
+		target["x"] = tile.x
+		target["y"] = tile.y
+		target["guard_engagement_route_target"] = true
+		return {
+			"target": target,
+			"path": path.slice(0, index + 1),
+		}
+	return {}
+
+func _validation_nearest_guard_engagement_target(start: Vector2i, preferred_path: Array = []) -> Dictionary:
+	var best := {}
+	var best_score := 999999
+	for encounter in _session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if OverworldRules.is_encounter_resolved(_session, encounter):
+			continue
+		var engagement_tiles := _validation_guard_engagement_tiles(encounter)
+		if engagement_tiles.is_empty():
+			continue
+		for tile in engagement_tiles:
+			if not (tile is Vector2i):
+				continue
+			var path := _build_validation_path(start, tile, false, "encounter", String(encounter.get("placement_id", "")))
+			if path.is_empty():
+				continue
+			var start_tile_penalty := 0
+			if tile == start:
+				start_tile_penalty = 100000
+			var score: int = start_tile_penalty + _validation_path_proximity_score(tile, preferred_path) * 1000 + max(0, path.size() - 1)
+			if best.is_empty() or score < best_score:
+				var target: Dictionary = encounter.duplicate(true)
+				target["guard_body_x"] = int(encounter.get("x", tile.x))
+				target["guard_body_y"] = int(encounter.get("y", tile.y))
+				target["x"] = tile.x
+				target["y"] = tile.y
+				target["guard_engagement_route_target"] = true
+				target["guard_engagement_route_fallback"] = "hostile_town_route_guard_required"
+				best = {"target": target, "path": path}
+				best_score = score
+	return best
+
+func _validation_guard_engagement_tiles(encounter: Dictionary) -> Array:
+	for key in ["package_guard_engagement_tiles", "package_guard_control_zone_tiles", "guard_control_zone_tiles"]:
+		var tiles: Array = encounter.get(key, []) if encounter.get(key, []) is Array else []
+		var result := []
+		for tile in tiles:
+			if tile is Dictionary:
+				result.append(Vector2i(int(tile.get("x", -1)), int(tile.get("y", -1))))
+		if not result.is_empty():
+			return result
+	return [Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))]
+
+func _validation_path_proximity_score(tile: Vector2i, path: Array) -> int:
+	if path.is_empty():
+		return 0
+	var best := 999
+	for path_tile in path:
+		if path_tile is Vector2i:
+			best = mini(best, abs(tile.x - path_tile.x) + abs(tile.y - path_tile.y))
+	return best
 
 func _validation_targets(target_kind: String, owner_id: String = "", placement_id: String = "") -> Array:
 	var targets := []

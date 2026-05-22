@@ -17,7 +17,7 @@ func _run() -> void:
 	var seed := _arg_value("--seed", DEFAULT_SEED)
 	var player_count := int(_arg_value("--players", "3"))
 	var human_players := int(_arg_value("--human-players", "1"))
-	var computer_players := max(0, player_count - human_players)
+	var computer_players: int = max(0, player_count - human_players)
 	var controlled_reference_manifest_path := _arg_value("--controlled-reference-manifest", "")
 	var water_mode := _arg_value("--water", "land")
 	var level_count := int(_arg_value("--level-count", "1"))

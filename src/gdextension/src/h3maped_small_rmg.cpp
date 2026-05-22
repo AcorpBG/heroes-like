@@ -10310,14 +10310,10 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 				candidate_template_body_missing_count += 1;
 				continue;
 			}
-			std::vector<H3MaskPoint> body_points = source_body_points;
-			if (body_points.size() > 4) {
-				body_points = std::vector<H3MaskPoint> { H3MaskPoint { 0, 0 } };
-			}
 			H3DecorationCandidate candidate;
 			candidate.obstacle = obstacle;
 			candidate.template_row = template_row;
-			candidate.body_points = body_points;
+			candidate.body_points = source_body_points;
 			candidate.source_body_points = source_body_points;
 			candidate.weight = std::max<int32_t>(1, obstacle.mapped_template_count);
 			candidates_by_terrain[size_t(obstacle.terrain_id)].push_back(candidate);
@@ -10520,7 +10516,7 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 	phase["budget_divisor_constant"] = 0x4374c;
 	phase["raw_budget_argument_to_0x49e700"] = raw_budget_argument;
 	phase["budget_argument_to_0x49e700"] = budget_argument;
-	phase["small_map_decorative_budget_policy"] = "bounded_0x49e700_budget_gate_after_primary_category_single_anchor_footprints";
+	phase["small_map_decorative_budget_policy"] = "bounded_0x49e700_budget_gate_after_exact_h3m_passability_footprints";
 	phase["budget_gate_denominator"] = budget_gate_denominator;
 	phase["cell_call_count"] = cell_call_count;
 	phase["skipped_occupied_seed_cell_count"] = skipped_occupied_count;
@@ -10915,13 +10911,6 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["visit_tile"] = primary_tile;
 		object["package_town_action_tile_policy"] = "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start";
 		h3maped_apply_package_pathing_surface(object, body_tiles, visit_tiles, true, "blocking_visitable");
-		Array non_blocking_town_tiles = visit_tiles.duplicate(true);
-		for (int64_t action_index = 0; action_index < action_tiles.size(); ++action_index) {
-			non_blocking_town_tiles.append(action_tiles[action_index]);
-		}
-		Array block_tiles = h3maped_package_cells_excluding(body_tiles, non_blocking_town_tiles);
-		object["package_block_tiles"] = block_tiles;
-		object["package_block_tile_count"] = block_tiles.size();
 		if (int32_t(object.get("owner_slot", -1)) > 0) {
 			owned_player_town_count += 1;
 		} else {
@@ -11000,7 +10989,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
 			object["package_guard_control_zone_tiles"] = control_tiles;
 			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "control_zone_is_engagement_metadata_guard_body_is_blocking_surface";
+			object["package_guard_engagement_tiles"] = control_tiles;
+			object["package_guard_engagement_tile_count"] = control_tiles.size();
+			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 			object["package_adoption_source"] = "h3maped_private_0x4a9911_mine_guard_0x4a960a_0x4a65a5";
 			object["public_runtime_authoritative"] = false;
 			package_guard_occupied_flats[flat_key] = true;
@@ -11045,9 +11037,9 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["primary_tile"] = h3maped_package_adoption_cell_from_record(source);
 		object["body_tiles"] = Array::make(h3maped_package_adoption_cell_from_record(source));
 		object["visit_tile"] = h3maped_package_adoption_cell_from_record(source);
-		object["blocking_body"] = false;
-		object["passability_class"] = "passable_visit_on_enter";
-		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), false, "passable_visit_on_enter");
+		object["blocking_body"] = true;
+		object["passability_class"] = "blocking_visitable";
+		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "blocking_visitable");
 		object["package_adoption_source"] = "h3maped_private_0x4a9911_adjacent_resource_0x4a9e40";
 		object["public_runtime_authoritative"] = false;
 		package_objects.append(object);
@@ -11099,7 +11091,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		}
 		object["blocking_body"] = true;
 		object["passability_class"] = visit_tiles.is_empty() ? String("blocking_non_visitable") : String("blocking_visitable");
-		h3maped_apply_package_pathing_surface(object, package_body_tiles, visit_tiles, body_tiles, String(object.get("passability_class", "blocking_non_visitable")));
+		h3maped_apply_package_pathing_surface(object, package_body_tiles, visit_tiles, package_body_tiles, String(object.get("passability_class", "blocking_non_visitable")));
 		object["package_adoption_source"] = "h3maped_private_0x4a8db2_0x4a901a_primary_category_object";
 		object["public_runtime_authoritative"] = false;
 		package_objects.append(object);
@@ -11143,7 +11135,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			Array control_tiles = h3maped_guard_control_zone_tiles(x, y, level, map_width, map_height);
 			object["package_guard_control_zone_tiles"] = control_tiles;
 			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "control_zone_is_engagement_metadata_guard_body_is_blocking_surface";
+			object["package_guard_engagement_tiles"] = control_tiles;
+			object["package_guard_engagement_tile_count"] = control_tiles.size();
+			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 			object["package_adoption_source"] = "h3maped_private_0x4a901a_primary_category_guard_0x4a65a5";
 			object["public_runtime_authoritative"] = false;
 			package_guard_occupied_flats[flat_key] = true;
@@ -11197,9 +11192,9 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["body_tiles"] = body_tiles;
 		object["action_tiles"] = h3maped_package_cell_array_from_variant(source.get("action_tiles", visit_tiles));
 		object["visit_tile"] = Dictionary(visit_tiles[0]);
-		object["blocking_body"] = false;
-		object["passability_class"] = "passable_visit_on_enter";
-		h3maped_apply_package_pathing_surface(object, body_tiles, visit_tiles, false, "passable_visit_on_enter");
+		object["blocking_body"] = true;
+		object["passability_class"] = "blocking_visitable";
+		h3maped_apply_package_pathing_surface(object, body_tiles, visit_tiles, true, "blocking_visitable");
 		object["package_adoption_source"] = "h3maped_private_0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record";
 		object["public_runtime_authoritative"] = false;
 		package_objects.append(object);
@@ -11239,7 +11234,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
 		object["package_guard_control_zone_tiles"] = control_tiles;
 		object["package_guard_control_zone_tile_count"] = control_tiles.size();
-		object["package_guard_control_zone_pathing_policy"] = "control_zone_is_engagement_metadata_guard_body_is_blocking_surface";
+		object["package_guard_engagement_tiles"] = control_tiles;
+		object["package_guard_engagement_tile_count"] = control_tiles.size();
+		object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+		object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 		object["package_adoption_source"] = "h3maped_private_0x4aa3e9_reward_guard_0x4a65a5";
 		object["public_runtime_authoritative"] = false;
 		package_guard_occupied_flats[flat_key] = true;
@@ -11278,7 +11276,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["h3m_body_tiles"] = package_body_tiles;
 		object["blocking_body"] = true;
 		object["passability_class"] = "blocking_non_visitable";
-		h3maped_apply_package_pathing_surface(object, package_body_tiles, Array(), body_tiles, "blocking_non_visitable");
+		h3maped_apply_package_pathing_surface(object, package_body_tiles, Array(), package_body_tiles, "blocking_non_visitable");
 		object["package_adoption_source"] = "h3maped_private_0x4a79a3_connection_blocker_cell";
 		object["public_runtime_authoritative"] = false;
 		package_objects.append(object);
@@ -11348,7 +11346,10 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
 			object["package_guard_control_zone_tiles"] = control_tiles;
 			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "control_zone_is_engagement_metadata_guard_body_is_blocking_surface";
+			object["package_guard_engagement_tiles"] = control_tiles;
+			object["package_guard_engagement_tile_count"] = control_tiles.size();
+			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 			object["package_adoption_source"] = "h3maped_private_0x4a5e03_connection_guard_record";
 			object["public_runtime_authoritative"] = false;
 			package_guard_occupied_flats[flat_key] = true;
@@ -11393,15 +11394,13 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["h3m_body_tiles"] = package_body_tiles;
 		object["blocking_body"] = true;
 		object["passability_class"] = "blocking_non_visitable";
-		h3maped_apply_package_pathing_surface(object, package_body_tiles, Array(), body_tiles, "blocking_non_visitable");
+		h3maped_apply_package_pathing_surface(object, package_body_tiles, Array(), package_body_tiles, "blocking_non_visitable");
 		object["package_adoption_source"] = "h3maped_private_0x49eb8d_0x49e700_rand_trn_decorative_filler";
 		object["public_runtime_authoritative"] = false;
 		package_objects.append(object);
 	}
 
 	Dictionary package_block_keys;
-	Dictionary non_removable_package_block_keys;
-	Dictionary removable_runtime_start_block_keys;
 	Dictionary package_interaction_keys;
 	Dictionary road_keys;
 	auto add_cell_keys = [&](Dictionary &keys, const Array &cells) {
@@ -11426,12 +11425,6 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Dictionary object = package_objects[index];
 		Array object_block_tiles = h3maped_package_cell_array_from_variant(object.get("package_block_tiles", Array()));
 		add_cell_keys(package_block_keys, object_block_tiles);
-		const String object_kind = String(object.get("kind", ""));
-		if (object_kind == "decorative_obstacle") {
-			add_cell_keys(removable_runtime_start_block_keys, object_block_tiles);
-		} else {
-			add_cell_keys(non_removable_package_block_keys, object_block_tiles);
-		}
 		add_cell_keys(package_interaction_keys, h3maped_package_cell_array_from_variant(object.get("package_visit_tiles", Array())));
 		add_cell_keys(package_interaction_keys, h3maped_package_cell_array_from_variant(object.get("visit_tile", Dictionary())));
 	}
@@ -11470,8 +11463,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	};
 	auto road_reachable_step_count_from = [&](int32_t start_x, int32_t start_y, int32_t level) {
 		const String start_key = tile_key_for_xyz(start_x, start_y, level);
-		if (non_removable_package_block_keys.has(start_key)
-				|| (package_block_keys.has(start_key) && !removable_runtime_start_block_keys.has(start_key))
+		if (package_block_keys.has(start_key)
 				|| road_keys.has(start_key)
 				|| !terrain_passable_for_start(start_x, start_y, level)) {
 			return -1;
@@ -11519,6 +11511,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		}
 		return -1;
 	};
+	int32_t runtime_start_blocked_by_exact_h3m_masks_count = 0;
 	for (int64_t index = 0; index < package_objects.size(); ++index) {
 		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -11544,8 +11537,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 						continue;
 					}
 					const String key = tile_key_for_xyz(x, y, level);
-					if (non_removable_package_block_keys.has(key)
-							|| (package_block_keys.has(key) && !removable_runtime_start_block_keys.has(key))
+					if (package_block_keys.has(key)
 							|| road_keys.has(key)
 							|| package_interaction_keys.has(key)) {
 						continue;
@@ -11558,8 +11550,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 					selected_start["selection_radius_from_town_coordinate"] = radius;
 					selected_start["selection_package_road_reachable_steps"] = reachable_road_steps;
 					selected_start["selection_adjacent_unblocked_package_road"] = has_unblocked_adjacent_road(x, y, level);
-					selected_start["selection_removed_removable_start_block_mask"] = package_block_keys.has(key) && removable_runtime_start_block_keys.has(key);
-					selected_start["selection_source"] = "h3maped_town_coordinate_package_mask_reachable_road_runtime_start";
+					selected_start["selection_removed_removable_start_block_mask"] = false;
+					selected_start["selection_source"] = "h3maped_town_coordinate_exact_package_mask_reachable_road_runtime_start";
 					selected_reachable_road_steps = reachable_road_steps;
 					break;
 				}
@@ -11571,79 +11563,44 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			object["runtime_start_selection_source"] = selected_start.get("selection_source", "");
 			object["runtime_start_reachable_road_steps"] = selected_reachable_road_steps;
 			package_objects[index] = object;
-		}
-	}
-
-	Dictionary selected_runtime_start_keys;
-	for (int64_t index = 0; index < package_objects.size(); ++index) {
-		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
-			continue;
-		}
-		Dictionary object = package_objects[index];
-		if (String(object.get("kind", "")) != "town" || !bool(object.get("is_start_town", false))) {
-			continue;
-		}
-		Dictionary runtime_start_tile = object.get("runtime_start_tile", Dictionary());
-		if (!runtime_start_tile.is_empty()) {
-			selected_runtime_start_keys[h3maped_package_cell_key(runtime_start_tile)] = true;
-		}
-	}
-	int32_t removed_runtime_start_block_mask_count = 0;
-	for (int64_t index = 0; index < package_objects.size(); ++index) {
-		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
-			continue;
-		}
-		Dictionary object = package_objects[index];
-		const String object_kind = String(object.get("kind", ""));
-		if (object_kind != "decorative_obstacle") {
-			continue;
-		}
-		Array block_tiles = h3maped_package_cell_array_from_variant(object.get("package_block_tiles", Array()));
-		if (block_tiles.is_empty()) {
-			continue;
-		}
-		Array filtered_block_tiles;
-		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
-			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
-				continue;
-			}
-			Dictionary block_tile = block_tiles[block_index];
-			if (selected_runtime_start_keys.has(h3maped_package_cell_key(block_tile))) {
-				removed_runtime_start_block_mask_count += 1;
-				continue;
-			}
-			filtered_block_tiles.append(block_tile);
-		}
-		if (filtered_block_tiles.size() != block_tiles.size()) {
-			object["package_block_tiles"] = filtered_block_tiles;
-			object["package_block_tile_count"] = filtered_block_tiles.size();
-			object["runtime_start_block_mask_removed_count"] = block_tiles.size() - filtered_block_tiles.size();
-			object["runtime_start_block_mask_policy"] = "selected_runtime_start_tile_takes_precedence_over_decorative_obstacle_masks_only";
+		} else {
+			object["runtime_start_selection_status"] = "runtime_start_blocked_by_exact_h3m_masks";
+			object["runtime_start_selection_source"] = "exact_h3m_masks_no_reachable_unblocked_start";
+			runtime_start_blocked_by_exact_h3m_masks_count += 1;
 			package_objects[index] = object;
 		}
-	}
-	int32_t removed_runtime_start_decorative_object_count = 0;
-	Array runtime_start_filtered_package_objects;
-	for (int64_t index = 0; index < package_objects.size(); ++index) {
-		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
-			runtime_start_filtered_package_objects.append(package_objects[index]);
-			continue;
-		}
-		Dictionary object = package_objects[index];
-		if (String(object.get("kind", "")) == "decorative_obstacle"
-				&& selected_runtime_start_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(object)))) {
-			removed_runtime_start_decorative_object_count += 1;
-			continue;
-		}
-		runtime_start_filtered_package_objects.append(object);
-	}
-	if (removed_runtime_start_decorative_object_count > 0) {
-		package_objects = runtime_start_filtered_package_objects;
 	}
 
 	Dictionary seen_placement_ids;
 	int32_t duplicate_placement_id_count = 0;
 	int32_t out_of_bounds_object_count = 0;
+	int32_t exact_h3m_body_block_mismatch_count = 0;
+	int32_t guard_body_not_blocking_count = 0;
+	int32_t guard_engagement_missing_count = 0;
+	int32_t package_block_trim_marker_count = 0;
+	Array exact_h3m_body_block_mismatch_samples;
+	auto cell_key_set = [&](const Array &cells) {
+		Dictionary keys;
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			keys[h3maped_package_cell_key(Dictionary(cells[cell_index]))] = true;
+		}
+		return keys;
+	};
+	auto cell_key_sets_equal = [&](const Dictionary &left, const Dictionary &right) {
+		if (left.size() != right.size()) {
+			return false;
+		}
+		Array keys = left.keys();
+		for (int64_t key_index = 0; key_index < keys.size(); ++key_index) {
+			if (!right.has(keys[key_index])) {
+				return false;
+			}
+		}
+		return true;
+	};
 	for (int64_t index = 0; index < package_objects.size(); ++index) {
 		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -11661,6 +11618,45 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		const int32_t level = int32_t(object.get("level", 0));
 		if (h3maped_cell_index(map_width, map_height, x, y, level) < 0) {
 			out_of_bounds_object_count += 1;
+		}
+		Array body_tiles = h3maped_package_cell_array_from_variant(object.get("package_body_tiles", Array()));
+		Array block_tiles = h3maped_package_cell_array_from_variant(object.get("package_block_tiles", Array()));
+		const String kind = String(object.get("kind", ""));
+		const String adoption_source = String(object.get("package_adoption_source", ""));
+		const bool has_h3m_source_body = !body_tiles.is_empty()
+				&& (adoption_source.begins_with("h3maped_")
+						|| object.has("h3m_body_tiles")
+						|| object.has("selected_template_passability_mask")
+						|| kind == "town"
+						|| kind == "guard"
+						|| kind == "mine");
+		if (has_h3m_source_body) {
+			Dictionary body_keys = cell_key_set(body_tiles);
+			Dictionary block_keys = cell_key_set(block_tiles);
+			if (!cell_key_sets_equal(body_keys, block_keys)) {
+				exact_h3m_body_block_mismatch_count += 1;
+				if (exact_h3m_body_block_mismatch_samples.size() < 12) {
+					Dictionary sample;
+					sample["placement_id"] = placement_id;
+					sample["kind"] = kind;
+					sample["package_body_tile_count"] = body_tiles.size();
+					sample["package_block_tile_count"] = block_tiles.size();
+					sample["package_adoption_source"] = adoption_source;
+					exact_h3m_body_block_mismatch_samples.append(sample);
+				}
+			}
+			if (kind == "guard" && block_tiles.is_empty()) {
+				guard_body_not_blocking_count += 1;
+			}
+			if (kind == "guard" && h3maped_package_cell_array_from_variant(object.get("package_guard_engagement_tiles", Array())).is_empty()) {
+				guard_engagement_missing_count += 1;
+			}
+		}
+		if (object.has("runtime_start_block_mask_removed_count")
+				|| object.has("runtime_start_block_mask_policy")
+				|| object.has("package_guarded_corridor_cleared_tile_count")
+				|| object.has("package_guarded_corridor_policy")) {
+			package_block_trim_marker_count += 1;
 		}
 	}
 
@@ -11754,7 +11750,12 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 			&& !road_segments.is_empty()
 			&& route_segment_disconnected_count == 0
 			&& !blocker_records.is_empty()
-			&& !guard_records.is_empty();
+			&& !guard_records.is_empty()
+			&& runtime_start_blocked_by_exact_h3m_masks_count == 0
+			&& exact_h3m_body_block_mismatch_count == 0
+			&& guard_body_not_blocking_count == 0
+			&& guard_engagement_missing_count == 0
+			&& package_block_trim_marker_count == 0;
 	Dictionary structural_validation;
 	structural_validation["schema_id"] = "aurelion_h3maped_small_package_draft_structural_validation_v1";
 	structural_validation["status"] = draft_structurally_present ? String("draft_pass_runtime_blocked") : String("draft_failed_runtime_blocked");
@@ -11770,6 +11771,12 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	structural_validation["road_route_edge_count"] = road_edges.size();
 	structural_validation["connection_blockers_present"] = !blocker_records.is_empty();
 	structural_validation["connection_guards_present"] = !guard_records.is_empty();
+	structural_validation["runtime_start_blocked_by_exact_h3m_masks_count"] = runtime_start_blocked_by_exact_h3m_masks_count;
+	structural_validation["exact_h3m_body_block_mismatch_count"] = exact_h3m_body_block_mismatch_count;
+	structural_validation["guard_body_not_blocking_count"] = guard_body_not_blocking_count;
+	structural_validation["guard_engagement_missing_count"] = guard_engagement_missing_count;
+	structural_validation["package_block_trim_marker_count"] = package_block_trim_marker_count;
+	structural_validation["exact_h3m_body_block_mismatch_samples"] = exact_h3m_body_block_mismatch_samples;
 	structural_validation["authorizes_public_runtime"] = false;
 
 	phase["status"] = draft_structurally_present ? String("strict_package_adoption_draft_materialized_runtime_blocked") : String("strict_package_adoption_draft_incomplete_runtime_blocked");
@@ -11807,6 +11814,11 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	phase["connection_guard_skipped_duplicate_package_cell_count"] = connection_guard_skipped_duplicate_count;
 	phase["decorative_obstacle_package_object_count"] = decorative_obstacle_records.size();
 	phase["package_object_count"] = package_objects.size();
+	phase["runtime_start_blocked_by_exact_h3m_masks_count"] = runtime_start_blocked_by_exact_h3m_masks_count;
+	phase["exact_h3m_body_block_mismatch_count"] = exact_h3m_body_block_mismatch_count;
+	phase["guard_body_not_blocking_count"] = guard_body_not_blocking_count;
+	phase["guard_engagement_missing_count"] = guard_engagement_missing_count;
+	phase["package_block_trim_marker_count"] = package_block_trim_marker_count;
 	phase["structural_validation"] = structural_validation;
 	phase["map_document_payload"] = map_document;
 	phase["remaining_blockers"] = Array::make(
@@ -12101,6 +12113,33 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	int32_t blocking_blocker_count = 0;
 	int32_t guard_count = 0;
 	int32_t blocking_guard_count = 0;
+	int32_t exact_h3m_body_block_mismatch_count = 0;
+	int32_t guard_body_not_blocking_count = 0;
+	int32_t guard_engagement_missing_count = 0;
+	int32_t package_block_trim_marker_count = 0;
+	int32_t runtime_start_blocked_by_exact_h3m_masks_count = int32_t(package_adoption_phase.get("runtime_start_blocked_by_exact_h3m_masks_count", 0));
+	auto cell_key_set = [&](const Array &cells) {
+		Dictionary keys;
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			keys[h3maped_package_cell_key(Dictionary(cells[cell_index]))] = true;
+		}
+		return keys;
+	};
+	auto cell_key_sets_equal = [&](const Dictionary &left, const Dictionary &right) {
+		if (left.size() != right.size()) {
+			return false;
+		}
+		Array keys = left.keys();
+		for (int64_t key_index = 0; key_index < keys.size(); ++key_index) {
+			if (!right.has(keys[key_index])) {
+				return false;
+			}
+		}
+		return true;
+	};
 	for (int64_t index = 0; index < package_objects.size(); ++index) {
 		if (Variant(package_objects[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -12120,6 +12159,31 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 			out_of_bounds_object_count += 1;
 		}
 		const String kind = String(object.get("kind", ""));
+		Array body_tiles = h3maped_package_cell_array_from_variant(object.get("package_body_tiles", Array()));
+		Array block_tiles = h3maped_package_cell_array_from_variant(object.get("package_block_tiles", Array()));
+		const String adoption_source = String(object.get("package_adoption_source", ""));
+		const bool has_h3m_source_body = !body_tiles.is_empty()
+				&& (adoption_source.begins_with("h3maped_")
+						|| object.has("h3m_body_tiles")
+						|| object.has("selected_template_passability_mask")
+						|| kind == "town"
+						|| kind == "guard"
+						|| kind == "mine");
+		if (has_h3m_source_body && !cell_key_sets_equal(cell_key_set(body_tiles), cell_key_set(block_tiles))) {
+			exact_h3m_body_block_mismatch_count += 1;
+		}
+		if (kind == "guard" && has_h3m_source_body && block_tiles.is_empty()) {
+			guard_body_not_blocking_count += 1;
+		}
+		if (kind == "guard" && has_h3m_source_body && h3maped_package_cell_array_from_variant(object.get("package_guard_engagement_tiles", Array())).is_empty()) {
+			guard_engagement_missing_count += 1;
+		}
+		if (object.has("runtime_start_block_mask_removed_count")
+				|| object.has("runtime_start_block_mask_policy")
+				|| object.has("package_guarded_corridor_cleared_tile_count")
+				|| object.has("package_guarded_corridor_policy")) {
+			package_block_trim_marker_count += 1;
+		}
 		if (kind == "town") {
 			town_count += 1;
 			if (int32_t(object.get("owner_slot", 0)) > 0) {
@@ -12194,6 +12258,21 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	if (guard_count <= 0 || blocking_guard_count != guard_count) {
 		add_failure("blocking_connection_guards", "connection guards must exist, have positive guard values, and block movement");
 	}
+	if (runtime_start_blocked_by_exact_h3m_masks_count != 0) {
+		add_failure("runtime_start_blocked_by_exact_h3m_masks", "runtime starts must be selected around exact H3M masks, not by trimming blocker masks");
+	}
+	if (exact_h3m_body_block_mismatch_count != 0) {
+		add_failure("exact_h3m_body_block_mask_mismatch", "h3maped-derived package block masks must match recovered non-passable body masks");
+	}
+	if (guard_body_not_blocking_count != 0) {
+		add_failure("guard_body_not_blocking", "guard body tiles must remain blocking while guard-control tiles force engagement");
+	}
+	if (guard_engagement_missing_count != 0) {
+		add_failure("guard_engagement_missing", "h3maped-derived guard control tiles must materialize as forced engagement tiles");
+	}
+	if (package_block_trim_marker_count != 0) {
+		add_failure("package_block_mask_trim_marker", "package adoption must not carry marker fields from trimming exact H3M block masks");
+	}
 
 	int32_t guarded_link_count = 0;
 	int32_t unguarded_link_count = 0;
@@ -12261,6 +12340,11 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	metrics["blocking_connection_blocker_count"] = blocking_blocker_count;
 	metrics["connection_guard_count"] = guard_count;
 	metrics["blocking_connection_guard_count"] = blocking_guard_count;
+	metrics["runtime_start_blocked_by_exact_h3m_masks_count"] = runtime_start_blocked_by_exact_h3m_masks_count;
+	metrics["exact_h3m_body_block_mismatch_count"] = exact_h3m_body_block_mismatch_count;
+	metrics["guard_body_not_blocking_count"] = guard_body_not_blocking_count;
+	metrics["guard_engagement_missing_count"] = guard_engagement_missing_count;
+	metrics["package_block_trim_marker_count"] = package_block_trim_marker_count;
 	metrics["route_link_count"] = route_links.size();
 	metrics["guard_required_route_link_count"] = guard_required_link_count;
 	metrics["normal_guard_not_required_route_link_count"] = normal_guard_not_required_link_count;
