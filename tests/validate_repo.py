@@ -15259,10 +15259,20 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_status_residue",
         "vfx_placeholder_status_clear",
         "vfx_placeholder_retaliation_arc",
+        "vfx_placeholder_idle_shadow",
+        "vfx_placeholder_active_ring",
+        "vfx_placeholder_brace_outline",
+        "vfx_placeholder_surrender_marker",
         "audio_placeholder_status_clear",
         "status_clear",
         "retaliation_arc",
         "func _draw_retaliation_arc_vfx",
+        "brace_outline",
+        "surrender_marker",
+        "func _draw_idle_shadow_vfx",
+        "func _draw_active_ring_vfx",
+        "func _draw_brace_outline_vfx",
+        "func _draw_surrender_marker_vfx",
         "func _status_clear_presentation_motion",
         "func _exit_presentation_motion",
         "retreat_withdraw",
@@ -15496,6 +15506,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "retaliation_arc",
         "vfx_placeholder_retaliation_arc",
         "audio_placeholder_retaliation",
+        "vfx_placeholder_brace_outline",
+        "vfx_placeholder_surrender_marker",
+        "brace_outline",
+        "surrender_marker",
         "_validate_retaliation_state",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
@@ -15516,6 +15530,23 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "No imported VFX or final sound design.",
         ):
             ensure(required_text in retaliation_doc_text, errors, f"Battle retaliation presentation doc is missing required text: {required_text}")
+    decision_vfx_doc_path = ROOT / "docs" / "battle-decision-vfx-cue-coverage-report.md"
+    ensure(decision_vfx_doc_path.exists(), errors, "battle-decision-vfx-cue-coverage-report.md is missing")
+    if decision_vfx_doc_path.exists():
+        decision_vfx_doc_text = decision_vfx_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Decision VFX Cue Coverage Report",
+            "battle-decision-vfx-cue-coverage-20260523-10184",
+            "`vfx_placeholder_idle_shadow`",
+            "`vfx_placeholder_active_ring`",
+            "`vfx_placeholder_brace_outline`",
+            "`vfx_placeholder_surrender_marker`",
+            "`brace_outline`",
+            "`surrender_marker`",
+            "No final imported VFX art.",
+            "No combat balance tuning.",
+        ):
+            ensure(required_text in decision_vfx_doc_text, errors, f"Battle decision VFX cue coverage doc is missing required text: {required_text}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
