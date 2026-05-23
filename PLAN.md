@@ -51,6 +51,8 @@ Battle movement token motion added on 2026-05-23: `BattleBoardView` now uses act
 
 Battle attack and hit token feedback added on 2026-05-23: `BattleBoardView` now uses attack, retaliation, ranged, cast, hit, status, and death event context to compute bounded token presentation transforms for lunge, recoil, cast anchoring, hit stagger, status pulse, and death fallback. The same transformed center drives the stack token, health bar, count badge, caption, and hit shape. `tests/battle_event_animation_state_report.tscn` now proves a real melee strike presents the attacker as `melee_lunge`, the target as `hit_stagger`, and keeps cue-driven melee VFX active. This is event-driven token feedback for readability, not final authored attack timing, camera shake, imported VFX/audio, or combat balance tuning.
 
+Battle event token feedback coverage added on 2026-05-23: `BattleBoardView.validation_unit_art_summary()` now exposes active presentation motion totals and per-role counts, and `tests/battle_event_animation_state_report.tscn` proves ranged recoil, status pulse, cast anchor, and death fallback token roles in addition to melee lunge and hit stagger. This is focused validation coverage for existing event-driven token feedback, not final authored animation timing, camera work, imported VFX/audio, or combat balance tuning.
+
 Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
 
 Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
@@ -5017,6 +5019,28 @@ completionCriteria:
 - Focused validation proves a real melee strike presents attacker lunge and target hit-stagger feedback while retaining melee VFX evidence.
 nonGoals:
 - No final authored attack timing, camera shake, imported VFX/audio assets, or combat balance tuning.
+
+Completed owner-directed implementation slice:
+
+id: `battle-event-token-feedback-coverage-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add focused board-summary and report coverage for every active token-feedback role currently produced by battle event presentation playback.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-event-token-feedback-coverage-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Board validation summaries expose active presentation motion totals and role counts.
+- Focused validation proves ranged recoil, status pulse, cast anchor, and death fallback token roles in addition to existing melee/hit feedback assertions.
+- Repository validation gates require the new focused report fields and role assertions.
+nonGoals:
+- No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 
