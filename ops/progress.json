@@ -15691,6 +15691,45 @@
         "No automatic tuning or content writeback.",
         "No replacement for manual playtesting."
       ]
+    },
+    {
+      "id": "strategic-ai-live-target-selection-20260523-10184",
+      "title": "Strategic AI Live Target Selection",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md",
+        "docs/strategic-ai-live-hero-task-adoption-gate-report.md"
+      ],
+      "purpose": "Move the first strategic AI hero-task surface from report-only evidence into bounded live target selection for new enemy raids.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_live_target_selection_report.gd",
+        "tests/ai_hero_task_live_target_selection_report.tscn",
+        "docs/strategic-ai-live-target-selection-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "New raids with deployable commanders use derived live commander tasks for resource retake, contest, and defense target selection before falling back to the global selector.",
+        "Active raid target reservations prevent companion commanders from duplicating the same exclusive resource target.",
+        "No durable hero_task_state, save-version bump, route actor rewrite, or save migration is introduced."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No persistent task-board adoption.",
+        "No broad town, hero, or artifact target rewrite."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19199,26 +19238,38 @@
         "git diff --check"
       ],
       "summary": "Focused headless simulation and balance regression reports passed with deterministic battle autoplay evidence; repo validation, Python compile, JSON syntax, and diff hygiene passed."
+    },
+    {
+      "id": "strategic-ai-live-target-selection-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused live target selection report passed: Vaska uses live commander-task targeting for river_free_company while Sable respects that reservation and targets river_signal_post; full validation gates passed."
     }
   ],
   "lastValidation": {
-    "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+    "id": "strategic-ai-live-target-selection-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused headless simulation and balance regression reports passed with deterministic battle autoplay evidence; repo validation, Python compile, JSON syntax, and diff hygiene passed."
+    "summary": "Focused live target selection report passed: Vaska uses live commander-task targeting for river_free_company while Sable respects that reservation and targets river_signal_post; full validation gates passed."
   },
   "active_slice": {
-    "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+    "id": "strategic-ai-live-target-selection-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: deterministic report-only battle autoplay sampling now feeds the headless simulation harness and balance regression suite with outcome, action, pacing, and health evidence."
+    "note": "Completed: new enemy raids can use live commander-task resource target selection without durable hero_task_state writes, save-version changes, route execution rewrites, or save migrations."
   }
 }

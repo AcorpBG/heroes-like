@@ -652,12 +652,14 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _refresh_target(session, raid)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan = choose_target(
-			session,
-			config,
-			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-			raid.get("enemy_commander_state", {})
-		)
+		var plan = ai_hero_task_live_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = choose_target(
+				session,
+				config,
+				{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
+				raid.get("enemy_commander_state", {})
+			)
 		if not plan.is_empty():
 			raid.merge(plan, true)
 	var current_target := _current_target_snapshot(raid)
@@ -2407,6 +2409,86 @@ static func choose_target(
 		if _candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func ai_hero_task_live_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	if faction_id == "":
+		return {}
+	var commander_state = raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary):
+		return {}
+	var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		return {}
+	var roster := commander_roster_for_faction(session, faction_id)
+	var commander_entry := _commander_roster_entry(roster, roster_hero_id)
+	if commander_entry.is_empty():
+		commander_entry = {
+			"roster_hero_id": roster_hero_id,
+			"status": COMMANDER_STATUS_AVAILABLE,
+			"commander_state": commander_state,
+			"army_continuity": commander_army_continuity(commander_state),
+		}
+	if not commander_can_deploy(commander_entry):
+		return {}
+	var origin := {"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))}
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var candidates := _target_candidates(session, config, origin_pos)
+	var plans := []
+	var local_sequence := 1
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		if String(candidate.get("target_kind", "")) != "resource":
+			continue
+		var target_id := String(candidate.get("target_placement_id", ""))
+		if target_id == "" or _ai_hero_task_live_target_reserved(session, faction_id, "resource", target_id, String(raid.get("placement_id", ""))):
+			continue
+		var target_view := commander_role_resource_target_view(session, config, faction_id, target_id, origin)
+		if target_view.is_empty():
+			continue
+		var proposal := commander_role_proposal_for_resource_target(
+			session,
+			config,
+			faction_id,
+			commander_entry,
+			target_view,
+			_ai_hero_task_live_resource_context(session, faction_id, target_id)
+		)
+		var role_record := _turn_transcript_role_proposal(session, faction_id, commander_entry, target_view, proposal)
+		role_record["timing"] = "live_target_selection"
+		var task := ai_hero_task_candidate_from_role(
+			session,
+			config,
+			faction_id,
+			commander_entry,
+			role_record,
+			local_sequence,
+			{"source_timing": "live_target_selection"}
+		)
+		local_sequence += 1
+		if not _ai_hero_task_live_target_task_valid(task):
+			continue
+		var plan := _ai_hero_task_live_plan_from_task(session, raid, task, candidate, origin_pos)
+		if not plan.is_empty():
+			plans.append(plan)
+	if plans.is_empty():
+		return {}
+	plans.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("priority", 0)) == int(b.get("priority", 0)):
+			if int(a.get("goal_distance", 9999)) == int(b.get("goal_distance", 9999)):
+				return String(a.get("target_label", "")) < String(b.get("target_label", ""))
+			return int(a.get("goal_distance", 9999)) < int(b.get("goal_distance", 9999))
+		return int(a.get("priority", 0)) > int(b.get("priority", 0))
+	)
+	return plans[0]
 
 static func enemy_strategy(config: Dictionary, faction_id: String) -> Dictionary:
 	var strategy = _default_enemy_strategy()
@@ -5987,6 +6069,106 @@ static func _ai_hero_task_live_adoption_gate_public_reason_code(reason_code: Str
 		"durable_event_log_not_selected":
 			return "later_history_gate"
 	return reason_code
+
+static func _ai_hero_task_live_resource_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_id: String
+) -> Dictionary:
+	var context := {}
+	var node_result := _find_resource_by_placement(session, target_id)
+	if int(node_result.get("index", -1)) < 0:
+		return context
+	var node: Dictionary = node_result.get("node", {})
+	var controller_id := String(node.get("collected_by_faction_id", ""))
+	if controller_id == "player":
+		context["fixture_previous_controller"] = faction_id
+		context["fixture_threatened_by_player_front"] = true
+	elif controller_id != "" and controller_id != faction_id:
+		context["fixture_denial_only"] = true
+	return context
+
+static func _ai_hero_task_live_target_reserved(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_kind: String,
+	target_id: String,
+	current_placement_id: String = ""
+) -> bool:
+	if session == null or target_kind == "" or target_id == "":
+		return false
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == current_placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != target_kind:
+			continue
+		if String(encounter.get("target_placement_id", "")) == target_id:
+			return true
+	return false
+
+static func _ai_hero_task_live_target_task_valid(task: Dictionary) -> bool:
+	if task.is_empty():
+		return false
+	if String(task.get("task_status", "")) not in ["candidate", "active"]:
+		return false
+	if String(task.get("last_validation", "")) != "valid":
+		return false
+	if String(task.get("target_kind", "")) != "resource":
+		return false
+	if String(task.get("target_id", "")) == "":
+		return false
+	return String(task.get("task_class", "")) in ["retake_site", "contest_site", "defend_front"]
+
+static func _ai_hero_task_live_plan_from_task(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	task: Dictionary,
+	source_candidate: Dictionary,
+	origin_pos: Vector2i
+) -> Dictionary:
+	var target_id := String(task.get("target_id", ""))
+	var node_result := _find_resource_by_placement(session, target_id)
+	if int(node_result.get("index", -1)) < 0:
+		return {}
+	var node: Dictionary = node_result.get("node", {})
+	var goal_tile := Vector2i(int(node.get("x", task.get("target_x", 0))), int(node.get("y", task.get("target_y", 0))))
+	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")))
+	if goal_distance >= 9999:
+		return {}
+	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
+	if "commander_memory" not in reason_codes:
+		reason_codes.append("commander_memory")
+	var task_class := String(task.get("task_class", ""))
+	var class_bonus := 0
+	match task_class:
+		"retake_site":
+			class_bonus = 75
+		"contest_site":
+			class_bonus = 45
+		"defend_front":
+			class_bonus = 30
+	var public_reason := String(task.get("public_reason", ""))
+	if public_reason == "":
+		public_reason = _public_reason_from_codes(reason_codes)
+	return {
+		"target_kind": "resource",
+		"target_placement_id": target_id,
+		"target_label": String(task.get("target_label", target_id)),
+		"target_x": goal_tile.x,
+		"target_y": goal_tile.y,
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"priority": max(0, int(source_candidate.get("priority", 0)) + class_bonus),
+		"target_reason_codes": reason_codes,
+		"target_public_reason": public_reason,
+		"target_public_importance": "high" if task_class in ["retake_site", "contest_site"] else "medium",
+		"target_debug_reason": "live commander target selection adopted %s" % task_class,
+	}
 
 static func _ai_hero_task_class_for_role(role: String, target_kind: String, role_status: String = "") -> String:
 	if role == COMMANDER_ROLE_RAIDER and target_kind == "town":
