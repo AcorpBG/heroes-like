@@ -2702,7 +2702,7 @@
       ],
       "towns": [
         {"placement_id": "prismhearth_hold", "town_id": "town_prismhearth", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "relay pressure"}},
-        {"placement_id": "halo_spire", "town_id": "town_halo_spire", "x": 9, "y": 2, "owner": "enemy"}
+        {"placement_id": "halo_spire", "town_id": "town_halo_spire", "x": 9, "y": 2, "owner": "enemy", "controlling_faction_id": "faction_mireclaw"}
       ],
       "enemy_factions": [
         {
@@ -2716,8 +2716,8 @@
           "raid_pillage": {"gold": 120, "ore": 1},
           "raid_encounter_ids": ["encounter_mire_raid", "encounter_blackbranch_reavers"],
           "spawn_points": [
-            {"x": 8, "y": 1},
-            {"x": 8, "y": 4}
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 4}
           ],
           "siege_target_placement_id": "prismhearth_hold",
           "siege_active_raid_threshold": 2,

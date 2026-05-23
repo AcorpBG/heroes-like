@@ -215,6 +215,7 @@ static func _build_town_states(placements: Variant) -> Array:
 			"x": int(placement.get("x", 0)),
 			"y": int(placement.get("y", 0)),
 			"owner": String(placement.get("owner", "neutral")),
+			"controlling_faction_id": String(placement.get("controlling_faction_id", "")),
 			"built_buildings": built_buildings,
 			"available_recruits": {},
 			"garrison": _duplicate_array(town_template.get("garrison", [])),

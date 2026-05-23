@@ -21,6 +21,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_raid_assault_grouping",
 	"strategic_ai_live_regroup_retreat",
 	"strategic_ai_live_recruitment_delivery",
+	"strategic_ai_multi_scenario_pressure_coverage",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
 	"save_replay_stability",
@@ -40,6 +41,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_raid_assault_grouping(input_config),
 		_strategic_ai_live_regroup_retreat(input_config),
 		_strategic_ai_live_recruitment_delivery(input_config),
+		_strategic_ai_multi_scenario_pressure_coverage(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
@@ -1156,6 +1158,152 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 		deferred
 	)
 
+static func _strategic_ai_multi_scenario_pressure_coverage(input_config: Dictionary) -> Dictionary:
+	var scenario_ids: Array = input_config.get("strategic_ai_pressure_coverage_scenario_ids", [
+		"river-pass",
+		"prismhearth-watch",
+		"glassroad-sundering",
+		"glassfen-breakers",
+		"ninefold-confluence",
+	])
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario_rows := []
+	var faction_rows := []
+	var all_events := []
+	var event_type_map := {}
+	var target_assignment_event_count := 0
+	var launched_faction_count := 0
+	var prismhearth_controller_town_id := ""
+	var prismhearth_controlling_faction_id := ""
+	for scenario_id_value in scenario_ids:
+		var scenario_id := String(scenario_id_value)
+		var scenario := ContentService.get_scenario(scenario_id)
+		if scenario.is_empty():
+			deferred.append("Missing strategic AI pressure coverage scenario %s." % scenario_id)
+			continue
+		var enemy_configs: Array = scenario.get("enemy_factions", []) if scenario.get("enemy_factions", []) is Array else []
+		if enemy_configs.is_empty():
+			deferred.append("%s has no enemy_factions for pressure coverage." % scenario_id)
+			continue
+		var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+			scenario_id,
+			"normal",
+			SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+		)
+		OverworldRules.normalize_overworld_state(session)
+		EnemyTurnRules.normalize_enemy_states(session)
+		EnemyAdventureRules.normalize_all_commander_rosters(session)
+		var before_by_faction := {}
+		var base_by_faction := {}
+		var town_by_faction := {}
+		for config in enemy_configs:
+			if not (config is Dictionary):
+				continue
+			var faction_id := String(config.get("faction_id", ""))
+			if faction_id == "":
+				continue
+			var state := _enemy_state_for_faction(session, faction_id)
+			if state.is_empty():
+				failures.append("%s has no enemy state for %s." % [scenario_id, faction_id])
+				continue
+			state["pressure"] = max(20, int(config.get("raid_active_threshold", 3)) + 5)
+			state["treasury"] = {"gold": 12000, "wood": 60, "ore": 60}
+			_update_enemy_state(session, state)
+			before_by_faction[faction_id] = _active_raid_count_for_faction(session, faction_id)
+			base_by_faction[faction_id] = _owned_controller_town_count_for_faction(session, faction_id)
+			town_by_faction[faction_id] = _first_controller_town_signal_for_faction(session, faction_id)
+		var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+		var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
+		all_events.append_array(events)
+		target_assignment_event_count += _event_count(events, "ai_target_assigned")
+		for event_type in _event_types(events):
+			event_type_map[String(event_type)] = true
+		if not bool(turn_result.get("ok", false)):
+			failures.append("%s enemy turn returned not-ok during pressure coverage." % scenario_id)
+		if _has_saved_hero_task_state(session):
+			failures.append("%s pressure coverage wrote forbidden hero_task_state." % scenario_id)
+		var scenario_launched_count := 0
+		for config in enemy_configs:
+			if not (config is Dictionary):
+				continue
+			var faction_id := String(config.get("faction_id", ""))
+			if faction_id == "":
+				continue
+			var active_before := int(before_by_faction.get(faction_id, 0))
+			var active_after := _active_raid_count_for_faction(session, faction_id)
+			var base_count := int(base_by_faction.get(faction_id, 0))
+			var active_raids := _active_raid_signals_for_faction(session, faction_id)
+			var faction_assignment_count := _event_count_for_faction(events, "ai_target_assigned", faction_id)
+			var launched := active_after > active_before and faction_assignment_count > 0 and not active_raids.is_empty()
+			var town_signal: Dictionary = town_by_faction.get(faction_id, {}) if town_by_faction.get(faction_id, {}) is Dictionary else {}
+			if base_count <= 0:
+				failures.append("%s/%s has no owned controller town for pressure launch." % [scenario_id, faction_id])
+			if not launched:
+				failures.append("%s/%s did not launch a live pressure raid from an owned base." % [scenario_id, faction_id])
+			else:
+				launched_faction_count += 1
+				scenario_launched_count += 1
+			if scenario_id == "prismhearth-watch" and faction_id == "faction_mireclaw":
+				prismhearth_controller_town_id = String(town_signal.get("placement_id", ""))
+				prismhearth_controlling_faction_id = String(town_signal.get("controlling_faction_id", ""))
+				if prismhearth_controller_town_id != "halo_spire" or prismhearth_controlling_faction_id != "faction_mireclaw":
+					failures.append("Prismhearth occupied Halo Spire is not a Mireclaw controller base.")
+			faction_rows.append({
+				"scenario_id": scenario_id,
+				"faction_id": faction_id,
+				"owned_base_count": base_count,
+				"controller_town": town_signal,
+				"active_before": active_before,
+				"active_after": active_after,
+				"launched": launched,
+				"target_assignment_event_count": faction_assignment_count,
+				"active_raids": active_raids,
+			})
+		scenario_rows.append({
+			"scenario_id": scenario_id,
+			"faction_count": enemy_configs.size(),
+			"launched_faction_count": scenario_launched_count,
+		})
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(all_events, 20)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected multi-scenario pressure events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public multi-scenario pressure events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var event_types := event_type_map.keys()
+	event_types.sort()
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_multi_scenario_pressure_coverage",
+		"live_enemy_pressure_launches_across_scenario_breadth",
+		status,
+		{
+			"scenario_count": scenario_rows.size(),
+			"faction_case_count": faction_rows.size(),
+			"launched_faction_count": launched_faction_count,
+			"target_assignment_event_count": target_assignment_event_count,
+			"prismhearth_controller_town_id": prismhearth_controller_town_id,
+			"prismhearth_controlling_faction_id": prismhearth_controlling_faction_id,
+			"warning_count": warnings.size(),
+			"deferred_count": deferred.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"scenarios": scenario_rows,
+			"faction_cases": faction_rows,
+			"event_types": event_types,
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"deferred": deferred,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("economy_scenario_id", "river-pass"))
 	var bounded_turns: int = max(1, int(input_config.get("economy_turns", 3)))
@@ -1973,6 +2121,56 @@ static func _active_raid_count_for_faction(session: SessionStateStoreScript.Sess
 		count += 1
 	return count
 
+static func _active_raid_signals_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var raids := []
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if String(encounter.get("placement_id", "")) in resolved:
+			continue
+		raids.append(_raid_execution_signal(encounter))
+	return raids
+
+static func _owned_controller_town_count_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	var count := 0
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if _town_controller_faction_id_for_harness(town) == faction_id:
+			count += 1
+	return count
+
+static func _first_controller_town_signal_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if _town_controller_faction_id_for_harness(town) != faction_id:
+			continue
+		return {
+			"placement_id": String(town.get("placement_id", "")),
+			"town_id": String(town.get("town_id", "")),
+			"template_faction_id": _town_template_faction_id_for_harness(town),
+			"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+		}
+	return {}
+
+static func _town_controller_faction_id_for_harness(town_state: Dictionary) -> String:
+	var controller := String(town_state.get("controlling_faction_id", ""))
+	if String(town_state.get("owner", "neutral")) == "enemy" and controller != "":
+		return controller
+	return _town_template_faction_id_for_harness(town_state)
+
+static func _town_template_faction_id_for_harness(town_state: Dictionary) -> String:
+	var town := ContentService.get_town(String(town_state.get("town_id", "")))
+	return String(town.get("faction_id", ""))
+
 static func _town_garrison_unit_count(session: SessionStateStoreScript.SessionData, placement_id: String, unit_id: String) -> int:
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
@@ -2002,6 +2200,23 @@ static func _event_count(events: Variant, event_type: String) -> int:
 		return count
 	for event in events:
 		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+			count += 1
+	return count
+
+static func _event_count_for_faction(events: Variant, event_type: String, faction_id: String) -> int:
+	var count := 0
+	if not (events is Array):
+		return count
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if String(event.get("event_type", "")) != event_type:
+			continue
+		if (
+			String(event.get("faction_id", "")) == faction_id
+			or String(event.get("spawned_by_faction_id", "")) == faction_id
+			or String(event.get("enemy_faction_id", "")) == faction_id
+		):
 			count += 1
 	return count
 
