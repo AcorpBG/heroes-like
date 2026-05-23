@@ -10,6 +10,10 @@ func _ready() -> void:
 		_load_backdrop()
 
 func _load_backdrop() -> void:
+	var resource := load(DEFAULT_BACKDROP_PATH)
+	if resource is Texture2D:
+		texture = resource
+		return
 	var image := Image.load_from_file(ProjectSettings.globalize_path(DEFAULT_BACKDROP_PATH))
 	if image == null or image.is_empty():
 		return

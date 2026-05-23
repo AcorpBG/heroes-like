@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-ai-withdrawal-decision-20260523-10184",
-  "currentSliceTitle": "Battle AI Withdrawal Decision",
+  "currentSliceId": "packaging-linux-binary-export-smoke-20260523-10184",
+  "currentSliceTitle": "Packaging Linux Binary Export Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: enemy tactical battle AI now chooses retreat or surrender from clearly losing field battles and resolves those choices through battle exit animation snapshots and aftermath state.",
+  "currentSliceNotes": "Completed: Linux Release binary export smoke now verifies the local exported ELF executable, sidecar PCK, Linux native library placement, executable bit, and headless boot; packaged route loading now uses preloaded scenes and package-safe menu backdrop loading.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T20:54:23Z",
+  "updatedAt": "2026-05-23T21:06:03Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,63 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "packaging-linux-binary-export-smoke-20260523-10184",
+      "title": "Packaging Linux Binary Export Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "export_presets.cfg",
+        "tests/packaging_platform_readiness_report.gd",
+        "tests/packaging_pack_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/menus/MainMenuHeroView.gd"
+      ],
+      "purpose": "Prove the Linux Release preset can produce a real binary artifact, sidecar PCK, and required Linux native GDExtension library in the local packaging environment.",
+      "implementationTargets": [
+        "tests/packaging_linux_export_smoke.py",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/menus/MainMenuHeroView.gd",
+        "tests/validate_repo.py",
+        "docs/packaging-linux-export-smoke-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The smoke exports the Linux Release preset with --export-release into a scoped .artifacts directory.",
+        "The smoke verifies the executable exists, is non-empty, has an ELF header, has executable permission bits, and has a non-empty sidecar PCK.",
+        "The smoke verifies the required Linux native GDExtension release library is present beside the exported binary.",
+        "Repository validation, Python compilation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No installer readiness claim.",
+        "No clean-machine smoke claim.",
+        "No package signing or distribution metadata.",
+        "No Windows runtime execution claim.",
+        "No release readiness claim."
+      ],
+      "startedAt": "2026-05-23T20:56:37Z",
+      "updatedAt": "2026-05-23T21:06:03Z",
+      "completedAt": "2026-05-23T21:06:03Z",
+      "notes": "Baseline: existing packaging evidence includes Linux PCK boot/settings/error-log smokes and Windows binary artifact inspection, but no matching Linux binary export smoke checks the exported executable artifact.",
+      "completionEvidence": {
+        "commands": [
+          "python3 tests/packaging_linux_export_smoke.py",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+          "python3 tests/packaging_pack_export_smoke.py",
+          "python3 tests/packaging_windows_export_smoke.py",
+          "python3 -m py_compile tests/packaging_linux_export_smoke.py tests/validate_repo.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "result": "Linux Release binary export smoke passed with a 71071768 byte executable, executable permission bit, valid ELF x86_64 header, 287796284 byte sidecar PCK, exported libaurelion_map_persistence.linux.template_release.x86_64.so, and local headless boot returncode 0 with no fatal boot patterns. Existing Linux PCK export smoke, Windows binary export smoke, packaging platform readiness report, repository validation, Python compilation, JSON validation, and diff whitespace checks passed. A separate headless menu_outcome_visual_smoke run still fails at campaign browser population, which is outside this packaged binary smoke and was not used as completion evidence."
+      }
+    },
     {
       "id": "battle-ai-withdrawal-decision-20260523-10184",
       "title": "Battle AI Withdrawal Decision",
