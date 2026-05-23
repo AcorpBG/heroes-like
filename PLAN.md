@@ -5528,6 +5528,35 @@ nonGoals:
 
 Completed implementation slice:
 
+id: `strategic-ai-town-defense-retask-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Make active strategic AI raid hosts defend threatened same-faction towns before continuing opportunistic pressure.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/strategic-ai-raid-regroup-retreat-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/ai_town_defense_retask_report.gd`
+- `tests/ai_town_defense_retask_report.tscn`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/strategic-ai-town-defense-retask-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- Non-understrength active raids detect a stabilizing same-faction enemy town front and retask to town defense before normal target selection.
+- Defensive retasks emit compact `ai_target_assigned` events with `town_defense` and `front_stabilization` reason codes.
+- Focused and shared headless reports prove the behavior without durable `hero_task_state`, save migration, or public score/task leaks.
+nonGoals:
+- No full strategic AI quality claim.
+- No durable commander task board.
+- No broad recruitment grouping, retreat timing, objective planner, or difficulty tuning.
+
+Completed implementation slice:
+
 id: `headless-strategic-ai-live-regroup-retreat-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Promote live understrength raid regroup/retreat behavior into the shared headless simulation harness and public end-turn AI event surface.

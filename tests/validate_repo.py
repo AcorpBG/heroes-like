@@ -122,6 +122,9 @@ AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
+AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_retask_report.gd"
+AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
+AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
@@ -13310,12 +13313,15 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     for required_token in (
         '"strategic_ai_live_turn_execution"',
         '"strategic_ai_live_route_progression"',
+        '"strategic_ai_live_town_defense_retask"',
         '"strategic_ai_live_regroup_retreat"',
         "func _strategic_ai_live_turn_execution",
         "func _strategic_ai_live_route_progression",
+        "func _strategic_ai_live_town_defense_retask",
         "func _strategic_ai_live_regroup_retreat",
         "live_commander_resource_front_turn_execution",
         "live_commander_resource_front_route_progression",
+        "live_raid_retasks_to_stabilizing_owned_town",
         "live_understrength_raid_regroups_at_town",
         "resource_fronts_seized",
         "reserved_unique_targets",
@@ -13323,6 +13329,8 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "turns_simulated",
         "assigned_target",
         "seized_target",
+        "_town_defense_retask_raid_seed",
+        "front_stabilization",
         "_understrength_regroup_raid_seed",
         "regroup_event_count",
         "garrison_before",
@@ -13343,9 +13351,11 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     for required_token in (
         "strategic_ai_live_turn_execution",
         "strategic_ai_live_route_progression",
+        "strategic_ai_live_town_defense_retask",
         "strategic_ai_live_regroup_retreat",
         "_assert_live_ai_turn_execution",
         "_assert_live_ai_route_progression",
+        "_assert_live_ai_town_defense_retask",
         "_assert_live_ai_regroup_retreat",
         "river_free_company",
         "river_signal_post",
@@ -13355,6 +13365,8 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "turns_simulated",
         "assigned_target",
         "seized_target",
+        "town_defense",
+        "front_stabilization",
         "regroup_event_count",
         "garrison_before",
         "garrison_after",
@@ -13376,13 +13388,17 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "implementation evidence",
             "`strategic_ai_live_turn_execution`",
             "`strategic_ai_live_route_progression`",
+            "`strategic_ai_live_town_defense_retask`",
             "`strategic_ai_live_regroup_retreat`",
             "EnemyTurnRules.run_enemy_turn",
             "OverworldRules.end_turn",
             "resource_fronts_seized = 2",
             "reserved_unique_targets = true",
             "live_commander_resource_front_route_progression",
+            "live_raid_retasks_to_stabilizing_owned_town",
             "live_understrength_raid_regroups_at_town",
+            "town_id = duskfen_bastion",
+            "previous_target_id = river_free_company",
             "regroup_event_count = 1",
             "garrison_before = 5",
             "garrison_after = 0",
@@ -13442,6 +13458,55 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
             "No full strategic AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"AI raid regroup/retreat doc is missing required text: {required_text}")
+
+
+def validate_ai_town_defense_retask(errors: list[str]) -> None:
+    for path in (
+        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
+        AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH,
+        AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI town defense retask file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "_redirect_raid_to_threatened_town_defense",
+        "_best_threatened_defense_town",
+        "_primary_player_position",
+        '"town_defense"',
+        '"front_stabilization"',
+        '"defending threatened town"',
+        'raid["town_defense_started_day"]',
+        'raid["town_defense_front_id"]',
+        "stabilizing owned town under player threat",
+        "String(town.get(\"owner\", \"neutral\")) == \"enemy\"",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defense retask token: {required_token}")
+    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_TOWN_DEFENSE_RETASK_REPORT",
+            "active_raids_defend_threatened_owned_town_fronts",
+            "river_pass_active_raid_defends_stabilizing_duskfen",
+            "duskfen_bastion",
+            "river_free_company",
+            "town_defense",
+            "front_stabilization",
+            "ai_target_assigned",
+            "no_hero_task_state_write_no_save_migration",
+            "save_version_before",
+            "save_version_after",
+        ):
+            ensure(required_token in report_text, errors, f"AI town defense retask report is missing token: {required_token}")
+    if AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH.exists():
+        doc_text = AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Town Defense Retask Report",
+            "strategic-ai-town-defense-retask-20260523-10184",
+            "active enemy raid hosts",
+            "Duskfen",
+            "No broad strategic AI quality claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI town defense retask doc is missing required text: {required_text}")
 
 
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
@@ -16664,6 +16729,7 @@ def main() -> int:
     validate_ai_hero_task_live_adoption_gate(errors)
     validate_ai_hero_task_live_turn_execution(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
+    validate_ai_town_defense_retask(errors)
     validate_ai_raid_regroup_retreat(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)

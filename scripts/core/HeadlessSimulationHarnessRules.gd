@@ -16,6 +16,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_pressure_tick",
 	"strategic_ai_live_turn_execution",
 	"strategic_ai_live_route_progression",
+	"strategic_ai_live_town_defense_retask",
 	"strategic_ai_live_regroup_retreat",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
@@ -31,6 +32,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_pressure_tick(input_config),
 		_strategic_ai_live_turn_execution(input_config),
 		_strategic_ai_live_route_progression(input_config),
+		_strategic_ai_live_town_defense_retask(input_config),
 		_strategic_ai_live_regroup_retreat(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
@@ -650,6 +652,124 @@ static func _strategic_ai_live_regroup_retreat(input_config: Dictionary) -> Dict
 		deferred
 	)
 
+static func _strategic_ai_live_town_defense_retask(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_defense_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_defense_faction_id", "faction_mireclaw"))
+	var town_id := String(input_config.get("strategic_ai_live_defense_town_id", "duskfen_bastion"))
+	var previous_target_id := String(input_config.get("strategic_ai_live_defense_previous_target_id", "river_free_company"))
+	var roster_hero_id := String(input_config.get("strategic_ai_live_defense_hero_id", "hero_vaska"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live town-defense scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_town_defense_retask",
+			"live_raid_retasks_to_stabilizing_owned_town",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_town_defense_retask",
+			"live_raid_retasks_to_stabilizing_owned_town",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_resource_controller(session, previous_target_id, "player", failures)
+	_set_town_stabilizing_front(session, town_id, faction_id, failures)
+	_set_player_position(session, {"x": 6, "y": 2})
+	var raid_id := "headless_live_defense_%s" % town_id
+	var seed_raid := _town_defense_retask_raid_seed(session, faction_id, roster_hero_id, raid_id, previous_target_id)
+	var regroup_needed_before := EnemyAdventureRules.raid_regroup_needed(seed_raid)
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append(seed_raid)
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var turn_result: Dictionary = OverworldRules.end_turn(session)
+	var events: Array = turn_result.get("enemy_activity_events", []) if turn_result.get("enemy_activity_events", []) is Array else []
+	var after_raid := _encounter_by_placement(session, raid_id)
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	var assignment_events := _event_count(events, "ai_target_assigned")
+	var resource_controller := _resource_controller(session, previous_target_id)
+	if not bool(turn_result.get("ok", false)):
+		failures.append("End turn returned not-ok during live town-defense retask.")
+	if after_raid.is_empty():
+		failures.append("Live town-defense raid disappeared after end-turn enemy cycle.")
+	if regroup_needed_before:
+		failures.append("Live town-defense fixture raid was understrength before enemy turn.")
+	if assignment_events < 1:
+		failures.append("Live town-defense retask did not surface an ai_target_assigned event.")
+	if String(after_raid.get("target_kind", "")) != "town" or String(after_raid.get("target_placement_id", "")) != town_id:
+		failures.append("Live town-defense retask did not target %s." % town_id)
+	if "town_defense" not in reason_codes or "front_stabilization" not in reason_codes:
+		failures.append("Live town-defense retask missed public reason codes.")
+	if String(after_raid.get("previous_target_placement_id", "")) != previous_target_id:
+		failures.append("Live town-defense retask did not preserve previous target %s." % previous_target_id)
+	if resource_controller == faction_id:
+		failures.append("Live town-defense retask captured the previous offensive resource.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live town-defense retask wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live town-defense retask events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live town-defense events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_town_defense_retask",
+		"live_raid_retasks_to_stabilizing_owned_town",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"town_id": town_id,
+			"previous_target_id": previous_target_id,
+			"regroup_needed_before": regroup_needed_before,
+			"target_assignment_event_count": assignment_events,
+			"resource_controller_after": resource_controller,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"raid": _raid_execution_signal(after_raid),
+			"target_reason_codes": reason_codes,
+			"event_types": _event_types(events),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("economy_scenario_id", "river-pass"))
 	var bounded_turns: int = max(1, int(input_config.get("economy_turns", 3)))
@@ -1098,6 +1218,44 @@ static func _resource_node_by_placement(session: SessionStateStoreScript.Session
 			return node
 	return {}
 
+static func _set_town_stabilizing_front(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	faction_id: String,
+	failures: Array
+) -> void:
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["front"] = {
+			"state": "stabilizing",
+			"faction_id": faction_id,
+			"last_change_day": max(0, int(session.day) - 1),
+			"stabilize_until_day": int(session.day) + 4,
+			"last_owner": "player",
+			"capture_count": 1,
+			"source": "headless_harness_fixture",
+		}
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	failures.append("Missing town %s for live town-defense fixture." % placement_id)
+
+static func _set_player_position(session: SessionStateStoreScript.SessionData, position: Dictionary) -> void:
+	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
+	var heroes: Array = session.overworld.get("heroes", []) if session.overworld.get("heroes", []) is Array else []
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("owner", "player")) == "player":
+			hero["position"] = session.overworld["hero_position"].duplicate(true)
+			heroes[index] = hero
+			session.overworld["heroes"] = heroes
+			return
+
 static func _live_turn_raid_seed(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
@@ -1146,6 +1304,48 @@ static func _live_route_raid_seed(
 		"days_active": 0,
 		"arrived": false,
 		"goal_distance": 9999,
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _town_defense_retask_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	previous_target_id: String
+) -> Dictionary:
+	var node := _resource_node_by_placement(session, previous_target_id)
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": 6,
+		"y": 2,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"target_kind": "resource",
+		"target_placement_id": previous_target_id,
+		"target_label": "Free Company Camp",
+		"target_x": int(node.get("x", 0)),
+		"target_y": int(node.get("y", 0)),
+		"goal_x": int(node.get("x", 0)),
+		"goal_y": int(node.get("y", 0)),
+		"enemy_army": {
+			"id": "headless_defense_retask_fixture_host",
+			"name": "Defense Retask Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 8}],
+		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
 		raid,
@@ -1234,6 +1434,16 @@ static func _event_types(events: Variant) -> Array:
 				types.append(event_type)
 	types.sort()
 	return types
+
+static func _string_array(value: Variant) -> Array:
+	var output := []
+	if not (value is Array):
+		return output
+	for item in value:
+		var text := String(item)
+		if text != "" and text not in output:
+			output.append(text)
+	return output
 
 static func _has_saved_hero_task_state(session: SessionStateStoreScript.SessionData) -> bool:
 	for state in session.overworld.get("enemy_states", []):
