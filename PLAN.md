@@ -57,6 +57,8 @@ Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle a
 
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
+Strategic AI raid regroup/retreat added on 2026-05-23: understrength enemy raids now retarget to the nearest reachable owned matching-faction town, transfer spare town garrison units into the field host, synchronize commander army continuity, emit public regroup/retarget events, and resume normal objective selection after crossing the regroup floor. `tests/ai_raid_regroup_retreat_report.tscn` proves the River Pass Vaska raid retreats to Duskfen Bastion and leaves the original player-held resource alone. This is a bounded strategic-AI behavior improvement, not full enemy economy planning, multi-hero grouping, town-defense strategy, or difficulty tuning.
+
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
 
 Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units now apply their authored status rider through the same battle ability path as ranged harry units, and `tests/unit_ability_runtime_report.tscn` probes all 143 authored unit ability instances across the 103-unit roster for a concrete runtime consequence. This strengthens the "fully implemented units" proof for current authored mechanics; final balance and hand-authored art approval remain outside this slice.
@@ -5111,6 +5113,30 @@ nonGoals:
 - No full strategic AI quality claim.
 - No persistent task-board adoption.
 - No broad town/hero/artifact target rewrite.
+
+Completed implementation slice:
+
+id: `strategic-ai-raid-regroup-retreat-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add bounded strategic AI retreat/regroup behavior so damaged active raids can rebuild at owned towns before resuming pressure.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `tests/ai_raid_regroup_retreat_report.gd`
+- `tests/ai_raid_regroup_retreat_report.tscn`
+- `docs/strategic-ai-raid-regroup-retreat-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- Understrength active raids can choose a regroup target at a reachable owned matching-faction town.
+- Regroup arrival transfers spare town garrison units into the raid host and synchronizes commander army state.
+- Regroup/retarget events remain public-safe and the behavior does not migrate saves or bump `SAVE_VERSION`.
+- Focused validation proves the River Pass Vaska raid regroups at Duskfen Bastion and does not capture its original resource objective on that turn.
+nonGoals:
+- No full strategic AI quality claim.
+- No broad enemy economy planner, town-defense rewrite, multi-hero grouping rewrite, or difficulty tuning.
 
 ### Phase 4 - Headless AI Agent Balance Harness
 

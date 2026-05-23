@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "packaging-platform-readiness-20260523-10184",
-  "currentSliceTitle": "Packaging Platform Readiness",
+  "currentSliceId": "strategic-ai-raid-regroup-retreat-20260523-10184",
+  "currentSliceTitle": "Strategic AI Raid Regroup Retreat",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: Linux/Windows export presets, native GDExtension artifact checks, user:// runtime path checks, and boot metadata checks now have a focused readiness report.",
+  "currentSliceNotes": "Completed: understrength enemy raids now retreat to owned matching-faction towns, pull garrison units into the host, emit regroup/retarget events, and resume targeting after crossing the regroup floor.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -15939,6 +15939,46 @@
         "No clean-machine packaged smoke-test claim.",
         "No release readiness claim."
       ]
+    },
+    {
+      "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
+      "title": "Strategic AI Raid Regroup Retreat",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Add bounded strategic AI retreat/regroup behavior so damaged active raids can rebuild at owned towns before resuming pressure.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/ai_raid_regroup_retreat_report.tscn",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_turn_transcript_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Understrength active raids choose a regroup target at a reachable owned matching-faction town instead of continuing a weak offensive move.",
+        "Regroup arrival transfers spare town garrison units into the raid host and synchronizes commander army continuity.",
+        "Regroup and target-assignment events remain public-safe without a save-version bump or save migration.",
+        "Focused validation proves the River Pass Vaska raid regroups at Duskfen Bastion and leaves the original player-held resource under player control."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No broad enemy economy planner.",
+        "No town-defense rewrite, multi-hero grouping rewrite, or difficulty tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18842,6 +18882,44 @@
         "git diff --check"
       ],
       "remainingGap": "This is a repository readiness gate; installer/export execution, clean-machine packaged smoke tests, crash reporting hardening, and release readiness remain outside this slice."
+    },
+    {
+      "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
+      "title": "Strategic AI Raid Regroup Retreat",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "strategic-ai-raid-regroup-retreat-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/ai_raid_regroup_retreat_report.tscn",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "EnemyAdventureRules now detects active understrength raids with raid_regroup_needed and redirects them to reachable owned matching-faction towns using target kind regroup.",
+        "Regroup arrival transfers spare town garrison stacks into the raid host, updates the town garrison, and synchronizes commander army continuity.",
+        "Regrouped raids clear the regroup target after crossing the strength floor so normal target selection can resume.",
+        "The focused River Pass report proves the damaged Vaska raid regroups at Duskfen Bastion, emits ai_target_assigned and ai_raid_regrouped, increases host strength, and leaves river_free_company under player control."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_turn_transcript_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is a bounded regroup/retreat behavior; broad strategic AI quality, multi-hero grouping, enemy economy planning, town defense, objective sequencing, and difficulty tuning remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -19691,25 +19769,40 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with board_audio_playback proving generated ranged/status audio cue waveforms and playback expiry; full validation gates passed."
+    },
+    {
+      "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_turn_transcript_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused AI raid regroup/retreat report passed: Vaska retreats to Duskfen Bastion, pulls garrison units into the host, emits regroup/retarget events, and leaves the original resource under player control; full validation gates passed."
     }
   ],
   "lastValidation": {
-    "id": "packaging-platform-readiness-20260523-10184",
+    "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_turn_transcript_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused packaging/platform readiness report passed with Linux/Windows export preset checks, native GDExtension artifact checks, packaged user:// path checks, and boot metadata checks; full repository validation gates passed."
+    "summary": "Focused AI raid regroup/retreat report passed: Vaska retreats to Duskfen Bastion, pulls garrison units into the host, emits regroup/retarget events, and leaves the original resource under player control; full repository validation gates passed."
   },
   "active_slice": {
-    "id": "packaging-platform-readiness-20260523-10184",
+    "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: packaging/platform readiness now has focused Linux/Windows export, native artifact, runtime path, and boot metadata gates."
+    "note": "Completed: understrength enemy raids now retreat to owned matching-faction towns, pull garrison units into the host, and resume targeting after crossing the regroup floor."
   }
 }
