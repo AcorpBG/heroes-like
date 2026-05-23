@@ -6989,7 +6989,12 @@ static func _resolve_move_action(
 ) -> Dictionary:
 	var start_hex := _stack_hex(active_stack)
 	_set_stack_hex(session.battle, String(active_stack.get("battle_id", "")), destination)
-	_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
+	_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move", {
+		"from_q": int(start_hex.get("q", -1)),
+		"from_r": int(start_hex.get("r", -1)),
+		"to_q": int(destination.get("q", -1)),
+		"to_r": int(destination.get("r", -1)),
+	})
 	_sync_distance_from_hexes(session.battle)
 	var pressure_message := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 	var updated_stack := _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
@@ -10746,6 +10751,10 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		"battle_id": battle_id,
 		"target_battle_id": String(context.get("target_battle_id", "")),
 		"source_battle_id": String(context.get("source_battle_id", "")),
+		"from_q": int(context.get("from_q", -1)),
+		"from_r": int(context.get("from_r", -1)),
+		"to_q": int(context.get("to_q", -1)),
+		"to_r": int(context.get("to_r", -1)),
 		"priority": priority,
 		"serial": serial,
 		"round": int(battle.get("round", 1)),
@@ -10778,6 +10787,10 @@ static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
 			"battle_id": battle_id,
 			"target_battle_id": String(record.get("target_battle_id", "")),
 			"source_battle_id": String(record.get("source_battle_id", "")),
+			"from_q": int(record.get("from_q", -1)),
+			"from_r": int(record.get("from_r", -1)),
+			"to_q": int(record.get("to_q", -1)),
+			"to_r": int(record.get("to_r", -1)),
 			"priority": int(record.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(record.get("serial", 0))),
 			"round": max(1, int(record.get("round", 1))),
@@ -10803,6 +10816,10 @@ static func _normalize_animation_event_queue(value: Variant) -> Array:
 			"state": state,
 			"target_battle_id": String(entry.get("target_battle_id", "")),
 			"source_battle_id": String(entry.get("source_battle_id", "")),
+			"from_q": int(entry.get("from_q", -1)),
+			"from_r": int(entry.get("from_r", -1)),
+			"to_q": int(entry.get("to_q", -1)),
+			"to_r": int(entry.get("to_r", -1)),
 			"priority": int(entry.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(entry.get("serial", 0))),
 			"round": max(1, int(entry.get("round", 1))),

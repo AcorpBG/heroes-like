@@ -16018,6 +16018,81 @@
       ]
     },
     {
+      "id": "battle-movement-path-presentation-20260523-10184",
+      "title": "Battle Movement Path Presentation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Preserve movement source/destination hexes on battle move events and use them for board-side path-ghost presentation.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-movement-path-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "battle_unit_move event records preserve source and destination hex coordinates.",
+        "BattleBoardView uses movement event coordinates to draw vfx_placeholder_battle_path_ghost between distinct cells.",
+        "Focused validation proves a real move action emits path coordinates and a source-to-destination path ghost."
+      ],
+      "nonGoals": [
+        "No final interpolated token travel, authored motion curves, camera work, imported VFX/audio assets, or combat balance tuning."
+      ]
+    },
+    {
+      "id": "battle-movement-path-presentation-20260523-10184",
+      "title": "Battle Movement Path Presentation",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-movement-path-presentation-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-movement-path-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleRules._resolve_move_action now records from_q/from_r and to_q/to_r on battle_unit_move events.",
+        "Battle animation state and event-queue normalization preserve the movement path coordinates.",
+        "BattleBoardView carries movement coordinates into cue playback records and uses them for vfx_placeholder_battle_path_ghost entries.",
+        "The focused battle event animation report now proves a real move action emits path coordinates and a path ghost from (0,3) to (1,3)."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This fixes movement path presentation context; final interpolated token travel, authored motion curves, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
+    },
+    {
       "id": "battle-death-animation-retention-20260523-10184",
       "title": "Battle Death Animation Retention",
       "phase": "phase-2-deep-production-foundation",

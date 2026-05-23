@@ -45,6 +45,8 @@ Battle event animation state adoption added on 2026-05-23: `BattleRules` now own
 
 Battle animation event queue lifecycle added on 2026-05-23: `BattleRules` now records a bounded serial event queue alongside the current per-stack state map, and `BattleBoardView` syncs new records into short playback windows that expire back to active, defend, or idle fallback poses. `tests/battle_event_animation_state_report.tscn` now validates queue coverage for movement, melee, ranged, hit, death, cast, status, and defend events, then proves live board playback expiry. This remains a generated-sheet presentation lifecycle slice, not final VFX/audio/camera timing, authored animation timing, or combat balance tuning.
 
+Battle movement path presentation added on 2026-05-23: `battle_unit_move` records now carry `from_q/from_r` and `to_q/to_r`, and `BattleBoardView` uses those coordinates for `vfx_placeholder_battle_path_ghost` so movement presentation spans the real source and destination cells instead of pulsing only on the final cell. `tests/battle_event_animation_state_report.tscn` now proves a real move emits path coordinates and a distinct path ghost. This is movement event context and placeholder VFX presentation, not final interpolated token travel, authored motion curves, imported VFX/audio, camera work, or combat balance tuning.
+
 Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
 
 Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
@@ -4989,6 +4991,29 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-movement-path-presentation-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Preserve movement source/destination hexes on battle move events and use them for board-side path-ghost presentation.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scripts/core/BattleRules.gd`
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-movement-path-presentation-report.md`
+- `ops/progress.json`
+completionCriteria:
+- `battle_unit_move` event records preserve source and destination hex coordinates.
+- `BattleBoardView` uses movement event coordinates to draw `vfx_placeholder_battle_path_ghost` between distinct cells.
+- Focused validation proves a real move action emits path coordinates and a source-to-destination path ghost.
+nonGoals:
+- No final interpolated token travel, authored motion curves, camera work, imported VFX/audio assets, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 
