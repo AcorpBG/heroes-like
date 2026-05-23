@@ -112,6 +112,9 @@ AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-tas
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.gd"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.tscn"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-hero-task-adoption-gate-report.md"
+AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.gd"
+AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.tscn"
+AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-turn-execution-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -13170,6 +13173,62 @@ def validate_ai_hero_task_live_adoption_gate(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI hero task live adoption gate doc is missing required boundary text: {required_text}")
 
 
+def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH,
+        AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task live turn execution file: {path.relative_to(ROOT)}")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)",
+        "_spawn_raid(session, config, state)",
+        "EnemyAdventureRulesScript.assign_target(",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing live turn execution token: {required_token}")
+    for required_token in (
+        "func ai_hero_task_live_target_selection_plan",
+        "func _ai_hero_task_live_plan_from_task",
+        "func _ai_hero_task_live_target_reserved",
+        "func _secure_resource_target",
+        '"ai_site_seized"',
+        '"live_target_selection"',
+        '"commander_memory"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing live turn execution token: {required_token}")
+    if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+            "run_enemy_turn_executes_live_commander_resource_targets",
+            "river_pass_live_target_turn_seizes_reserved_resource_fronts",
+            "river_free_company",
+            "river_signal_post",
+            "ai_target_assigned",
+            "ai_site_seized",
+            "no_hero_task_state_write_no_save_migration",
+            "resource_score_breakdown",
+            "reservation_key",
+            "save_version_before",
+            "save_version_after",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task live turn execution report is missing token: {required_token}")
+    if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Live Turn Execution Report",
+            "implementation evidence",
+            "run_enemy_turn",
+            "river_pass_live_target_turn_seizes_reserved_resource_fronts",
+            "No persistent task board",
+            "No save migration",
+            "Public event output",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task live turn execution doc is missing required text: {required_text}")
+
+
 def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
     for path in (
         AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH,
@@ -16121,6 +16180,7 @@ def main() -> int:
     validate_overworld_object_ai_valuation_route_effects(errors)
     validate_ai_hero_task_state_normalizer_preservation(errors)
     validate_ai_hero_task_live_adoption_gate(errors)
+    validate_ai_hero_task_live_turn_execution(errors)
     validate_ai_raid_regroup_retreat(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
