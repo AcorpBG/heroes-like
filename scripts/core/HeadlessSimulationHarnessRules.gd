@@ -17,6 +17,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_turn_execution",
 	"strategic_ai_live_route_progression",
 	"strategic_ai_live_town_defense_retask",
+	"strategic_ai_live_town_retake_assault",
 	"strategic_ai_live_regroup_retreat",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
@@ -33,6 +34,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_turn_execution(input_config),
 		_strategic_ai_live_route_progression(input_config),
 		_strategic_ai_live_town_defense_retask(input_config),
+		_strategic_ai_live_town_retake_assault(input_config),
 		_strategic_ai_live_regroup_retreat(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
@@ -770,6 +772,118 @@ static func _strategic_ai_live_town_defense_retask(input_config: Dictionary) -> 
 		deferred
 	)
 
+static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_retake_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_retake_faction_id", "faction_mireclaw"))
+	var town_id := String(input_config.get("strategic_ai_live_retake_town_id", "duskfen_bastion"))
+	var roster_hero_id := String(input_config.get("strategic_ai_live_retake_hero_id", "hero_vaska"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live town-retake scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_town_retake_assault",
+			"live_retake_front_queues_town_defense_battle",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_town_retake_assault",
+			"live_retake_front_queues_town_defense_battle",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_town_retake_front(session, town_id, faction_id, failures)
+	var raid_id := "headless_live_retake_%s" % town_id
+	var seed_raid := _town_retake_assault_raid_seed(session, faction_id, roster_hero_id, raid_id)
+	var selector_plan := EnemyAdventureRules.ai_live_town_retake_target_selection_plan(session, config, seed_raid)
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append(seed_raid)
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
+	var after_raid := _encounter_by_placement(session, raid_id)
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	var assignment_events := _event_count(events, "ai_target_assigned")
+	if String(selector_plan.get("target_kind", "")) != "town" or String(selector_plan.get("target_placement_id", "")) != town_id:
+		failures.append("Live retake selector did not prefer %s." % town_id)
+	if not bool(turn_result.get("ok", false)):
+		failures.append("Enemy turn returned not-ok during live town-retake assault.")
+	if after_raid.is_empty():
+		failures.append("Live town-retake raid disappeared after enemy turn.")
+	if String(after_raid.get("target_kind", "")) != "town" or String(after_raid.get("target_placement_id", "")) != town_id:
+		failures.append("Live town-retake raid did not target %s." % town_id)
+	if session.battle.is_empty():
+		failures.append("Live town-retake assault did not queue a battle.")
+	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != town_id:
+		failures.append("Live town-retake assault queued wrong battle context.")
+	if assignment_events < 1:
+		failures.append("Live town-retake assault did not surface an ai_target_assigned event.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live town-retake assault wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live town-retake assault events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live town-retake events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_town_retake_assault",
+		"live_retake_front_queues_town_defense_battle",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"town_id": town_id,
+			"selector_target_kind": String(selector_plan.get("target_kind", "")),
+			"selector_target_id": String(selector_plan.get("target_placement_id", "")),
+			"target_assignment_event_count": assignment_events,
+			"battle_context_type": String(battle_context.get("type", "")),
+			"battle_town_id": String(battle_context.get("town_placement_id", "")),
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"raid": _raid_execution_signal(after_raid),
+			"event_types": _event_types(events),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("economy_scenario_id", "river-pass"))
 	var bounded_turns: int = max(1, int(input_config.get("economy_turns", 3)))
@@ -1245,6 +1359,34 @@ static func _set_town_stabilizing_front(
 		return
 	failures.append("Missing town %s for live town-defense fixture." % placement_id)
 
+static func _set_town_retake_front(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	faction_id: String,
+	failures: Array
+) -> void:
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["owner"] = "player"
+		town["front"] = {
+			"state": "retake",
+			"faction_id": faction_id,
+			"last_change_day": int(session.day),
+			"stabilize_until_day": 0,
+			"last_owner": "enemy",
+			"capture_count": 1,
+			"source": "headless_harness_fixture",
+		}
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	failures.append("Missing town %s for live town-retake fixture." % placement_id)
+
 static func _set_player_position(session: SessionStateStoreScript.SessionData, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
 	var heroes: Array = session.overworld.get("heroes", []) if session.overworld.get("heroes", []) is Array else []
@@ -1344,6 +1486,39 @@ static func _town_defense_retask_raid_seed(
 		"enemy_army": {
 			"id": "headless_defense_retask_fixture_host",
 			"name": "Defense Retask Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 8}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _town_retake_assault_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": 7,
+		"y": 2,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"enemy_army": {
+			"id": "headless_retake_assault_fixture_host",
+			"name": "Retake Assault Host",
 			"stacks": [{"unit_id": "unit_bog_brute", "count": 8}],
 		},
 	}

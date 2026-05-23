@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-town-defense-retask-20260523-10184",
-  "currentSliceTitle": "Strategic AI Town Defense Retask",
+  "currentPhase": "phase-4-headless-ai-agent-balance-harness",
+  "currentSliceId": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
+  "currentSliceTitle": "Strategic AI Live Town Retake Assault Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: active non-understrength raids now retask to defend stabilizing same-faction town fronts before normal target selection, emit public-safe town_defense/front_stabilization assignment events, and focused plus shared headless reports prove the behavior without hero_task_state writes or save migration.",
+  "currentSliceNotes": "Completed: live retake-front town assaults now select player-held retake towns before commander resource-target adoption and queue town_defense battles through the normal enemy turn.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:41:13Z",
+  "updatedAt": "2026-05-23T16:51:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16859,6 +16859,48 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
+      "title": "Strategic AI Live Town Retake Assault Harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add live headless evidence that enemy retake-front town targeting executes through the normal enemy turn and queues a real town-defense battle when a raid reaches a player-captured town.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "A no-target enemy raid on a captured hostile town front assigns the retake town through normal live target selection.",
+        "The normal enemy turn queues a real town_defense battle for the player-held retake-front town.",
+        "Focused and shared headless reports prove the behavior without durable hero_task_state writes, save migration, or public score/task leaks."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No automatic battle resolution tuning.",
+        "No broad objective planner rewrite."
+      ],
+      "updatedAt": "2026-05-23T16:51:05Z",
+      "completedAt": "2026-05-23T16:51:05Z",
+      "completionNotes": "Completed: live retake-front town assaults now select active player-held retake towns before commander resource-target adoption, queue town_defense battles through the normal enemy turn, and focused plus shared headless reports prove the behavior without hero_task_state writes, save migration, or public score/task leaks.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21678,10 +21720,10 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T16:41:13Z",
-    "sliceId": "strategic-ai-town-defense-retask-20260523-10184",
+    "updatedAt": "2026-05-23T16:51:05Z",
+    "sliceId": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
@@ -21691,10 +21733,10 @@
     "status": "passed"
   },
   "active_slice": {
-    "id": "strategic-ai-town-defense-retask-20260523-10184",
+    "id": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:41:13Z",
-    "note": "Completed: active non-understrength raids now retask to defend stabilizing same-faction town fronts before normal target selection, emit public-safe town_defense/front_stabilization assignment events, and focused plus shared headless reports prove the behavior without hero_task_state writes or save migration."
+    "updated": "2026-05-23T16:51:05Z",
+    "note": "Completed: live retake-front town assaults select active player-held retake towns before commander resource-target adoption and queue town_defense battles."
   },
-  "currentSliceUpdatedAt": "2026-05-23T16:41:13Z"
+  "currentSliceUpdatedAt": "2026-05-23T16:51:05Z"
 }

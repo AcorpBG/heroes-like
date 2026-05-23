@@ -2,7 +2,7 @@
 
 Status: implementation evidence.
 
-This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_defense_retask`, and `strategic_ai_live_regroup_retreat` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
+This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_defense_retask`, `strategic_ai_live_town_retake_assault`, and `strategic_ai_live_regroup_retreat` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
 
 Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
@@ -15,6 +15,9 @@ Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_defense_retask`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_raid_retasks_to_stabilizing_owned_town` through `OverworldRules.end_turn(...)`.
 - The town-defense case marks Duskfen Bastion as a stabilizing Mireclaw front, starts a strong Vaska raid aimed at `river_free_company`, and requires the raid to retask to `duskfen_bastion` with `town_defense` and `front_stabilization` reason codes.
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_retake_assault`.
+- `HeadlessSimulationHarnessRules.build_report(...)` runs `live_retake_front_queues_town_defense_battle` through `EnemyTurnRules.run_enemy_turn(...)`.
+- The town-retake case marks Duskfen Bastion as a player-captured Mireclaw retake front, starts a no-target Vaska raid in battle range, requires live target selection to choose `duskfen_bastion`, and requires the normal enemy turn to queue a `town_defense` battle for that town.
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_regroup_retreat`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_understrength_raid_regroups_at_town` through `OverworldRules.end_turn(...)`.
 - The regroup case starts a damaged Vaska raid aimed at `river_free_company`, requires a Duskfen Bastion retreat/regroup, proves strength recovery and garrison transfer, and requires the original resource to stay player-controlled on that turn.
@@ -32,6 +35,7 @@ Validation evidence:
 - `strategic_ai_live_turn_execution`
 - `strategic_ai_live_route_progression`
 - `strategic_ai_live_town_defense_retask`
+- `strategic_ai_live_town_retake_assault`
 - `strategic_ai_live_regroup_retreat`
 - `resource_fronts_seized = 2`
 - `reserved_unique_targets = true`
@@ -44,6 +48,9 @@ Validation evidence:
 - `previous_target_id = river_free_company`
 - `town_defense`
 - `front_stabilization`
+- `live_retake_front_queues_town_defense_battle`
+- `battle_context_type = town_defense`
+- `battle_town_id = duskfen_bastion`
 - `regroup_event_count = 1`
 - `garrison_before = 5`
 - `garrison_after = 0`
@@ -57,5 +64,6 @@ Remaining gaps:
 - This is a deterministic harness fixture for one strategic AI behavior, not a full AI quality claim.
 - This route case proves one long-route resource-front progression fixture, not broad path quality.
 - This town-defense case proves one stabilizing-front retask fixture, not broad defense rotation.
+- This town-retake case proves one live retake-front battle queue fixture, not broad objective sequencing.
 - This regroup case proves one retreat/rebuild fixture, not broad defense rotation, multi-hero grouping, or difficulty tuning.
 - Town assault priorities, recruitment grouping, defense rotation, objective handling across scenarios, and difficulty tuning still need broader harness cases.

@@ -5557,6 +5557,40 @@ nonGoals:
 
 Completed implementation slice:
 
+id: `strategic-ai-live-town-retake-assault-harness-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Add live headless evidence that enemy retake-front town targeting executes through the normal enemy turn and queues a real town-defense battle.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/ai_town_retake_assault_report.gd`
+- `tests/ai_town_retake_assault_report.tscn`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/strategic-ai-town-retake-assault-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- A no-target enemy raid on a player-captured retake-front town assigns `duskfen_bastion` through live strategic target selection.
+- The normal enemy turn queues a real `town_defense` battle for the player-held retake-front town.
+- Focused and shared headless reports prove the behavior without durable `hero_task_state`, save migration, or public score/task leaks.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No full strategic AI quality claim.
+- No automatic battle resolution tuning.
+- No broad objective planner rewrite.
+
+Completed implementation slice:
+
 id: `headless-strategic-ai-live-regroup-retreat-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Promote live understrength raid regroup/retreat behavior into the shared headless simulation harness and public end-turn AI event surface.

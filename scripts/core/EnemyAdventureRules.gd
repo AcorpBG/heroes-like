@@ -653,7 +653,9 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _refresh_target(session, raid)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan = ai_hero_task_live_target_selection_plan(session, config, raid)
+		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = choose_target(
 				session,
@@ -679,6 +681,76 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 				int(current_target.get("target_y", 0))
 			)
 	return raid
+
+static func ai_live_town_retake_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	if faction_id == "":
+		return {}
+	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var current_placement_id := String(raid.get("placement_id", ""))
+	var best := {}
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		var town_id := String(town.get("placement_id", ""))
+		if town_id == "":
+			continue
+		var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+		if not bool(front_state.get("active", false)):
+			continue
+		if String(front_state.get("faction_id", "")) != faction_id:
+			continue
+		if String(front_state.get("mode", "")) != "retake":
+			continue
+		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id):
+			continue
+		var staging_tiles := _town_staging_tiles(session, town)
+		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id)
+		if goal_distance >= 9999:
+			continue
+		var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles)
+		var objective_anchor := _town_is_objective_anchor(session, town_id)
+		var reason_codes := ["town_siege", "retake_front"]
+		if objective_anchor:
+			reason_codes.append("objective_front")
+		var candidate := {
+			"target_kind": "town",
+			"target_placement_id": town_id,
+			"target_label": _town_name(town),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"goal_x": goal_tile.x,
+			"goal_y": goal_tile.y,
+			"goal_distance": goal_distance,
+			"priority": max(
+				0,
+				_weighted_priority(
+					config,
+					faction_id,
+					"town",
+					town_id,
+					330 + _town_strategic_priority_bonus(session, town, faction_id, objective_anchor),
+					"",
+					objective_anchor
+				) - _assignment_penalty(session, "town", town_id)
+			),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": "retaking captured town",
+			"target_debug_reason": "live retake front town target selection",
+			"target_public_importance": "critical",
+		}
+		if best.is_empty() or _candidate_beats(candidate, best):
+			best = candidate
+	return best
 
 static func advance_raids(
 	session: SessionStateStoreScript.SessionData,
@@ -4765,6 +4837,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "defending threatened town"
 	if "front_stabilization" in codes:
 		return "front stabilization"
+	if "retake_front" in codes:
+		return "retaking captured town"
 	if "town_siege" in codes:
 		return "town siege remains the main front"
 	if "persistent_income_denial" in codes and "recruit_denial" in codes:

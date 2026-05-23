@@ -68,6 +68,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_town_defense_retask(live_defense_case):
 		return false
+	var live_retake_case := _find_case(first, "strategic_ai_live_town_retake_assault")
+	if live_retake_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI town-retake assault evidence.")
+		return false
+	if not _assert_live_ai_town_retake_assault(live_retake_case):
+		return false
 	var live_regroup_case := _find_case(first, "strategic_ai_live_regroup_retreat")
 	if live_regroup_case.is_empty():
 		_fail("Headless simulation harness is missing live strategic AI regroup/retreat evidence.")
@@ -285,6 +291,41 @@ func _assert_live_ai_town_defense_retask(live_defense_case: Dictionary) -> bool:
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
 		_fail("Live strategic AI town-defense retask leaked internal public-event tokens: %s" % leak_tokens)
+		return false
+	return true
+
+func _assert_live_ai_town_retake_assault(live_retake_case: Dictionary) -> bool:
+	if String(live_retake_case.get("status", "")) != "pass":
+		_fail("Live strategic AI town-retake assault did not pass: %s" % JSON.stringify(live_retake_case))
+		return false
+	var summary: Dictionary = live_retake_case.get("summary", {}) if live_retake_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_retake_case.get("evidence", {}) if live_retake_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-retake assault used unexpected town id: %s" % summary)
+		return false
+	if String(summary.get("selector_target_kind", "")) != "town" or String(summary.get("selector_target_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-retake selector did not prefer Duskfen: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < 1:
+		_fail("Live strategic AI town-retake assault is missing assignment event evidence: %s" % summary)
+		return false
+	if String(summary.get("battle_context_type", "")) != "town_defense" or String(summary.get("battle_town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-retake assault did not queue a Duskfen town-defense battle: %s" % summary)
+		return false
+	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
+	if String(raid.get("target_kind", "")) != "town" or String(raid.get("target_placement_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-retake raid did not target Duskfen: %s" % raid)
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_target_assigned" not in event_types:
+		_fail("Live strategic AI town-retake assault missing assignment event type evidence: %s" % event_types)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI town-retake assault save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI town-retake assault leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
 
