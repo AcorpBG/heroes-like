@@ -415,6 +415,8 @@ func validation_unit_art_summary() -> Dictionary:
 	var stack_entries := []
 	var loaded_count := 0
 	var missing := []
+	var presentation_motion_count := 0
+	var presentation_motion_roles := {}
 	var stack_cells := _stack_cells()
 	var hex_layout := _current_hex_layout()
 	for stack in _all_visible_stacks():
@@ -436,6 +438,11 @@ func validation_unit_art_summary() -> Dictionary:
 			loaded_count += 1
 		else:
 			missing.append(unit_id)
+		if bool(presentation.get("presentation_motion_active", false)):
+			presentation_motion_count += 1
+			var role := String(presentation.get("presentation_motion_role", "")).strip_edges()
+			if role != "":
+				presentation_motion_roles[role] = int(presentation_motion_roles.get(role, 0)) + 1
 		stack_entries.append({
 			"battle_id": battle_id,
 			"unit_id": unit_id,
@@ -471,6 +478,8 @@ func validation_unit_art_summary() -> Dictionary:
 		"cue_playback": validation_cue_playback_summary(),
 		"vfx_playback": validation_vfx_playback_summary(),
 		"audio_playback": validation_audio_playback_summary(),
+		"presentation_motion_count": presentation_motion_count,
+		"presentation_motion_roles": presentation_motion_roles,
 		"stacks": stack_entries,
 	}
 

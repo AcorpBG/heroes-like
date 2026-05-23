@@ -23,9 +23,9 @@ func _run() -> void:
 	_validate_defend_state()
 	_validate_move_state()
 	await _validate_melee_hit_state()
-	_validate_ranged_status_state()
+	await _validate_ranged_status_state()
 	_validate_death_state()
-	_validate_spell_cast_state()
+	await _validate_spell_cast_state()
 	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
@@ -158,7 +158,33 @@ func _validate_ranged_status_state() -> void:
 	_expect_equal("ranged target status animation state", target_state, "status_applied")
 	_expect_event("ranged attacker queue", session.battle, "player_0", "battle_unit_ranged_attack", "ranged_aim_release")
 	_expect_event("ranged target status queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
-	_report["cases"]["ranged_status"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	await get_tree().create_timer(0.08).timeout
+	var board_summary := _board_summary_for_session(session)
+	var attacker_stack := _summary_stack_entry(board_summary, "player_0")
+	var target_stack := _summary_stack_entry(board_summary, "enemy_0")
+	var motion_count := int(board_summary.get("presentation_motion_count", 0))
+	var motion_roles: Dictionary = board_summary.get("presentation_motion_roles", {}) if board_summary.get("presentation_motion_roles", {}) is Dictionary else {}
+	_expect_equal("ranged attacker presentation role", String(attacker_stack.get("presentation_motion_role", "")), "ranged_recoil")
+	_expect_equal("ranged attacker presentation target", String(attacker_stack.get("presentation_motion_target_battle_id", "")), "enemy_0")
+	_expect_equal("ranged target presentation role", String(target_stack.get("presentation_motion_role", "")), "status_pulse")
+	_expect_equal("ranged target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "player_0")
+	if motion_count < 2:
+		_error("Ranged/status presentation motion count was too low: %s." % board_summary)
+	if int(motion_roles.get("ranged_recoil", 0)) < 1 or int(motion_roles.get("status_pulse", 0)) < 1:
+		_error("Ranged/status presentation roles were not counted in board summary: %s." % board_summary)
+	var case_payload := {
+		"attacker_state": attacker_state,
+		"target_state": target_state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+	}
+	case_payload["attacker_presentation_role"] = String(attacker_stack.get("presentation_motion_role", ""))
+	case_payload["attacker_presentation_target"] = String(attacker_stack.get("presentation_motion_target_battle_id", ""))
+	case_payload["target_presentation_role"] = String(target_stack.get("presentation_motion_role", ""))
+	case_payload["target_presentation_source"] = String(target_stack.get("presentation_motion_source_battle_id", ""))
+	case_payload["presentation_motion_count"] = motion_count
+	case_payload["presentation_motion_roles"] = motion_roles
+	_report["cases"]["ranged_status"] = case_payload
 
 func _validate_death_state() -> void:
 	var session := _session_for_stacks(
@@ -187,6 +213,8 @@ func _validate_death_state() -> void:
 		_error("Death board summary should retain the defeated stack with alive_count 0: %s" % death_stack)
 	if not bool(death_stack.get("event_playback_visible", false)):
 		_error("Death board summary did not mark the defeated stack as event-playback visible: %s" % death_stack)
+	_expect_equal("death target presentation role", String(death_stack.get("presentation_motion_role", "")), "death_fall_back")
+	_expect_equal("death target presentation source", String(death_stack.get("presentation_motion_source_battle_id", "")), "player_0")
 	_expect_equal("death fade vfx cue", String(fade.get("cue_id", "")), "vfx_placeholder_stack_fade")
 	_expect_equal("death fade vfx battle id", String(fade.get("battle_id", "")), "enemy_0")
 	_report["cases"]["death"] = {
@@ -210,7 +238,33 @@ func _validate_spell_cast_state() -> void:
 	_expect_equal("spell target animation state", target_state, "status_applied")
 	_expect_event("spell caster queue", session.battle, "player_0", "battle_unit_cast", "cast_support_anchor")
 	_expect_event("spell target queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
-	_report["cases"]["spell_cast"] = {"caster_state": caster_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	await get_tree().create_timer(0.08).timeout
+	var board_summary := _board_summary_for_session(session)
+	var caster_stack := _summary_stack_entry(board_summary, "player_0")
+	var target_stack := _summary_stack_entry(board_summary, "enemy_0")
+	var motion_count := int(board_summary.get("presentation_motion_count", 0))
+	var motion_roles: Dictionary = board_summary.get("presentation_motion_roles", {}) if board_summary.get("presentation_motion_roles", {}) is Dictionary else {}
+	_expect_equal("spell caster presentation role", String(caster_stack.get("presentation_motion_role", "")), "cast_anchor")
+	_expect_equal("spell caster presentation target", String(caster_stack.get("presentation_motion_target_battle_id", "")), "enemy_0")
+	_expect_equal("spell target presentation role", String(target_stack.get("presentation_motion_role", "")), "status_pulse")
+	_expect_equal("spell target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "player_0")
+	if motion_count < 2:
+		_error("Spell/status presentation motion count was too low: %s." % board_summary)
+	if int(motion_roles.get("cast_anchor", 0)) < 1 or int(motion_roles.get("status_pulse", 0)) < 1:
+		_error("Spell/status presentation roles were not counted in board summary: %s." % board_summary)
+	var case_payload := {
+		"caster_state": caster_state,
+		"target_state": target_state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+	}
+	case_payload["caster_presentation_role"] = String(caster_stack.get("presentation_motion_role", ""))
+	case_payload["caster_presentation_target"] = String(caster_stack.get("presentation_motion_target_battle_id", ""))
+	case_payload["target_presentation_role"] = String(target_stack.get("presentation_motion_role", ""))
+	case_payload["target_presentation_source"] = String(target_stack.get("presentation_motion_source_battle_id", ""))
+	case_payload["presentation_motion_count"] = motion_count
+	case_payload["presentation_motion_roles"] = motion_roles
+	_report["cases"]["spell_cast"] = case_payload
 
 func _validate_exit_action_state(action_id: String, event_id: String, expected_state: String) -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)

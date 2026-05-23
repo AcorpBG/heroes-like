@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-attack-hit-token-feedback-20260523-10184",
-  "currentSliceTitle": "Battle Attack And Hit Token Feedback",
+  "currentSliceId": "battle-event-token-feedback-coverage-20260523-10184",
+  "currentSliceTitle": "Battle Event Token Feedback Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked.",
+  "currentSliceNotes": "Completed focused event-driven battle token feedback validation coverage; remaining battle production gaps are authored timing, camera/audio/VFX polish, and combat balance.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16239,6 +16239,42 @@
       "nonGoals": [
         "No final authored attack timing, camera shake, imported VFX/audio assets, or combat balance tuning."
       ]
+    },
+    {
+      "id": "battle-event-token-feedback-coverage-20260523-10184",
+      "title": "Battle Event Token Feedback Coverage",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Add focused board-summary and report coverage for every active token-feedback role currently produced by battle event presentation playback.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-event-token-feedback-coverage-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Board validation summaries expose active presentation motion totals and role counts.",
+        "Focused validation proves ranged recoil, status pulse, cast anchor, and death fallback token roles in addition to existing melee/hit feedback assertions.",
+        "Repository validation gates require the new focused report fields and role assertions."
+      ],
+      "nonGoals": [
+        "No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19408,6 +19444,44 @@
         "git diff --check"
       ],
       "remainingGap": "This closes a bounded attack/hit token feedback slice; final authored attack timing, camera shake, imported VFX/audio assets, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-event-token-feedback-coverage-20260523-10184",
+      "title": "Battle Event Token Feedback Coverage",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-event-token-feedback-coverage-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-event-token-feedback-coverage-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView validation summaries now expose active presentation motion counts and per-role totals.",
+        "The focused battle event animation report now proves ranged attacks present ranged_recoil on the attacker and status_pulse on the target.",
+        "The same report proves spell casts present cast_anchor on the caster and status_pulse on the target.",
+        "Death validation now asserts the defeated target remains visible with death_fall_back presentation metadata during the active playback window.",
+        "Repository validation now gates the report script for the new board summary fields and token-feedback role assertions."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This closes focused validation coverage for current token feedback roles; final authored animation timing, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -20310,25 +20384,38 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with melee_lunge attacker feedback, hit_stagger target feedback, and cue-driven melee VFX evidence; full repository validation gates passed."
+    },
+    {
+      "id": "battle-event-token-feedback-coverage-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with ranged_recoil, status_pulse, cast_anchor, death_fall_back, melee_lunge, and hit_stagger token presentation coverage; full repository validation gates are required for the committed slice."
     }
   ],
   "lastValidation": {
-    "id": "battle-attack-hit-token-feedback-20260523-10184",
+    "id": "battle-event-token-feedback-coverage-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with melee_lunge attacker feedback, hit_stagger target feedback, and cue-driven melee VFX evidence; full repository validation gates passed."
+    "summary": "Focused battle event animation report passed with ranged_recoil, status_pulse, cast_anchor, death_fall_back, melee_lunge, and hit_stagger token presentation coverage; full repository validation gates are required for the committed slice."
   },
   "active_slice": {
-    "id": "battle-attack-hit-token-feedback-20260523-10184",
+    "id": "battle-event-token-feedback-coverage-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: attack, cast, impact, status, and death events now drive bounded stack-token presentation transforms from source/target context."
+    "note": "Completed: board summaries and focused report assertions now cover ranged recoil, status pulse, cast anchor, and death fallback token presentation roles."
   }
 }
