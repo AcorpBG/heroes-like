@@ -1,0 +1,307 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+
+ROOT = Path(__file__).resolve().parents[1]
+UNITS_PATH = ROOT / "content" / "units.json"
+MANIFEST_PATH = ROOT / "content" / "unit_art_manifest.json"
+ART_ROOT = ROOT / "art" / "units"
+
+PORTRAIT_SIZE = (384, 512)
+BATTLE_ICON_SIZE = (160, 160)
+OVERWORLD_ICON_SIZE = (96, 96)
+
+PALETTES = {
+    "faction_embercourt": {
+        "primary": (191, 73, 40),
+        "secondary": (239, 164, 65),
+        "shadow": (57, 32, 24),
+        "metal": (238, 203, 129),
+    },
+    "faction_mireclaw": {
+        "primary": (69, 121, 62),
+        "secondary": (151, 105, 54),
+        "shadow": (22, 44, 35),
+        "metal": (168, 202, 145),
+    },
+    "faction_sunvault": {
+        "primary": (213, 180, 66),
+        "secondary": (109, 139, 219),
+        "shadow": (43, 45, 75),
+        "metal": (245, 235, 165),
+    },
+    "faction_thornwake": {
+        "primary": (74, 129, 67),
+        "secondary": (146, 92, 55),
+        "shadow": (25, 50, 29),
+        "metal": (179, 214, 134),
+    },
+    "faction_brasshollow": {
+        "primary": (184, 128, 54),
+        "secondary": (106, 112, 116),
+        "shadow": (45, 36, 31),
+        "metal": (228, 185, 94),
+    },
+    "faction_veilmourn": {
+        "primary": (73, 102, 135),
+        "secondary": (81, 151, 160),
+        "shadow": (24, 31, 48),
+        "metal": (177, 204, 211),
+    },
+    "neutral": {
+        "primary": (130, 141, 122),
+        "secondary": (184, 145, 83),
+        "shadow": (42, 45, 41),
+        "metal": (210, 197, 151),
+    },
+}
+
+
+def main() -> int:
+    units = json.loads(UNITS_PATH.read_text(encoding="utf-8")).get("items", [])
+    for subdir in ("portraits", "battle_icons", "overworld_icons"):
+        (ART_ROOT / subdir).mkdir(parents=True, exist_ok=True)
+
+    manifest = {
+        "schema_version": 1,
+        "generator": "deterministic_unit_art_assets_v1",
+        "source": "content/units.json",
+        "surface_sizes": {
+            "portrait": {"width": PORTRAIT_SIZE[0], "height": PORTRAIT_SIZE[1]},
+            "battle_icon": {"width": BATTLE_ICON_SIZE[0], "height": BATTLE_ICON_SIZE[1]},
+            "overworld_icon": {"width": OVERWORLD_ICON_SIZE[0], "height": OVERWORLD_ICON_SIZE[1]},
+        },
+        "items": [],
+    }
+
+    for unit in units:
+        unit_id = str(unit["id"])
+        faction_key = str(unit.get("faction_id") or unit.get("affiliation") or "neutral")
+        if faction_key == "":
+            faction_key = "neutral"
+        palette = PALETTES.get(faction_key, PALETTES["neutral"])
+        motif = motif_for_unit(unit)
+        initials = initials_for(str(unit.get("name", unit_id)))
+        portrait_path = ART_ROOT / "portraits" / f"{unit_id}.png"
+        battle_path = ART_ROOT / "battle_icons" / f"{unit_id}.png"
+        overworld_path = ART_ROOT / "overworld_icons" / f"{unit_id}.png"
+
+        draw_portrait(unit, palette, motif, initials, portrait_path)
+        draw_battle_icon(unit, palette, motif, initials, battle_path)
+        draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+
+        manifest["items"].append(
+            {
+                "id": unit_id,
+                "unit_id": unit_id,
+                "name": str(unit.get("name", unit_id)),
+                "faction_id": faction_key,
+                "tier": int(unit.get("tier", 1)),
+                "role": str(unit.get("role", "")),
+                "motif": motif,
+                "portrait": to_res_path(portrait_path),
+                "battle_icon": to_res_path(battle_path),
+                "overworld_icon": to_res_path(overworld_path),
+            }
+        )
+
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+    print(f"generated {len(units)} unit art records into {ART_ROOT.relative_to(ROOT)}")
+    return 0
+
+
+def to_res_path(path: Path) -> str:
+    return "res://" + path.relative_to(ROOT).as_posix()
+
+
+def motif_for_unit(unit: dict) -> str:
+    name = f"{unit.get('id', '')} {unit.get('name', '')}".lower()
+    role = str(unit.get("role", "")).lower()
+    ranged = bool(unit.get("ranged", False)) or role == "ranged"
+    if any(token in name for token in ("ballista", "engine", "colossus", "crawler", "array")):
+        return "engine"
+    if any(token in name for token in ("hound", "runner", "lindworm", "leviathan", "antler", "ripper")):
+        return "beast"
+    if any(token in name for token in ("adept", "lector", "chanter", "scribe", "mender", "caller", "sovereign", "saint")):
+        return "caster"
+    if ranged or any(token in name for token in ("archer", "slinger", "bow", "bolt", "thrower", "shot", "dart", "hurl")):
+        return "ranged"
+    if any(token in name for token in ("guard", "warden", "pike", "pole", "halberd", "shield", "pavis", "buckler")):
+        return "shield"
+    if any(token in name for token in ("duelist", "blade", "cutter", "corsair", "cutthroat", "lash")):
+        return "blade"
+    return "melee"
+
+
+def initials_for(name: str) -> str:
+    parts = [part for part in name.replace("-", " ").split() if part]
+    if not parts:
+        return "U"
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return (parts[0][0] + parts[-1][0]).upper()
+
+
+def hash_int(value: str) -> int:
+    return int(hashlib.sha256(value.encode("utf-8")).hexdigest()[:12], 16)
+
+
+def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    candidates = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
+    ]
+    for path in candidates:
+        if Path(path).exists():
+            return ImageFont.truetype(path, size=size)
+    return ImageFont.load_default()
+
+
+def scale_color(color: tuple[int, int, int], factor: float) -> tuple[int, int, int]:
+    return tuple(max(0, min(255, int(channel * factor))) for channel in color)
+
+
+def with_alpha(color: tuple[int, int, int], alpha: int) -> tuple[int, int, int, int]:
+    return (color[0], color[1], color[2], alpha)
+
+
+def canvas(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
+    image = Image.new("RGBA", size, (0, 0, 0, 0))
+    return image, ImageDraw.Draw(image, "RGBA")
+
+
+def draw_gradient(draw: ImageDraw.ImageDraw, size: tuple[int, int], top: tuple[int, int, int], bottom: tuple[int, int, int]) -> None:
+    width, height = size
+    for y in range(height):
+        t = y / max(1, height - 1)
+        color = tuple(int(top[index] * (1.0 - t) + bottom[index] * t) for index in range(3))
+        draw.line([(0, y), (width, y)], fill=(*color, 255))
+
+
+def draw_hash_marks(draw: ImageDraw.ImageDraw, unit_id: str, size: tuple[int, int], color: tuple[int, int, int], alpha: int) -> None:
+    seed = hash_int(unit_id)
+    width, height = size
+    for index in range(10):
+        x = (seed >> (index * 5)) % width
+        y = (seed >> (index * 7 + 3)) % height
+        length = 18 + ((seed >> (index * 3)) % 38)
+        draw.line([(x, y), (x + length, y - length * 0.45)], fill=with_alpha(color, alpha), width=2)
+
+
+def draw_tier_pips(draw: ImageDraw.ImageDraw, tier: int, origin: tuple[int, int], color: tuple[int, int, int], radius: int = 5) -> None:
+    for index in range(max(1, min(7, tier))):
+        x = origin[0] + (index % 4) * (radius * 3)
+        y = origin[1] + (index // 4) * (radius * 3)
+        draw.ellipse([x - radius, y - radius, x + radius, y + radius], fill=with_alpha(color, 225), outline=(18, 20, 22, 210), width=1)
+
+
+def draw_centered_text(draw: ImageDraw.ImageDraw, text: str, box: tuple[int, int, int, int], text_font, fill: tuple[int, int, int, int]) -> None:
+    bbox = draw.textbbox((0, 0), text, font=text_font)
+    x = box[0] + ((box[2] - box[0]) - (bbox[2] - bbox[0])) / 2
+    y = box[1] + ((box[3] - box[1]) - (bbox[3] - bbox[1])) / 2 - 2
+    draw.text((x, y), text, font=text_font, fill=fill)
+
+
+def draw_portrait(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
+    image, draw = canvas(PORTRAIT_SIZE)
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw_gradient(draw, PORTRAIT_SIZE, scale_color(primary, 0.48), scale_color(shadow, 0.86))
+    draw_hash_marks(draw, str(unit["id"]), PORTRAIT_SIZE, metal, 38)
+    draw.rectangle([20, 20, 364, 492], outline=with_alpha(metal, 235), width=5)
+    draw.rectangle([30, 30, 354, 482], outline=with_alpha(scale_color(shadow, 0.72), 235), width=3)
+    draw.polygon([(42, 92), (192, 42), (342, 92), (322, 122), (62, 122)], fill=with_alpha(secondary, 120))
+    draw_motif(draw, motif, (192, 246), 112, palette, str(unit["id"]))
+    draw.rectangle([42, 392, 342, 460], fill=with_alpha(scale_color(shadow, 0.72), 215), outline=with_alpha(metal, 180), width=2)
+    draw_centered_text(draw, str(unit.get("name", unit["id"]))[:28], (48, 400, 336, 430), font(24, True), (245, 238, 218, 245))
+    subtitle = f"T{int(unit.get('tier', 1))} {str(unit.get('role', '')).upper()}"
+    draw_centered_text(draw, subtitle, (48, 430, 336, 458), font(17), (218, 224, 219, 230))
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (54, 62), metal, 5)
+    draw_centered_text(draw, initials, (272, 48, 336, 92), font(30, True), with_alpha(metal, 238))
+    image.save(path)
+
+
+def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
+    image, draw = canvas(BATTLE_ICON_SIZE)
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    center = (80, 80)
+    draw.ellipse([10, 10, 150, 150], fill=with_alpha(scale_color(shadow, 0.84), 245), outline=with_alpha(metal, 235), width=5)
+    draw.ellipse([22, 22, 138, 138], fill=with_alpha(primary, 225), outline=with_alpha(scale_color(secondary, 1.12), 210), width=3)
+    draw_motif(draw, motif, center, 43, palette, str(unit["id"]))
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (36, 130), metal, 3)
+    draw_centered_text(draw, initials, (51, 114, 109, 144), font(18, True), (20, 22, 24, 220))
+    image.save(path)
+
+
+def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
+    image, draw = canvas(OVERWORLD_ICON_SIZE)
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw.polygon([(48, 4), (88, 30), (80, 86), (16, 86), (8, 30)], fill=with_alpha(scale_color(shadow, 0.78), 245), outline=with_alpha(metal, 230))
+    draw.polygon([(48, 12), (78, 34), (72, 76), (24, 76), (18, 34)], fill=with_alpha(primary, 225), outline=with_alpha(secondary, 180))
+    draw_motif(draw, motif, (48, 44), 24, palette, str(unit["id"]))
+    draw_centered_text(draw, initials, (20, 66, 76, 90), font(12, True), (20, 22, 24, 230))
+    image.save(path)
+
+
+def draw_motif(draw: ImageDraw.ImageDraw, motif: str, center: tuple[int, int], size: int, palette: dict, unit_id: str) -> None:
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    x, y = center
+    seed = hash_int(unit_id)
+    accent_shift = ((seed % 17) - 8) / 100.0
+    accent = scale_color(secondary, 1.0 + accent_shift)
+    dark = scale_color(shadow, 0.72)
+
+    if motif == "ranged":
+        draw.arc([x - size, y - size, x + size * 0.35, y + size], 288, 75, fill=with_alpha(metal, 235), width=max(3, size // 15))
+        draw.line([(x - size * 0.54, y - size * 0.62), (x + size * 0.70, y + size * 0.42)], fill=with_alpha(dark, 245), width=max(3, size // 14))
+        draw.polygon([(x + size * 0.70, y + size * 0.42), (x + size * 0.42, y + size * 0.32), (x + size * 0.54, y + size * 0.58)], fill=with_alpha(metal, 245))
+    elif motif == "shield":
+        points = [(x, y - size), (x + size * 0.66, y - size * 0.48), (x + size * 0.50, y + size * 0.54), (x, y + size), (x - size * 0.50, y + size * 0.54), (x - size * 0.66, y - size * 0.48)]
+        draw.polygon(points, fill=with_alpha(accent, 232), outline=with_alpha(dark, 245))
+        draw.line([(x, y - size * 0.74), (x, y + size * 0.70)], fill=with_alpha(metal, 225), width=max(2, size // 16))
+    elif motif == "blade":
+        draw.polygon([(x - size * 0.10, y - size), (x + size * 0.30, y - size * 0.14), (x + size * 0.02, y + size * 0.92), (x - size * 0.24, y - size * 0.12)], fill=with_alpha(metal, 240), outline=with_alpha(dark, 245))
+        draw.line([(x - size * 0.54, y + size * 0.44), (x + size * 0.52, y + size * 0.18)], fill=with_alpha(accent, 230), width=max(4, size // 12))
+    elif motif == "caster":
+        for index in range(6):
+            angle = math.radians(index * 60 + (seed % 19))
+            point = (x + math.cos(angle) * size * 0.78, y + math.sin(angle) * size * 0.78)
+            draw.line([center, point], fill=with_alpha(metal, 120), width=max(2, size // 22))
+            draw.ellipse([point[0] - size * 0.10, point[1] - size * 0.10, point[0] + size * 0.10, point[1] + size * 0.10], fill=with_alpha(accent, 215))
+        draw.ellipse([x - size * 0.38, y - size * 0.38, x + size * 0.38, y + size * 0.38], fill=with_alpha(primary, 230), outline=with_alpha(metal, 235), width=max(2, size // 20))
+    elif motif == "beast":
+        draw.ellipse([x - size * 0.76, y - size * 0.42, x + size * 0.70, y + size * 0.58], fill=with_alpha(accent, 235), outline=with_alpha(dark, 245), width=max(2, size // 18))
+        draw.polygon([(x - size * 0.50, y - size * 0.38), (x - size * 0.82, y - size * 0.86), (x - size * 0.14, y - size * 0.52)], fill=with_alpha(metal, 220))
+        draw.polygon([(x + size * 0.42, y - size * 0.36), (x + size * 0.80, y - size * 0.72), (x + size * 0.62, y - size * 0.10)], fill=with_alpha(metal, 220))
+        draw.ellipse([x + size * 0.26, y - size * 0.08, x + size * 0.40, y + size * 0.06], fill=with_alpha(dark, 255))
+    elif motif == "engine":
+        draw.rectangle([x - size * 0.76, y - size * 0.34, x + size * 0.72, y + size * 0.42], fill=with_alpha(accent, 230), outline=with_alpha(dark, 245), width=max(2, size // 18))
+        draw.line([(x - size * 0.94, y - size * 0.70), (x + size * 0.94, y + size * 0.72)], fill=with_alpha(metal, 230), width=max(3, size // 12))
+        draw.ellipse([x - size * 0.62, y + size * 0.28, x - size * 0.22, y + size * 0.68], fill=with_alpha(dark, 235), outline=with_alpha(metal, 210))
+        draw.ellipse([x + size * 0.22, y + size * 0.28, x + size * 0.62, y + size * 0.68], fill=with_alpha(dark, 235), outline=with_alpha(metal, 210))
+    else:
+        draw.line([(x - size * 0.52, y + size * 0.54), (x + size * 0.48, y - size * 0.58)], fill=with_alpha(metal, 240), width=max(5, size // 9))
+        draw.line([(x - size * 0.18, y + size * 0.10), (x + size * 0.30, y + size * 0.58)], fill=with_alpha(dark, 245), width=max(3, size // 13))
+        draw.ellipse([x - size * 0.40, y - size * 0.18, x + size * 0.30, y + size * 0.50], outline=with_alpha(accent, 230), width=max(3, size // 15))
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
