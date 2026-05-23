@@ -8,6 +8,12 @@ const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const DEFAULT_SAMPLE_LIMIT := 6
 const DEFAULT_MINIMUM_SAMPLE_COUNT := 3
 const DEFAULT_STEP_LIMIT := 72
+const DEFAULT_SCENARIO_IDS := [
+	"river-pass",
+	"causeway-stand",
+	"fen-crown",
+	"stonewake-watch",
+]
 const TERMINAL_STATES := ["victory", "defeat", "hero_defeat", "retreat", "surrender", "stalemate"]
 
 static func build_sampling_report(
@@ -15,7 +21,7 @@ static func build_sampling_report(
 	scenario_key: String = "battle_scenario_ids",
 	limit_key: String = "battle_sample_limit"
 ) -> Dictionary:
-	var scenario_ids: Array = input_config.get(scenario_key, ["river-pass"])
+	var scenario_ids: Array = input_config.get(scenario_key, DEFAULT_SCENARIO_IDS)
 	var max_samples: int = max(1, int(input_config.get(limit_key, DEFAULT_SAMPLE_LIMIT)))
 	var minimum_samples: int = max(1, int(input_config.get("battle_minimum_sample_count", DEFAULT_MINIMUM_SAMPLE_COUNT)))
 	var step_limit: int = max(1, int(input_config.get("battle_autoplay_step_limit", DEFAULT_STEP_LIMIT)))
@@ -85,6 +91,7 @@ static func build_sampling_report(
 			"primary_action_id": String(aggregate.get("primary_action_id", "")),
 			"primary_action_pct": aggregate.get("primary_action_pct", 0),
 			"terrain_distribution": aggregate.get("terrain_distribution", {}),
+			"scenario_distribution": aggregate.get("scenario_distribution", {}),
 			"difficulty_distribution": aggregate.get("difficulty_distribution", {}),
 			"pacing_band_distribution": aggregate.get("pacing_band_distribution", {}),
 			"initial_role_distribution": aggregate.get("initial_role_distribution", {}),
@@ -322,6 +329,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 	var total_terminal_margin_pct := 0
 	var total_initial_initiative_spread := 0
 	var terrain_distribution := {}
+	var scenario_distribution := {}
 	var difficulty_distribution := {}
 	var pacing_band_distribution := {}
 	var initial_role_distribution := {}
@@ -348,6 +356,8 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		total_damage_per_round += int(damage_per_round.get("total", 0))
 		var terrain_id := String(sample.get("terrain", "unknown"))
 		terrain_distribution[terrain_id] = int(terrain_distribution.get(terrain_id, 0)) + 1
+		var scenario_id := String(sample.get("scenario_id", "unknown"))
+		scenario_distribution[scenario_id] = int(scenario_distribution.get(scenario_id, 0)) + 1
 		var difficulty_id := str(int(sample.get("encounter_difficulty", 0)))
 		difficulty_distribution[difficulty_id] = int(difficulty_distribution.get(difficulty_id, 0)) + 1
 		var pacing_band := String(sample.get("pacing_band", "unknown"))
@@ -381,6 +391,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"primary_action_id": String(primary_action.get("action", "")),
 		"primary_action_pct": int(primary_action.get("pct", 0)),
 		"terrain_distribution": terrain_distribution,
+		"scenario_distribution": scenario_distribution,
 		"difficulty_distribution": difficulty_distribution,
 		"pacing_band_distribution": pacing_band_distribution,
 		"initial_role_distribution": initial_role_distribution,

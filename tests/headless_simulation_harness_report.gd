@@ -55,12 +55,19 @@ func _assert_report(first: Dictionary) -> bool:
 	if int(battle_summary.get("sample_count", 0)) <= 0:
 		_fail("Battle resolver sampling did not emit any autoplay samples.")
 		return false
+	if int(battle_summary.get("sample_count", 0)) < int(battle_summary.get("requested_sample_limit", 0)):
+		_fail("Battle resolver sampling did not reach the requested default sample breadth: %s" % battle_summary)
+		return false
 	if int(battle_summary.get("step_limit", 0)) <= 0 or int(battle_summary.get("average_steps_sampled", 0)) <= 0:
 		_fail("Battle resolver sampling is missing autoplay pacing metrics.")
 		return false
 	var action_distribution: Dictionary = battle_summary.get("action_distribution", {}) if battle_summary.get("action_distribution", {}) is Dictionary else {}
 	if action_distribution.is_empty():
 		_fail("Battle resolver sampling is missing action distribution metrics.")
+		return false
+	var scenario_distribution: Dictionary = battle_summary.get("scenario_distribution", {}) if battle_summary.get("scenario_distribution", {}) is Dictionary else {}
+	if scenario_distribution.keys().size() <= 1:
+		_fail("Battle resolver sampling did not sample multiple authored scenarios: %s" % battle_summary)
 		return false
 	for required_summary_field in [
 		"average_player_damage_dealt",
@@ -72,6 +79,7 @@ func _assert_report(first: Dictionary) -> bool:
 		"primary_action_id",
 		"primary_action_pct",
 		"terrain_distribution",
+		"scenario_distribution",
 		"difficulty_distribution",
 		"pacing_band_distribution",
 		"initial_role_distribution",

@@ -4,7 +4,7 @@ Date: 2026-05-23
 
 ## Status
 
-Implementation evidence. This slice expands the shared deterministic battle autoplay sampler so balance work has concrete combat-feel diagnostics instead of only outcome counts. The follow-up tactical order pass replaces the old shoot-first autoplay policy with shared battle-AI non-spell tactical scoring for player-side samples. It does not tune authored encounters, change unit stats, enable automatic tuning, or claim final combat balance.
+Implementation evidence. This slice expands the shared deterministic battle autoplay sampler so balance work has concrete combat-feel diagnostics instead of only outcome counts. The follow-up tactical order pass replaces the old shoot-first autoplay policy with shared battle-AI non-spell tactical scoring for player-side samples. The default sampler now uses a multi-scenario authored encounter set and reports scenario distribution so the standard harness no longer depends on a single scenario's narrow encounter list. It does not tune authored encounters, change unit stats, enable automatic tuning, or claim final combat balance.
 
 ## What Changed
 
@@ -21,6 +21,7 @@ Implementation evidence. This slice expands the shared deterministic battle auto
   - pacing band;
   - terminal health margin.
 - The aggregate sampler summary now exposes:
+  - sample count, requested sample limit, and scenario distribution;
   - average player and enemy damage dealt;
   - average total damage per round;
   - average terminal health margin;
@@ -29,6 +30,7 @@ Implementation evidence. This slice expands the shared deterministic battle auto
   - terrain, difficulty, pacing-band, role, and ability distributions.
 - `BalanceRegressionReportRules` and `HeadlessSimulationHarnessRules` consume the same richer sampler output, so balance and headless evidence stay aligned.
 - `tests/balance_regression_report_suite.tscn` and `tests/headless_simulation_harness_report.tscn` assert the new diagnostic fields.
+- Default balance/headless report sampling now spans `river-pass`, `causeway-stand`, `fen-crown`, and `stonewake-watch`, with focused tests asserting that the requested default sample count is reached across multiple authored scenarios.
 - `BattleAiRules.choose_stack_tactical_order` exposes the same non-spell attack/advance/defend scoring used by runtime battle AI as a side-agnostic helper.
 - `BattleAutoplayBalanceHarnessRules.player_autoplay_decision_report` uses that scoring to pick and apply a target before issuing player autoplay orders, and compact turn logs now include the scored autoplay decision.
 - `tests/battle_autoplay_tactical_order_report.tscn` covers an adjacent ranged-stack case where both shoot and strike are available and verifies scored autoplay chooses melee strike instead of the legacy shoot-first order.
@@ -43,7 +45,7 @@ GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene 
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn
 ```
 
-Observed balance summary now includes terrain distribution, difficulty distribution, pacing-band distribution, role and ability distributions, average damage dealt, average damage per round, average terminal margin, action diversity, and primary action percentage. The tactical order fixture reports `battle_ai_nonspell_tactical_order_v1` with candidate score evidence.
+Observed balance summary now includes requested sample limit, scenario distribution, terrain distribution, difficulty distribution, pacing-band distribution, role and ability distributions, average damage dealt, average damage per round, average terminal margin, action diversity, and primary action percentage. The tactical order fixture reports `battle_ai_nonspell_tactical_order_v1` with candidate score evidence.
 
 ## Boundaries
 
