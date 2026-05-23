@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-autoplay-balance-matrix-diagnostics-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Balance Matrix Diagnostics",
+  "currentPhase": "phase-2-deep-production-foundation",
+  "currentSliceId": "strategic-ai-town-defense-retask-20260523-10184",
+  "currentSliceTitle": "Strategic AI Town Defense Retask",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: deterministic battle autoplay sampling now records side power, matchup bands, side role/ability maps, difficulty/terrain/scenario/matchup/ability cohort matrices, and a report-only balance_matrix_gate that surfaces terminal-margin outliers without automatic tuning or content writeback.",
+  "currentSliceNotes": "Completed: active non-understrength raids now retask to defend stabilizing same-faction town fronts before normal target selection, emit public-safe town_defense/front_stabilization assignment events, and focused plus shared headless reports prove the behavior without hero_task_state writes or save migration.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:29:49Z",
+  "updatedAt": "2026-05-23T16:41:13Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16816,6 +16816,49 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-town-defense-retask-20260523-10184",
+      "title": "Strategic AI Town Defense Retask",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Make active enemy raid hosts retask to defend a threatened owned town front before continuing opportunistic raids, with public event evidence and headless validation.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active raids with non-regroup targets detect stabilizing owned enemy towns threatened by the player and retask to a town-defense target before movement.",
+        "Town-defense retasks emit compact ai_target_assigned public events with town_defense/front_stabilization reason codes and no internal score/task-state leaks.",
+        "Focused and headless harness reports prove the retask path without writing hero_task_state or requiring a save migration."
+      ],
+      "nonGoals": [
+        "No durable commander task board or save-version migration.",
+        "No broad strategic AI rewrite.",
+        "No final AI difficulty/balance claim."
+      ],
+      "updatedAt": "2026-05-23T16:41:13Z",
+      "completedAt": "2026-05-23T16:41:13Z",
+      "completionNotes": "Completed: active non-understrength raids now retask to defend stabilizing same-faction town fronts before normal target selection, emit public-safe town_defense/front_stabilization assignment events, and focused plus shared headless reports prove the behavior without hero_task_state writes or save migration.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21635,24 +21678,23 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "packaged-runtime-issue-log-smoke-20260523-10184",
-    "status": "passed",
-    "updated": "2026-05-23",
+    "updatedAt": "2026-05-23T16:41:13Z",
+    "sliceId": "strategic-ai-town-defense-retask-20260523-10184",
     "commands": [
-      "python3 tests/packaged_runtime_issue_log_smoke.py",
-      "python3 tests/packaged_settings_persistence_smoke.py",
-      "python3 tests/packaging_pack_export_smoke.py",
-      "python3 -m py_compile tests/packaged_runtime_issue_log_smoke.py tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
-      "git diff --check",
-      "python3 tests/validate_repo.py"
-    ]
+      "git diff --check"
+    ],
+    "status": "passed"
   },
   "active_slice": {
-    "id": "battle-autoplay-balance-matrix-diagnostics-20260523-10184",
+    "id": "strategic-ai-town-defense-retask-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:29:49Z",
-    "note": "Completed: deterministic battle autoplay sampling now records side power, matchup bands, side role/ability maps, difficulty/terrain/scenario/matchup/ability cohort matrices, and a report-only balance_matrix_gate that surfaces terminal-margin outliers without automatic tuning or content writeback."
+    "updated": "2026-05-23T16:41:13Z",
+    "note": "Completed: active non-understrength raids now retask to defend stabilizing same-faction town fronts before normal target selection, emit public-safe town_defense/front_stabilization assignment events, and focused plus shared headless reports prove the behavior without hero_task_state writes or save migration."
   },
-  "currentSliceUpdatedAt": "2026-05-23T16:29:49Z"
+  "currentSliceUpdatedAt": "2026-05-23T16:41:13Z"
 }

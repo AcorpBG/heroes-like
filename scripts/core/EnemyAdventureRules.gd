@@ -703,6 +703,7 @@ static func advance_raids(
 		encounter = ensure_raid_army(encounter, session)
 		var previous_target := _current_target_snapshot(encounter)
 		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
+		encounter = _redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id)
 		encounter = assign_target(session, config, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
@@ -805,6 +806,97 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["arrived"] = false
 	raid["regroup_started_day"] = int(session.day)
 	return _refresh_target(session, raid)
+
+static func _redirect_raid_to_threatened_town_defense(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
+		return raid
+	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id)
+	if defense_town.is_empty():
+		return raid
+	var town_id := String(defense_town.get("placement_id", ""))
+	if town_id == "":
+		return raid
+	var current_kind := String(raid.get("target_kind", ""))
+	var current_id := String(raid.get("target_placement_id", ""))
+	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if current_kind == "town" and current_id == town_id and "town_defense" in current_codes:
+		return _refresh_target(session, raid)
+	raid["previous_target_kind"] = current_kind
+	raid["previous_target_placement_id"] = current_id
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_kind"] = "town"
+	raid["target_placement_id"] = town_id
+	raid["target_label"] = _town_name(defense_town)
+	raid["target_public_reason"] = "defending threatened town"
+	raid["target_reason_codes"] = ["town_defense", "front_stabilization"]
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "stabilizing owned town under player threat"
+	raid["arrived"] = false
+	raid["town_defense_started_day"] = int(session.day)
+	raid["town_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "town", town_id)
+	return _refresh_target(session, raid)
+
+static func _best_threatened_defense_town(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var hero_position := _primary_player_position(session)
+	var best := {}
+	var best_score := -999999
+	var best_distance := 9999
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if _town_faction_id(town) != faction_id:
+			continue
+		var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+		if not bool(front_state.get("active", false)):
+			continue
+		if String(front_state.get("faction_id", "")) != faction_id:
+			continue
+		if String(front_state.get("mode", "")) != "stabilizing":
+			continue
+		var staging_tiles := _town_staging_tiles(session, town)
+		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")))
+		if distance >= 9999:
+			continue
+		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var hero_distance: int = abs(hero_position.x - town_tile.x) + abs(hero_position.y - town_tile.y)
+		var score := int(front_state.get("priority_bonus", 0))
+		score += int(front_state.get("garrison_bonus", 0))
+		score += max(0, 12 - hero_distance) * 18
+		score += max(0, 14 - distance) * 8
+		if String(config.get("siege_target_placement_id", "")) == String(town.get("placement_id", "")):
+			score += 40
+		if score > best_score or (score == best_score and (distance < best_distance or (distance == best_distance and String(town.get("placement_id", "")) < String(best.get("placement_id", ""))))):
+			best_score = score
+			best_distance = distance
+			best = town
+	return best
+
+static func _primary_player_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
+	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
+	if hero_position is Dictionary:
+		return Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	if active_hero_id != "":
+		var hero := _find_player_hero(session, active_hero_id)
+		if not hero.is_empty():
+			return _hero_position_for_target(session, active_hero_id)
+	return Vector2i(0, 0)
 
 static func _nearest_regroup_town(
 	session: SessionStateStoreScript.SessionData,
@@ -4669,6 +4761,10 @@ static func _resource_target_public_importance(player_controlled: bool, persiste
 
 static func _public_reason_from_codes(reason_codes: Array) -> String:
 	var codes := _normalize_string_array(reason_codes)
+	if "town_defense" in codes:
+		return "defending threatened town"
+	if "front_stabilization" in codes:
+		return "front stabilization"
 	if "town_siege" in codes:
 		return "town siege remains the main front"
 	if "persistent_income_denial" in codes and "recruit_denial" in codes:
@@ -8347,7 +8443,16 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 	match target_kind:
 		"town":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
-			valid = int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player"
+			if int(town_result.get("index", -1)) < 0:
+				valid = false
+			else:
+				var town: Dictionary = town_result.get("town", {})
+				var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+				valid = String(town.get("owner", "neutral")) == "player" or (
+					"town_defense" in reason_codes
+					and String(town.get("owner", "neutral")) == "enemy"
+					and _town_faction_id(town) == String(raid.get("spawned_by_faction_id", ""))
+				)
 		"regroup":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			valid = (
