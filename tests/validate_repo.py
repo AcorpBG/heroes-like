@@ -70,6 +70,8 @@ UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime
 UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "unit_ability_runtime_report.tscn"
 UNIT_ROSTER_DEPLOYMENT_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_roster_deployment_report.gd"
 UNIT_ROSTER_DEPLOYMENT_REPORT_SCENE_PATH = ROOT / "tests" / "unit_roster_deployment_report.tscn"
+UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_runtime_asset_resolution_report.gd"
+UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCENE_PATH = ROOT / "tests" / "unit_runtime_asset_resolution_report.tscn"
 UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.gd"
 UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.tscn"
 UNIT_ANIMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_animation_manifest_report.gd"
@@ -14315,6 +14317,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         TOWN_SCRIPT_PATH,
         UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH,
         UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH,
+        UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCRIPT_PATH,
+        UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCENE_PATH,
         UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH,
         UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH,
         UNIT_ANIMATION_REPORT_SCRIPT_PATH,
@@ -14517,6 +14521,23 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "units_without_live_reference",
     ):
         ensure(required_token in readiness_report_text, errors, f"unit_production_readiness_report.gd is missing token {required_token}")
+
+    runtime_asset_resolution_report_text = UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCENE_PATH.exists(), errors, "unit_runtime_asset_resolution_report.tscn is missing")
+    for required_token in (
+        "UNIT_RUNTIME_ASSET_RESOLUTION_REPORT",
+        "ContentService.get_unit_art",
+        "ContentService.get_unit_animation",
+        "BattleBoardViewScript",
+        "OverworldMapViewScript",
+        "TownShellScene",
+        "_unit_battle_icon_for_stack",
+        "_unit_animation_sheet_for_stack",
+        "_encounter_overworld_icon_path",
+        "_unit_art_texture",
+        "animation_state_runtime_row_count",
+    ):
+        ensure(required_token in runtime_asset_resolution_report_text, errors, f"unit_runtime_asset_resolution_report.gd is missing token {required_token}")
 
     ability_runtime_report_text = UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     ensure(UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH.exists(), errors, "unit_ability_runtime_report.tscn is missing")

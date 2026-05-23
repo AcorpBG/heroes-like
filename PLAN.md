@@ -47,6 +47,8 @@ Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units n
 
 Unit roster deployment gate added on 2026-05-23: `tests/unit_roster_deployment_report.tscn` now proves all 53 faction units are recruitable through matching-faction town build trees with runtime weekly growth, and all 50 neutral units are deployed through neutral dwellings, army groups, and encounters. This closes a semantic deployment gap beyond raw content references; final balance and hand-authored art approval remain outside this slice.
 
+Unit runtime asset-resolution gate added on 2026-05-23: `tests/unit_runtime_asset_resolution_report.tscn` now exercises every authored unit through `ContentService.get_unit_art()`, `ContentService.get_unit_animation()`, `BattleBoardView` battle-icon and animation-sheet loaders, `OverworldMapView` encounter icon resolution, and `TownShell` portrait texture loading. The report passed with 103/103 units resolving portrait, battle icon, overworld icon, animation sheet, battle stack materialization, and 1,442 animation state-row lookups. This closes the full-roster runtime lookup gap beyond sampled screen checks; final combat balance and hand-authored art approval remain outside this slice.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:
