@@ -2,7 +2,7 @@
 
 Status: implementation evidence.
 
-This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, and `strategic_ai_multi_scenario_pressure_coverage` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
+This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_live_resource_site_defense`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, and `strategic_ai_multi_scenario_pressure_coverage` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
 
 Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
@@ -19,6 +19,10 @@ Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_defense_retask`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_raid_retasks_to_stabilizing_owned_town` through `OverworldRules.end_turn(...)`.
 - The town-defense case marks Duskfen Bastion as a stabilizing Mireclaw front, starts a strong Vaska raid aimed at `river_free_company`, and requires the raid to retask to `duskfen_bastion` with `town_defense` and `front_stabilization` reason codes.
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_resource_site_defense`.
+- `HeadlessSimulationHarnessRules.build_report(...)` runs `live_raid_defends_owned_persistent_resource_site` through `OverworldRules.end_turn(...)`.
+- The resource-site defense case marks `river_free_company` as a threatened Mireclaw-held persistent site, starts a strong Vaska raid aimed at `river_signal_post`, and requires the raid to retask back to `river_free_company` with `site_defense`, `defend_front`, and `front_stabilization` reason codes.
+- The resource-site defense case requires `site_defense_event_count = 1`, a public `ai_site_defended` event, durable `ai_defended_by_faction_id` resource-node state, and no capture of the abandoned offensive target.
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_retake_assault`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_retake_front_queues_town_defense_battle` through `EnemyTurnRules.run_enemy_turn(...)`.
 - The town-retake case marks Duskfen Bastion as a player-captured Mireclaw retake front, starts a no-target Vaska raid in battle range, requires live target selection to choose `duskfen_bastion`, and requires the normal enemy turn to queue a `town_defense` battle for that town.
@@ -54,6 +58,7 @@ Validation evidence:
 - `strategic_ai_live_route_progression`
 - `strategic_ai_live_town_governor_build_execution`
 - `strategic_ai_live_town_defense_retask`
+- `strategic_ai_live_resource_site_defense`
 - `strategic_ai_live_town_retake_assault`
 - `strategic_ai_live_raid_assault_grouping`
 - `strategic_ai_live_regroup_retreat`
@@ -77,6 +82,11 @@ Validation evidence:
 - `previous_target_id = river_free_company`
 - `town_defense`
 - `front_stabilization`
+- `live_raid_defends_owned_persistent_resource_site`
+- `site_defense`
+- `site_defense_event_count = 1`
+- `ai_site_defended`
+- `ai_defended_by_faction_id`
 - `live_retake_front_queues_town_defense_battle`
 - `battle_context_type = town_defense`
 - `battle_town_id = duskfen_bastion`
@@ -113,6 +123,7 @@ Remaining gaps:
 - This route case proves one long-route resource-front progression fixture, not broad path quality.
 - This town-governor case proves one live Duskfen build/recruit execution fixture, not broad economy planning or final strategic AI quality.
 - This town-defense case proves one stabilizing-front retask fixture, not broad defense rotation.
+- This resource-site defense case proves one persistent economy-site hold fixture, not broad resource-defense rotation or final objective planning.
 - This town-retake case proves one live retake-front battle queue fixture, not broad objective sequencing.
 - This raid-grouping case proves one adjacent support-column consolidation fixture, not a broad multi-hero army board or general grouping planner.
 - This regroup case proves one retreat/rebuild fixture, not broad defense rotation or difficulty tuning.

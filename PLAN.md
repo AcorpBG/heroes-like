@@ -127,6 +127,8 @@ Unit runtime asset-resolution gate added on 2026-05-23: `tests/unit_runtime_asse
 
 Unit generated-art reproducibility gate added on 2026-05-23: `tests/unit_art_reproducibility_report.py` imports `tools/generate_unit_art_assets.py`, regenerates every unit portrait, battle icon, overworld icon, and battle animation sheet into temporary storage, and byte-compares the generated PNGs plus both manifests against the committed runtime assets. The report passed with 412/412 generated unit assets and both manifests matching generator output. This closes the drift gap between the reproducible generator and committed generated art; final hand-authored art approval remains outside this slice.
 
+Strategic AI resource-site defense selected on 2026-05-23: active work targets the gap where persistent resource sites controlled by an enemy faction stop being valid same-faction strategic targets, making raids able to capture economy sites but not deliberately hold them under player threat. The slice adds defense-coded resource target validity, live retasking, durable defended-site state, `ai_site_defended` public event evidence, and a required `strategic_ai_live_resource_site_defense` headless harness case. This is one resource-defense behavior increment, not final strategic AI quality or broad economy retuning.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:
