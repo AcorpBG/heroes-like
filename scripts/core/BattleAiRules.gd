@@ -428,6 +428,46 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 			return best_attack
 	return best
 
+static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "") -> Dictionary:
+	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
+		return {}
+	var acting_side := String(active_stack.get("side", ""))
+	var resolved_target_side := target_side if target_side != "" else _opposing_side(acting_side)
+	if acting_side == "" or resolved_target_side == "" or acting_side == resolved_target_side:
+		return {}
+	var targets := _alive_stacks_for_side(battle, resolved_target_side)
+	if targets.is_empty():
+		return {}
+
+	var best_attack := _best_attack_action(battle, active_stack, targets)
+	var defend_score := _defend_score(battle, active_stack, targets)
+	var advance_score := _advance_score(battle, active_stack, targets)
+	var best := {"action": "defend", "score": defend_score}
+	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
+		best = best_attack
+	if int(battle.get("distance", 1)) > 0:
+		var advance_candidate := {"action": "advance", "score": advance_score}
+		if _candidate_beats(advance_candidate, best):
+			best = advance_candidate
+	if String(best.get("action", "")) == "advance" and not _should_close_distance(active_stack) and not best_attack.is_empty():
+		var best_attack_score := float(best_attack.get("score", -9999.0))
+		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
+			best = best_attack
+
+	var candidate_scores := {
+		"defend": defend_score,
+		"advance": advance_score,
+	}
+	if not best_attack.is_empty():
+		candidate_scores[String(best_attack.get("action", "attack"))] = float(best_attack.get("score", 0.0))
+	var report := best.duplicate(true)
+	report["acting_side"] = acting_side
+	report["target_side"] = resolved_target_side
+	report["target_count"] = targets.size()
+	report["scoring_policy"] = "battle_ai_nonspell_tactical_order_v1"
+	report["candidate_scores"] = candidate_scores
+	return report
+
 static func battle_spell_choice_report(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	var errors := []
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":

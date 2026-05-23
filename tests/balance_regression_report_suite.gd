@@ -85,6 +85,14 @@ func _assert_report(first: Dictionary) -> bool:
 		if not first_battle_sample.has(String(required_field)):
 			_fail("Battle outcome distribution sample is missing field: %s" % required_field)
 			return false
+	var turn_log: Array = first_battle_sample.get("turn_log", []) if first_battle_sample.get("turn_log", []) is Array else []
+	if turn_log.is_empty() or not (turn_log[0] is Dictionary) or not (turn_log[0].get("autoplay_decision", {}) is Dictionary):
+		_fail("Battle outcome distribution sample is missing scored autoplay decision evidence: %s" % first_battle_sample)
+		return false
+	var autoplay_decision: Dictionary = turn_log[0].get("autoplay_decision", {})
+	if String(autoplay_decision.get("scoring_policy", "")) != "battle_ai_nonspell_tactical_order_v1":
+		_fail("Battle outcome distribution did not use the shared tactical autoplay scoring policy: %s" % autoplay_decision)
+		return false
 	var initial_stack_profile: Dictionary = first_battle_sample.get("initial_stack_profile", {}) if first_battle_sample.get("initial_stack_profile", {}) is Dictionary else {}
 	if not initial_stack_profile.has("initiative") or not initial_stack_profile.has("role_counts") or not initial_stack_profile.has("ability_counts"):
 		_fail("Battle outcome distribution sample is missing stack role/ability/initiative diagnostics: %s" % first_battle_sample)

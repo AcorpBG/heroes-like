@@ -15801,10 +15801,13 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
 
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
+    battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
     balance_report_path = ROOT / "tests/balance_regression_report_suite.gd"
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
+    tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
+    tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
-    for path in (harness_path, balance_report_path, headless_report_path, doc_path):
+    for path in (harness_path, battle_ai_path, balance_report_path, headless_report_path, tactical_report_path, tactical_scene_path, doc_path):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
         harness_text = harness_path.read_text(encoding="utf-8")
@@ -15824,11 +15827,22 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "damage_totals",
             "damage_per_round",
             "initial_stack_profile",
+            "player_autoplay_decision_report",
+            "battle_ai_nonspell_tactical_order_v1",
+            "autoplay_decision",
             "func _stack_profile",
             "func _action_mix_summary",
             "func _pacing_band",
         ):
             ensure(required_token in harness_text, errors, f"Battle autoplay balance harness is missing diagnostic token: {required_token}")
+    if battle_ai_path.exists():
+        battle_ai_text = battle_ai_path.read_text(encoding="utf-8")
+        for required_token in (
+            "choose_stack_tactical_order",
+            "battle_ai_nonspell_tactical_order_v1",
+            "candidate_scores",
+        ):
+            ensure(required_token in battle_ai_text, errors, f"Battle AI rules are missing tactical autoplay token: {required_token}")
     for path in (balance_report_path, headless_report_path):
         if not path.exists():
             continue
@@ -15841,12 +15855,22 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "initial_ability_distribution",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
+    if tactical_report_path.exists():
+        tactical_report_text = tactical_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_TACTICAL_ORDER_REPORT",
+            "player_autoplay_decision_report",
+            "legacy shoot-first",
+            "battle_ai_nonspell_tactical_order_v1",
+        ):
+            ensure(required_token in tactical_report_text, errors, f"Battle autoplay tactical order report is missing token: {required_token}")
     if doc_path.exists():
         doc_text = doc_path.read_text(encoding="utf-8")
         for required_text in (
             "Battle Autoplay Combat-Feel Diagnostics Report",
             "damage per round",
             "initiative",
+            "shared battle-AI non-spell tactical scoring",
             "This is instrumentation for future tuning passes.",
         ):
             ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")
