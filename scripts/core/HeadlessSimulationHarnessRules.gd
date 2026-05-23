@@ -16,6 +16,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_pressure_tick",
 	"strategic_ai_live_turn_execution",
 	"strategic_ai_live_route_progression",
+	"strategic_ai_live_town_governor_build_execution",
 	"strategic_ai_live_town_defense_retask",
 	"strategic_ai_live_town_retake_assault",
 	"strategic_ai_live_raid_assault_grouping",
@@ -36,6 +37,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_pressure_tick(input_config),
 		_strategic_ai_live_turn_execution(input_config),
 		_strategic_ai_live_route_progression(input_config),
+		_strategic_ai_live_town_governor_build_execution(input_config),
 		_strategic_ai_live_town_defense_retask(input_config),
 		_strategic_ai_live_town_retake_assault(input_config),
 		_strategic_ai_live_raid_assault_grouping(input_config),
@@ -521,6 +523,156 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			"origin": {"x": int(origin.get("x", 0)), "y": int(origin.get("y", 0))},
 			"route_records": route_records,
 			"event_types": _event_types(all_events),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
+static func _strategic_ai_live_town_governor_build_execution(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_town_governor_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_town_governor_faction_id", "faction_mireclaw"))
+	var town_id := String(input_config.get("strategic_ai_live_town_governor_town_id", "duskfen_bastion"))
+	var seeded_treasury: Dictionary = input_config.get("strategic_ai_live_town_governor_treasury", {"gold": 5200, "wood": 8, "ore": 8}) if input_config.get("strategic_ai_live_town_governor_treasury", {}) is Dictionary else {"gold": 5200, "wood": 8, "ore": 8}
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live town-governor scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_town_governor_build_execution",
+			"live_town_governor_builds_and_recruits_through_enemy_turn",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_town_governor_build_execution",
+			"live_town_governor_builds_and_recruits_through_enemy_turn",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	_set_player_position(session, {"x": 0, "y": 12})
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		state["treasury"] = _resource_pool(seeded_treasury)
+		_update_enemy_state(session, state)
+	var town_before := _town_by_placement(session, town_id)
+	if town_before.is_empty():
+		failures.append("Missing town %s for live town-governor fixture." % town_id)
+	var governor_before: Dictionary = EnemyTurnRules.town_governor_pressure_report(session, config, faction_id)
+	var town_report_before := _town_governor_report_for_town(governor_before, town_id)
+	var build_report: Dictionary = town_report_before.get("build", {}) if town_report_before.get("build", {}) is Dictionary else {}
+	var selected_build: Dictionary = build_report.get("selected_build", {}) if build_report.get("selected_build", {}) is Dictionary else {}
+	var recruitment_report: Dictionary = town_report_before.get("recruitment", {}) if town_report_before.get("recruitment", {}) is Dictionary else {}
+	var selected_recruitment: Dictionary = recruitment_report.get("selected_recruitment", {}) if recruitment_report.get("selected_recruitment", {}) is Dictionary else {}
+	var selected_build_id := String(selected_build.get("building_id", ""))
+	var recruit_unit_id := String(selected_recruitment.get("unit_id", ""))
+	var recruit_count_projected := int(selected_recruitment.get("recruit_count", 0))
+	var treasury_before := _resource_pool(state.get("treasury", {})) if not state.is_empty() else _resource_pool({})
+	var built_before := _town_building_ids(town_before)
+	var recruit_pool_before := _recruit_pool_total(town_before.get("available_recruits", {}))
+	var garrison_count_before := _army_stack_count(town_before.get("garrison", []))
+	if selected_build_id == "":
+		failures.append("Live town-governor fixture did not project an affordable build.")
+	if recruit_unit_id == "" or recruit_count_projected <= 0:
+		failures.append("Live town-governor fixture did not project affordable recruitment.")
+	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
+	var town_after := _town_by_placement(session, town_id)
+	var state_after := _enemy_state_for_faction(session, faction_id)
+	var treasury_after := _resource_pool(state_after.get("treasury", {})) if not state_after.is_empty() else _resource_pool({})
+	var built_after := _town_building_ids(town_after)
+	var recruit_pool_after := _recruit_pool_total(town_after.get("available_recruits", {}))
+	var garrison_count_after := _army_stack_count(town_after.get("garrison", []))
+	var treasury_delta := _resource_delta(treasury_before, treasury_after)
+	var town_build_events := _event_count(events, "ai_town_built")
+	var town_recruit_events := _event_count(events, "ai_town_recruited")
+	var garrison_events := _event_count(events, "ai_garrison_reinforced")
+	var raid_reinforcement_events := _event_count(events, "ai_raid_reinforced")
+	var rebuild_events := _event_count(events, "ai_commander_rebuilt")
+	if not bool(turn_result.get("ok", false)):
+		failures.append("Enemy turn returned not-ok during live town-governor execution.")
+	if selected_build_id != "" and selected_build_id not in built_after:
+		failures.append("Live town-governor build did not mutate built buildings with %s." % selected_build_id)
+	if selected_build_id != "" and selected_build_id in built_before:
+		failures.append("Live town-governor fixture selected a building that was already built: %s." % selected_build_id)
+	if _resource_abs_sum(treasury_delta) <= 0 or int(treasury_delta.get("gold", 0)) >= 0:
+		failures.append("Live town-governor execution did not spend treasury: %s." % treasury_delta)
+	if town_build_events < 1:
+		failures.append("Live town-governor execution did not emit ai_town_built.")
+	if town_recruit_events < 1:
+		failures.append("Live town-governor execution did not emit ai_town_recruited.")
+	if garrison_events + raid_reinforcement_events + rebuild_events < 1:
+		failures.append("Live town-governor execution did not emit a recruitment destination event.")
+	if garrison_count_after <= garrison_count_before and recruit_pool_after == recruit_pool_before:
+		failures.append("Live town-governor execution did not produce visible recruitment mutation.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live town-governor execution wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live town-governor events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live town-governor events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_town_governor_build_execution",
+		"live_town_governor_builds_and_recruits_through_enemy_turn",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"town_id": town_id,
+			"selected_build_id": selected_build_id,
+			"recruit_unit_id": recruit_unit_id,
+			"recruit_count_projected": recruit_count_projected,
+			"built_before_count": built_before.size(),
+			"built_after_count": built_after.size(),
+			"recruit_pool_before": recruit_pool_before,
+			"recruit_pool_after": recruit_pool_after,
+			"garrison_count_before": garrison_count_before,
+			"garrison_count_after": garrison_count_after,
+			"town_build_event_count": town_build_events,
+			"town_recruit_event_count": town_recruit_events,
+			"recruit_destination_event_count": garrison_events + raid_reinforcement_events + rebuild_events,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"treasury_before": treasury_before,
+			"treasury_after": treasury_after,
+			"treasury_delta": treasury_delta,
+			"built_before": built_before,
+			"built_after": built_after,
+			"selected_build": _town_build_signal(selected_build),
+			"selected_recruitment": _town_recruitment_signal(selected_recruitment),
+			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
 			"save_policy": "no_hero_task_state_write_no_save_migration",
 			"warnings": warnings,
@@ -2170,6 +2322,64 @@ static func _town_controller_faction_id_for_harness(town_state: Dictionary) -> S
 static func _town_template_faction_id_for_harness(town_state: Dictionary) -> String:
 	var town := ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("faction_id", ""))
+
+static func _town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			return town
+	return {}
+
+static func _town_governor_report_for_town(governor_report: Dictionary, placement_id: String) -> Dictionary:
+	for town_report in governor_report.get("towns", []):
+		if town_report is Dictionary and String(town_report.get("placement_id", "")) == placement_id:
+			return town_report
+	return {}
+
+static func _town_building_ids(town: Dictionary) -> Array:
+	var building_ids := []
+	for building_id_value in town.get("built_buildings", []):
+		var building_id := String(building_id_value)
+		if building_id != "" and building_id not in building_ids:
+			building_ids.append(building_id)
+	building_ids.sort()
+	return building_ids
+
+static func _recruit_pool_total(recruits: Variant) -> int:
+	var total := 0
+	if not (recruits is Dictionary):
+		return total
+	for unit_id in recruits.keys():
+		total += max(0, int(recruits.get(unit_id, 0)))
+	return total
+
+static func _army_stack_count(stacks: Variant) -> int:
+	var total := 0
+	if not (stacks is Array):
+		return total
+	for stack in stacks:
+		if stack is Dictionary:
+			total += max(0, int(stack.get("count", 0)))
+	return total
+
+static func _town_build_signal(selected_build: Dictionary) -> Dictionary:
+	return {
+		"building_id": String(selected_build.get("building_id", "")),
+		"building_label": String(selected_build.get("building_label", "")),
+		"category": String(selected_build.get("category", "")),
+		"public_reason": String(selected_build.get("public_reason", "")),
+		"reason_codes": _string_array(selected_build.get("reason_codes", [])),
+	}
+
+static func _town_recruitment_signal(selected_recruitment: Dictionary) -> Dictionary:
+	var destination: Dictionary = selected_recruitment.get("destination", {}) if selected_recruitment.get("destination", {}) is Dictionary else {}
+	return {
+		"unit_id": String(selected_recruitment.get("unit_id", "")),
+		"unit_label": String(selected_recruitment.get("unit_label", "")),
+		"recruit_count": int(selected_recruitment.get("recruit_count", 0)),
+		"destination_type": String(destination.get("type", "")),
+		"destination_reason": String(destination.get("public_reason", "")),
+		"reason_codes": _string_array(destination.get("reason_codes", [])),
+	}
 
 static func _town_garrison_unit_count(session: SessionStateStoreScript.SessionData, placement_id: String, unit_id: String) -> int:
 	for town in session.overworld.get("towns", []):

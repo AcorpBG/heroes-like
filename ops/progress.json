@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-autoplay-expanded-sample-breadth-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Expanded Sample Breadth Gate",
+  "currentSliceId": "strategic-ai-live-town-governor-build-execution-20260523-10184",
+  "currentSliceTitle": "Strategic AI Live Town Governor Build Execution Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: deterministic battle autoplay balance sampling now defaults to 12 requested samples, focused/shared reports assert the expanded default breadth, and the current evidence completes 12/12 samples across four authored scenarios with combat_feel_gate and balance_matrix_gate passing.",
+  "currentSliceNotes": "Completed: the shared headless harness now requires strategic_ai_live_town_governor_build_execution, proving Duskfen Bastion live enemy-turn town-governor behavior adds building_slingers_post, spends treasury, recruits unit_blackbranch_cutthroat, emits ai_town_built/ai_town_recruited plus destination events, and keeps public event output leak-free.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T19:05:00Z",
   "statusTaxonomy": {
@@ -17160,6 +17160,49 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",
+      "title": "Strategic AI Live Town Governor Build Execution Harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Promote enemy town-governor build/recruit decisions from report-only diagnostics into the shared live enemy-turn harness, proving real town and treasury mutation plus public event boundaries.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules requires strategic_ai_live_town_governor_build_execution and runs it through EnemyTurnRules.run_enemy_turn(session).",
+        "The live case captures the projected governor build for Duskfen Bastion, then proves the building is added, treasury is spent, recruitment is applied, and public compact events remain leak-free.",
+        "The standard headless harness test and repo validator gate the new subsystem, summary fields, event types, save policy, and documentation evidence."
+      ],
+      "nonGoals": [
+        "No broad strategic AI rewrite.",
+        "No content retune or final AI quality claim.",
+        "No save migration."
+      ],
+      "updatedAt": "2026-05-23T19:35:00Z",
+      "startedAt": "2026-05-23T19:20:00Z",
+      "completedAt": "2026-05-23T19:35:00Z",
+      "completionNotes": "Completed: the shared headless harness now requires strategic_ai_live_town_governor_build_execution, proving Duskfen Bastion live enemy-turn town-governor behavior adds building_slingers_post, spends treasury, recruits unit_blackbranch_cutthroat, emits ai_town_built/ai_town_recruited plus destination events, and keeps public event output leak-free.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -22087,19 +22130,34 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+    "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T19:05:00Z",
+    "updatedAt": "2026-05-23T19:35:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ]
   },
-  "active_slice": "battle-autoplay-expanded-sample-breadth-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T19:05:00Z"
+  "active_slice": "strategic-ai-live-town-governor-build-execution-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T19:35:00Z",
+  "validationHistory": [
+    {
+      "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T19:35:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused strategic AI live town-governor build execution passed; headless harness reports ok true with known generated-map deferred boundary warning, and supporting town-governor report plus repo validation passed."
+    }
+  ]
 }

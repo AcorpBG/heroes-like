@@ -63,6 +63,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_route_progression(live_route_case):
 		return false
+	var live_town_governor_case := _find_case(first, "strategic_ai_live_town_governor_build_execution")
+	if live_town_governor_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI town-governor build execution evidence.")
+		return false
+	if not _assert_live_ai_town_governor_build_execution(live_town_governor_case):
+		return false
 	var live_defense_case := _find_case(first, "strategic_ai_live_town_defense_retask")
 	if live_defense_case.is_empty():
 		_fail("Headless simulation harness is missing live strategic AI town-defense retask evidence.")
@@ -230,6 +236,58 @@ func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> 
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
 		_fail("Live strategic AI recruitment delivery leaked internal public-event tokens: %s" % leak_tokens)
+		return false
+	return true
+
+func _assert_live_ai_town_governor_build_execution(live_town_governor_case: Dictionary) -> bool:
+	if String(live_town_governor_case.get("status", "")) != "pass":
+		_fail("Live strategic AI town-governor build execution did not pass: %s" % JSON.stringify(live_town_governor_case))
+		return false
+	var summary: Dictionary = live_town_governor_case.get("summary", {}) if live_town_governor_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_town_governor_case.get("evidence", {}) if live_town_governor_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-governor build execution used unexpected town id: %s" % summary)
+		return false
+	if String(summary.get("selected_build_id", "")) == "":
+		_fail("Live strategic AI town-governor build execution did not expose a selected build: %s" % summary)
+		return false
+	var built_before: Array = evidence.get("built_before", []) if evidence.get("built_before", []) is Array else []
+	var built_after: Array = evidence.get("built_after", []) if evidence.get("built_after", []) is Array else []
+	if String(summary.get("selected_build_id", "")) in built_before:
+		_fail("Live strategic AI town-governor fixture selected an already-built building: %s" % evidence)
+		return false
+	if String(summary.get("selected_build_id", "")) not in built_after:
+		_fail("Live strategic AI town-governor build did not mutate the town building list: %s" % evidence)
+		return false
+	if int(summary.get("built_after_count", 0)) <= int(summary.get("built_before_count", 0)):
+		_fail("Live strategic AI town-governor build count did not increase: %s" % summary)
+		return false
+	if String(summary.get("recruit_unit_id", "")) == "" or int(summary.get("recruit_count_projected", 0)) <= 0:
+		_fail("Live strategic AI town-governor recruitment projection is missing: %s" % summary)
+		return false
+	if int(summary.get("town_build_event_count", 0)) < 1 or int(summary.get("town_recruit_event_count", 0)) < 1:
+		_fail("Live strategic AI town-governor execution is missing build/recruit events: %s" % summary)
+		return false
+	if int(summary.get("recruit_destination_event_count", 0)) < 1:
+		_fail("Live strategic AI town-governor execution is missing recruitment destination evidence: %s" % summary)
+		return false
+	if int(summary.get("garrison_count_after", 0)) <= int(summary.get("garrison_count_before", 0)) and int(summary.get("recruit_pool_after", 0)) == int(summary.get("recruit_pool_before", 0)):
+		_fail("Live strategic AI town-governor execution did not mutate recruits or garrison: %s" % summary)
+		return false
+	var treasury_delta: Dictionary = evidence.get("treasury_delta", {}) if evidence.get("treasury_delta", {}) is Dictionary else {}
+	if int(treasury_delta.get("gold", 0)) >= 0:
+		_fail("Live strategic AI town-governor execution did not spend gold treasury: %s" % treasury_delta)
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_town_built" not in event_types or "ai_town_recruited" not in event_types:
+		_fail("Live strategic AI town-governor execution missing event type evidence: %s" % event_types)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI town-governor execution save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI town-governor execution leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
 
