@@ -16474,6 +16474,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
     forest_balance_doc_path = ROOT / "docs/battle-autoplay-forest-cohort-balance-pass-report.md"
+    hard_watch_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     for path in (
         harness_path,
@@ -16496,6 +16497,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         queue_balance_doc_path,
         cohort_balance_doc_path,
         forest_balance_doc_path,
+        hard_watch_doc_path,
         difficulty_sweep_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
@@ -16667,6 +16669,11 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "sweep_signature",
             "repeat_sweep_signature",
             "battle_difficulty_sweep_sample_limit",
+            "MAX_NORMAL_TUNING_QUEUE_ITEMS",
+            "MAX_HARD_TUNING_QUEUE_ITEMS",
+            "RESOLVED_HARD_WATCH_COHORT_IDS",
+            "tuning_queue_signature",
+            "tuning_queue_top_contributors",
             "get_tree().quit(1)",
         ):
             ensure(required_token in difficulty_sweep_text, errors, f"Battle autoplay difficulty sweep report is missing token: {required_token}")
@@ -16807,6 +16814,22 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in forest_balance_doc_text, errors, f"Battle autoplay forest cohort balance doc is missing required text: {required_text}")
+    if hard_watch_doc_path.exists():
+        hard_watch_doc_text = hard_watch_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Hard Difficulty Watch Pass Report",
+            "battle-autoplay-hard-difficulty-watch-pass-20260523-10184",
+            "f59ef772",
+            "8a238ca3",
+            "MAX_HARD_TUNING_QUEUE_ITEMS := 3",
+            "normal queue",
+            "829808c9",
+            "hard battle damage multipliers",
+            "player_damage_multiplier",
+            "enemy_damage_multiplier",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in hard_watch_doc_text, errors, f"Battle autoplay hard difficulty watch doc is missing required text: {required_text}")
     if difficulty_sweep_doc_path.exists():
         difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
         for required_text in (

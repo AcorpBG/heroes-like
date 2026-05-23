@@ -173,6 +173,9 @@ static func build_difficulty_sweep_report(input_config: Dictionary = {}) -> Dict
 			"balance_matrix_gate_status": String(matrix_gate.get("status", "")),
 			"tuning_queue_status": String(tuning_queue.get("status", "")),
 			"tuning_queue_item_count": int(tuning_queue.get("item_count", 0)),
+			"tuning_queue_signature": String(tuning_queue.get("queue_signature", "")),
+			"tuning_queue_categories": _array_of_strings(tuning_queue.get("coverage", {}).get("categories", []) if tuning_queue.get("coverage", {}) is Dictionary else []),
+			"tuning_queue_top_contributors": tuning_queue.get("top_contributors", []),
 			"launch_difficulty_distribution": summary.get("launch_difficulty_distribution", {}),
 			"report_signature": _signature_for({
 				"difficulty_id": difficulty_id,
@@ -1204,6 +1207,15 @@ static func _battle_signal(battle: Dictionary) -> Dictionary:
 
 static func _is_terminal_state(state: String) -> bool:
 	return state in TERMINAL_STATES
+
+static func _array_of_strings(value: Variant) -> Array:
+	var result := []
+	if not (value is Array):
+		return result
+	for item in value:
+		result.append(String(item))
+	result.sort()
+	return result
 
 static func _signature_for(value: Variant) -> String:
 	return _hash32_hex(_stable_stringify(value))

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Forest Cohort Balance Pass",
+  "currentSliceId": "battle-autoplay-hard-difficulty-watch-pass-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Hard Difficulty Watch Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the forest cohort balance pass: the normal-difficulty battle autoplay tuning queue is clear with signature 829808c9, while hard-difficulty sweep watches remain outside this slice.",
+  "currentSliceNotes": "Completed the hard-difficulty watch pass: normal remains clear at signature 829808c9 and hard is bounded to three watch items at signature 8a238ca3.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T00:45:00Z",
+  "updatedAt": "2026-05-23T20:32:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,61 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-hard-difficulty-watch-pass-20260523-10184",
+      "title": "Battle Autoplay Hard Difficulty Watch Pass",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/DifficultyRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.gd"
+      ],
+      "purpose": "Use the deterministic hard-difficulty sweep queue to make a bounded combat-feel tuning pass while preserving the cleared normal-difficulty queue.",
+      "implementationTargets": [
+        "scripts/core/DifficultyRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-hard-difficulty-watch-pass-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The normal-difficulty battle autoplay tuning queue remains clear.",
+        "The hard-difficulty sweep row has fewer or no medium-priority watch items than the seven-item baseline signature f59ef772.",
+        "Hard difficulty remains observably harder than normal without failing combat-feel or balance-matrix gates.",
+        "Focused battle autoplay reports, shared headless harness, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic runtime tuning.",
+        "No global unit-stat rewrite.",
+        "No campaign completion or RMG parity claim."
+      ],
+      "startedAt": "2026-05-23T20:24:54Z",
+      "updatedAt": "2026-05-23T20:32:00Z",
+      "completedAt": "2026-05-23T20:32:00Z",
+      "notes": "Baseline hard queue before this slice: seven medium watch items with signature f59ef772, including formation_guard/bloodrush/stonewake-watch outcome-bias watches plus sample watches for river_pass_hollow_mire, causeway_gate_marshals, sluice_band, and causeway_reed_camp.",
+      "completionEvidence": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json content/army_groups.json content/scenarios.json",
+          "git diff --check"
+        ],
+        "result": "Normal difficulty queue remains clear at signature 829808c9, item_count 0. Hard difficulty queue moves from baseline signature f59ef772 with 7 watch items to signature 8a238ca3 with 3 watch items, with combat-feel and balance-matrix gates passing and normal_vs_hard still showing observable hard launch deltas. Shared headless harness returned ok true with the known generated random-map deferred warning."
+      }
+    },
     {
       "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
       "title": "Battle Autoplay Forest Cohort Balance Pass",
