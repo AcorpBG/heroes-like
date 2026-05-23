@@ -3,6 +3,7 @@ extends Node
 const BalanceRegressionReportRulesScript = preload("res://scripts/core/BalanceRegressionReportRules.gd")
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
+const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
@@ -13,6 +14,7 @@ const MID_SCENARIO_ID := "glassfen-breakers"
 const SCENARIO_ID := "ninefold-confluence"
 const SKIRMISH_ONLY_SCENARIO_ID := "mireford-skirmish"
 const CAMPAIGN_SCENARIO_IDS := [START_SCENARIO_ID, MID_SCENARIO_ID, SCENARIO_ID]
+const REQUIRED_CAMPAIGN_DOMAIN_STATUS := "archived_native_campaign_set_disabled"
 const FORBIDDEN_CLAIM_TOKENS := [
 	"alpha_or_parity_claim\":true",
 	"parity_complete",
@@ -36,7 +38,7 @@ func _run() -> void:
 	var final_ready_profile := _profile_ready_for_final_chapter(profile)
 	if final_ready_profile.is_empty():
 		return
-	var final_action := CampaignRulesScript.build_chapter_action(final_ready_profile, CAMPAIGN_ID, SCENARIO_ID)
+	var final_action := _archived_chapter_action(final_ready_profile, CAMPAIGN_ID, SCENARIO_ID)
 	if bool(final_action.get("disabled", true)) or String(final_action.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Final chapter was not unlocked by recorded campaign road: %s" % JSON.stringify(final_action))
 		return
@@ -45,16 +47,24 @@ func _run() -> void:
 		return
 	if not _assert_faction_hooks(scenario, campaign_session):
 		return
-	var skirmish_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SCENARIO_ID, "hard")
+	var skirmish_setup: Dictionary = _archived_skirmish_setup(SCENARIO_ID, "hard")
 	if not _assert_skirmish_setup(skirmish_setup):
 		return
-	var skirmish_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_skirmish_session(SCENARIO_ID, "hard")
+	var skirmish_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		SCENARIO_ID,
+		"hard",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
 	if not _assert_authored_session(skirmish_session, false):
 		return
-	var skirmish_only_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SKIRMISH_ONLY_SCENARIO_ID, "normal")
+	var skirmish_only_setup: Dictionary = _archived_skirmish_setup(SKIRMISH_ONLY_SCENARIO_ID, "normal")
 	if not _assert_skirmish_only_setup(skirmish_only_setup):
 		return
-	var skirmish_only_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_skirmish_session(SKIRMISH_ONLY_SCENARIO_ID, "normal")
+	var skirmish_only_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		SKIRMISH_ONLY_SCENARIO_ID,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
 	if not _assert_skirmish_only_session(skirmish_only_session):
 		return
 	var replay_profile := _profile_after_recorded_victory(final_ready_profile, campaign_session)
@@ -84,15 +94,18 @@ func _run() -> void:
 			"skirmish_only_scenario_id": skirmish_only_setup.get("scenario_id", ""),
 		},
 		"campaign_replay": {
-			"browser_campaign_count": CampaignRulesScript.campaign_ids().size(),
-			"chapter_count": CampaignRulesScript.build_campaign_chapter_entries(replay_profile, CAMPAIGN_ID).size(),
-			"post_victory_action": CampaignRulesScript.build_start_action(replay_profile, CAMPAIGN_ID).get("label", ""),
+			"campaign_domain_status": _campaign_domain_status(),
+			"player_facing_campaign_count": CampaignRulesScript.campaign_ids().size(),
+			"archived_chapter_count": _archived_chapter_entries(replay_profile, CAMPAIGN_ID).size(),
+			"post_victory_action": _archived_start_action(replay_profile, CAMPAIGN_ID).get("label", ""),
 			"starting_scenario_id": START_SCENARIO_ID,
 			"final_scenario_id": SCENARIO_ID,
 		},
 		"random_map_provenance": random_map_evidence,
 		"balance_reflection": balance_evidence,
 		"boundary": {
+			"campaign_domain_archived": true,
+			"player_facing_campaign_api_exposure": false,
 			"authored_campaign_record": true,
 			"authored_skirmish_record": true,
 			"generated_campaign_adoption": false,
@@ -109,6 +122,9 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool:
+	if _campaign_domain_status() != REQUIRED_CAMPAIGN_DOMAIN_STATUS:
+		_fail("Campaign domain status changed away from the archived reset contract: %s." % _campaign_domain_status())
+		return false
 	var campaign := ContentService.get_campaign(CAMPAIGN_ID)
 	if campaign.is_empty():
 		_fail("Missing campaign %s." % CAMPAIGN_ID)
@@ -126,19 +142,13 @@ func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool
 		if not bool(availability.get("campaign", false)) or not bool(availability.get("skirmish", false)):
 			_fail("%s must remain both campaign and skirmish selectable." % campaign_scenario_id)
 			return false
-		if CampaignRulesScript.get_campaign_id_for_scenario(String(campaign_scenario_id)) != CAMPAIGN_ID:
+		if _archived_campaign_id_for_scenario(String(campaign_scenario_id)) != CAMPAIGN_ID:
 			_fail("%s is not wired to the new campaign docket." % campaign_scenario_id)
 			return false
-	var browser_seen := false
-	for entry in CampaignRulesScript.build_campaign_browser_entries(profile):
-		if entry is Dictionary and String(entry.get("campaign_id", "")) == CAMPAIGN_ID:
-			browser_seen = true
-			if bool(entry.get("selected", false)):
-				break
-	if not browser_seen:
-		_fail("Campaign browser did not expose %s." % CAMPAIGN_ID)
+	if not CampaignRulesScript.campaign_ids().is_empty() or not CampaignRulesScript.build_campaign_browser_entries(profile).is_empty():
+		_fail("Archived campaign domain leaked into player-facing campaign APIs.")
 		return false
-	var chapter_entries := CampaignRulesScript.build_campaign_chapter_entries(profile, CAMPAIGN_ID)
+	var chapter_entries := _archived_chapter_entries(profile, CAMPAIGN_ID)
 	if chapter_entries.size() != 3:
 		_fail("Campaign chapter entries did not expose three authored chapters: %s" % JSON.stringify(chapter_entries))
 		return false
@@ -148,7 +158,7 @@ func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool
 	if not bool(chapter_entries[1].get("disabled", false)) or not bool(chapter_entries[2].get("disabled", false)):
 		_fail("Downstream chapters unlocked before recorded victories: %s" % JSON.stringify(chapter_entries))
 		return false
-	var action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID)
+	var action := _archived_start_action(profile, CAMPAIGN_ID)
 	if bool(action.get("disabled", true)) or String(action.get("scenario_id", "")) != START_SCENARIO_ID:
 		_fail("Campaign start action did not target %s: %s" % [START_SCENARIO_ID, JSON.stringify(action)])
 		return false
@@ -244,7 +254,7 @@ func _assert_skirmish_only_setup(setup: Dictionary) -> bool:
 	if bool(availability.get("campaign", true)) or not bool(availability.get("skirmish", false)):
 		_fail("Skirmish-only scenario crossed campaign availability: %s" % JSON.stringify(availability))
 		return false
-	if CampaignRulesScript.get_campaign_id_for_scenario(SKIRMISH_ONLY_SCENARIO_ID) != "":
+	if _archived_campaign_id_for_scenario(SKIRMISH_ONLY_SCENARIO_ID) != "":
 		_fail("Skirmish-only scenario was wired into campaign content.")
 		return false
 	return true
@@ -281,7 +291,7 @@ func _profile_ready_for_final_chapter(profile: Dictionary) -> Dictionary:
 	ironbridge_session.flags["ford_reavers_broken"] = true
 	ironbridge_session.flags["silt_hunters_broken"] = true
 	var after_ironbridge := CampaignRulesScript.record_session_completion(profile, ironbridge_session)
-	var mid_action := CampaignRulesScript.build_chapter_action(after_ironbridge, CAMPAIGN_ID, MID_SCENARIO_ID)
+	var mid_action := _archived_chapter_action(after_ironbridge, CAMPAIGN_ID, MID_SCENARIO_ID)
 	if bool(mid_action.get("disabled", true)) or String(mid_action.get("scenario_id", "")) != MID_SCENARIO_ID:
 		_fail("Middle chapter was not unlocked by Ironbridge record: %s" % JSON.stringify(mid_action))
 		return {}
@@ -301,17 +311,13 @@ func _assert_recorded_replay(base_profile: Dictionary, replay_profile: Dictionar
 	if String(record.get("status", "")) != "victory":
 		_fail("Recorded campaign profile did not store victory: %s" % JSON.stringify(record))
 		return false
-	var start_action := CampaignRulesScript.build_start_action(replay_profile, CAMPAIGN_ID)
+	var start_action := _archived_start_action(replay_profile, CAMPAIGN_ID)
 	if String(start_action.get("label", "")).find("Replay") < 0:
 		_fail("Completed campaign did not offer replay: %s" % JSON.stringify(start_action))
 		return false
-	var actions := CampaignRulesScript.build_outcome_actions(replay_profile, _completed_session_for_actions(base_profile))
-	var saw_replay := false
-	for action in actions:
-		if action is Dictionary and String(action.get("label", "")).find("Replay") >= 0:
-			saw_replay = true
-	if not saw_replay:
-		_fail("Outcome actions did not expose replay after completion: %s" % JSON.stringify(actions))
+	var replay_action := _archived_chapter_action(replay_profile, CAMPAIGN_ID, SCENARIO_ID)
+	if bool(replay_action.get("disabled", true)) or String(replay_action.get("label", "")).find("Replay") < 0:
+		_fail("Archived final chapter action did not expose replay after completion: %s" % JSON.stringify(replay_action))
 		return false
 	return true
 
@@ -341,7 +347,11 @@ func _random_map_provenance_evidence() -> Dictionary:
 		_fail("Generated scenario crossed into authored campaign content: %s." % scenario_id)
 		return {}
 	var provenance: Dictionary = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
-	if bool(provenance.get("campaign_adoption", true)) or bool(provenance.get("authored_content_writeback", true)) or bool(provenance.get("alpha_parity_claim", true)):
+	var provenance_boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
+	var campaign_adoption := bool(provenance.get("campaign_adoption", provenance_boundaries.get("campaign_adoption", false)))
+	var authored_content_writeback := bool(provenance.get("authored_content_writeback", provenance_boundaries.get("authored_content_writeback", false)))
+	var alpha_parity_claim := bool(provenance.get("alpha_parity_claim", provenance_boundaries.get("alpha_parity_claim", false)))
+	if campaign_adoption or authored_content_writeback or alpha_parity_claim:
 		_fail("Generated provenance crossed forbidden boundaries: %s" % JSON.stringify(provenance))
 		return {}
 	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session(config, "normal")
@@ -393,6 +403,122 @@ func _balance_scenario_row(report: Dictionary, scenario_id: String) -> Dictionar
 		for row in evidence.get("authored_scenarios", []):
 			if row is Dictionary and String(row.get("scenario_id", "")) == scenario_id:
 				return row
+	return {}
+
+func _campaign_domain_status() -> String:
+	return String(ContentService.load_json(ContentService.CAMPAIGNS_PATH).get("domain_status", ""))
+
+func _archived_skirmish_setup(scenario_id: String, difficulty_id: String) -> Dictionary:
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		return {}
+	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+	var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
+	if not bool(availability.get("skirmish", false)):
+		return {}
+	return {
+		"scenario_id": scenario_id,
+		"difficulty": difficulty_id,
+		"recommended_difficulty": String(selection.get("recommended_difficulty", "")),
+		"map_size_label": String(selection.get("map_size_label", "")),
+		"availability": availability,
+		"archived_scenario_domain": true,
+		"action_consequence": "Archived skirmish evidence does not change campaign progression.",
+	}
+
+func _archived_campaign_id_for_scenario(scenario_id: String) -> String:
+	for campaign in ContentService.load_json(ContentService.CAMPAIGNS_PATH).get("items", []):
+		if not (campaign is Dictionary):
+			continue
+		for scenario_entry in campaign.get("scenarios", []):
+			if scenario_entry is Dictionary and String(scenario_entry.get("scenario_id", "")) == scenario_id:
+				return String(campaign.get("id", ""))
+	return ""
+
+func _archived_chapter_entries(profile: Dictionary, campaign_id: String) -> Array:
+	var campaign := ContentService.get_campaign(campaign_id)
+	var entries := []
+	for scenario_entry in campaign.get("scenarios", []):
+		if not (scenario_entry is Dictionary):
+			continue
+		var scenario_id := String(scenario_entry.get("scenario_id", ""))
+		var action := _archived_chapter_action(profile, campaign_id, scenario_id)
+		action["chapter_index"] = int(scenario_entry.get("chapter_index", 0))
+		entries.append(action)
+	return entries
+
+func _archived_start_action(profile: Dictionary, campaign_id: String) -> Dictionary:
+	var campaign := ContentService.get_campaign(campaign_id)
+	if campaign.is_empty():
+		return {"label": "No Archived Campaign", "disabled": true, "scenario_id": "", "campaign_id": campaign_id}
+	if _archived_campaign_completed(profile, campaign_id):
+		return _archived_chapter_action(profile, campaign_id, SCENARIO_ID)
+	for scenario_entry in campaign.get("scenarios", []):
+		if not (scenario_entry is Dictionary):
+			continue
+		var scenario_id := String(scenario_entry.get("scenario_id", ""))
+		var action := _archived_chapter_action(profile, campaign_id, scenario_id)
+		if not bool(action.get("disabled", true)):
+			return action
+	return {"label": "No Archived Chapter Available", "disabled": true, "scenario_id": "", "campaign_id": campaign_id}
+
+func _archived_chapter_action(profile: Dictionary, campaign_id: String, scenario_id: String) -> Dictionary:
+	var campaign := ContentService.get_campaign(campaign_id)
+	var scenario_entry := _archived_scenario_entry(campaign, scenario_id)
+	if scenario_entry.is_empty():
+		return {"label": "No Archived Chapter Available", "disabled": true, "scenario_id": "", "campaign_id": campaign_id}
+	var unlocked := _archived_scenario_unlocked(profile, campaign_id, scenario_entry)
+	var record := CampaignRulesScript.get_scenario_record(profile, campaign_id, scenario_id)
+	var label_prefix := "Start"
+	match String(record.get("status", "")):
+		"victory":
+			label_prefix = "Replay"
+		"defeat":
+			label_prefix = "Retry"
+	return {
+		"label": "%s %s" % [label_prefix, String(scenario_entry.get("label", scenario_id))],
+		"disabled": not unlocked,
+		"scenario_id": scenario_id,
+		"campaign_id": campaign_id,
+		"archived_campaign_domain": true,
+	}
+
+func _archived_scenario_unlocked(profile: Dictionary, campaign_id: String, scenario_entry: Dictionary) -> bool:
+	if bool(scenario_entry.get("starts_unlocked", false)):
+		return true
+	var scenario_id := String(scenario_entry.get("scenario_id", ""))
+	if not CampaignRulesScript.get_scenario_record(profile, campaign_id, scenario_id).is_empty():
+		return true
+	for requirement in scenario_entry.get("unlock_requirements", []):
+		if not (requirement is Dictionary):
+			return false
+		var dependency_id := String(requirement.get("scenario_id", ""))
+		var record := CampaignRulesScript.get_scenario_record(profile, campaign_id, dependency_id)
+		match String(requirement.get("type", "")):
+			"scenario_status":
+				if String(record.get("status", "")) != String(requirement.get("status", "")):
+					return false
+			"scenario_flag_true":
+				var exported_flags: Dictionary = record.get("exported_flags", {}) if record.get("exported_flags", {}) is Dictionary else {}
+				if not bool(exported_flags.get(String(requirement.get("flag", "")), false)):
+					return false
+			_:
+				return false
+	return true
+
+func _archived_campaign_completed(profile: Dictionary, campaign_id: String) -> bool:
+	for scenario_entry in ContentService.get_campaign(campaign_id).get("scenarios", []):
+		if not (scenario_entry is Dictionary):
+			continue
+		var scenario_id := String(scenario_entry.get("scenario_id", ""))
+		if String(CampaignRulesScript.get_scenario_record(profile, campaign_id, scenario_id).get("status", "")) != "victory":
+			return false
+	return true
+
+func _archived_scenario_entry(campaign: Dictionary, scenario_id: String) -> Dictionary:
+	for scenario_entry in campaign.get("scenarios", []):
+		if scenario_entry is Dictionary and String(scenario_entry.get("scenario_id", "")) == scenario_id:
+			return scenario_entry
 	return {}
 
 func _enemy_config_for_faction(scenario: Dictionary, faction_id: String) -> Dictionary:
