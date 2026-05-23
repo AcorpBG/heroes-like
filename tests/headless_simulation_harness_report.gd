@@ -56,6 +56,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_turn_execution(live_ai_case):
 		return false
+	var live_route_case := _find_case(first, "strategic_ai_live_route_progression")
+	if live_route_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI route progression evidence.")
+		return false
+	if not _assert_live_ai_route_progression(live_route_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -137,6 +143,53 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_live_ai_route_progression(live_route_case: Dictionary) -> bool:
+	if String(live_route_case.get("status", "")) != "pass":
+		_fail("Live strategic AI route progression did not pass: %s" % JSON.stringify(live_route_case))
+		return false
+	var summary: Dictionary = live_route_case.get("summary", {}) if live_route_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_route_case.get("evidence", {}) if live_route_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("target_id", "")) != "river_free_company":
+		_fail("Live strategic AI route progression used an unexpected target: %s" % summary)
+		return false
+	if not bool(summary.get("assigned_target", false)) or not bool(summary.get("seized_target", false)):
+		_fail("Live strategic AI route progression did not assign and seize its target: %s" % summary)
+		return false
+	if String(summary.get("target_controller", "")) != "faction_mireclaw":
+		_fail("Live strategic AI route progression did not leave target under Mireclaw control: %s" % summary)
+		return false
+	if int(summary.get("initial_goal_distance", 0)) <= int(summary.get("final_goal_distance", 9999)):
+		_fail("Live strategic AI route progression did not reduce route distance: %s" % summary)
+		return false
+	if int(summary.get("initial_goal_distance", 0)) <= 0 or int(summary.get("final_goal_distance", -1)) != 0:
+		_fail("Live strategic AI route progression has invalid initial/final route distance: %s" % summary)
+		return false
+	if int(summary.get("turns_simulated", 0)) < 2:
+		_fail("Live strategic AI route progression did not exercise multiple turns: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < 1 or int(summary.get("site_seizure_event_count", 0)) < 1:
+		_fail("Live strategic AI route progression is missing assignment/seizure events: %s" % summary)
+		return false
+	var route_records: Array = evidence.get("route_records", []) if evidence.get("route_records", []) is Array else []
+	if route_records.size() != int(summary.get("turns_simulated", -1)):
+		_fail("Live strategic AI route progression route records do not match turn count: %s" % evidence)
+		return false
+	if route_records.is_empty() or String(route_records[0].get("target_id", "")) != "river_free_company":
+		_fail("Live strategic AI route progression first route record does not show target assignment: %s" % route_records)
+		return false
+	var last_record: Dictionary = route_records[route_records.size() - 1]
+	if not bool(last_record.get("arrived", false)) or String(last_record.get("controller", "")) != "faction_mireclaw":
+		_fail("Live strategic AI route progression last record did not arrive and seize: %s" % last_record)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI route progression save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI route progression leaked internal public-event tokens: %s" % leak_tokens)
+		return false
 	return true
 
 func _assert_live_ai_turn_execution(live_ai_case: Dictionary) -> bool:
