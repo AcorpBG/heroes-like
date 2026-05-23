@@ -35,7 +35,7 @@ BATTLE_TROOP_ANIMATION_STATES = [
     {"event_id": "battle_unit_defend", "family": "defend", "state": "defend_brace"},
     {"event_id": "battle_retaliation", "family": "attack", "state": "retaliation_release"},
     {"event_id": "battle_unit_retreat", "family": "retreat", "state": "retreat_withdraw_column"},
-    {"event_id": "battle_unit_surrender", "family": "retreat", "state": "surrender_stand_down"},
+    {"event_id": "battle_unit_surrender", "family": "surrender", "state": "surrender_stand_down"},
 ]
 
 PALETTES = {

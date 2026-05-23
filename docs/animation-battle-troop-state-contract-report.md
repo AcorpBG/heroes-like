@@ -7,7 +7,7 @@ Schema: `battle_troop_sprite_state_contract_v1`.
 
 ## What Changed
 
-- Added explicit battle troop idle and retreat-style entries to `content/animation_event_cues.json`.
+- Added explicit battle troop idle, retreat, and surrender entries to `content/animation_event_cues.json`.
 - Added `AnimationCueCatalog.battle_troop_sprite_state_contract_report(...)` to validate battle troop sprite state family coverage, representative event ids, producer refs, fallbacks, and cue playback policy selection.
 - Added focused report coverage in `tests/animation_battle_troop_state_contract_report.gd` and `tests/validate_repo.py --animation-battle-troop-contract-report`.
 
@@ -25,6 +25,7 @@ The bounded battle troop contract covers these sprite state families:
 - status
 - defend
 - retreat
+- surrender
 
 Representative events are limited to resolved battle troop cues with `subject_kind: troop_stack`. The report checks each representative event has battle/troop/resolved-event validation tags, producer references from current battle or spell rule producers, reduced-motion fallback tags, fast-mode fallback tags, and public-safe report payloads.
 

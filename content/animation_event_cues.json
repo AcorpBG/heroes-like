@@ -294,7 +294,7 @@
       "cue_id": "cue_battle_unit_surrender",
       "surface": "battle",
       "subject_kind": "troop_stack",
-      "animation_state_family": "retreat",
+      "animation_state_family": "surrender",
       "animation_state": "surrender_stand_down",
       "playback_policy": "queue_resolved",
       "blocking_policy": "input_blocking_timeout",
@@ -305,7 +305,7 @@
         "reduced_motion_tag": "surrender_icon_static",
         "fast_mode_tag": "surrender_icon_flash"
       },
-      "validation_tags": ["battle", "troop_state", "retreat", "surrender", "resolved_event"],
+      "validation_tags": ["battle", "troop_state", "surrender", "resolved_event"],
       "producer_refs": ["BattleRules.action_id:surrender", "BattleRules._finalize_surrender"]
     },
     {

@@ -1512,6 +1512,10 @@ func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: D
 			return _impact_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress)
 		"battle_status_expired":
 			return _status_clear_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress)
+		"battle_unit_retreat":
+			return _exit_presentation_motion(record, battle_id, cell, hex_layout, progress, "retreat_withdraw")
+		"battle_unit_surrender":
+			return _exit_presentation_motion(record, battle_id, cell, hex_layout, progress, "surrender_stand_down")
 	return {}
 
 func _stack_presentation_progress(battle_id: String) -> float:
@@ -1639,6 +1643,29 @@ func _status_clear_presentation_motion(record: Dictionary, battle_id: String, ce
 		"target_battle_id": battle_id,
 		"from_q": source_cell.x,
 		"from_r": source_cell.y,
+		"to_q": cell.x,
+		"to_r": cell.y,
+		"center_x": snappedf(center.x, 0.01),
+		"center_y": snappedf(center.y, 0.01),
+		"progress": snappedf(progress, 0.001),
+	}
+
+func _exit_presentation_motion(record: Dictionary, battle_id: String, cell: Vector2i, hex_layout: Dictionary, progress: float, role: String) -> Dictionary:
+	if not _cell_in_bounds(cell):
+		return {}
+	var origin := _hex_center(cell, hex_layout)
+	var radius := float(hex_layout.get("radius", 1.0))
+	var direction := -1.0 if String(record.get("event_id", "")) == "battle_unit_retreat" else 1.0
+	var retreat_dx := direction * sin(progress * PI) * radius * 0.18
+	var surrender_lift := sin(progress * PI) * radius * 0.06 if role == "surrender_stand_down" else 0.0
+	var center := origin + Vector2(retreat_dx, surrender_lift)
+	return {
+		"event_id": String(record.get("event_id", "")),
+		"role": role,
+		"source_battle_id": battle_id,
+		"target_battle_id": String(record.get("target_battle_id", "")),
+		"from_q": cell.x,
+		"from_r": cell.y,
 		"to_q": cell.x,
 		"to_r": cell.y,
 		"center_x": snappedf(center.x, 0.01),

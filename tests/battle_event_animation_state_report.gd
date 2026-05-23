@@ -343,6 +343,7 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 	add_child(view)
 	view.set_battle_presentation_snapshot(snapshot)
 	await get_tree().process_frame
+	await get_tree().create_timer(0.08).timeout
 	var summary: Dictionary = view.validation_unit_art_summary()
 	view.queue_free()
 	await get_tree().process_frame
@@ -351,6 +352,14 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 	var playback: Dictionary = summary.get("animation_playback", {}) if summary.get("animation_playback", {}) is Dictionary else {}
 	if int(playback.get("active_playback_count", 0)) < 1:
 		_error("%s board exit playback did not keep the exit animation active: %s" % [action_id, playback])
+	var exiting_stack := _summary_stack_entry(summary, "player_0")
+	var expected_role := "retreat_withdraw" if action_id == "retreat" else "surrender_stand_down"
+	_expect_equal("%s board exit presentation active" % action_id, str(bool(exiting_stack.get("presentation_motion_active", false))), "true")
+	_expect_equal("%s board exit presentation event" % action_id, String(exiting_stack.get("presentation_motion_event_id", "")), event_id)
+	_expect_equal("%s board exit presentation role" % action_id, String(exiting_stack.get("presentation_motion_role", "")), expected_role)
+	var motion_roles: Dictionary = summary.get("presentation_motion_roles", {}) if summary.get("presentation_motion_roles", {}) is Dictionary else {}
+	if int(motion_roles.get(expected_role, 0)) < 1:
+		_error("%s board exit presentation role was not counted in the board summary: %s" % [action_id, summary])
 	_report["cases"][action_id] = {
 		"result_state": String(result.get("state", "")),
 		"snapshot_policy": String(snapshot.get("presentation_policy", "")),
@@ -359,6 +368,8 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 		"queue": BattleRulesScript.animation_event_queue(snapshot),
 		"board_states": observed_states,
 		"board_playback": playback,
+		"board_stack": exiting_stack,
+		"presentation_motion_roles": motion_roles,
 	}
 
 func _validate_board_runtime_summary() -> void:
