@@ -92,6 +92,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_recruitment_delivery(live_recruitment_case):
 		return false
+	var multi_scenario_case := _find_case(first, "strategic_ai_multi_scenario_pressure_coverage")
+	if multi_scenario_case.is_empty():
+		_fail("Headless simulation harness is missing multi-scenario strategic AI pressure coverage evidence.")
+		return false
+	if not _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -220,6 +226,60 @@ func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> 
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
 		_fail("Live strategic AI recruitment delivery leaked internal public-event tokens: %s" % leak_tokens)
+		return false
+	return true
+
+func _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case: Dictionary) -> bool:
+	if String(multi_scenario_case.get("status", "")) != "pass":
+		_fail("Multi-scenario strategic AI pressure coverage did not pass: %s" % JSON.stringify(multi_scenario_case))
+		return false
+	var summary: Dictionary = multi_scenario_case.get("summary", {}) if multi_scenario_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = multi_scenario_case.get("evidence", {}) if multi_scenario_case.get("evidence", {}) is Dictionary else {}
+	if int(summary.get("scenario_count", 0)) < 5 or int(summary.get("faction_case_count", 0)) < 9:
+		_fail("Multi-scenario strategic AI pressure coverage is too narrow: %s" % summary)
+		return false
+	if int(summary.get("launched_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
+		_fail("Multi-scenario strategic AI pressure coverage did not launch for every faction: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI pressure coverage is missing target assignment events: %s" % summary)
+		return false
+	if String(summary.get("prismhearth_controller_town_id", "")) != "halo_spire" or String(summary.get("prismhearth_controlling_faction_id", "")) != "faction_mireclaw":
+		_fail("Prismhearth occupied Halo Spire did not remain a Mireclaw AI base: %s" % summary)
+		return false
+	var scenario_ids := []
+	for row in evidence.get("scenarios", []):
+		if row is Dictionary:
+			scenario_ids.append(String(row.get("scenario_id", "")))
+	for required_id in ["river-pass", "prismhearth-watch", "glassroad-sundering", "glassfen-breakers", "ninefold-confluence"]:
+		if required_id not in scenario_ids:
+			_fail("Multi-scenario strategic AI pressure coverage missed scenario: %s" % required_id)
+			return false
+	var faction_cases: Array = evidence.get("faction_cases", []) if evidence.get("faction_cases", []) is Array else []
+	var saw_prismhearth := false
+	for row in faction_cases:
+		if not (row is Dictionary):
+			continue
+		if int(row.get("owned_base_count", 0)) <= 0 or not bool(row.get("launched", false)):
+			_fail("Multi-scenario strategic AI pressure coverage has an unlaunched faction row: %s" % row)
+			return false
+		if String(row.get("scenario_id", "")) == "prismhearth-watch" and String(row.get("faction_id", "")) == "faction_mireclaw":
+			var town: Dictionary = row.get("controller_town", {}) if row.get("controller_town", {}) is Dictionary else {}
+			if String(town.get("placement_id", "")) == "halo_spire" and String(town.get("controlling_faction_id", "")) == "faction_mireclaw":
+				saw_prismhearth = true
+	if not saw_prismhearth:
+		_fail("Multi-scenario strategic AI pressure coverage did not include Prismhearth Halo Spire controller evidence.")
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_target_assigned" not in event_types:
+		_fail("Multi-scenario strategic AI pressure coverage missing ai_target_assigned event evidence: %s" % event_types)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Multi-scenario strategic AI pressure coverage save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Multi-scenario strategic AI pressure coverage leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
 

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
-  "currentSliceTitle": "Strategic AI Live Recruitment Delivery Harness",
+  "currentSliceId": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
+  "currentSliceTitle": "Strategic AI Multi-Scenario Pressure Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: shared headless harness now proves live enemy town recruitment delivery into an active raid host through the normal enemy turn cycle.",
+  "currentSliceNotes": "Completed: shared headless harness now proves live enemy pressure launches across 5 authored scenarios and 9 enemy faction cases. Prismhearth Watch preserves halo_spire as a faction_mireclaw controller base, controller-owned enemy towns survive session normalization/control transitions, and normal enemy turns launch pressure without hero_task_state/save/public-event leaks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T17:36:00Z",
+  "updatedAt": "2026-05-23T18:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17029,6 +17029,49 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
+      "title": "Strategic AI Multi-Scenario Pressure Coverage",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add shared headless evidence that enemy factions across multiple authored scenarios can launch live pressure from controlled enemy towns.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules treats strategic_ai_multi_scenario_pressure_coverage as a required subsystem.",
+        "The standard headless report primes pressure and runs normal EnemyTurnRules.run_enemy_turn coverage for river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and ninefold-confluence.",
+        "The harness proves all 9 enemy faction cases have an owned controller town, launch live pressure raids, emit ai_target_assigned, and keep no durable hero_task_state, save migration, or public score/task leaks.",
+        "Prismhearth Watch keeps occupied halo_spire as a faction_mireclaw controller base even though the town template is Sunvault."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No campaign/scenario polish pass.",
+        "No final objective planner, defense rotation, or difficulty tuning."
+      ],
+      "updatedAt": "2026-05-23T18:18:00Z",
+      "completedAt": "2026-05-23T18:18:00Z",
+      "completionNotes": "Completed: shared headless harness now proves live enemy pressure launches across 5 authored scenarios and 9 enemy faction cases. Prismhearth Watch preserves halo_spire as a faction_mireclaw controller base, controller-owned enemy towns survive session normalization/control transitions, and normal enemy turns launch pressure without hero_task_state/save/public-event leaks.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21848,8 +21891,8 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T17:36:00Z",
-    "sliceId": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
+    "updatedAt": "2026-05-23T18:18:00Z",
+    "sliceId": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
@@ -21861,10 +21904,10 @@
     "status": "passed"
   },
   "active_slice": {
-    "id": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
+    "id": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T17:36:00Z",
-    "note": "Completed: shared headless harness now proves live enemy town recruitment delivery into an active raid host through the normal enemy turn cycle."
+    "updated": "2026-05-23T18:18:00Z",
+    "note": "Completed: shared headless harness now proves live enemy pressure launches across 5 authored scenarios and 9 enemy faction cases. Prismhearth Watch preserves halo_spire as a faction_mireclaw controller base, controller-owned enemy towns survive session normalization/control transitions, and normal enemy turns launch pressure without hero_task_state/save/public-event leaks."
   },
-  "currentSliceUpdatedAt": "2026-05-23T17:36:00Z"
+  "currentSliceUpdatedAt": "2026-05-23T18:18:00Z"
 }

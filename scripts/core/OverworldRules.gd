@@ -1194,6 +1194,10 @@ static func transition_town_control(
 	if previous_owner != new_owner and previous_owner == "player":
 		town = _release_town_occupation_reserves(town)
 	town["owner"] = new_owner
+	if new_owner == "enemy":
+		town["controlling_faction_id"] = controlling_faction_id
+	elif previous_owner == "enemy":
+		town["controlling_faction_id"] = ""
 	town["front"] = _town_front_after_control_change(
 		session,
 		town,
@@ -4796,6 +4800,7 @@ static func _normalize_towns(towns: Array) -> Array:
 			"x": int(town.get("x", 0)),
 			"y": int(town.get("y", 0)),
 			"owner": String(town.get("owner", "neutral")),
+			"controlling_faction_id": String(town.get("controlling_faction_id", "")),
 			"built_buildings": built_buildings.duplicate(true),
 			"available_recruits": _normalize_resource_dict(town.get("available_recruits", {})),
 			"garrison": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],

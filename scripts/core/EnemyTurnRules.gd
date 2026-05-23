@@ -903,6 +903,8 @@ static func _build_in_enemy_towns(
 	var events = []
 	for entry in town_entries:
 		var town = towns[int(entry.get("index", -1))]
+		if _town_faction_id(town) != faction_id:
+			continue
 		var build_choice = _best_build_candidate(session, town, treasury, config, faction_id)
 		if build_choice.is_empty():
 			continue
@@ -1938,7 +1940,7 @@ static func _determine_posture(
 	for town in towns:
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		if _army_strength(town.get("garrison", [])) < _desired_town_strength(session, town, config):
 			threatened_towns += 1
@@ -2116,7 +2118,7 @@ static func _owned_town_entries(session: SessionStateStoreScript.SessionData, fa
 			continue
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		entries.append({"index": index, "town": town})
 	return entries
@@ -2146,7 +2148,7 @@ static func _faction_capital_state_from_towns(
 	for town in towns:
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var role: String = OverworldRulesScript.town_strategic_role(town)
 		var town_name = _town_name(town)
@@ -2245,7 +2247,7 @@ static func _empire_strength_pressure_bonus(session: SessionStateStoreScript.Ses
 	for town in towns:
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		total_strength += _army_strength(town.get("garrison", []))
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
@@ -2264,7 +2266,7 @@ static func _empire_town_pressure_bonus(session: SessionStateStoreScript.Session
 	for town in towns:
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		total_pressure += OverworldRulesScript.town_pressure_output(town, session)
 	return clamp(int(floor(float(total_pressure) / 4.0)), 0, 5)
@@ -2845,3 +2847,9 @@ static func _town_name(town_state: Dictionary) -> String:
 static func _town_faction_id(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("faction_id", ""))
+
+static func _town_controller_faction_id(town_state: Dictionary) -> String:
+	var controller := String(town_state.get("controlling_faction_id", ""))
+	if String(town_state.get("owner", "neutral")) == "enemy" and controller != "":
+		return controller
+	return _town_faction_id(town_state)

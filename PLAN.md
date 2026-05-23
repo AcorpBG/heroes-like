@@ -85,6 +85,8 @@ Headless strategic AI live-turn harness added on 2026-05-23: `HeadlessSimulation
 
 Strategic AI recruitment-delivery harness added on 2026-05-23: `HeadlessSimulationHarnessRules` now treats `strategic_ai_live_recruitment_delivery` as a required subsystem, seeding Duskfen Bastion with recruitable Mireclaw units and a stable garrison, then running the normal `EnemyTurnRules.run_enemy_turn(...)` cycle against an underfilled active Vaska raid. `tests/headless_simulation_harness_report.tscn` asserts the town recruits are consumed into the raid host, the raid strength rises from `21` to `183`, `raid_unit_after = 5`, `ai_town_recruited` and `ai_raid_reinforced` events are emitted, the active `river_free_company` target is preserved, and no internal task/score fields leak through public event output. This is a focused live recruitment-routing harness case, not broad recruiting economy, multi-hero grouping, defense rotation, or final strategic AI quality.
 
+Strategic AI multi-scenario pressure coverage added on 2026-05-23: `HeadlessSimulationHarnessRules` now treats `strategic_ai_multi_scenario_pressure_coverage` as a required subsystem. The shared headless report primes enemy pressure across `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `ninefold-confluence`, then requires all 9 enemy faction cases to have an owned controller town, launch a live pressure raid, and emit `ai_target_assigned` evidence without save/public-event leaks. This also fixes the Prismhearth Watch occupied-town bug: `halo_spire` is now explicitly controlled by `faction_mireclaw`, scenario factory/normalization preserve `controlling_faction_id`, and enemy AI uses controlled enemy towns as operational bases while same-faction recruitment/building rules remain guarded. This is scenario-breadth pressure launch evidence, not full strategic AI quality, campaign polish, or final objective planning.
+
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
 Packaging pack-export smoke gate added on 2026-05-23: `tests/packaging_pack_export_smoke.py` now creates a real external `Linux Release` PCK under `.artifacts/packaging_pack_export_smoke/`, verifies it is non-empty, boots it through `godot --headless --main-pack`, and writes a scoped report with command summaries, warning/error tails, PCK size, fatal boot pattern checks, and binary export template availability. This is local Linux-PCK smoke evidence only; it does not claim binary export readiness, Windows packaged smoke coverage, installer readiness, clean-machine validation, or release readiness.
@@ -5478,6 +5480,42 @@ nonGoals:
 - No full strategic AI quality claim.
 - No persistent AI task board.
 - No long-route path quality, town/hero/artifact target expansion, or UI surfacing.
+
+Completed implementation slice:
+
+id: `strategic-ai-multi-scenario-pressure-coverage-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Add shared headless evidence that enemy factions across multiple authored scenarios can launch live pressure from controlled enemy towns.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `content/scenarios.json`
+- `scripts/core/ScenarioFactory.gd`
+- `scripts/core/OverworldRules.gd`
+- `scripts/core/EnemyTurnRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_multi_scenario_pressure_coverage`.
+- The standard headless report primes pressure and runs normal `EnemyTurnRules.run_enemy_turn(...)` coverage for `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `ninefold-confluence`.
+- The harness proves all 9 enemy faction cases have an owned controller town, launch live pressure raids, emit `ai_target_assigned`, and keep no durable `hero_task_state`, save migration, or public task/score leaks.
+- Prismhearth Watch keeps occupied `halo_spire` as a `faction_mireclaw` controller base even though the town template is Sunvault.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No full strategic AI quality claim.
+- No campaign/scenario polish pass.
+- No final objective planner, defense rotation, or difficulty tuning.
 
 Completed implementation slice:
 
