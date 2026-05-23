@@ -18,6 +18,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_route_progression",
 	"strategic_ai_live_town_defense_retask",
 	"strategic_ai_live_town_retake_assault",
+	"strategic_ai_live_raid_assault_grouping",
 	"strategic_ai_live_regroup_retreat",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
@@ -35,6 +36,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_route_progression(input_config),
 		_strategic_ai_live_town_defense_retask(input_config),
 		_strategic_ai_live_town_retake_assault(input_config),
+		_strategic_ai_live_raid_assault_grouping(input_config),
 		_strategic_ai_live_regroup_retreat(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
@@ -884,6 +886,144 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 		deferred
 	)
 
+static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_grouping_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_grouping_faction_id", "faction_mireclaw"))
+	var town_id := String(input_config.get("strategic_ai_live_grouping_town_id", "duskfen_bastion"))
+	var roster_hero_id := String(input_config.get("strategic_ai_live_grouping_hero_id", "hero_vaska"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live raid-grouping scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_raid_assault_grouping",
+			"live_nearby_raids_group_for_town_assault",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_raid_assault_grouping",
+			"live_nearby_raids_group_for_town_assault",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_town_retake_front(session, town_id, faction_id, failures)
+	var leader_id := "headless_grouping_assault_%s" % town_id
+	var support_id := "headless_grouping_support_%s" % town_id
+	var leader := _town_assault_grouping_raid_seed(session, faction_id, roster_hero_id, leader_id, 7, 2, 7, true)
+	var support := _town_assault_grouping_raid_seed(session, faction_id, "", support_id, 7, 3, 3, false)
+	var leader_plan := EnemyAdventureRules.ai_live_town_retake_target_selection_plan(session, config, leader)
+	var support_plan := EnemyAdventureRules.ai_live_town_retake_target_selection_plan(session, config, support)
+	if String(leader_plan.get("target_kind", "")) == "town" and String(leader_plan.get("target_placement_id", "")) == town_id:
+		leader.merge(leader_plan, true)
+	else:
+		failures.append("Live grouping leader selector did not prefer %s." % town_id)
+	if String(support_plan.get("target_kind", "")) == "town" and String(support_plan.get("target_placement_id", "")) == town_id:
+		support.merge(support_plan, true)
+	else:
+		failures.append("Live grouping support selector did not prefer %s." % town_id)
+	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
+	var support_strength_before := EnemyAdventureRules.raid_strength(support)
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append(leader)
+	encounters.append(support)
+	session.overworld["encounters"] = encounters
+	var active_before := _active_raid_count_for_faction(session, faction_id)
+	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
+	var after_leader := _encounter_by_placement(session, leader_id)
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
+	var grouping_events := _event_count(events, "ai_raid_grouped")
+	if not bool(turn_result.get("ok", false)):
+		failures.append("Enemy turn returned not-ok during live raid grouping.")
+	if after_leader.is_empty():
+		failures.append("Live raid grouping leader disappeared after enemy turn.")
+	if support_id not in resolved:
+		failures.append("Live raid grouping support host stayed active.")
+	if leader_strength_after < leader_strength_before + support_strength_before:
+		failures.append("Live raid grouping leader did not absorb support strength.")
+	if int(after_leader.get("grouped_support_count", 0)) < 1:
+		failures.append("Live raid grouping leader is missing grouped support marker.")
+	if String(after_leader.get("last_grouped_support_placement_id", "")) != support_id:
+		failures.append("Live raid grouping leader recorded wrong support host.")
+	if grouping_events < 1:
+		failures.append("Live raid grouping did not emit ai_raid_grouped.")
+	if session.battle.is_empty():
+		failures.append("Live raid grouping did not continue into a battle.")
+	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != town_id:
+		failures.append("Live raid grouping queued wrong battle context.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live raid grouping wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live raid grouping events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live raid grouping events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_raid_assault_grouping",
+		"live_nearby_raids_group_for_town_assault",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"town_id": town_id,
+			"leader_id": leader_id,
+			"support_id": support_id,
+			"active_before": active_before,
+			"active_after": _active_raid_count_for_faction(session, faction_id),
+			"leader_strength_before": leader_strength_before,
+			"support_strength_before": support_strength_before,
+			"leader_strength_after": leader_strength_after,
+			"grouping_event_count": grouping_events,
+			"battle_context_type": String(battle_context.get("type", "")),
+			"battle_town_id": String(battle_context.get("town_placement_id", "")),
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"raid": _raid_execution_signal(after_leader),
+			"resolved_encounters": resolved,
+			"event_types": _event_types(events),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("economy_scenario_id", "river-pass"))
 	var bounded_turns: int = max(1, int(input_config.get("economy_turns", 3)))
@@ -1532,6 +1672,46 @@ static func _town_retake_assault_raid_seed(
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+static func _town_assault_grouping_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	x: int,
+	y: int,
+	brute_count: int,
+	with_commander: bool
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"commanderless_support_column": not with_commander,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"enemy_army": {
+			"id": "%s_host" % placement_id,
+			"name": "Town Assault Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": max(1, brute_count)}],
+		},
+	}
+	if with_commander:
+		raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+			raid,
+			roster_hero_id,
+			faction_id,
+			session,
+			{},
+			EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+		)
+		return EnemyAdventureRules.ensure_raid_army(raid, session)
+	return raid
+
 static func _understrength_regroup_raid_seed(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
@@ -1579,6 +1759,19 @@ static func _encounter_by_placement(session: SessionStateStoreScript.SessionData
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return encounter
 	return {}
+
+static func _active_raid_count_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var count := 0
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if String(encounter.get("placement_id", "")) in resolved:
+			continue
+		count += 1
+	return count
 
 static func _town_garrison_unit_count(session: SessionStateStoreScript.SessionData, placement_id: String, unit_id: String) -> int:
 	for town in session.overworld.get("towns", []):

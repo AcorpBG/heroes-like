@@ -5591,6 +5591,41 @@ nonGoals:
 
 Completed implementation slice:
 
+id: `strategic-ai-live-raid-assault-grouping-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Add live strategic AI evidence and behavior for nearby same-faction raid hosts consolidating before a shared town assault.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/ai_raid_assault_grouping_report.gd`
+- `tests/ai_raid_assault_grouping_report.tscn`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/strategic-ai-raid-assault-grouping-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- Nearby same-faction raid hosts assigned to the same player-held town can consolidate a support host into the assault host before battle resolution.
+- The donor host is removed from active raid pressure, the leader army gains the donor stacks, commander continuity is refreshed, and a compact `ai_raid_grouped` public-safe event is emitted.
+- Focused and shared headless reports prove the behavior without durable `hero_task_state`, save migration, or public score/task leaks.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No full strategic AI quality claim.
+- No multi-commander army board or broad hero-party system.
+- No automatic combat balance tuning.
+
+Completed implementation slice:
+
 id: `headless-strategic-ai-live-regroup-retreat-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Promote live understrength raid regroup/retreat behavior into the shared headless simulation harness and public end-turn AI event surface.
