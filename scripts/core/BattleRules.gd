@@ -23,6 +23,8 @@ const OCCUPIED_HEXES_KEY := "occupied_hexes"
 const STACK_HEX_KEY := "hex"
 const STACK_ANIMATION_STATES_KEY := "stack_animation_states"
 const ANIMATION_EVENT_SERIAL_KEY := "animation_event_serial"
+const ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
+const ANIMATION_EVENT_QUEUE_LIMIT := 24
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
@@ -161,6 +163,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"recent_events": [],
 		STACK_ANIMATION_STATES_KEY: {},
 		ANIMATION_EVENT_SERIAL_KEY: 0,
+		ANIMATION_EVENT_QUEUE_KEY: [],
 		HEX_BOARD_KEY: _hex_board_descriptor(),
 		OCCUPIED_HEXES_KEY: {},
 		COMMANDER_SPELL_CAST_ROUNDS_KEY: {},
@@ -993,6 +996,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	session.battle["recent_events"] = _normalize_recent_events(session.battle.get("recent_events", []))
 	session.battle[STACK_ANIMATION_STATES_KEY] = _normalize_stack_animation_states(session.battle.get(STACK_ANIMATION_STATES_KEY, {}))
 	session.battle[ANIMATION_EVENT_SERIAL_KEY] = max(0, int(session.battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)))
+	session.battle[ANIMATION_EVENT_QUEUE_KEY] = _normalize_animation_event_queue(session.battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
 	session.battle[TACTICAL_BRIEFING_KEY] = _normalize_tactical_briefing_state(session.battle.get(TACTICAL_BRIEFING_KEY, {}), session)
 	session.battle["round"] = max(1, int(session.battle.get("round", 1)))
 	session.battle["max_rounds"] = max(1, int(session.battle.get("max_rounds", 12)))
@@ -4740,6 +4744,9 @@ static func animation_event_states(battle: Dictionary) -> Dictionary:
 			continue
 		normalized[String(battle_id)] = record.duplicate(true)
 	return normalized
+
+static func animation_event_queue(battle: Dictionary) -> Array:
+	return _normalize_animation_event_queue(battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
 
 static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
@@ -10694,33 +10701,70 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		return
 	var serial := int(battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)) + 1
 	battle[ANIMATION_EVENT_SERIAL_KEY] = serial
-	event_states[battle_id] = {
+	var record := {
 		"event_id": event_id,
 		"state": state,
+		"battle_id": battle_id,
 		"priority": priority,
 		"serial": serial,
 		"round": int(battle.get("round", 1)),
 		"turn_index": int(battle.get("turn_index", 0)),
 	}
+	event_states[battle_id] = record.duplicate(true)
 	battle[STACK_ANIMATION_STATES_KEY] = event_states
+	_append_animation_event_record(battle, record)
+
+static func _append_animation_event_record(battle: Dictionary, record: Dictionary) -> void:
+	var events := _normalize_animation_event_queue(battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
+	events.push_back(record.duplicate(true))
+	while events.size() > ANIMATION_EVENT_QUEUE_LIMIT:
+		events.pop_front()
+	battle[ANIMATION_EVENT_QUEUE_KEY] = events
 
 static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
 	var normalized := {}
 	if not (value is Dictionary):
 		return normalized
-	for battle_id in value.keys():
-		var record: Dictionary = value.get(battle_id, {}) if value.get(battle_id, {}) is Dictionary else {}
+	for battle_id_key in value.keys():
+		var record: Dictionary = value.get(battle_id_key, {}) if value.get(battle_id_key, {}) is Dictionary else {}
 		var state := String(record.get("state", "")).strip_edges()
 		if state == "":
 			continue
+		var battle_id := String(record.get("battle_id", battle_id_key)).strip_edges()
 		normalized[String(battle_id)] = {
 			"event_id": String(record.get("event_id", "")),
 			"state": state,
+			"battle_id": battle_id,
 			"priority": int(record.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(record.get("serial", 0))),
 			"round": max(1, int(record.get("round", 1))),
 			"turn_index": max(0, int(record.get("turn_index", 0))),
 		}
+	return normalized
+
+static func _normalize_animation_event_queue(value: Variant) -> Array:
+	var normalized: Array = []
+	if not (value is Array):
+		return normalized
+	for entry in value:
+		if not (entry is Dictionary):
+			continue
+		var battle_id := String(entry.get("battle_id", "")).strip_edges()
+		var event_id := String(entry.get("event_id", "")).strip_edges()
+		var state := String(entry.get("state", "")).strip_edges()
+		if battle_id == "" or event_id == "" or state == "":
+			continue
+		normalized.append({
+			"battle_id": battle_id,
+			"event_id": event_id,
+			"state": state,
+			"priority": int(entry.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
+			"serial": max(0, int(entry.get("serial", 0))),
+			"round": max(1, int(entry.get("round", 1))),
+			"turn_index": max(0, int(entry.get("turn_index", 0))),
+		})
+	while normalized.size() > ANIMATION_EVENT_QUEUE_LIMIT:
+		normalized.pop_front()
 	return normalized
 
 static func _normalize_recent_events(value: Variant) -> Array:

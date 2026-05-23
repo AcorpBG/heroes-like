@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-event-animation-state-adoption-20260523-10184",
-  "currentSliceTitle": "Battle Event Animation State Adoption",
+  "currentSliceId": "battle-animation-event-queue-lifecycle-20260523-10184",
+  "currentSliceTitle": "Battle Animation Event Queue Lifecycle",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: battle rules now stamp transient per-stack animation states from resolved combat events, and the battle board consumes those states before fallback idle/ready/defend selection.",
+  "currentSliceNotes": "Completed: battle animation events now have a bounded serial queue and board-side playback windows that expire back to normal stack states.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23",
   "statusTaxonomy": {
@@ -15609,6 +15609,48 @@
       "validationResults": [
         "Focused report passed with fallback, defend, move, melee hit, ranged status, death, spell cast, and board runtime consumption cases."
       ]
+    },
+    {
+      "id": "battle-animation-event-queue-lifecycle-20260523-10184",
+      "title": "Battle Animation Event Queue Lifecycle",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "purpose": "Add bounded event history and board-side playback expiry so battle event animation states play as transient presentation cues instead of persistent stack poses.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "BattleRules records a bounded battle animation event queue with serial, subject stack id, event id, state, round, and turn index.",
+        "BattleBoardView syncs new event records into active playback windows and expires them back to active/defend/idle fallback states.",
+        "Focused validation proves event queue coverage and board playback lifecycle expiry."
+      ],
+      "nonGoals": [
+        "No final VFX, audio, camera motion, or authored timing curves.",
+        "No combat balance changes.",
+        "No broad battle UI redesign."
+      ],
+      "validationResults": [
+        "Focused report passed with nine cases including queue coverage and board playback expiry."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18249,6 +18291,43 @@
         "git diff --check"
       ],
       "remainingGap": "This is a presentation-state bridge for generated unit animation sheets; final VFX, audio, camera timing, queued playback, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-animation-event-queue-lifecycle-20260523-10184",
+      "title": "Battle Animation Event Queue Lifecycle",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-animation-event-queue-lifecycle-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleRules records battle_animation_events as a bounded serial queue with battle_id, event_id, state, priority, round, and turn index.",
+        "BattleBoardView syncs new event records into short stack playback windows and expires them back to active, defend, or idle fallback states.",
+        "tests/battle_event_animation_state_report.tscn validates queue coverage for movement, melee, ranged, hit, death, cast, status, and defend events plus board playback expiry."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This adds event queue and playback lifecycle for generated unit sheets; final VFX, audio, camera timing, authored timing curves, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -19036,9 +19115,9 @@
   ],
   "lastValidation": "Unit art reproducibility report passed with 103 units, 412 matching generated PNG assets, and both committed manifests matching fresh generator output; repository validation passed.",
   "active_slice": {
-    "id": "battle-event-animation-state-adoption-20260523-10184",
+    "id": "battle-animation-event-queue-lifecycle-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: battle rules now stamp transient per-stack animation states from resolved combat events, and the battle board consumes those states before fallback idle/ready/defend selection."
+    "note": "Completed: battle animation events now have a bounded serial queue and board-side playback windows that expire back to normal stack states."
   }
 }
