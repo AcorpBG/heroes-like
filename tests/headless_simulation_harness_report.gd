@@ -157,6 +157,8 @@ func _assert_report(first: Dictionary) -> bool:
 		"pacing_band_distribution",
 		"initial_role_distribution",
 		"initial_ability_distribution",
+		"runtime_consequence_distribution",
+		"runtime_consequence_gate",
 		"balance_matrix",
 		"balance_matrix_gate",
 		"combat_feel_gate",
@@ -168,6 +170,8 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_balance_matrix_gate(battle_summary):
 		return false
+	if not _assert_runtime_consequence_gate(battle_summary):
+		return false
 	if int(battle_summary.get("average_total_damage_per_round", 0)) <= 0:
 		_fail("Battle resolver sampling did not expose positive damage pacing evidence.")
 		return false
@@ -176,13 +180,17 @@ func _assert_report(first: Dictionary) -> bool:
 		_fail("Battle resolver sampling is missing per-sample evidence.")
 		return false
 	var first_battle_sample: Dictionary = battle_samples[0]
-	for required_field in ["terrain", "encounter_difficulty", "steps_sampled", "round_reached", "initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "terminal_health_margin_pct", "action_counts", "action_mix", "damage_totals", "damage_per_round", "pacing_band", "initial_stack_profile"]:
+	for required_field in ["terrain", "encounter_difficulty", "steps_sampled", "round_reached", "initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "terminal_health_margin_pct", "action_counts", "action_mix", "damage_totals", "damage_per_round", "pacing_band", "initial_stack_profile", "runtime_consequence_profile"]:
 		if not first_battle_sample.has(String(required_field)):
 			_fail("Battle resolver sample is missing field: %s" % required_field)
 			return false
 	var initial_stack_profile: Dictionary = first_battle_sample.get("initial_stack_profile", {}) if first_battle_sample.get("initial_stack_profile", {}) is Dictionary else {}
 	if not initial_stack_profile.has("initiative") or not initial_stack_profile.has("role_counts") or not initial_stack_profile.has("ability_counts") or not initial_stack_profile.has("side_power_scores") or not initial_stack_profile.has("matchup_band") or not initial_stack_profile.has("side_role_counts") or not initial_stack_profile.has("side_ability_counts"):
 		_fail("Battle resolver sample is missing stack role/ability/initiative diagnostics.")
+		return false
+	var runtime_profile: Dictionary = first_battle_sample.get("runtime_consequence_profile", {}) if first_battle_sample.get("runtime_consequence_profile", {}) is Dictionary else {}
+	if String(runtime_profile.get("schema", "")) != "battle_autoplay_runtime_consequence_profile_v1" or String(runtime_profile.get("profile_signature", "")) == "":
+		_fail("Battle resolver sample is missing runtime consequence profile evidence.")
 		return false
 	if int(statuses.get("pass", 0)) <= 0:
 		_fail("Headless simulation harness did not pass any mature subsystem.")
@@ -712,6 +720,29 @@ func _assert_balance_matrix_gate(battle_summary: Dictionary) -> bool:
 		return false
 	if not outliers.is_empty():
 		_fail("Battle resolver sampling balance matrix still has terminal-margin outliers: %s" % outliers)
+		return false
+	return true
+
+func _assert_runtime_consequence_gate(battle_summary: Dictionary) -> bool:
+	var distribution: Dictionary = battle_summary.get("runtime_consequence_distribution", {}) if battle_summary.get("runtime_consequence_distribution", {}) is Dictionary else {}
+	var gate: Dictionary = battle_summary.get("runtime_consequence_gate", {}) if battle_summary.get("runtime_consequence_gate", {}) is Dictionary else {}
+	if String(distribution.get("schema", "")) != "battle_autoplay_runtime_consequence_distribution_v1":
+		_fail("Battle resolver sampling runtime consequence distribution schema mismatch: %s" % distribution)
+		return false
+	if String(gate.get("policy", "")) != "report_only_runtime_consequence_thresholds_v1":
+		_fail("Battle resolver sampling runtime consequence gate policy mismatch: %s" % gate)
+		return false
+	if String(gate.get("status", "")) != "pass":
+		_fail("Battle resolver sampling runtime consequence gate must pass: %s" % gate)
+		return false
+	if int(gate.get("sample_count", -1)) != int(battle_summary.get("sample_count", -2)):
+		_fail("Battle resolver sampling runtime consequence gate sample count does not align with summary: %s" % gate)
+		return false
+	if int(distribution.get("samples_with_ability_consequence_count", 0)) <= 0:
+		_fail("Battle resolver sampling did not observe ability runtime consequences: %s" % distribution)
+		return false
+	if int(distribution.get("total_status_application_event_count", 0)) <= 0:
+		_fail("Battle resolver sampling did not observe status application runtime events: %s" % distribution)
 		return false
 	return true
 
