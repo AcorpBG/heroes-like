@@ -422,7 +422,7 @@ func validation_unit_art_summary() -> Dictionary:
 			continue
 		var battle_id := String(stack.get("battle_id", ""))
 		var cell: Vector2i = stack_cells.get(battle_id, Vector2i(-1, -1))
-		var presentation := _stack_presentation_summary(stack, cell, hex_layout)
+		var presentation := _stack_presentation_summary(stack, cell, hex_layout, stack_cells)
 		var unit_id := String(stack.get("unit_id", ""))
 		var art := ContentService.get_unit_art(unit_id)
 		var path := String(art.get("battle_icon", ""))
@@ -450,6 +450,9 @@ func validation_unit_art_summary() -> Dictionary:
 			"presentation_y": presentation.get("presentation_y", 0.0),
 			"presentation_motion_active": bool(presentation.get("presentation_motion_active", false)),
 			"presentation_motion_event_id": String(presentation.get("presentation_motion_event_id", "")),
+			"presentation_motion_role": String(presentation.get("presentation_motion_role", "")),
+			"presentation_motion_source_battle_id": String(presentation.get("presentation_motion_source_battle_id", "")),
+			"presentation_motion_target_battle_id": String(presentation.get("presentation_motion_target_battle_id", "")),
 			"presentation_motion_from_q": int(presentation.get("presentation_motion_from_q", -1)),
 			"presentation_motion_from_r": int(presentation.get("presentation_motion_from_r", -1)),
 			"presentation_motion_to_q": int(presentation.get("presentation_motion_to_q", -1)),
@@ -1313,7 +1316,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		if not stack_cells.has(battle_id):
 			continue
 		var cell: Vector2i = stack_cells.get(battle_id)
-		var center := _stack_presentation_center(stack, cell, hex_layout)
+		var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)
 		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
@@ -1350,32 +1353,38 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			}
 		)
 
-func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Vector2:
-	var motion := _stack_presentation_motion(stack, cell, hex_layout)
+func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Vector2:
+	var motion := _stack_presentation_motion(stack, cell, hex_layout, stack_cells)
 	if motion.is_empty():
 		return _hex_center(cell, hex_layout)
 	return Vector2(float(motion.get("center_x", 0.0)), float(motion.get("center_y", 0.0)))
 
-func _stack_presentation_summary(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Dictionary:
+func _stack_presentation_summary(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Dictionary:
 	var center := _hex_center(cell, hex_layout)
 	var summary := {
 		"presentation_x": snappedf(center.x, 0.01),
 		"presentation_y": snappedf(center.y, 0.01),
 		"presentation_motion_active": false,
 		"presentation_motion_event_id": "",
+		"presentation_motion_role": "",
+		"presentation_motion_source_battle_id": "",
+		"presentation_motion_target_battle_id": "",
 		"presentation_motion_from_q": -1,
 		"presentation_motion_from_r": -1,
 		"presentation_motion_to_q": -1,
 		"presentation_motion_to_r": -1,
 		"presentation_motion_progress": 1.0,
 	}
-	var motion := _stack_presentation_motion(stack, cell, hex_layout)
+	var motion := _stack_presentation_motion(stack, cell, hex_layout, stack_cells)
 	if motion.is_empty():
 		return summary
 	summary["presentation_x"] = motion.get("center_x", summary.get("presentation_x"))
 	summary["presentation_y"] = motion.get("center_y", summary.get("presentation_y"))
 	summary["presentation_motion_active"] = true
 	summary["presentation_motion_event_id"] = String(motion.get("event_id", ""))
+	summary["presentation_motion_role"] = String(motion.get("role", ""))
+	summary["presentation_motion_source_battle_id"] = String(motion.get("source_battle_id", ""))
+	summary["presentation_motion_target_battle_id"] = String(motion.get("target_battle_id", ""))
 	summary["presentation_motion_from_q"] = int(motion.get("from_q", -1))
 	summary["presentation_motion_from_r"] = int(motion.get("from_r", -1))
 	summary["presentation_motion_to_q"] = int(motion.get("to_q", -1))
@@ -1383,17 +1392,27 @@ func _stack_presentation_summary(stack: Dictionary, cell: Vector2i, hex_layout: 
 	summary["presentation_motion_progress"] = motion.get("progress", 0.0)
 	return summary
 
-func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Dictionary:
+func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Dictionary:
 	var battle_id := String(stack.get("battle_id", ""))
 	var record := _animation_playback_record_for_stack(battle_id)
-	if String(record.get("event_id", "")) != "battle_unit_move":
+	if record.is_empty():
 		return {}
-	var from_cell := Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))
-	var to_cell := Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1)))
-	if not _cell_in_bounds(from_cell) or not _cell_in_bounds(to_cell):
-		return {}
-	if to_cell != cell:
-		return {}
+	var event_id := String(record.get("event_id", ""))
+	var progress := _stack_presentation_progress(battle_id)
+	match event_id:
+		"battle_unit_move":
+			return _movement_presentation_motion(record, cell, hex_layout, progress)
+		"battle_unit_melee_attack", "battle_retaliation":
+			return _attack_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress, "melee_lunge")
+		"battle_unit_ranged_attack":
+			return _attack_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress, "ranged_recoil")
+		"battle_unit_cast":
+			return _attack_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress, "cast_anchor")
+		"battle_unit_hit", "battle_status_applied", "battle_unit_death":
+			return _impact_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress)
+	return {}
+
+func _stack_presentation_progress(battle_id: String) -> float:
 	var cue_record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
 	var progress := 1.0
 	if not cue_record.is_empty():
@@ -1401,15 +1420,100 @@ func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: D
 		var mode := String(cue_record.get("mode", AnimationCueCatalogScript.MODE_NORMAL))
 		if mode == AnimationCueCatalogScript.MODE_FAST or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
 			progress = 1.0
+	return clampf(progress, 0.0, 1.0)
+
+func _movement_presentation_motion(record: Dictionary, cell: Vector2i, hex_layout: Dictionary, progress: float) -> Dictionary:
+	var from_cell := Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))
+	var to_cell := Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1)))
+	if not _cell_in_bounds(from_cell) or not _cell_in_bounds(to_cell):
+		return {}
+	if to_cell != cell:
+		return {}
 	var from_center := _hex_center(from_cell, hex_layout)
 	var to_center := _hex_center(to_cell, hex_layout)
 	var center := from_center.lerp(to_center, clampf(progress, 0.0, 1.0))
 	return {
 		"event_id": String(record.get("event_id", "")),
+		"role": "move_path",
+		"source_battle_id": String(record.get("source_battle_id", "")),
+		"target_battle_id": String(record.get("target_battle_id", "")),
 		"from_q": from_cell.x,
 		"from_r": from_cell.y,
 		"to_q": to_cell.x,
 		"to_r": to_cell.y,
+		"center_x": snappedf(center.x, 0.01),
+		"center_y": snappedf(center.y, 0.01),
+		"progress": snappedf(progress, 0.001),
+	}
+
+func _attack_presentation_motion(record: Dictionary, battle_id: String, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary, progress: float, role: String) -> Dictionary:
+	var target_id := String(record.get("target_battle_id", "")).strip_edges()
+	if target_id == "" or not stack_cells.has(target_id):
+		return {}
+	var target_cell: Vector2i = stack_cells.get(target_id)
+	if not _cell_in_bounds(cell) or not _cell_in_bounds(target_cell):
+		return {}
+	var origin := _hex_center(cell, hex_layout)
+	var target := _hex_center(target_cell, hex_layout)
+	var direction := (target - origin).normalized()
+	if direction.length() <= 0.0:
+		return {}
+	var radius := float(hex_layout.get("radius", 1.0))
+	var travel := 0.0
+	match role:
+		"melee_lunge":
+			travel = sin(progress * PI) * radius * 0.34
+		"ranged_recoil":
+			travel = -sin(progress * PI) * radius * 0.12
+		"cast_anchor":
+			travel = -sin(progress * PI) * radius * 0.07
+	var center := origin + direction * travel
+	return {
+		"event_id": String(record.get("event_id", "")),
+		"role": role,
+		"source_battle_id": battle_id,
+		"target_battle_id": target_id,
+		"from_q": cell.x,
+		"from_r": cell.y,
+		"to_q": target_cell.x,
+		"to_r": target_cell.y,
+		"center_x": snappedf(center.x, 0.01),
+		"center_y": snappedf(center.y, 0.01),
+		"progress": snappedf(progress, 0.001),
+	}
+
+func _impact_presentation_motion(record: Dictionary, battle_id: String, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary, progress: float) -> Dictionary:
+	var source_id := String(record.get("source_battle_id", "")).strip_edges()
+	if source_id == "" or not stack_cells.has(source_id):
+		return {}
+	var source_cell: Vector2i = stack_cells.get(source_id)
+	if not _cell_in_bounds(cell) or not _cell_in_bounds(source_cell):
+		return {}
+	var source := _hex_center(source_cell, hex_layout)
+	var origin := _hex_center(cell, hex_layout)
+	var direction := (origin - source).normalized()
+	if direction.length() <= 0.0:
+		return {}
+	var radius := float(hex_layout.get("radius", 1.0))
+	var event_id := String(record.get("event_id", ""))
+	var role := "hit_stagger"
+	var travel := (1.0 - progress) * radius * 0.18
+	if event_id == "battle_status_applied":
+		role = "status_pulse"
+		travel = sin(progress * TAU) * radius * 0.06
+	elif event_id == "battle_unit_death":
+		role = "death_fall_back"
+		travel = (1.0 - progress) * radius * 0.26
+	var center := origin + direction * travel
+	return {
+		"event_id": event_id,
+		"role": role,
+		"source_battle_id": source_id,
+		"target_battle_id": battle_id,
+		"from_q": source_cell.x,
+		"from_r": source_cell.y,
+		"to_q": cell.x,
+		"to_r": cell.y,
 		"center_x": snappedf(center.x, 0.01),
 		"center_y": snappedf(center.y, 0.01),
 		"progress": snappedf(progress, 0.001),
