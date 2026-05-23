@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "archived-campaign-breadth-report-regate-20260523-10184",
-  "currentSliceTitle": "Archived Campaign Breadth Report Regate",
+  "currentSliceId": "battle-difficulty-sweep-balance-harness-20260523-10184",
+  "currentSliceTitle": "Battle Difficulty Sweep Balance Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths.",
+  "currentSliceNotes": "Battle autoplay difficulty sweep completed: the harness now samples authored encounters across normal and hard launch difficulties, preserves launch_difficulty_distribution, emits deterministic normal_vs_hard deltas, and gates sample breadth, completion, stalled/invalid-order absence, and observed difficulty effects without automatic tuning or content writeback.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T21:43:00Z",
   "statusTaxonomy": {
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
+      "title": "Battle Difficulty Sweep Balance Harness",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Extend the automated combat-feel harness so authored battle samples are compared across launch difficulties, giving balance work evidence for normal versus hard pacing, damage, outcome, and terminal-margin deltas.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Autoplay samples carry the launch difficulty used to create the session.",
+        "A report-only difficulty sweep samples at least normal and hard launch difficulties over the current authored encounter sample set.",
+        "The sweep emits per-difficulty summaries, deterministic signatures, and hard-vs-normal deltas for terminal margin, damage pacing, outcome, and remaining-health evidence.",
+        "The sweep gates missing difficulty rows, below-minimum samples, stalled samples, invalid orders, and absent difficulty-effect evidence.",
+        "No authored content is automatically retuned and no final combat-balance claim is made."
+      ],
+      "nonGoals": [
+        "No broad combat rebalance.",
+        "No AI rewrite, spell/autocast expansion, or content writeback.",
+        "No final tactical-depth approval."
+      ],
+      "startedAt": "2026-05-23T22:05:00Z",
+      "updatedAt": "2026-05-23T22:22:00Z",
+      "completedAt": "2026-05-23T22:22:00Z",
+      "completionEvidence": [
+        "BattleAutoplayBalanceHarnessRules.run_battle_sample now records launch_difficulty and build_sampling_report exposes launch_difficulty_distribution.",
+        "BattleAutoplayBalanceHarnessRules.build_difficulty_sweep_report runs the authored sample set for normal and hard launch difficulties with deterministic sweep signatures.",
+        "tests/battle_autoplay_difficulty_sweep_report.tscn passed with 12/12 completed normal samples and 12/12 completed hard samples.",
+        "Current normal_vs_hard evidence reports enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5, and primary defeat rate 67% -> 75%.",
+        "Existing battle autoplay combat balance and tuning queue reports still pass with the default normal launch difficulty path."
+      ],
+      "notes": "Completed from the remaining production-gap list under combat feel and automated balance harness. This remains report-only evidence, not final combat balance approval."
+    },
     {
       "id": "native-rmg-small-h3maped-port-10184",
       "title": "Native RMG Small h3maped Port",
@@ -22402,21 +22448,38 @@
     }
   ],
   "lastValidation": {
-    "id": "archived-campaign-breadth-report-regate-20260523-10184",
+    "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T21:43:00Z",
+    "updatedAt": "2026-05-23T22:22:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json content/campaigns.json",
       "git diff --check"
     ],
-    "summary": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths."
+    "summary": "Battle autoplay difficulty sweep completed: normal and hard each sampled 12/12 completed authored battles; normal_vs_hard evidence reports enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5, deterministic sweep signature d15e9659, and existing combat balance/tuning queue reports remained green."
   },
-  "active_slice": "archived-campaign-breadth-report-regate-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T21:43:00Z",
+  "active_slice": "battle-difficulty-sweep-balance-harness-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T22:22:00Z",
   "validationHistory": [
+    {
+      "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T22:22:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/campaigns.json",
+        "git diff --check"
+      ],
+      "summary": "Battle autoplay difficulty sweep completed: normal and hard each sampled 12/12 completed authored battles; normal_vs_hard evidence reports enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5, deterministic sweep signature d15e9659, and existing combat balance/tuning queue reports remained green."
+    },
     {
       "id": "archived-campaign-breadth-report-regate-20260523-10184",
       "status": "passed",

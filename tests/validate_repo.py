@@ -16438,6 +16438,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
+    difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
+    difficulty_sweep_scene_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.tscn"
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
@@ -16446,6 +16448,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
+    difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16455,6 +16458,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
+        difficulty_sweep_report_path,
+        difficulty_sweep_scene_path,
         tactical_report_path,
         tactical_scene_path,
         doc_path,
@@ -16463,6 +16468,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         expanded_sample_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
+        difficulty_sweep_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16483,6 +16489,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND",
             "terrain_distribution",
             "difficulty_distribution",
+            "launch_difficulty_distribution",
             "pacing_band_distribution",
             "initial_role_distribution",
             "initial_ability_distribution",
@@ -16492,6 +16499,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "report_only_balance_matrix_thresholds_v1",
             "balance_tuning_queue",
             "battle_autoplay_balance_tuning_queue_v1",
+            "build_difficulty_sweep_report",
+            "battle_autoplay_difficulty_sweep_v1",
+            "report_only_launch_difficulty_balance_probe",
+            "DEFAULT_DIFFICULTY_SWEEP_IDS",
+            "battle_launch_difficulty",
+            "normal_vs_hard",
             "report_only_no_runtime_tuning",
             "queue_signature",
             "top_contributors",
@@ -16610,6 +16623,25 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if tuning_queue_scene_path.exists():
         tuning_queue_scene_text = tuning_queue_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_balance_tuning_queue_report.gd" in tuning_queue_scene_text, errors, "Battle autoplay tuning queue scene is not wired to its script.")
+    if difficulty_sweep_report_path.exists():
+        difficulty_sweep_text = difficulty_sweep_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_DIFFICULTY_SWEEP_REPORT",
+            "battle_autoplay_difficulty_sweep_v1",
+            "report_only_launch_difficulty_balance_probe",
+            "REQUIRED_DIFFICULTIES",
+            "normal_vs_hard",
+            "launch_difficulty_distribution",
+            "no_observed_effect",
+            "sweep_signature",
+            "repeat_sweep_signature",
+            "battle_difficulty_sweep_sample_limit",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in difficulty_sweep_text, errors, f"Battle autoplay difficulty sweep report is missing token: {required_token}")
+    if difficulty_sweep_scene_path.exists():
+        difficulty_sweep_scene_text = difficulty_sweep_scene_path.read_text(encoding="utf-8")
+        ensure("battle_autoplay_difficulty_sweep_report.gd" in difficulty_sweep_scene_text, errors, "Battle autoplay difficulty sweep scene is not wired to its script.")
     if tactical_report_path.exists():
         tactical_report_text = tactical_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -16705,6 +16737,19 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in queue_balance_doc_text, errors, f"Battle autoplay queue-driven balance doc is missing required text: {required_text}")
+    if difficulty_sweep_doc_path.exists():
+        difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Difficulty Sweep Balance Harness Report",
+            "battle_autoplay_difficulty_sweep_v1",
+            "normal and hard",
+            "launch_difficulty_distribution",
+            "normal_vs_hard",
+            "report-only",
+            "No automatic tuning or content writeback.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in difficulty_sweep_doc_text, errors, f"Battle autoplay difficulty sweep doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:

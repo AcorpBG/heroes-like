@@ -8,6 +8,9 @@ const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const DEFAULT_SAMPLE_LIMIT := 12
 const DEFAULT_MINIMUM_SAMPLE_COUNT := 6
 const DEFAULT_STEP_LIMIT := 72
+const DEFAULT_DIFFICULTY_SWEEP_IDS := ["normal", "hard"]
+const DIFFICULTY_SWEEP_SCHEMA := "battle_autoplay_difficulty_sweep_v1"
+const DIFFICULTY_SWEEP_POLICY := "report_only_launch_difficulty_balance_probe"
 const COMBAT_FEEL_MIN_ACTION_DIVERSITY := 3
 const COMBAT_FEEL_MAX_PRIMARY_ACTION_PCT := 70
 const COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND := 12
@@ -62,7 +65,7 @@ static func build_sampling_report(
 				break
 			if not (encounter is Dictionary):
 				continue
-			var sample := run_battle_sample(scenario_id, encounter, step_limit)
+			var sample := run_battle_sample(scenario_id, encounter, step_limit, String(input_config.get("battle_launch_difficulty", "normal")))
 			if sample.is_empty():
 				deferred.append("%s/%s could not create a battle payload." % [scenario_id, String(encounter.get("placement_id", ""))])
 			else:
@@ -118,6 +121,7 @@ static func build_sampling_report(
 			"terrain_distribution": aggregate.get("terrain_distribution", {}),
 			"scenario_distribution": aggregate.get("scenario_distribution", {}),
 			"difficulty_distribution": aggregate.get("difficulty_distribution", {}),
+			"launch_difficulty_distribution": aggregate.get("launch_difficulty_distribution", {}),
 			"pacing_band_distribution": aggregate.get("pacing_band_distribution", {}),
 			"initial_role_distribution": aggregate.get("initial_role_distribution", {}),
 			"initial_ability_distribution": aggregate.get("initial_ability_distribution", {}),
@@ -133,6 +137,121 @@ static func build_sampling_report(
 		"warnings": warnings,
 		"deferred": deferred,
 	}
+
+static func build_difficulty_sweep_report(input_config: Dictionary = {}) -> Dictionary:
+	var difficulty_ids: Array = input_config.get("battle_difficulty_sweep_ids", DEFAULT_DIFFICULTY_SWEEP_IDS)
+	var rows := []
+	var warnings := []
+	var failures := []
+	var row_by_difficulty := {}
+	var sample_limit: int = max(1, int(input_config.get("battle_difficulty_sweep_sample_limit", DEFAULT_SAMPLE_LIMIT)))
+	var minimum_samples: int = max(1, int(input_config.get("battle_difficulty_sweep_minimum_sample_count", min(DEFAULT_MINIMUM_SAMPLE_COUNT, sample_limit))))
+	for difficulty_value in difficulty_ids:
+		var difficulty_id := String(difficulty_value)
+		var difficulty_config := input_config.duplicate(true)
+		difficulty_config["battle_launch_difficulty"] = difficulty_id
+		difficulty_config["battle_sample_limit"] = sample_limit
+		difficulty_config["battle_minimum_sample_count"] = minimum_samples
+		var report := build_sampling_report(difficulty_config)
+		var summary: Dictionary = report.get("summary", {}) if report.get("summary", {}) is Dictionary else {}
+		var gate: Dictionary = summary.get("combat_feel_gate", {}) if summary.get("combat_feel_gate", {}) is Dictionary else {}
+		var matrix_gate: Dictionary = summary.get("balance_matrix_gate", {}) if summary.get("balance_matrix_gate", {}) is Dictionary else {}
+		var tuning_queue: Dictionary = summary.get("balance_tuning_queue", {}) if summary.get("balance_tuning_queue", {}) is Dictionary else {}
+		var row := {
+			"difficulty_id": difficulty_id,
+			"sample_count": int(summary.get("sample_count", 0)),
+			"completed_sample_count": int(summary.get("completed_sample_count", 0)),
+			"stalled_sample_count": int(summary.get("stalled_sample_count", 0)),
+			"invalid_order_count": int(summary.get("invalid_order_count", 0)),
+			"average_terminal_health_margin_pct": int(summary.get("average_terminal_health_margin_pct", 0)),
+			"average_total_damage_per_round": int(summary.get("average_total_damage_per_round", 0)),
+			"average_player_health_remaining_pct": int(summary.get("average_player_health_remaining_pct", 0)),
+			"average_enemy_health_remaining_pct": int(summary.get("average_enemy_health_remaining_pct", 0)),
+			"primary_outcome_state": String(summary.get("primary_outcome_state", "")),
+			"primary_outcome_pct": int(summary.get("primary_outcome_pct", 0)),
+			"combat_feel_gate_status": String(gate.get("status", "")),
+			"balance_matrix_gate_status": String(matrix_gate.get("status", "")),
+			"tuning_queue_status": String(tuning_queue.get("status", "")),
+			"tuning_queue_item_count": int(tuning_queue.get("item_count", 0)),
+			"launch_difficulty_distribution": summary.get("launch_difficulty_distribution", {}),
+			"report_signature": _signature_for({
+				"difficulty_id": difficulty_id,
+				"summary": summary,
+				"queue_signature": String(tuning_queue.get("queue_signature", "")),
+			}),
+		}
+		if int(row.get("sample_count", 0)) < minimum_samples:
+			failures.append("%s_sample_count_below_minimum" % difficulty_id)
+		if int(row.get("stalled_sample_count", 0)) > 0:
+			failures.append("%s_stalled_samples_present" % difficulty_id)
+		if int(row.get("invalid_order_count", 0)) > 0:
+			failures.append("%s_invalid_orders_present" % difficulty_id)
+		if String(gate.get("status", "")) == "fail":
+			failures.append("%s_combat_feel_gate_failed" % difficulty_id)
+		if String(matrix_gate.get("status", "")) == "fail":
+			failures.append("%s_balance_matrix_gate_failed" % difficulty_id)
+		for report_warning in report.get("warnings", []):
+			warnings.append("%s:%s" % [difficulty_id, String(report_warning)])
+		rows.append(row)
+		row_by_difficulty[difficulty_id] = row
+	var deltas := _difficulty_sweep_deltas(row_by_difficulty)
+	if difficulty_ids.size() < 2:
+		failures.append("difficulty_sweep_requires_at_least_two_launch_difficulties")
+	if not row_by_difficulty.has("normal"):
+		failures.append("difficulty_sweep_missing_normal")
+	if not row_by_difficulty.has("hard"):
+		failures.append("difficulty_sweep_missing_hard")
+	if bool(deltas.get("normal_vs_hard", {}).get("no_observed_effect", true)):
+		failures.append("difficulty_sweep_no_observed_effect")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"schema": DIFFICULTY_SWEEP_SCHEMA,
+		"policy": DIFFICULTY_SWEEP_POLICY,
+		"status": status,
+		"difficulty_ids": difficulty_ids,
+		"sample_limit_per_difficulty": sample_limit,
+		"minimum_sample_count_per_difficulty": minimum_samples,
+		"rows": rows,
+		"deltas": deltas,
+		"warning_count": warnings.size(),
+		"failure_count": failures.size(),
+		"warnings": warnings,
+		"failures": failures,
+		"sweep_signature": _signature_for({
+			"schema": DIFFICULTY_SWEEP_SCHEMA,
+			"policy": DIFFICULTY_SWEEP_POLICY,
+			"rows": rows,
+			"deltas": deltas,
+		}),
+	}
+
+static func _difficulty_sweep_deltas(row_by_difficulty: Dictionary) -> Dictionary:
+	var result := {}
+	if row_by_difficulty.has("normal") and row_by_difficulty.has("hard"):
+		var normal_row: Dictionary = row_by_difficulty.get("normal", {}) if row_by_difficulty.get("normal", {}) is Dictionary else {}
+		var hard_row: Dictionary = row_by_difficulty.get("hard", {}) if row_by_difficulty.get("hard", {}) is Dictionary else {}
+		var row_delta := {
+			"terminal_margin_delta": int(hard_row.get("average_terminal_health_margin_pct", 0)) - int(normal_row.get("average_terminal_health_margin_pct", 0)),
+			"total_damage_per_round_delta": int(hard_row.get("average_total_damage_per_round", 0)) - int(normal_row.get("average_total_damage_per_round", 0)),
+			"player_remaining_pct_delta": int(hard_row.get("average_player_health_remaining_pct", 0)) - int(normal_row.get("average_player_health_remaining_pct", 0)),
+			"enemy_remaining_pct_delta": int(hard_row.get("average_enemy_health_remaining_pct", 0)) - int(normal_row.get("average_enemy_health_remaining_pct", 0)),
+			"primary_outcome_changed": String(hard_row.get("primary_outcome_state", "")) != String(normal_row.get("primary_outcome_state", "")),
+			"primary_outcome_pct_delta": int(hard_row.get("primary_outcome_pct", 0)) - int(normal_row.get("primary_outcome_pct", 0)),
+		}
+		row_delta["no_observed_effect"] = (
+			int(row_delta.get("terminal_margin_delta", 0)) == 0
+			and int(row_delta.get("total_damage_per_round_delta", 0)) == 0
+			and int(row_delta.get("player_remaining_pct_delta", 0)) == 0
+			and int(row_delta.get("enemy_remaining_pct_delta", 0)) == 0
+			and not bool(row_delta.get("primary_outcome_changed", false))
+			and int(row_delta.get("primary_outcome_pct_delta", 0)) == 0
+		)
+		result["normal_vs_hard"] = row_delta
+	return result
 
 static func balance_tuning_queue(aggregate: Dictionary, samples: Array, combat_feel_gate: Dictionary = {}) -> Dictionary:
 	var items := []
@@ -242,10 +361,10 @@ static func balance_tuning_queue(aggregate: Dictionary, samples: Array, combat_f
 	})
 	return queue
 
-static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_limit: int = DEFAULT_STEP_LIMIT) -> Dictionary:
+static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_limit: int = DEFAULT_STEP_LIMIT, launch_difficulty: String = "normal") -> Dictionary:
 	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
 		scenario_id,
-		"normal",
+		launch_difficulty,
 		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 	)
 	if session == null or session.scenario_id == "":
@@ -331,6 +450,7 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 	var completed_rounds: int = max(1, last_round)
 	return {
 		"scenario_id": scenario_id,
+		"launch_difficulty": String(session.difficulty),
 		"encounter_placement_id": String(encounter.get("placement_id", "")),
 		"encounter_id": String(encounter.get("encounter_id", "")),
 		"terrain": battle_terrain,
@@ -469,6 +589,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 	var terrain_distribution := {}
 	var scenario_distribution := {}
 	var difficulty_distribution := {}
+	var launch_difficulty_distribution := {}
 	var pacing_band_distribution := {}
 	var initial_role_distribution := {}
 	var initial_ability_distribution := {}
@@ -498,6 +619,8 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		scenario_distribution[scenario_id] = int(scenario_distribution.get(scenario_id, 0)) + 1
 		var difficulty_id := String(sample.get("encounter_difficulty", "unknown"))
 		difficulty_distribution[difficulty_id] = int(difficulty_distribution.get(difficulty_id, 0)) + 1
+		var launch_difficulty_id := String(sample.get("launch_difficulty", "unknown"))
+		launch_difficulty_distribution[launch_difficulty_id] = int(launch_difficulty_distribution.get(launch_difficulty_id, 0)) + 1
 		var pacing_band := String(sample.get("pacing_band", "unknown"))
 		pacing_band_distribution[pacing_band] = int(pacing_band_distribution.get(pacing_band, 0)) + 1
 		var profile: Dictionary = sample.get("initial_stack_profile", {}) if sample.get("initial_stack_profile", {}) is Dictionary else {}
@@ -539,6 +662,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"terrain_distribution": terrain_distribution,
 		"scenario_distribution": scenario_distribution,
 		"difficulty_distribution": difficulty_distribution,
+		"launch_difficulty_distribution": launch_difficulty_distribution,
 		"pacing_band_distribution": pacing_band_distribution,
 		"initial_role_distribution": initial_role_distribution,
 		"initial_ability_distribution": initial_ability_distribution,
