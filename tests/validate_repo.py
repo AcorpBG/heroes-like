@@ -104,6 +104,8 @@ ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH = ROOT / "docs" / "animation-overworl
 ANIMATION_VALIDATION_SMOKE_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.gd"
 ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.tscn"
 ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validation-smoke-harness-report.md"
+BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_event_animation_state_report.gd"
+BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_event_animation_state_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
@@ -14325,6 +14327,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH,
         UNIT_ANIMATION_REPORT_SCRIPT_PATH,
         UNIT_ANIMATION_REPORT_SCENE_PATH,
+        BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH,
+        BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
@@ -14506,11 +14510,27 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _unit_battle_icon_for_stack",
         "func _unit_animation_sheet_for_stack",
         "func _animation_frame_region_for_stack",
+        "BattleRulesScript.animation_state_for_stack",
         "draw_texture_rect(battle_icon",
         "draw_texture_rect_region(animation_sheet",
         "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "STACK_ANIMATION_STATES_KEY",
+        "ANIMATION_STATE_BY_EVENT",
+        "func animation_state_for_stack",
+        "func animation_event_states",
+        "func _mark_stack_animation_event",
+        "func _mark_damage_target_animation",
+        "func _mark_spell_animation_states",
+        "func _normalize_stack_animation_states",
+        "battle_unit_ranged_attack",
+        "battle_status_applied",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing battle event animation token {required_token}")
 
     overworld_map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -14613,6 +14633,25 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "unique_sprite_sheet_visual_fingerprint_count",
     ):
         ensure(required_token in animation_report_text, errors, f"unit_animation_manifest_report.gd is missing token {required_token}")
+
+    battle_event_animation_report_text = BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BATTLE_EVENT_ANIMATION_STATE_REPORT",
+        "BattleRulesScript.perform_player_action",
+        "BattleRulesScript.move_active_stack_to_hex",
+        "BattleRulesScript.cast_player_spell",
+        "BattleRulesScript.animation_state_for_stack",
+        "BattleBoardViewScript",
+        "move_path_step",
+        "melee_windup_release",
+        "ranged_aim_release",
+        "hit_stagger",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "defend_brace",
+    ):
+        ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:

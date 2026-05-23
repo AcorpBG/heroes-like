@@ -21,6 +21,8 @@ const FIELD_OBJECTIVES_KEY := "field_objectives"
 const HEX_BOARD_KEY := "hex_board"
 const OCCUPIED_HEXES_KEY := "occupied_hexes"
 const STACK_HEX_KEY := "hex"
+const STACK_ANIMATION_STATES_KEY := "stack_animation_states"
+const ANIMATION_EVENT_SERIAL_KEY := "animation_event_serial"
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
@@ -30,6 +32,32 @@ const BATTLE_HEX_ROWS := 7
 const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
+const ANIMATION_STATE_BY_EVENT := {
+	"battle_unit_move": "move_path_step",
+	"battle_unit_melee_attack": "melee_windup_release",
+	"battle_unit_ranged_attack": "ranged_aim_release",
+	"battle_unit_hit": "hit_stagger",
+	"battle_unit_death": "death_rout_remove",
+	"battle_unit_cast": "cast_support_anchor",
+	"battle_status_applied": "status_applied",
+	"battle_unit_defend": "defend_brace",
+	"battle_retaliation": "retaliation_release",
+	"battle_unit_retreat": "retreat_withdraw_column",
+	"battle_unit_surrender": "surrender_stand_down",
+}
+const ANIMATION_STATE_PRIORITY := {
+	"death_rout_remove": 100,
+	"retreat_withdraw_column": 95,
+	"surrender_stand_down": 95,
+	"retaliation_release": 86,
+	"status_applied": 84,
+	"hit_stagger": 80,
+	"melee_windup_release": 60,
+	"ranged_aim_release": 60,
+	"cast_support_anchor": 60,
+	"move_path_step": 58,
+	"defend_brace": 55,
+}
 
 static func create_town_assault_payload(
 	session: SessionStateStoreScript.SessionData,
@@ -130,12 +158,14 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"turn_index": 0,
 		"active_stack_id": "",
 		"selected_target_id": "",
-			"recent_events": [],
-			HEX_BOARD_KEY: _hex_board_descriptor(),
-			OCCUPIED_HEXES_KEY: {},
-			COMMANDER_SPELL_CAST_ROUNDS_KEY: {},
-			FIELD_OBJECTIVES_KEY: _normalize_field_objectives(
-				[],
+		"recent_events": [],
+		STACK_ANIMATION_STATES_KEY: {},
+		ANIMATION_EVENT_SERIAL_KEY: 0,
+		HEX_BOARD_KEY: _hex_board_descriptor(),
+		OCCUPIED_HEXES_KEY: {},
+		COMMANDER_SPELL_CAST_ROUNDS_KEY: {},
+		FIELD_OBJECTIVES_KEY: _normalize_field_objectives(
+			[],
 			encounter,
 			encounter_placement,
 			scenario,
@@ -961,6 +991,8 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		else bool(session.battle.get("surrender_allowed", true))
 	)
 	session.battle["recent_events"] = _normalize_recent_events(session.battle.get("recent_events", []))
+	session.battle[STACK_ANIMATION_STATES_KEY] = _normalize_stack_animation_states(session.battle.get(STACK_ANIMATION_STATES_KEY, {}))
+	session.battle[ANIMATION_EVENT_SERIAL_KEY] = max(0, int(session.battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)))
 	session.battle[TACTICAL_BRIEFING_KEY] = _normalize_tactical_briefing_state(session.battle.get(TACTICAL_BRIEFING_KEY, {}), session)
 	session.battle["round"] = max(1, int(session.battle.get("round", 1)))
 	session.battle["max_rounds"] = max(1, int(session.battle.get("max_rounds", 12)))
@@ -4686,6 +4718,29 @@ static func _post_action_label(action_id: String) -> String:
 			return "Surrender"
 	return "Order"
 
+static func animation_state_for_stack(battle: Dictionary, stack: Dictionary) -> String:
+	var battle_id := String(stack.get("battle_id", ""))
+	var event_states: Dictionary = battle.get(STACK_ANIMATION_STATES_KEY, {}) if battle.get(STACK_ANIMATION_STATES_KEY, {}) is Dictionary else {}
+	var record: Dictionary = event_states.get(battle_id, {}) if event_states.get(battle_id, {}) is Dictionary else {}
+	var event_state := String(record.get("state", "")).strip_edges()
+	if event_state != "":
+		return event_state
+	if battle_id != "" and battle_id == String(battle.get("active_stack_id", "")):
+		return "ready_active"
+	if bool(stack.get("defending", false)):
+		return "defend_brace"
+	return "idle_hold"
+
+static func animation_event_states(battle: Dictionary) -> Dictionary:
+	var normalized := {}
+	var event_states: Dictionary = battle.get(STACK_ANIMATION_STATES_KEY, {}) if battle.get(STACK_ANIMATION_STATES_KEY, {}) is Dictionary else {}
+	for battle_id in event_states.keys():
+		var record: Dictionary = event_states.get(battle_id, {}) if event_states.get(battle_id, {}) is Dictionary else {}
+		if String(record.get("state", "")).strip_edges() == "":
+			continue
+		normalized[String(battle_id)] = record.duplicate(true)
+	return normalized
+
 static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
@@ -4703,6 +4758,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "Spell casting failed.")), "state": "invalid"}
+	_clear_stack_animation_states(session.battle)
 	_clear_selected_target_continuity(session.battle)
 	_clear_selected_target_closing(session.battle)
 	_mark_commander_spell_cast(session.battle, "player")
@@ -4790,6 +4846,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
+	_mark_spell_animation_states(session.battle, active_stack, resolution)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -4826,6 +4883,7 @@ static func move_active_stack_to_hex(session: SessionStateStoreScript.SessionDat
 			{"ok": false, "message": String(movement_intent.get("message", "That hex is not a legal destination for this stack.")), "state": "invalid"},
 			movement_intent
 		)
+	_clear_stack_animation_states(session.battle)
 	return _resolve_move_action(session, active_stack, legal_destination, "moves", movement_intent)
 
 static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String) -> Dictionary:
@@ -4840,8 +4898,10 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 		"advance":
 			if int(session.battle.get("distance", 1)) <= 0 and legal_destinations_for_active_stack(session.battle).is_empty():
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
+			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			var advance_message = "%s advances." % _stack_label(active_stack)
@@ -4870,6 +4930,7 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			var strike_target = get_selected_target(session.battle)
 			if not _can_make_melee_attack(active_stack, session.battle, strike_target):
 				return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			return _resolve_attack_action(session, active_stack, strike_target, false)
@@ -4877,13 +4938,16 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			var shoot_target = get_selected_target(session.battle)
 			if not _can_make_ranged_attack(active_stack, session.battle, shoot_target):
 				return {"ok": false, "message": "This stack cannot make a ranged attack at that target.", "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			return _resolve_attack_action(session, active_stack, shoot_target, true)
 		"defend":
+			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
+			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
 			var defend_message = "%s braces for impact." % _stack_label(active_stack)
 			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
@@ -4904,6 +4968,8 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 				return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
 			if not _battle_retreat_allowed(session.battle):
 				return {"ok": false, "message": _retreat_action_summary(session), "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
+			_mark_side_animation_event(session.battle, "player", "battle_unit_retreat")
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			return _finalize_retreat(session)
@@ -4912,6 +4978,8 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 				return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
 			if not _battle_surrender_allowed(session.battle):
 				return {"ok": false, "message": _surrender_action_summary(session), "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
+			_mark_side_animation_event(session.battle, "player", "battle_unit_surrender")
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			return _finalize_surrender(session)
@@ -4973,6 +5041,7 @@ static func _resolve_attack_action(
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
+	_mark_stack_animation_event(session.battle, String(attacker.get("battle_id", "")), "battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack")
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -4982,9 +5051,11 @@ static func _resolve_attack_action(
 
 	var retaliated = false
 	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	messages.append_array(_apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance))
+	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
+	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty())
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -4997,9 +5068,11 @@ static func _resolve_attack_action(
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
+		_mark_stack_animation_event(session.battle, String(defender_after.get("battle_id", "")), "battle_retaliation")
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		messages.append_array(_apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation))
+		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
+		messages.append_array(retaliation_ability_messages)
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(
 			_apply_damage_pressure(
@@ -5011,6 +5084,7 @@ static func _resolve_attack_action(
 				"retaliation"
 			)
 		)
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty())
 		retaliated = true
 
 	var action_id := "shoot" if is_ranged else "strike"
@@ -5263,9 +5337,11 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				)
 			if not advance_objective_messages.is_empty():
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
+			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 			return _complete_enemy_action(session, advance_message)
 		"defend":
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
+			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
 			var defend_message = "%s braces for impact." % _stack_label(active_stack)
 			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
@@ -5307,6 +5383,7 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				)
 				if not fallback_objective_messages.is_empty():
 					fallback_advance_message = _join_messages([fallback_advance_message, " ".join(fallback_objective_messages)])
+				_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 				return _complete_enemy_action(session, fallback_advance_message)
 			return _resolve_ai_attack(session, active_stack, fallback, false)
 
@@ -5403,6 +5480,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
+	_mark_spell_animation_states(session.battle, active_stack, resolution)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -5432,6 +5510,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
+	_mark_stack_animation_event(session.battle, String(attacker.get("battle_id", "")), "battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack")
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -5440,9 +5519,11 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		messages.append("%s batters %s for %d damage." % [_stack_label(attacker), _stack_label(target), damage])
 
 	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	messages.append_array(_apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance))
+	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
+	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty())
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -5455,9 +5536,11 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
+		_mark_stack_animation_event(session.battle, String(defender_after.get("battle_id", "")), "battle_retaliation")
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		messages.append_array(_apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation))
+		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
+		messages.append_array(retaliation_ability_messages)
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(
 			_apply_damage_pressure(
@@ -5469,6 +5552,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 				"retaliation"
 			)
 		)
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty())
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -6876,6 +6960,7 @@ static func _resolve_move_action(
 ) -> Dictionary:
 	var start_hex := _stack_hex(active_stack)
 	_set_stack_hex(session.battle, String(active_stack.get("battle_id", "")), destination)
+	_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 	_sync_distance_from_hexes(session.battle)
 	var pressure_message := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 	var updated_stack := _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
@@ -10555,6 +10640,88 @@ static func _battle_seed(session: SessionStateStoreScript.SessionData) -> int:
 
 static func _battle_state_counter(session: SessionStateStoreScript.SessionData) -> int:
 	return hash(JSON.stringify(session.battle))
+
+static func _clear_stack_animation_states(battle: Dictionary) -> void:
+	if battle.is_empty():
+		return
+	battle[STACK_ANIMATION_STATES_KEY] = {}
+
+static func _mark_side_animation_event(battle: Dictionary, side: String, event_id: String) -> void:
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		if String(stack.get("side", "")) != side or _alive_count(stack) <= 0:
+			continue
+		_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), event_id)
+
+static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false) -> void:
+	if battle_id == "":
+		return
+	var target := _get_stack_by_id(battle, battle_id)
+	if target.is_empty():
+		return
+	if _alive_count(target) <= 0:
+		_mark_stack_animation_event(battle, battle_id, "battle_unit_death")
+	elif had_status_effect:
+		_mark_stack_animation_event(battle, battle_id, "battle_status_applied")
+	else:
+		_mark_stack_animation_event(battle, battle_id, "battle_unit_hit")
+
+static func _mark_spell_animation_states(battle: Dictionary, caster_stack: Dictionary, resolution: Dictionary) -> void:
+	_mark_stack_animation_event(battle, String(caster_stack.get("battle_id", "")), "battle_unit_cast")
+	var target_id := String(resolution.get("target_battle_id", "")).strip_edges()
+	if target_id == "":
+		return
+	match String(resolution.get("resolution_type", "")):
+		"damage":
+			var post_damage_effect = resolution.get("post_damage_effect", {})
+			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty())
+		"effect", "recover_effect", "cleanse_effect":
+			_mark_stack_animation_event(battle, target_id, "battle_status_applied")
+
+static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, event_id: String) -> void:
+	if battle.is_empty() or battle_id == "":
+		return
+	var state := String(ANIMATION_STATE_BY_EVENT.get(event_id, "")).strip_edges()
+	if state == "":
+		return
+	var event_states: Dictionary = battle.get(STACK_ANIMATION_STATES_KEY, {}) if battle.get(STACK_ANIMATION_STATES_KEY, {}) is Dictionary else {}
+	var existing: Dictionary = event_states.get(battle_id, {}) if event_states.get(battle_id, {}) is Dictionary else {}
+	var existing_state := String(existing.get("state", "")).strip_edges()
+	var existing_priority := int(ANIMATION_STATE_PRIORITY.get(existing_state, 0))
+	var priority := int(ANIMATION_STATE_PRIORITY.get(state, 1))
+	if existing_state != "" and existing_priority > priority:
+		return
+	var serial := int(battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)) + 1
+	battle[ANIMATION_EVENT_SERIAL_KEY] = serial
+	event_states[battle_id] = {
+		"event_id": event_id,
+		"state": state,
+		"priority": priority,
+		"serial": serial,
+		"round": int(battle.get("round", 1)),
+		"turn_index": int(battle.get("turn_index", 0)),
+	}
+	battle[STACK_ANIMATION_STATES_KEY] = event_states
+
+static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
+	var normalized := {}
+	if not (value is Dictionary):
+		return normalized
+	for battle_id in value.keys():
+		var record: Dictionary = value.get(battle_id, {}) if value.get(battle_id, {}) is Dictionary else {}
+		var state := String(record.get("state", "")).strip_edges()
+		if state == "":
+			continue
+		normalized[String(battle_id)] = {
+			"event_id": String(record.get("event_id", "")),
+			"state": state,
+			"priority": int(record.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
+			"serial": max(0, int(record.get("serial", 0))),
+			"round": max(1, int(record.get("round", 1))),
+			"turn_index": max(0, int(record.get("turn_index", 0))),
+		}
+	return normalized
 
 static func _normalize_recent_events(value: Variant) -> Array:
 	var events = []
