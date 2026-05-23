@@ -91,6 +91,8 @@ const BUTTON_ROLES := {
 	},
 }
 
+const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
+
 static func set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
 	label.tooltip_text = full_text
 	label.text = compact_text(full_text, max_lines, max_chars, drop_headings)
@@ -158,8 +160,9 @@ static func texture_panel_style(path: String, fallback_tone: String = "ink", tex
 	var texture_2d: Texture2D = texture
 	var max_x_margin: int = max(0, int(floor(float(texture_2d.get_width()) * 0.5)) - 1)
 	var max_y_margin: int = max(0, int(floor(float(texture_2d.get_height()) * 0.5)) - 1)
-	var x_margin: int = clampi(texture_margin, 0, max_x_margin)
-	var y_margin: int = clampi(texture_margin, 0, max_y_margin)
+	var safe_texture_margin: int = min(texture_margin, 24)
+	var x_margin: int = clampi(safe_texture_margin, 0, max_x_margin)
+	var y_margin: int = clampi(safe_texture_margin, 0, max_y_margin)
 	var style := StyleBoxTexture.new()
 	style.texture = texture_2d
 	style.texture_margin_left = x_margin
@@ -215,12 +218,26 @@ static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	var disabled := normal.duplicate()
 	disabled.bg_color = Color(0.12, 0.14, 0.15, 0.92)
 	disabled.border_color = Color(0.28, 0.32, 0.35, 0.72)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("disabled", disabled)
+	var art_role := _button_art_role(role)
+	button.add_theme_stylebox_override("normal", _button_art_style(art_role, "normal", normal))
+	button.add_theme_stylebox_override("hover", _button_art_style(art_role, "hover", hover))
+	button.add_theme_stylebox_override("pressed", _button_art_style(art_role, "pressed", pressed))
+	button.add_theme_stylebox_override("disabled", _button_art_style(art_role, "disabled", disabled))
 	button.add_theme_color_override("font_color", TEXT_TONES["title"])
 	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
+
+static func _button_art_role(role: String) -> String:
+	if role == "primary" or role == "spine_active":
+		return "primary"
+	if role == "danger":
+		return "danger"
+	return "secondary"
+
+static func _button_art_style(art_role: String, state: String, fallback: StyleBox) -> StyleBox:
+	var path := "%s/button_%s_%s.png" % [BUTTON_ART_ROOT, art_role, state]
+	if not FileAccess.file_exists(path):
+		return fallback
+	return texture_panel_style(path, "ink", 12, 8)
 
 static func apply_item_list(item_list: ItemList, tone: String = "ink") -> void:
 	item_list.add_theme_stylebox_override("panel", panel_style(tone, 14))

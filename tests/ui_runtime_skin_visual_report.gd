@@ -18,6 +18,11 @@ const EXPECTED_PANELS := {
 			"HeroPanel": "res://art/ui/runtime/overworld/hero_frame.png",
 			"CommandPanel": "res://art/ui/runtime/overworld/wood_panel.png",
 		},
+		"buttons": {
+			"PrimaryAction": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"EndTurn": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"Save": "res://art/ui/runtime/shared/button_secondary_normal.png",
+		},
 	},
 	"battle": {
 		"scene": BATTLE_SCENE,
@@ -30,6 +35,11 @@ const EXPECTED_PANELS := {
 			"Footer": "res://art/ui/runtime/battle/battle_footer_panel.png",
 			"SystemPanel": "res://art/ui/runtime/battle/combat_log_panel.png",
 		},
+		"buttons": {
+			"Advance": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"Retreat": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"Surrender": "res://art/ui/runtime/shared/button_primary_normal.png",
+		},
 	},
 	"town": {
 		"scene": TOWN_SCENE,
@@ -41,6 +51,11 @@ const EXPECTED_PANELS := {
 			"SidebarShell": "res://art/ui/runtime/town/parchment_panel.png",
 			"BuildPanel": "res://art/ui/runtime/town/build_panel.png",
 			"FooterPanel": "res://art/ui/runtime/town/banner_frame.png",
+		},
+		"buttons": {
+			"Save": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"Leave": "res://art/ui/runtime/shared/button_primary_normal.png",
+			"Menu": "res://art/ui/runtime/shared/button_primary_normal.png",
 		},
 	},
 }
@@ -76,6 +91,7 @@ func _run_shell(shell_id: String, spec: Dictionary) -> Dictionary:
 	var shell_report := {
 		"scene": spec["scene"],
 		"panels": {},
+		"buttons": {},
 		"screenshot": "",
 	}
 	for panel_name in Dictionary(spec["panels"]).keys():
@@ -88,6 +104,16 @@ func _run_shell(shell_id: String, spec: Dictionary) -> Dictionary:
 		}
 		if actual_path != expected_path:
 			_error("%s panel %s expected %s but got %s" % [shell_id, panel_name, expected_path, actual_path])
+	for button_name in Dictionary(spec.get("buttons", {})).keys():
+		var expected_button_path := String(spec["buttons"][button_name])
+		var actual_button_path := _button_texture_path(shell, String(button_name), "normal")
+		shell_report["buttons"][button_name] = {
+			"expected": expected_button_path,
+			"actual": actual_button_path,
+			"ok": actual_button_path == expected_button_path,
+		}
+		if actual_button_path != expected_button_path:
+			_error("%s button %s expected %s but got %s" % [shell_id, button_name, expected_button_path, actual_button_path])
 
 	var screenshot_path := "%s/%s" % [OUTPUT_DIR, String(spec["screenshot"])]
 	await _save_screenshot(screenshot_path)
@@ -117,6 +143,20 @@ func _panel_texture_path(shell: Node, panel_name: String) -> String:
 	if not panel is PanelContainer:
 		return "<not panel>"
 	var style := (panel as PanelContainer).get_theme_stylebox("panel")
+	if not style is StyleBoxTexture:
+		return "<not texture stylebox>"
+	var texture := (style as StyleBoxTexture).texture
+	if texture == null:
+		return "<missing texture>"
+	return texture.resource_path
+
+func _button_texture_path(shell: Node, button_name: String, style_name: String) -> String:
+	var button := shell.find_child(button_name, true, false)
+	if button == null:
+		return "<missing button>"
+	if not button is BaseButton:
+		return "<not button>"
+	var style := (button as BaseButton).get_theme_stylebox(style_name)
 	if not style is StyleBoxTexture:
 		return "<not texture stylebox>"
 	var texture := (style as StyleBoxTexture).texture
