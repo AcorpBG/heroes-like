@@ -2431,6 +2431,174 @@ static func action_readiness_confirmation_payload(session: SessionStateStoreScri
 static func describe_action_readiness_confirmation(session: SessionStateStoreScript.SessionData) -> String:
 	return String(action_readiness_confirmation_payload(session).get("visible_text", "Ready check unavailable."))
 
+static func intent_forecast_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {
+			"visible_text": "Intent forecast: no battle is loaded.",
+			"tooltip_text": "Intent Forecast\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	if active_stack.is_empty():
+		return {
+			"visible_text": "Intent forecast: wait for the next stack.",
+			"tooltip_text": "Intent Forecast\n- No stack is queued to act.",
+			"readiness": "waiting",
+		}
+	if String(active_stack.get("side", "")) != "player":
+		var enemy_action := BattleAiRulesScript.choose_enemy_action(battle, active_stack, battle.get("enemy_hero", {}))
+		var enemy_reply := _enemy_action_preview_summary(battle, active_stack, enemy_action)
+		return {
+			"visible_text": "Intent forecast: enemy initiative; %s" % _intent_forecast_sentence(enemy_reply),
+			"tooltip_text": "Intent Forecast\n- Active: %s\n- Incoming: %s\n- Readiness: player input is locked until command returns." % [
+				_stack_label(active_stack),
+				enemy_reply,
+			],
+			"readiness": "locked",
+			"action_id": String(enemy_action.get("action", "")),
+			"target_battle_id": String(enemy_action.get("target_battle_id", "")),
+			"risk": enemy_reply,
+		}
+
+	var surface := get_action_surface(session)
+	var tactical_order := BattleAiRulesScript.choose_stack_tactical_order(battle, active_stack, "enemy")
+	var action_id := _intent_forecast_action_id(surface, tactical_order, active_stack)
+	if action_id == "":
+		return {
+			"visible_text": "Intent forecast: no legal order is open.",
+			"tooltip_text": "Intent Forecast\n- Active: %s\n- No ready action is available from the current posture.\n- Next: retarget, move, or wait for initiative to change." % _stack_label(active_stack),
+			"readiness": "blocked",
+		}
+	var action: Dictionary = surface.get(action_id, {}) if surface.get(action_id, {}) is Dictionary else {}
+	var target := get_selected_target(battle)
+	var tactical_target_id := String(tactical_order.get("target_battle_id", ""))
+	if tactical_target_id != "":
+		var tactical_target := _get_stack_by_id(battle, tactical_target_id)
+		if not tactical_target.is_empty():
+			target = tactical_target
+	var action_label := String(action.get("label", action_id.capitalize())).strip_edges()
+	var target_label := _intent_forecast_target_label(action_id, active_stack, target)
+	var expected_result := _intent_forecast_expected_result(action_id, session, battle, active_stack, target, action)
+	var reason := String(action.get("why", "")).strip_edges()
+	if reason == "":
+		reason = _action_why_line(action_id, session, battle, active_stack, target, true)
+	var risk := _enemy_reply_line(session, battle)
+	var confidence := _intent_forecast_confidence_line(tactical_order, action_id)
+	var retarget_line := ""
+	if tactical_target_id != "" and tactical_target_id != String(get_selected_target(battle).get("battle_id", "")) and action_id in ["strike", "shoot"]:
+		retarget_line = "Retarget first: %s." % target_label
+	var visible := "Intent forecast: %s%s; %s." % [
+		action_label,
+		" -> %s" % target_label if target_label != "" else "",
+		_intent_forecast_sentence(expected_result),
+	]
+	var tooltip_lines := [
+		"Intent Forecast",
+		"- Active: %s" % _stack_label(active_stack),
+		"- Preferred order: %s%s" % [action_label, " -> %s" % target_label if target_label != "" else ""],
+		"- Expected result: %s" % expected_result,
+		"- Why: %s" % reason,
+		"- Risk: %s" % risk,
+		"- Confidence: %s" % confidence,
+		"- Inspection: checking this forecast does not spend an action, move, attack, cast, or advance initiative.",
+	]
+	if retarget_line != "":
+		tooltip_lines.insert(3, "- %s" % retarget_line)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"readiness": String(action.get("readiness", "Ready")),
+		"action_id": action_id,
+		"action_label": action_label,
+		"target": target_label,
+		"target_battle_id": String(target.get("battle_id", "")),
+		"expected_result": expected_result,
+		"why": reason,
+		"risk": risk,
+		"confidence": confidence,
+		"scoring_policy": String(tactical_order.get("scoring_policy", "")),
+		"candidate_scores": tactical_order.get("candidate_scores", {}).duplicate(true) if tactical_order.get("candidate_scores", {}) is Dictionary else {},
+	}
+
+static func describe_intent_forecast(session: SessionStateStoreScript.SessionData) -> String:
+	return String(intent_forecast_payload(session).get("visible_text", "Intent forecast unavailable."))
+
+static func _intent_forecast_action_id(surface: Dictionary, tactical_order: Dictionary, active_stack: Dictionary) -> String:
+	var tactical_action := String(tactical_order.get("action", ""))
+	if tactical_action != "":
+		var tactical_surface: Dictionary = surface.get(tactical_action, {}) if surface.get(tactical_action, {}) is Dictionary else {}
+		if not bool(tactical_surface.get("disabled", true)):
+			return tactical_action
+	return _preferred_player_action_id(surface, active_stack)
+
+static func _intent_forecast_target_label(action_id: String, active_stack: Dictionary, target: Dictionary) -> String:
+	match action_id:
+		"strike", "shoot":
+			return _stack_label(target) if not target.is_empty() else "selected target"
+		"advance":
+			return _stack_label(target) if not target.is_empty() else "nearest lane"
+		"defend":
+			return _stack_label(active_stack) if not active_stack.is_empty() else "active stack"
+		"retreat", "surrender":
+			return "whole army"
+	return ""
+
+static func _intent_forecast_expected_result(
+	action_id: String,
+	session: SessionStateStoreScript.SessionData,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	action: Dictionary
+) -> String:
+	if action_id in ["strike", "shoot"] and not active_stack.is_empty() and not target.is_empty():
+		return _attack_action_summary(active_stack, target, battle, action_id == "shoot").trim_suffix(".")
+	if action_id == "advance":
+		return _advance_action_summary(battle, active_stack).trim_suffix(".")
+	if action_id == "defend":
+		return _defend_action_summary(battle, active_stack).trim_suffix(".")
+	if action_id == "retreat":
+		return _retreat_action_summary(session).trim_suffix(".")
+	if action_id == "surrender":
+		return _surrender_action_summary(session).trim_suffix(".")
+	var consequence := String(action.get("consequence", action.get("summary", ""))).strip_edges()
+	return consequence if consequence != "" else "initiative advances after the order resolves"
+
+static func _intent_forecast_sentence(text: String) -> String:
+	var cleaned := text.strip_edges()
+	if cleaned == "":
+		return ""
+	var split := cleaned.split(". ", false)
+	if split.is_empty():
+		return cleaned.trim_suffix(".")
+	return String(split[0]).strip_edges().trim_suffix(".")
+
+static func _intent_forecast_confidence_line(tactical_order: Dictionary, action_id: String) -> String:
+	var scores: Dictionary = tactical_order.get("candidate_scores", {}) if tactical_order.get("candidate_scores", {}) is Dictionary else {}
+	if scores.is_empty():
+		return "manual order surface; no score spread is available."
+	var chosen_score := -99999.0
+	var next_score := -99999.0
+	for key_value in scores.keys():
+		var key := String(key_value)
+		var score := float(scores.get(key_value, 0.0))
+		if key == action_id:
+			chosen_score = score
+		elif score > next_score:
+			next_score = score
+	if chosen_score <= -99998.0:
+		return "fallback from scored order; selected action was not in the candidate spread."
+	if next_score <= -99998.0:
+		return "single scored option at %.1f." % chosen_score
+	var margin := chosen_score - next_score
+	var band := "close"
+	if margin >= 3.0:
+		band = "strong"
+	elif margin >= 1.0:
+		band = "clear"
+	return "%s scored pick: %.1f vs next %.1f." % [band, chosen_score, next_score]
+
 static func _manual_battle_action_cue(actions: Dictionary, click_intent: Dictionary, movement_intent: Dictionary) -> String:
 	var click_action := String(click_intent.get("action", ""))
 	var click_label := String(click_intent.get("label", "")).strip_edges()
