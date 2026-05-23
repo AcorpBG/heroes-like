@@ -84,12 +84,29 @@ func _validate_move_state() -> void:
 	_expect_equal("move path ghost cue", String(path.get("cue_id", "")), "vfx_placeholder_battle_path_ghost")
 	if int(path.get("start_q", -1)) == int(path.get("target_q", -1)) and int(path.get("start_r", -1)) == int(path.get("target_r", -1)):
 		_error("Move path ghost did not span distinct source and destination cells: %s" % path)
+	var moving_stack := _summary_stack_entry(board_summary, "player_0")
+	_expect_equal("move token presentation motion active", str(bool(moving_stack.get("presentation_motion_active", false))), "true")
+	_expect_equal("move token presentation event", String(moving_stack.get("presentation_motion_event_id", "")), "battle_unit_move")
+	_expect_equal("move token presentation from q", str(int(moving_stack.get("presentation_motion_from_q", -1))), "0")
+	_expect_equal("move token presentation from r", str(int(moving_stack.get("presentation_motion_from_r", -1))), "3")
+	_expect_equal("move token presentation to q", str(int(moving_stack.get("presentation_motion_to_q", -1))), str(int(destination.get("q", -1))))
+	_expect_equal("move token presentation to r", str(int(moving_stack.get("presentation_motion_to_r", -1))), str(int(destination.get("r", -1))))
+	if float(moving_stack.get("presentation_motion_progress", 1.0)) >= 1.0:
+		_error("Move token presentation progress was already complete during active playback: %s." % moving_stack)
+	var presentation_x := float(moving_stack.get("presentation_x", 0.0))
+	var start_x := float(path.get("start_x", 0.0))
+	var end_x := float(path.get("end_x", 0.0))
+	if presentation_x < minf(start_x, end_x) - 0.5 or presentation_x > maxf(start_x, end_x) + 0.5:
+		_error("Move token presentation center left the event path: stack=%s path=%s." % [moving_stack, path])
+	if absf(presentation_x - end_x) <= 1.0:
+		_error("Move token presentation snapped directly to destination instead of animating along the event path: stack=%s path=%s." % [moving_stack, path])
 	_report["cases"]["move"] = {
 		"state": state,
 		"destination": destination,
 		"events": BattleRulesScript.animation_event_states(session.battle),
 		"queue": BattleRulesScript.animation_event_queue(session.battle),
 		"board_vfx": vfx_playback,
+		"board_stack": moving_stack,
 	}
 
 func _validate_melee_hit_state() -> void:
