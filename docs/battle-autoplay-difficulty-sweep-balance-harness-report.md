@@ -1,0 +1,23 @@
+# Battle Autoplay Difficulty Sweep Balance Harness Report
+
+Slice: `battle-difficulty-sweep-balance-harness-20260523-10184`
+
+This slice extends the existing deterministic battle autoplay balance harness with `battle_autoplay_difficulty_sweep_v1`. The sweep runs the authored encounter sample set separately for normal and hard launch difficulties, then emits per-difficulty rows plus a `normal_vs_hard` delta summary.
+
+The report checks that each sampled battle preserves `launch_difficulty_distribution`, completes without stalled samples or invalid orders, and exposes difficulty-effect evidence through terminal margin, damage pacing, remaining health, and outcome deltas. The sweep remains report-only: it gives combat-feel and balance work better evidence before content scaling, but it does not tune content automatically.
+
+Validation entry point:
+
+```bash
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn
+```
+
+Current evidence:
+
+- Normal: 12/12 completed samples, `average_terminal_health_margin_pct: 43`, `average_total_damage_per_round: 41`, primary outcome `defeat` at 67%.
+- Hard: 12/12 completed samples, `average_terminal_health_margin_pct: 61`, `average_total_damage_per_round: 46`, primary outcome `defeat` at 75%.
+- `normal_vs_hard`: enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5.
+
+No automatic tuning or content writeback.
+
+No final combat balance approval.
