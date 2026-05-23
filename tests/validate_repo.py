@@ -116,6 +116,8 @@ BATTLE_SFX_MANIFEST_PATH = CONTENT_DIR / "battle_sfx_manifest.json"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
+HEADLESS_BALANCE_HARNESS_CLI_PATH = ROOT / "tools" / "run_headless_balance_harness.py"
+HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH = ROOT / "docs" / "headless-balance-harness-cli-report.md"
 BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
 BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH = ROOT / "tests" / "battle_intent_forecast_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
@@ -13449,8 +13451,48 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         ROOT / "tests" / "headless_simulation_harness_report.tscn",
         doc_path,
         difficulty_sweep_doc_path,
+        HEADLESS_BALANCE_HARNESS_CLI_PATH,
+        HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing headless strategic AI live turn harness file: {path.relative_to(ROOT)}")
+    if HEADLESS_BALANCE_HARNESS_CLI_PATH.exists():
+        cli_text = HEADLESS_BALANCE_HARNESS_CLI_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "headless_balance_harness_cli_v1",
+            "SUITES",
+            '"standard"',
+            '"full"',
+            "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
+            "BALANCE_REGRESSION_REPORT_SUITE",
+            "HEADLESS_SIMULATION_HARNESS_REPORT",
+            "extract_marker_payload",
+            "policy_violations_for",
+            "FORBIDDEN_POLICY_FLAGS",
+            "automatic_tuning",
+            "runtime_balance_changes",
+            "authored_content_writeback",
+            "manual_play_replacement",
+            "alpha_or_parity_claim",
+            "manifest.json",
+            "--keep-going",
+            "hashlib.sha256",
+            "report_status_from_payload",
+        ):
+            ensure(required_token in cli_text, errors, f"Headless balance harness CLI is missing token: {required_token}")
+    if HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH.exists():
+        cli_doc_text = HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "headless-balance-harness-cli-20260523-10184",
+            "tools/run_headless_balance_harness.py",
+            "headless_balance_harness_cli_v1",
+            "tests/battle_autoplay_combat_balance_report.tscn",
+            "tests/balance_regression_report_suite.tscn",
+            "tests/headless_simulation_harness_report.tscn",
+            "python3 tools/run_headless_balance_harness.py --suite standard",
+            "does not tune content",
+            "claim final combat balance",
+        ):
+            ensure(required_text in cli_doc_text, errors, f"Headless balance harness CLI doc is missing required text: {required_text}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
         '"strategic_ai_live_turn_execution"',

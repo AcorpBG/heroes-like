@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-runtime-sfx-asset-layer-20260523-10184",
-  "currentSliceTitle": "Battle Runtime SFX Asset Layer",
+  "currentSliceId": "headless-balance-harness-cli-20260523-10184",
+  "currentSliceTitle": "Headless Balance Harness CLI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime battle SFX asset layer with committed WAV assets and imported-first playback validation.",
+  "currentSliceNotes": "Completed the artifact-producing headless balance harness CLI for automated balance/headless reports.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:17:00Z",
+  "updatedAt": "2026-05-23T23:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,71 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "headless-balance-harness-cli-20260523-10184",
+      "title": "Headless Balance Harness CLI",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd"
+      ],
+      "purpose": "Add a single artifact-producing CLI runner for the existing automated battle balance, balance regression, and headless simulation harness reports.",
+      "implementationTargets": [
+        "tools/run_headless_balance_harness.py",
+        "tests/validate_repo.py",
+        "docs/headless-balance-harness-cli-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "CLI runs the standard Godot headless balance suite and writes a manifest artifact with command, marker, status, signature, duration, and report path evidence.",
+        "CLI preserves report-only policy and does not tune content, write authored content, or claim manual-play replacement.",
+        "Repository validation gates runner tokens and documentation.",
+        "New CLI standard run, repository validation, Python compile, JSON validation, and whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No automatic balance tuning.",
+        "No authored content writeback.",
+        "No final combat balance approval.",
+        "No CI provider wiring or platform packaging change."
+      ],
+      "startedAt": "2026-05-23T23:15:56Z",
+      "updatedAt": "2026-05-23T23:28:00Z",
+      "notes": "Completed a CLI wrapper for existing headless balance harness reports. The standard suite passed with 3/3 cases and wrote a manifest artifact containing parsed statuses, signatures, durations, commands, output paths, and report-only policy flags.",
+      "completedAt": "2026-05-23T23:28:00Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "python3 tools/run_headless_balance_harness.py --suite standard",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "manifest_schema": "headless_balance_harness_cli_v1",
+          "standard_case_count": 3,
+          "standard_passed_count": 3,
+          "standard_failed_count": 0,
+          "battle_autoplay_combat_balance_signature": "39ff521c",
+          "balance_regression_suite_signature": "0dd4479e",
+          "headless_simulation_harness_signature": "56ae7622",
+          "automatic_tuning": false,
+          "runtime_balance_changes": false,
+          "authored_content_writeback": false,
+          "manual_play_replacement": false,
+          "alpha_or_parity_claim": false
+        }
+      }
+    },
     {
       "id": "battle-runtime-sfx-asset-layer-20260523-10184",
       "title": "Battle Runtime SFX Asset Layer",
@@ -23749,8 +23814,8 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T23:17:00Z",
+  "active_slice": "headless-balance-harness-cli-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T23:28:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -23954,6 +24019,19 @@
         "git diff --check"
       ],
       "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
+    },
+    {
+      "id": "headless-balance-harness-cli-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T23:28:00Z",
+      "commands": [
+        "python3 tools/run_headless_balance_harness.py --suite standard",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Headless balance harness CLI passed: standard suite ran 3/3 cases, wrote schema headless_balance_harness_cli_v1 manifest artifacts, recorded battle_autoplay_combat_balance signature 39ff521c, balance_regression_suite signature 0dd4479e, headless_simulation_harness signature 56ae7622, and kept report-only policy flags false."
     }
   ]
 }
