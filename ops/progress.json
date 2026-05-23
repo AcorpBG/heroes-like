@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Hard Difficulty Queue Clear Pass",
+  "currentSliceId": "headless-battle-difficulty-sweep-harness-20260523-10184",
+  "currentSliceTitle": "Headless Battle Difficulty Sweep Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Hard difficulty autoplay tuning queue clear pass completed: both normal and hard difficulty rows are clear, with the hard gate tightened to zero accepted queue items.",
+  "currentSliceNotes": "Completed headless battle difficulty sweep harness integration: the required shared headless harness now carries normal-vs-hard difficulty sweep evidence, clear normal/hard tuning queues, and observed hard-effect deltas.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T22:20:26Z",
+  "updatedAt": "2026-05-23T22:28:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -104,6 +104,71 @@
           "total_status_application_event_count": 55,
           "total_ability_effect_observation_count": 118,
           "total_spell_effect_observation_count": 117
+        }
+      }
+    },
+    {
+      "id": "headless-battle-difficulty-sweep-harness-20260523-10184",
+      "title": "Headless Battle Difficulty Sweep Harness",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
+      ],
+      "purpose": "Promote the deterministic normal-vs-hard battle autoplay difficulty sweep into the required shared headless simulation harness so broader balance harness runs cover launch difficulty effects and tuning queue clear status.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-battle-difficulty-sweep-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules includes a required battle_difficulty_sweep_sampling subsystem.",
+        "The new headless case reports battle_autoplay_difficulty_sweep_v1 rows for normal and hard launch difficulties.",
+        "The headless report asserts both normal and hard tuning queues are clear and normal_vs_hard keeps an observed effect.",
+        "Focused headless harness, difficulty sweep, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No new encounter retuning.",
+        "No automatic tuning or authored content writeback.",
+        "No final combat balance approval.",
+        "No manual-play replacement or playable-alpha completion claim."
+      ],
+      "startedAt": "2026-05-23T22:23:32Z",
+      "updatedAt": "2026-05-23T22:28:51Z",
+      "notes": "Completed report-only shared headless harness integration for battle_autoplay_difficulty_sweep_v1; no encounter retuning, automatic tuning, or final balance approval claimed.",
+      "completedAt": "2026-05-23T22:28:51Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "headless_harness_status": "warning",
+          "headless_harness_ok": true,
+          "headless_harness_signature": "56ae7622",
+          "headless_battle_difficulty_case_status": "pass",
+          "headless_battle_difficulty_case_signature": "f6e32bbf",
+          "standalone_sweep_signature": "bc42c7b1",
+          "normal_tuning_queue_status": "clear",
+          "hard_tuning_queue_status": "clear",
+          "normal_tuning_queue_item_count": 0,
+          "hard_tuning_queue_item_count": 0,
+          "normal_tuning_queue_signature": "829808c9",
+          "hard_tuning_queue_signature": "829808c9",
+          "normal_vs_hard_no_observed_effect": false
         }
       }
     },
@@ -22158,6 +22223,44 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "headless-battle-difficulty-sweep-harness-20260523-10184",
+      "title": "Headless Battle Difficulty Sweep Harness",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T22:28:51Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-battle-difficulty-sweep-harness-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "headless-battle-difficulty-sweep-harness-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/headless-battle-difficulty-sweep-harness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "HeadlessSimulationHarnessRules now requires battle_difficulty_sweep_sampling and runs BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report in the shared harness.",
+        "tests/headless_simulation_harness_report.gd asserts the battle_autoplay_difficulty_sweep_v1 schema, report_only_launch_difficulty_balance_probe policy, normal and hard row breadth, clear tuning queues, and observed normal-vs-hard effect.",
+        "Current standalone sweep_signature is bc42c7b1; headless battle difficulty case signature is f6e32bbf; headless harness signature is 56ae7622.",
+        "Normal and hard rows both report tuning_queue_status clear, tuning_queue_item_count 0, tuning_queue_signature 829808c9, and no_observed_effect false for normal_vs_hard.",
+        "This is automated balance-harness strengthening only; no automatic tuning, authored content writeback, encounter retuning, or final combat balance approval."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -23286,26 +23389,21 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+    "id": "headless-battle-difficulty-sweep-harness-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T22:20:26Z",
+    "updatedAt": "2026-05-23T22:28:51Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Hard difficulty queue clear passed: sweep_signature bc42c7b1; normal and hard queue signatures 829808c9; both rows tuning_queue_item_count 0 and status clear; normal_vs_hard still has observed effect; runtime consequence signatures refreshed to a537a308 and cab8ca24; focused Godot gates, repository validation, JSON validation, and diff whitespace checks passed."
+    "summary": "Headless battle difficulty sweep harness passed: required battle_difficulty_sweep_sampling case status pass, case signature f6e32bbf, harness signature 56ae7622 with known generated-map deferred boundary warning, standalone sweep_signature bc42c7b1, normal and hard queue signatures 829808c9, both rows tuning_queue_item_count 0 and status clear, and normal_vs_hard no_observed_effect false."
   },
   "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T22:20:26Z",
+  "currentSliceUpdatedAt": "2026-05-23T22:28:51Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -23456,6 +23554,20 @@
         "git diff --check"
       ],
       "summary": "Focused strategic AI live town-governor build execution passed; headless harness reports ok true with known generated-map deferred boundary warning, and supporting town-governor report plus repo validation passed."
+    },
+    {
+      "id": "headless-battle-difficulty-sweep-harness-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T22:28:51Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Headless battle difficulty sweep harness passed: required battle_difficulty_sweep_sampling case status pass, case signature f6e32bbf, harness signature 56ae7622 with known generated-map deferred boundary warning, standalone sweep_signature bc42c7b1, normal and hard queue signatures 829808c9, both rows tuning_queue_item_count 0 and status clear, and normal_vs_hard no_observed_effect false."
     }
   ]
 }

@@ -51,6 +51,10 @@ func _assert_report(first: Dictionary) -> bool:
 	if battle_case.is_empty():
 		_fail("Headless simulation harness is missing battle resolver sampling evidence.")
 		return false
+	var difficulty_sweep_case := _find_case(first, "battle_difficulty_sweep_sampling")
+	if difficulty_sweep_case.is_empty():
+		_fail("Headless simulation harness is missing battle difficulty sweep evidence.")
+		return false
 	var live_ai_case := _find_case(first, "strategic_ai_live_turn_execution")
 	if live_ai_case.is_empty():
 		_fail("Headless simulation harness is missing live strategic AI turn execution evidence.")
@@ -173,6 +177,8 @@ func _assert_report(first: Dictionary) -> bool:
 	if not _assert_balance_matrix_gate(battle_summary):
 		return false
 	if not _assert_runtime_consequence_gate(battle_summary):
+		return false
+	if not _assert_battle_difficulty_sweep(difficulty_sweep_case):
 		return false
 	if int(battle_summary.get("average_total_damage_per_round", 0)) <= 0:
 		_fail("Battle resolver sampling did not expose positive damage pacing evidence.")
@@ -756,6 +762,53 @@ func _assert_runtime_consequence_gate(battle_summary: Dictionary) -> bool:
 		return false
 	if String(matrix_gate.get("status", "")) != "pass":
 		_fail("Battle resolver sampling runtime consequence matrix gate must pass: %s" % matrix_gate)
+		return false
+	return true
+
+func _assert_battle_difficulty_sweep(difficulty_sweep_case: Dictionary) -> bool:
+	if String(difficulty_sweep_case.get("status", "")) != "pass":
+		_fail("Battle difficulty sweep headless case did not pass: %s" % JSON.stringify(difficulty_sweep_case))
+		return false
+	var summary: Dictionary = difficulty_sweep_case.get("summary", {}) if difficulty_sweep_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = difficulty_sweep_case.get("evidence", {}) if difficulty_sweep_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("schema", "")) != "battle_autoplay_difficulty_sweep_v1":
+		_fail("Battle difficulty sweep schema mismatch: %s" % summary)
+		return false
+	if String(summary.get("policy", "")) != "report_only_launch_difficulty_balance_probe":
+		_fail("Battle difficulty sweep policy mismatch: %s" % summary)
+		return false
+	if String(summary.get("sweep_status", "")) != "pass" or String(summary.get("sweep_signature", "")) == "":
+		_fail("Battle difficulty sweep status/signature is invalid: %s" % summary)
+		return false
+	if int(summary.get("sample_limit_per_difficulty", 0)) < BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT:
+		_fail("Battle difficulty sweep did not use the default sample limit per difficulty: %s" % summary)
+		return false
+	var row_summary: Dictionary = summary.get("row_summary", {}) if summary.get("row_summary", {}) is Dictionary else {}
+	for difficulty_id in ["normal", "hard"]:
+		if not row_summary.has(difficulty_id):
+			_fail("Battle difficulty sweep is missing row summary for %s: %s" % [difficulty_id, summary])
+			return false
+		var row: Dictionary = row_summary.get(difficulty_id, {}) if row_summary.get(difficulty_id, {}) is Dictionary else {}
+		if int(row.get("sample_count", 0)) < BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT:
+			_fail("Battle difficulty sweep row did not reach sample breadth for %s: %s" % [difficulty_id, row])
+			return false
+		if String(row.get("combat_feel_gate_status", "")) != "pass" or String(row.get("balance_matrix_gate_status", "")) != "pass":
+			_fail("Battle difficulty sweep row gate did not pass for %s: %s" % [difficulty_id, row])
+			return false
+		if String(row.get("tuning_queue_status", "")) != "clear" or int(row.get("tuning_queue_item_count", -1)) != 0:
+			_fail("Battle difficulty sweep row tuning queue is not clear for %s: %s" % [difficulty_id, row])
+			return false
+		if String(row.get("tuning_queue_signature", "")) == "":
+			_fail("Battle difficulty sweep row is missing tuning queue signature for %s: %s" % [difficulty_id, row])
+			return false
+	var deltas: Dictionary = summary.get("deltas", {}) if summary.get("deltas", {}) is Dictionary else {}
+	var normal_vs_hard: Dictionary = deltas.get("normal_vs_hard", {}) if deltas.get("normal_vs_hard", {}) is Dictionary else {}
+	if bool(normal_vs_hard.get("no_observed_effect", true)):
+		_fail("Battle difficulty sweep lost the observed normal-vs-hard effect: %s" % normal_vs_hard)
+		return false
+	var rows: Array = evidence.get("rows", []) if evidence.get("rows", []) is Array else []
+	if rows.size() < 2:
+		_fail("Battle difficulty sweep is missing per-row evidence: %s" % evidence)
 		return false
 	return true
 
