@@ -142,6 +142,9 @@ func _ready() -> void:
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
+	MusicAudio.sync_context("menu", "main_menu_ready", {"tab": TAB_CAMPAIGN})
+	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_select_menu_tab(TAB_CAMPAIGN)
 	_hide_stage_dock()
 	buckets["initial_layout"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -1768,6 +1771,7 @@ func validation_snapshot() -> Dictionary:
 	var continue_check := _continue_check_surface()
 	return {
 		"scene_path": scene_file_path,
+		"music_audio": MusicAudio.validation_summary(),
 		"stage_dock_visible": _stage_dock_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",

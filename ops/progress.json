@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-difficulty-sweep-balance-harness-20260523-10184",
-  "currentSliceTitle": "Battle Difficulty Sweep Balance Harness",
+  "currentSliceId": "music-audio-runtime-baseline-20260523-10184",
+  "currentSliceTitle": "Music Audio Runtime Baseline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Battle autoplay difficulty sweep completed: the harness now samples authored encounters across normal and hard launch difficulties, preserves launch_difficulty_distribution, emits deterministic normal_vs_hard deltas, and gates sample breadth, completion, stalled/invalid-order absence, and observed difficulty effects without automatic tuning or content writeback.",
+  "currentSliceNotes": "Completed generated-music runtime layer for menu, overworld, battle, and outcome contexts. This closes a placeholder music-routing baseline only; final composed soundtrack, imported stems, mixer mastering, and broad audio/VFX polish remain future production work.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:43:00Z",
+  "updatedAt": "2026-05-23T23:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,61 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "music-audio-runtime-baseline-20260523-10184",
+      "title": "Music Audio Runtime Baseline",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/UiAudio.gd",
+        "scripts/autoload/AmbientAudio.gd",
+        "project.godot",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Add a runtime music state layer so top-level game contexts have deterministic music routing and validation evidence before final composed audio assets exist.",
+      "implementationTargets": [
+        "scripts/autoload/MusicAudio.gd",
+        "project.godot",
+        "scenes/menus/MainMenu.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/music_audio_runtime_report.gd",
+        "tests/music_audio_runtime_report.tscn",
+        "docs/music-audio-runtime-baseline-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "MusicAudio is registered as an autoload and respects master/music mute state.",
+        "Menu, overworld, battle, and outcome contexts sync deterministic generated music layer records.",
+        "Music state avoids restarting when the context signature is unchanged.",
+        "Validation summary exposes schema, current context, cue id, layers, active player cap, records, and audio bus.",
+        "Focused report proves direct context routing plus at least one live shell routing path.",
+        "No imported final music assets, mixer mastering, or final soundtrack claim."
+      ],
+      "nonGoals": [
+        "No final composed soundtrack.",
+        "No imported audio files.",
+        "No broad audio mixer redesign.",
+        "No save migration."
+      ],
+      "startedAt": "2026-05-23T22:35:00Z",
+      "updatedAt": "2026-05-23T23:05:00Z",
+      "completedAt": "2026-05-23T23:05:00Z",
+      "completionEvidence": [
+        "MusicAudio is registered as an autoload and exposes generated layered music records for menu, overworld, battle, and outcome contexts.",
+        "MainMenu, OverworldShell, BattleShell, and ScenarioOutcomeShell now sync MusicAudio and expose music_audio validation summaries.",
+        "tests/music_audio_runtime_report.tscn passed with four direct context routes, stable menu non-restart evidence, and one live MainMenu shell route.",
+        "tests/ui_audio_cue_runtime_report.tscn, tests/overworld_ambient_audio_runtime_report.tscn, and tests/battle_event_animation_state_report.tscn still pass after the new runtime music hooks.",
+        "python3 tests/validate_repo.py, python3 -m py_compile tests/validate_repo.py, jq empty ops/progress.json, and git diff --check passed."
+      ],
+      "notes": "Completed from the remaining production-gap list under Audio and VFX. This is a deterministic placeholder music-routing baseline, not final soundtrack composition or mixer mastering."
+    },
     {
       "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
       "title": "Battle Difficulty Sweep Balance Harness",

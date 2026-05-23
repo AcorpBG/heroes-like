@@ -861,6 +861,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 	if compact_generated:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
 	_sync_overworld_ambient_audio("refresh")
+	_sync_overworld_music_audio("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 	_complete_refresh_request(request)
 	_profile_end("refresh", profile_start, {
@@ -881,6 +882,44 @@ func _sync_overworld_ambient_audio(source: String) -> void:
 		"layer_count": int(record.get("layer_count", 0)),
 		"audio_bus": String(record.get("audio_bus", "")),
 	}
+
+func _sync_overworld_music_audio(source: String) -> void:
+	if _session == null:
+		return
+	var record := MusicAudio.sync_context("overworld", "overworld_shell_%s" % source, _music_session_metadata())
+	_validation_profile["last_music_audio"] = {
+		"schema": String(record.get("schema", "")),
+		"cue_id": String(record.get("cue_id", "")),
+		"context_id": String(record.get("context_id", "")),
+		"changed": bool(record.get("changed", false)),
+		"layer_count": int(record.get("layer_count", 0)),
+		"audio_bus": String(record.get("audio_bus", "")),
+	}
+
+func _music_session_metadata() -> Dictionary:
+	if _session == null:
+		return {}
+	return {
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"day": _session.day,
+		"threat_level": _music_threat_level(),
+	}
+
+func _music_threat_level() -> String:
+	var enemy_states: Array = _session.overworld.get("enemy_states", []) if _session != null and _session.overworld.get("enemy_states", []) is Array else []
+	var max_pressure := 0
+	for state in enemy_states:
+		if state is Dictionary:
+			max_pressure = max(max_pressure, int(state.get("pressure", 0)))
+	if max_pressure >= 8:
+		return "high"
+	if max_pressure >= 4:
+		return "medium"
+	if max_pressure > 0:
+		return "low"
+	return "calm"
 
 func _make_refresh_request(reason: String, phases: Array, include_dirty: bool = true, full_refresh: bool = false) -> Dictionary:
 	_refresh_request_sequence += 1
@@ -6761,11 +6800,15 @@ func validation_snapshot() -> Dictionary:
 		"debug_overlay": validation_debug_overlay_snapshot(),
 		"placement_debug_overlay": validation_placement_debug_overlay_snapshot(),
 		"ambient_audio": validation_ambient_audio_summary(),
+		"music_audio": validation_music_audio_summary(),
 		"profile": validation_profile_snapshot(),
 	}
 
 func validation_ambient_audio_summary() -> Dictionary:
 	return AmbientAudio.validation_summary()
+
+func validation_music_audio_summary() -> Dictionary:
+	return MusicAudio.validation_summary()
 
 func _validation_latest_save_summary_snapshot() -> Dictionary:
 	if _validation_uses_compact_save_surface():

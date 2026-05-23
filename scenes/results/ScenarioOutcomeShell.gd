@@ -46,7 +46,19 @@ func _ready() -> void:
 		AppRouter.resume_active_session()
 		return
 	_configure_save_slot_picker()
+	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	_refresh()
+
+func _outcome_music_metadata() -> Dictionary:
+	if _session == null:
+		return {}
+	return {
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"status": _session.scenario_status,
+		"day": _session.day,
+	}
 
 func _refresh() -> void:
 	_model = ScenarioRules.build_outcome_model(_session)
@@ -272,6 +284,7 @@ func validation_snapshot() -> Dictionary:
 	var save_surface := AppRouter.active_save_surface()
 	return {
 		"scene_path": scene_file_path,
+		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
