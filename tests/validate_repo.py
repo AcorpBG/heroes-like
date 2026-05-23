@@ -47,7 +47,7 @@ ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
 MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_smoke.gd"
-MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH = ROOT / "docs" / "main-menu-archived-campaign-empty-state-smoke-report.md"
+MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH = ROOT / "docs" / "player-facing-campaign-reactivation-smoke-report.md"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
@@ -7367,14 +7367,14 @@ def validate_native_scenario_reset(errors: list[str], scenario_payload: dict, ca
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
     ensure(
-        str(scenario_payload.get("domain_status", "")) == "archived_native_scenario_set_disabled",
+        str(scenario_payload.get("domain_status", "")) == "",
         errors,
-        "content/scenarios.json must declare the native scenario domain archived/disabled",
+        "content/scenarios.json must declare the authored scenario domain active",
     )
     ensure(
-        str(campaign_payload.get("domain_status", "")) == "archived_native_campaign_set_disabled",
+        str(campaign_payload.get("domain_status", "")) == "",
         errors,
-        "content/campaigns.json must declare the native campaign domain archived/disabled",
+        "content/campaigns.json must declare the authored campaign domain active",
     )
     active_scenarios: list[str] = []
     selectable_scenarios: list[str] = []
@@ -7395,18 +7395,18 @@ def validate_native_scenario_reset(errors: list[str], scenario_payload: dict, ca
         active = bool(campaign.get("active", True)) and bool(campaign.get("player_facing", True))
         if campaign_domain_active and active and not status.startswith("archived_") and not status.endswith("_disabled"):
             active_campaigns.append(campaign_id)
-    ensure(not active_scenarios, errors, f"Native scenario reset must leave zero active authored scenarios, found {active_scenarios}")
-    ensure(not selectable_scenarios, errors, f"Native scenario reset must leave zero campaign/skirmish-selectable authored scenarios, found {selectable_scenarios}")
-    ensure(not active_campaigns, errors, f"Native scenario reset must leave zero active authored campaigns, found {active_campaigns}")
+    ensure(len(active_scenarios) == len(scenarios), errors, f"Authored scenario reactivation must expose all active authored scenarios, found {active_scenarios}")
+    ensure(len(selectable_scenarios) >= 15, errors, f"Authored scenario reactivation must expose campaign/skirmish-selectable scenarios, found {selectable_scenarios}")
+    ensure(len(active_campaigns) == len(campaigns), errors, f"Authored campaign reactivation must expose all active authored campaigns, found {active_campaigns}")
     ensure(
-        int(scenario_payload.get("player_facing_active_scenario_count", -1)) == 0,
+        int(scenario_payload.get("player_facing_active_scenario_count", -1)) == len(active_scenarios),
         errors,
-        "content/scenarios.json must record zero player-facing active scenarios",
+        "content/scenarios.json must record the active player-facing scenario count",
     )
     ensure(
-        int(campaign_payload.get("player_facing_active_campaign_count", -1)) == 0,
+        int(campaign_payload.get("player_facing_active_campaign_count", -1)) == len(active_campaigns),
         errors,
-        "content/campaigns.json must record zero player-facing active campaigns",
+        "content/campaigns.json must record the active player-facing campaign count",
     )
 
 
@@ -10135,15 +10135,16 @@ def validate_content(errors: list[str]) -> None:
         campaign_breadth_text = campaign_breadth_report_path.read_text(encoding="utf-8")
         for required_text in (
             "REQUIRED_CAMPAIGN_DOMAIN_STATUS",
-            "archived_native_campaign_set_disabled",
-            "_archived_campaign_id_for_scenario",
-            "_archived_chapter_action",
-            "_archived_skirmish_setup",
+            "campaign_domain_active",
+            "player_facing_chapter_count",
+            "CampaignRulesScript.build_campaign_chapter_entries",
+            "CampaignRulesScript.build_start_action",
+            "ScenarioSelectRulesScript.build_skirmish_setup",
             "player_facing_campaign_api_exposure",
-            "campaign_domain_archived",
-            "archived_scenario_domain",
+            "generated_campaign_adoption",
+            "authored_content_writeback",
         ):
-            ensure(required_text in campaign_breadth_text, errors, f"Map/campaign replayability breadth report is missing archived-domain token: {required_text}")
+            ensure(required_text in campaign_breadth_text, errors, f"Map/campaign replayability breadth report is missing active-domain token: {required_text}")
     ensure(RELEASE_PLAYER_FACTIONS.issubset(scenario_player_factions), errors, "Scenario starts must cover all release player factions")
     ensure(len(scenario_hero_ids) >= 4, errors, "Scenario roster must expose at least four distinct lead heroes")
 
@@ -10644,8 +10645,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "campaign_empty_state_text",
         "campaign_primary_disabled",
         "start_chapter_disabled",
-        "Campaign board: archived campaign arcs are not active in this build.",
-        "Use Skirmish to launch playable authored fronts while campaign arcs stay archived.",
+        "CampaignProgression.campaign_browser_entries",
+        "CampaignProgression.primary_campaign_action",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
 
@@ -10654,26 +10655,45 @@ def validate_campaign_browser(errors: list[str]) -> None:
         menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "campaign_board_status",
-            "archived_empty",
-            "Main menu archived campaign empty state",
-            "archived campaign board exposed campaign entries",
-            "Skirmish fronts remain available",
+            "Main menu campaign launch preview",
+            "active campaign browser did not populate",
+            "selected chapter matches the primary campaign action",
+            "victory can advance the campaign path",
         ):
-            ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing archived campaign empty-state token: {required_token}")
+            ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing active campaign-browser token: {required_token}")
 
-    ensure(MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.exists(), errors, "Missing main menu archived campaign empty-state smoke report")
-    if MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.exists():
-        report_text = MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.read_text(encoding="utf-8")
+    for report_path in (
+        ROOT / "tests/player_facing_campaign_menu_smoke.gd",
+        ROOT / "tests/player_facing_campaign_menu_smoke.tscn",
+    ):
+        ensure(report_path.exists(), errors, f"Missing player-facing campaign menu smoke file: {report_path.relative_to(ROOT)}")
+    player_campaign_smoke_path = ROOT / "tests/player_facing_campaign_menu_smoke.gd"
+    if player_campaign_smoke_path.exists():
+        smoke_text = player_campaign_smoke_path.read_text(encoding="utf-8")
         for required_token in (
-            "Main Menu Archived Campaign Empty-State Smoke Report",
-            "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
-            "archived_native_campaign_set_disabled",
-            "archived_empty",
-            "No reactivation of archived campaign domain",
-            "menu_outcome_visual_smoke",
-            "Skirmish",
+            "PLAYER_FACING_CAMPAIGN_MENU_SMOKE",
+            "campaign_reedfall",
+            "river-pass",
+            "campaign_board_status",
+            "CampaignRules.campaign_ids",
+            "validation_select_campaign",
+            "validation_select_campaign_chapter",
         ):
-            ensure(required_token in report_text, errors, f"main menu archived campaign empty-state report is missing token: {required_token}")
+            ensure(required_token in smoke_text, errors, f"player_facing_campaign_menu_smoke.gd is missing required token: {required_token}")
+
+    ensure(MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists(), errors, "Missing player-facing campaign reactivation smoke report")
+    if MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists():
+        report_text = MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "Player-Facing Campaign Reactivation Smoke Report",
+            "player-facing-campaign-reactivation-smoke-20260523-10184",
+            "player_facing_active_campaign_count",
+            "player_facing_active_scenario_count",
+            "CampaignRules",
+            "menu_outcome_visual_smoke",
+            "map_campaign_replayability_breadth_report",
+        ):
+            ensure(required_token in report_text, errors, f"player-facing campaign reactivation report is missing token: {required_token}")
 
 
 def validate_settings_and_onboarding(errors: list[str]) -> None:

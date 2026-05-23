@@ -14,7 +14,7 @@ const MID_SCENARIO_ID := "glassfen-breakers"
 const SCENARIO_ID := "ninefold-confluence"
 const SKIRMISH_ONLY_SCENARIO_ID := "mireford-skirmish"
 const CAMPAIGN_SCENARIO_IDS := [START_SCENARIO_ID, MID_SCENARIO_ID, SCENARIO_ID]
-const REQUIRED_CAMPAIGN_DOMAIN_STATUS := "archived_native_campaign_set_disabled"
+const REQUIRED_CAMPAIGN_DOMAIN_STATUS := ""
 const FORBIDDEN_CLAIM_TOKENS := [
 	"alpha_or_parity_claim\":true",
 	"parity_complete",
@@ -38,7 +38,7 @@ func _run() -> void:
 	var final_ready_profile := _profile_ready_for_final_chapter(profile)
 	if final_ready_profile.is_empty():
 		return
-	var final_action := _archived_chapter_action(final_ready_profile, CAMPAIGN_ID, SCENARIO_ID)
+	var final_action := CampaignRulesScript.build_chapter_action(final_ready_profile, CAMPAIGN_ID, SCENARIO_ID)
 	if bool(final_action.get("disabled", true)) or String(final_action.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Final chapter was not unlocked by recorded campaign road: %s" % JSON.stringify(final_action))
 		return
@@ -47,7 +47,7 @@ func _run() -> void:
 		return
 	if not _assert_faction_hooks(scenario, campaign_session):
 		return
-	var skirmish_setup: Dictionary = _archived_skirmish_setup(SCENARIO_ID, "hard")
+	var skirmish_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SCENARIO_ID, "hard")
 	if not _assert_skirmish_setup(skirmish_setup):
 		return
 	var skirmish_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
@@ -57,7 +57,7 @@ func _run() -> void:
 	)
 	if not _assert_authored_session(skirmish_session, false):
 		return
-	var skirmish_only_setup: Dictionary = _archived_skirmish_setup(SKIRMISH_ONLY_SCENARIO_ID, "normal")
+	var skirmish_only_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SKIRMISH_ONLY_SCENARIO_ID, "normal")
 	if not _assert_skirmish_only_setup(skirmish_only_setup):
 		return
 	var skirmish_only_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
@@ -96,16 +96,16 @@ func _run() -> void:
 		"campaign_replay": {
 			"campaign_domain_status": _campaign_domain_status(),
 			"player_facing_campaign_count": CampaignRulesScript.campaign_ids().size(),
-			"archived_chapter_count": _archived_chapter_entries(replay_profile, CAMPAIGN_ID).size(),
-			"post_victory_action": _archived_start_action(replay_profile, CAMPAIGN_ID).get("label", ""),
+			"player_facing_chapter_count": CampaignRulesScript.build_campaign_chapter_entries(replay_profile, CAMPAIGN_ID).size(),
+			"post_victory_action": CampaignRulesScript.build_start_action(replay_profile, CAMPAIGN_ID).get("label", ""),
 			"starting_scenario_id": START_SCENARIO_ID,
 			"final_scenario_id": SCENARIO_ID,
 		},
 		"random_map_provenance": random_map_evidence,
 		"balance_reflection": balance_evidence,
 		"boundary": {
-			"campaign_domain_archived": true,
-			"player_facing_campaign_api_exposure": false,
+			"campaign_domain_active": true,
+			"player_facing_campaign_api_exposure": true,
 			"authored_campaign_record": true,
 			"authored_skirmish_record": true,
 			"generated_campaign_adoption": false,
@@ -123,7 +123,7 @@ func _run() -> void:
 
 func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool:
 	if _campaign_domain_status() != REQUIRED_CAMPAIGN_DOMAIN_STATUS:
-		_fail("Campaign domain status changed away from the archived reset contract: %s." % _campaign_domain_status())
+		_fail("Campaign domain status is not active: %s." % _campaign_domain_status())
 		return false
 	var campaign := ContentService.get_campaign(CAMPAIGN_ID)
 	if campaign.is_empty():
@@ -145,10 +145,10 @@ func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool
 		if _archived_campaign_id_for_scenario(String(campaign_scenario_id)) != CAMPAIGN_ID:
 			_fail("%s is not wired to the new campaign docket." % campaign_scenario_id)
 			return false
-	if not CampaignRulesScript.campaign_ids().is_empty() or not CampaignRulesScript.build_campaign_browser_entries(profile).is_empty():
-		_fail("Archived campaign domain leaked into player-facing campaign APIs.")
+	if CAMPAIGN_ID not in CampaignRulesScript.campaign_ids() or CampaignRulesScript.build_campaign_browser_entries(profile).is_empty():
+		_fail("Active campaign domain did not expose player-facing campaign APIs.")
 		return false
-	var chapter_entries := _archived_chapter_entries(profile, CAMPAIGN_ID)
+	var chapter_entries := CampaignRulesScript.build_campaign_chapter_entries(profile, CAMPAIGN_ID)
 	if chapter_entries.size() != 3:
 		_fail("Campaign chapter entries did not expose three authored chapters: %s" % JSON.stringify(chapter_entries))
 		return false
@@ -158,7 +158,7 @@ func _assert_campaign_content(profile: Dictionary, scenario: Dictionary) -> bool
 	if not bool(chapter_entries[1].get("disabled", false)) or not bool(chapter_entries[2].get("disabled", false)):
 		_fail("Downstream chapters unlocked before recorded victories: %s" % JSON.stringify(chapter_entries))
 		return false
-	var action := _archived_start_action(profile, CAMPAIGN_ID)
+	var action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID)
 	if bool(action.get("disabled", true)) or String(action.get("scenario_id", "")) != START_SCENARIO_ID:
 		_fail("Campaign start action did not target %s: %s" % [START_SCENARIO_ID, JSON.stringify(action)])
 		return false
@@ -291,7 +291,7 @@ func _profile_ready_for_final_chapter(profile: Dictionary) -> Dictionary:
 	ironbridge_session.flags["ford_reavers_broken"] = true
 	ironbridge_session.flags["silt_hunters_broken"] = true
 	var after_ironbridge := CampaignRulesScript.record_session_completion(profile, ironbridge_session)
-	var mid_action := _archived_chapter_action(after_ironbridge, CAMPAIGN_ID, MID_SCENARIO_ID)
+	var mid_action := CampaignRulesScript.build_chapter_action(after_ironbridge, CAMPAIGN_ID, MID_SCENARIO_ID)
 	if bool(mid_action.get("disabled", true)) or String(mid_action.get("scenario_id", "")) != MID_SCENARIO_ID:
 		_fail("Middle chapter was not unlocked by Ironbridge record: %s" % JSON.stringify(mid_action))
 		return {}
@@ -311,13 +311,13 @@ func _assert_recorded_replay(base_profile: Dictionary, replay_profile: Dictionar
 	if String(record.get("status", "")) != "victory":
 		_fail("Recorded campaign profile did not store victory: %s" % JSON.stringify(record))
 		return false
-	var start_action := _archived_start_action(replay_profile, CAMPAIGN_ID)
+	var start_action := CampaignRulesScript.build_start_action(replay_profile, CAMPAIGN_ID)
 	if String(start_action.get("label", "")).find("Replay") < 0:
 		_fail("Completed campaign did not offer replay: %s" % JSON.stringify(start_action))
 		return false
-	var replay_action := _archived_chapter_action(replay_profile, CAMPAIGN_ID, SCENARIO_ID)
+	var replay_action := CampaignRulesScript.build_chapter_action(replay_profile, CAMPAIGN_ID, SCENARIO_ID)
 	if bool(replay_action.get("disabled", true)) or String(replay_action.get("label", "")).find("Replay") < 0:
-		_fail("Archived final chapter action did not expose replay after completion: %s" % JSON.stringify(replay_action))
+		_fail("Active final chapter action did not expose replay after completion: %s" % JSON.stringify(replay_action))
 		return false
 	return true
 
