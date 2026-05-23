@@ -228,6 +228,16 @@ func _get_tooltip(at_position: Vector2) -> String:
 
 func set_battle_state(session) -> void:
 	_session = session
+	var battle := {}
+	if session != null and session.battle is Dictionary:
+		battle = session.battle
+	_apply_battle_dictionary(battle)
+
+func set_battle_presentation_snapshot(battle_snapshot: Dictionary) -> void:
+	_session = null
+	_apply_battle_dictionary(battle_snapshot.duplicate(true))
+
+func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_battle = {}
 	_player_stacks = []
 	_enemy_stacks = []
@@ -237,8 +247,8 @@ func set_battle_state(session) -> void:
 	_stack_hit_shapes = []
 	if not _is_legal_destination_cell(_hover_destination_cell):
 		_hover_destination_cell = Vector2i(-1, -1)
-	if session != null and session.battle is Dictionary:
-		_battle = session.battle
+	if not battle.is_empty():
+		_battle = battle
 		_sync_animation_playback_records()
 		_active_stack = BattleRulesScript.get_active_stack(_battle)
 		_target_stack = BattleRulesScript.get_selected_target(_battle)

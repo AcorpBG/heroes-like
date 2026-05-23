@@ -11559,6 +11559,10 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         "BattleRules.describe_effect_board",
         "BattleRules.describe_action_surface",
         "AppRouter.save_active_session_to_selected_manual_slot",
+        "_begin_battle_exit_animation_handoff",
+        "_complete_battle_exit_animation_handoff",
+        "_battle_exit_handoff_in_progress",
+        "set_battle_presentation_snapshot",
         "_style_action_button",
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle-shell polish token: {required_token}")
@@ -14580,6 +14584,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_status_residue",
         "func _sync_animation_playback_records",
         "func _expire_animation_playback_records",
+        "func set_battle_presentation_snapshot",
         "func _animation_cue_playback_record_for_event",
         "STACK_ANIMATION_EVENT_PLAYBACK_MSEC",
         "AnimationCueCatalogScript.cue_playback_policy_for_event",
@@ -14601,8 +14606,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _append_animation_event_record",
         "func _mark_damage_target_animation",
         "func _mark_spell_animation_states",
+        "func _battle_exit_animation_snapshot",
         "func _normalize_stack_animation_states",
         "func _normalize_animation_event_queue",
+        "battle_exit_animation_snapshot",
+        "battle_unit_retreat",
+        "battle_unit_surrender",
+        "retreat_withdraw_column",
+        "surrender_stand_down",
         "target_battle_id",
         "source_battle_id",
         "battle_unit_ranged_attack",
@@ -14725,6 +14736,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "board_cue_dispatch",
         "board_vfx_presentation",
         "board_audio_playback",
+        "battle_exit_animation_snapshot",
+        "presentation_mode",
         "active_vfx_draw_count",
         "active_audio_record_count",
         "generated_waveform_count",
@@ -14740,6 +14753,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "cast_support_anchor",
         "status_applied",
         "defend_brace",
+        "retreat_withdraw_column",
+        "surrender_stand_down",
+        "battle_unit_retreat",
+        "battle_unit_surrender",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
 
@@ -16046,6 +16063,7 @@ def main() -> int:
     print("- hero-command roster, tavern recruitment, transfer flow, and thin UI wiring are present")
     print("- authored hero metadata, multi-faction campaign starts, skirmish-only fronts, and lead-hero variety are present")
     print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
+    print("- retreat and surrender now preserve pre-resolution battle animation snapshots for board presentation before terminal routing")
     print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics")
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")

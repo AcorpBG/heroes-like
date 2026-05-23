@@ -70,6 +70,7 @@ var _validation_spell_casting_enabled := true
 var _validation_battle_resolution_routing_enabled := true
 var _last_action_recap_payload := {}
 var _last_action_recap_text := ""
+var _battle_exit_handoff_in_progress := false
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -417,14 +418,51 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 		return true
 	match String(result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
+			if _begin_battle_exit_animation_handoff(result, "overworld"):
+				return true
 			if _validation_battle_resolution_routing_enabled:
 				AppRouter.go_to_overworld()
 			return true
 		"defeat":
+			if _begin_battle_exit_animation_handoff(result, "outcome"):
+				return true
 			if _validation_battle_resolution_routing_enabled:
 				AppRouter.go_to_scenario_outcome()
 			return true
 	return false
+
+func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: String) -> bool:
+	if _battle_exit_handoff_in_progress or not _validation_battle_resolution_routing_enabled:
+		return false
+	var snapshot_value: Variant = result.get("battle_exit_animation_snapshot", {})
+	if not (snapshot_value is Dictionary) or snapshot_value.is_empty():
+		return false
+	var snapshot: Dictionary = snapshot_value
+	if _battle_board_view == null or not _battle_board_view.has_method("set_battle_presentation_snapshot"):
+		return false
+	_battle_exit_handoff_in_progress = true
+	_battle_board_view.set_battle_presentation_snapshot(snapshot)
+	_last_message = String(result.get("message", _last_message))
+	_event_label.text = _last_message
+	_disable_battle_exit_handoff_inputs()
+	var timer := get_tree().create_timer(0.72)
+	timer.timeout.connect(_complete_battle_exit_animation_handoff.bind(route_target))
+	return true
+
+func _disable_battle_exit_handoff_inputs() -> void:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
+		if button != null:
+			button.disabled = true
+	for child in _spell_actions.get_children():
+		if child is BaseButton:
+			child.disabled = true
+
+func _complete_battle_exit_animation_handoff(route_target: String) -> void:
+	_battle_exit_handoff_in_progress = false
+	if route_target == "outcome":
+		AppRouter.go_to_scenario_outcome()
+	else:
+		AppRouter.go_to_overworld()
 
 func _refresh() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -794,12 +832,14 @@ func _battle_target_cycle_tooltip(
 	player_turn: bool,
 	target_count: int
 ) -> String:
+	if not player_turn:
+		return "Input locked: it is not the player's turn.\n- Active stack: %s\n- State: %s\n- Prev: input locked until the player stack acts.\n- Next: input locked until the player stack acts." % [
+			active_name if active_name != "" else "current stack",
+			state,
+		]
 	var previous_step := "Previous target in the current %s list." % scope
 	var next_step := "Next target in the current %s list." % scope
-	if not player_turn:
-		previous_step = "Input locked until the player stack acts."
-		next_step = previous_step
-	elif target_count <= 1:
+	if target_count <= 1:
 		previous_step = "Only one target is available from this stack."
 		next_step = previous_step
 	return "Target cycle:\n- Focus: %s\n- Position: %s\n- Scope: %s\n- Active stack: %s\n- State: %s\n- Prev: %s\n- Next: %s" % [
