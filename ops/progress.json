@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
-  "currentSliceTitle": "Unit Art Composite Visual Fingerprint Gate",
+  "currentSliceId": "unit-animation-generated-sprite-sheet-baseline-20260523-10184",
+  "currentSliceTitle": "Unit Animation Generated Sprite Sheet Baseline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all 103 authored units now pass composite visual-fingerprint uniqueness checks for portrait, battle icon, and overworld icon surfaces, with nearest-neighbor diagnostics written by the contact-sheet report.",
+  "currentSliceNotes": "Completed: all 103 authored units now have generated battle troop animation sprite sheets with cue-aligned state coverage and focused validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:40:11Z",
+  "updatedAt": "2026-05-23T10:51:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15186,6 +15186,63 @@
         "The report records nearest_visual_neighbor diagnostics per surface so the closest generated-art pairs stay visible during review.",
         "tests/validate_repo.py gates the visual fingerprint and nearest-neighbor report tokens."
       ]
+    },
+    {
+      "id": "unit-animation-generated-sprite-sheet-baseline-20260523-10184",
+      "title": "Unit Animation Generated Sprite Sheet Baseline",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-battle-troop-state-contract-report.md",
+        "content/units.json",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "purpose": "Add generated battle troop sprite sheets for every authored unit so the unit art baseline covers cue-aligned animation states instead of only static portrait, battle icon, and overworld icon surfaces.",
+      "implementationTargets": [
+        "tools/generate_unit_art_assets.py",
+        "content/unit_animation_manifest.json",
+        "art/animation/runtime/units/",
+        "tests/unit_animation_manifest_report.gd",
+        "tests/unit_animation_manifest_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored unit has a generated battle troop sprite sheet under art/animation/runtime/units/.",
+        "The animation manifest covers the cue-aligned battle troop state families with four 64x64 frames per state.",
+        "The focused Godot report validates manifest shape, state coverage, loadable PNG sheets, unique sheet hashes, non-empty frames, and per-state frame variation.",
+        "Repository validation gates the new manifest, generator hooks, sprite-sheet files, and report script/scene."
+      ],
+      "nonGoals": [
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or final animation direction approval claim.",
+        "No new combat animation playback system in this slice."
+      ],
+      "startedAt": "2026-05-23T10:50:42Z",
+      "updatedAt": "2026-05-23T10:51:07Z",
+      "notes": "Completed: all 103 authored units now have generated battle troop animation sprite sheets with cue-aligned state coverage and focused validation.",
+      "completedAt": "2026-05-23T10:51:07Z",
+      "validationResults": [
+        "python3 -m py_compile tools/generate_unit_art_assets.py",
+        "python3 tools/generate_unit_art_assets.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_animation_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json"
+      ],
+      "lastValidation": "Unit animation manifest report passed with 103/103 sprite sheets loaded, 14 state rows, 103 unique sprite-sheet hashes, and repository validation now gating the generated animation surface.",
+      "evidenceHistory": [
+        "tools/generate_unit_art_assets.py now emits content/unit_animation_manifest.json and 103 deterministic 256x896 battle troop sprite sheets under art/animation/runtime/units/.",
+        "The animation manifest covers 14 cue-aligned battle troop states with four 64x64 frames per state: idle, ready, move, melee attack, ranged attack, hit, death, cast, two status states, defend, retaliation, retreat, and surrender.",
+        "tests/unit_animation_manifest_report.tscn validates manifest shape, required state families, sheet loadability, PNG dimensions, unique sheet hashes, non-empty frame metrics, and per-state frame variation.",
+        "tests/validate_repo.py gates the animation manifest, generated PNG sheet paths and dimensions, generator tokens, and report script/scene tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18310,11 +18367,11 @@
       "summary": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in."
     }
   ],
-  "lastValidation": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in.",
+  "lastValidation": "Unit animation manifest report passed with 103/103 sprite sheets loaded, 14 state rows, 103 unique sprite-sheet hashes, and repository validation now gating the generated animation surface.",
   "active_slice": {
-    "id": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
+    "id": "unit-animation-generated-sprite-sheet-baseline-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all 103 authored units now pass composite visual-fingerprint uniqueness checks for portrait, battle icon, and overworld icon surfaces, with nearest-neighbor diagnostics written by the contact-sheet report."
+    "note": "Completed: all 103 authored units now have generated battle troop animation sprite sheets with cue-aligned state coverage and focused validation."
   }
 }

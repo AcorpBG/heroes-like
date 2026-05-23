@@ -60,12 +60,16 @@ BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
+UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_ROOT = ROOT / "art" / "units"
+UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.gd"
 UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.tscn"
+UNIT_ANIMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_animation_manifest_report.gd"
+UNIT_ANIMATION_REPORT_SCENE_PATH = ROOT / "tests" / "unit_animation_manifest_report.tscn"
 RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
@@ -14299,6 +14303,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     required_paths = (
         CONTENT_DIR / "units.json",
         UNIT_ART_MANIFEST_PATH,
+        UNIT_ANIMATION_MANIFEST_PATH,
         UNIT_ART_GENERATOR_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
@@ -14308,6 +14313,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH,
         UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH,
         UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH,
+        UNIT_ANIMATION_REPORT_SCRIPT_PATH,
+        UNIT_ANIMATION_REPORT_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
@@ -14316,7 +14323,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
 
     units = items_index(load_json(CONTENT_DIR / "units.json"))
     manifest = load_json(UNIT_ART_MANIFEST_PATH)
+    animation_manifest = load_json(UNIT_ANIMATION_MANIFEST_PATH)
     ensure(str(manifest.get("generator", "")) == "deterministic_unit_art_assets_v1", errors, "Unit art manifest must identify deterministic generator v1")
+    ensure(str(animation_manifest.get("schema_id", "")) == "unit_animation_manifest_v1", errors, "Unit animation manifest must identify schema v1")
+    ensure(str(animation_manifest.get("generator", "")) == "deterministic_unit_animation_assets_v1", errors, "Unit animation manifest must identify deterministic animation generator v1")
 
     expected_sizes = {
         "portrait": (384, 512),
@@ -14351,7 +14361,54 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure(not missing_unit_ids, errors, "Unit art manifest is missing authored units: " + ", ".join(missing_unit_ids[:12]))
     ensure(not extra_unit_ids, errors, "Unit art manifest references unknown units: " + ", ".join(extra_unit_ids[:12]))
 
+    animation_frame_size = animation_manifest.get("frame_size", {})
+    animation_sheet_size = animation_manifest.get("sheet_size", {})
+    expected_animation_frame_size = (64, 64)
+    animation_states = animation_manifest.get("states", [])
+    animation_state_names = []
+    animation_state_families = set()
+    if isinstance(animation_states, list):
+        for state in animation_states:
+            if isinstance(state, dict):
+                state_name = str(state.get("state", "")).strip()
+                state_family = str(state.get("family", "")).strip()
+                if state_name:
+                    animation_state_names.append(state_name)
+                if state_family:
+                    animation_state_families.add(state_family)
+    expected_animation_sheet_size = (
+        int(animation_frame_size.get("width", 0)) * int(animation_manifest.get("frames_per_state", 0)),
+        int(animation_frame_size.get("height", 0)) * len(animation_state_names),
+    )
+    required_animation_families = {"idle", "ready", "move", "attack", "hit", "death", "cast", "status", "defend", "retaliation", "retreat"}
+    ensure((int(animation_frame_size.get("width", 0)), int(animation_frame_size.get("height", 0))) == expected_animation_frame_size, errors, "Unit animation frame size must be 64x64")
+    ensure(int(animation_manifest.get("frames_per_state", 0)) == 4, errors, "Unit animation manifest must define four frames per state")
+    ensure((int(animation_sheet_size.get("width", 0)), int(animation_sheet_size.get("height", 0))) == expected_animation_sheet_size, errors, "Unit animation sheet size must match frame size, state count, and frame count")
+    ensure(required_animation_families.issubset(animation_state_families), errors, "Unit animation manifest is missing required state families: " + ", ".join(sorted(required_animation_families - animation_state_families)))
+
+    animation_records_by_unit_id: dict[str, dict] = {}
+    duplicate_animation_unit_ids: list[str] = []
+    for record in animation_manifest.get("items", []):
+        if not isinstance(record, dict):
+            fail(errors, "Unit animation manifest contains a non-object item")
+            continue
+        unit_id = str(record.get("unit_id", record.get("id", "")))
+        if not unit_id:
+            fail(errors, "Unit animation manifest item is missing unit_id")
+            continue
+        if unit_id in animation_records_by_unit_id:
+            duplicate_animation_unit_ids.append(unit_id)
+        animation_records_by_unit_id[unit_id] = record
+
+    ensure(len(animation_records_by_unit_id) == len(units), errors, "Unit animation manifest must contain exactly one record for every authored unit")
+    ensure(not duplicate_animation_unit_ids, errors, "Unit animation manifest must not duplicate unit ids: " + ", ".join(sorted(set(duplicate_animation_unit_ids))[:8]))
+    missing_animation_unit_ids = sorted(set(units.keys()) - set(animation_records_by_unit_id.keys()))
+    extra_animation_unit_ids = sorted(set(animation_records_by_unit_id.keys()) - set(units.keys()))
+    ensure(not missing_animation_unit_ids, errors, "Unit animation manifest is missing authored units: " + ", ".join(missing_animation_unit_ids[:12]))
+    ensure(not extra_animation_unit_ids, errors, "Unit animation manifest references unknown units: " + ", ".join(extra_animation_unit_ids[:12]))
+
     used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
+    used_animation_paths: set[str] = set()
     for unit_id, unit in units.items():
         record = records_by_unit_id.get(unit_id, {})
         ensure(str(record.get("name", "")) == str(unit.get("name", "")), errors, f"Unit art manifest name mismatch for {unit_id}")
@@ -14365,15 +14422,33 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(disk_path.exists(), errors, f"Unit art {unit_id} {surface} file is missing: {raw_path}")
             if disk_path.exists():
                 ensure(png_size(disk_path) == expected_size, errors, f"Unit art {unit_id} {surface} must be {expected_size[0]}x{expected_size[1]} PNG: {raw_path}")
+        animation_record = animation_records_by_unit_id.get(unit_id, {})
+        ensure(str(animation_record.get("name", "")) == str(unit.get("name", "")), errors, f"Unit animation manifest name mismatch for {unit_id}")
+        animation_record_states = animation_record.get("states", [])
+        ensure(animation_record_states == animation_state_names, errors, f"Unit animation {unit_id} states must match manifest state order")
+        animation_path = str(animation_record.get("sprite_sheet", ""))
+        ensure(animation_path.startswith("res://art/animation/runtime/units/"), errors, f"Unit animation {unit_id} sheet must live in art/animation/runtime/units")
+        ensure(animation_path.endswith(".png"), errors, f"Unit animation {unit_id} sheet must be a PNG path")
+        ensure(animation_path not in used_animation_paths, errors, f"Unit animation sprite sheet path is reused: {animation_path}")
+        used_animation_paths.add(animation_path)
+        animation_disk_path = res_path_to_disk(animation_path)
+        ensure(animation_disk_path.exists(), errors, f"Unit animation {unit_id} sprite sheet is missing: {animation_path}")
+        if animation_disk_path.exists():
+            ensure(png_size(animation_disk_path) == expected_animation_sheet_size, errors, f"Unit animation {unit_id} sheet must be {expected_animation_sheet_size[0]}x{expected_animation_sheet_size[1]} PNG: {animation_path}")
 
     generator_text = UNIT_ART_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
         "deterministic_unit_art_assets_v1",
+        "deterministic_unit_animation_assets_v1",
         "surface_sizes",
         "portrait",
         "battle_icon",
         "overworld_icon",
         "draw_unit_signature",
+        "BATTLE_TROOP_ANIMATION_STATES",
+        "draw_battle_troop_animation_sheet",
+        "draw_animation_frame_signature",
+        "draw_animation_palette_marks",
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
 
@@ -14435,6 +14510,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _nearest_visual_neighbor",
     ):
         ensure(required_token in contact_sheet_report_text, errors, f"unit_art_contact_sheet_report.gd is missing token {required_token}")
+
+    animation_report_text = UNIT_ANIMATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "UNIT_ANIMATION_MANIFEST_REPORT",
+        "EXPECTED_FRAME_SIZE",
+        "REQUIRED_STATE_FAMILIES",
+        "func _frame_metrics_pass",
+        "func _frame_signature",
+        "unique_sprite_sheet_hash_count",
+    ):
+        ensure(required_token in animation_report_text, errors, f"unit_animation_manifest_report.gd is missing token {required_token}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
