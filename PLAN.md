@@ -45,6 +45,8 @@ Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_ani
 
 Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units now apply their authored status rider through the same battle ability path as ranged harry units, and `tests/unit_ability_runtime_report.tscn` probes all 143 authored unit ability instances across the 103-unit roster for a concrete runtime consequence. This strengthens the "fully implemented units" proof for current authored mechanics; final balance and hand-authored art approval remain outside this slice.
 
+Unit roster deployment gate added on 2026-05-23: `tests/unit_roster_deployment_report.tscn` now proves all 53 faction units are recruitable through matching-faction town build trees with runtime weekly growth, and all 50 neutral units are deployed through neutral dwellings, army groups, and encounters. This closes a semantic deployment gap beyond raw content references; final balance and hand-authored art approval remain outside this slice.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-ability-runtime-consequence-gate-20260523-10184",
-  "currentSliceTitle": "Unit Ability Runtime Consequence Gate",
+  "currentSliceId": "unit-roster-deployment-gate-20260523-10184",
+  "currentSliceTitle": "Unit Roster Deployment Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all authored unit ability instances now have a focused runtime consequence gate, and melee harry status application is implemented.",
+  "currentSliceNotes": "Completed: all faction units are recruitable through matching-faction town build trees with runtime growth, and all neutral units are deployed through dwellings, army groups, and encounters.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:14:27Z",
+  "updatedAt": "2026-05-23T11:20:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15403,6 +15403,60 @@
         "The report passed with ability_instance_count=143 and runtime_consequence_count=143 across all 103 units.",
         "tests/validate_repo.py gates the unit ability runtime report script and scene."
       ]
+    },
+    {
+      "id": "unit-roster-deployment-gate-20260523-10184",
+      "title": "Unit Roster Deployment Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/buildings.json",
+        "content/towns.json",
+        "content/neutral_dwellings.json",
+        "content/army_groups.json",
+        "content/encounters.json"
+      ],
+      "purpose": "Strengthen full-unit implementation proof by validating semantic roster deployment, not just raw unit references.",
+      "implementationTargets": [
+        "tests/unit_roster_deployment_report.gd",
+        "tests/unit_roster_deployment_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every faction unit is unlocked by a building in at least one matching-faction town build tree.",
+        "Every faction unit produces runtime weekly growth through OverworldRules.town_weekly_growth when its unlock building is projected as built.",
+        "Every neutral unit is listed by a neutral dwelling and is deployed through an army group that is reachable from an encounter.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim."
+      ],
+      "startedAt": "2026-05-23T11:20:16Z",
+      "updatedAt": "2026-05-23T11:20:16Z",
+      "notes": "Completed: all 53 faction units passed recruitable town-growth deployment checks and all 50 neutral units passed dwelling/army/encounter deployment checks.",
+      "completedAt": "2026-05-23T11:20:16Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_roster_deployment_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit roster deployment report passed with 103 units, 53 faction units recruitable through runtime town growth, and 50 neutral units deployed through dwellings, army groups, and encounters.",
+      "evidenceHistory": [
+        "tests/unit_roster_deployment_report.tscn validates faction unit unlock buildings, matching-faction town build-tree presence, and OverworldRules.town_weekly_growth output for projected unlocks.",
+        "The report validates neutral unit dwelling membership plus army group and encounter deployment reachability.",
+        "The report passed with faction_recruitable_count=53 and neutral_deployed_count=50 across all 103 units.",
+        "tests/validate_repo.py gates the unit roster deployment report script and scene."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17882,6 +17936,47 @@
         "git diff --check"
       ],
       "remainingGap": "This proves current authored unit ability payloads have executable battle consequences; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
+    },
+    {
+      "id": "unit-roster-deployment-gate-20260523-10184",
+      "title": "Unit Roster Deployment Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T11:20:16Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/buildings.json",
+        "content/towns.json",
+        "content/neutral_dwellings.json",
+        "content/army_groups.json",
+        "content/encounters.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-roster-deployment-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_roster_deployment_report.gd",
+        "tests/unit_roster_deployment_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_roster_deployment_report.tscn validates that every faction unit has a building unlock in a matching-faction town build tree and produces runtime weekly growth through OverworldRules.town_weekly_growth.",
+        "The report validates that every neutral unit belongs to a neutral dwelling and is deployed through an army group reachable from an encounter.",
+        "The report passed with unit_count=103, faction_recruitable_count=53, and neutral_deployed_count=50.",
+        "tests/validate_repo.py gates the report script and scene."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_roster_deployment_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves current unit roster deployment through recruitable town growth and neutral dwelling encounters; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18626,13 +18721,26 @@
         "git diff --check"
       ],
       "summary": "All 143 authored unit ability instances across 103 units passed concrete runtime consequence probes; repo validation passed with the new gate wired in."
+    },
+    {
+      "id": "unit-roster-deployment-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T11:20:16Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_roster_deployment_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 53 faction units passed matching-faction town-growth deployment checks and all 50 neutral units passed dwelling/army/encounter deployment checks; repo validation passed with the new gate wired in."
     }
   ],
-  "lastValidation": "Unit ability runtime report passed with 103 units, 143 authored ability instances, and 143 runtime consequences across all eight ability families; repository validation passed.",
+  "lastValidation": "Unit roster deployment report passed with 103 units, 53 faction units recruitable through runtime town growth, and 50 neutral units deployed through dwellings, army groups, and encounters; repository validation passed.",
   "active_slice": {
-    "id": "unit-ability-runtime-consequence-gate-20260523-10184",
+    "id": "unit-roster-deployment-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all authored unit ability instances now have a focused runtime consequence gate, and melee harry status application is implemented."
+    "note": "Completed: all faction units are recruitable through matching-faction town build trees with runtime growth, and all neutral units are deployed through dwellings, army groups, and encounters."
   }
 }

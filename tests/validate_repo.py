@@ -68,6 +68,8 @@ UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
 UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "unit_ability_runtime_report.tscn"
+UNIT_ROSTER_DEPLOYMENT_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_roster_deployment_report.gd"
+UNIT_ROSTER_DEPLOYMENT_REPORT_SCENE_PATH = ROOT / "tests" / "unit_roster_deployment_report.tscn"
 UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.gd"
 UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.tscn"
 UNIT_ANIMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_animation_manifest_report.gd"
@@ -14528,6 +14530,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "ability_family_consequence_counts",
     ):
         ensure(required_token in ability_runtime_report_text, errors, f"unit_ability_runtime_report.gd is missing token {required_token}")
+
+    roster_deployment_report_text = UNIT_ROSTER_DEPLOYMENT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(UNIT_ROSTER_DEPLOYMENT_REPORT_SCENE_PATH.exists(), errors, "unit_roster_deployment_report.tscn is missing")
+    for required_token in (
+        "UNIT_ROSTER_DEPLOYMENT_REPORT",
+        "OverworldRulesScript.town_weekly_growth",
+        "faction_recruitable_count",
+        "neutral_deployed_count",
+        "func _validate_faction_unit",
+        "func _validate_neutral_unit",
+    ):
+        ensure(required_token in roster_deployment_report_text, errors, f"unit_roster_deployment_report.gd is missing token {required_token}")
 
     contact_sheet_report_text = UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
