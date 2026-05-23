@@ -45,6 +45,8 @@ ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_smoke.gd"
+MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH = ROOT / "docs" / "main-menu-archived-campaign-empty-state-smoke-report.md"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
@@ -10601,8 +10603,41 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func _on_campaign_primary_pressed",
         "func _on_start_chapter_pressed",
         "func _launch_campaign_action",
+        "campaign_board_status",
+        "archived_empty",
+        "campaign_empty_state_text",
+        "campaign_primary_disabled",
+        "start_chapter_disabled",
+        "Campaign board: archived campaign arcs are not active in this build.",
+        "Use Skirmish to launch playable authored fronts while campaign arcs stay archived.",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
+
+    ensure(MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists(), errors, "Missing main menu outcome visual smoke script")
+    if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():
+        menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "campaign_board_status",
+            "archived_empty",
+            "Main menu archived campaign empty state",
+            "archived campaign board exposed campaign entries",
+            "Skirmish fronts remain available",
+        ):
+            ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing archived campaign empty-state token: {required_token}")
+
+    ensure(MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.exists(), errors, "Missing main menu archived campaign empty-state smoke report")
+    if MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.exists():
+        report_text = MAIN_MENU_ARCHIVED_CAMPAIGN_EMPTY_STATE_DOC_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "Main Menu Archived Campaign Empty-State Smoke Report",
+            "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
+            "archived_native_campaign_set_disabled",
+            "archived_empty",
+            "No reactivation of archived campaign domain",
+            "menu_outcome_visual_smoke",
+            "Skirmish",
+        ):
+            ensure(required_token in report_text, errors, f"main menu archived campaign empty-state report is missing token: {required_token}")
 
 
 def validate_settings_and_onboarding(errors: list[str]) -> None:

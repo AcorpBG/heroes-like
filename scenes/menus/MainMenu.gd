@@ -555,18 +555,18 @@ func _rebuild_campaign_chapter_browser() -> void:
 
 func _refresh_campaign_browser() -> void:
 	if _campaign_entries.is_empty():
-		_set_compact_label(_campaign_details_label, "No active campaign arcs are available.", 2, 82)
-		_set_compact_label(_campaign_arc_status_label, "Arc status appears here.", 2, 82)
-		_set_compact_label(_chapter_details_label, "No chapters are ready.", 2, 82)
-		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 82)
-		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 82)
-		_set_compact_label(_campaign_journal_label, "Campaign journal entries appear here.", 3, 82)
+		_set_compact_label(_campaign_details_label, "Campaign board: archived campaign arcs are not active in this build.", 2, 82)
+		_set_compact_label(_campaign_arc_status_label, "Campaign reset: no player-facing campaign progression is exposed.", 2, 82)
+		_set_compact_label(_chapter_details_label, "No campaign chapters are selectable from the main menu.", 2, 82)
+		_set_compact_label(_campaign_commander_preview_label, "Skirmish fronts remain available for fresh expeditions.", 3, 82)
+		_set_compact_label(_campaign_operational_board_label, "Use Skirmish to launch playable authored fronts while campaign arcs stay archived.", 3, 82)
+		_set_compact_label(_campaign_journal_label, "Campaign journal is dormant until campaign arcs are reactivated.", 3, 82)
 		_campaign_primary_button.text = "No Campaign"
 		_campaign_primary_button.disabled = true
-		_campaign_primary_button.tooltip_text = "No active authored campaign arc is available from the main menu."
+		_campaign_primary_button.tooltip_text = "Campaign board is intentionally disabled by the archived campaign-domain reset; open Skirmish for playable fronts."
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
-		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
+		_start_chapter_button.tooltip_text = "No campaign chapter is selectable while the campaign domain is archived."
 		return
 
 	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 4, 86)
@@ -1784,6 +1784,9 @@ func validation_snapshot() -> Dictionary:
 		"has_generated_command_spine": get_node_or_null("CommandSpinePanel") != null,
 		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
 		"campaign_count": _campaign_entries.size(),
+		"campaign_board_status": "active" if not _campaign_entries.is_empty() else "archived_empty",
+		"campaign_empty_state_text": _campaign_details_label.text,
+		"campaign_empty_state_tooltip": _campaign_details_label.tooltip_text,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
 		"primary_campaign_action": primary_campaign_action.duplicate(true),
@@ -1793,8 +1796,10 @@ func validation_snapshot() -> Dictionary:
 		"campaign_chapter_check_tooltip": String(campaign_chapter_check.get("tooltip_text", "")),
 		"campaign_primary_text": _campaign_primary_button.text,
 		"campaign_primary_tooltip": _campaign_primary_button.tooltip_text,
+		"campaign_primary_disabled": _campaign_primary_button.disabled,
 		"start_chapter_text": _start_chapter_button.text,
 		"start_chapter_tooltip": _start_chapter_button.tooltip_text,
+		"start_chapter_disabled": _start_chapter_button.disabled,
 		"campaign_details": _campaign_details_label.text,
 		"campaign_details_full": _campaign_details_label.tooltip_text,
 		"campaign_arc_status": _campaign_arc_status_label.text,

@@ -190,8 +190,8 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	var campaign_list = shell.get_node_or_null("%CampaignList")
-	if campaign_list == null or int(campaign_list.get_item_count()) <= 0:
-		push_error("Main menu smoke: campaign browser did not populate.")
+	if campaign_list == null:
+		push_error("Main menu smoke: campaign browser node is missing.")
 		get_tree().quit(1)
 		return false
 
@@ -207,42 +207,70 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	shell.call("validation_open_campaign_stage")
 	var campaign_snapshot: Dictionary = shell.call("validation_snapshot")
-	var selected_chapter_action: Dictionary = campaign_snapshot.get("selected_chapter_action", {}) if campaign_snapshot.get("selected_chapter_action", {}) is Dictionary else {}
-	var campaign_chapter_check: Dictionary = campaign_snapshot.get("campaign_chapter_check", {}) if campaign_snapshot.get("campaign_chapter_check", {}) is Dictionary else {}
-	if not _assert_text_contains_all(
-		"Main menu campaign launch preview",
-		[
-			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
-			String(selected_chapter_action.get("summary", "")),
-			String(campaign_chapter_check.get("text", "")),
-			String(campaign_chapter_check.get("tooltip_text", "")),
-			String(campaign_snapshot.get("campaign_chapter_check_text", "")),
-			String(campaign_snapshot.get("campaign_chapter_check_tooltip", "")),
-			String(selected_chapter_action.get("launch_handoff", "")),
-			String(campaign_snapshot.get("start_chapter_tooltip", "")),
-			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
-			String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
-		],
-		["Campaign check:", "Campaign Chapter Check", "selected chapter matches the primary campaign action", "victory can advance the campaign path", "Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Launch handoff:", "starts Day 1 in Campaign mode", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
-	):
-		return false
-	if not _assert_text_contains_all(
-		"Main menu visible campaign launch handoff",
-		[String(campaign_snapshot.get("chapter_details", ""))],
-		["Campaign check:", "Launch handoff:", "starts Day 1 in Campaign mode"]
-	):
-		return false
-	if not _assert_no_score_leak(
-		"Main menu campaign launch handoff",
-		[
-			String(selected_chapter_action.get("launch_handoff", "")),
-			String(campaign_chapter_check.get("text", "")),
-			String(campaign_chapter_check.get("tooltip_text", "")),
-			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
-			String(campaign_snapshot.get("start_chapter_tooltip", "")),
-		]
-	):
-		return false
+	if String(campaign_snapshot.get("campaign_board_status", "")) == "archived_empty":
+		if int(campaign_snapshot.get("campaign_count", -1)) != 0 or int(campaign_list.get_item_count()) != 0:
+			push_error("Main menu smoke: archived campaign board exposed campaign entries: %s." % campaign_snapshot)
+			get_tree().quit(1)
+			return false
+		if not _assert_text_contains_all(
+			"Main menu archived campaign empty state",
+			[
+				String(campaign_snapshot.get("campaign_empty_state_tooltip", campaign_snapshot.get("campaign_empty_state_text", ""))),
+				String(campaign_snapshot.get("campaign_arc_status_full", campaign_snapshot.get("campaign_arc_status", ""))),
+				String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
+				String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
+				String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
+				String(campaign_snapshot.get("campaign_primary_tooltip", "")),
+				String(campaign_snapshot.get("start_chapter_tooltip", "")),
+			],
+			["Campaign board:", "archived campaign", "no player-facing campaign", "No campaign chapters", "Skirmish fronts remain available", "Use Skirmish", "intentionally disabled", "No campaign chapter"]
+		):
+			return false
+		if String(campaign_snapshot.get("campaign_primary_text", "")) != "No Campaign" or not bool(campaign_snapshot.get("campaign_primary_disabled", false)):
+			push_error("Main menu smoke: archived campaign primary action is not disabled: %s." % campaign_snapshot)
+			get_tree().quit(1)
+			return false
+	else:
+		if int(campaign_list.get_item_count()) <= 0:
+			push_error("Main menu smoke: active campaign browser did not populate.")
+			get_tree().quit(1)
+			return false
+		var selected_chapter_action: Dictionary = campaign_snapshot.get("selected_chapter_action", {}) if campaign_snapshot.get("selected_chapter_action", {}) is Dictionary else {}
+		var campaign_chapter_check: Dictionary = campaign_snapshot.get("campaign_chapter_check", {}) if campaign_snapshot.get("campaign_chapter_check", {}) is Dictionary else {}
+		if not _assert_text_contains_all(
+			"Main menu campaign launch preview",
+			[
+				String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
+				String(selected_chapter_action.get("summary", "")),
+				String(campaign_chapter_check.get("text", "")),
+				String(campaign_chapter_check.get("tooltip_text", "")),
+				String(campaign_snapshot.get("campaign_chapter_check_text", "")),
+				String(campaign_snapshot.get("campaign_chapter_check_tooltip", "")),
+				String(selected_chapter_action.get("launch_handoff", "")),
+				String(campaign_snapshot.get("start_chapter_tooltip", "")),
+				String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
+				String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
+			],
+			["Campaign check:", "Campaign Chapter Check", "selected chapter matches the primary campaign action", "victory can advance the campaign path", "Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Launch handoff:", "starts Day 1 in Campaign mode", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+		):
+			return false
+		if not _assert_text_contains_all(
+			"Main menu visible campaign launch handoff",
+			[String(campaign_snapshot.get("chapter_details", ""))],
+			["Campaign check:", "Launch handoff:", "starts Day 1 in Campaign mode"]
+		):
+			return false
+		if not _assert_no_score_leak(
+			"Main menu campaign launch handoff",
+			[
+				String(selected_chapter_action.get("launch_handoff", "")),
+				String(campaign_chapter_check.get("text", "")),
+				String(campaign_chapter_check.get("tooltip_text", "")),
+				String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
+				String(campaign_snapshot.get("start_chapter_tooltip", "")),
+			]
+		):
+			return false
 	if not shell.has_method("validation_open_contextual_guide_stage") or not shell.has_method("validation_return_from_contextual_guide"):
 		push_error("Main menu smoke: contextual Field Manual validation hooks are missing.")
 		get_tree().quit(1)
@@ -302,8 +330,14 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	shell.call("validation_open_skirmish_stage")
-	if not bool(shell.call("validation_select_skirmish", "river-pass")):
-		push_error("Main menu smoke: could not select River Pass for skirmish launch preview.")
+	var initial_skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected_skirmish_id := String(initial_skirmish_snapshot.get("selected_skirmish_id", ""))
+	if selected_skirmish_id == "":
+		push_error("Main menu smoke: skirmish stage has no selected launchable front: %s." % [initial_skirmish_snapshot])
+		get_tree().quit(1)
+		return false
+	if not bool(shell.call("validation_select_skirmish", selected_skirmish_id)):
+		push_error("Main menu smoke: could not reselect current skirmish front %s for launch preview." % selected_skirmish_id)
 		get_tree().quit(1)
 		return false
 	if not bool(shell.call("validation_set_difficulty", "hard")):
@@ -336,13 +370,13 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_skirmish_setup.get("action_consequence", "")),
 			"\n".join(skirmish_browser_tooltips),
 		],
-		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Front cue:", "Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "Generated package", "selected generated map", "maps/", ".amap", ".ascenario", "native MapPackageService", "package-backed skirmish session", "Front context:", "Package objective:", "defeat generated rivals", "Readiness:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action boundary:", "authored JSON content"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu visible skirmish launch handoff",
 		[String(skirmish_snapshot.get("skirmish_setup", ""))],
-		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "fresh Skirmish expedition on Day 1"]
+		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "Generated package"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -834,7 +868,7 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "starts a fresh campaign chapter from recorded campaign progress", "Save first:", "Return keeps review", "Retry check:", "Outcome Retry Check", "replays this chapter from its authored opening state", "save keeps review", "current campaign record stays as recorded", "Carryover check:", "Outcome Carryover Check", "Campaign export", "next chapter ready", "Replay/new run:", "recorded campaign progress", "Manual save:", "Slot check:", "Outcome Slot Check", "Selected slot:", "Saving now:", "Outcome save check:", "Outcome Save Check", "Save target:", "Save action:", "Follow-up boundary:", "review preserved", "Manual", "Continue Latest and Load Selected can review this outcome", "State change:", "Inspection:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter import ready:", "This victory exports:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "starts a fresh campaign chapter from recorded campaign progress", "Save first:", "Return keeps review", "Retry check:", "Outcome Retry Check", "replays this chapter from its authored opening state", "save keeps review", "current campaign record stays as recorded", "Carryover check:", "Outcome Carryover Check", "Campaign export", "next chapter ready", "Replay/new run:", "recorded campaign progress", "Manual save:", "Slot check:", "Outcome Slot Check", "Selected slot:", "Saving now:", "Outcome save check:", "Outcome Save Check", "Save target:", "Save action:", "Follow-up boundary:", "review preserved", "Manual", "Continue Latest and Load Selected can review this outcome", "State change:", "Inspection:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "still locked", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "campaign board", "Replays this chapter fresh", "Next Chapter Blocked", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(

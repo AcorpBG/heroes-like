@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "packaging-linux-binary-export-smoke-20260523-10184",
-  "currentSliceTitle": "Packaging Linux Binary Export Smoke",
+  "currentSliceId": "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
+  "currentSliceTitle": "Main Menu Archived Campaign Empty-State Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: Linux Release binary export smoke now verifies the local exported ELF executable, sidecar PCK, Linux native library placement, executable bit, and headless boot; packaged route loading now uses preloaded scenes and package-safe menu backdrop loading.",
+  "currentSliceNotes": "Completed: archived campaign empty-state main menu smoke now matches the current campaign-domain reset, preserves package-backed skirmish launch coverage, and is gated by validate_repo plus a focused report.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:06:03Z",
+  "updatedAt": "2026-05-23T21:50:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,55 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
+      "title": "Main Menu Archived Campaign Empty-State Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/campaigns.json",
+        "scripts/core/CampaignRules.gd",
+        "tests/map_campaign_replayability_breadth_report.gd",
+        "tests/menu_outcome_visual_smoke.gd"
+      ],
+      "purpose": "Make main-menu smoke coverage respect the archived campaign-domain reset by proving a truthful disabled campaign board empty state instead of expecting archived campaign rows to appear.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/main-menu-archived-campaign-empty-state-smoke-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Menu campaign validation snapshot exposes an explicit archived/empty campaign board status when campaign APIs return zero player-facing campaigns.",
+        "The visual smoke accepts the archived campaign empty state and continues to validate skirmish, settings, save, guide, and outcome flows.",
+        "The campaign breadth report remains aligned with archived_native_campaign_set_disabled and zero player-facing campaign APIs.",
+        "Focused menu smoke, archived campaign breadth report, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No reactivation of archived campaign domain.",
+        "No new playable campaign content.",
+        "No campaign progression schema migration.",
+        "No broad main-menu redesign.",
+        "No release-readiness claim."
+      ],
+      "startedAt": "2026-05-23T21:08:16Z",
+      "updatedAt": "2026-05-23T21:08:16Z",
+      "notes": "Completed with archived campaign-domain reset intact; no player-facing campaign entries are exposed and skirmish remains package-backed.",
+      "completedAt": "2026-05-23T21:50:00Z",
+      "completionEvidence": [
+        "MainMenu.gd exposes archived_empty campaign_board_status plus disabled No Campaign / Select Chapter actions when player-facing campaign entries are empty.",
+        "menu_outcome_visual_smoke accepts the archived campaign empty state only when campaign_count and CampaignList item count are zero, while preserving skirmish/settings/save/guide/outcome smoke coverage against maps-folder package skirmish fronts.",
+        "validate_repo.py gates the archived-empty main menu smoke contract and docs/main-menu-archived-campaign-empty-state-smoke-report.md.",
+        "Validation passed: godot --headless --path . --quit-after 120 --scene res://tests/menu_outcome_visual_smoke.tscn.",
+        "Validation passed: godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn.",
+        "Validation passed: python3 tests/validate_repo.py; python3 -m py_compile tests/validate_repo.py; jq empty ops/progress.json; git diff --check."
+      ]
+    },
     {
       "id": "packaging-linux-binary-export-smoke-20260523-10184",
       "title": "Packaging Linux Binary Export Smoke",
