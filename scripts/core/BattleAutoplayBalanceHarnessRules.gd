@@ -5,8 +5,8 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 
-const DEFAULT_SAMPLE_LIMIT := 6
-const DEFAULT_MINIMUM_SAMPLE_COUNT := 3
+const DEFAULT_SAMPLE_LIMIT := 12
+const DEFAULT_MINIMUM_SAMPLE_COUNT := 6
 const DEFAULT_STEP_LIMIT := 72
 const COMBAT_FEEL_MIN_ACTION_DIVERSITY := 3
 const COMBAT_FEEL_MAX_PRIMARY_ACTION_PCT := 70

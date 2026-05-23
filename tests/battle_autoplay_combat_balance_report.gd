@@ -4,6 +4,7 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 
 const REPORT_ID := "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT"
 const MAX_AVERAGE_TERMINAL_MARGIN_PCT := 65
+const REQUIRED_SAMPLE_LIMIT := 12
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -43,6 +44,9 @@ func _run() -> void:
 	}
 	if int(summary.get("average_terminal_health_margin_pct", 0)) > MAX_AVERAGE_TERMINAL_MARGIN_PCT:
 		_fail("Average terminal health margin remains above target.", payload)
+		return
+	if int(summary.get("requested_sample_limit", 0)) < REQUIRED_SAMPLE_LIMIT or int(summary.get("sample_count", 0)) < REQUIRED_SAMPLE_LIMIT:
+		_fail("Battle autoplay combat balance report did not reach expanded sample breadth.", payload)
 		return
 	if "high_terminal_health_margin" in warnings:
 		_fail("Combat-feel threshold gate still reports high_terminal_health_margin.", payload)

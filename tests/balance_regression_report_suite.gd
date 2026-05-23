@@ -1,6 +1,7 @@
 extends Node
 
 const BalanceRegressionReportRulesScript = preload("res://scripts/core/BalanceRegressionReportRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"
 
 func _ready() -> void:
@@ -47,6 +48,9 @@ func _assert_report(first: Dictionary) -> bool:
 	var battle_evidence: Dictionary = battle_section.get("evidence", {})
 	var action_distribution: Dictionary = battle_summary.get("action_distribution", {}) if battle_summary.get("action_distribution", {}) is Dictionary else {}
 	var battle_samples: Array = battle_evidence.get("samples", []) if battle_evidence.get("samples", []) is Array else []
+	if int(battle_summary.get("requested_sample_limit", 0)) < BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT:
+		_fail("Battle outcome distribution did not use the expanded default sample limit: %s" % battle_summary)
+		return false
 	if int(battle_summary.get("sample_count", 0)) <= 0 or battle_samples.is_empty():
 		_fail("Battle outcome distribution did not emit autoplay samples.")
 		return false

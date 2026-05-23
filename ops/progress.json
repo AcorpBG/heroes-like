@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-status-clear-animation-presentation-20260523-10184",
-  "currentSliceTitle": "Battle Status Clear Animation Presentation",
+  "currentSliceId": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Expanded Sample Breadth Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: status cleanse and round-expiry removals now emit battle_status_expired/status_expired, BattleBoardView presents status_clear motion/VFX/audio/camera records, and the focused animation report proves Prism Bastion cleanse plus round-expiry purge cases.",
+  "currentSliceNotes": "Completed: deterministic battle autoplay balance sampling now defaults to 12 requested samples, focused/shared reports assert the expanded default breadth, and the current evidence completes 12/12 samples across four authored scenarios with combat_feel_gate and balance_matrix_gate passing.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T18:35:00Z",
+  "updatedAt": "2026-05-23T19:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17115,6 +17115,51 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+      "title": "Battle Autoplay Expanded Sample Breadth Gate",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Broaden the default deterministic combat-feel sampler so balance gates cover more authored encounters before content scaling.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Default battle autoplay sample limit increases beyond the existing six-sample gate and reaches the requested breadth.",
+        "Focused combat balance and shared balance/headless reports assert the expanded requested sample limit and continue to pass combat-feel and matrix gates.",
+        "Any exposed terminal-margin, pacing, outcome-bias, stalled, or invalid-order regressions are fixed by tuning or AI changes rather than by weakening thresholds."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic stat tuning or content writeback.",
+        "No broad campaign content pass."
+      ],
+      "updatedAt": "2026-05-23T19:05:00Z",
+      "startedAt": "2026-05-23T18:50:00Z",
+      "completedAt": "2026-05-23T19:05:00Z",
+      "completionNotes": "Completed: deterministic battle autoplay balance sampling now defaults to 12 requested samples, focused/shared reports assert the expanded default breadth, and the current evidence completes 12/12 samples across four authored scenarios with combat_feel_gate and balance_matrix_gate passing.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -20890,6 +20935,47 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+      "title": "Battle Autoplay Expanded Sample Breadth Gate",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T19:05:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-expanded-sample-breadth-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "DEFAULT_SAMPLE_LIMIT increased from 6 to 12 and DEFAULT_MINIMUM_SAMPLE_COUNT increased from 3 to 6.",
+        "Focused combat balance, balance regression, and headless simulation reports assert the expanded default sample limit.",
+        "Current focused evidence completes 12/12 deterministic samples across river-pass, causeway-stand, fen-crown, and stonewake-watch.",
+        "Current sample summary reports action_diversity_count 4, average_terminal_health_margin_pct 48, average_total_damage_per_round 43, no terminal-margin outliers, no stalled samples, no invalid orders, combat_feel_gate pass, and balance_matrix_gate pass.",
+        "The slice strengthens automated balance evidence but does not claim final combat balance or automatic tuning."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -21983,14 +22069,30 @@
         "git diff --check"
       ],
       "summary": "Focused battle animation report passed with 17 cases including status_cleanse and status_round_expiry; validate_repo, py_compile, progress JSON, diff whitespace, and headless simulation harness passed. Headless harness retained the known generated-map deferred boundary warning while reporting ok true."
+    },
+    {
+      "id": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T19:05:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Expanded deterministic battle autoplay sample breadth passed: 12/12 focused samples across four scenarios; combat_feel_gate pass, balance_matrix_gate pass, no terminal-margin outliers, no stalled samples, and no invalid orders. Headless harness remained ok true with the known generated-map deferred warning."
     }
   ],
   "lastValidation": {
-    "id": "battle-status-clear-animation-presentation-20260523-10184",
+    "id": "battle-autoplay-expanded-sample-breadth-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T18:35:00Z",
+    "updatedAt": "2026-05-23T19:05:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
@@ -21998,6 +22100,6 @@
       "git diff --check"
     ]
   },
-  "active_slice": "battle-status-clear-animation-presentation-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T18:35:00Z"
+  "active_slice": "battle-autoplay-expanded-sample-breadth-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T19:05:00Z"
 }

@@ -1,6 +1,7 @@
 extends Node
 
 const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
 const FORBIDDEN_CLAIM_TOKENS := [
 	"manual_play_replacement\":true",
@@ -105,6 +106,9 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if int(battle_summary.get("sample_count", 0)) < int(battle_summary.get("requested_sample_limit", 0)):
 		_fail("Battle resolver sampling did not reach the requested default sample breadth: %s" % battle_summary)
+		return false
+	if int(battle_summary.get("requested_sample_limit", 0)) < BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT:
+		_fail("Battle resolver sampling did not use the expanded default sample limit: %s" % battle_summary)
 		return false
 	if int(battle_summary.get("step_limit", 0)) <= 0 or int(battle_summary.get("average_steps_sampled", 0)) <= 0:
 		_fail("Battle resolver sampling is missing autoplay pacing metrics.")

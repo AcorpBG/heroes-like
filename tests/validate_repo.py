@@ -16363,6 +16363,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
+    expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16375,6 +16376,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         doc_path,
         calibration_doc_path,
         balance_matrix_doc_path,
+        expanded_sample_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16409,6 +16411,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "terminal_margin_outliers",
             "BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT",
             "DEFAULT_SCENARIO_IDS",
+            "DEFAULT_SAMPLE_LIMIT := 12",
+            "DEFAULT_MINIMUM_SAMPLE_COUNT := 6",
             "scenario_distribution",
             "damage_totals",
             "damage_per_round",
@@ -16444,6 +16448,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         report_text = path.read_text(encoding="utf-8")
         for required_token in (
             "average_total_damage_per_round",
+            "BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT",
+            "expanded default sample limit",
             "initial_stack_profile",
             "terrain_distribution",
             "scenario_distribution",
@@ -16469,6 +16475,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         for required_token in (
             "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
             "MAX_AVERAGE_TERMINAL_MARGIN_PCT",
+            "REQUIRED_SAMPLE_LIMIT := 12",
+            "expanded sample breadth",
             "authored_encounter_terminal_margin_balance_gate_v1",
             "high_terminal_health_margin",
             "average_terminal_health_margin_pct",
@@ -16533,6 +16541,21 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "Final combat feel",
         ):
             ensure(required_text in balance_matrix_text, errors, f"Battle autoplay balance matrix doc is missing required text: {required_text}")
+    if expanded_sample_doc_path.exists():
+        expanded_sample_text = expanded_sample_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Expanded Sample Breadth Report",
+            "DEFAULT_SAMPLE_LIMIT",
+            "12 samples",
+            "scenario_distribution",
+            "combat_feel_gate.status",
+            "balance_matrix_gate.status",
+            "terminal_margin_outliers",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "not final combat balance approval",
+        ):
+            ensure(required_text in expanded_sample_text, errors, f"Battle autoplay expanded sample doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:
