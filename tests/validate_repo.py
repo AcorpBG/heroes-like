@@ -14380,11 +14380,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         int(animation_frame_size.get("width", 0)) * int(animation_manifest.get("frames_per_state", 0)),
         int(animation_frame_size.get("height", 0)) * len(animation_state_names),
     )
-    required_animation_families = {"idle", "ready", "move", "attack", "hit", "death", "cast", "status", "defend", "retaliation", "retreat"}
+    cue_entries = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    cue_entries_by_event = {str(entry.get("event_id", "")): entry for entry in cue_entries if isinstance(entry, dict)}
+    required_animation_families = {"idle", "ready", "move", "attack", "hit", "death", "cast", "status", "defend", "retreat"}
     ensure((int(animation_frame_size.get("width", 0)), int(animation_frame_size.get("height", 0))) == expected_animation_frame_size, errors, "Unit animation frame size must be 64x64")
     ensure(int(animation_manifest.get("frames_per_state", 0)) == 4, errors, "Unit animation manifest must define four frames per state")
     ensure((int(animation_sheet_size.get("width", 0)), int(animation_sheet_size.get("height", 0))) == expected_animation_sheet_size, errors, "Unit animation sheet size must match frame size, state count, and frame count")
     ensure(required_animation_families.issubset(animation_state_families), errors, "Unit animation manifest is missing required state families: " + ", ".join(sorted(required_animation_families - animation_state_families)))
+    for state in animation_states:
+        if not isinstance(state, dict):
+            continue
+        event_id = str(state.get("event_id", "")).strip()
+        cue_entry = cue_entries_by_event.get(event_id, {})
+        ensure(bool(cue_entry), errors, f"Unit animation state references missing cue event {event_id}")
+        if cue_entry:
+            ensure(str(state.get("family", "")).strip() == str(cue_entry.get("animation_state_family", "")).strip(), errors, f"Unit animation state {event_id} family must match animation_event_cues.json")
+            ensure(str(state.get("state", "")).strip() == str(cue_entry.get("animation_state", "")).strip(), errors, f"Unit animation state {event_id} state must match animation_event_cues.json")
 
     animation_records_by_unit_id: dict[str, dict] = {}
     duplicate_animation_unit_ids: list[str] = []
@@ -14455,8 +14466,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
         "UNIT_ART_PATH",
+        "UNIT_ANIMATION_PATH",
         "func get_unit_art",
+        "func get_unit_animation",
         "func _validate_unit_art_manifest",
+        "func _validate_unit_animation_manifest",
     ):
         ensure(required_token in content_service_text, errors, f"ContentService.gd is missing unit art token {required_token}")
 
@@ -14464,7 +14478,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for required_token in (
         "func validation_unit_art_summary",
         "func _unit_battle_icon_for_stack",
+        "func _unit_animation_sheet_for_stack",
+        "func _animation_frame_region_for_stack",
         "draw_texture_rect(battle_icon",
+        "draw_texture_rect_region(animation_sheet",
+        "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
 
@@ -14514,8 +14532,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     animation_report_text = UNIT_ANIMATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "UNIT_ANIMATION_MANIFEST_REPORT",
+        "ANIMATION_EVENT_CUES",
         "EXPECTED_FRAME_SIZE",
         "REQUIRED_STATE_FAMILIES",
+        "func _validate_event_cue_alignment",
         "func _frame_metrics_pass",
         "func _frame_signature",
         "unique_sprite_sheet_hash_count",
@@ -15721,7 +15741,7 @@ def main() -> int:
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
-    print("- unit art manifest now covers every authored unit with portrait, battle-icon, and overworld-icon PNG assets plus battle runtime loading hooks")
+    print("- unit art manifests now cover every authored unit with portrait, battle-icon, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")

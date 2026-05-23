@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-animation-generated-sprite-sheet-baseline-20260523-10184",
-  "currentSliceTitle": "Unit Animation Generated Sprite Sheet Baseline",
+  "currentSliceId": "unit-animation-runtime-cue-adoption-20260523-10184",
+  "currentSliceTitle": "Unit Animation Runtime Cue Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all 103 authored units now have generated battle troop animation sprite sheets with cue-aligned state coverage and focused validation.",
+  "currentSliceNotes": "Completed: generated unit animation sheets are cue-aligned, validated by ContentService, and consumed by battle runtime token drawing.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:51:07Z",
+  "updatedAt": "2026-05-23T11:00:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15243,6 +15243,66 @@
         "tests/unit_animation_manifest_report.tscn validates manifest shape, required state families, sheet loadability, PNG dimensions, unique sheet hashes, non-empty frame metrics, and per-state frame variation.",
         "tests/validate_repo.py gates the animation manifest, generated PNG sheet paths and dimensions, generator tokens, and report script/scene tokens."
       ]
+    },
+    {
+      "id": "unit-animation-runtime-cue-adoption-20260523-10184",
+      "title": "Unit Animation Runtime Cue Adoption",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json",
+        "content/unit_art_manifest.json"
+      ],
+      "purpose": "Promote generated unit animation sheets from validated files to cue-aligned runtime assets consumed by battle presentation.",
+      "implementationTargets": [
+        "tools/generate_unit_art_assets.py",
+        "content/unit_animation_manifest.json",
+        "art/animation/runtime/units/",
+        "scripts/autoload/ContentService.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/unit_animation_manifest_report.gd",
+        "tests/unit_art_manifest_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Generated animation state event ids, families, and names match content/animation_event_cues.json.",
+        "ContentService exposes and validates unit animation manifest records at runtime startup.",
+        "BattleBoardView loads and draws frames from generated unit animation sheets, with static battle icons retained as fallback.",
+        "Focused Godot reports and repository validation pass."
+      ],
+      "nonGoals": [
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim.",
+        "No full battle event playback timeline system in this slice."
+      ],
+      "startedAt": "2026-05-23T10:59:09Z",
+      "updatedAt": "2026-05-23T11:00:02Z",
+      "notes": "Completed: generated unit animation sheets are cue-aligned, validated by ContentService, and consumed by battle runtime token drawing.",
+      "completedAt": "2026-05-23T11:00:02Z",
+      "validationResults": [
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "python3 tools/generate_unit_art_assets.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_animation_manifest_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_production_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json"
+      ],
+      "lastValidation": "Cue-aligned unit animation report passed with 103 sheets, 14 cue-matched states, and 103 unique sheet hashes; unit art runtime report passed with battle animation sheets loaded for visible stacks; unit production readiness and repository validation passed.",
+      "evidenceHistory": [
+        "tools/generate_unit_art_assets.py now emits unit animation state ids/families/names matching content/animation_event_cues.json for death, cast, status, retaliation, retreat, and surrender events.",
+        "ContentService exposes UNIT_ANIMATION_PATH, get_unit_animation(), and startup validation for every generated unit animation sprite sheet.",
+        "BattleBoardView draws live token frames from generated unit animation sheets with static battle icons retained as fallback.",
+        "tests/unit_animation_manifest_report.gd cross-checks every generated state against animation_event_cues.json.",
+        "tests/unit_art_manifest_report.gd now validates battle runtime animation sheet loading in addition to static battle icon, overworld icon, and town portrait loading.",
+        "tests/validate_repo.py gates the cue alignment, ContentService animation API, BattleBoardView animation drawing hook, and focused report tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18367,11 +18427,11 @@
       "summary": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in."
     }
   ],
-  "lastValidation": "Unit animation manifest report passed with 103/103 sprite sheets loaded, 14 state rows, 103 unique sprite-sheet hashes, and repository validation now gating the generated animation surface.",
+  "lastValidation": "Cue-aligned unit animation report passed with 103 sheets, 14 cue-matched states, and 103 unique sheet hashes; unit art runtime report passed with battle animation sheets loaded for visible stacks; unit production readiness and repository validation passed.",
   "active_slice": {
-    "id": "unit-animation-generated-sprite-sheet-baseline-20260523-10184",
+    "id": "unit-animation-runtime-cue-adoption-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all 103 authored units now have generated battle troop animation sprite sheets with cue-aligned state coverage and focused validation."
+    "note": "Completed: generated unit animation sheets are cue-aligned, validated by ContentService, and consumed by battle runtime token drawing."
   }
 }

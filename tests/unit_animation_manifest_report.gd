@@ -2,6 +2,7 @@ extends Node
 
 const OUTPUT_DIR := "res://.artifacts/unit_animation_manifest_report"
 const UNIT_ANIMATION_MANIFEST := "res://content/unit_animation_manifest.json"
+const ANIMATION_EVENT_CUES := "res://content/animation_event_cues.json"
 const EXPECTED_SCHEMA_ID := "unit_animation_manifest_v1"
 const EXPECTED_GENERATOR := "deterministic_unit_animation_assets_v1"
 const EXPECTED_FRAME_SIZE := Vector2i(64, 64)
@@ -16,7 +17,6 @@ const REQUIRED_STATE_FAMILIES := [
 	"cast",
 	"status",
 	"defend",
-	"retaliation",
 	"retreat",
 ]
 
@@ -50,6 +50,7 @@ func _run() -> void:
 	_report["state_count"] = states.size()
 	_validate_manifest_header(manifest, frame_size, frames_per_state, sheet_size, states)
 	var states_by_name := _validate_states(states)
+	_validate_event_cue_alignment(states)
 	var records_by_unit := _index_by_unit_id(records)
 	var sheet_hashes := {}
 	if records_by_unit.size() != units.size():
@@ -108,6 +109,30 @@ func _validate_states(states: Array) -> Dictionary:
 			_error("Unit animation manifest is missing state family %s." % family)
 	_report["state_family_counts"] = family_counts
 	return by_name
+
+func _validate_event_cue_alignment(states: Array) -> void:
+	var cue_catalog := ContentService.load_json(ANIMATION_EVENT_CUES)
+	var entries: Array = cue_catalog.get("entries", []) if cue_catalog.get("entries", []) is Array else []
+	var entries_by_event := {}
+	for entry in entries:
+		if entry is Dictionary:
+			var event_id := String(entry.get("event_id", "")).strip_edges()
+			if event_id != "":
+				entries_by_event[event_id] = entry
+	for state in states:
+		if not (state is Dictionary):
+			continue
+		var event_id := String(state.get("event_id", "")).strip_edges()
+		if not entries_by_event.has(event_id):
+			_error("Unit animation state references missing cue event %s." % event_id)
+			continue
+		var cue: Dictionary = entries_by_event[event_id]
+		var expected_family := String(cue.get("animation_state_family", "")).strip_edges()
+		var expected_state := String(cue.get("animation_state", "")).strip_edges()
+		if String(state.get("family", "")).strip_edges() != expected_family:
+			_error("Unit animation state %s family does not match cue catalog family %s." % [event_id, expected_family])
+		if String(state.get("state", "")).strip_edges() != expected_state:
+			_error("Unit animation state %s name does not match cue catalog state %s." % [event_id, expected_state])
 
 func _validate_unit_record(
 	unit: Dictionary,

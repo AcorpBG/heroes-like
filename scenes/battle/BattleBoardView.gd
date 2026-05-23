@@ -77,6 +77,8 @@ var _terrain_textures: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
 var _unit_battle_icon_textures: Dictionary = {}
 var _unit_battle_icon_missing: Dictionary = {}
+var _unit_animation_sheet_textures: Dictionary = {}
+var _unit_animation_sheet_missing: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -87,6 +89,10 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
+		queue_redraw()
+
+func _process(_delta: float) -> void:
+	if not _battle.is_empty():
 		queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
@@ -388,7 +394,11 @@ func validation_unit_art_summary() -> Dictionary:
 		var art := ContentService.get_unit_art(unit_id)
 		var path := String(art.get("battle_icon", ""))
 		var texture := _unit_battle_icon_for_stack(stack)
+		var animation := ContentService.get_unit_animation(unit_id)
+		var animation_path := String(animation.get("sprite_sheet", ""))
+		var animation_sheet := _unit_animation_sheet_for_stack(stack)
 		var loaded := texture != null
+		var animation_loaded := animation_sheet != null
 		if loaded:
 			loaded_count += 1
 		else:
@@ -398,11 +408,16 @@ func validation_unit_art_summary() -> Dictionary:
 			"unit_id": unit_id,
 			"battle_icon": path,
 			"loaded": loaded,
+			"animation_sheet": animation_path,
+			"animation_loaded": animation_loaded,
+			"animation_state": _animation_state_for_stack(stack),
 		})
 	return {
 		"visible_stack_count": stack_entries.size(),
 		"battle_icon_loaded_count": loaded_count,
 		"missing_battle_icon_units": missing,
+		"animation_sheet_loaded_count": stack_entries.filter(func(entry): return bool(entry.get("animation_loaded", false))).size(),
+		"missing_animation_units": stack_entries.filter(func(entry): return not bool(entry.get("animation_loaded", false))).map(func(entry): return String(entry.get("unit_id", ""))),
 		"stacks": stack_entries,
 	}
 
@@ -890,6 +905,58 @@ func _unit_battle_icon_texture(path: String) -> Texture2D:
 	_unit_battle_icon_missing[path] = true
 	return null
 
+func _unit_animation_sheet_for_stack(stack: Dictionary) -> Texture2D:
+	var unit_id := String(stack.get("unit_id", ""))
+	if unit_id == "":
+		return null
+	var animation := ContentService.get_unit_animation(unit_id)
+	var path := String(animation.get("sprite_sheet", ""))
+	if path == "":
+		return null
+	return _unit_animation_sheet_texture(path)
+
+func _unit_animation_sheet_texture(path: String) -> Texture2D:
+	if _unit_animation_sheet_textures.has(path):
+		return _unit_animation_sheet_textures[path]
+	if _unit_animation_sheet_missing.has(path):
+		return null
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is Texture2D:
+			texture = resource
+	if texture == null and FileAccess.file_exists(path):
+		var image := Image.new()
+		if image.load(path) == OK:
+			texture = ImageTexture.create_from_image(image)
+	if texture != null:
+		_unit_animation_sheet_textures[path] = texture
+		return texture
+	_unit_animation_sheet_missing[path] = true
+	return null
+
+func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
+	var state_name := _animation_state_for_stack(stack)
+	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
+	var frame := int(Time.get_ticks_msec() / 180) % 4
+	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
+
+func _animation_state_for_stack(stack: Dictionary) -> String:
+	var battle_id := String(stack.get("battle_id", ""))
+	if battle_id == String(_battle.get("active_stack_id", "")):
+		return "ready_active"
+	if bool(stack.get("defending", false)):
+		return "defend_brace"
+	return "idle_hold"
+
+func _animation_state_row_for_unit(unit_id: String, state_name: String) -> int:
+	var animation := ContentService.get_unit_animation(unit_id)
+	var states: Array = animation.get("states", []) if animation.get("states", []) is Array else []
+	for index in range(states.size()):
+		if String(states[index]) == state_name:
+			return index
+	return 0
+
 func _battle_terrain_id() -> String:
 	var terrain_id := String(_battle.get("terrain", "plains")).strip_edges().to_lower()
 	return terrain_id if terrain_id != "" else "plains"
@@ -1016,13 +1083,19 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)
 		draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.90))))
 		draw_circle(center, token_radius, fill)
-		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
-		if battle_icon != null:
-			var icon_size := token_radius * 1.62
-			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
-			draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
+		var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
+		if animation_sheet != null:
+			var frame_size := token_radius * 1.76
+			var frame_rect := Rect2(center - Vector2(frame_size * 0.5, frame_size * 0.55), Vector2(frame_size, frame_size))
+			draw_texture_rect_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
 		else:
-			_draw_unit_glyph(center, token_radius, stack)
+			var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
+			if battle_icon != null:
+				var icon_size := token_radius * 1.62
+				var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
+				draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
+			else:
+				_draw_unit_glyph(center, token_radius, stack)
 		_draw_stack_health_bar(center, radius, stack)
 		_draw_count_badge(center, token_radius, stack)
 		_draw_stack_caption(center, radius, stack)

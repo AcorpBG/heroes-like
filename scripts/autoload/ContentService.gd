@@ -8,6 +8,7 @@ const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
 const FACTIONS_PATH := "%s/factions.json" % CONTENT_DIR
 const UNITS_PATH := "%s/units.json" % CONTENT_DIR
 const UNIT_ART_PATH := "%s/unit_art_manifest.json" % CONTENT_DIR
+const UNIT_ANIMATION_PATH := "%s/unit_animation_manifest.json" % CONTENT_DIR
 const ARMY_GROUPS_PATH := "%s/army_groups.json" % CONTENT_DIR
 const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
@@ -95,6 +96,17 @@ func get_unit(id: String) -> Dictionary:
 
 func get_unit_art(id: String) -> Dictionary:
 	var raw := load_json(UNIT_ART_PATH)
+	if raw.is_empty():
+		return {}
+	for item in _items_from_raw(raw):
+		if not (item is Dictionary):
+			continue
+		if String(item.get("unit_id", item.get("id", ""))) == id:
+			return item
+	return {}
+
+func get_unit_animation(id: String) -> Dictionary:
+	var raw := load_json(UNIT_ANIMATION_PATH)
 	if raw.is_empty():
 		return {}
 	for item in _items_from_raw(raw):
@@ -306,6 +318,8 @@ func _validate_content() -> void:
 	var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
 	var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
 	var unit_art_index := _index_unit_art_items(_items_from_raw(load_json(UNIT_ART_PATH)))
+	var unit_animation_raw := load_json(UNIT_ANIMATION_PATH)
+	var unit_animation_index := _index_unit_art_items(_items_from_raw(unit_animation_raw))
 	var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
 	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
@@ -347,6 +361,7 @@ func _validate_content() -> void:
 	for unit in unit_index.values():
 		_validate_unit(unit, faction_index)
 	_validate_unit_art_manifest(unit_index, unit_art_index)
+	_validate_unit_animation_manifest(unit_index, unit_animation_raw, unit_animation_index)
 	for army_group in army_group_index.values():
 		_validate_army_group(army_group, faction_index, unit_index)
 	for building in building_index.values():
@@ -968,6 +983,31 @@ func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Diction
 	for unit_id in unit_art_index.keys():
 		if not unit_index.has(unit_id):
 			push_warning("Unit art manifest references unknown unit %s." % unit_id)
+
+func _validate_unit_animation_manifest(unit_index: Dictionary, manifest: Dictionary, unit_animation_index: Dictionary) -> void:
+	if String(manifest.get("schema_id", "")) != "unit_animation_manifest_v1":
+		push_warning("Unit animation manifest has unexpected schema id %s." % manifest.get("schema_id", ""))
+	if int(manifest.get("frames_per_state", 0)) <= 0:
+		push_warning("Unit animation manifest must define frames_per_state > 0.")
+	var states: Array = manifest.get("states", []) if manifest.get("states", []) is Array else []
+	if states.is_empty():
+		push_warning("Unit animation manifest must define battle troop states.")
+	for unit_id in unit_index.keys():
+		if not unit_animation_index.has(unit_id):
+			push_warning("Unit animation manifest is missing unit %s." % unit_id)
+			continue
+		var record: Dictionary = unit_animation_index.get(unit_id, {})
+		var path := String(record.get("sprite_sheet", ""))
+		if path == "" or not path.begins_with("res://"):
+			push_warning("Unit animation %s must define sprite_sheet as a res:// path." % unit_id)
+		elif not FileAccess.file_exists(path):
+			push_warning("Unit animation %s sprite sheet file is missing: %s." % [unit_id, path])
+		var record_states: Array = record.get("states", []) if record.get("states", []) is Array else []
+		if record_states.size() != states.size():
+			push_warning("Unit animation %s state count %d does not match manifest state count %d." % [unit_id, record_states.size(), states.size()])
+	for unit_id in unit_animation_index.keys():
+		if not unit_index.has(unit_id):
+			push_warning("Unit animation manifest references unknown unit %s." % unit_id)
 
 func _validate_army_group(army_group: Dictionary, faction_index: Dictionary, unit_index: Dictionary) -> void:
 	var group_id := String(army_group.get("id", ""))
