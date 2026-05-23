@@ -69,6 +69,11 @@ func _assert_report(first: Dictionary) -> bool:
 	if scenario_distribution.keys().size() <= 1:
 		_fail("Battle resolver sampling did not sample multiple authored scenarios: %s" % battle_summary)
 		return false
+	var difficulty_distribution: Dictionary = battle_summary.get("difficulty_distribution", {}) if battle_summary.get("difficulty_distribution", {}) is Dictionary else {}
+	for required_difficulty in ["low", "medium", "high"]:
+		if not difficulty_distribution.has(required_difficulty):
+			_fail("Battle resolver sampling did not preserve authored difficulty labels: %s" % battle_summary)
+			return false
 	for required_summary_field in [
 		"average_player_damage_dealt",
 		"average_enemy_damage_dealt",

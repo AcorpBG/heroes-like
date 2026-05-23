@@ -418,7 +418,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		best = best_attack
 	if not best_spell.is_empty() and _candidate_beats(best_spell, best):
 		best = best_spell
-	if distance > 0:
+	if distance > 0 or best_attack.is_empty():
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -445,7 +445,7 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	var best := {"action": "defend", "score": defend_score}
 	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if int(battle.get("distance", 1)) > 0:
+	if int(battle.get("distance", 1)) > 0 or best_attack.is_empty():
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -1048,17 +1048,32 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 	return score
 
 static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
-	if int(battle.get("distance", 1)) <= 0:
-		return -9999.0
+	var current_distance := int(battle.get("distance", 1))
 	var side := String(active_stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
 	var ranged := bool(active_stack.get("ranged", false))
+	if current_distance <= 0:
+		if _can_make_melee_attack(active_stack, battle) or (ranged and _can_make_any_ranged_attack(active_stack, battle, targets)):
+			return -9999.0
+		var reposition_score := 8.0
+		if not ranged:
+			reposition_score += 4.0
+		if _has_hostile_ranged_pressure(targets):
+			reposition_score += 2.0
+		if _stack_is_isolated(battle, active_stack):
+			reposition_score += 1.0
+		reposition_score += _objective_action_score(battle, side, "advance", active_stack)
+		return reposition_score
 	var distance_delta := _advance_distance_delta(active_stack, battle)
 	var score := -0.5
 	if _should_close_distance(active_stack):
 		score += 2.5
 	if not ranged:
 		score += 2.0
+		if not _can_make_melee_attack(active_stack, battle):
+			score += 4.0
+			if _has_hostile_ranged_pressure(targets):
+				score += 1.5
 		if int(battle.get("distance", 1)) >= 2:
 			score += 0.75
 	elif int(active_stack.get("shots_remaining", 0)) > 0:
@@ -1370,6 +1385,12 @@ static func _can_make_ranged_attack(stack: Dictionary, battle: Dictionary, targe
 		and not _stack_hex(stack).is_empty()
 		and not _stack_hex(target).is_empty()
 	)
+
+static func _can_make_any_ranged_attack(stack: Dictionary, battle: Dictionary, targets: Array) -> bool:
+	for target in targets:
+		if target is Dictionary and _can_make_ranged_attack(stack, battle, target):
+			return true
+	return false
 
 static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
 	var hex_distance := _stack_hex_distance(attacker, target)
