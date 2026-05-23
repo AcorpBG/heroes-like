@@ -7689,7 +7689,7 @@ static func _apply_attack_ability_effects(
 		return messages
 
 	var harry = _ability_by_id(attacker, "harry")
-	if not harry.is_empty() and is_ranged:
+	if not harry.is_empty():
 		_apply_stack_effect(
 			battle,
 			String(defender.get("battle_id", "")),

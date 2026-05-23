@@ -43,6 +43,8 @@ Unit animation runtime adoption added on 2026-05-23: `ContentService` now treats
 
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
 
+Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units now apply their authored status rider through the same battle ability path as ranged harry units, and `tests/unit_ability_runtime_report.tscn` probes all 143 authored unit ability instances across the 103-unit roster for a concrete runtime consequence. This strengthens the "fully implemented units" proof for current authored mechanics; final balance and hand-authored art approval remain outside this slice.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:
