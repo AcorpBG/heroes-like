@@ -195,6 +195,37 @@ def draw_hash_marks(draw: ImageDraw.ImageDraw, unit_id: str, size: tuple[int, in
         draw.line([(x, y), (x + length, y - length * 0.45)], fill=with_alpha(color, alpha), width=2)
 
 
+def draw_unit_signature(
+    draw: ImageDraw.ImageDraw,
+    unit_id: str,
+    size: tuple[int, int],
+    color: tuple[int, int, int],
+    anchor: tuple[int, int],
+    scale: int,
+) -> None:
+    seed = hash_int(f"{unit_id}:signature")
+    for index in range(8):
+        bit_pair = (seed >> (index * 6)) & 0x3F
+        x = anchor[0] + (index % 4) * scale + (bit_pair % 3)
+        y = anchor[1] + (index // 4) * scale + ((bit_pair // 3) % 3)
+        radius = max(1, scale // 5 + (bit_pair % 2))
+        alpha = 125 + ((bit_pair >> 1) % 95)
+        draw.ellipse(
+            [x - radius, y - radius, x + radius, y + radius],
+            fill=with_alpha(color, alpha),
+            outline=with_alpha((18, 20, 22), min(220, alpha + 20)),
+        )
+    slash_offset = seed % max(1, size[0] // 5)
+    draw.line(
+        [
+            (max(2, anchor[0] - scale // 2 + slash_offset), min(size[1] - 3, anchor[1] + scale * 3)),
+            (min(size[0] - 3, anchor[0] + scale * 4 + slash_offset), max(2, anchor[1] - scale)),
+        ],
+        fill=with_alpha(color, 54),
+        width=max(1, scale // 5),
+    )
+
+
 def draw_tier_pips(draw: ImageDraw.ImageDraw, tier: int, origin: tuple[int, int], color: tuple[int, int, int], radius: int = 5) -> None:
     for index in range(max(1, min(7, tier))):
         x = origin[0] + (index % 4) * (radius * 3)
@@ -239,7 +270,9 @@ def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path:
     center = (80, 80)
     draw.ellipse([10, 10, 150, 150], fill=with_alpha(scale_color(shadow, 0.84), 245), outline=with_alpha(metal, 235), width=5)
     draw.ellipse([22, 22, 138, 138], fill=with_alpha(primary, 225), outline=with_alpha(scale_color(secondary, 1.12), 210), width=3)
+    draw_hash_marks(draw, str(unit["id"]), BATTLE_ICON_SIZE, metal, 28)
     draw_motif(draw, motif, center, 43, palette, str(unit["id"]))
+    draw_unit_signature(draw, str(unit["id"]), BATTLE_ICON_SIZE, metal, (22, 25), 12)
     draw_tier_pips(draw, int(unit.get("tier", 1)), (36, 130), metal, 3)
     draw_centered_text(draw, initials, (51, 114, 109, 144), font(18, True), (20, 22, 24, 220))
     image.save(path)
@@ -253,7 +286,9 @@ def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, pa
     metal = palette["metal"]
     draw.polygon([(48, 4), (88, 30), (80, 86), (16, 86), (8, 30)], fill=with_alpha(scale_color(shadow, 0.78), 245), outline=with_alpha(metal, 230))
     draw.polygon([(48, 12), (78, 34), (72, 76), (24, 76), (18, 34)], fill=with_alpha(primary, 225), outline=with_alpha(secondary, 180))
+    draw_hash_marks(draw, str(unit["id"]), OVERWORLD_ICON_SIZE, metal, 24)
     draw_motif(draw, motif, (48, 44), 24, palette, str(unit["id"]))
+    draw_unit_signature(draw, str(unit["id"]), OVERWORLD_ICON_SIZE, metal, (16, 18), 8)
     draw_centered_text(draw, initials, (20, 66, 76, 90), font(12, True), (20, 22, 24, 230))
     image.save(path)
 
