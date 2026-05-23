@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Terminal-Margin Outlier Calibration",
+  "currentSliceId": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
+  "currentSliceTitle": "Strategic AI Live Recruitment Delivery Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: deterministic battle autoplay samples now have zero terminal-margin outliers, balance_matrix_gate passes, and combat-feel gates still pass across the focused report, balance regression suite, and shared headless harness.",
+  "currentSliceNotes": "Completed: shared headless harness now proves live enemy town recruitment delivery into an active raid host through the normal enemy turn cycle.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T17:12:42Z",
+  "updatedAt": "2026-05-23T17:36:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16987,6 +16987,48 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
+      "title": "Strategic AI Live Recruitment Delivery Harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add focused shared headless harness evidence that enemy town recruitment can feed an active raid host through the normal enemy turn cycle.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules treats strategic_ai_live_recruitment_delivery as a required subsystem.",
+        "A normal EnemyTurnRules.run_enemy_turn fixture consumes Duskfen recruits into an underfilled active Vaska raid host.",
+        "The focused harness proves raid strength increases, town recruits are consumed, ai_town_recruited and ai_raid_reinforced events are emitted, the active target is preserved, and no public score/task leaks or save migration occur."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No broad recruiting economy planner or multi-hero army-board system.",
+        "No automatic balance tuning."
+      ],
+      "updatedAt": "2026-05-23T17:36:00Z",
+      "completedAt": "2026-05-23T17:36:00Z",
+      "completionNotes": "Completed: shared headless harness now includes required strategic_ai_live_recruitment_delivery evidence. The River Pass fixture seeds Duskfen recruits and a stable garrison, runs EnemyTurnRules.run_enemy_turn, consumes 4 unit_bog_brute recruits into the active Vaska raid, raises raid strength 21->183, reports raid_unit_after 5, emits ai_town_recruited and ai_raid_reinforced, preserves the river_free_company target, and keeps public event/save boundaries clean.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21806,12 +21848,11 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T17:12:42Z",
-    "sliceId": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
+    "updatedAt": "2026-05-23T17:36:00Z",
+    "sliceId": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
@@ -21820,10 +21861,10 @@
     "status": "passed"
   },
   "active_slice": {
-    "id": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
+    "id": "strategic-ai-live-recruitment-delivery-harness-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T17:12:42Z",
-    "note": "Completed: deterministic battle autoplay samples now have zero terminal-margin outliers and pass both balance-matrix and combat-feel gates."
+    "updated": "2026-05-23T17:36:00Z",
+    "note": "Completed: shared headless harness now proves live enemy town recruitment delivery into an active raid host through the normal enemy turn cycle."
   },
-  "currentSliceUpdatedAt": "2026-05-23T17:12:42Z"
+  "currentSliceUpdatedAt": "2026-05-23T17:36:00Z"
 }

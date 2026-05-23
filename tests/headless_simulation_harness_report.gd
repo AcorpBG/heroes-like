@@ -86,6 +86,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_regroup_retreat(live_regroup_case):
 		return false
+	var live_recruitment_case := _find_case(first, "strategic_ai_live_recruitment_delivery")
+	if live_recruitment_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI recruitment delivery evidence.")
+		return false
+	if not _assert_live_ai_recruitment_delivery(live_recruitment_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -171,6 +177,50 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> bool:
+	if String(live_recruitment_case.get("status", "")) != "pass":
+		_fail("Live strategic AI recruitment delivery did not pass: %s" % JSON.stringify(live_recruitment_case))
+		return false
+	var summary: Dictionary = live_recruitment_case.get("summary", {}) if live_recruitment_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_recruitment_case.get("evidence", {}) if live_recruitment_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("town_id", "")) != "duskfen_bastion" or String(summary.get("target_id", "")) != "river_free_company":
+		_fail("Live strategic AI recruitment delivery used unexpected town/target ids: %s" % summary)
+		return false
+	if String(summary.get("unit_id", "")) != "unit_bog_brute":
+		_fail("Live strategic AI recruitment delivery used unexpected unit id: %s" % summary)
+		return false
+	if int(summary.get("desired_before", 0)) <= int(summary.get("before_strength", 0)):
+		_fail("Live strategic AI recruitment delivery fixture had no raid strength need: %s" % summary)
+		return false
+	if int(summary.get("after_strength", 0)) <= int(summary.get("before_strength", 0)):
+		_fail("Live strategic AI recruitment delivery did not increase raid strength: %s" % summary)
+		return false
+	if int(summary.get("town_recruits_after", 9999)) >= int(summary.get("town_recruits_before", 0)):
+		_fail("Live strategic AI recruitment delivery did not consume town recruits: %s" % summary)
+		return false
+	if int(summary.get("raid_unit_after", 0)) < 5:
+		_fail("Live strategic AI recruitment delivery did not add recruits to the raid army: %s" % summary)
+		return false
+	if int(summary.get("town_recruit_event_count", 0)) < 1 or int(summary.get("raid_reinforcement_event_count", 0)) < 1:
+		_fail("Live strategic AI recruitment delivery is missing recruitment/reinforcement events: %s" % summary)
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
+		_fail("Live strategic AI recruitment delivery missing event type evidence: %s" % event_types)
+		return false
+	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
+	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Live strategic AI recruitment delivery lost the active raid target: %s" % raid)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI recruitment delivery save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI recruitment delivery leaked internal public-event tokens: %s" % leak_tokens)
+		return false
 	return true
 
 func _assert_live_ai_regroup_retreat(live_regroup_case: Dictionary) -> bool:
