@@ -19,6 +19,7 @@ CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
 RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
 UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
+AMBIENT_AUDIO_PATH = ROOT / "scripts" / "autoload" / "AmbientAudio.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
@@ -151,6 +152,9 @@ PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-runtime-is
 UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.gd"
 UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.tscn"
 UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-report.md"
+OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
+OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
+OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -16936,6 +16940,94 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
 
 
+def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    required_paths = (
+        project_path,
+        AMBIENT_AUDIO_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH,
+        OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH,
+        OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld ambient audio runtime file: {path.relative_to(ROOT)}")
+
+    if project_path.exists():
+        project_text = project_path.read_text(encoding="utf-8")
+        ensure(
+            'AmbientAudio="*res://scripts/autoload/AmbientAudio.gd"' in project_text,
+            errors,
+            "project.godot must register AmbientAudio as an autoload",
+        )
+
+    if AMBIENT_AUDIO_PATH.exists():
+        ambient_text = AMBIENT_AUDIO_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "class_name HeroesAmbientAudio",
+            "AudioStreamGenerator",
+            "AudioStreamGeneratorPlayback",
+            "AudioStreamPlayer",
+            "SettingsService.master_volume_percent",
+            "func sync_overworld_session",
+            "func stop_overworld_ambient",
+            "func validation_summary",
+            "overworld_ambient_audio_runtime_v1",
+            "overworld_ambient_mix",
+            "overworld_ambient_pressure",
+            "overworld_ambient_day_pulse",
+            "TERRAIN_SPECS",
+            "PRESSURE_SPEC",
+            "MAX_ACTIVE_PLAYERS",
+            "audio_bus",
+            "Master",
+        ):
+            ensure(required_token in ambient_text, errors, f"AmbientAudio.gd is missing required token: {required_token}")
+
+    if OVERWORLD_SCRIPT_PATH.exists():
+        overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "_sync_overworld_ambient_audio",
+            "AmbientAudio.sync_overworld_session",
+            "validation_ambient_audio_summary",
+            '"ambient_audio"',
+            "overworld_shell_%s",
+        ):
+            ensure(required_token in overworld_text, errors, f"OverworldShell.gd is missing ambient audio token: {required_token}")
+
+    if OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH.exists():
+        report_text = OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "OVERWORLD_AMBIENT_AUDIO_RUNTIME_REPORT",
+            "AmbientAudio.validation_reset",
+            "AmbientAudio.sync_overworld_session",
+            "validation_ambient_audio_summary",
+            "overworld_ambient_audio_runtime_v1",
+            "overworld_ambient_mix",
+            "overworld_ambient_pressure",
+            "overworld_ambient_day_pulse",
+            "pressure_layer_count",
+            "Master",
+        ):
+            ensure(required_token in report_text, errors, f"Overworld ambient audio runtime report is missing required token: {required_token}")
+
+    if OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH.exists():
+        doc_text = OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Overworld Ambient Audio Runtime Report",
+            "overworld-ambient-audio-runtime-baseline-20260523-10184",
+            "scripts/autoload/AmbientAudio.gd",
+            "AudioStreamGenerator",
+            "overworld_ambient_pressure",
+            "OverworldShell",
+            "Master",
+            "not final sound design",
+            "No imported final audio assets",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"Overworld ambient audio runtime doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -17030,6 +17122,7 @@ def main() -> int:
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
+    validate_overworld_ambient_audio_runtime(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
@@ -17129,6 +17222,7 @@ def main() -> int:
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the Master bus")
+    print("- generated overworld ambient audio now syncs terrain, day, and enemy-pressure layers from live overworld sessions on the Master bus")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:

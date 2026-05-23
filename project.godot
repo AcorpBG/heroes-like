@@ -18,6 +18,7 @@ CampaignProgression="*res://scripts/autoload/CampaignProgression.gd"
 SettingsService="*res://scripts/autoload/SettingsService.gd"
 RuntimeIssueLog="*res://scripts/autoload/RuntimeIssueLog.gd"
 UiAudio="*res://scripts/autoload/UiAudio.gd"
+AmbientAudio="*res://scripts/autoload/AmbientAudio.gd"
 AppRouter="*res://scripts/autoload/AppRouter.gd"
 LiveValidationHarness="*res://scripts/autoload/LiveValidationHarness.gd"
 
