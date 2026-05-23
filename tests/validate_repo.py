@@ -10439,6 +10439,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         '"operational_board"',
         '"commander_preview"',
         '"briefing_check"',
+        '"source_kind": "authored_scenario"',
         "Opening briefing:",
         "First decision:",
         "func _skirmish_briefing_check",
@@ -10509,6 +10510,37 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "selected_skirmish_setup.get(\"briefing_check\"",
     ):
         ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing skirmish briefing UX token: {required_token}")
+
+    for report_path in (
+        ROOT / "tests/player_facing_skirmish_browser_smoke.gd",
+        ROOT / "tests/player_facing_skirmish_browser_smoke.tscn",
+    ):
+        ensure(report_path.exists(), errors, f"Missing player-facing skirmish browser smoke file: {report_path.relative_to(ROOT)}")
+    player_skirmish_smoke_path = ROOT / "tests/player_facing_skirmish_browser_smoke.gd"
+    if player_skirmish_smoke_path.exists():
+        smoke_text = player_skirmish_smoke_path.read_text(encoding="utf-8")
+        for required_token in (
+            "PLAYER_FACING_SKIRMISH_BROWSER_SMOKE",
+            "river-pass",
+            "authored_entry_count",
+            "generated_transient_browser_leak",
+            "validation_select_skirmish",
+            "build_random_map_skirmish_setup",
+        ):
+            ensure(required_token in smoke_text, errors, f"player_facing_skirmish_browser_smoke.gd is missing required token: {required_token}")
+
+    authored_skirmish_doc_path = ROOT / "docs" / "player-facing-authored-skirmish-browser-report.md"
+    ensure(authored_skirmish_doc_path.exists(), errors, "Missing player-facing authored skirmish browser report")
+    if authored_skirmish_doc_path.exists():
+        authored_skirmish_doc_text = authored_skirmish_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Player-Facing Authored Skirmish Browser Report",
+            "player-facing-authored-skirmish-browser-20260523-10184",
+            "build_skirmish_browser_entries",
+            "PLAYER_FACING_SKIRMISH_BROWSER_SMOKE",
+            "generated-map transient draft",
+        ):
+            ensure(required_text in authored_skirmish_doc_text, errors, f"player-facing authored skirmish browser report is missing token: {required_text}")
 
     briefing_doc_path = ROOT / "docs" / "skirmish-launch-briefing-ux-report.md"
     ensure(briefing_doc_path.exists(), errors, "Missing skirmish launch briefing UX report")

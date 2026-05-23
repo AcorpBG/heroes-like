@@ -298,6 +298,28 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 
 static func build_skirmish_browser_entries() -> Array:
 	var entries := []
+	for scenario in _scenario_items():
+		if not (scenario is Dictionary):
+			continue
+		if not _scenario_is_player_facing(scenario):
+			continue
+		var selection := _selection_metadata(scenario)
+		var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
+		if not bool(availability.get("skirmish", false)):
+			continue
+		var scenario_id := String(scenario.get("id", ""))
+		if scenario_id == "":
+			continue
+		entries.append(
+			{
+				"scenario_id": scenario_id,
+				"label": String(scenario.get("name", scenario_id)),
+				"summary": _browser_summary_text(scenario, selection),
+				"source_kind": "authored_scenario",
+				"availability": availability.duplicate(true),
+				"recommended_difficulty": String(selection.get("recommended_difficulty", default_difficulty_id())),
+			}
+		)
 	for package_entry in build_maps_folder_package_browser_entries():
 		entries.append(package_entry)
 	return entries

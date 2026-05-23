@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "player-facing-campaign-reactivation-smoke-20260523-10184",
-  "currentSliceTitle": "Player-Facing Campaign Reactivation Smoke",
+  "currentSliceId": "player-facing-authored-skirmish-browser-20260523-10184",
+  "currentSliceTitle": "Player-Facing Authored Skirmish Browser",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed authored campaign/scenario domain reactivation for player-facing campaign browsing with focused campaign menu, replayability, and generated-map boundary smoke coverage.",
+  "currentSliceNotes": "Completed active authored skirmish scenario exposure in the player-facing skirmish browser while preserving generated-map draft/package isolation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:59:00Z",
+  "updatedAt": "2026-05-24T00:19:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,72 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "player-facing-authored-skirmish-browser-20260523-10184",
+      "title": "Player-Facing Authored Skirmish Browser",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/random_map_scenario_load_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Return active authored skirmish-available scenarios from ScenarioSelectRules.build_skirmish_browser_entries so the player-facing Skirmish board is not package-only.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/player_facing_skirmish_browser_smoke.tscn",
+        "tests/random_map_scenario_load_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/player-facing-authored-skirmish-browser-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "ScenarioSelectRules.build_skirmish_browser_entries includes active authored scenarios whose selection availability marks skirmish=true.",
+        "Generated maps-folder package entries remain available and generated transient draft scenario ids do not appear as authored skirmish rows.",
+        "MainMenu validation hooks can select and preview an authored skirmish front from the browser.",
+        "Focused tests gate authored skirmish browser exposure and random-map generated draft isolation."
+      ],
+      "nonGoals": [
+        "No new authored scenario content.",
+        "No generated-map campaign adoption.",
+        "No full campaign/skirmish breadth completion claim."
+      ],
+      "startedAt": "2026-05-24T00:08:00Z",
+      "updatedAt": "2026-05-24T00:19:00Z",
+      "notes": "Completed after making build_skirmish_browser_entries include active authored skirmish-available scenarios, adding a focused menu/browser smoke, and regating random-map smoke around active authored rows plus generated transient draft isolation.",
+      "completedAt": "2026-05-24T00:19:00Z",
+      "completionEvidence": [
+        "ScenarioSelectRules.build_skirmish_browser_entries now emits authored_scenario rows for active scenarios with selection.availability.skirmish=true.",
+        "tests/player_facing_skirmish_browser_smoke.tscn passed with 16 authored rows, River Pass main-menu skirmish selection, and no generated transient draft browser leak.",
+        "tests/random_map_scenario_load_smoke.tscn passed after accepting active authored rows while rejecting non-authored/non-package rows.",
+        "Repository validation gates the authored skirmish browser smoke, report doc, and ScenarioSelectRules source_kind marker."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_skirmish_browser_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/random_map_scenario_load_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "PLAYER_FACING_SKIRMISH_BROWSER_SMOKE",
+          "authored_entry_count": 16,
+          "selected_scenario_id": "river-pass",
+          "generated_transient_browser_leak": false,
+          "full_skirmish_breadth_claim": false
+        }
+      }
+    },
     {
       "id": "player-facing-campaign-reactivation-smoke-20260523-10184",
       "title": "Player-Facing Campaign Reactivation Smoke",
