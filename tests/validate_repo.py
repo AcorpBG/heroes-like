@@ -16391,6 +16391,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "combat_feel_gate",
             "report_only_combat_feel_thresholds_v1",
             "required_difficulty",
+            "must pass without terminal-margin warnings",
+            "not outliers.is_empty()",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
     if combat_balance_report_path.exists():
@@ -16405,6 +16407,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "balance_matrix",
             "balance_matrix_gate",
             "terminal_margin_outliers",
+            "must pass without terminal-margin warnings",
+            "not outliers.is_empty()",
             "report_only_balance_matrix_thresholds_v1",
             "get_tree().quit(1)",
         ):

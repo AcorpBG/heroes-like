@@ -5591,6 +5591,43 @@ nonGoals:
 
 Completed implementation slice:
 
+id: `battle-autoplay-terminal-margin-outlier-calibration-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Calibrate the deterministic battle autoplay matrix so sampled authored encounters no longer produce extreme terminal-health-margin outliers.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `content/army_groups.json`
+- `content/encounters.json`
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `tests/battle_autoplay_combat_balance_report.gd`
+- `tests/balance_regression_report_suite.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/battle-autoplay-combat-balance-calibration-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- The deterministic battle autoplay report has zero terminal-margin outliers above the matrix threshold.
+- The shared headless simulation harness no longer carries the balance-matrix outlier warning for the default authored battle sample.
+- Existing combat-feel gates still pass for sample count, action diversity, damage pacing, outcome distribution, and stalled/invalid-order checks.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No final combat balance approval.
+- No automatic tuning or authored encounter writeback system.
+- No broad battle AI rewrite.
+
+Completed implementation slice:
+
 id: `strategic-ai-live-raid-assault-grouping-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Add live strategic AI evidence and behavior for nearby same-faction raid hosts consolidating before a shared town assault.
