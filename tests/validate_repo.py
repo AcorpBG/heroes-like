@@ -15726,6 +15726,59 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
 
 
+def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
+    harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
+    balance_report_path = ROOT / "tests/balance_regression_report_suite.gd"
+    headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
+    doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
+    for path in (harness_path, balance_report_path, headless_report_path, doc_path):
+        ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
+    if harness_path.exists():
+        harness_text = harness_path.read_text(encoding="utf-8")
+        for required_token in (
+            "average_player_damage_dealt",
+            "average_enemy_damage_dealt",
+            "average_total_damage_per_round",
+            "average_terminal_health_margin_pct",
+            "average_initial_initiative_spread",
+            "action_diversity_count",
+            "primary_action_pct",
+            "terrain_distribution",
+            "difficulty_distribution",
+            "pacing_band_distribution",
+            "initial_role_distribution",
+            "initial_ability_distribution",
+            "damage_totals",
+            "damage_per_round",
+            "initial_stack_profile",
+            "func _stack_profile",
+            "func _action_mix_summary",
+            "func _pacing_band",
+        ):
+            ensure(required_token in harness_text, errors, f"Battle autoplay balance harness is missing diagnostic token: {required_token}")
+    for path in (balance_report_path, headless_report_path):
+        if not path.exists():
+            continue
+        report_text = path.read_text(encoding="utf-8")
+        for required_token in (
+            "average_total_damage_per_round",
+            "initial_stack_profile",
+            "terrain_distribution",
+            "pacing_band_distribution",
+            "initial_ability_distribution",
+        ):
+            ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
+    if doc_path.exists():
+        doc_text = doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Combat-Feel Diagnostics Report",
+            "damage per round",
+            "initiative",
+            "This is instrumentation for future tuning passes.",
+        ):
+            ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -15772,6 +15825,7 @@ def main() -> int:
     validate_hero_command(errors)
     validate_overworld_fog(errors)
     validate_battle_ability_layer(errors)
+    validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
@@ -15856,6 +15910,7 @@ def main() -> int:
     print("- hero-command roster, tavern recruitment, transfer flow, and thin UI wiring are present")
     print("- authored hero metadata, multi-faction campaign starts, skirmish-only fronts, and lead-hero variety are present")
     print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
+    print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics")
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")
     print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")

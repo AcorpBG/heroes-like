@@ -56,11 +56,39 @@ func _assert_report(first: Dictionary) -> bool:
 	if action_distribution.is_empty():
 		_fail("Battle outcome distribution is missing action metrics.")
 		return false
+	for required_summary_field in [
+		"average_player_damage_dealt",
+		"average_enemy_damage_dealt",
+		"average_total_damage_per_round",
+		"average_terminal_health_margin_pct",
+		"average_initial_initiative_spread",
+		"action_diversity_count",
+		"primary_action_id",
+		"primary_action_pct",
+		"terrain_distribution",
+		"difficulty_distribution",
+		"pacing_band_distribution",
+		"initial_role_distribution",
+		"initial_ability_distribution",
+	]:
+		if not battle_summary.has(String(required_summary_field)):
+			_fail("Battle outcome distribution summary is missing combat-feel diagnostic field: %s" % required_summary_field)
+			return false
+	if int(battle_summary.get("action_diversity_count", 0)) <= 0 or String(battle_summary.get("primary_action_id", "")) == "":
+		_fail("Battle outcome distribution did not expose a usable action-mix diagnostic: %s" % battle_summary)
+		return false
+	if int(battle_summary.get("average_total_damage_per_round", 0)) <= 0:
+		_fail("Battle outcome distribution did not expose positive damage pacing evidence: %s" % battle_summary)
+		return false
 	var first_battle_sample: Dictionary = battle_samples[0]
-	for required_field in ["initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "action_counts"]:
+	for required_field in ["terrain", "encounter_difficulty", "initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "terminal_health_margin_pct", "action_counts", "action_mix", "damage_totals", "damage_per_round", "pacing_band", "initial_stack_profile"]:
 		if not first_battle_sample.has(String(required_field)):
 			_fail("Battle outcome distribution sample is missing field: %s" % required_field)
 			return false
+	var initial_stack_profile: Dictionary = first_battle_sample.get("initial_stack_profile", {}) if first_battle_sample.get("initial_stack_profile", {}) is Dictionary else {}
+	if not initial_stack_profile.has("initiative") or not initial_stack_profile.has("role_counts") or not initial_stack_profile.has("ability_counts"):
+		_fail("Battle outcome distribution sample is missing stack role/ability/initiative diagnostics: %s" % first_battle_sample)
+		return false
 	if int(statuses.get("pass", 0)) <= 0:
 		_fail("Balance regression report did not pass any mature surface.")
 		return false
