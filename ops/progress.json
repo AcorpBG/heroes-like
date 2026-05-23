@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-art-reproducibility-gate-20260523-10184",
-  "currentSliceTitle": "Unit Art Reproducibility Gate",
+  "currentSliceId": "battle-event-animation-state-adoption-20260523-10184",
+  "currentSliceTitle": "Battle Event Animation State Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all 412 committed generated unit PNG assets and both unit art manifests match fresh generator output.",
+  "currentSliceNotes": "Completed: battle rules now stamp transient per-stack animation states from resolved combat events, and the battle board consumes those states before fallback idle/ready/defend selection.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:30:57Z",
+  "updatedAt": "2026-05-23",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15566,6 +15566,49 @@
         "The report passed with asset_count=412, matching_asset_count=412, and matching_manifest_count=2.",
         "tests/validate_repo.py gates the reproducibility report script tokens."
       ]
+    },
+    {
+      "id": "battle-event-animation-state-adoption-20260523-10184",
+      "title": "Battle Event Animation State Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "purpose": "Make resolved battle actions drive runtime unit animation states instead of limiting generated battle sheets to idle, ready, and defend fallback poses.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Battle payloads carry per-stack event animation state metadata for resolved player and AI battle actions.",
+        "Movement, melee, ranged, hit, death, cast, status, defend, retaliation, retreat, and surrender events map to cue-catalog unit animation states where the battle remains active.",
+        "BattleBoardView reads BattleRules animation state metadata before fallback active/defend/idle state selection.",
+        "A focused report proves action-to-animation state adoption and live board summary consumption."
+      ],
+      "nonGoals": [
+        "No final hand-authored animation art.",
+        "No new VFX, audio, camera, timing, or queued playback system.",
+        "No combat balance tuning."
+      ],
+      "validationResults": [
+        "Focused report passed with fallback, defend, move, melee hit, ranged status, death, spell cast, and board runtime consumption cases."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18168,6 +18211,44 @@
         "git diff --check"
       ],
       "remainingGap": "This proves committed generated unit art assets and manifests match the current generator; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
+    },
+    {
+      "id": "battle-event-animation-state-adoption-20260523-10184",
+      "title": "Battle Event Animation State Adoption",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-event-animation-state-adoption-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleRules owns transient stack_animation_states metadata and normalizes it for active battle payloads.",
+        "Resolved player and AI movement, melee, ranged, hit, death, spell cast, status, defend, retaliation, retreat, and surrender paths now stamp cue-catalog unit animation states where battle state is still available.",
+        "BattleBoardView asks BattleRules.animation_state_for_stack before falling back to ready_active, defend_brace, or idle_hold.",
+        "tests/battle_event_animation_state_report.tscn validates fallback, defend, move, melee hit, ranged status, death, spell cast, and live board-runtime summary consumption cases."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is a presentation-state bridge for generated unit animation sheets; final VFX, audio, camera timing, queued playback, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18955,9 +19036,9 @@
   ],
   "lastValidation": "Unit art reproducibility report passed with 103 units, 412 matching generated PNG assets, and both committed manifests matching fresh generator output; repository validation passed.",
   "active_slice": {
-    "id": "unit-art-reproducibility-gate-20260523-10184",
+    "id": "battle-event-animation-state-adoption-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all 412 committed generated unit PNG assets and both unit art manifests match fresh generator output."
+    "note": "Completed: battle rules now stamp transient per-stack animation states from resolved combat events, and the battle board consumes those states before fallback idle/ready/defend selection."
   }
 }

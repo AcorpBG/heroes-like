@@ -942,12 +942,7 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
 
 func _animation_state_for_stack(stack: Dictionary) -> String:
-	var battle_id := String(stack.get("battle_id", ""))
-	if battle_id == String(_battle.get("active_stack_id", "")):
-		return "ready_active"
-	if bool(stack.get("defending", false)):
-		return "defend_brace"
-	return "idle_hold"
+	return BattleRulesScript.animation_state_for_stack(_battle, stack)
 
 func _animation_state_row_for_unit(unit_id: String, state_name: String) -> int:
 	var animation := ContentService.get_unit_animation(unit_id)
