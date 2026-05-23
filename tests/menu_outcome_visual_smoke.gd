@@ -362,6 +362,7 @@ func _run_main_menu_smoke() -> bool:
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
 			String(selected_skirmish_setup.get("launch_handoff", "")),
+			String(selected_skirmish_setup.get("briefing_check", "")),
 			String(selected_skirmish_setup.get("front_context", "")),
 			String(selected_skirmish_setup.get("objective_stakes", "")),
 			String(selected_skirmish_setup.get("readiness_summary", "")),
@@ -370,13 +371,13 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_skirmish_setup.get("action_consequence", "")),
 			"\n".join(skirmish_browser_tooltips),
 		],
-		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "Generated package", "selected generated map", "maps/", ".amap", ".ascenario", "native MapPackageService", "package-backed skirmish session", "Front context:", "Package objective:", "defeat generated rivals", "Readiness:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action boundary:", "authored JSON content"]
+		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Opening briefing:", "First decision:", "Skirmish", "Warlord", "Generated package", "selected generated map", "maps/", ".amap", ".ascenario", "native MapPackageService", "package-backed skirmish session", "Front context:", "Package objective:", "defeat generated rivals", "Readiness:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action boundary:", "authored JSON content"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu visible skirmish launch handoff",
 		[String(skirmish_snapshot.get("skirmish_setup", ""))],
-		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "Generated package"]
+		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "Opening briefing:", "First decision:", "Generated package"]
 	):
 		return false
 	if not _assert_no_score_leak(

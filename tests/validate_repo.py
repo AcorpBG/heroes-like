@@ -10430,6 +10430,11 @@ def validate_skirmish_setup(errors: list[str]) -> None:
     for required_token in (
         '"operational_board"',
         '"commander_preview"',
+        '"briefing_check"',
+        "Opening briefing:",
+        "First decision:",
+        "func _skirmish_briefing_check",
+        "func _maps_folder_package_briefing_check",
         "SpellRulesScript.describe_spellbook",
         "ArtifactRulesScript.describe_loadout",
         "ScenarioRulesScript.describe_scenario_operational_board",
@@ -10484,8 +10489,32 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "_skirmish_operational_board_label",
         "func _on_start_skirmish_pressed",
         "func _on_difficulty_selected",
+        "briefing_check",
+        "- Briefing: %s",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required skirmish setup token: {required_token}")
+
+    menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "Opening briefing:",
+        "First decision:",
+        "selected_skirmish_setup.get(\"briefing_check\"",
+    ):
+        ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing skirmish briefing UX token: {required_token}")
+
+    briefing_doc_path = ROOT / "docs" / "skirmish-launch-briefing-ux-report.md"
+    ensure(briefing_doc_path.exists(), errors, "Missing skirmish launch briefing UX report")
+    if briefing_doc_path.exists():
+        briefing_doc_text = briefing_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Skirmish Launch Briefing UX Report",
+            "skirmish-launch-briefing-ux-20260523-10184",
+            "`briefing_check`",
+            "Opening briefing",
+            "First decision",
+            "No campaign-domain reactivation",
+        ):
+            ensure(required_text in briefing_doc_text, errors, f"skirmish launch briefing UX report is missing token: {required_text}")
 
     for scene_name in ("overworld/OverworldShell.tscn", "town/TownShell.tscn"):
         scene_path = ROOT / "scenes" / scene_name
