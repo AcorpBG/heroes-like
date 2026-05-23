@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-resource-site-defense-20260523-10184",
-  "currentSliceTitle": "Strategic AI Resource Site Defense",
+  "currentSliceId": "windows-binary-export-smoke-20260523-10184",
+  "currentSliceTitle": "Windows Binary Export Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed live strategic AI resource-site defense so owned persistent economy sites under player threat remain valid defense targets, record durable defended-site state, and emit public ai_site_defended evidence.",
+  "currentSliceNotes": "Completed a local Windows Release binary export smoke gate: exported and inspected the Windows executable, sidecar package, and required native DLL without claiming Windows runtime execution, installer readiness, or clean-machine validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:58:00Z",
+  "updatedAt": "2026-05-23T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,51 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "windows-binary-export-smoke-20260523-10184",
+      "title": "Windows Binary Export Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "export_presets.cfg",
+        "tests/packaging_pack_export_smoke.py",
+        "docs/packaging-pack-export-smoke-report.md",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Add a repeatable local Windows Release export smoke so platform readiness has executable/package artifact evidence beyond Linux PCK export smokes.",
+      "implementationTargets": [
+        "tests/packaging_windows_export_smoke.py",
+        "docs/packaging-windows-export-smoke-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The smoke runner exports the Windows Release preset to a scoped .artifacts directory.",
+        "The runner verifies the Windows .exe exists, is non-empty, and has an MZ executable header.",
+        "The runner verifies the sidecar .pck exists and passes the minimum package-size floor.",
+        "The runner verifies required Windows native runtime DLL artifacts are included beside the export.",
+        "The report records explicit non-claims for Windows runtime execution, installer readiness, clean-machine smoke coverage, and release readiness."
+      ],
+      "nonGoals": [
+        "No Wine or real Windows runtime execution.",
+        "No installer build.",
+        "No clean-machine validation.",
+        "No release readiness claim."
+      ],
+      "startedAt": "2026-05-23T23:58:00Z",
+      "updatedAt": "2026-05-23T23:59:00Z",
+      "completedAt": "2026-05-23T23:59:00Z",
+      "notes": "Selected from the remaining production-gap list under Packaging and platform readiness. Existing Linux PCK/package settings smokes remain valid but explicitly did not cover Windows packaged artifacts.",
+      "completionEvidence": {
+        "command": "python3 tests/packaging_windows_export_smoke.py",
+        "report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "result": "PACKAGING_WINDOWS_EXPORT_SMOKE ok true; export_returncode 0; heroes-like.exe 104539648 bytes with MZ/PE headers; heroes-like.pck 287755204 bytes; aurelion_map_persistence.windows.template_release.x86_64.dll exported beside the executable."
+      }
+    },
     {
       "id": "strategic-ai-resource-site-defense-20260523-10184",
       "title": "Strategic AI Resource Site Defense",
@@ -22552,23 +22597,38 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
+    "id": "windows-binary-export-smoke-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T22:22:00Z",
+    "updatedAt": "2026-05-23T23:59:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+      "python3 tests/packaging_windows_export_smoke.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+      "python3 tests/packaging_pack_export_smoke.py",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json content/campaigns.json",
+      "python3 -m py_compile tests/validate_repo.py tests/packaging_windows_export_smoke.py",
+      "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Battle autoplay difficulty sweep completed: normal and hard each sampled 12/12 completed authored battles; normal_vs_hard evidence reports enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5, deterministic sweep signature d15e9659, and existing combat balance/tuning queue reports remained green."
+    "summary": "Windows binary export smoke completed: Windows Release exported heroes-like.exe with MZ/PE headers, sidecar PCK, and required Windows native DLL beside the executable; packaging readiness, Linux PCK export/boot smoke, repo validation, JSON validation, py_compile, and diff whitespace checks passed."
   },
-  "active_slice": "battle-difficulty-sweep-balance-harness-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T22:22:00Z",
+  "active_slice": "windows-binary-export-smoke-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T23:59:00Z",
   "validationHistory": [
+    {
+      "id": "windows-binary-export-smoke-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T23:59:00Z",
+      "commands": [
+        "python3 tests/packaging_windows_export_smoke.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tests/packaging_windows_export_smoke.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Windows binary export smoke completed: Windows Release exported heroes-like.exe with MZ/PE headers, sidecar PCK, and required Windows native DLL beside the executable; packaging readiness, Linux PCK export/boot smoke, repo validation, JSON validation, py_compile, and diff whitespace checks passed."
+    },
     {
       "id": "battle-difficulty-sweep-balance-harness-20260523-10184",
       "status": "passed",

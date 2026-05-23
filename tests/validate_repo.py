@@ -142,6 +142,8 @@ PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_pla
 PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH = ROOT / "docs" / "packaging-platform-readiness-report.md"
 PACKAGING_PACK_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_pack_export_smoke.py"
 PACKAGING_PACK_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-pack-export-smoke-report.md"
+PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_windows_export_smoke.py"
+PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-windows-export-smoke-report.md"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_report.gd"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
@@ -16894,6 +16896,57 @@ def validate_packaging_pack_export_smoke(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaging pack-export smoke doc is missing required text: {required_text}")
 
 
+def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
+    required_paths = (
+        PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH,
+        PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing packaging Windows export smoke file: {path.relative_to(ROOT)}")
+
+    if PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH.exists():
+        script_text = PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGING_WINDOWS_EXPORT_SMOKE",
+            "packaging_windows_export_smoke_v1",
+            "PRESET_NAME = \"Windows Release\"",
+            "--export-release",
+            "heroes-like.exe",
+            "heroes-like.pck",
+            "MZ",
+            "PE\\x00\\x00",
+            "REQUIRED_WINDOWS_DLLS",
+            "aurelion_map_persistence.windows.template_release.x86_64.dll",
+            "FATAL_EXPORT_PATTERNS",
+            "does_not_claim",
+            "Windows runtime execution",
+            "clean-machine smoke coverage",
+            "MIN_EXE_BYTES",
+            "MIN_PCK_BYTES",
+            "report.json",
+        ):
+            ensure(required_token in script_text, errors, f"Packaging Windows export smoke script is missing required token: {required_token}")
+
+    if PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH.exists():
+        doc_text = PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaging Windows Export Smoke Report",
+            "windows-binary-export-smoke-20260523-10184",
+            "Windows Release",
+            "--export-release",
+            "heroes-like.exe",
+            "heroes-like.pck",
+            "MZ",
+            "PE",
+            "aurelion_map_persistence.windows.template_release.x86_64.dll",
+            "does not claim Windows runtime execution",
+            "clean-machine smoke coverage",
+            "release readiness",
+            "report.json",
+        ):
+            ensure(required_text in doc_text, errors, f"Packaging Windows export smoke doc is missing required text: {required_text}")
+
+
 def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
     required_paths = (
         PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH,
@@ -17405,6 +17458,7 @@ def main() -> int:
     validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
+    validate_packaging_windows_export_smoke(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
