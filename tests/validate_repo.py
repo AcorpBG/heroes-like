@@ -66,6 +66,8 @@ UNIT_ART_ROOT = ROOT / "art" / "units"
 UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
+UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
+UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "unit_ability_runtime_report.tscn"
 UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.gd"
 UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.tscn"
 UNIT_ANIMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_animation_manifest_report.gd"
@@ -14513,6 +14515,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "units_without_live_reference",
     ):
         ensure(required_token in readiness_report_text, errors, f"unit_production_readiness_report.gd is missing token {required_token}")
+
+    ability_runtime_report_text = UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH.exists(), errors, "unit_ability_runtime_report.tscn is missing")
+    for required_token in (
+        "UNIT_ABILITY_RUNTIME_REPORT",
+        "REQUIRED_ABILITY_IDS",
+        "func _runtime_consequence_for_ability",
+        "func _probe_harry",
+        "func _probe_bloodrush",
+        "runtime_consequence_count",
+        "ability_family_consequence_counts",
+    ):
+        ensure(required_token in ability_runtime_report_text, errors, f"unit_ability_runtime_report.gd is missing token {required_token}")
 
     contact_sheet_report_text = UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (

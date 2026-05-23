@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-animation-visual-qa-contact-sheet-20260523-10184",
-  "currentSliceTitle": "Unit Animation Visual QA Contact Sheet Gate",
+  "currentSliceId": "unit-ability-runtime-consequence-gate-20260523-10184",
+  "currentSliceTitle": "Unit Ability Runtime Consequence Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: generated unit animation sheets now pass full-sheet visual fingerprint uniqueness, nearest-neighbor diagnostics, and contact-sheet artifact generation.",
+  "currentSliceNotes": "Completed: all authored unit ability instances now have a focused runtime consequence gate, and melee harry status application is implemented.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:06:50Z",
+  "updatedAt": "2026-05-23T11:14:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15352,6 +15352,57 @@
         "The report records nearest_visual_neighbor diagnostics so closest generated animation sheet pairs remain visible during review.",
         "tests/validate_repo.py gates the visual fingerprint, nearest-neighbor, and contact-sheet report tokens."
       ]
+    },
+    {
+      "id": "unit-ability-runtime-consequence-gate-20260523-10184",
+      "title": "Unit Ability Runtime Consequence Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "scripts/core/BattleRules.gd"
+      ],
+      "purpose": "Strengthen full-unit implementation proof by validating that every authored unit ability instance has a concrete battle runtime consequence, not just a preserved payload.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/unit_ability_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Melee and ranged harry ability instances apply their authored status rider through the battle ability effect path.",
+        "Every authored unit ability instance across reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush has a focused runtime consequence probe.",
+        "The focused Godot report passes for all 103 units and all 143 authored ability instances.",
+        "Repository validation gates the new report script and scene."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim."
+      ],
+      "startedAt": "2026-05-23T11:14:27Z",
+      "updatedAt": "2026-05-23T11:14:27Z",
+      "notes": "Completed: melee harry now applies its status rider, and the unit ability runtime report proves all 143 authored ability instances have concrete battle consequences.",
+      "completedAt": "2026-05-23T11:14:27Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit ability runtime report passed with 103 units, 143 authored ability instances, and 143 runtime consequences across all eight ability families.",
+      "evidenceHistory": [
+        "scripts/core/BattleRules.gd now applies the harry status rider for any valid attack carrying harry, including melee units whose authored descriptions promise mark/disorder effects.",
+        "tests/unit_ability_runtime_report.tscn probes reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush for concrete BattleRules consequences.",
+        "The report passed with ability_instance_count=143 and runtime_consequence_count=143 across all 103 units.",
+        "tests/validate_repo.py gates the unit ability runtime report script and scene."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17793,6 +17844,44 @@
         "git diff --check"
       ],
       "remainingGap": "This proves generated animation sheets are loadable, byte-unique, and full-sheet visual-fingerprint unique with a review artifact; final hand-painted animation direction remains outside this slice."
+    },
+    {
+      "id": "unit-ability-runtime-consequence-gate-20260523-10184",
+      "title": "Unit Ability Runtime Consequence Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T11:14:27Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "scripts/core/BattleRules.gd"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-ability-runtime-consequence-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/unit_ability_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "scripts/core/BattleRules.gd now applies harry's authored status rider for melee and ranged attacks instead of limiting the effect to ranged attacks.",
+        "tests/unit_ability_runtime_report.tscn probes every authored unit ability instance for a concrete runtime consequence through BattleRules and SpellRules helpers.",
+        "The report passed with unit_count=103, ability_instance_count=143, and runtime_consequence_count=143 across reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush.",
+        "tests/validate_repo.py gates the report script and scene."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves current authored unit ability payloads have executable battle consequences; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18524,13 +18613,26 @@
         "git diff --check"
       ],
       "summary": "All 103 generated unit animation sheets passed full-sheet visual-fingerprint uniqueness and contact-sheet artifact generation; repo validation passed with the strengthened gate wired in."
+    },
+    {
+      "id": "unit-ability-runtime-consequence-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T11:14:27Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 143 authored unit ability instances across 103 units passed concrete runtime consequence probes; repo validation passed with the new gate wired in."
     }
   ],
-  "lastValidation": "Unit animation visual-QA report passed with 103 loaded sheets, 103 unique byte hashes, 103 unique visual fingerprints, 14 cue-matched states, nearest-neighbor diagnostics, and contact-sheet artifact output; repository validation passed.",
+  "lastValidation": "Unit ability runtime report passed with 103 units, 143 authored ability instances, and 143 runtime consequences across all eight ability families; repository validation passed.",
   "active_slice": {
-    "id": "unit-animation-visual-qa-contact-sheet-20260523-10184",
+    "id": "unit-ability-runtime-consequence-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: generated unit animation sheets now pass full-sheet visual fingerprint uniqueness, nearest-neighbor diagnostics, and contact-sheet artifact generation."
+    "note": "Completed: all authored unit ability instances now have a focused runtime consequence gate, and melee harry status application is implemented."
   }
 }
