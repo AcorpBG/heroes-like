@@ -16073,6 +16073,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
+    balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16084,6 +16085,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         tactical_scene_path,
         doc_path,
         calibration_doc_path,
+        balance_matrix_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16107,6 +16109,16 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "pacing_band_distribution",
             "initial_role_distribution",
             "initial_ability_distribution",
+            "balance_matrix",
+            "battle_autoplay_balance_matrix_v1",
+            "balance_matrix_gate",
+            "report_only_balance_matrix_thresholds_v1",
+            "side_power_scores",
+            "matchup_band",
+            "side_role_counts",
+            "side_ability_counts",
+            "terminal_margin_outliers",
+            "BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT",
             "DEFAULT_SCENARIO_IDS",
             "scenario_distribution",
             "damage_totals",
@@ -16119,6 +16131,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "func _action_mix_summary",
             "func _pacing_band",
             "func _combat_feel_gate",
+            "func _balance_matrix",
+            "func _balance_matrix_gate",
+            "func _stack_power_score",
+            "func _matchup_band",
             "func _primary_count_entry",
         ):
             ensure(required_token in harness_text, errors, f"Battle autoplay balance harness is missing diagnostic token: {required_token}")
@@ -16144,6 +16160,11 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "scenario_distribution",
             "pacing_band_distribution",
             "initial_ability_distribution",
+            "balance_matrix",
+            "balance_matrix_gate",
+            "report_only_balance_matrix_thresholds_v1",
+            "side_power_scores",
+            "matchup_band",
             "requested_sample_limit",
             "primary_outcome_pct",
             "primary_pacing_band_pct",
@@ -16161,6 +16182,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "high_terminal_health_margin",
             "average_terminal_health_margin_pct",
             "combat_feel_gate",
+            "balance_matrix",
+            "balance_matrix_gate",
+            "terminal_margin_outliers",
+            "report_only_balance_matrix_thresholds_v1",
             "get_tree().quit(1)",
         ):
             ensure(required_token in combat_balance_text, errors, f"Battle autoplay combat balance report is missing token: {required_token}")
@@ -16201,6 +16226,20 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "not final combat balance approval",
         ):
             ensure(required_text in calibration_text, errors, f"Battle autoplay combat balance calibration doc is missing required text: {required_text}")
+    if balance_matrix_doc_path.exists():
+        balance_matrix_text = balance_matrix_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Balance Matrix Diagnostics Report",
+            "battle-autoplay-balance-matrix-diagnostics-20260523-10184",
+            "balance_matrix",
+            "battle_autoplay_balance_matrix_v1",
+            "balance_matrix_gate",
+            "report_only_balance_matrix_thresholds_v1",
+            "difficulty, terrain, scenario, army matchup, and ability presence",
+            "terminal-margin outliers",
+            "Final combat feel",
+        ):
+            ensure(required_text in balance_matrix_text, errors, f"Battle autoplay balance matrix doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:
@@ -16697,7 +16736,7 @@ def main() -> int:
     print("- authored hero metadata, multi-faction campaign starts, skirmish-only fronts, and lead-hero variety are present")
     print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
     print("- retreat and surrender now preserve pre-resolution battle animation snapshots for board presentation before terminal routing")
-    print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics")
+    print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, initiative, and cohort matrix diagnostics")
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
     print("- the battle shell now exposes a scored intent forecast with preferred order, target, expected result, risk, and confidence evidence")
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")

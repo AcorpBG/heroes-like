@@ -14,6 +14,10 @@ const COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND := 12
 const COMBAT_FEEL_MAX_TERMINAL_MARGIN_PCT := 65
 const COMBAT_FEEL_MAX_OUTCOME_BIAS_PCT := 75
 const COMBAT_FEEL_MAX_BURST_OR_GRIND_PCT := 50
+const BALANCE_MATRIX_MIN_DIFFICULTY_COHORTS := 3
+const BALANCE_MATRIX_MIN_TERRAIN_COHORTS := 2
+const BALANCE_MATRIX_MIN_ABILITY_COHORTS := 4
+const BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT := 90
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
 	"causeway-stand",
@@ -109,6 +113,8 @@ static func build_sampling_report(
 			"pacing_band_distribution": aggregate.get("pacing_band_distribution", {}),
 			"initial_role_distribution": aggregate.get("initial_role_distribution", {}),
 			"initial_ability_distribution": aggregate.get("initial_ability_distribution", {}),
+			"balance_matrix": aggregate.get("balance_matrix", {}),
+			"balance_matrix_gate": aggregate.get("balance_matrix_gate", {}),
 			"combat_feel_gate": combat_feel_gate,
 			"policy": "deterministic_autoplay_sample_report_only",
 		},
@@ -388,6 +394,8 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 	var primary_action := _primary_action(action_distribution)
 	var primary_outcome := _primary_count_entry(distribution, "outcome")
 	var primary_pacing_band := _primary_count_entry(pacing_band_distribution, "pacing_band")
+	var balance_matrix := _balance_matrix(samples)
+	var balance_matrix_gate := _balance_matrix_gate(balance_matrix, samples.size())
 	return {
 		"distribution": distribution,
 		"action_distribution": action_distribution,
@@ -416,6 +424,8 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"pacing_band_distribution": pacing_band_distribution,
 		"initial_role_distribution": initial_role_distribution,
 		"initial_ability_distribution": initial_ability_distribution,
+		"balance_matrix": balance_matrix,
+		"balance_matrix_gate": balance_matrix_gate,
 	}
 
 static func _combat_feel_gate(aggregate: Dictionary, sample_count: int, requested_sample_limit: int, requested_minimum: int) -> Dictionary:
@@ -519,6 +529,9 @@ static func _stack_profile(battle: Dictionary) -> Dictionary:
 	var side_stack_counts := {"player": 0, "enemy": 0}
 	var side_unit_counts := {"player": 0, "enemy": 0}
 	var ranged_stack_counts := {"player": 0, "enemy": 0}
+	var side_power_scores := {"player": 0, "enemy": 0}
+	var side_role_counts := {"player": {}, "enemy": {}}
+	var side_ability_counts := {"player": {}, "enemy": {}}
 	var role_counts := {}
 	var ability_counts := {}
 	var initiative_min := 2147483647
@@ -539,6 +552,10 @@ static func _stack_profile(battle: Dictionary) -> Dictionary:
 		var unit: Dictionary = ContentService.get_unit(String(stack.get("unit_id", "")))
 		var role := String(unit.get("role", "unknown"))
 		role_counts[role] = int(role_counts.get(role, 0)) + 1
+		var side_roles: Dictionary = side_role_counts.get(side, {}) if side_role_counts.get(side, {}) is Dictionary else {}
+		side_roles[role] = int(side_roles.get(role, 0)) + 1
+		side_role_counts[side] = side_roles
+		side_power_scores[side] = int(side_power_scores.get(side, 0)) + _stack_power_score(stack)
 		var initiative := int(stack.get("initiative", 0))
 		initiative_min = min(initiative_min, initiative)
 		initiative_max = max(initiative_max, initiative)
@@ -550,15 +567,26 @@ static func _stack_profile(battle: Dictionary) -> Dictionary:
 				continue
 			var ability_id := String(ability.get("id", "unknown"))
 			ability_counts[ability_id] = int(ability_counts.get(ability_id, 0)) + 1
+			var side_abilities: Dictionary = side_ability_counts.get(side, {}) if side_ability_counts.get(side, {}) is Dictionary else {}
+			side_abilities[ability_id] = int(side_abilities.get(ability_id, 0)) + 1
+			side_ability_counts[side] = side_abilities
 	if initiative_count <= 0:
 		initiative_min = 0
 		initiative_max = 0
+	var player_power: int = int(side_power_scores.get("player", 0))
+	var enemy_power: int = int(side_power_scores.get("enemy", 0))
+	var power_ratio_pct := int(round(float(player_power) * 100.0 / float(max(1, enemy_power))))
 	return {
 		"side_stack_counts": side_stack_counts,
 		"side_unit_counts": side_unit_counts,
 		"ranged_stack_counts": ranged_stack_counts,
+		"side_power_scores": side_power_scores,
+		"player_enemy_power_ratio_pct": power_ratio_pct,
+		"matchup_band": _matchup_band(player_power, enemy_power),
 		"role_counts": role_counts,
+		"side_role_counts": side_role_counts,
 		"ability_counts": ability_counts,
+		"side_ability_counts": side_ability_counts,
 		"ability_instance_count": _count_map_total(ability_counts),
 		"initiative": {
 			"min": initiative_min,
@@ -566,6 +594,179 @@ static func _stack_profile(battle: Dictionary) -> Dictionary:
 			"spread": initiative_max - initiative_min,
 			"average": int(round(float(initiative_total) / float(max(1, initiative_count)))),
 		},
+	}
+
+static func _stack_power_score(stack: Dictionary) -> int:
+	var count: int = max(0, int(stack.get("base_count", 0)))
+	var average_damage: int = int(round(float(int(stack.get("min_damage", 1)) + int(stack.get("max_damage", 1))) / 2.0))
+	var abilities: Array = stack.get("abilities", []) if stack.get("abilities", []) is Array else []
+	var unit_score: int = (
+		max(1, int(stack.get("unit_hp", 1)))
+		+ max(0, int(stack.get("attack", 0))) * 4
+		+ max(0, int(stack.get("defense", 0))) * 3
+		+ max(1, average_damage) * 6
+		+ max(0, int(stack.get("initiative", 0))) * 2
+		+ max(0, int(stack.get("speed", 0))) * 2
+		+ (8 if bool(stack.get("ranged", false)) else 0)
+		+ abilities.size() * 5
+	)
+	return count * max(1, unit_score)
+
+static func _matchup_band(player_power: int, enemy_power: int) -> String:
+	var ratio_pct := int(round(float(max(0, player_power)) * 100.0 / float(max(1, enemy_power))))
+	if ratio_pct <= 75:
+		return "player_disadvantaged"
+	if ratio_pct >= 125:
+		return "player_advantaged"
+	return "even"
+
+static func _balance_matrix(samples: Array) -> Dictionary:
+	var matrix := {
+		"policy": "report_only_balance_matrix_v1",
+		"schema": "battle_autoplay_balance_matrix_v1",
+		"sample_count": samples.size(),
+		"difficulty": {},
+		"terrain": {},
+		"scenario": {},
+		"matchup": {},
+		"ability_presence": {},
+		"terminal_margin_outliers": [],
+	}
+	for sample in samples:
+		if not (sample is Dictionary):
+			continue
+		var entry: Dictionary = sample
+		_update_balance_cohort(matrix["difficulty"], String(entry.get("encounter_difficulty", "unknown")), entry)
+		_update_balance_cohort(matrix["terrain"], String(entry.get("terrain", "unknown")), entry)
+		_update_balance_cohort(matrix["scenario"], String(entry.get("scenario_id", "unknown")), entry)
+		var profile: Dictionary = entry.get("initial_stack_profile", {}) if entry.get("initial_stack_profile", {}) is Dictionary else {}
+		_update_balance_cohort(matrix["matchup"], String(profile.get("matchup_band", "unknown")), entry)
+		var ability_counts: Dictionary = profile.get("ability_counts", {}) if profile.get("ability_counts", {}) is Dictionary else {}
+		for ability_id in ability_counts.keys():
+			_update_balance_cohort(matrix["ability_presence"], String(ability_id), entry)
+		if int(entry.get("terminal_health_margin_pct", 0)) >= BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT:
+			matrix["terminal_margin_outliers"].append({
+				"scenario_id": String(entry.get("scenario_id", "")),
+				"encounter_placement_id": String(entry.get("encounter_placement_id", "")),
+				"encounter_id": String(entry.get("encounter_id", "")),
+				"outcome_state": String(entry.get("outcome_state", "")),
+				"terminal_health_margin_pct": int(entry.get("terminal_health_margin_pct", 0)),
+				"matchup_band": String(profile.get("matchup_band", "unknown")),
+				"terrain": String(entry.get("terrain", "unknown")),
+				"encounter_difficulty": String(entry.get("encounter_difficulty", "unknown")),
+			})
+	for section_key in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_key, {}) if matrix.get(section_key, {}) is Dictionary else {}
+		for cohort_id in section.keys():
+			section[cohort_id] = _finalize_balance_cohort(section[cohort_id])
+	return matrix
+
+static func _update_balance_cohort(section: Dictionary, cohort_id: String, sample: Dictionary) -> void:
+	var normalized_id := cohort_id if cohort_id != "" else "unknown"
+	var cohort: Dictionary = section.get(normalized_id, {}) if section.get(normalized_id, {}) is Dictionary else {}
+	if cohort.is_empty():
+		cohort = {
+			"sample_count": 0,
+			"completed_sample_count": 0,
+			"outcome_distribution": {},
+			"pacing_band_distribution": {},
+			"action_distribution": {},
+			"terminal_margin_total": 0,
+			"round_total": 0,
+			"damage_per_round_total": 0,
+		}
+	cohort["sample_count"] = int(cohort.get("sample_count", 0)) + 1
+	if bool(sample.get("completed", false)):
+		cohort["completed_sample_count"] = int(cohort.get("completed_sample_count", 0)) + 1
+	var outcomes: Dictionary = cohort.get("outcome_distribution", {}) if cohort.get("outcome_distribution", {}) is Dictionary else {}
+	var outcome_id := String(sample.get("outcome_state", "unknown"))
+	outcomes[outcome_id] = int(outcomes.get(outcome_id, 0)) + 1
+	cohort["outcome_distribution"] = outcomes
+	var pacing: Dictionary = cohort.get("pacing_band_distribution", {}) if cohort.get("pacing_band_distribution", {}) is Dictionary else {}
+	var pacing_id := String(sample.get("pacing_band", "unknown"))
+	pacing[pacing_id] = int(pacing.get(pacing_id, 0)) + 1
+	cohort["pacing_band_distribution"] = pacing
+	var action_distribution: Dictionary = cohort.get("action_distribution", {}) if cohort.get("action_distribution", {}) is Dictionary else {}
+	var action_counts: Dictionary = sample.get("action_counts", {}) if sample.get("action_counts", {}) is Dictionary else {}
+	for action_id in action_counts.keys():
+		action_distribution[String(action_id)] = int(action_distribution.get(String(action_id), 0)) + int(action_counts[action_id])
+	cohort["action_distribution"] = action_distribution
+	cohort["terminal_margin_total"] = int(cohort.get("terminal_margin_total", 0)) + int(sample.get("terminal_health_margin_pct", 0))
+	cohort["round_total"] = int(cohort.get("round_total", 0)) + int(sample.get("round_reached", 0))
+	var damage_per_round: Dictionary = sample.get("damage_per_round", {}) if sample.get("damage_per_round", {}) is Dictionary else {}
+	cohort["damage_per_round_total"] = int(cohort.get("damage_per_round_total", 0)) + int(damage_per_round.get("total", 0))
+	section[normalized_id] = cohort
+
+static func _finalize_balance_cohort(cohort: Dictionary) -> Dictionary:
+	var sample_count: int = max(1, int(cohort.get("sample_count", 0)))
+	var primary_outcome := _primary_count_entry(cohort.get("outcome_distribution", {}), "outcome")
+	var primary_pacing := _primary_count_entry(cohort.get("pacing_band_distribution", {}), "pacing_band")
+	var primary_action := _primary_action(cohort.get("action_distribution", {}))
+	return {
+		"sample_count": int(cohort.get("sample_count", 0)),
+		"completed_sample_count": int(cohort.get("completed_sample_count", 0)),
+		"outcome_distribution": cohort.get("outcome_distribution", {}),
+		"primary_outcome_state": String(primary_outcome.get("outcome", "")),
+		"primary_outcome_pct": int(primary_outcome.get("pct", 0)),
+		"pacing_band_distribution": cohort.get("pacing_band_distribution", {}),
+		"primary_pacing_band": String(primary_pacing.get("pacing_band", "")),
+		"primary_pacing_band_pct": int(primary_pacing.get("pct", 0)),
+		"action_distribution": cohort.get("action_distribution", {}),
+		"primary_action_id": String(primary_action.get("action", "")),
+		"primary_action_pct": int(primary_action.get("pct", 0)),
+		"average_terminal_health_margin_pct": int(round(float(int(cohort.get("terminal_margin_total", 0))) / float(sample_count))),
+		"average_round_reached": int(round(float(int(cohort.get("round_total", 0))) / float(sample_count))),
+		"average_total_damage_per_round": int(round(float(int(cohort.get("damage_per_round_total", 0))) / float(sample_count))),
+	}
+
+static func _balance_matrix_gate(matrix: Dictionary, sample_count: int) -> Dictionary:
+	var warnings := []
+	var failures := []
+	var difficulty: Dictionary = matrix.get("difficulty", {}) if matrix.get("difficulty", {}) is Dictionary else {}
+	var terrain: Dictionary = matrix.get("terrain", {}) if matrix.get("terrain", {}) is Dictionary else {}
+	var matchup: Dictionary = matrix.get("matchup", {}) if matrix.get("matchup", {}) is Dictionary else {}
+	var ability_presence: Dictionary = matrix.get("ability_presence", {}) if matrix.get("ability_presence", {}) is Dictionary else {}
+	var outliers: Array = matrix.get("terminal_margin_outliers", []) if matrix.get("terminal_margin_outliers", []) is Array else []
+	if sample_count <= 0:
+		failures.append("no_balance_matrix_samples")
+	if difficulty.keys().size() < BALANCE_MATRIX_MIN_DIFFICULTY_COHORTS:
+		warnings.append("difficulty_cohort_coverage_below_target")
+	for required_difficulty in ["low", "medium", "high"]:
+		if not difficulty.has(required_difficulty):
+			warnings.append("missing_%s_difficulty_cohort" % required_difficulty)
+	if terrain.keys().size() < BALANCE_MATRIX_MIN_TERRAIN_COHORTS:
+		warnings.append("terrain_cohort_coverage_below_target")
+	if matchup.keys().size() <= 0:
+		failures.append("missing_matchup_cohort")
+	if ability_presence.keys().size() < BALANCE_MATRIX_MIN_ABILITY_COHORTS:
+		warnings.append("ability_presence_cohort_coverage_below_target")
+	if not outliers.is_empty():
+		warnings.append("terminal_margin_outliers_present")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"policy": "report_only_balance_matrix_thresholds_v1",
+		"sample_count": sample_count,
+		"difficulty_cohort_count": difficulty.keys().size(),
+		"terrain_cohort_count": terrain.keys().size(),
+		"scenario_cohort_count": (matrix.get("scenario", {}) if matrix.get("scenario", {}) is Dictionary else {}).keys().size(),
+		"matchup_cohort_count": matchup.keys().size(),
+		"ability_presence_cohort_count": ability_presence.keys().size(),
+		"terminal_margin_outlier_count": outliers.size(),
+		"thresholds": {
+			"min_difficulty_cohorts": BALANCE_MATRIX_MIN_DIFFICULTY_COHORTS,
+			"min_terrain_cohorts": BALANCE_MATRIX_MIN_TERRAIN_COHORTS,
+			"min_ability_presence_cohorts": BALANCE_MATRIX_MIN_ABILITY_COHORTS,
+			"terminal_margin_outlier_pct": BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT,
+		},
+		"warning_count": warnings.size(),
+		"failure_count": failures.size(),
+		"warnings": warnings,
+		"failures": failures,
 	}
 
 static func _action_mix_summary(action_counts: Dictionary, player_order_count: int) -> Dictionary:
