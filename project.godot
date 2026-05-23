@@ -16,6 +16,7 @@ SessionState="*res://scripts/autoload/SessionState.gd"
 SaveService="*res://scripts/autoload/SaveService.gd"
 CampaignProgression="*res://scripts/autoload/CampaignProgression.gd"
 SettingsService="*res://scripts/autoload/SettingsService.gd"
+RuntimeIssueLog="*res://scripts/autoload/RuntimeIssueLog.gd"
 AppRouter="*res://scripts/autoload/AppRouter.gd"
 LiveValidationHarness="*res://scripts/autoload/LiveValidationHarness.gd"
 
