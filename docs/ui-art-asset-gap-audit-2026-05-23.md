@@ -131,7 +131,7 @@ The first crop-based runtime pass produced visible scale problems: oversized edg
 - Panel and bar assets now keep ornamentation inside fixed margins and use plain, stretch-safe center regions.
 - `FrontierVisualKit.texture_panel_style()` caps texture margins so source art cannot balloon on large shells.
 - `FrontierVisualKit.apply_button()` now routes primary, secondary, and danger buttons through shared runtime button assets with normal, hover, pressed, and disabled states.
-- Representative shell buttons are verified by `tests/ui_runtime_skin_visual_report.tscn` in addition to panel textures.
+- Representative shell buttons are verified by `tests/ui_runtime_skin_visual_report.tscn` in addition to panel textures. The report now renders each shell through exact-size `SubViewport` targets for 1280x720, 1600x900, 1920x1080, and 2560x1440, so panel/button skin assertions and screenshots cover compact through high-resolution 16:9 desktop layouts.
 
 Shared button assets:
 
@@ -151,12 +151,12 @@ Shared button assets:
 Non-headless screenshot validation:
 
 ```bash
-GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a godot4 --path . tests/ui_runtime_skin_visual_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a -s "-screen 0 2560x1440x24" godot4 --path . tests/ui_runtime_skin_visual_report.tscn
 ```
 
-Result: passed after the runtime skin correction. The report asserts selected panels and representative buttons in all three shells are backed by the expected runtime `StyleBoxTexture` resources and writes screenshots to `.artifacts/ui_runtime_skin_visual_report/overworld.png`, `.artifacts/ui_runtime_skin_visual_report/battle.png`, and `.artifacts/ui_runtime_skin_visual_report/town.png`.
+Result: passed after the runtime skin correction and multi-resolution update. The report asserts selected panels and representative buttons in all three shells are backed by the expected runtime `StyleBoxTexture` resources at 1280x720, 1600x900, 1920x1080, and 2560x1440; it also verifies each screenshot is written at the requested dimensions under `.artifacts/ui_runtime_skin_visual_report/`.
 
-Visual inspection: the corrected screenshots show consistent dark wood/iron/brass UI framing, stretch-safe bars without distorted center ornaments, button texture assets in live use, readable text, and no blocking of the dominant overworld map, battle board, or town stage surfaces.
+Visual inspection: the corrected screenshots show consistent dark wood/iron/brass UI framing, stretch-safe bars without distorted center ornaments, button texture assets in live use, readable text, and no blocking of the dominant overworld map, battle board, or town stage surfaces. A compact 1280x720 town-stage title was moved and shortened responsively so it no longer runs through the stage building art.
 
 ## Remaining Boundary
 

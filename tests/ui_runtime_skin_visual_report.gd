@@ -5,6 +5,12 @@ const OUTPUT_DIR := "res://.artifacts/ui_runtime_skin_visual_report"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
+const VIEWPORT_SIZES := [
+	Vector2i(1280, 720),
+	Vector2i(1600, 900),
+	Vector2i(1920, 1080),
+	Vector2i(2560, 1440),
+]
 
 const EXPECTED_PANELS := {
 	"overworld": {
@@ -71,28 +77,55 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	DisplayServer.window_set_size(Vector2i(1280, 720))
 	_ensure_output_dir()
-	for shell_id in ["overworld", "battle", "town"]:
-		var shell_report := await _run_shell(shell_id, EXPECTED_PANELS[shell_id])
-		_report["shells"][shell_id] = shell_report
+	_report["viewports"] = []
+	for viewport_size in VIEWPORT_SIZES:
+		var viewport_key := _viewport_key(viewport_size)
+		var viewport_report := {
+			"size": {"width": viewport_size.x, "height": viewport_size.y},
+			"shells": {},
+		}
+		for shell_id in ["overworld", "battle", "town"]:
+			var shell_report := await _run_shell(shell_id, EXPECTED_PANELS[shell_id], viewport_size)
+			viewport_report["shells"][shell_id] = shell_report
+			if not _report["shells"].has(shell_id):
+				_report["shells"][shell_id] = {}
+			_report["shells"][shell_id][viewport_key] = shell_report
+		_report["viewports"].append(viewport_report)
 	_report["ok"] = _report["errors"].is_empty()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
 	get_tree().quit(0 if bool(_report["ok"]) else 1)
 
-func _run_shell(shell_id: String, spec: Dictionary) -> Dictionary:
+func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> Dictionary:
 	_prepare_session(shell_id)
+	var render_viewport := SubViewport.new()
+	render_viewport.name = "%sRenderViewport%s" % [shell_id.capitalize(), _viewport_key(viewport_size)]
+	render_viewport.size = viewport_size
+	render_viewport.disable_3d = true
+	render_viewport.transparent_bg = false
+	render_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(render_viewport)
+
 	var shell: Node = load(String(spec["scene"])).instantiate()
-	add_child(shell)
+	render_viewport.add_child(shell)
+	if shell is Control:
+		var shell_control := shell as Control
+		shell_control.set_anchors_preset(Control.PRESET_FULL_RECT)
+		shell_control.offset_left = 0.0
+		shell_control.offset_top = 0.0
+		shell_control.offset_right = 0.0
+		shell_control.offset_bottom = 0.0
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
 
 	var shell_report := {
 		"scene": spec["scene"],
+		"viewport": {"width": viewport_size.x, "height": viewport_size.y},
 		"panels": {},
 		"buttons": {},
 		"screenshot": "",
+		"screenshot_size": {},
 	}
 	for panel_name in Dictionary(spec["panels"]).keys():
 		var expected_path := String(spec["panels"][panel_name])
@@ -115,12 +148,16 @@ func _run_shell(shell_id: String, spec: Dictionary) -> Dictionary:
 		if actual_button_path != expected_button_path:
 			_error("%s button %s expected %s but got %s" % [shell_id, button_name, expected_button_path, actual_button_path])
 
-	var screenshot_path := "%s/%s" % [OUTPUT_DIR, String(spec["screenshot"])]
-	await _save_screenshot(screenshot_path)
+	var screenshot_name := "%s_%s" % [shell_id, _viewport_key(viewport_size)]
+	var screenshot_path := "%s/%s.png" % [OUTPUT_DIR, screenshot_name]
+	var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)
 	shell_report["screenshot"] = screenshot_path
+	shell_report["screenshot_size"] = {"width": screenshot_size.x, "height": screenshot_size.y}
 	_report["screenshots"].append(screenshot_path)
+	if screenshot_size != viewport_size:
+		_error("%s screenshot at %s expected %s but got %s" % [shell_id, _viewport_key(viewport_size), viewport_size, screenshot_size])
 
-	shell.queue_free()
+	render_viewport.queue_free()
 	await get_tree().process_frame
 	return shell_report
 
@@ -164,13 +201,17 @@ func _button_texture_path(shell: Node, button_name: String, style_name: String) 
 		return "<missing texture>"
 	return texture.resource_path
 
-func _save_screenshot(path: String) -> void:
+func _save_screenshot(render_viewport: SubViewport, path: String) -> Vector2i:
 	await RenderingServer.frame_post_draw
-	var image := get_viewport().get_texture().get_image()
+	var image := render_viewport.get_texture().get_image()
 	var absolute_path := ProjectSettings.globalize_path(path)
 	var result := image.save_png(absolute_path)
 	if result != OK:
 		_error("Failed to save screenshot %s: %s" % [path, result])
+	return Vector2i(image.get_width(), image.get_height())
+
+func _viewport_key(size: Vector2i) -> String:
+	return "%dx%d" % [size.x, size.y]
 
 func _first_player_town(session) -> Dictionary:
 	for town in session.overworld.get("towns", []):

@@ -347,19 +347,25 @@ func _draw_command_markers(scene_rect: Rect2) -> void:
 func _draw_header(scene_rect: Rect2) -> void:
 	var title := String(_town_template.get("name", _town.get("town_id", "Town")))
 	var role := OverworldRulesScript.town_strategic_role(_town).capitalize()
-	var line := "%s | %s | %s" % [
+	var line := _short_stage_text("%s | %s | %s" % [
 		title,
 		String(_faction.get("name", _town_template.get("faction_id", "Faction"))),
 		role if role != "" else "Outpost",
-	]
-	_draw_text(line, scene_rect.position + Vector2(18.0, scene_rect.size.y * 0.48), TEXT_COLOR, 20)
-	var subline := "Garrison %d companies | %d troops | Study %d | Market %d" % [
+	], clampi(int(scene_rect.size.x / 18.0), 34, 96))
+	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
+	_draw_text(line, scene_rect.position + Vector2(18.0, label_y), TEXT_COLOR, 20)
+	var subline := _short_stage_text("Garrison %d companies | %d troops | Study %d | Market %d" % [
 		_garrison_company_count(),
 		_garrison_headcount(),
 		_study_actions.size(),
 		_market_actions.size(),
-	]
-	_draw_text(subline, scene_rect.position + Vector2(18.0, scene_rect.size.y * 0.48 + 22.0), SUBTEXT_COLOR, 13)
+	], clampi(int(scene_rect.size.x / 14.0), 42, 116))
+	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
+
+func _short_stage_text(text: String, max_chars: int) -> String:
+	if text.length() <= max_chars:
+		return text
+	return "%s..." % text.left(max(0, max_chars - 3)).strip_edges()
 
 func _accent_color() -> Color:
 	return FACTION_COLORS.get(String(_town_template.get("faction_id", "")), Color(0.84, 0.67, 0.35, 1.0))
