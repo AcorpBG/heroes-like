@@ -128,6 +128,9 @@ AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defe
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_retake_assault_report.gd"
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_retake_assault_report.tscn"
 AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-retake-assault-report.md"
+AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.gd"
+AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.tscn"
+AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-assault-grouping-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
@@ -13318,16 +13321,19 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         '"strategic_ai_live_route_progression"',
         '"strategic_ai_live_town_defense_retask"',
         '"strategic_ai_live_town_retake_assault"',
+        '"strategic_ai_live_raid_assault_grouping"',
         '"strategic_ai_live_regroup_retreat"',
         "func _strategic_ai_live_turn_execution",
         "func _strategic_ai_live_route_progression",
         "func _strategic_ai_live_town_defense_retask",
         "func _strategic_ai_live_town_retake_assault",
+        "func _strategic_ai_live_raid_assault_grouping",
         "func _strategic_ai_live_regroup_retreat",
         "live_commander_resource_front_turn_execution",
         "live_commander_resource_front_route_progression",
         "live_raid_retasks_to_stabilizing_owned_town",
         "live_retake_front_queues_town_defense_battle",
+        "live_nearby_raids_group_for_town_assault",
         "live_understrength_raid_regroups_at_town",
         "resource_fronts_seized",
         "reserved_unique_targets",
@@ -13337,6 +13343,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "seized_target",
         "_town_defense_retask_raid_seed",
         "_town_retake_assault_raid_seed",
+        "_town_assault_grouping_raid_seed",
+        "grouping_event_count",
+        "ai_raid_grouped",
         "battle_context_type",
         "battle_town_id",
         "front_stabilization",
@@ -13362,11 +13371,13 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "strategic_ai_live_route_progression",
         "strategic_ai_live_town_defense_retask",
         "strategic_ai_live_town_retake_assault",
+        "strategic_ai_live_raid_assault_grouping",
         "strategic_ai_live_regroup_retreat",
         "_assert_live_ai_turn_execution",
         "_assert_live_ai_route_progression",
         "_assert_live_ai_town_defense_retask",
         "_assert_live_ai_town_retake_assault",
+        "_assert_live_ai_raid_assault_grouping",
         "_assert_live_ai_regroup_retreat",
         "river_free_company",
         "river_signal_post",
@@ -13380,6 +13391,8 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "front_stabilization",
         "battle_context_type",
         "battle_town_id",
+        "grouping_event_count",
+        "ai_raid_grouped",
         "regroup_event_count",
         "garrison_before",
         "garrison_after",
@@ -13403,6 +13416,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "`strategic_ai_live_route_progression`",
             "`strategic_ai_live_town_defense_retask`",
             "`strategic_ai_live_town_retake_assault`",
+            "`strategic_ai_live_raid_assault_grouping`",
             "`strategic_ai_live_regroup_retreat`",
             "EnemyTurnRules.run_enemy_turn",
             "OverworldRules.end_turn",
@@ -13411,11 +13425,15 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "live_commander_resource_front_route_progression",
             "live_raid_retasks_to_stabilizing_owned_town",
             "live_retake_front_queues_town_defense_battle",
+            "live_nearby_raids_group_for_town_assault",
             "live_understrength_raid_regroups_at_town",
             "town_id = duskfen_bastion",
             "previous_target_id = river_free_company",
             "battle_context_type = town_defense",
             "battle_town_id = duskfen_bastion",
+            "grouping_event_count = 1",
+            "active_before = 2",
+            "active_after = 1",
             "regroup_event_count = 1",
             "garrison_before = 5",
             "garrison_after = 0",
@@ -13582,6 +13600,68 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
             "No full strategic AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"AI town retake assault doc is missing required text: {required_text}")
+
+
+def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
+    for path in (
+        AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH,
+        AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH,
+        AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI raid assault grouping file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func group_nearby_raids_for_town_assault",
+        "func _best_nearby_assault_support_raid_index",
+        "func _merged_raid_army_payload",
+        "commanderless_support_column",
+        '"ai_raid_grouped"',
+        '"army_consolidation"',
+        "sync_commander_army_continuity",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid assault grouping token: {required_token}")
+    harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
+    for required_token in (
+        '"strategic_ai_live_raid_assault_grouping"',
+        "func _strategic_ai_live_raid_assault_grouping",
+        "_town_assault_grouping_raid_seed",
+        "live_nearby_raids_group_for_town_assault",
+        "grouping_event_count",
+        "ai_raid_grouped",
+        "active_before",
+        "active_after",
+        "leader_strength_after",
+        "support_strength_before",
+        "no_hero_task_state_write_no_save_migration",
+    ):
+        ensure(required_token in harness_text, errors, f"Headless harness is missing raid assault grouping token: {required_token}")
+    if AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "nearby_same_town_raids_group_before_assault",
+            "river_pass_nearby_raids_group_for_town_assault",
+            "grouping_support_column",
+            "grouped_support_count",
+            "ai_raid_grouped",
+            "commanderless_support_column",
+            "EnemyTurnRules.run_enemy_turn",
+            "no_hero_task_state_write_no_save_migration",
+            "save_version_before",
+            "save_version_after",
+        ):
+            ensure(required_token in report_text, errors, f"AI raid assault grouping report is missing token: {required_token}")
+    if AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.exists():
+        doc_text = AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Raid Assault Grouping Report",
+            "strategic-ai-live-raid-assault-grouping-20260523-10184",
+            "Duskfen Bastion",
+            "`ai_raid_grouped`",
+            "`town_defense`",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI raid assault grouping doc is missing required text: {required_text}")
 
 
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
@@ -16806,6 +16886,7 @@ def main() -> int:
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_retake_assault(errors)
+    validate_ai_raid_assault_grouping(errors)
     validate_ai_raid_regroup_retreat(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)

@@ -93,6 +93,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_raid_moved",
 	"ai_raid_arrived",
 	"ai_raid_regrouped",
+	"ai_raid_grouped",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -780,6 +781,21 @@ static func advance_raids(
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
 			event_records.append(assignment_event)
+		var grouping_result := group_nearby_raids_for_town_assault(
+			session,
+			config,
+			encounters,
+			index,
+			encounter,
+			faction_id,
+			resolved_encounters
+		)
+		encounter = grouping_result.get("encounter", encounter)
+		if bool(grouping_result.get("grouped", false)):
+			resolved_encounters = session.overworld.get("resolved_encounters", resolved_encounters)
+			for event_value in grouping_result.get("events", []):
+				if event_value is Dictionary and not event_value.is_empty():
+					event_records.append(event_value)
 		encounter["days_active"] = max(0, int(encounter.get("days_active", 0))) + 1
 
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
@@ -849,6 +865,175 @@ static func advance_raids(
 		"state": state,
 		"events": event_records,
 	}
+
+static func group_nearby_raids_for_town_assault(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	encounters: Array,
+	leader_index: int,
+	leader: Dictionary,
+	faction_id: String,
+	resolved_encounters: Array
+) -> Dictionary:
+	if session == null or leader.is_empty() or leader_index < 0 or leader_index >= encounters.size():
+		return {"encounter": leader, "grouped": false, "events": []}
+	if String(leader.get("target_kind", "")) != "town":
+		return {"encounter": leader, "grouped": false, "events": []}
+	if raid_regroup_needed(leader):
+		return {"encounter": leader, "grouped": false, "events": []}
+	var town_id := String(leader.get("target_placement_id", ""))
+	var leader_id := String(leader.get("placement_id", ""))
+	if town_id == "" or leader_id == "":
+		return {"encounter": leader, "grouped": false, "events": []}
+	var town_result := _find_town_by_placement(session, town_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {"encounter": leader, "grouped": false, "events": []}
+	var town: Dictionary = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "player":
+		return {"encounter": leader, "grouped": false, "events": []}
+	var donor_index := _best_nearby_assault_support_raid_index(
+		session,
+		encounters,
+		leader_index,
+		leader,
+		faction_id,
+		resolved_encounters
+	)
+	if donor_index < 0:
+		return {"encounter": leader, "grouped": false, "events": []}
+	var donor: Dictionary = encounters[donor_index]
+	var donor_id := String(donor.get("placement_id", ""))
+	var donor_strength := raid_strength(donor)
+	var before_strength := raid_strength(leader)
+	leader = ensure_raid_army(leader, session)
+	leader["enemy_army"] = _merged_raid_army_payload(leader, donor)
+	leader["grouped_support_count"] = max(0, int(leader.get("grouped_support_count", 0))) + 1
+	leader["grouped_support_strength"] = max(0, int(leader.get("grouped_support_strength", 0))) + donor_strength
+	leader["last_grouped_support_placement_id"] = donor_id
+	leader["last_grouped_support_day"] = int(session.day)
+	var reason_codes := _normalize_string_array(leader.get("target_reason_codes", []))
+	for code in ["army_consolidation", "town_siege"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	leader["target_reason_codes"] = reason_codes
+	leader["target_public_reason"] = "army consolidation"
+	leader["target_public_importance"] = "high"
+	leader["target_debug_reason"] = "nearby support host consolidated for town assault"
+	var commander_state = leader.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		leader["enemy_commander_state"] = sync_commander_army_continuity(
+			commander_state,
+			leader.get("enemy_army", {}),
+			String(leader.get("encounter_id", leader.get("id", "")))
+		)
+	donor["grouped_into_placement_id"] = leader_id
+	donor["grouped_into_target_id"] = town_id
+	donor["grouped_day"] = int(session.day)
+	donor["arrived"] = true
+	encounters[donor_index] = donor
+	if donor_id != "" and donor_id not in resolved_encounters:
+		resolved_encounters.append(donor_id)
+	session.overworld["resolved_encounters"] = resolved_encounters
+	var event := build_ai_event_record(
+		session,
+		config,
+		"ai_raid_grouped",
+		leader,
+		{
+			"target_kind": "town",
+			"target_placement_id": town_id,
+			"target_label": _town_name(town),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": ["army_consolidation", "town_siege"],
+			"target_public_reason": "army consolidation",
+			"target_public_importance": "high",
+		},
+		{
+			"summary": "%s folds %s into the assault on %s." % [
+				_raid_name(leader),
+				_raid_name(donor),
+				_town_name(town),
+			],
+			"state_policy": "durable_state_reference",
+			"public_importance": "high",
+		}
+	)
+	return {
+		"encounter": leader,
+		"grouped": true,
+		"events": [event],
+		"donor_placement_id": donor_id,
+		"leader_strength_before": before_strength,
+		"leader_strength_after": raid_strength(leader),
+		"donor_strength": donor_strength,
+	}
+
+static func _best_nearby_assault_support_raid_index(
+	session: SessionStateStoreScript.SessionData,
+	encounters: Array,
+	leader_index: int,
+	leader: Dictionary,
+	faction_id: String,
+	resolved_encounters: Array
+) -> int:
+	var town_id := String(leader.get("target_placement_id", ""))
+	var best_index := -1
+	var best_strength := -1
+	var best_label := ""
+	for index in range(encounters.size()):
+		if index == leader_index:
+			continue
+		var donor_value = encounters[index]
+		if not _is_active_raid(donor_value, faction_id, resolved_encounters):
+			continue
+		var donor: Dictionary = donor_value
+		if bool(donor.get("arrived", false)):
+			continue
+		if String(donor.get("target_kind", "")) != "town":
+			continue
+		if String(donor.get("target_placement_id", "")) != town_id:
+			continue
+		if _raid_has_commander(donor):
+			continue
+		if _raid_tile_distance(leader, donor) > 1:
+			continue
+		var donor_strength := raid_strength(donor)
+		var donor_label := _raid_name(donor)
+		if donor_strength > best_strength or (donor_strength == best_strength and donor_label < best_label):
+			best_index = index
+			best_strength = donor_strength
+			best_label = donor_label
+	return best_index
+
+static func _merged_raid_army_payload(leader: Dictionary, donor: Dictionary) -> Dictionary:
+	var leader_army := _normalize_army_payload(leader.get("enemy_army", {}))
+	var donor_army := _normalize_army_payload(donor.get("enemy_army", {}))
+	if donor_army.is_empty():
+		donor_army = _base_enemy_army(String(donor.get("encounter_id", donor.get("id", ""))))
+	var merged_stacks: Array = leader_army.get("stacks", []).duplicate(true) if leader_army.has("stacks") else []
+	for stack_value in donor_army.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		merged_stacks = _add_army_stack(
+			merged_stacks,
+			String(stack_value.get("unit_id", "")),
+			max(0, int(stack_value.get("count", 0)))
+		)
+	return {
+		"id": String(leader_army.get("id", leader.get("encounter_id", leader.get("id", "raid")))),
+		"name": String(leader_army.get("name", "Raid Host")),
+		"stacks": merged_stacks,
+	}
+
+static func _raid_has_commander(raid: Dictionary) -> bool:
+	if bool(raid.get("commanderless_support_column", false)):
+		return false
+	var commander_state = raid.get("enemy_commander_state", {})
+	return commander_state is Dictionary and String(commander_state.get("roster_hero_id", "")) != ""
+
+static func _raid_tile_distance(a: Dictionary, b: Dictionary) -> int:
+	return abs(int(a.get("x", 0)) - int(b.get("x", 0))) + abs(int(a.get("y", 0)) - int(b.get("y", 0)))
 
 static func _redirect_understrength_raid_to_regroup(
 	session: SessionStateStoreScript.SessionData,
@@ -1762,7 +1947,7 @@ static func ensure_raid_army(
 		return encounter
 	var encounter_id = String(encounter.get("encounter_id", encounter.get("id", "")))
 	var commander_state := {}
-	if String(encounter.get("spawned_by_faction_id", "")) != "":
+	if String(encounter.get("spawned_by_faction_id", "")) != "" and not bool(encounter.get("commanderless_support_column", false)):
 		commander_state = build_raid_commander_state(
 			encounter,
 			"",
@@ -7341,6 +7526,8 @@ static func _ai_event_summary(
 			return "%s contests %s%s." % [actor_clause, target_label, reason_suffix]
 		"ai_pressure_summary":
 			return "%s pressure centers on %s%s." % [faction_label, target_label, reason_suffix]
+		"ai_raid_grouped":
+			return "%s consolidates on %s%s." % [actor_clause, target_label, reason_suffix]
 		_:
 			return "%s marks %s%s." % [actor_clause, target_label, reason_suffix]
 

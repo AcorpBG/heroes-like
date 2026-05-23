@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
-  "currentSliceTitle": "Strategic AI Live Town Retake Assault Harness",
+  "currentSliceId": "strategic-ai-live-raid-assault-grouping-20260523-10184",
+  "currentSliceTitle": "Strategic AI Live Raid Assault Grouping",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: live retake-front town assaults now select player-held retake towns before commander resource-target adoption and queue town_defense battles through the normal enemy turn.",
+  "currentSliceNotes": "Completed: nearby same-faction raid hosts can consolidate before shared town assaults, transferring support stacks into the leader, removing the donor host from active pressure, refreshing commander continuity, and emitting a public-safe ai_raid_grouped event.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:51:05Z",
+  "updatedAt": "2026-05-23T17:05:13Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16901,6 +16901,48 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "strategic-ai-live-raid-assault-grouping-20260523-10184",
+      "title": "Strategic AI Live Raid Assault Grouping",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add live strategic AI behavior and headless evidence for nearby same-faction raid hosts consolidating before a shared town assault.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Nearby same-faction raid hosts assigned to the same player-held town consolidate a support host into the assault host before battle resolution.",
+        "The donor host is removed from active raid pressure, the leader army gains donor stacks, commander continuity is refreshed, and a compact ai_raid_grouped event is emitted.",
+        "Focused and shared headless reports prove the behavior without durable hero_task_state writes, save migration, or public score/task leaks."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No multi-commander army board or broad hero-party system.",
+        "No automatic combat balance tuning."
+      ],
+      "updatedAt": "2026-05-23T17:05:13Z",
+      "completedAt": "2026-05-23T17:05:13Z",
+      "completionNotes": "Completed: nearby same-faction raid hosts assigned to the same player-held town now consolidate a commanderless support host into the assault leader before battle resolution. The donor host is resolved out of active raid pressure, the leader army gains the donor stacks, commander continuity is refreshed, a compact ai_raid_grouped event is emitted, and focused plus shared headless reports prove the behavior without hero_task_state writes, save migration, or public score/task leaks.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21720,10 +21762,10 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T16:51:05Z",
-    "sliceId": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
+    "updatedAt": "2026-05-23T17:05:13Z",
+    "sliceId": "strategic-ai-live-raid-assault-grouping-20260523-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
@@ -21733,10 +21775,10 @@
     "status": "passed"
   },
   "active_slice": {
-    "id": "strategic-ai-live-town-retake-assault-harness-20260523-10184",
+    "id": "strategic-ai-live-raid-assault-grouping-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:51:05Z",
-    "note": "Completed: live retake-front town assaults select active player-held retake towns before commander resource-target adoption and queue town_defense battles."
+    "updated": "2026-05-23T17:05:13Z",
+    "note": "Completed: nearby same-faction raid hosts consolidate before shared town assaults with support-stack transfer, donor resolution, commander continuity refresh, and a public-safe ai_raid_grouped event."
   },
-  "currentSliceUpdatedAt": "2026-05-23T16:51:05Z"
+  "currentSliceUpdatedAt": "2026-05-23T17:05:13Z"
 }
