@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "strategic-ai-live-raid-assault-grouping-20260523-10184",
-  "currentSliceTitle": "Strategic AI Live Raid Assault Grouping",
+  "currentSliceId": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Terminal-Margin Outlier Calibration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: nearby same-faction raid hosts can consolidate before shared town assaults, transferring support stacks into the leader, removing the donor host from active pressure, refreshing commander continuity, and emitting a public-safe ai_raid_grouped event.",
+  "currentSliceNotes": "Completed: deterministic battle autoplay samples now have zero terminal-margin outliers, balance_matrix_gate passes, and combat-feel gates still pass across the focused report, balance regression suite, and shared headless harness.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T17:05:13Z",
+  "updatedAt": "2026-05-23T17:12:42Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16943,6 +16943,50 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
+      "title": "Battle Autoplay Terminal-Margin Outlier Calibration",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Calibrate deterministic battle autoplay matrix samples so authored encounters no longer produce extreme terminal-health-margin outliers.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The deterministic battle autoplay report has zero terminal-margin outliers above the matrix threshold.",
+        "The shared headless simulation harness no longer carries the balance-matrix outlier warning for the default authored battle sample.",
+        "Existing combat-feel gates still pass for sample count, action diversity, damage pacing, outcome distribution, and stalled/invalid-order checks."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or authored encounter writeback system.",
+        "No broad battle AI rewrite."
+      ],
+      "updatedAt": "2026-05-23T17:12:42Z",
+      "completedAt": "2026-05-23T17:12:42Z",
+      "completionNotes": "Completed: calibrated the default deterministic battle autoplay sample by slightly increasing Ghoul Grove pressure, removing the Reedward Camp mire chokepoint lockout, and tightening focused/shared assertions so terminal-margin outliers now fail the default balance reports. The latest focused report, balance regression suite, and shared headless harness all show balance_matrix_gate.status pass, terminal_margin_outlier_count 0, terminal_margin_outliers [], and combat_feel_gate.status pass.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -21762,10 +21806,11 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T17:05:13Z",
-    "sliceId": "strategic-ai-live-raid-assault-grouping-20260523-10184",
+    "updatedAt": "2026-05-23T17:12:42Z",
+    "sliceId": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
@@ -21775,10 +21820,10 @@
     "status": "passed"
   },
   "active_slice": {
-    "id": "strategic-ai-live-raid-assault-grouping-20260523-10184",
+    "id": "battle-autoplay-terminal-margin-outlier-calibration-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T17:05:13Z",
-    "note": "Completed: nearby same-faction raid hosts consolidate before shared town assaults with support-stack transfer, donor resolution, commander continuity refresh, and a public-safe ai_raid_grouped event."
+    "updated": "2026-05-23T17:12:42Z",
+    "note": "Completed: deterministic battle autoplay samples now have zero terminal-margin outliers and pass both balance-matrix and combat-feel gates."
   },
-  "currentSliceUpdatedAt": "2026-05-23T17:05:13Z"
+  "currentSliceUpdatedAt": "2026-05-23T17:12:42Z"
 }

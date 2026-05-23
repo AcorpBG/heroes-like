@@ -25,7 +25,7 @@ The default authored autoplay sample set currently covers:
 - matchup cohorts: `even`, `player_advantaged`;
 - ability-presence cohorts for the sampled roster abilities.
 
-The current `balance_matrix_gate` is allowed to report warnings. In the current sample set it identifies terminal-margin outliers, which are concrete tuning leads for later balance work rather than a claim that combat balance is complete.
+The current focused balance and shared harness reports require the default matrix gate to pass without terminal-margin warnings. The calibrated sample set currently reports `terminal_margin_outliers: []` and `balance_matrix_gate.status: pass`, so new extreme terminal-health-margin samples are treated as regressions in these reports.
 
 ## Validation Commands
 
