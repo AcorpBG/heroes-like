@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-production-readiness-audit-20260523-10184",
-  "currentSliceTitle": "Unit Production Readiness Audit",
+  "currentSliceId": "unit-art-visual-qa-contact-sheet-20260523-10184",
+  "currentSliceTitle": "Unit Art Visual QA Contact Sheet Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all units pass the focused production-readiness audit for mechanics, references, loadable unique art, and battle stack normalization.",
+  "currentSliceNotes": "Completed: all 103 authored units now pass generated-art visual-density checks for portrait, battle icon, and overworld icon surfaces, and the report writes full-roster contact sheets for review.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:29:02Z",
+  "updatedAt": "2026-05-23T10:34:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15087,6 +15087,56 @@
         "tools/generate_unit_art_assets.py now adds deterministic unit-signature marks to battle and overworld icons so generated PNG bytes are unique per unit.",
         "tests/validate_repo.py gates the production-readiness report and generator signature hook."
       ]
+    },
+    {
+      "id": "unit-art-visual-qa-contact-sheet-20260523-10184",
+      "title": "Unit Art Visual QA Contact Sheet Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "purpose": "Add a focused visual-QA gate and contact-sheet artifact proving every generated unit art surface is loadable, visibly non-empty, and reviewable as a full roster.",
+      "implementationTargets": [
+        "tests/unit_art_contact_sheet_report.gd",
+        "tests/unit_art_contact_sheet_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored unit portrait, battle icon, and overworld icon loads from the unit-art manifest.",
+        "Every generated art surface passes alpha coverage, visible bounds, luminance range, and quantized color variety gates.",
+        "The report writes review contact sheets and per-unit tile coordinates under .artifacts/unit_art_contact_sheet_report/.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No new copyrighted external art import.",
+        "No final hand-painted art direction claim.",
+        "No animation sprite-sheet implementation in this slice."
+      ],
+      "startedAt": "2026-05-23T10:34:44Z",
+      "updatedAt": "2026-05-23T10:34:44Z",
+      "notes": "Completed: all 103 authored units now pass generated-art visual-density checks for portrait, battle icon, and overworld icon surfaces, and the report writes full-roster contact sheets for review.",
+      "completedAt": "2026-05-23T10:34:44Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit art contact-sheet report and repository validation passed; all three surfaces loaded and passed visual-density checks for 103 units each.",
+      "evidenceHistory": [
+        "tests/unit_art_contact_sheet_report.tscn loads all 309 generated unit art PNG surfaces and checks alpha coverage, visible bounds, luminance range, and quantized color variety.",
+        "The report passed with portrait/battle_icon/overworld_icon loaded_count=103 and visual_pass_count=103 for each surface.",
+        "The report writes portraits_contact_sheet.png, battle_icons_contact_sheet.png, overworld_icons_contact_sheet.png, and report.json under .artifacts/unit_art_contact_sheet_report/ for full-roster visual review.",
+        "tests/validate_repo.py gates the contact-sheet report script/scene and required visual-QA tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17416,6 +17466,44 @@
         "git diff --check"
       ],
       "remainingGap": "This proves current generated assets and unit mechanics are consumable and unique; final hand-painted art direction and animation sprite sheets remain outside this slice."
+    },
+    {
+      "id": "unit-art-visual-qa-contact-sheet-20260523-10184",
+      "title": "Unit Art Visual QA Contact Sheet Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T10:34:44Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-art-visual-qa-contact-sheet-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_art_contact_sheet_report.gd",
+        "tests/unit_art_contact_sheet_report.tscn",
+        "tests/validate_repo.py",
+        ".artifacts/unit_art_contact_sheet_report/",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_art_contact_sheet_report.tscn loads all 309 generated unit art PNG surfaces and checks alpha coverage, visible bounds, luminance range, and quantized color variety.",
+        "The report passed with portrait/battle_icon/overworld_icon loaded_count=103 and visual_pass_count=103 for each surface.",
+        "The report writes portraits_contact_sheet.png, battle_icons_contact_sheet.png, overworld_icons_contact_sheet.png, and report.json under .artifacts/unit_art_contact_sheet_report/ for full-roster visual review.",
+        "tests/validate_repo.py gates the contact-sheet report script/scene and required visual-QA tokens."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves generated assets are non-empty, loadable, and reviewable; final hand-painted art direction and animation sprite sheets remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18108,13 +18196,26 @@
         "git diff --check"
       ],
       "summary": "All 103 units passed production-readiness audit with unique loadable art surfaces and BattleRules stack materialization/normalization."
+    },
+    {
+      "id": "unit-art-visual-qa-contact-sheet-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T10:34:44Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 103 units passed the visual-QA contact-sheet report for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the new gate wired in."
     }
   ],
-  "lastValidation": "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval.",
+  "lastValidation": "All 103 units passed the visual-QA contact-sheet report for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the new gate wired in.",
   "active_slice": {
-    "id": "unit-production-readiness-audit-20260523-10184",
+    "id": "unit-art-visual-qa-contact-sheet-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all units pass the focused production-readiness audit for mechanics, references, loadable unique art, and battle stack normalization."
+    "note": "Completed: all 103 authored units now pass generated-art visual-density checks for portrait, battle icon, and overworld icon surfaces, and the report writes full-roster contact sheets for review."
   }
 }
