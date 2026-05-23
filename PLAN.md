@@ -47,6 +47,8 @@ Battle animation event queue lifecycle added on 2026-05-23: `BattleRules` now re
 
 Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
 
+Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
+
 Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBalanceHarnessRules` now provides deterministic report-only battle sampling for authored encounters, including outcome distribution, action distribution, completed/stalled counts, round/step pacing, side health totals, remaining-health percentages, and compact per-sample turn logs. `HeadlessSimulationHarnessRules` and `BalanceRegressionReportRules` both consume the shared sampler, and their focused tests assert the new pacing/action/health evidence. Current evidence is still narrow authored-scenario sampling for balance work, not automatic tuning, manual-play replacement, or final combat balance approval.
 
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
@@ -4975,6 +4977,32 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-vfx-cue-presentation-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Materialize active battle VFX cue ids as visible board-side presentation effects tied to event source/target context.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+- `docs/battle-animation-cue-dispatch-report.md`
+implementationTargets:
+- `scripts/core/BattleRules.gd`
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-vfx-cue-presentation-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Battle animation events carry source/target stack context where resolved actions have a meaningful source-target relationship.
+- Active VFX cue ids resolve to board draw entries with stack coordinates and source/target ids.
+- `BattleBoardView` draws visible placeholder VFX for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts.
+- Focused validation proves ranged/status events produce source-target VFX draw entries and expire with playback.
+nonGoals:
+- No final imported VFX assets.
+- No audio playback, camera motion, screen shake, authored timing curves, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 
