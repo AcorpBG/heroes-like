@@ -3,6 +3,13 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
+const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
+const UI_ART_TOWN_CREST_MEDALLION := "res://art/ui/runtime/town/crest_medallion.png"
+const UI_ART_TOWN_PARCHMENT_PANEL := "res://art/ui/runtime/town/parchment_panel.png"
+const UI_ART_TOWN_RECRUIT_ROW := "res://art/ui/runtime/town/recruit_row.png"
+const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.png"
+const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
+
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _crest_panel: PanelContainer = %CrestFrame
 @onready var _town_stage_panel: PanelContainer = %TownStagePanel
@@ -3259,6 +3266,21 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_market_panel, "gold")
 	FrontierVisualKit.apply_panel(_logistics_panel, "teal")
 	FrontierVisualKit.apply_panel(_footer_panel, "banner")
+	FrontierVisualKit.apply_art_panel(_banner_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 14, Color(0.78, 0.74, 0.66, 1.0))
+	FrontierVisualKit.apply_art_panel(_crest_panel, UI_ART_TOWN_CREST_MEDALLION, "gold", 70, 10, Color(0.82, 0.78, 0.70, 1.0))
+	FrontierVisualKit.apply_art_panel(_town_stage_panel, UI_ART_TOWN_BUILD_PANEL, "earth", 58, 12, Color(0.66, 0.60, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_town_stage_frame_panel, UI_ART_TOWN_RECRUIT_ROW, "frame", 62, 12, Color(0.66, 0.62, 0.56, 1.0))
+	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_TOWN_PARCHMENT_PANEL, "ink", 66, 12, Color(0.44, 0.42, 0.38, 1.0))
+	FrontierVisualKit.apply_art_panel(_command_panel, UI_ART_TOWN_PARCHMENT_PANEL, "ink", 66, 12, Color(0.44, 0.42, 0.38, 1.0))
+	FrontierVisualKit.apply_art_panel(_town_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 12, Color(0.56, 0.50, 0.44, 1.0))
+	FrontierVisualKit.apply_art_panel(_outlook_panel, UI_ART_TOWN_RESOURCE_LEDGER, "teal", 62, 12, Color(0.50, 0.56, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_command_ledger_panel, UI_ART_TOWN_RESOURCE_LEDGER, "earth", 62, 12, Color(0.52, 0.50, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_build_panel, UI_ART_TOWN_BUILD_PANEL, "earth", 58, 12, Color(0.58, 0.52, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_recruit_panel, UI_ART_TOWN_RECRUIT_ROW, "green", 62, 12, Color(0.58, 0.62, 0.52, 1.0))
+	FrontierVisualKit.apply_art_panel(_study_panel, UI_ART_TOWN_PARCHMENT_PANEL, "blue", 66, 12, Color(0.42, 0.44, 0.52, 1.0))
+	FrontierVisualKit.apply_art_panel(_market_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 12, Color(0.56, 0.50, 0.44, 1.0))
+	FrontierVisualKit.apply_art_panel(_logistics_panel, UI_ART_TOWN_BUILD_PANEL, "teal", 58, 12, Color(0.50, 0.56, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 12, Color(0.70, 0.66, 0.60, 1.0))
 	FrontierVisualKit.apply_tab_container(_management_tabs)
 	_management_tabs.set_tab_title(0, "Build")
 	_management_tabs.set_tab_title(1, "Muster")
