@@ -63,6 +63,7 @@ const TEXTURED_DEPLOYMENT_FILL_ALPHA := 0.035
 const TEXTURED_CENTER_FILL_ALPHA := 0.045
 const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
 const TEXTURED_GRID_MAX_CELL_FILL_ALPHA := 0.05
+const STACK_ANIMATION_EVENT_PLAYBACK_MSEC := 760
 
 var _session = null
 var _battle: Dictionary = {}
@@ -79,6 +80,9 @@ var _unit_battle_icon_textures: Dictionary = {}
 var _unit_battle_icon_missing: Dictionary = {}
 var _unit_animation_sheet_textures: Dictionary = {}
 var _unit_animation_sheet_missing: Dictionary = {}
+var _stack_animation_playback_records: Dictionary = {}
+var _stack_animation_playback_until_msec: Dictionary = {}
+var _latest_animation_serial_by_stack: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -93,6 +97,7 @@ func _notification(what: int) -> void:
 
 func _process(_delta: float) -> void:
 	if not _battle.is_empty():
+		_expire_animation_playback_records()
 		queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
@@ -222,6 +227,7 @@ func set_battle_state(session) -> void:
 		_hover_destination_cell = Vector2i(-1, -1)
 	if session != null and session.battle is Dictionary:
 		_battle = session.battle
+		_sync_animation_playback_records()
 		_active_stack = BattleRulesScript.get_active_stack(_battle)
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
 		_field_objectives = _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []).duplicate(true) if _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []) is Array else []
@@ -418,7 +424,22 @@ func validation_unit_art_summary() -> Dictionary:
 		"missing_battle_icon_units": missing,
 		"animation_sheet_loaded_count": stack_entries.filter(func(entry): return bool(entry.get("animation_loaded", false))).size(),
 		"missing_animation_units": stack_entries.filter(func(entry): return not bool(entry.get("animation_loaded", false))).map(func(entry): return String(entry.get("unit_id", ""))),
+		"animation_playback": validation_animation_playback_summary(),
 		"stacks": stack_entries,
+	}
+
+func validation_animation_playback_summary() -> Dictionary:
+	_expire_animation_playback_records()
+	var records := {}
+	for battle_id in _stack_animation_playback_records.keys():
+		var record: Dictionary = _stack_animation_playback_records.get(battle_id, {}) if _stack_animation_playback_records.get(battle_id, {}) is Dictionary else {}
+		records[String(battle_id)] = record.duplicate(true)
+	return {
+		"playback_duration_msec": STACK_ANIMATION_EVENT_PLAYBACK_MSEC,
+		"active_playback_count": records.size(),
+		"active_records": records,
+		"latest_serial_by_stack": _latest_animation_serial_by_stack.duplicate(true),
+		"queue_count": BattleRulesScript.animation_event_queue(_battle).size() if not _battle.is_empty() else 0,
 	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
@@ -942,7 +963,61 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
 
 func _animation_state_for_stack(stack: Dictionary) -> String:
-	return BattleRulesScript.animation_state_for_stack(_battle, stack)
+	var playback_record := _animation_playback_record_for_stack(String(stack.get("battle_id", "")))
+	if not playback_record.is_empty():
+		return String(playback_record.get("state", ""))
+	return _fallback_animation_state_for_stack(stack)
+
+func _fallback_animation_state_for_stack(stack: Dictionary) -> String:
+	var battle_id := String(stack.get("battle_id", ""))
+	if battle_id != "" and battle_id == String(_battle.get("active_stack_id", "")):
+		return "ready_active"
+	if bool(stack.get("defending", false)):
+		return "defend_brace"
+	return "idle_hold"
+
+func _animation_playback_record_for_stack(battle_id: String) -> Dictionary:
+	if battle_id == "":
+		return {}
+	var expires_at := int(_stack_animation_playback_until_msec.get(battle_id, 0))
+	if expires_at <= int(Time.get_ticks_msec()):
+		_stack_animation_playback_records.erase(battle_id)
+		_stack_animation_playback_until_msec.erase(battle_id)
+		return {}
+	var record: Dictionary = _stack_animation_playback_records.get(battle_id, {}) if _stack_animation_playback_records.get(battle_id, {}) is Dictionary else {}
+	return record.duplicate(true)
+
+func _sync_animation_playback_records() -> void:
+	var now := int(Time.get_ticks_msec())
+	var stack_ids := {}
+	for stack in _battle.get("stacks", []):
+		if stack is Dictionary:
+			var battle_id := String(stack.get("battle_id", ""))
+			if battle_id != "":
+				stack_ids[battle_id] = true
+	for battle_id in _stack_animation_playback_records.keys():
+		if not stack_ids.has(String(battle_id)):
+			_stack_animation_playback_records.erase(battle_id)
+			_stack_animation_playback_until_msec.erase(battle_id)
+	for event in BattleRulesScript.animation_event_queue(_battle):
+		if not (event is Dictionary):
+			continue
+		var battle_id := String(event.get("battle_id", ""))
+		if battle_id == "" or not stack_ids.has(battle_id):
+			continue
+		var serial := int(event.get("serial", 0))
+		if serial <= int(_latest_animation_serial_by_stack.get(battle_id, 0)):
+			continue
+		_latest_animation_serial_by_stack[battle_id] = serial
+		_stack_animation_playback_records[battle_id] = event.duplicate(true)
+		_stack_animation_playback_until_msec[battle_id] = now + STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+
+func _expire_animation_playback_records() -> void:
+	var now := int(Time.get_ticks_msec())
+	for battle_id in _stack_animation_playback_until_msec.keys():
+		if int(_stack_animation_playback_until_msec.get(battle_id, 0)) <= now:
+			_stack_animation_playback_until_msec.erase(battle_id)
+			_stack_animation_playback_records.erase(battle_id)
 
 func _animation_state_row_for_unit(unit_id: String, state_name: String) -> int:
 	var animation := ContentService.get_unit_animation(unit_id)

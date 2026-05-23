@@ -27,6 +27,7 @@ func _run() -> void:
 	_validate_death_state()
 	_validate_spell_cast_state()
 	await _validate_board_runtime_summary()
+	await _validate_board_playback_lifecycle()
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -55,7 +56,8 @@ func _validate_defend_state() -> void:
 	var state := _state_for(session, "player_0")
 	_expect_ok("defend action", result)
 	_expect_equal("defend animation state", state, "defend_brace")
-	_report["cases"]["defend"] = {"state": state, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("defend queue", session.battle, "player_0", "battle_unit_defend", "defend_brace")
+	_report["cases"]["defend"] = {"state": state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_move_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 0, 3, 7, 3)
@@ -68,7 +70,8 @@ func _validate_move_state() -> void:
 	var state := _state_for(session, "player_0")
 	_expect_ok("move action", result)
 	_expect_equal("move animation state", state, "move_path_step")
-	_report["cases"]["move"] = {"state": state, "destination": destination, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("move queue", session.battle, "player_0", "battle_unit_move", "move_path_step")
+	_report["cases"]["move"] = {"state": state, "destination": destination, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_melee_hit_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
@@ -80,7 +83,9 @@ func _validate_melee_hit_state() -> void:
 	_expect_ok("melee strike action", result)
 	_expect_equal("melee attacker animation state", attacker_state, "melee_windup_release")
 	_expect_equal("melee target animation state", target_state, "hit_stagger")
-	_report["cases"]["melee_hit"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("melee attacker queue", session.battle, "player_0", "battle_unit_melee_attack", "melee_windup_release")
+	_expect_event("melee target queue", session.battle, "enemy_0", "battle_unit_hit", "hit_stagger")
+	_report["cases"]["melee_hit"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_ranged_status_state() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
@@ -91,7 +96,9 @@ func _validate_ranged_status_state() -> void:
 	_expect_ok("ranged shoot action", result)
 	_expect_equal("ranged attacker animation state", attacker_state, "ranged_aim_release")
 	_expect_equal("ranged target status animation state", target_state, "status_applied")
-	_report["cases"]["ranged_status"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("ranged attacker queue", session.battle, "player_0", "battle_unit_ranged_attack", "ranged_aim_release")
+	_expect_event("ranged target status queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
+	_report["cases"]["ranged_status"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_death_state() -> void:
 	var session := _session_for_stacks(
@@ -109,7 +116,8 @@ func _validate_death_state() -> void:
 	var target_state := _state_for(session, "enemy_0")
 	_expect_ok("death strike action", result)
 	_expect_equal("death target animation state", target_state, "death_rout_remove")
-	_report["cases"]["death"] = {"target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("death target queue", session.battle, "enemy_0", "battle_unit_death", "death_rout_remove")
+	_report["cases"]["death"] = {"target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_spell_cast_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
@@ -121,7 +129,9 @@ func _validate_spell_cast_state() -> void:
 	_expect_ok("spell cast action", result)
 	_expect_equal("spell caster animation state", caster_state, "cast_support_anchor")
 	_expect_equal("spell target animation state", target_state, "status_applied")
-	_report["cases"]["spell_cast"] = {"caster_state": caster_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle)}
+	_expect_event("spell caster queue", session.battle, "player_0", "battle_unit_cast", "cast_support_anchor")
+	_expect_event("spell target queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
+	_report["cases"]["spell_cast"] = {"caster_state": caster_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
 
 func _validate_board_runtime_summary() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
@@ -142,6 +152,39 @@ func _validate_board_runtime_summary() -> void:
 	_expect_equal("board runtime ranged attacker state", String(observed_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("board runtime status target state", String(observed_states.get("enemy_0", "")), "status_applied")
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
+
+func _validate_board_playback_lifecycle() -> void:
+	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
+	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+	var result := BattleRulesScript.perform_player_action(session, "shoot")
+	_expect_ok("board lifecycle source action", result)
+	var view := BattleBoardViewScript.new()
+	add_child(view)
+	view.set_battle_state(session)
+	await get_tree().process_frame
+	var active_summary: Dictionary = view.validation_unit_art_summary()
+	var active_states := _observed_animation_states(active_summary)
+	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
+	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
+	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
+	if int(active_playback.get("active_playback_count", 0)) < 2:
+		_error("Playback lifecycle did not keep both source and target events active: %s" % active_playback)
+	await get_tree().create_timer(0.90).timeout
+	var expired_summary: Dictionary = view.validation_unit_art_summary()
+	var expired_states := _observed_animation_states(expired_summary)
+	var expired_playback: Dictionary = expired_summary.get("animation_playback", {}) if expired_summary.get("animation_playback", {}) is Dictionary else {}
+	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
+	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
+	if int(expired_playback.get("active_playback_count", -1)) != 0:
+		_error("Playback lifecycle did not expire event states: %s" % expired_playback)
+	view.queue_free()
+	await get_tree().process_frame
+	_report["cases"]["board_playback_lifecycle"] = {
+		"active_states": active_states,
+		"expired_states": expired_states,
+		"active_playback": active_playback,
+		"expired_playback": expired_playback,
+	}
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
@@ -226,6 +269,25 @@ func _set_stack_field(battle: Dictionary, battle_id: String, key: String, value:
 			battle["stacks"] = stacks
 			BattleRulesScript._ensure_battle_hex_state(battle)
 			return
+
+func _observed_animation_states(summary: Dictionary) -> Dictionary:
+	var observed_states := {}
+	for entry in summary.get("stacks", []):
+		if entry is Dictionary:
+			observed_states[String(entry.get("battle_id", ""))] = String(entry.get("animation_state", ""))
+	return observed_states
+
+func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
+	for event in BattleRulesScript.animation_event_queue(battle):
+		if not (event is Dictionary):
+			continue
+		if (
+			String(event.get("battle_id", "")) == battle_id
+			and String(event.get("event_id", "")) == event_id
+			and String(event.get("state", "")) == state
+		):
+			return
+	_error("%s missing event %s/%s for %s in %s." % [label, event_id, state, battle_id, BattleRulesScript.animation_event_queue(battle)])
 
 func _expect_ok(label: String, result: Dictionary) -> void:
 	if not bool(result.get("ok", false)):
