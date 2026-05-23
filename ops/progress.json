@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Runtime Consequence Matrix",
+  "currentSliceId": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Hard Difficulty Queue Clear Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime consequence matrix: deterministic cohorts for scenario, terrain, difficulty, matchup, and ability presence; current gate passes with zero zero-consequence samples.",
+  "currentSliceNotes": "Hard difficulty autoplay tuning queue clear pass completed: both normal and hard difficulty rows are clear, with the hard gate tightened to zero accepted queue items.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:57:00Z",
+  "updatedAt": "2026-05-23T22:20:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -96,14 +96,14 @@
         ],
         "evidence": {
           "runtime_consequence_gate": "pass",
-          "distribution_signature": "7d9508d8",
+          "distribution_signature": "a537a308",
           "sample_count": 12,
           "samples_with_status_consequence_count": 12,
-          "samples_with_ability_consequence_count": 11,
+          "samples_with_ability_consequence_count": 10,
           "samples_with_spell_consequence_count": 12,
-          "total_status_application_event_count": 57,
-          "total_ability_effect_observation_count": 124,
-          "total_spell_effect_observation_count": 121
+          "total_status_application_event_count": 55,
+          "total_ability_effect_observation_count": 118,
+          "total_spell_effect_observation_count": 117
         }
       }
     },
@@ -18177,7 +18177,7 @@
         ],
         "evidence": {
           "runtime_consequence_matrix_gate": "pass",
-          "matrix_signature": "0fd488df",
+          "matrix_signature": "cab8ca24",
           "sample_count": 12,
           "difficulty_cohort_count": 3,
           "terrain_cohort_count": 3,
@@ -18188,9 +18188,118 @@
           "zero_consequence_sample_count": 0
         }
       }
+    },
+    {
+      "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+      "title": "Battle Autoplay Hard Difficulty Queue Clear Pass",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-hard-difficulty-watch-pass-report.md",
+        "tests/battle_autoplay_difficulty_sweep_report.gd"
+      ],
+      "purpose": "Use the remaining hard difficulty tuning queue watches as a bounded combat-feel pass and tighten the deterministic hard sweep gate from an accepted watch budget to clear status.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The hard row in battle_autoplay_difficulty_sweep_v1 reports tuning_queue_item_count 0 and tuning_queue_status clear.",
+        "The normal row remains clear with zero tuning queue items.",
+        "The normal-vs-hard sweep still shows an observable difficulty effect.",
+        "Focused battle balance, difficulty sweep, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No broad faction rebalance.",
+        "No automatic tuning or authored content writeback.",
+        "No final combat balance approval.",
+        "No campaign or RMG parity claim."
+      ],
+      "startedAt": "2026-05-23T22:10:00Z",
+      "updatedAt": "2026-05-23T22:20:26Z",
+      "notes": "Completed hard difficulty tuning queue clear pass: placement-local retunes for river_pass_hollow_mire and causeway_reed_camp, hard difficulty queue gate tightened to zero accepted items, and focused validation passed.",
+      "completedAt": "2026-05-23T22:20:26Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "sweep_signature": "bc42c7b1",
+          "normal_queue_signature": "829808c9",
+          "normal_tuning_queue_item_count": 0,
+          "normal_tuning_queue_status": "clear",
+          "hard_queue_signature": "829808c9",
+          "hard_tuning_queue_item_count": 0,
+          "hard_tuning_queue_status": "clear",
+          "normal_vs_hard_no_observed_effect": false,
+          "runtime_consequence_distribution_signature": "a537a308",
+          "runtime_consequence_matrix_signature": "cab8ca24"
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+      "title": "Battle Autoplay Hard Difficulty Queue Clear Pass",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T22:20:26Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184"
+      ],
+      "implementationRefs": [
+        "content/scenarios.json",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md",
+        "docs/battle-autoplay-runtime-consequence-harness-report.md",
+        "docs/battle-autoplay-runtime-consequence-matrix-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "The hard difficulty sweep gate now requires MAX_HARD_TUNING_QUEUE_ITEMS := 0.",
+        "river_pass_hollow_mire and causeway_reed_camp use placement-local rosters to clear hard terminal-margin and burst-pacing watches without changing shared army groups.",
+        "Current difficulty sweep evidence reports sweep_signature bc42c7b1, normal queue signature 829808c9, hard queue signature 829808c9, and both rows at tuning_queue_item_count 0 with status clear.",
+        "Runtime consequence signatures were refreshed after the encounter retune: distribution_signature a537a308 and matrix_signature cab8ca24."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "native-rmg-owner-small-random-land-corpus-shape-gate-10184",
       "title": "Native RMG Owner Small Random Land Corpus Shape Gate",
@@ -22034,7 +22143,7 @@
       ],
       "evidence": [
         "The shared battle autoplay sampler now emits battle_autoplay_runtime_consequence_matrix_v1 with difficulty, terrain, scenario, matchup, and ability-presence cohorts.",
-        "The report-only runtime consequence matrix gate passes for the current 12-sample authored set with matrix_signature 0fd488df.",
+        "The report-only runtime consequence matrix gate passes for the current 12-sample authored set with matrix_signature cab8ca24.",
         "Current matrix evidence covers 3 difficulty cohorts, 3 terrain cohorts, 4 scenario cohorts, 2 matchup cohorts, 8 ability-presence cohorts, and 8 ability-consequence cohorts.",
         "Zero sampled battles have no runtime consequence evidence; this is instrumentation only, not final combat balance approval or automatic tuning."
       ],
@@ -23173,17 +23282,19 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "summary": "Runtime consequence matrix passed: matrix_signature 0fd488df; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
+      "summary": "Runtime consequence matrix passed: matrix_signature cab8ca24; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+    "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T21:57:00Z",
+    "updatedAt": "2026-05-23T22:20:26Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
@@ -23191,11 +23302,30 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Runtime consequence matrix passed: matrix_signature 0fd488df; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
+    "summary": "Hard difficulty queue clear passed: sweep_signature bc42c7b1; normal and hard queue signatures 829808c9; both rows tuning_queue_item_count 0 and status clear; normal_vs_hard still has observed effect; runtime consequence signatures refreshed to a537a308 and cab8ca24; focused Godot gates, repository validation, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T21:57:00Z",
+  "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T22:20:26Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T22:20:26Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Hard difficulty queue clear passed: sweep_signature bc42c7b1; normal and hard queue signatures 829808c9; both rows tuning_queue_item_count 0 and status clear; normal_vs_hard still has observed effect; runtime consequence signatures refreshed to a537a308 and cab8ca24; focused Godot gates, repository validation, JSON validation, and diff whitespace checks passed."
+    },
     {
       "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
       "status": "passed",

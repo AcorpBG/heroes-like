@@ -17,14 +17,14 @@ The deterministic battle autoplay sampler already records initial ability presen
 ## Current Evidence
 
 - `runtime_consequence_gate.status`: `pass`
-- `distribution_signature`: `7d9508d8`
+- `distribution_signature`: `a537a308`
 - `sample_count`: `12`
 - `samples_with_status_consequence_count`: `12`
-- `samples_with_ability_consequence_count`: `11`
+- `samples_with_ability_consequence_count`: `10`
 - `samples_with_spell_consequence_count`: `12`
-- `total_status_application_event_count`: `57`
-- `total_ability_effect_observation_count`: `124`
-- `total_spell_effect_observation_count`: `121`
+- `total_status_application_event_count`: `55`
+- `total_ability_effect_observation_count`: `118`
+- `total_spell_effect_observation_count`: `117`
 - `observed_source_types`: `ability`, `spell`
 - `observed_effect_ids`: `status_harried`, `status_staggered`, `spell:spell_bloodwake_drum:attack_buff`, `spell:spell_stone_veil:defense_buff`
 
