@@ -564,7 +564,7 @@ func validation_vfx_playback_summary() -> Dictionary:
 				projectile_count += 1
 			"status_residue", "status_clear":
 				status_count += 1
-			"damage_tick", "melee_arc", "stack_fade":
+			"damage_tick", "melee_arc", "retaliation_arc", "stack_fade":
 				impact_count += 1
 			"cast_anchor":
 				cast_count += 1
@@ -1693,6 +1693,8 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_damage_tick_vfx(center, radius, progress)
 			"melee_arc":
 				_draw_melee_arc_vfx(start, end, radius, progress)
+			"retaliation_arc":
+				_draw_retaliation_arc_vfx(start, end, radius, progress)
 			"stack_fade":
 				_draw_stack_fade_vfx(center, radius, progress)
 			"cast_anchor":
@@ -1736,7 +1738,7 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 			var start := source_center
 			var end := target_center
 			var center := subject_center
-			if kind == "projectile_path" or kind == "melee_arc":
+			if kind == "projectile_path" or kind == "melee_arc" or kind == "retaliation_arc":
 				start = subject_center
 				end = target_center
 				center = target_center
@@ -1783,6 +1785,8 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "damage_tick"
 		"vfx_placeholder_melee_arc":
 			return "melee_arc"
+		"vfx_placeholder_retaliation_arc":
+			return "retaliation_arc"
 		"vfx_placeholder_stack_fade":
 			return "stack_fade"
 		"vfx_placeholder_cast_anchor":
@@ -1843,6 +1847,15 @@ func _draw_melee_arc_vfx(start: Vector2, end: Vector2, radius: float, progress: 
 	var color := Color(BATTLE_VFX_DAMAGE_COLOR.r, BATTLE_VFX_DAMAGE_COLOR.g, BATTLE_VFX_DAMAGE_COLOR.b, 0.72 * alpha)
 	draw_line(start.lerp(center, 0.35), center, color, maxf(2.4, radius * 0.07), true)
 	draw_line(center, end.lerp(center, 0.35), color, maxf(2.4, radius * 0.07), true)
+
+func _draw_retaliation_arc_vfx(start: Vector2, end: Vector2, radius: float, progress: float) -> void:
+	var direction := (end - start).normalized() if start.distance_to(end) > 1.0 else Vector2.LEFT
+	var normal := Vector2(direction.y, -direction.x)
+	var center := start.lerp(end, 0.48) + normal * radius * 0.24
+	var alpha := maxf(0.18, 1.0 - progress * 0.60)
+	var color := Color(1.0, 0.76, 0.42, 0.74 * alpha)
+	draw_line(start.lerp(center, 0.30), center, color, maxf(2.2, radius * 0.065), true)
+	draw_line(center, end.lerp(center, 0.30), color, maxf(2.2, radius * 0.065), true)
 
 func _draw_stack_fade_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var alpha := maxf(0.10, 1.0 - progress)

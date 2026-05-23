@@ -15258,8 +15258,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_projectile_path",
         "vfx_placeholder_status_residue",
         "vfx_placeholder_status_clear",
+        "vfx_placeholder_retaliation_arc",
         "audio_placeholder_status_clear",
         "status_clear",
+        "retaliation_arc",
+        "func _draw_retaliation_arc_vfx",
         "func _status_clear_presentation_motion",
         "func _exit_presentation_motion",
         "retreat_withdraw",
@@ -15295,6 +15298,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "battle_exit_animation_snapshot",
         "battle_unit_retreat",
         "battle_unit_surrender",
+        "battle_retaliation",
+        "retaliation_release",
         "retreat_withdraw_column",
         "surrender_stand_down",
         "target_battle_id",
@@ -15486,8 +15491,31 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "surrender_stand_down",
         "battle_unit_retreat",
         "battle_unit_surrender",
+        "battle_retaliation",
+        "retaliation_release",
+        "retaliation_arc",
+        "vfx_placeholder_retaliation_arc",
+        "audio_placeholder_retaliation",
+        "_validate_retaliation_state",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
+
+    retaliation_doc_path = ROOT / "docs" / "battle-retaliation-event-presentation-report.md"
+    ensure(retaliation_doc_path.exists(), errors, "battle-retaliation-event-presentation-report.md is missing")
+    if retaliation_doc_path.exists():
+        retaliation_doc_text = retaliation_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Retaliation Event Presentation Report",
+            "battle-retaliation-event-presentation-20260523-10184",
+            "`battle_retaliation`",
+            "`retaliation_release`",
+            "`vfx_placeholder_retaliation_arc`",
+            "`audio_placeholder_retaliation`",
+            "`retaliation_arc`",
+            "No combat balance tuning.",
+            "No imported VFX or final sound design.",
+        ):
+            ensure(required_text in retaliation_doc_text, errors, f"Battle retaliation presentation doc is missing required text: {required_text}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
