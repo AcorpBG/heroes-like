@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-intent-forecast-20260523-10184",
-  "currentSliceTitle": "Battle Intent Forecast",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSliceId": "packaging-pack-export-smoke-20260523-10184",
+  "currentSliceTitle": "Packaging Pack Export Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: compact scored battle intent forecast is surfaced in BattleShell and covered by focused validation.",
+  "currentSliceNotes": "Completed: local Linux Release PCK export and --main-pack boot smoke passed with explicit non-release boundaries.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T15:53:36.482174Z",
+  "updatedAt": "2026-05-23T16:01:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16627,6 +16627,40 @@
       "nonGoals": [
         "No final combat balance approval, broad encounter retune, final VFX/audio, or full battle UX redesign."
       ]
+    },
+    {
+      "id": "packaging-pack-export-smoke-20260523-10184",
+      "title": "Packaging Pack Export Smoke",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add a repeatable Linux release PCK export and --main-pack boot smoke gate without claiming binary export, installer, or clean-machine release readiness.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md"
+      ],
+      "baselineChecks": [
+        "python3 tests/packaging_pack_export_smoke.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Linux Release export preset can produce a non-empty external PCK artifact through Godot --export-pack.",
+        "The produced PCK boots through Godot --main-pack without fatal/script/resource-load errors.",
+        "The smoke report records export-template availability separately and does not overclaim binary export or installer readiness."
+      ],
+      "nonGoals": [
+        "No release readiness claim.",
+        "No Windows binary export claim from an untested artifact.",
+        "No installer or clean-machine smoke-test claim."
+      ],
+      "updatedAt": "2026-05-23T16:01:58Z",
+      "completedAt": "2026-05-23T16:01:58Z",
+      "completionNotes": "Completed: local Linux Release --export-pack produced a 287473012-byte PCK and --main-pack boot returned 0 with no fatal boot patterns; binary export templates remain explicitly reported as missing/non-required for this smoke."
     }
   ],
   "completedImplementationEvidence": [
@@ -20156,6 +20190,45 @@
       "sliceId": "battle-intent-forecast-20260523-10184",
       "summary": "BattleRules now exposes a read-only scored intent forecast; BattleShell adds it to action-guide tooltip and validation snapshots; focused report proves scored strike selection, expected consequence/risk/confidence copy, no mutation, and enemy-initiative lockout.",
       "updated": "2026-05-23"
+    },
+    {
+      "id": "packaging-pack-export-smoke-20260523-10184",
+      "title": "Packaging Pack Export Smoke",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "completedAt": "2026-05-23T16:01:58Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md",
+        "docs/packaging-pack-export-smoke-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "packaging-pack-export-smoke-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/packaging_pack_export_smoke.py",
+        "docs/packaging-pack-export-smoke-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/packaging_pack_export_smoke.py exports the Linux Release preset through Godot --export-pack into .artifacts/packaging_pack_export_smoke/heroes-like.pck.",
+        "The smoke verifies the generated PCK exists, exceeds the package-size floor, and boots through Godot --main-pack with return code 0.",
+        "The smoke records command summaries, warning/error tails, PCK size, fatal boot patterns, and binary export template availability in .artifacts/packaging_pack_export_smoke/report.json.",
+        "The current local run produced a 287473012-byte PCK, booted with no fatal boot matches, and reported binary export templates as missing but not required for pack export.",
+        "The report and docs explicitly do not claim binary export readiness, Windows packaged smoke coverage, installer readiness, clean-machine validation, or release readiness."
+      ],
+      "validation": [
+        "python3 tests/packaging_pack_export_smoke.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 -m py_compile tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "remainingGap": "Release packaging still needs installed binary export templates, Linux/Windows executable export smoke tests, installer/export preset hardening, clean-machine validation, packaged settings persistence checks, and crash/error reporting policy."
     }
   ],
   "docsReadyEvidence": [
@@ -21192,24 +21265,39 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "packaging-pack-export-smoke-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T16:01:58Z",
+      "commands": [
+        "python3 tests/packaging_pack_export_smoke.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 -m py_compile tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "summary": "Focused packaging pack-export smoke passed: export return code 0, --main-pack boot return code 0, 287473012-byte PCK, no fatal boot pattern matches, and binary export template status reported separately as missing/non-required."
     }
   ],
   "lastValidation": {
-    "sliceId": "battle-intent-forecast-20260523-10184",
+    "sliceId": "packaging-pack-export-smoke-20260523-10184",
     "status": "passed",
     "updated": "2026-05-23",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn",
-      "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
+      "python3 tests/packaging_pack_export_smoke.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+      "python3 -m py_compile tests/packaging_pack_export_smoke.py tests/validate_repo.py",
       "jq empty ops/progress.json",
-      "git diff --check"
+      "git diff --check",
+      "python3 tests/validate_repo.py"
     ]
   },
   "active_slice": {
-    "id": "battle-intent-forecast-20260523-10184",
+    "id": "packaging-pack-export-smoke-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23",
-    "note": "Completed: compact scored battle intent forecast is surfaced in BattleShell and covered by focused validation."
+    "updated": "2026-05-23T16:01:58Z",
+    "note": "Completed: local Linux Release PCK export and --main-pack boot smoke passed with explicit non-release boundaries."
   }
 }
