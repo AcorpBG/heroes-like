@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "windows-binary-export-smoke-20260523-10184",
-  "currentSliceTitle": "Windows Binary Export Smoke",
+  "currentSliceId": "battle-autoplay-cohort-balance-pass-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Cohort Balance Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a local Windows Release binary export smoke gate: exported and inspected the Windows executable, sidecar package, and required native DLL without claiming Windows runtime execution, installer readiness, or clean-machine validation.",
+  "currentSliceNotes": "Completed a focused authored encounter cohort balance pass: the queue now has one remaining forest cohort watch with signature 80bea883, while Fen Crown, grass, high-difficulty, and low terminal-margin watches are cleared without claiming final combat balance.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:59:00Z",
+  "updatedAt": "2026-05-24T00:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,60 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
+      "title": "Battle Autoplay Cohort Balance Pass",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.gd"
+      ],
+      "purpose": "Use the deterministic battle autoplay queue to make a bounded authored encounter tuning pass against current medium-priority cohort watches.",
+      "implementationTargets": [
+        "content/army_groups.json",
+        "content/scenarios.json",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-cohort-balance-pass-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The focused queue report passes with fewer medium-priority cohort watches than the prior five-item queue.",
+        "Fen Crown, grass-terrain, and high-difficulty cohorts no longer all resolve to one outcome in the default 12-sample harness.",
+        "Combat-feel and balance-matrix gates remain passing with no stalled samples and no invalid orders.",
+        "Difficulty-sweep evidence remains passing after the content tuning."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic runtime tuning.",
+        "No global unit-stat rewrite.",
+        "No campaign completion or RMG parity claim."
+      ],
+      "startedAt": "2026-05-24T00:12:00Z",
+      "updatedAt": "2026-05-24T00:28:00Z",
+      "completedAt": "2026-05-24T00:28:00Z",
+      "notes": "Selected from the remaining production-gap list under Combat feel and balance. Baseline queue before this slice: five medium watch items, including low terminal margin at 70 and one-sided forest, Fen Crown, grass, and high-difficulty cohorts.",
+      "completionEvidence": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+          "git diff --check"
+        ],
+        "result": "Focused queue report reduced from five medium watches/signature 95f5ac7e to one medium forest cohort watch/signature 80bea883. Combat-feel and balance-matrix gates remained pass, with no sample-level or gate-level queue items. Shared headless harness returned ok true with the known generated random-map deferred warning."
+      }
+    },
     {
       "id": "windows-binary-export-smoke-20260523-10184",
       "title": "Windows Binary Export Smoke",
@@ -22597,23 +22651,40 @@
     }
   ],
   "lastValidation": {
-    "id": "windows-binary-export-smoke-20260523-10184",
+    "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T23:59:00Z",
+    "updatedAt": "2026-05-24T00:28:00Z",
     "commands": [
-      "python3 tests/packaging_windows_export_smoke.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
-      "python3 tests/packaging_pack_export_smoke.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py tests/packaging_windows_export_smoke.py",
-      "jq empty ops/progress.json",
+      "python3 -m py_compile tests/validate_repo.py",
+      "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
       "git diff --check"
     ],
-    "summary": "Windows binary export smoke completed: Windows Release exported heroes-like.exe with MZ/PE headers, sidecar PCK, and required Windows native DLL beside the executable; packaging readiness, Linux PCK export/boot smoke, repo validation, JSON validation, py_compile, and diff whitespace checks passed."
+    "summary": "Battle autoplay cohort balance pass completed: tuning queue reduced from five medium watches/signature 95f5ac7e to one medium forest cohort watch/signature 80bea883; Fen Crown, grass, and high-difficulty cohorts now have mixed outcomes; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
   },
-  "active_slice": "windows-binary-export-smoke-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T23:59:00Z",
+  "active_slice": "battle-autoplay-cohort-balance-pass-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-24T00:28:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T00:28:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+        "git diff --check"
+      ],
+      "summary": "Battle autoplay cohort balance pass completed: tuning queue reduced from five medium watches/signature 95f5ac7e to one medium forest cohort watch/signature 80bea883; Fen Crown, grass, and high-difficulty cohorts now have mixed outcomes; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
+    },
     {
       "id": "windows-binary-export-smoke-20260523-10184",
       "status": "passed",

@@ -16472,6 +16472,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
+    cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     for path in (
         harness_path,
@@ -16492,6 +16493,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         expanded_sample_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
+        cohort_balance_doc_path,
         difficulty_sweep_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
@@ -16634,9 +16636,11 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "queue_signature",
             "repeat_queue_signature",
             "MAX_CURRENT_WATCH_ITEMS",
+            "RESOLVED_COHORT_IDS",
             "sample_watch_count",
             "gate_item_count",
             "cohort_outcome_bias_watch",
+            "resolved cohort watch",
             "high-priority action-required",
             "top_contributors",
             "remediation_hint",
@@ -16761,6 +16765,24 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in queue_balance_doc_text, errors, f"Battle autoplay queue-driven balance doc is missing required text: {required_text}")
+    if cohort_balance_doc_path.exists():
+        cohort_balance_doc_text = cohort_balance_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Cohort Balance Pass Report",
+            "battle-autoplay-cohort-balance-pass-20260523-10184",
+            "queue_signature",
+            "80bea883",
+            "item_count",
+            "1",
+            "fen-crown",
+            "grass",
+            "high",
+            "forest",
+            "combat_feel_gate.status",
+            "balance_matrix_gate.status",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in cohort_balance_doc_text, errors, f"Battle autoplay cohort balance doc is missing required text: {required_text}")
     if difficulty_sweep_doc_path.exists():
         difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
         for required_text in (

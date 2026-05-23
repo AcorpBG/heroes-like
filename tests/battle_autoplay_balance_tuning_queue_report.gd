@@ -5,7 +5,8 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_AUTOPLAY_BALANCE_TUNING_QUEUE_REPORT"
 const REQUIRED_SCHEMA := "battle_autoplay_balance_tuning_queue_v1"
 const REQUIRED_POLICY := "report_only_no_runtime_tuning"
-const MAX_CURRENT_WATCH_ITEMS := 5
+const MAX_CURRENT_WATCH_ITEMS := 1
+const RESOLVED_COHORT_IDS := ["fen-crown", "grass", "high"]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -90,6 +91,11 @@ func _assert_queue_items(queue: Dictionary, payload: Dictionary) -> bool:
 			_fail("Battle autoplay tuning queue items must be sorted by descending priority.", payload)
 			return false
 		previous_priority = priority
+		var context: Dictionary = entry.get("context", {}) if entry.get("context", {}) is Dictionary else {}
+		var cohort_id := String(context.get("cohort_id", ""))
+		if cohort_id in RESOLVED_COHORT_IDS:
+			_fail("Battle autoplay tuning queue should not reopen resolved cohort watch: %s" % cohort_id, payload)
+			return false
 		if String(entry.get("remediation_hint", "")) != "":
 			saw_remediation_hint = true
 	if not saw_remediation_hint:

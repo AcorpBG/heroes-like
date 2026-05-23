@@ -905,7 +905,7 @@
         {"placement_id": "crown_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 3}
       ],
       "encounters": [
-        {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201},
+        {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201, "enemy_army": {"id": "army_fen_crown_gate_watch", "name": "Fen Crown Gate Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 3}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_blackbranch_cutthroat", "count": 4}]}},
         {"placement_id": "bone_ferry", "encounter_id": "encounter_hollow_mire", "x": 4, "y": 4, "difficulty": "medium", "combat_seed": 3202},
         {"placement_id": "fen_crown_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 3203}
       ]
