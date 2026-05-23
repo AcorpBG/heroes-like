@@ -49,6 +49,8 @@ Unit roster deployment gate added on 2026-05-23: `tests/unit_roster_deployment_r
 
 Unit runtime asset-resolution gate added on 2026-05-23: `tests/unit_runtime_asset_resolution_report.tscn` now exercises every authored unit through `ContentService.get_unit_art()`, `ContentService.get_unit_animation()`, `BattleBoardView` battle-icon and animation-sheet loaders, `OverworldMapView` encounter icon resolution, and `TownShell` portrait texture loading. The report passed with 103/103 units resolving portrait, battle icon, overworld icon, animation sheet, battle stack materialization, and 1,442 animation state-row lookups. This closes the full-roster runtime lookup gap beyond sampled screen checks; final combat balance and hand-authored art approval remain outside this slice.
 
+Unit generated-art reproducibility gate added on 2026-05-23: `tests/unit_art_reproducibility_report.py` imports `tools/generate_unit_art_assets.py`, regenerates every unit portrait, battle icon, overworld icon, and battle animation sheet into temporary storage, and byte-compares the generated PNGs plus both manifests against the committed runtime assets. The report passed with 412/412 generated unit assets and both manifests matching generator output. This closes the drift gap between the reproducible generator and committed generated art; final hand-authored art approval remains outside this slice.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-runtime-asset-resolution-gate-20260523-10184",
-  "currentSliceTitle": "Unit Runtime Asset Resolution Gate",
+  "currentSliceId": "unit-art-reproducibility-gate-20260523-10184",
+  "currentSliceTitle": "Unit Art Reproducibility Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all 103 units resolve portrait, battle icon, overworld icon, animation sheet, and animation state rows through live runtime lookup paths.",
+  "currentSliceNotes": "Completed: all 412 committed generated unit PNG assets and both unit art manifests match fresh generator output.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:24:59Z",
+  "updatedAt": "2026-05-23T11:30:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15514,6 +15514,58 @@
         "The report calls TownShell's portrait texture loader for every unit.",
         "tests/validate_repo.py gates the unit runtime asset resolution report script and scene."
       ]
+    },
+    {
+      "id": "unit-art-reproducibility-gate-20260523-10184",
+      "title": "Unit Art Reproducibility Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py"
+      ],
+      "purpose": "Prove committed generated unit art and animation assets remain reproducible from the checked-in generator and authored unit data.",
+      "implementationTargets": [
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The report regenerates every unit portrait, battle icon, overworld icon, and battle animation sheet into temporary storage.",
+        "Every regenerated PNG matches the committed runtime PNG byte-for-byte by SHA-256.",
+        "The regenerated unit art and unit animation manifest text matches the committed manifests.",
+        "Focused Python report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim."
+      ],
+      "startedAt": "2026-05-23T11:30:57Z",
+      "updatedAt": "2026-05-23T11:30:57Z",
+      "notes": "Completed: all 412 generated unit PNG assets and both unit art manifests matched fresh generator output.",
+      "completedAt": "2026-05-23T11:30:57Z",
+      "validationResults": [
+        "python3 tests/unit_art_reproducibility_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/unit_art_reproducibility_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit art reproducibility report passed with 103 units, 412 matching generated PNG assets, and both committed manifests matching fresh generator output.",
+      "evidenceHistory": [
+        "tests/unit_art_reproducibility_report.py imports tools/generate_unit_art_assets.py instead of duplicating drawing implementation.",
+        "The report regenerates all unit portrait, battle icon, overworld icon, and battle animation sheet PNGs into a temporary directory.",
+        "The report compares regenerated PNG SHA-256 hashes against the committed runtime assets and compares generated manifest text against committed manifests.",
+        "The report passed with asset_count=412, matching_asset_count=412, and matching_manifest_count=2.",
+        "tests/validate_repo.py gates the reproducibility report script tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18077,6 +18129,45 @@
         "git diff --check"
       ],
       "remainingGap": "This proves current generated unit art and animation assets resolve through full-roster runtime lookup paths; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
+    },
+    {
+      "id": "unit-art-reproducibility-gate-20260523-10184",
+      "title": "Unit Art Reproducibility Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T11:30:57Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-art-reproducibility-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_art_reproducibility_report.py imports tools/generate_unit_art_assets.py and regenerates all generated unit art into temporary storage.",
+        "The report validates every portrait, battle icon, overworld icon, and battle animation sheet against the committed PNG bytes.",
+        "The report validates both committed unit art manifests against fresh generator output.",
+        "The report passed with unit_count=103, asset_count=412, matching_asset_count=412, and matching_manifest_count=2.",
+        "tests/validate_repo.py gates the report script."
+      ],
+      "validation": [
+        "python3 tests/unit_art_reproducibility_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/unit_art_reproducibility_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves committed generated unit art assets and manifests match the current generator; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18847,13 +18938,26 @@
         "git diff --check"
       ],
       "summary": "All 103 units passed full-roster runtime asset resolution through ContentService, BattleBoardView, OverworldMapView, and TownShell lookup paths; repo validation passed with the new gate wired in."
+    },
+    {
+      "id": "unit-art-reproducibility-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T11:30:57Z",
+      "commands": [
+        "python3 tests/unit_art_reproducibility_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/unit_art_reproducibility_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 412 committed generated unit PNG assets and both unit art manifests matched fresh generator output; repo validation passed with the new gate wired in."
     }
   ],
-  "lastValidation": "Unit runtime asset resolution report passed with 103 units, 103 runtime-resolved portraits, battle icons, overworld icons, animation sheets, and 1,442 animation state-row lookups; repository validation passed.",
+  "lastValidation": "Unit art reproducibility report passed with 103 units, 412 matching generated PNG assets, and both committed manifests matching fresh generator output; repository validation passed.",
   "active_slice": {
-    "id": "unit-runtime-asset-resolution-gate-20260523-10184",
+    "id": "unit-art-reproducibility-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all 103 units resolve portrait, battle icon, overworld icon, animation sheet, and animation state rows through live runtime lookup paths."
+    "note": "Completed: all 412 committed generated unit PNG assets and both unit art manifests match fresh generator output."
   }
 }

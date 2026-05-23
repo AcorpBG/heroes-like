@@ -62,6 +62,7 @@ OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
+UNIT_ART_REPRODUCIBILITY_REPORT_PATH = ROOT / "tests" / "unit_art_reproducibility_report.py"
 UNIT_ART_ROOT = ROOT / "art" / "units"
 UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
@@ -14311,6 +14312,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         UNIT_ART_MANIFEST_PATH,
         UNIT_ANIMATION_MANIFEST_PATH,
         UNIT_ART_GENERATOR_PATH,
+        UNIT_ART_REPRODUCIBILITY_REPORT_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -14470,6 +14472,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "draw_animation_palette_marks",
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
+
+    reproducibility_report_text = UNIT_ART_REPRODUCIBILITY_REPORT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "UNIT_ART_REPRODUCIBILITY_REPORT",
+        "generate_temp_assets",
+        "load_generator",
+        "compare_manifest_text",
+        "sha256_file",
+        "draw_portrait",
+        "draw_battle_icon",
+        "draw_overworld_icon",
+        "draw_battle_troop_animation_sheet",
+        "matching_asset_count",
+        "matching_manifest_count",
+    ):
+        ensure(required_token in reproducibility_report_text, errors, f"unit_art_reproducibility_report.py is missing token {required_token}")
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
