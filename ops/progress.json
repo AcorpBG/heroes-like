@@ -2,11 +2,11 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-live-turn-execution-20260523-10184",
-  "currentSliceTitle": "Strategic AI Live Turn Execution",
+  "currentPhase": "phase-4-headless-ai-agent-balance-harness",
+  "currentSliceId": "headless-strategic-ai-live-turn-harness-20260523-10184",
+  "currentSliceTitle": "Headless Strategic AI Live Turn Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused live enemy-turn execution proof; live commander resource-front targets now have regression coverage through assignment, arrival resolution, site seizure, reservation behavior, and no-save boundaries.",
+  "currentSliceNotes": "Completed focused headless harness adoption for live strategic AI resource-front turn execution with assignment/seizure/reservation evidence and report-only boundaries.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -15899,6 +15899,45 @@
       ]
     },
     {
+      "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
+      "title": "Headless Strategic AI Live Turn Harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-live-turn-execution-report.md"
+      ],
+      "purpose": "Promote live strategic AI resource-front execution into the shared headless simulation harness so AI-quality regressions are visible in the standard report suite.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS includes strategic_ai_live_turn_execution.",
+        "The standard headless report runs a real EnemyTurnRules.run_enemy_turn live commander fixture.",
+        "The harness asserts both River Pass resource fronts are seized, companion target reservation keeps Vaska/Sable targets unique, and assignment/seizure events exist.",
+        "The harness preserves report-only/no-save boundaries and checks public event output for internal score/task/reservation leaks."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No automatic tuning or authored content writeback.",
+        "No long-route planning, recruitment grouping, defense rotation, retreat timing, or scenario-breadth completion."
+      ]
+    },
+    {
       "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
       "title": "Battle Autoplay Combat-Feel Diagnostics",
       "phase": "phase-4-headless-ai-agent-balance-harness",
@@ -19875,6 +19914,44 @@
         "git diff --check"
       ],
       "remainingGap": "This proves live resource-front target execution for on-target raids; broader strategic AI quality still needs long-route pressure, town/hero/artifact target classes, recruitment grouping, defense, retreat choices, and difficulty tuning."
+    },
+    {
+      "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
+      "title": "Headless Strategic AI Live Turn Harness",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-live-turn-execution-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "headless-strategic-ai-live-turn-harness-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "HeadlessSimulationHarnessRules now includes strategic_ai_live_turn_execution in REQUIRED_SUBSYSTEM_IDS.",
+        "The shared headless report runs a River Pass EnemyTurnRules.run_enemy_turn fixture for Vaska and Sable resource-front targets.",
+        "The harness asserts both river_free_company and river_signal_post are seized by faction_mireclaw.",
+        "The harness asserts companion target reservation keeps live targets unique and both assignment/seizure events are present.",
+        "The harness checks public event output for internal score/task/reservation leaks and keeps no-save/report-only boundaries."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is one strategic AI harness fixture; broader AI quality still needs long-route planning, town assault priorities, recruitment grouping, defense rotation, retreat timing, objective handling across scenarios, and difficulty tuning."
     }
   ],
   "docsReadyEvidence": [
@@ -20859,25 +20936,38 @@
         "git diff --check"
       ],
       "summary": "Focused live turn execution report passed with run_enemy_turn assigning and resolving Vaska/Sable resource-front seizures, companion target reservation, public event leak checks, and unchanged save version."
+    },
+    {
+      "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused headless harness report passed with strategic_ai_live_turn_execution as a required subsystem, two River Pass resource-front seizures, unique companion reservation targets, event evidence, and no-save/report-only boundaries."
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-live-turn-execution-20260523-10184",
+    "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused live turn execution report passed with run_enemy_turn assigning and resolving Vaska/Sable resource-front seizures, companion target reservation, public event leak checks, and unchanged save version."
+    "summary": "Focused headless harness report passed with strategic_ai_live_turn_execution as a required subsystem, two River Pass resource-front seizures, unique companion reservation targets, event evidence, and no-save/report-only boundaries."
   },
   "active_slice": {
-    "id": "strategic-ai-live-turn-execution-20260523-10184",
+    "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: run_enemy_turn now has focused regression proof for live commander target assignment and resource-front seizure without durable hero_task_state."
+    "note": "Completed: standard headless harness now includes required live strategic AI turn execution coverage."
   }
 }

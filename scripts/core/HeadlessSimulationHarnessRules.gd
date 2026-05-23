@@ -14,6 +14,7 @@ const LIVE_RESOURCE_IDS := ["gold", "wood", "ore"]
 const REQUIRED_SUBSYSTEM_IDS := [
 	"scenario_session_turn_loop",
 	"strategic_ai_pressure_tick",
+	"strategic_ai_live_turn_execution",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
 	"save_replay_stability",
@@ -26,6 +27,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 	var cases := [
 		_scenario_session_turn_loop(input_config),
 		_strategic_ai_pressure_tick(input_config),
+		_strategic_ai_live_turn_execution(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
@@ -236,6 +238,134 @@ static func _strategic_ai_pressure_tick(input_config: Dictionary) -> Dictionary:
 			"deferred_count": deferred.size(),
 		},
 		{"cases": cases, "warnings": warnings, "deferred": deferred},
+		warnings,
+		deferred
+	)
+
+static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_turn_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_turn_faction_id", "faction_mireclaw"))
+	var primary_target_id := String(input_config.get("strategic_ai_live_turn_primary_target_id", "river_free_company"))
+	var companion_target_id := String(input_config.get("strategic_ai_live_turn_companion_target_id", "river_signal_post"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live-turn scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_turn_execution",
+			"live_commander_resource_front_turn_execution",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_turn_execution",
+			"live_commander_resource_front_turn_execution",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_resource_controller(session, primary_target_id, "player", failures)
+	_set_resource_controller(session, companion_target_id, "player", failures)
+	var controllers_before := {
+		primary_target_id: _resource_controller(session, primary_target_id),
+		companion_target_id: _resource_controller(session, companion_target_id),
+	}
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	var primary_raid_id := "headless_live_turn_primary_%s" % primary_target_id
+	var companion_raid_id := "headless_live_turn_companion_%s" % companion_target_id
+	encounters.append(_live_turn_raid_seed(session, faction_id, "hero_vaska", primary_raid_id, primary_target_id))
+	encounters.append(_live_turn_raid_seed(session, faction_id, "hero_sable", companion_raid_id, companion_target_id))
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+	var primary_raid := _encounter_by_placement(session, primary_raid_id)
+	var companion_raid := _encounter_by_placement(session, companion_raid_id)
+	var controllers_after := {
+		primary_target_id: _resource_controller(session, primary_target_id),
+		companion_target_id: _resource_controller(session, companion_target_id),
+	}
+	var target_assignments := _event_count(turn_result.get("events", []), "ai_target_assigned")
+	var site_seizures := _event_count(turn_result.get("events", []), "ai_site_seized")
+	var primary_ok := String(primary_raid.get("target_placement_id", "")) == primary_target_id and bool(primary_raid.get("arrived", false)) and String(controllers_after.get(primary_target_id, "")) == faction_id
+	var companion_ok := String(companion_raid.get("target_placement_id", "")) == companion_target_id and bool(companion_raid.get("arrived", false)) and String(controllers_after.get(companion_target_id, "")) == faction_id
+	var reserved_unique_targets := (
+		String(primary_raid.get("target_placement_id", "")) != ""
+		and String(companion_raid.get("target_placement_id", "")) != ""
+		and String(primary_raid.get("target_placement_id", "")) != String(companion_raid.get("target_placement_id", ""))
+	)
+	if not bool(turn_result.get("ok", false)):
+		failures.append("Enemy turn returned not-ok.")
+	if not primary_ok:
+		failures.append("Primary live-turn raid did not assign and seize %s." % primary_target_id)
+	if not companion_ok:
+		failures.append("Companion live-turn raid did not assign and seize %s." % companion_target_id)
+	if not reserved_unique_targets:
+		failures.append("Companion reservation did not preserve unique live targets.")
+	if target_assignments < 2:
+		failures.append("Live turn produced fewer than two target assignment events.")
+	if site_seizures < 2:
+		failures.append("Live turn produced fewer than two site seizure events.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live turn execution wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(turn_result.get("events", []), 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live-turn events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live-turn events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_turn_execution",
+		"live_commander_resource_front_turn_execution",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"primary_target_id": primary_target_id,
+			"companion_target_id": companion_target_id,
+			"resource_fronts_seized": (1 if primary_ok else 0) + (1 if companion_ok else 0),
+			"target_assignment_event_count": target_assignments,
+			"site_seizure_event_count": site_seizures,
+			"reserved_unique_targets": reserved_unique_targets,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"controllers_before": controllers_before,
+			"controllers_after": controllers_after,
+			"primary_raid": _raid_execution_signal(primary_raid),
+			"companion_raid": _raid_execution_signal(companion_raid),
+			"event_types": _event_types(turn_result.get("events", [])),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
 		warnings,
 		deferred
 	)
@@ -635,6 +765,148 @@ static func _enemy_origin(config: Dictionary) -> Dictionary:
 	if not spawn_points.is_empty() and spawn_points[0] is Dictionary:
 		return {"x": int(spawn_points[0].get("x", 0)), "y": int(spawn_points[0].get("y", 0))}
 	return {"x": 0, "y": 0}
+
+static func _enemy_config_for_scenario(scenario: Dictionary, faction_id: String) -> Dictionary:
+	for config in scenario.get("enemy_factions", []):
+		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
+			return config
+	return {}
+
+static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state
+	return {}
+
+static func _update_enemy_state(session: SessionStateStoreScript.SessionData, replacement: Dictionary) -> void:
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		var state = states[index]
+		if state is Dictionary and String(state.get("faction_id", "")) == String(replacement.get("faction_id", "")):
+			states[index] = replacement
+			session.overworld["enemy_states"] = states
+			return
+
+static func _set_resource_controller(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	faction_id: String,
+	failures: Array
+) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		node["collected"] = true
+		node["collected_by_faction_id"] = faction_id
+		node["collected_day"] = max(1, int(session.day))
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		return
+	failures.append("Missing resource node %s for live-turn harness fixture." % placement_id)
+
+static func _resource_controller(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
+	var node := _resource_node_by_placement(session, placement_id)
+	return String(node.get("collected_by_faction_id", "")) if not node.is_empty() else ""
+
+static func _resource_node_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return node
+	return {}
+
+static func _live_turn_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	target_resource_id: String
+) -> Dictionary:
+	var node := _resource_node_by_placement(session, target_resource_id)
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": int(node.get("x", 0)),
+		"y": int(node.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
+static func _event_count(events: Variant, event_type: String) -> int:
+	var count := 0
+	if not (events is Array):
+		return count
+	for event in events:
+		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+			count += 1
+	return count
+
+static func _event_types(events: Variant) -> Array:
+	var types := []
+	if not (events is Array):
+		return types
+	for event in events:
+		if event is Dictionary:
+			var event_type := String(event.get("event_type", ""))
+			if event_type != "" and event_type not in types:
+				types.append(event_type)
+	types.sort()
+	return types
+
+static func _has_saved_hero_task_state(session: SessionStateStoreScript.SessionData) -> bool:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and state.has("hero_task_state"):
+			return true
+	return false
+
+static func _public_event_leak_tokens(public_events: Variant) -> Array:
+	var leaks := []
+	var forbidden_tokens := [
+		"resource_score_breakdown",
+		"target_debug_reason",
+		"final_priority",
+		"hero_task_state",
+		"task_id",
+		"reservation_key",
+	]
+	var encoded := JSON.stringify(public_events)
+	for token in forbidden_tokens:
+		if encoded.find(String(token)) >= 0:
+			leaks.append(String(token))
+	return leaks
+
+static func _raid_execution_signal(raid: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(raid.get("placement_id", "")),
+		"target_kind": String(raid.get("target_kind", "")),
+		"target_placement_id": String(raid.get("target_placement_id", "")),
+		"arrived": bool(raid.get("arrived", false)),
+		"x": int(raid.get("x", 0)),
+		"y": int(raid.get("y", 0)),
+		"goal_distance": int(raid.get("goal_distance", 9999)),
+	}
 
 static func _target_signal(target: Dictionary) -> Dictionary:
 	return {
