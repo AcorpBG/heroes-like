@@ -115,6 +115,8 @@ Headless battle difficulty sweep harness added on 2026-05-23: the now-clear norm
 
 Headless balance harness CLI added on 2026-05-23: `tools/run_headless_balance_harness.py` now runs the existing Godot battle autoplay, balance regression, and headless simulation harness reports as one artifact-producing command. The standard suite writes per-case logs plus `.artifacts/headless_balance_harness_cli/manifest.json` with schema `headless_balance_harness_cli_v1`, parsed report markers, statuses, signatures, durations, command lines, and report-only policy checks. This makes the automated balance harness easier to run before content scaling, but it is not automatic tuning, authored content writeback, CI provider wiring, manual-play replacement, or final combat balance approval.
 
+Content runtime overworld family allowlist aligned on 2026-05-23: `ContentService` now accepts the authored resource-site and map-object families already gated by repository validation, including staged resource fronts, support producers, shrines, sign waypoints, scenario objectives, and faction landmarks. A focused battle autoplay report now loads content without `unsupported family` warning spam, reducing debug-like noise in headless balance/simulation logs. This is runtime validation alignment only, not new object mechanics, rare-resource activation, scenario scripting rewrite, generated-map behavior, or balance tuning.
+
 Battle autoplay runtime consequence harness added on 2026-05-23: the deterministic battle balance sampler now extends initial ability presence into observed runtime effects. Each sample emits `battle_autoplay_runtime_consequence_profile_v1`, shared summaries emit `battle_autoplay_runtime_consequence_distribution_v1`, and `runtime_consequence_gate` uses `report_only_runtime_consequence_thresholds_v1`. Current focused evidence has stable distribution signature `a537a308`, 12/12 status-consequence samples, 10 ability-consequence samples, 12 spell-consequence samples, 55 status application events, 118 ability-effect observations, and 117 spell-effect observations. `tests/battle_autoplay_runtime_consequence_report.tscn`, the combat balance report, the balance regression suite, and the headless simulation harness gate the new surface. This is automated combat-feel evidence, not automatic tuning, new ability content, broad encounter retuning, or final combat balance approval.
 
 Battle autoplay runtime consequence matrix added on 2026-05-23: the aggregate runtime consequence harness now breaks observed status, spell, and ability effects into deterministic cohorts for difficulty, terrain, scenario, matchup, and ability presence. The new `battle_autoplay_runtime_consequence_matrix_v1` surface and `report_only_runtime_consequence_matrix_thresholds_v1` gate are asserted by `tests/battle_autoplay_runtime_consequence_matrix_report.tscn`, the existing runtime consequence report, the combat balance report, the balance regression suite, and the headless simulation harness. Current focused evidence reports `matrix_signature: cab8ca24`, 12 samples, 3 difficulty cohorts, 3 terrain cohorts, 4 scenario cohorts, 2 matchup cohorts, 8 ability-presence cohorts, 8 ability-consequence cohorts, and zero zero-consequence samples. This is report-only balance instrumentation, not encounter retuning, new ability content, spell redesign, player-facing UI, or final combat balance approval.
@@ -5509,6 +5511,41 @@ nonGoals:
 - No authored content writeback.
 - No final combat balance approval.
 - No CI provider wiring or platform packaging change.
+
+Completed implementation slice:
+
+id: `content-runtime-overworld-family-allowlist-20260523-10184`
+phase: `phase-5-playable-alpha-baseline`
+purpose: Treat currently authored overworld resource-site and map-object families as first-class runtime content families so Godot reports no longer emit unsupported-family warning spam for valid production content.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/autoload/ContentService.gd`
+- `content/resource_sites.json`
+- `content/map_objects.json`
+implementationTargets:
+- `scripts/autoload/ContentService.gd`
+- `tests/validate_repo.py`
+- `docs/content-runtime-overworld-family-allowlist-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Runtime resource-site validation accepts `staged_resource_front`, `support_producer`, `shrine`, `sign_waypoint`, `scenario_objective`, and `faction_landmark`.
+- Runtime map-object validation accepts `staged_resource_front`, `support_producer`, `sign_waypoint`, and `scenario_objective` in addition to the existing authored families.
+- Repository validation gates the runtime allowlist and focused report document.
+- Focused Godot balance report output contains no `unsupported family` warnings.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn`
+- `! rg -n "unsupported family|WARNING:" .artifacts/content_runtime_overworld_family_allowlist_battle.log`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No new object interaction mechanics.
+- No rare-resource activation.
+- No scenario scripting rewrite.
+- No generated-map/RMG behavior change.
+- No combat balance tuning.
 
 Completed implementation slice:
 

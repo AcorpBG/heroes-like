@@ -401,6 +401,12 @@ func _supported_resource_site_families() -> Array:
 		"scouting_structure",
 		"transit_object",
 		"repeatable_service",
+		"staged_resource_front",
+		"support_producer",
+		"shrine",
+		"sign_waypoint",
+		"scenario_objective",
+		"faction_landmark",
 	]
 
 func _supported_map_object_families() -> Array:
@@ -417,6 +423,10 @@ func _supported_map_object_families() -> Array:
 		"blocker",
 		"decoration",
 		"faction_landmark",
+		"staged_resource_front",
+		"support_producer",
+		"sign_waypoint",
+		"scenario_objective",
 	]
 
 func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
