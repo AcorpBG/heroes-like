@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSliceId": "packaged-settings-persistence-smoke-20260523-10184",
-  "currentSliceTitle": "Packaged Settings Persistence Smoke",
+  "currentSliceId": "packaged-runtime-issue-log-smoke-20260523-10184",
+  "currentSliceTitle": "Packaged Runtime Issue Log Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: PCK-launched settings persistence smoke passed and restored local settings state.",
+  "currentSliceNotes": "Completed: packaged runtime issue-log smoke passed with user://debug JSONL/snapshot evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:08:51Z",
+  "updatedAt": "2026-05-23T16:14:14Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16695,6 +16695,41 @@
       "updatedAt": "2026-05-23T16:08:51Z",
       "completedAt": "2026-05-23T16:08:51Z",
       "completionNotes": "Completed: exported a 287482540-byte Linux Release PCK, launched the packaged settings report scene with --main-pack --scene, verified user://config/settings.cfg direct ConfigFile and reloaded SettingsService values, and restored the original local settings file."
+    },
+    {
+      "id": "packaged-runtime-issue-log-smoke-20260523-10184",
+      "title": "Packaged Runtime Issue Log Smoke",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add a package-safe runtime issue logging service and prove it writes sanitized user://debug issue reports from an exported PCK scene.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaged-settings-persistence-smoke-report.md"
+      ],
+      "baselineChecks": [
+        "python3 tests/packaged_runtime_issue_log_smoke.py",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/packaged_runtime_issue_log_smoke.py tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "RuntimeIssueLog is registered as an autoload and writes issue JSONL plus latest issue snapshot under user://debug.",
+        "The issue log sanitizes metadata and preserves bounded severity, surface, event, message, app/platform, and session fields.",
+        "A focused report scene runs from an exported PCK and proves issue records can be emitted, read back, and cleared/restored without claiming native crash catching."
+      ],
+      "nonGoals": [
+        "No native process crash capture claim.",
+        "No remote telemetry upload.",
+        "No binary export or clean-machine release readiness claim."
+      ],
+      "updatedAt": "2026-05-23T16:14:14Z",
+      "completedAt": "2026-05-23T16:14:14Z",
+      "completionNotes": "Completed: RuntimeIssueLog autoload writes sanitized user://debug JSONL and latest-issue snapshots; packaged smoke exported a 287498580-byte Linux Release PCK, launched the report scene through --main-pack --scene, emitted one issue record, read it back, and found no fatal boot patterns."
     }
   ],
   "completedImplementationEvidence": [
@@ -20304,6 +20339,50 @@
         "python3 tests/validate_repo.py"
       ],
       "remainingGap": "Release packaging still needs installed binary export templates, Linux/Windows executable export smoke tests, installer/export preset hardening, clean-machine validation, and crash/error reporting policy."
+    },
+    {
+      "id": "packaged-runtime-issue-log-smoke-20260523-10184",
+      "title": "Packaged Runtime Issue Log Smoke",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "completedAt": "2026-05-23T16:14:14Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaged-runtime-issue-log-smoke-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "packaged-runtime-issue-log-smoke-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/autoload/RuntimeIssueLog.gd",
+        "project.godot",
+        "tests/packaged_runtime_issue_log_report.gd",
+        "tests/packaged_runtime_issue_log_report.tscn",
+        "tests/packaged_runtime_issue_log_smoke.py",
+        "docs/packaged-runtime-issue-log-smoke-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "RuntimeIssueLog is registered as an autoload in project.godot and writes runtime issue records under user://debug/heroes_runtime_issues.jsonl.",
+        "RuntimeIssueLog writes the latest issue snapshot under user://debug/heroes_last_runtime_issue.json and exposes snapshot, clear, and last-record read helpers.",
+        "Issue records include schema, timestamp, severity, surface, event, bounded message, sanitized metadata, session metadata, app metadata, and platform metadata.",
+        "tests/packaged_runtime_issue_log_smoke.py exports the Linux Release preset and launches tests/packaged_runtime_issue_log_report.tscn from the PCK through --main-pack --scene.",
+        "The current smoke run produced a 287498580-byte PCK, emitted one packaged_runtime_issue_smoke error record, read it back from JSONL and latest snapshot, verified sanitized Vector2i/Color metadata, and had no fatal boot matches.",
+        "The report keeps native process crash capture, remote telemetry upload, binary export readiness, clean-machine validation, and release readiness as explicit non-claims."
+      ],
+      "validation": [
+        "python3 tests/packaged_runtime_issue_log_smoke.py",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 -m py_compile tests/packaged_runtime_issue_log_smoke.py tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "remainingGap": "Release packaging still needs native crash capture policy, Linux/Windows executable smoke tests, clean-machine validation, installer/export preset hardening, and final support workflow decisions."
     }
   ],
   "docsReadyEvidence": [
@@ -21368,25 +21447,41 @@
         "python3 tests/validate_repo.py"
       ],
       "summary": "Focused packaged settings persistence smoke passed: export return code 0, packaged scene return code 0, 287482540-byte PCK, user://config/settings.cfg values reloaded correctly, original settings restored, and no fatal boot pattern matches."
+    },
+    {
+      "id": "packaged-runtime-issue-log-smoke-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T16:14:14Z",
+      "commands": [
+        "python3 tests/packaged_runtime_issue_log_smoke.py",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 -m py_compile tests/packaged_runtime_issue_log_smoke.py tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "summary": "Focused packaged runtime issue-log smoke passed: export return code 0, packaged scene return code 0, 287498580-byte PCK, one sanitized issue record under user://debug, latest issue snapshot present, and no fatal boot pattern matches."
     }
   ],
   "lastValidation": {
-    "sliceId": "packaged-settings-persistence-smoke-20260523-10184",
+    "sliceId": "packaged-runtime-issue-log-smoke-20260523-10184",
     "status": "passed",
     "updated": "2026-05-23",
     "commands": [
+      "python3 tests/packaged_runtime_issue_log_smoke.py",
       "python3 tests/packaged_settings_persistence_smoke.py",
       "python3 tests/packaging_pack_export_smoke.py",
-      "python3 -m py_compile tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+      "python3 -m py_compile tests/packaged_runtime_issue_log_smoke.py tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check",
       "python3 tests/validate_repo.py"
     ]
   },
   "active_slice": {
-    "id": "packaged-settings-persistence-smoke-20260523-10184",
+    "id": "packaged-runtime-issue-log-smoke-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:08:51Z",
-    "note": "Completed: PCK-launched settings persistence smoke passed and restored local settings state."
+    "updated": "2026-05-23T16:14:14Z",
+    "note": "Completed: packaged runtime issue-log smoke passed with user://debug JSONL/snapshot evidence."
   }
 }

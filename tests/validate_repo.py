@@ -17,6 +17,7 @@ NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
 SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
+RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
@@ -133,6 +134,10 @@ PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_se
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-settings-persistence-smoke-report.md"
+PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.gd"
+PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
+PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
+PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-runtime-issue-log-smoke-report.md"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -16373,6 +16378,97 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaged settings persistence smoke doc is missing required text: {required_text}")
 
 
+def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    required_paths = (
+        project_path,
+        RUNTIME_ISSUE_LOG_PATH,
+        PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH,
+        PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH,
+        PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH,
+        PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing packaged runtime issue log smoke file: {path.relative_to(ROOT)}")
+
+    if project_path.exists():
+        project_text = project_path.read_text(encoding="utf-8")
+        ensure(
+            'RuntimeIssueLog="*res://scripts/autoload/RuntimeIssueLog.gd"' in project_text,
+            errors,
+            "project.godot must register RuntimeIssueLog as an autoload",
+        )
+
+    if RUNTIME_ISSUE_LOG_PATH.exists():
+        issue_text = RUNTIME_ISSUE_LOG_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "class_name HeroesRuntimeIssueLog",
+            "heroes_like.runtime_issue.v1",
+            "user://debug/heroes_runtime_issues.jsonl",
+            "user://debug/heroes_last_runtime_issue.json",
+            "func emit_issue",
+            "func emit_error",
+            "func emit_fatal",
+            "func issue_log_snapshot",
+            "func last_issue_records",
+            "func clear_issue_log",
+            "ProfileLogScript.json_safe",
+            "ProfileLogScript.session_metadata",
+            "ProjectSettings.get_setting",
+            "OS.get_name",
+        ):
+            ensure(required_token in issue_text, errors, f"RuntimeIssueLog.gd is missing required token: {required_token}")
+
+    if PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH.exists():
+        report_text = PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGED_RUNTIME_ISSUE_LOG_REPORT",
+            "packaged_runtime_issue_log_v1",
+            "RuntimeIssueLog.ISSUE_LOG_PATH",
+            "RuntimeIssueLog.LATEST_ISSUE_PATH",
+            "RuntimeIssueLog.emit_error",
+            "RuntimeIssueLog.last_issue_records",
+            "RuntimeIssueLog.clear_issue_log",
+            "ran_from_pack_scene",
+            "ResourceLoader.exists",
+            "Vector2i",
+            "Color",
+        ):
+            ensure(required_token in report_text, errors, f"Packaged runtime issue log report is missing required token: {required_token}")
+
+    if PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH.exists():
+        smoke_text = PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGED_RUNTIME_ISSUE_LOG_SMOKE",
+            "packaged_runtime_issue_log_smoke_v1",
+            "PRESET_NAME = \"Linux Release\"",
+            "PACKAGED_SCENE",
+            "--export-pack",
+            "--main-pack",
+            "--scene",
+            "scene_report.json",
+            "native process crash capture",
+            "does_not_claim",
+            "FATAL_PATTERNS",
+        ):
+            ensure(required_token in smoke_text, errors, f"Packaged runtime issue log smoke runner is missing required token: {required_token}")
+
+    if PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH.exists():
+        doc_text = PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaged Runtime Issue Log Smoke Report",
+            "packaged-runtime-issue-log-smoke-20260523-10184",
+            "RuntimeIssueLog",
+            "user://debug/heroes_runtime_issues.jsonl",
+            "user://debug/heroes_last_runtime_issue.json",
+            "--main-pack",
+            "does not claim native process crash capture",
+            "remote telemetry upload",
+            "Future release packaging still needs",
+        ):
+            ensure(required_text in doc_text, errors, f"Packaged runtime issue log smoke doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -16462,6 +16558,7 @@ def main() -> int:
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
     validate_packaged_settings_persistence_smoke(errors)
+    validate_packaged_runtime_issue_log_smoke(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
@@ -16559,6 +16656,7 @@ def main() -> int:
     print("- Linux and Windows export presets, native extension libraries, packaged settings paths, and boot metadata now have a focused packaging/platform readiness gate")
     print("- the packaging smoke gate now exports a real Linux Release PCK, boots it with --main-pack, and keeps binary export/install/release readiness as explicit non-claims")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
+    print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
