@@ -71,6 +71,8 @@ Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle a
 
 Battle autoplay combat-feel threshold gate added on 2026-05-23: the shared sampler now exposes `combat_feel_gate` with report-only thresholds for sample breadth, stalled samples, invalid orders, action diversity/dominance, damage pacing, terminal health margin, outcome bias, and burst/grind/stalled pacing dominance. The current deterministic samples surface high terminal health margin as a structured warning, so balance risk is visible in the standard reports without automatic tuning, content writeback, or a final combat-feel approval claim.
 
+Battle autoplay combat balance calibration added on 2026-05-23: the prior `high_terminal_health_margin` warning has a first bounded fix. `BattleAiRules` now scores no-attack melee repositioning so stacks do not defend forever after abstract distance closes but hex-board contact is still missing, the sampled early authored army groups have been retuned, and `tests/battle_autoplay_combat_balance_report.tscn` gates the default sampler at 65% average terminal margin. Current focused evidence is `average_terminal_health_margin_pct: 55`, a 3/3 victory/defeat split, preserved `low`/`medium`/`high` difficulty labels, and `combat_feel_gate.status: pass`. This is a first deterministic balance calibration, not final combat balance approval.
+
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
 Strategic AI raid regroup/retreat added on 2026-05-23: understrength enemy raids now retarget to the nearest reachable owned matching-faction town, transfer spare town garrison units into the field host, synchronize commander army continuity, emit public regroup/retarget events, and resume normal objective selection after crossing the regroup floor. `tests/ai_raid_regroup_retreat_report.tscn` proves the River Pass Vaska raid retreats to Duskfen Bastion and leaves the original player-held resource alone. This is a bounded strategic-AI behavior improvement, not full enemy economy planning, multi-hero grouping, town-defense strategy, or difficulty tuning.
@@ -5178,6 +5180,35 @@ completionCriteria:
 - Current deterministic samples surface high terminal health margin as a warning without automatic tuning or content writeback.
 nonGoals:
 - No authored encounter retune, unit-stat rebalance, automatic tuning, strategic AI rewrite, or final combat balance approval.
+
+Completed owner-directed implementation slice:
+
+id: `battle-autoplay-combat-balance-calibration-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Use the deterministic battle autoplay gate to make a first bounded combat-feel balance calibration over sampled authored encounters.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/battle-autoplay-combat-feel-diagnostics-report.md`
+implementationTargets:
+- `scripts/core/BattleAiRules.gd`
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `content/army_groups.json`
+- `tests/battle_autoplay_combat_balance_report.gd`
+- `tests/battle_autoplay_combat_balance_report.tscn`
+- `tests/balance_regression_report_suite.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-autoplay-combat-balance-calibration-report.md`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Default deterministic battle autoplay samples no longer trigger `high_terminal_health_margin`.
+- Average terminal health margin is at or below 65% for the focused standard sampler.
+- Tactical autoplay can advance/reposition no-attack melee stacks instead of repeatedly defending after abstract distance closes.
+- Difficulty distribution preserves authored `low`/`medium`/`high` labels.
+nonGoals:
+- No final combat balance approval, broad faction-vs-faction tuning, automatic content tuning, spell/autocast retune, strategic AI rewrite, or manual playtest replacement.
 
 Completed owner-directed implementation slice:
 

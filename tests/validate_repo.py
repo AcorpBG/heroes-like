@@ -15833,10 +15833,24 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
     balance_report_path = ROOT / "tests/balance_regression_report_suite.gd"
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
+    combat_balance_report_path = ROOT / "tests/battle_autoplay_combat_balance_report.gd"
+    combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
-    for path in (harness_path, battle_ai_path, balance_report_path, headless_report_path, tactical_report_path, tactical_scene_path, doc_path):
+    calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
+    for path in (
+        harness_path,
+        battle_ai_path,
+        balance_report_path,
+        headless_report_path,
+        combat_balance_report_path,
+        combat_balance_scene_path,
+        tactical_report_path,
+        tactical_scene_path,
+        doc_path,
+        calibration_doc_path,
+    ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
         harness_text = harness_path.read_text(encoding="utf-8")
@@ -15880,6 +15894,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "choose_stack_tactical_order",
             "battle_ai_nonspell_tactical_order_v1",
             "candidate_scores",
+            "reposition_score",
+            "not _can_make_melee_attack(active_stack, battle)",
+            "func _can_make_any_ranged_attack",
         ):
             ensure(required_token in battle_ai_text, errors, f"Battle AI rules are missing tactical autoplay token: {required_token}")
     for path in (balance_report_path, headless_report_path):
@@ -15898,8 +15915,24 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "primary_pacing_band_pct",
             "combat_feel_gate",
             "report_only_combat_feel_thresholds_v1",
+            "required_difficulty",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
+    if combat_balance_report_path.exists():
+        combat_balance_text = combat_balance_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
+            "MAX_AVERAGE_TERMINAL_MARGIN_PCT",
+            "authored_encounter_terminal_margin_balance_gate_v1",
+            "high_terminal_health_margin",
+            "average_terminal_health_margin_pct",
+            "combat_feel_gate",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in combat_balance_text, errors, f"Battle autoplay combat balance report is missing token: {required_token}")
+    if combat_balance_scene_path.exists():
+        combat_balance_scene_text = combat_balance_scene_path.read_text(encoding="utf-8")
+        ensure("battle_autoplay_combat_balance_report.gd" in combat_balance_scene_text, errors, "Battle autoplay combat balance scene is not wired to its script.")
     if tactical_report_path.exists():
         tactical_report_text = tactical_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -15923,6 +15956,17 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "This is instrumentation for future tuning passes.",
         ):
             ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")
+    if calibration_doc_path.exists():
+        calibration_text = calibration_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Combat Balance Calibration Report",
+            "average_terminal_health_margin_pct",
+            "combat_feel_gate.status",
+            "Blackfen Gateward",
+            "authored encounter army groups",
+            "not final combat balance approval",
+        ):
+            ensure(required_text in calibration_text, errors, f"Battle autoplay combat balance calibration doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:

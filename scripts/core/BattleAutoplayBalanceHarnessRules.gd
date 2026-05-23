@@ -133,7 +133,7 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 	var initial_health := _side_health_totals(session.battle)
 	var initial_stack_profile := _stack_profile(session.battle)
 	var battle_terrain := String(session.battle.get("terrain", "unknown"))
-	var encounter_difficulty := int(session.battle.get("encounter_difficulty", 0))
+	var encounter_difficulty := String(session.battle.get("encounter_difficulty", "unknown"))
 	var steps := 0
 	var player_order_count := 0
 	var enemy_ready_ticks := 0
@@ -372,7 +372,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		terrain_distribution[terrain_id] = int(terrain_distribution.get(terrain_id, 0)) + 1
 		var scenario_id := String(sample.get("scenario_id", "unknown"))
 		scenario_distribution[scenario_id] = int(scenario_distribution.get(scenario_id, 0)) + 1
-		var difficulty_id := str(int(sample.get("encounter_difficulty", 0)))
+		var difficulty_id := String(sample.get("encounter_difficulty", "unknown"))
 		difficulty_distribution[difficulty_id] = int(difficulty_distribution.get(difficulty_id, 0)) + 1
 		var pacing_band := String(sample.get("pacing_band", "unknown"))
 		pacing_band_distribution[pacing_band] = int(pacing_band_distribution.get(pacing_band, 0)) + 1

@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Combat Feel Threshold Gate",
+  "currentSliceId": "battle-autoplay-combat-balance-calibration-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Combat Balance Calibration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed report-only battle autoplay combat-feel threshold gate; current deterministic samples flag high terminal health margin while final combat balance and authored retuning remain open.",
+  "currentSliceNotes": "Completed first deterministic battle autoplay combat-balance calibration; standard sampler now clears terminal-margin gate, but final combat balance remains open.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16348,6 +16348,51 @@
       "nonGoals": [
         "No authored encounter retune, unit-stat rebalance, automatic tuning, strategic AI rewrite, or final combat balance approval."
       ]
+    },
+    {
+      "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
+      "title": "Battle Autoplay Combat Balance Calibration",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md"
+      ],
+      "purpose": "Use the deterministic battle autoplay gate to make a first bounded combat-feel balance calibration over sampled authored encounters.",
+      "implementationTargets": [
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "content/army_groups.json",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/battle_autoplay_combat_balance_report.tscn",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-balance-calibration-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Default deterministic battle autoplay samples no longer trigger high_terminal_health_margin.",
+        "Average terminal health margin is at or below 65% for the focused standard sampler.",
+        "Tactical autoplay can advance/reposition no-attack melee stacks instead of repeatedly defending after abstract distance closes.",
+        "Difficulty distribution preserves authored low, medium, and high labels."
+      ],
+      "nonGoals": [
+        "No final combat balance approval, broad faction-vs-faction tuning, automatic content tuning, spell/autocast retune, strategic AI rewrite, or manual playtest replacement."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19632,6 +19677,52 @@
         "git diff --check"
       ],
       "remainingGap": "This is a report-only combat-feel gate for balance triage; authored encounter retuning, unit-stat balance, tactical AI quality, and final combat approval remain outside this slice."
+    },
+    {
+      "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
+      "title": "Battle Autoplay Combat Balance Calibration",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-combat-balance-calibration-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "content/army_groups.json",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/battle_autoplay_combat_balance_report.tscn",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-balance-calibration-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAiRules now scores no-attack melee advance/reposition choices after abstract distance closes but hex-board contact is still missing.",
+        "The default battle autoplay sampler preserves authored difficulty labels in difficulty_distribution.",
+        "Early sampled authored army groups were retuned to reduce extreme low/medium/high encounter terminal margins.",
+        "The new combat balance report gates the standard sampler at 65% average terminal health margin and rejects lingering high_terminal_health_margin warnings.",
+        "Focused evidence after calibration reports average_terminal_health_margin_pct 55, combat_feel_gate.status pass, victory/defeat split 3/3, and low/medium/high difficulty labels."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is a first deterministic sampler calibration; final combat balance, broad faction-vs-faction tuning, spell/autocast tuning, manual playtest feel, and larger sample breadth remain open."
     }
   ],
   "docsReadyEvidence": [
@@ -20574,26 +20665,44 @@
         "git diff --check"
       ],
       "summary": "Focused balance/headless reports passed with combat_feel_gate coverage; the gate currently reports high_terminal_health_margin as a warning while preserving report-only/no-writeback boundaries."
+    },
+    {
+      "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused combat balance calibration passed with average terminal margin 55, combat_feel_gate.status pass, no high_terminal_health_margin warning, a 3/3 victory-defeat split, and preserved low/medium/high difficulty labels."
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+    "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused balance/headless reports passed with combat_feel_gate coverage; the gate currently reports high_terminal_health_margin as a warning while preserving report-only/no-writeback boundaries."
+    "summary": "Focused combat balance calibration passed with average terminal margin 55, combat_feel_gate.status pass, no high_terminal_health_margin warning, a 3/3 victory-defeat split, and preserved low/medium/high difficulty labels."
   },
   "active_slice": {
-    "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+    "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: deterministic battle autoplay summaries now expose report-only combat-feel threshold gate warnings for balance triage."
+    "note": "Completed: standard battle autoplay sampler now passes the terminal-margin combat-feel gate after tactical reposition scoring and authored encounter retune."
   }
 }
