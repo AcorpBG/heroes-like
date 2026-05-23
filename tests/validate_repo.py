@@ -250,6 +250,7 @@ ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
     "battle_status_applied",
     "battle_unit_defend",
     "battle_unit_retreat",
+    "battle_unit_surrender",
     "overworld_object_visited",
     "overworld_object_captured",
     "overworld_object_depleted",
@@ -279,6 +280,7 @@ ANIMATION_BATTLE_TROOP_REQUIRED_STATE_FAMILIES = {
     "status",
     "defend",
     "retreat",
+    "surrender",
 }
 ANIMATION_BATTLE_TROOP_REPRESENTATIVE_EVENTS = {
     "idle": "battle_stack_idle",
@@ -291,6 +293,7 @@ ANIMATION_BATTLE_TROOP_REPRESENTATIVE_EVENTS = {
     "status": "battle_status_applied",
     "defend": "battle_unit_defend",
     "retreat": "battle_unit_retreat",
+    "surrender": "battle_unit_surrender",
 }
 ANIMATION_OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES = {
     "idle",
@@ -8971,6 +8974,7 @@ def validate_animation_battle_troop_state_contract(errors: list[str]) -> None:
         "func battle_troop_sprite_state_contract_report",
         "battle_stack_idle",
         "battle_unit_retreat",
+        "battle_unit_surrender",
     ):
         ensure(required_token in rules_text, errors, f"AnimationCueCatalog.gd is missing battle troop contract token: {required_token}")
     report = build_animation_battle_troop_state_contract_report()
@@ -8993,6 +8997,7 @@ def validate_animation_battle_troop_state_contract(errors: list[str]) -> None:
             "status",
             "defend",
             "retreat",
+            "surrender",
             "No save migration",
             "No final sprite, VFX, or audio import",
             "No renderer asset pipeline work",
@@ -15057,7 +15062,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     )
     cue_entries = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
     cue_entries_by_event = {str(entry.get("event_id", "")): entry for entry in cue_entries if isinstance(entry, dict)}
-    required_animation_families = {"idle", "ready", "move", "attack", "hit", "death", "cast", "status", "defend", "retreat"}
+    required_animation_families = {"idle", "ready", "move", "attack", "hit", "death", "cast", "status", "defend", "retreat", "surrender"}
     ensure((int(animation_frame_size.get("width", 0)), int(animation_frame_size.get("height", 0))) == expected_animation_frame_size, errors, "Unit animation frame size must be 64x64")
     ensure(int(animation_manifest.get("frames_per_state", 0)) == 4, errors, "Unit animation manifest must define four frames per state")
     ensure((int(animation_sheet_size.get("width", 0)), int(animation_sheet_size.get("height", 0))) == expected_animation_sheet_size, errors, "Unit animation sheet size must match frame size, state count, and frame count")
@@ -15191,6 +15196,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "audio_placeholder_status_clear",
         "status_clear",
         "func _status_clear_presentation_motion",
+        "func _exit_presentation_motion",
+        "retreat_withdraw",
+        "surrender_stand_down",
         "func _draw_status_clear_vfx",
         "func _sync_animation_playback_records",
         "func _expire_animation_playback_records",
@@ -15364,6 +15372,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "presentation_motion_progress",
         "presentation_motion_count",
         "presentation_motion_roles",
+        "retreat_withdraw",
+        "surrender_stand_down",
         "melee_lunge",
         "hit_stagger",
         "ranged_recoil",

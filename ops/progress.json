@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-hard-difficulty-watch-pass-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Hard Difficulty Watch Pass",
+  "currentSliceId": "battle-exit-event-motion-presentation-20260523-10184",
+  "currentSliceTitle": "Battle Exit Event Motion Presentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the hard-difficulty watch pass: normal remains clear at signature 829808c9 and hard is bounded to three watch items at signature 8a238ca3.",
+  "currentSliceNotes": "Completed: retreat and surrender exit snapshots now expose distinct board token motion roles, and surrender is a first-class battle troop animation family.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T20:32:00Z",
+  "updatedAt": "2026-05-23T20:40:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-exit-event-motion-presentation-20260523-10184",
+      "title": "Battle Exit Event Motion Presentation",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "scripts/core/AnimationCueCatalog.gd",
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd"
+      ],
+      "purpose": "Make battle retreat and surrender events produce distinct board token motion and promote surrender from a retreat tag to a required battle animation state family.",
+      "implementationTargets": [
+        "content/animation_event_cues.json",
+        "scripts/core/AnimationCueCatalog.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-exit-event-motion-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Retreat and surrender exit snapshots keep active event playback and expose distinct presentation motion roles in the battle board summary.",
+        "The animation cue catalog treats surrender as a required battle troop state family with its own representative event.",
+        "Focused battle event animation, animation contract, validation-smoke, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final animation art approval.",
+        "No new hand-authored sprite sheets.",
+        "No broad battle UX redesign.",
+        "No combat rules rebalance."
+      ],
+      "startedAt": "2026-05-23T20:34:35Z",
+      "updatedAt": "2026-05-23T20:40:07Z",
+      "completedAt": "2026-05-23T20:40:07Z",
+      "notes": "Baseline: battle_unit_retreat and battle_unit_surrender already queue animation states, but BattleBoardView token presentation motion did not branch on these event ids and AnimationCueCatalog grouped surrender under the retreat state family.",
+      "completionEvidence": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_battle_troop_state_contract_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_validation_smoke_harness_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_event_cue_catalog_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/unit_animation_manifest_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_unit_art_assets.py",
+          "jq empty ops/progress.json content/animation_event_cues.json content/unit_animation_manifest.json",
+          "git diff --check"
+        ],
+        "result": "Battle exit actions now report active board token motion roles for retreat_withdraw and surrender_stand_down; the battle troop state contract reports 14 troop entries with a separate surrender family; the unit animation manifest reports 103 loadable sheets with state_family_counts including retreat: 1 and surrender: 1; repository validation, JSON validation, py_compile, and diff whitespace checks passed."
+      }
+    },
     {
       "id": "battle-autoplay-hard-difficulty-watch-pass-20260523-10184",
       "title": "Battle Autoplay Hard Difficulty Watch Pass",
@@ -22759,23 +22815,24 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+    "id": "battle-exit-event-motion-presentation-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T00:45:00Z",
+    "updatedAt": "2026-05-23T20:40:07Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_battle_troop_state_contract_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_validation_smoke_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_event_cue_catalog_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/unit_animation_manifest_report.tscn",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+      "python3 -m py_compile tests/validate_repo.py tools/generate_unit_art_assets.py",
+      "jq empty ops/progress.json content/animation_event_cues.json content/unit_animation_manifest.json",
       "git diff --check"
     ],
-    "summary": "Battle autoplay forest cohort balance pass completed: normal queue moved from one forest watch/signature 80bea883 to status clear, item_count 0, signature 829808c9; forest, Stonewake, formation_guard, and grass cohorts are mixed; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed. Hard-difficulty sweep still has watch items outside this slice."
+    "summary": "Battle exit event motion presentation completed: BattleBoardView now reports retreat_withdraw and surrender_stand_down token motion for exit snapshots; AnimationCueCatalog and generated animation metadata treat surrender as its own battle troop state family; focused battle animation, animation contract, validation smoke, cue catalog, unit animation manifest, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
   },
-  "active_slice": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-24T00:45:00Z",
+  "active_slice": "battle-exit-event-motion-presentation-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T20:40:07Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",

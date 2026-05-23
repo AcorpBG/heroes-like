@@ -23,6 +23,7 @@ const BATTLE_TROOP_REQUIRED_STATE_FAMILIES := [
 	"status",
 	"defend",
 	"retreat",
+	"surrender",
 ]
 const OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES := [
 	"idle",
@@ -47,6 +48,7 @@ const BATTLE_TROOP_REPRESENTATIVE_EVENTS := {
 	"status": "battle_status_applied",
 	"defend": "battle_unit_defend",
 	"retreat": "battle_unit_retreat",
+	"surrender": "battle_unit_surrender",
 }
 const OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS := {
 	"idle": "overworld_object_idle",
