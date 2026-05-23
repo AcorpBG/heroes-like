@@ -35,6 +35,8 @@ Owner-directed unit-art progress on 2026-05-23: every authored unit now has dete
 
 Unit production-readiness gate added on 2026-05-23: `tests/unit_production_readiness_report.tscn` audits all 103 authored units for required gameplay fields, non-empty costs/growth/abilities, live content references, loadable portrait/battle/overworld textures, unique PNG hashes per art surface, and successful `BattleRules` stack materialization/normalization. The unit art generator now stamps battle and overworld icons with deterministic unit-signature marks so every generated PNG surface is byte-unique. This gate proves the current generated unit set is mechanically consumable by battle/content/art systems; it still does not claim final hand-painted art direction or animation sprite-sheet completion.
 
+Unit visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_art_contact_sheet_report.tscn` loads every portrait, battle icon, and overworld icon, verifies visual-density metrics for alpha coverage, visible bounds, luminance range, and quantized color variety, and writes review contact sheets plus tile coordinates under `.artifacts/unit_art_contact_sheet_report/`. `tests/validate_repo.py` now gates the report script/scene tokens so this generated-art baseline remains inspectable as the roster changes. This is a production review artifact and blank/flat asset guard, not final hand-painted or animated unit-art approval.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:

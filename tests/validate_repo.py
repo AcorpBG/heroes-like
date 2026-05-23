@@ -64,6 +64,8 @@ UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_ROOT = ROOT / "art" / "units"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
+UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.gd"
+UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH = ROOT / "tests" / "unit_art_contact_sheet_report.tscn"
 RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
@@ -14304,6 +14306,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         TOWN_SCRIPT_PATH,
         UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH,
         UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH,
+        UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH,
+        UNIT_ART_CONTACT_SHEET_REPORT_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
@@ -14416,6 +14420,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "units_without_live_reference",
     ):
         ensure(required_token in readiness_report_text, errors, f"unit_production_readiness_report.gd is missing token {required_token}")
+
+    contact_sheet_report_text = UNIT_ART_CONTACT_SHEET_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "UNIT_ART_CONTACT_SHEET_REPORT",
+        "CONTACT_SHEET_FILES",
+        "func _visual_metrics",
+        "save_png",
+        "alpha_coverage",
+        "quantized_color_count",
+    ):
+        ensure(required_token in contact_sheet_report_text, errors, f"unit_art_contact_sheet_report.gd is missing token {required_token}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
