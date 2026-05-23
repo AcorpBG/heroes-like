@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-roster-deployment-gate-20260523-10184",
-  "currentSliceTitle": "Unit Roster Deployment Gate",
+  "currentSliceId": "unit-runtime-asset-resolution-gate-20260523-10184",
+  "currentSliceTitle": "Unit Runtime Asset Resolution Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all faction units are recruitable through matching-faction town build trees with runtime growth, and all neutral units are deployed through dwellings, army groups, and encounters.",
+  "currentSliceNotes": "Completed: all 103 units resolve portrait, battle icon, overworld icon, animation sheet, and animation state rows through live runtime lookup paths.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:20:16Z",
+  "updatedAt": "2026-05-23T11:24:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15457,6 +15457,63 @@
         "The report passed with faction_recruitable_count=53 and neutral_deployed_count=50 across all 103 units.",
         "tests/validate_repo.py gates the unit roster deployment report script and scene."
       ]
+    },
+    {
+      "id": "unit-runtime-asset-resolution-gate-20260523-10184",
+      "title": "Unit Runtime Asset Resolution Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "scripts/autoload/ContentService.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/town/TownShell.gd"
+      ],
+      "purpose": "Strengthen full-unit art readiness proof by validating full-roster runtime asset resolution through the same lookup paths used by battle, overworld, and town UI surfaces.",
+      "implementationTargets": [
+        "tests/unit_runtime_asset_resolution_report.gd",
+        "tests/unit_runtime_asset_resolution_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every unit resolves a portrait through ContentService and TownShell's runtime texture path.",
+        "Every unit resolves a battle icon through ContentService and BattleBoardView's runtime battle-icon texture path.",
+        "Every unit resolves an overworld icon through ContentService and OverworldMapView's encounter icon path.",
+        "Every unit resolves a generated animation sheet and every required animation state row through ContentService and BattleBoardView's runtime animation path.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim."
+      ],
+      "startedAt": "2026-05-23T11:24:59Z",
+      "updatedAt": "2026-05-23T11:24:59Z",
+      "notes": "Completed: all 103 units resolved portrait, battle icon, overworld icon, animation sheet, and 14 required animation states through runtime lookup paths.",
+      "completedAt": "2026-05-23T11:24:59Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_runtime_asset_resolution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit runtime asset resolution report passed with 103 units, 103 ContentService art records, 103 ContentService animation records, 103 runtime-resolved portraits, battle icons, overworld icons, animation sheets, and 1,442 animation state row lookups.",
+      "evidenceHistory": [
+        "tests/unit_runtime_asset_resolution_report.tscn validates every authored unit through ContentService.get_unit_art() and ContentService.get_unit_animation().",
+        "The report calls BattleBoardView's battle-icon and animation-sheet runtime loaders for every unit stack.",
+        "The report calls OverworldMapView's encounter icon resolver and texture path for every unit.",
+        "The report calls TownShell's portrait texture loader for every unit.",
+        "tests/validate_repo.py gates the unit runtime asset resolution report script and scene."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17977,6 +18034,49 @@
         "git diff --check"
       ],
       "remainingGap": "This proves current unit roster deployment through recruitable town growth and neutral dwelling encounters; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
+    },
+    {
+      "id": "unit-runtime-asset-resolution-gate-20260523-10184",
+      "title": "Unit Runtime Asset Resolution Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T11:24:59Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "scripts/autoload/ContentService.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/town/TownShell.gd"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-runtime-asset-resolution-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_runtime_asset_resolution_report.gd",
+        "tests/unit_runtime_asset_resolution_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_runtime_asset_resolution_report.tscn validates every authored unit through ContentService.get_unit_art() and ContentService.get_unit_animation().",
+        "The report validates every unit through BattleBoardView's runtime battle-icon and animation-sheet loaders.",
+        "The report validates every unit through OverworldMapView's encounter icon resolver and TownShell's portrait texture loader.",
+        "The report passed with unit_count=103, battle_icon_runtime_resolved_count=103, overworld_icon_runtime_resolved_count=103, portrait_runtime_resolved_count=103, animation_sheet_runtime_resolved_count=103, and animation_state_runtime_row_count=1442.",
+        "tests/validate_repo.py gates the report script and scene."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_runtime_asset_resolution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves current generated unit art and animation assets resolve through full-roster runtime lookup paths; final combat balance, final hand-painted art direction, and final animation direction remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18734,13 +18834,26 @@
         "git diff --check"
       ],
       "summary": "All 53 faction units passed matching-faction town-growth deployment checks and all 50 neutral units passed dwelling/army/encounter deployment checks; repo validation passed with the new gate wired in."
+    },
+    {
+      "id": "unit-runtime-asset-resolution-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T11:24:59Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_runtime_asset_resolution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 103 units passed full-roster runtime asset resolution through ContentService, BattleBoardView, OverworldMapView, and TownShell lookup paths; repo validation passed with the new gate wired in."
     }
   ],
-  "lastValidation": "Unit roster deployment report passed with 103 units, 53 faction units recruitable through runtime town growth, and 50 neutral units deployed through dwellings, army groups, and encounters; repository validation passed.",
+  "lastValidation": "Unit runtime asset resolution report passed with 103 units, 103 runtime-resolved portraits, battle icons, overworld icons, animation sheets, and 1,442 animation state-row lookups; repository validation passed.",
   "active_slice": {
-    "id": "unit-roster-deployment-gate-20260523-10184",
+    "id": "unit-runtime-asset-resolution-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all faction units are recruitable through matching-faction town build trees with runtime growth, and all neutral units are deployed through dwellings, army groups, and encounters."
+    "note": "Completed: all 103 units resolve portrait, battle icon, overworld icon, animation sheet, and animation state rows through live runtime lookup paths."
   }
 }
