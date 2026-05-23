@@ -18,6 +18,7 @@ SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
 RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
+UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
@@ -138,6 +139,9 @@ PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runti
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-runtime-issue-log-smoke-report.md"
+UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.gd"
+UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.tscn"
+UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-report.md"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -16469,6 +16473,89 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaged runtime issue log smoke doc is missing required text: {required_text}")
 
 
+def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    required_paths = (
+        project_path,
+        UI_AUDIO_PATH,
+        UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH,
+        UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH,
+        UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing UI audio cue runtime file: {path.relative_to(ROOT)}")
+
+    if project_path.exists():
+        project_text = project_path.read_text(encoding="utf-8")
+        ensure(
+            'UiAudio="*res://scripts/autoload/UiAudio.gd"' in project_text,
+            errors,
+            "project.godot must register UiAudio as an autoload",
+        )
+
+    if UI_AUDIO_PATH.exists():
+        ui_audio_text = UI_AUDIO_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "class_name HeroesUiAudio",
+            "AudioStreamGenerator",
+            "AudioStreamGeneratorPlayback",
+            "AudioStreamPlayer",
+            "SettingsService.master_volume_percent",
+            "func attach_control",
+            "func play_cue",
+            "func play_confirm",
+            "func play_invalid",
+            "func validation_summary",
+            "ui_click",
+            "ui_select",
+            "ui_adjust",
+            "ui_tab",
+            "ui_confirm",
+            "ui_invalid",
+            "MAX_ACTIVE_PLAYERS",
+            "audio_bus",
+            "Master",
+            "node_added",
+        ):
+            ensure(required_token in ui_audio_text, errors, f"UiAudio.gd is missing required token: {required_token}")
+
+    if UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH.exists():
+        report_text = UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "UI_AUDIO_CUE_RUNTIME_REPORT",
+            "UiAudio.validation_reset",
+            "UiAudio.attach_control",
+            "UiAudio.play_confirm",
+            "UiAudio.play_invalid",
+            "UiAudio.validation_summary",
+            "Button",
+            "OptionButton",
+            "HSlider",
+            "TabContainer",
+            "ItemList",
+            "ui_audio_runtime_v1",
+        ):
+            ensure(required_token in report_text, errors, f"UI audio cue runtime report is missing required token: {required_token}")
+
+    if UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH.exists():
+        doc_text = UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "UI Audio Cue Runtime Report",
+            "ui-audio-cue-runtime-baseline-20260523-10184",
+            "scripts/autoload/UiAudio.gd",
+            "AudioStreamGenerator",
+            "Master",
+            "Button",
+            "OptionButton",
+            "HSlider",
+            "TabContainer",
+            "ItemList",
+            "not final sound design",
+            "Final imported UI audio",
+        ):
+            ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -16559,6 +16646,7 @@ def main() -> int:
     validate_packaging_pack_export_smoke(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
+    validate_ui_audio_cue_runtime(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
@@ -16657,6 +16745,7 @@ def main() -> int:
     print("- the packaging smoke gate now exports a real Linux Release PCK, boots it with --main-pack, and keeps binary export/install/release readiness as explicit non-claims")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
+    print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the Master bus")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
