@@ -18887,6 +18887,46 @@
       "remainingGap": "This is balance instrumentation; authored encounter retuning, stack-size pacing, ability-power tuning, tactical AI quality, terrain-value tuning, difficulty curves, and manual playtest approval remain outside this slice."
     },
     {
+      "id": "battle-autoplay-tactical-order-scoring-20260523-10184",
+      "title": "Battle Autoplay Tactical Order Scoring",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-tactical-order-scoring-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_tactical_order_report.gd",
+        "tests/battle_autoplay_tactical_order_report.tscn",
+        "tests/balance_regression_report_suite.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAiRules now exposes choose_stack_tactical_order as a side-agnostic non-spell tactical scorer for attack, defend, and advance orders.",
+        "BattleAutoplayBalanceHarnessRules now uses the shared tactical scorer for player-side autoplay, applies scored target selection before the action, and records compact scored decisions in sample turn logs.",
+        "The focused tactical-order report covers an adjacent ranged-stack case where both shoot and strike are legal and verifies scored autoplay chooses melee strike instead of legacy shoot-first behavior.",
+        "The balance regression report now asserts scored autoplay decision evidence and the battle_ai_nonspell_tactical_order_v1 scoring policy in battle samples."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This improves balance-harness tactical fidelity; authored encounter retuning, stack-size pacing, ability-power tuning, spell autoplay, manual playtest approval, and final combat balance remain outside this slice."
+    },
+    {
       "id": "packaging-platform-readiness-20260523-10184",
       "title": "Packaging Platform Readiness",
       "status": "completed",

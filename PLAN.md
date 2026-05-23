@@ -4990,6 +4990,30 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `battle-autoplay-tactical-order-scoring-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Replace deterministic balance autoplay's shoot-first player policy with shared tactical order scoring so combat-feel samples reflect target, action, terrain, ability, cohesion, and defend/advance tradeoffs.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/core/BattleAiRules.gd`
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `tests/battle_autoplay_tactical_order_report.gd`
+- `tests/battle_autoplay_tactical_order_report.tscn`
+- `tests/balance_regression_report_suite.gd`
+- `tests/validate_repo.py`
+- `docs/battle-autoplay-combat-feel-diagnostics-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Battle AI exposes a side-agnostic non-spell tactical order scorer for attack, defend, and advance orders.
+- Player-side balance autoplay uses the tactical scorer, applies scored targets before acting, and records compact decision evidence in turn logs.
+- A focused tactical-order report proves an adjacent ranged stack chooses scored melee strike when both shoot and strike are legal, preventing legacy shoot-first autoplay bias.
+nonGoals:
+- No automatic tuning, authored content writeback, unit-stat retune, spell/autocast expansion, or final combat balance approval.
+
+Completed owner-directed implementation slice:
+
 id: `battle-autoplay-combat-feel-diagnostics-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Expand deterministic battle autoplay sampling into actionable combat-feel diagnostics for balance work.
