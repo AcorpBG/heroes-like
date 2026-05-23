@@ -6145,6 +6145,57 @@
       "completedAt": "2026-05-02T10:59:21Z"
     },
     {
+      "id": "ui-interface-art-study-20260523-10184",
+      "title": "UI Interface Art Study",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "report",
+      "classification": "report_and_planning_gate",
+      "parentSliceId": "concept-art-curation-gate-10184",
+      "purpose": "Check missing UI art assets and generate first-pass overworld, battle, and town interface study sheets without runtime ingestion.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/concept-art-pipeline.md",
+        "docs/ui-art-asset-gap-audit-2026-05-23.md"
+      ],
+      "implementationTargets": [
+        "docs/ui-art-asset-gap-audit-2026-05-23.md",
+        "docs/art-studies/ui/2026-05-23/overworld_ui_skin_sheet_transparent.png",
+        "docs/art-studies/ui/2026-05-23/battle_ui_skin_sheet_transparent.png",
+        "docs/art-studies/ui/2026-05-23/town_ui_skin_sheet_transparent.png"
+      ],
+      "baselineChecks": [
+        "res:// image-reference missing-asset scan",
+        "built-in image generation tool output",
+        "python3 chroma-key alpha conversion",
+        "PNG alpha/channel validation",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Referenced raster/vector assets for scenes/scripts/content/art are scanned and any missing references are reported.",
+        "First-pass UI study sheets exist for overworld, battle, and town interface skins.",
+        "Generated sheets remain art-study candidates and are not wired into runtime/source asset manifests or scenes.",
+        "The later ingestion boundary remains explicit for crop selection, import paths, rollback, and screenshot validation."
+      ],
+      "validationEvidence": [
+        "Referenced asset scan checked 1253 res:// PNG/WebP/JPG/SVG references and found 0 missing assets.",
+        "art/ui currently contains only main_menu_nano_banana_backdrop.png, confirming the UI skin gap for live overworld, battle, and town shells.",
+        "Generated three 1536x1024 transparent RGBA UI study sheets for overworld, battle, and town with transparent corners and opaque UI element coverage.",
+        "No runtime scenes, renderers, content manifests, save schema, or gameplay code were changed."
+      ],
+      "nonGoals": [
+        "No runtime/source asset ingestion.",
+        "No scene hookup, theme replacement, crop slicing, renderer change, or screenshot approval.",
+        "No final art approval or production UI skin claim."
+      ],
+      "updatedAt": "2026-05-23T08:25:00Z",
+      "startedAt": "2026-05-23T08:10:00Z",
+      "completedAt": "2026-05-23T08:25:00Z"
+    },
+    {
       "id": "economy-resource-registry-policy-10184",
       "title": "Economy Resource Registry Policy",
       "phase": "phase-2-deep-production-foundation",
