@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "headless-balance-harness-cli-20260523-10184",
-  "currentSliceTitle": "Headless Balance Harness CLI",
+  "currentSliceId": "content-runtime-overworld-family-allowlist-20260523-10184",
+  "currentSliceTitle": "Content Runtime Overworld Family Allowlist",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the artifact-producing headless balance harness CLI for automated balance/headless reports.",
+  "currentSliceNotes": "Completed runtime ContentService family allowlist alignment for authored overworld object/resource-site families.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:28:00Z",
+  "updatedAt": "2026-05-23T23:31:47Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,78 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "content-runtime-overworld-family-allowlist-20260523-10184",
+      "title": "Content Runtime Overworld Family Allowlist",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/ContentService.gd",
+        "content/resource_sites.json",
+        "content/map_objects.json",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Treat currently authored overworld resource-site and map-object families as first-class runtime content families so Godot reports no longer spam unsupported-family warnings for valid production content.",
+      "implementationTargets": [
+        "scripts/autoload/ContentService.gd",
+        "tests/validate_repo.py",
+        "docs/content-runtime-overworld-family-allowlist-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Runtime ContentService supported resource-site families include staged_resource_front, support_producer, shrine, sign_waypoint, scenario_objective, and faction_landmark.",
+        "Runtime ContentService supported map-object families include staged_resource_front, support_producer, sign_waypoint, and scenario_objective in addition to existing authored families.",
+        "Repository validation gates runtime allowlist alignment and the focused report document.",
+        "A focused Godot report run no longer emits unsupported family warnings for authored resource sites or map objects."
+      ],
+      "nonGoals": [
+        "No new object interaction mechanics.",
+        "No rare-resource activation.",
+        "No scenario scripting rewrite.",
+        "No generated-map/RMG behavior change."
+      ],
+      "startedAt": "2026-05-23T23:29:58Z",
+      "updatedAt": "2026-05-23T23:31:47Z",
+      "notes": "Completed after aligning ContentService runtime resource-site and map-object family allowlists with valid authored overworld content families. Focused battle autoplay report output no longer contains unsupported-family warning spam.",
+      "completedAt": "2026-05-23T23:31:47Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "! rg -n \"unsupported family|WARNING:\" .artifacts/content_runtime_overworld_family_allowlist_battle.log",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
+          "focused_report_ok": true,
+          "unsupported_family_warning_count": 0,
+          "resource_site_families_added": [
+            "staged_resource_front",
+            "support_producer",
+            "shrine",
+            "sign_waypoint",
+            "scenario_objective",
+            "faction_landmark"
+          ],
+          "map_object_families_added": [
+            "staged_resource_front",
+            "support_producer",
+            "sign_waypoint",
+            "scenario_objective"
+          ],
+          "new_object_mechanics": false,
+          "rare_resource_activation": false,
+          "generated_map_behavior_change": false
+        }
+      }
+    },
     {
       "id": "headless-balance-harness-cli-20260523-10184",
       "title": "Headless Balance Harness CLI",
@@ -23814,8 +23886,8 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "headless-balance-harness-cli-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T23:28:00Z",
+  "active_slice": "content-runtime-overworld-family-allowlist-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -24032,6 +24104,20 @@
         "git diff --check"
       ],
       "summary": "Headless balance harness CLI passed: standard suite ran 3/3 cases, wrote schema headless_balance_harness_cli_v1 manifest artifacts, recorded battle_autoplay_combat_balance signature 39ff521c, balance_regression_suite signature 0dd4479e, headless_simulation_harness signature 56ae7622, and kept report-only policy flags false."
+    },
+    {
+      "id": "content-runtime-overworld-family-allowlist-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T23:31:47Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "! rg -n \"unsupported family|WARNING:\" .artifacts/content_runtime_overworld_family_allowlist_battle.log",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Content runtime overworld family allowlist passed: ContentService now accepts authored staged resource front, support producer, shrine, sign waypoint, scenario objective, and faction landmark resource-site families plus matching authored map-object families; focused battle autoplay report output had zero unsupported-family or warning lines."
     }
   ]
 }

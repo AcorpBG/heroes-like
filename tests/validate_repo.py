@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content"
 CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
+CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH = ROOT / "docs" / "content-runtime-overworld-family-allowlist-report.md"
 NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
 SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
@@ -13201,6 +13202,35 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         "func _validate_resource_site",
     ):
         ensure(required_token in content_service_text, errors, f"ContentService.gd is missing overworld-content-foundation token: {required_token}")
+    for required_family in (
+        "staged_resource_front",
+        "support_producer",
+        "shrine",
+        "sign_waypoint",
+        "scenario_objective",
+        "faction_landmark",
+    ):
+        ensure(f'"{required_family}"' in content_service_text, errors, f"ContentService.gd runtime resource-site allowlist is missing {required_family}")
+    for required_family in (
+        "staged_resource_front",
+        "support_producer",
+        "sign_waypoint",
+        "scenario_objective",
+    ):
+        ensure(f'"{required_family}"' in content_service_text, errors, f"ContentService.gd runtime map-object allowlist is missing {required_family}")
+    ensure(CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH.exists(), errors, f"Missing content runtime overworld family allowlist report: {CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH.relative_to(ROOT)}")
+    if CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH.exists():
+        allowlist_doc_text = CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "content-runtime-overworld-family-allowlist-20260523-10184",
+            "ContentService.gd",
+            "staged_resource_front",
+            "support_producer",
+            "scenario_objective",
+            "unsupported family",
+            "No new object interaction mechanics",
+        ):
+            ensure(required_text in allowlist_doc_text, errors, f"Content runtime overworld family allowlist report is missing required text: {required_text}")
 
     overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
