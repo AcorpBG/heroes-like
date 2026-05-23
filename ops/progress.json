@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-cohort-balance-pass-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Cohort Balance Pass",
+  "currentSliceId": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Forest Cohort Balance Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a focused authored encounter cohort balance pass: the queue now has one remaining forest cohort watch with signature 80bea883, while Fen Crown, grass, high-difficulty, and low terminal-margin watches are cleared without claiming final combat balance.",
+  "currentSliceNotes": "Completed the forest cohort balance pass: the normal-difficulty battle autoplay tuning queue is clear with signature 829808c9, while hard-difficulty sweep watches remain outside this slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T00:28:00Z",
+  "updatedAt": "2026-05-24T00:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,59 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+      "title": "Battle Autoplay Forest Cohort Balance Pass",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/army_groups.json",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/battle_autoplay_difficulty_sweep_report.gd"
+      ],
+      "purpose": "Use the remaining deterministic forest cohort tuning item to make a bounded authored encounter retune and close the current normal-difficulty tuning queue.",
+      "implementationTargets": [
+        "content/army_groups.json",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-forest-cohort-balance-pass-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The focused queue report passes with zero normal-difficulty tuning queue items.",
+        "The forest terrain cohort no longer resolves to a single outcome in the default 12-sample harness.",
+        "Combat-feel and balance-matrix gates remain passing with no stalled samples and no invalid orders.",
+        "Difficulty-sweep evidence remains passing after the content tuning."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic runtime tuning.",
+        "No global unit-stat rewrite.",
+        "No campaign completion or RMG parity claim."
+      ],
+      "startedAt": "2026-05-24T00:36:00Z",
+      "updatedAt": "2026-05-24T00:45:00Z",
+      "completedAt": "2026-05-24T00:45:00Z",
+      "notes": "Selected from the remaining production-gap list under Combat feel and balance. Baseline queue before this slice: one medium forest outcome-bias watch with signature 80bea883; forest cohort is 2/2 victories from river_pass_ghoul_grove and willow_mill.",
+      "completionEvidence": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+          "git diff --check"
+        ],
+        "result": "Normal battle autoplay tuning queue moved from one medium forest watch/signature 80bea883 to status clear, item_count 0, signature 829808c9. Forest, Stonewake, formation_guard, and grass cohorts have mixed outcomes. Combat-feel, balance-matrix, and difficulty-sweep gates pass; shared headless harness returned ok true with the known generated random-map deferred warning; hard-difficulty sweep still reports separate watch items outside this slice."
+      }
+    },
     {
       "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
       "title": "Battle Autoplay Cohort Balance Pass",
@@ -22651,9 +22704,9 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
+    "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T00:28:00Z",
+    "updatedAt": "2026-05-24T00:45:00Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
@@ -22664,11 +22717,27 @@
       "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
       "git diff --check"
     ],
-    "summary": "Battle autoplay cohort balance pass completed: tuning queue reduced from five medium watches/signature 95f5ac7e to one medium forest cohort watch/signature 80bea883; Fen Crown, grass, and high-difficulty cohorts now have mixed outcomes; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
+    "summary": "Battle autoplay forest cohort balance pass completed: normal queue moved from one forest watch/signature 80bea883 to status clear, item_count 0, signature 829808c9; forest, Stonewake, formation_guard, and grass cohorts are mixed; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed. Hard-difficulty sweep still has watch items outside this slice."
   },
-  "active_slice": "battle-autoplay-cohort-balance-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-24T00:28:00Z",
+  "active_slice": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-24T00:45:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T00:45:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+        "git diff --check"
+      ],
+      "summary": "Battle autoplay forest cohort balance pass completed: normal queue moved from one forest watch/signature 80bea883 to status clear, item_count 0, signature 829808c9; forest, Stonewake, formation_guard, and grass cohorts are mixed; combat-feel, balance-matrix, difficulty sweep, shared headless harness ok true with known generated-map deferred warning, repository validation, JSON validation, py_compile, and diff whitespace checks passed. Hard-difficulty sweep still has watch items outside this slice."
+    },
     {
       "id": "battle-autoplay-cohort-balance-pass-20260523-10184",
       "status": "passed",

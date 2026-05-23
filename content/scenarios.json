@@ -1101,7 +1101,7 @@
         {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201},
+        {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201, "enemy_army": {"id": "army_stonewake_sluice_band", "name": "Stonewake Sluice Band", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mire_slinger", "count": 8}, {"unit_id": "unit_blackbranch_cutthroat", "count": 5}, {"unit_id": "unit_gorefen_ripper", "count": 1}]}},
         {"placement_id": "willow_mill", "encounter_id": "encounter_willow_mill_pack", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 4202},
         {
           "placement_id": "stonewake_reed_totemists",

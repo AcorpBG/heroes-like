@@ -16473,6 +16473,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
+    forest_balance_doc_path = ROOT / "docs/battle-autoplay-forest-cohort-balance-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     for path in (
         harness_path,
@@ -16494,6 +16495,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
+        forest_balance_doc_path,
         difficulty_sweep_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
@@ -16641,6 +16643,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "gate_item_count",
             "cohort_outcome_bias_watch",
             "resolved cohort watch",
+            "clear status",
             "high-priority action-required",
             "top_contributors",
             "remediation_hint",
@@ -16783,6 +16786,27 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in cohort_balance_doc_text, errors, f"Battle autoplay cohort balance doc is missing required text: {required_text}")
+    if forest_balance_doc_path.exists():
+        forest_balance_doc_text = forest_balance_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Forest Cohort Balance Pass Report",
+            "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
+            "MAX_CURRENT_WATCH_ITEMS := 0",
+            "queue_signature",
+            "829808c9",
+            "item_count",
+            "0",
+            "status",
+            "clear",
+            "forest",
+            "stonewake-watch",
+            "formation_guard",
+            "grass",
+            "combat_feel_gate.status",
+            "balance_matrix_gate.status",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in forest_balance_doc_text, errors, f"Battle autoplay forest cohort balance doc is missing required text: {required_text}")
     if difficulty_sweep_doc_path.exists():
         difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
         for required_text in (
