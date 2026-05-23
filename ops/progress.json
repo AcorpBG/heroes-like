@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-event-token-feedback-coverage-20260523-10184",
-  "currentSliceTitle": "Battle Event Token Feedback Coverage",
+  "currentSliceId": "battle-camera-presentation-20260523-10184",
+  "currentSliceTitle": "Battle Camera Presentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused event-driven battle token feedback validation coverage; remaining battle production gaps are authored timing, camera/audio/VFX polish, and combat balance.",
+  "currentSliceNotes": "Completed bounded event-driven battle camera presentation scaffolding; remaining battle production gaps are final authored timing, imported audio/VFX, camera direction, and combat balance.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16275,6 +16275,42 @@
       "nonGoals": [
         "No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning."
       ]
+    },
+    {
+      "id": "battle-camera-presentation-20260523-10184",
+      "title": "Battle Camera Presentation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Derive bounded board-side camera focus and shake presentation from active battle event playback records.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-camera-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active movement, attack, impact, spell, status, and exit battle cue records can produce camera presentation records with focus kind, source/target cells, focus coordinates, and bounded shake strength.",
+        "Normal animation playback applies a bounded battlefield offset while reduced-motion and fast modes suppress camera shake strength.",
+        "Focused validation proves ranged/status event playback creates source-target/status camera records and that camera records expire with event playback."
+      ],
+      "nonGoals": [
+        "No final authored cinematic timing, screen shake direction, imported VFX/audio assets, or combat balance tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19482,6 +19518,44 @@
         "git diff --check"
       ],
       "remainingGap": "This closes focused validation coverage for current token feedback roles; final authored animation timing, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-camera-presentation-20260523-10184",
+      "title": "Battle Camera Presentation",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-camera-presentation-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-camera-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now derives camera presentation records from active battle cue playback for movement, melee, retaliation, ranged, hit, death, cast, status, retreat, and surrender events.",
+        "Camera records expose focus kind, source/target/subject cells, focus coordinates, progress, shake strength, event id, serial, and animation mode.",
+        "Normal animation playback applies a small bounded battlefield offset based on the strongest active camera record, while reduced-motion and fast modes suppress shake strength.",
+        "The focused battle event animation report now proves ranged/status playback creates source-target and status camera records, exposes positive bounded shake strength, and expires camera records with playback.",
+        "Repository validation gates the new camera playback summary and report assertions."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This closes deterministic board-side camera presentation scaffolding for active battle events; final authored cinematic timing, screen shake direction, imported VFX/audio assets, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -20397,10 +20471,23 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with ranged_recoil, status_pulse, cast_anchor, death_fall_back, melee_lunge, and hit_stagger token presentation coverage; full repository validation gates are required for the committed slice."
+    },
+    {
+      "id": "battle-camera-presentation-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with board_camera_presentation coverage for source-target/status focus records, positive bounded shake strength, and lifecycle expiry; full repository validation gates passed for the committed slice."
     }
   ],
   "lastValidation": {
-    "id": "battle-event-token-feedback-coverage-20260523-10184",
+    "id": "battle-camera-presentation-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
@@ -20410,12 +20497,12 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with ranged_recoil, status_pulse, cast_anchor, death_fall_back, melee_lunge, and hit_stagger token presentation coverage; full repository validation gates are required for the committed slice."
+    "summary": "Focused battle event animation report passed with board_camera_presentation coverage for source-target/status focus records, positive bounded shake strength, and lifecycle expiry; full repository validation gates passed for the committed slice."
   },
   "active_slice": {
-    "id": "battle-event-token-feedback-coverage-20260523-10184",
+    "id": "battle-camera-presentation-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: board summaries and focused report assertions now cover ranged recoil, status pulse, cast anchor, and death fallback token presentation roles."
+    "note": "Completed: active battle events now produce bounded camera focus/shake records and a small normal-mode battlefield offset with focused report coverage."
   }
 }
