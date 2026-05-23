@@ -5449,7 +5449,11 @@ static func _complete_action(session: SessionStateStoreScript.SessionData, initi
 	_append_nonempty_message(messages, String(enemy_result.get("message", "")))
 	var enemy_state := String(enemy_result.get("state", "continue"))
 	if enemy_state != "" and enemy_state != "continue":
-		return {"ok": true, "message": " ".join(messages), "state": enemy_state}
+		var terminal_result := enemy_result.duplicate(true)
+		terminal_result["ok"] = true
+		terminal_result["message"] = " ".join(messages)
+		terminal_result["state"] = enemy_state
+		return terminal_result
 	return {"ok": true, "message": " ".join(messages), "state": "continue"}
 
 static func advance_turn(battle: Dictionary) -> void:
@@ -5488,6 +5492,16 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 	match String(action.get("action", "")):
 		"cast_spell":
 			return _cast_enemy_spell(session, active_stack, action)
+		"retreat":
+			if not _battle_retreat_allowed(session.battle):
+				return {"ok": false, "message": "Enemy retreat is locked for this battle.", "state": "invalid"}
+			_mark_side_animation_event(session.battle, "enemy", "battle_unit_retreat")
+			return _finalize_enemy_withdrawal(session, "enemy_retreat")
+		"surrender":
+			if not _battle_surrender_allowed(session.battle):
+				return {"ok": false, "message": "Enemy surrender is locked for this battle.", "state": "invalid"}
+			_mark_side_animation_event(session.battle, "enemy", "battle_unit_surrender")
+			return _finalize_enemy_withdrawal(session, "enemy_surrender")
 		"shoot":
 			return _resolve_ai_attack(
 				session,
@@ -5792,7 +5806,10 @@ static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> 
 		var enemy_state := String(enemy_result.get("state", "continue"))
 		if enemy_state != "" and enemy_state not in ["continue", "invalid"]:
 			session.battle.erase(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY)
-			return {"state": enemy_state, "message": " ".join(messages)}
+			var terminal_result := enemy_result.duplicate(true)
+			terminal_result["state"] = enemy_state
+			terminal_result["message"] = " ".join(messages)
+			return terminal_result
 		if enemy_state == "invalid":
 			break
 
@@ -6063,6 +6080,63 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"ok": true, "message": final_message, "state": "surrender", "battle_exit_animation_snapshot": exit_animation_snapshot}
+
+static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionData, outcome_id: String) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
+	var context = session.battle.get("context", {})
+	if _is_town_defense_context(context) or _is_town_assault_context(context):
+		return {"ok": false, "message": "Enemy withdrawal is locked for town battles.", "state": "invalid"}
+	var event_outcome := "surrender" if outcome_id == "enemy_surrender" else "retreat"
+	var exit_animation_snapshot := _battle_exit_animation_snapshot(session.battle, event_outcome)
+	var base_summary := (
+		"The enemy host lowers its banners and yields the field."
+		if outcome_id == "enemy_surrender"
+		else "The enemy host withdraws and concedes the field."
+	)
+	var messages = [base_summary]
+	_sync_player_force_from_battle(session)
+	var front_summary := _apply_front_pressure_shift(
+		session,
+		_battle_enemy_faction_id(session),
+		-1,
+		"victory"
+	)
+	_append_nonempty_message(messages, front_summary)
+	var commander_summary := _resolve_enemy_commander_aftermath(
+		session,
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_STALEMATE
+	)
+	_append_nonempty_message(messages, commander_summary)
+	var delivery_summary := _apply_delivery_route_aftermath(session, "victory")
+	_append_nonempty_message(messages, delivery_summary)
+	_sync_enemy_force_from_battle(session, true)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
+	session.flags["last_battle_outcome"] = outcome_id
+	_record_battle_aftermath(
+		session,
+		outcome_id,
+		base_summary,
+		{
+			"display_outcome": "surrender" if outcome_id == "enemy_surrender" else "withdrawal",
+			"pressure_summary": front_summary,
+			"recovery_summary": commander_summary,
+			"logistics_summary": delivery_summary,
+		}
+	)
+	session.battle = {}
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
+	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
+	var final_message = " ".join(messages)
+	if session.scenario_status == "in_progress" and final_message != "":
+		session.flags["return_notice"] = final_message
+	return {
+		"ok": true,
+		"message": final_message,
+		"state": "victory",
+		"battle_exit_animation_snapshot": exit_animation_snapshot,
+	}
 
 static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []

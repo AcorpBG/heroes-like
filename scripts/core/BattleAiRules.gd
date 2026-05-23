@@ -12,6 +12,7 @@ const FIELD_OBJECTIVES_KEY := "field_objectives"
 const STACK_HEX_KEY := "hex"
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
+const ENEMY_WITHDRAWAL_SCORING_POLICY := "battle_ai_enemy_withdrawal_decision_v1"
 const BATTLE_HEX_COLUMNS := 11
 const BATTLE_HEX_ROWS := 7
 
@@ -425,8 +426,25 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if String(best.get("action", "")) == "advance" and not _should_close_distance(active_stack) and not best_attack.is_empty():
 		var best_attack_score := float(best_attack.get("score", -9999.0))
 		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
-			return best_attack
-	return best
+			best = best_attack
+	var candidate_scores := {
+		"defend": defend_score,
+		"advance": advance_score,
+	}
+	if not best_attack.is_empty():
+		candidate_scores[String(best_attack.get("action", "attack"))] = float(best_attack.get("score", 0.0))
+	if not best_spell.is_empty():
+		candidate_scores["cast_spell"] = float(best_spell.get("score", 0.0))
+	var withdrawal_candidate := _enemy_withdrawal_action(battle, active_stack, targets, best)
+	if not withdrawal_candidate.is_empty():
+		candidate_scores[String(withdrawal_candidate.get("action", "withdraw"))] = float(withdrawal_candidate.get("score", 0.0))
+		if _candidate_beats(withdrawal_candidate, best):
+			best = withdrawal_candidate
+	var report := best.duplicate(true)
+	report["candidate_scores"] = candidate_scores
+	if String(report.get("action", "")) in ["retreat", "surrender"]:
+		report["scoring_policy"] = ENEMY_WITHDRAWAL_SCORING_POLICY
+	return report
 
 static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "") -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
@@ -1104,6 +1122,71 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 	score += _objective_action_score(battle, side, "advance", active_stack)
 	return score
 
+static func _enemy_withdrawal_action(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	targets: Array,
+	current_best: Dictionary
+) -> Dictionary:
+	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
+		return {}
+	var context = battle.get("context", {})
+	var context_type := String(context.get("type", "")) if context is Dictionary else ""
+	if context_type in ["town_defense", "town_assault"]:
+		return {}
+	var retreat_allowed := bool(battle.get("retreat_allowed", true))
+	var surrender_allowed := bool(battle.get("surrender_allowed", true))
+	if not retreat_allowed and not surrender_allowed:
+		return {}
+	if int(battle.get("round", 1)) < 4:
+		return {}
+	var enemy_health := _side_current_health(battle, "enemy")
+	var player_health := _side_current_health(battle, "player")
+	if enemy_health <= 0 or player_health <= 0:
+		return {}
+	var enemy_ratio := _side_health_ratio(battle, "enemy")
+	var player_ratio := _side_health_ratio(battle, "player")
+	var active_ratio := _health_ratio(active_stack)
+	var pressure_ratio := float(player_health) / float(max(1, enemy_health))
+	if enemy_ratio > 0.34 and active_ratio > 0.35 and pressure_ratio < 2.2:
+		return {}
+	if pressure_ratio < 1.55 and enemy_ratio > 0.22:
+		return {}
+	var best_score := float(current_best.get("score", 0.0)) if not current_best.is_empty() else 0.0
+	var score := 5.0
+	score += (1.0 - enemy_ratio) * 10.0
+	score += maxf(0.0, player_ratio - enemy_ratio) * 6.0
+	score += maxf(0.0, pressure_ratio - 1.5) * 2.0
+	score += maxf(0.0, 0.25 - active_ratio) * 5.0
+	score += maxf(0.0, float(_alive_stacks_for_side(battle, "player").size() - _alive_stacks_for_side(battle, "enemy").size())) * 0.75
+	if int(battle.get("round", 1)) >= 4:
+		score += 1.5
+	if best_score >= 9.0:
+		score -= (best_score - 8.5) * 0.8
+	if score < best_score + 0.35:
+		return {}
+	var action_id := ""
+	if surrender_allowed and (enemy_ratio <= 0.14 or active_ratio <= 0.12 or pressure_ratio >= 4.0):
+		action_id = "surrender"
+	elif retreat_allowed:
+		action_id = "retreat"
+	elif surrender_allowed:
+		action_id = "surrender"
+	if action_id == "":
+		return {}
+	return {
+		"action": action_id,
+		"score": score,
+		"scoring_policy": ENEMY_WITHDRAWAL_SCORING_POLICY,
+		"reason": "enemy_force_preservation",
+		"enemy_health_ratio": enemy_ratio,
+		"player_health_ratio": player_ratio,
+		"active_health_ratio": active_ratio,
+		"pressure_ratio": pressure_ratio,
+		"current_best_action": String(current_best.get("action", "")),
+		"current_best_score": best_score,
+	}
+
 static func _should_close_distance(active_stack: Dictionary) -> bool:
 	if not bool(active_stack.get("ranged", false)):
 		return true
@@ -1351,6 +1434,23 @@ static func _battle_recovery_amount(hero_state: Dictionary, spell: Dictionary) -
 static func _health_ratio(stack: Dictionary) -> float:
 	var max_health: int = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
 	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
+
+static func _side_current_health(battle: Dictionary, side: String) -> int:
+	var total := 0
+	for stack in _alive_stacks_for_side(battle, side):
+		total += max(0, int(stack.get("total_health", 0)))
+	return total
+
+static func _side_base_health(battle: Dictionary, side: String) -> int:
+	var total := 0
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == side:
+			total += max(0, int(stack.get("base_count", 0))) * max(1, int(stack.get("unit_hp", 1)))
+	return total
+
+static func _side_health_ratio(battle: Dictionary, side: String) -> float:
+	var base_health: int = maxi(1, _side_base_health(battle, side))
+	return clampf(float(_side_current_health(battle, side)) / float(base_health), 0.0, 1.0)
 
 static func _has_hostile_ranged_pressure(targets: Array) -> bool:
 	for target in targets:
