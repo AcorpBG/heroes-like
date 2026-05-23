@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-exit-event-motion-presentation-20260523-10184",
-  "currentSliceTitle": "Battle Exit Event Motion Presentation",
+  "currentSliceId": "battle-ai-withdrawal-decision-20260523-10184",
+  "currentSliceTitle": "Battle AI Withdrawal Decision",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: retreat and surrender exit snapshots now expose distinct board token motion roles, and surrender is a first-class battle troop animation family.",
+  "currentSliceNotes": "Completed: enemy tactical battle AI now chooses retreat or surrender from clearly losing field battles and resolves those choices through battle exit animation snapshots and aftermath state.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T20:40:07Z",
+  "updatedAt": "2026-05-23T20:54:23Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,63 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-withdrawal-decision-20260523-10184",
+      "title": "Battle AI Withdrawal Decision",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/battle_autoplay_tactical_order_report.gd"
+      ],
+      "purpose": "Make enemy battle AI preserve forces by choosing retreat or surrender in clearly losing field battles, with score evidence and runtime resolution through battle exit animation snapshots.",
+      "implementationTargets": [
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/battle_ai_withdrawal_decision_report.gd",
+        "tests/battle_ai_withdrawal_decision_report.tscn",
+        "tests/validate_repo.py",
+        "docs/battle-ai-withdrawal-decision-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Enemy AI returns retreat or surrender when the enemy side is badly behind and the corresponding battle exit is allowed.",
+        "Town-defense or otherwise locked withdrawal surfaces do not produce enemy retreat or surrender actions.",
+        "Runtime enemy turns resolve withdrawal through battle exit snapshots, update battle aftermath state, and do not fall through to invalid/fallback actions.",
+        "Focused withdrawal, tactical-order, combat-balance, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No player autoplay withdrawal.",
+        "No final combat balance approval.",
+        "No broad strategic AI rewrite.",
+        "No new reward or economy model for enemy surrender."
+      ],
+      "startedAt": "2026-05-23T20:46:11Z",
+      "updatedAt": "2026-05-23T20:54:23Z",
+      "completedAt": "2026-05-23T20:54:23Z",
+      "notes": "Baseline: retreat and surrender are player actions with presentation snapshots, but enemy tactical AI only scores spell, attack, advance, and defend, so losing enemy field stacks keep fighting until annihilated.",
+      "completionEvidence": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "result": "Enemy battle AI withdrawal decisions now select retreat or surrender only from clearly losing non-town field battles, runtime enemy withdrawal resolves as victory with battle exit animation snapshots, normal autoplay balance gates remain clear, hard difficulty remains under watch, repository validation passed, JSON validation passed, and diff whitespace checks passed. The shared headless simulation harness still reports an existing warning/deferred generated RMG boundary condition with no failures."
+      }
+    },
     {
       "id": "battle-exit-event-motion-presentation-20260523-10184",
       "title": "Battle Exit Event Motion Presentation",

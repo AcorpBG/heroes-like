@@ -16476,6 +16476,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     difficulty_sweep_scene_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.tscn"
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
+    withdrawal_report_path = ROOT / "tests/battle_ai_withdrawal_decision_report.gd"
+    withdrawal_scene_path = ROOT / "tests/battle_ai_withdrawal_decision_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
@@ -16486,6 +16488,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     forest_balance_doc_path = ROOT / "docs/battle-autoplay-forest-cohort-balance-pass-report.md"
     hard_watch_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
+    withdrawal_doc_path = ROOT / "docs/battle-ai-withdrawal-decision-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16499,6 +16502,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         difficulty_sweep_scene_path,
         tactical_report_path,
         tactical_scene_path,
+        withdrawal_report_path,
+        withdrawal_scene_path,
         doc_path,
         calibration_doc_path,
         balance_matrix_doc_path,
@@ -16509,6 +16514,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         forest_balance_doc_path,
         hard_watch_doc_path,
         difficulty_sweep_doc_path,
+        withdrawal_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16588,6 +16594,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "reposition_score",
             "not _can_make_melee_attack(active_stack, battle)",
             "func _can_make_any_ranged_attack",
+            "battle_ai_enemy_withdrawal_decision_v1",
+            "func _enemy_withdrawal_action",
+            "func _side_health_ratio",
         ):
             ensure(required_token in battle_ai_text, errors, f"Battle AI rules are missing tactical autoplay token: {required_token}")
     for path in (balance_report_path, headless_report_path):
@@ -16699,6 +16708,20 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_ai_nonspell_tactical_order_v1",
         ):
             ensure(required_token in tactical_report_text, errors, f"Battle autoplay tactical order report is missing token: {required_token}")
+    if withdrawal_report_path.exists():
+        withdrawal_report_text = withdrawal_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AI_WITHDRAWAL_DECISION_REPORT",
+            "battle_ai_enemy_withdrawal_decision_v1",
+            "enemy_retreat",
+            "battle_exit_animation_snapshot",
+            "locked withdrawal",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in withdrawal_report_text, errors, f"Battle AI withdrawal report is missing token: {required_token}")
+    if withdrawal_scene_path.exists():
+        withdrawal_scene_text = withdrawal_scene_path.read_text(encoding="utf-8")
+        ensure("battle_ai_withdrawal_decision_report.gd" in withdrawal_scene_text, errors, "Battle AI withdrawal scene is not wired to its script.")
     if doc_path.exists():
         doc_text = doc_path.read_text(encoding="utf-8")
         for required_text in (
@@ -16853,6 +16876,17 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in difficulty_sweep_doc_text, errors, f"Battle autoplay difficulty sweep doc is missing required text: {required_text}")
+    if withdrawal_doc_path.exists():
+        withdrawal_doc_text = withdrawal_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle AI Withdrawal Decision Report",
+            "battle-ai-withdrawal-decision-20260523-10184",
+            "battle_ai_enemy_withdrawal_decision_v1",
+            "enemy_retreat",
+            "No final combat balance approval",
+            "No player autoplay withdrawal",
+        ):
+            ensure(required_text in withdrawal_doc_text, errors, f"Battle AI withdrawal doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:
