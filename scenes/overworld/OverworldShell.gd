@@ -3,6 +3,13 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
+const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
+const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
+const UI_ART_OVERWORLD_PARCHMENT_PANEL := "res://art/ui/runtime/overworld/parchment_panel.png"
+const UI_ART_OVERWORLD_WOOD_PANEL := "res://art/ui/runtime/overworld/wood_panel.png"
+const UI_ART_OVERWORLD_MINIMAP_FRAME := "res://art/ui/runtime/overworld/minimap_frame.png"
+const UI_ART_OVERWORLD_HERO_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
+
 @onready var _shell_panel: PanelContainer = %Shell
 @onready var _top_strip_panel: PanelContainer = %TopStrip
 @onready var _status_chip_panel: PanelContainer = %StatusChip
@@ -8096,6 +8103,22 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_command_band_panel, "earth", 22)
 	FrontierVisualKit.apply_panel(_orders_panel, "ink", 18)
 	FrontierVisualKit.apply_panel(_system_panel, "banner", 18)
+	FrontierVisualKit.apply_art_panel(_shell_panel, UI_ART_OVERWORLD_WOOD_PANEL, "earth", 72, 16, Color(0.70, 0.70, 0.68, 1.0))
+	FrontierVisualKit.apply_art_panel(_top_strip_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "banner", 44, 10, Color(0.82, 0.82, 0.78, 1.0))
+	FrontierVisualKit.apply_art_panel(_event_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "ink", 54, 10, Color(0.44, 0.42, 0.39, 1.0))
+	FrontierVisualKit.apply_art_panel(_briefing_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "gold", 54, 10, Color(0.48, 0.45, 0.40, 1.0))
+	FrontierVisualKit.apply_art_panel(_commitment_panel, UI_ART_OVERWORLD_WOOD_PANEL, "green", 58, 10, Color(0.54, 0.58, 0.48, 1.0))
+	FrontierVisualKit.apply_art_panel(_map_panel, UI_ART_OVERWORLD_WOOD_PANEL, "earth", 72, 14, Color(0.58, 0.55, 0.50, 1.0))
+	FrontierVisualKit.apply_art_panel(_map_frame_panel, UI_ART_OVERWORLD_MINIMAP_FRAME, "frame", 70, 12, Color(0.66, 0.66, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_OVERWORLD_SIDEBAR_FRAME, "frame", 70, 12, Color(0.82, 0.82, 0.78, 1.0))
+	FrontierVisualKit.apply_art_panel(_hero_panel, UI_ART_OVERWORLD_HERO_FRAME, "banner", 58, 10, Color(0.72, 0.70, 0.64, 1.0))
+	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.62, 0.60, 0.55, 1.0))
+	FrontierVisualKit.apply_art_panel(_command_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.58, 0.58, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_frontier_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "teal", 54, 10, Color(0.44, 0.48, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_context_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "gold", 54, 10, Color(0.46, 0.43, 0.38, 1.0))
+	FrontierVisualKit.apply_art_panel(_command_band_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "earth", 44, 10, Color(0.70, 0.68, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_orders_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.58, 0.58, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "banner", 44, 10, Color(0.72, 0.70, 0.64, 1.0))
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	FrontierVisualKit.apply_button(_open_command_button, "secondary", 128.0, 34.0, 13)

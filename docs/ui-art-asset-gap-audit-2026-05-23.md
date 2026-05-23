@@ -4,13 +4,13 @@
 
 Owner request: check missing art assets and generate first-pass UI elements for the overworld, battle, and town interfaces using the image generation tool.
 
-This audit is limited to UI art for:
+This audit began as a study-only UI art pass for:
 
 - `scenes/overworld/OverworldShell.tscn`
 - `scenes/battle/BattleShell.tscn`
 - `scenes/town/TownShell.tscn`
 
-It does not approve runtime/source asset ingestion. The generated sheets are art-study candidates only; no scene, renderer, content manifest, or runtime UI reference was changed.
+Runtime ingestion was approved later on 2026-05-23 for selected crops from these sheets. The first runtime pass is limited to panel/frame skins for the existing overworld, battle, and town shells; it does not replace gameplay rendering, save data, or content manifests.
 
 ## Missing-Asset Check
 
@@ -89,13 +89,56 @@ Per-interface generated content:
 - Battle: initiative track, active unit card, stack badge, health/morale meter frames, hex-selection ring, command plates, combat log and confirmation frames.
 - Town: banner, crest medallion, construction card, recruitment/garrison frames, resource ledger, upgrade plaque, defense badge, town tabs, corner filigree.
 
-## Ingestion Boundary
+## Runtime Ingestion
 
-These PNGs are not runtime assets yet. A later ingestion slice must:
+Selected crops from the study sheets were imported under `art/ui/runtime/` and wired through `scripts/ui/FrontierVisualKit.gd` as `StyleBoxTexture` panel skins. The existing flat `StyleBoxFlat` theme remains the fallback when a texture path is missing or invalid.
 
-- Select approved crop regions from the study sheets.
-- Record source/provenance and chosen import paths.
-- Add rollback notes for any replacement of procedural UI drawing.
-- Update scenes/themes/manifests intentionally.
-- Run UI screenshot checks for overworld, battle, and town at supported viewports.
+Runtime crop outputs:
 
+- `art/ui/runtime/overworld/resource_bar.png`
+- `art/ui/runtime/overworld/sidebar_frame.png`
+- `art/ui/runtime/overworld/parchment_panel.png`
+- `art/ui/runtime/overworld/wood_panel.png`
+- `art/ui/runtime/overworld/minimap_frame.png`
+- `art/ui/runtime/overworld/command_button.png`
+- `art/ui/runtime/overworld/hero_frame.png`
+- `art/ui/runtime/battle/initiative_bar.png`
+- `art/ui/runtime/battle/combat_log_panel.png`
+- `art/ui/runtime/battle/unit_card.png`
+- `art/ui/runtime/battle/hex_focus_ring.png`
+- `art/ui/runtime/battle/command_button_red.png`
+- `art/ui/runtime/battle/command_button_blue.png`
+- `art/ui/runtime/battle/battle_footer_panel.png`
+- `art/ui/runtime/town/banner_frame.png`
+- `art/ui/runtime/town/crest_medallion.png`
+- `art/ui/runtime/town/parchment_panel.png`
+- `art/ui/runtime/town/recruit_row.png`
+- `art/ui/runtime/town/resource_ledger.png`
+- `art/ui/runtime/town/build_panel.png`
+- `art/ui/runtime/town/town_button.png`
+
+Runtime wiring:
+
+- `scripts/ui/FrontierVisualKit.gd` now exposes texture-backed panel helpers.
+- `scenes/overworld/OverworldShell.gd` applies overworld frame/resource/sidebar/hero panel skins.
+- `scenes/battle/BattleShell.gd` applies battle banner/log/unit/footer panel skins.
+- `scenes/town/TownShell.gd` applies town banner/crest/parchment/recruit/ledger/build panel skins.
+
+Non-headless screenshot validation:
+
+```bash
+GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a godot4 --path . tests/ui_runtime_skin_visual_report.tscn
+```
+
+Result: passed. The report asserts selected panels in all three shells are backed by the expected runtime `StyleBoxTexture` resources and writes screenshots to `.artifacts/ui_runtime_skin_visual_report/overworld.png`, `.artifacts/ui_runtime_skin_visual_report/battle.png`, and `.artifacts/ui_runtime_skin_visual_report/town.png`.
+
+Visual inspection: the generated screenshots show the runtime skins applied to the live shells with readable text and without blocking the dominant overworld map, battle board, or town stage surfaces.
+
+## Remaining Boundary
+
+This first ingestion pass does not claim final UI art approval. Later UI art slices should:
+
+- Replace generated-study-derived crops with curated production art when final art direction is approved.
+- Keep rollback simple by routing texture use through `FrontierVisualKit`.
+- Continue screenshot validation for overworld, battle, and town at supported viewports when changing UI skins.
+- Avoid covering play surfaces with additional report panels or decorative frames.

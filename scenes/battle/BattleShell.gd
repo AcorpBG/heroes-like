@@ -3,6 +3,11 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
+const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_bar.png"
+const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
+const UI_ART_BATTLE_UNIT_CARD := "res://art/ui/runtime/battle/unit_card.png"
+const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_panel.png"
+
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
 @onready var _risk_panel: PanelContainer = %RiskPanel
@@ -2409,6 +2414,23 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_footer_panel, "ink")
 	FrontierVisualKit.apply_panel(_action_panel, "gold")
 	FrontierVisualKit.apply_panel(_system_panel, "ink")
+	FrontierVisualKit.apply_art_panel(_banner_panel, UI_ART_BATTLE_INITIATIVE_BAR, "banner", 58, 12, Color(0.76, 0.72, 0.68, 1.0))
+	FrontierVisualKit.apply_art_panel(_briefing_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_risk_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "teal", 54, 10, Color(0.50, 0.56, 0.58, 1.0))
+	FrontierVisualKit.apply_art_panel(_consequence_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "earth", 54, 10, Color(0.52, 0.48, 0.44, 1.0))
+	FrontierVisualKit.apply_art_panel(_battlefield_panel, UI_ART_BATTLE_FOOTER_PANEL, "earth", 62, 12, Color(0.58, 0.54, 0.50, 1.0))
+	FrontierVisualKit.apply_art_panel(_battlefield_frame_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "frame", 56, 12, Color(0.56, 0.56, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_BATTLE_UNIT_CARD, "ink", 72, 12, Color(0.72, 0.68, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_command_panel, UI_ART_BATTLE_UNIT_CARD, "ink", 72, 12, Color(0.62, 0.60, 0.58, 1.0))
+	FrontierVisualKit.apply_art_panel(_initiative_panel, UI_ART_BATTLE_INITIATIVE_BAR, "green", 58, 10, Color(0.74, 0.76, 0.66, 1.0))
+	FrontierVisualKit.apply_art_panel(_context_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_spell_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "blue", 54, 10, Color(0.50, 0.54, 0.62, 1.0))
+	FrontierVisualKit.apply_art_panel(_timing_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "earth", 54, 10, Color(0.54, 0.50, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_player_panel, UI_ART_BATTLE_UNIT_CARD, "teal", 72, 12, Color(0.62, 0.68, 0.68, 1.0))
+	FrontierVisualKit.apply_art_panel(_enemy_panel, UI_ART_BATTLE_UNIT_CARD, "red", 72, 12, Color(0.68, 0.58, 0.56, 1.0))
+	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_BATTLE_FOOTER_PANEL, "ink", 62, 12, Color(0.62, 0.60, 0.56, 1.0))
+	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "ink", 54, 10, Color(0.50, 0.50, 0.48, 1.0))
 	FrontierVisualKit.apply_tab_container(_battle_tabs)
 	_battle_tabs.set_tab_title(0, "Order")
 	_battle_tabs.set_tab_title(1, "Focus")

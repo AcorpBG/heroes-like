@@ -149,6 +149,33 @@ static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	style.shadow_offset = Vector2(0.0, 2.0)
 	return style
 
+static func texture_panel_style(path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> StyleBox:
+	if path == "" or not FileAccess.file_exists(path):
+		return panel_style(fallback_tone)
+	var texture := load(path)
+	if not texture is Texture2D:
+		return panel_style(fallback_tone)
+	var texture_2d: Texture2D = texture
+	var max_x_margin: int = max(0, int(floor(float(texture_2d.get_width()) * 0.5)) - 1)
+	var max_y_margin: int = max(0, int(floor(float(texture_2d.get_height()) * 0.5)) - 1)
+	var x_margin: int = clampi(texture_margin, 0, max_x_margin)
+	var y_margin: int = clampi(texture_margin, 0, max_y_margin)
+	var style := StyleBoxTexture.new()
+	style.texture = texture_2d
+	style.texture_margin_left = x_margin
+	style.texture_margin_right = x_margin
+	style.texture_margin_top = y_margin
+	style.texture_margin_bottom = y_margin
+	style.content_margin_left = content_margin
+	style.content_margin_right = content_margin
+	style.content_margin_top = content_margin
+	style.content_margin_bottom = content_margin
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.draw_center = true
+	style.modulate_color = modulate
+	return style
+
 static func badge_style(tone: String) -> StyleBoxFlat:
 	var style := panel_style(tone, 12)
 	style.shadow_size = 3
@@ -156,6 +183,9 @@ static func badge_style(tone: String) -> StyleBoxFlat:
 
 static func apply_panel(panel: PanelContainer, tone: String, corner_radius: int = 16) -> void:
 	panel.add_theme_stylebox_override("panel", panel_style(tone, corner_radius))
+
+static func apply_art_panel(panel: PanelContainer, path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> void:
+	panel.add_theme_stylebox_override("panel", texture_panel_style(path, fallback_tone, texture_margin, content_margin, modulate))
 
 static func apply_badge(panel: PanelContainer, tone: String) -> void:
 	panel.add_theme_stylebox_override("panel", badge_style(tone))
