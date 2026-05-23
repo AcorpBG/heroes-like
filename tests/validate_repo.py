@@ -129,6 +129,10 @@ PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_pla
 PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH = ROOT / "docs" / "packaging-platform-readiness-report.md"
 PACKAGING_PACK_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_pack_export_smoke.py"
 PACKAGING_PACK_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-pack-export-smoke-report.md"
+PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_report.gd"
+PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
+PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
+PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-settings-persistence-smoke-report.md"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -16310,6 +16314,65 @@ def validate_packaging_pack_export_smoke(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaging pack-export smoke doc is missing required text: {required_text}")
 
 
+def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
+    required_paths = (
+        PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH,
+        PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH,
+        PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH,
+        PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing packaged settings persistence smoke file: {path.relative_to(ROOT)}")
+
+    if PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.exists():
+        report_text = PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGED_SETTINGS_PERSISTENCE_REPORT",
+            "packaged_settings_persistence_v1",
+            "SettingsService.SETTINGS_FILE",
+            "user://config/settings.cfg",
+            "SettingsService.save_settings",
+            "SettingsService.load_settings",
+            "ConfigFile",
+            "OS.get_cmdline_user_args",
+            "restored_original_settings",
+            "ran_from_pack_scene",
+            "ResourceLoader.exists",
+        ):
+            ensure(required_token in report_text, errors, f"Packaged settings report scene is missing required token: {required_token}")
+
+    if PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH.exists():
+        smoke_text = PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGED_SETTINGS_PERSISTENCE_SMOKE",
+            "packaged_settings_persistence_smoke_v1",
+            "PRESET_NAME = \"Linux Release\"",
+            "PACKAGED_SCENE",
+            "--export-pack",
+            "--main-pack",
+            "--scene",
+            "scene_report.json",
+            "restored_original_settings",
+            "does_not_claim",
+            "FATAL_PATTERNS",
+        ):
+            ensure(required_token in smoke_text, errors, f"Packaged settings smoke runner is missing required token: {required_token}")
+
+    if PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH.exists():
+        doc_text = PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaged Settings Persistence Smoke Report",
+            "packaged-settings-persistence-smoke-20260523-10184",
+            "user://config/settings.cfg",
+            "--main-pack",
+            "restores any pre-existing local settings file",
+            "does not claim binary export readiness",
+            "clean-machine smoke coverage",
+            "Future release packaging still needs",
+        ):
+            ensure(required_text in doc_text, errors, f"Packaged settings persistence smoke doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -16398,6 +16461,7 @@ def main() -> int:
     validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
+    validate_packaged_settings_persistence_smoke(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
@@ -16494,6 +16558,7 @@ def main() -> int:
     print("- animation validation smoke harness now proves catalog, policy, battle troop, and overworld object reports agree across representative battle/overworld/town/spell/artifact/UI events")
     print("- Linux and Windows export presets, native extension libraries, packaged settings paths, and boot metadata now have a focused packaging/platform readiness gate")
     print("- the packaging smoke gate now exports a real Linux Release PCK, boots it with --main-pack, and keeps binary export/install/release readiness as explicit non-claims")
+    print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:

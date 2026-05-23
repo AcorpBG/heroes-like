@@ -83,6 +83,8 @@ Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now 
 
 Packaging pack-export smoke gate added on 2026-05-23: `tests/packaging_pack_export_smoke.py` now creates a real external `Linux Release` PCK under `.artifacts/packaging_pack_export_smoke/`, verifies it is non-empty, boots it through `godot --headless --main-pack`, and writes a scoped report with command summaries, warning/error tails, PCK size, fatal boot pattern checks, and binary export template availability. This is local Linux-PCK smoke evidence only; it does not claim binary export readiness, Windows packaged smoke coverage, installer readiness, clean-machine validation, or release readiness.
 
+Packaged settings persistence smoke gate added on 2026-05-23: `tests/packaged_settings_persistence_smoke.py` now exports a real external `Linux Release` PCK, runs `tests/packaged_settings_persistence_report.tscn` from that PCK through `godot --headless --main-pack --scene`, writes and reloads `SettingsService` values under `user://config/settings.cfg`, verifies direct `ConfigFile` and reloaded service values, and restores any pre-existing local settings file afterward. This is local PCK settings-persistence evidence only; it does not claim binary export readiness, Windows packaged smoke coverage, installer readiness, clean-machine validation, or release readiness.
+
 Strategic AI raid regroup/retreat added on 2026-05-23: understrength enemy raids now retarget to the nearest reachable owned matching-faction town, transfer spare town garrison units into the field host, synchronize commander army continuity, emit public regroup/retarget events, and resume normal objective selection after crossing the regroup floor. `tests/ai_raid_regroup_retreat_report.tscn` proves the River Pass Vaska raid retreats to Duskfen Bastion and leaves the original player-held resource alone. This is a bounded strategic-AI behavior improvement, not full enemy economy planning, multi-hero grouping, town-defense strategy, or difficulty tuning.
 
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
@@ -5601,6 +5603,7 @@ Goal: expand the playable alpha into a production-shaped game slice.
 Closed tactical slices:
 - `packaging-platform-readiness-20260523-10184`
 - `packaging-pack-export-smoke-20260523-10184`
+- `packaged-settings-persistence-smoke-20260523-10184`
 
 Paused tactical slices:
 

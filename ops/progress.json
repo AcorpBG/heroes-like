@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSliceId": "packaging-pack-export-smoke-20260523-10184",
-  "currentSliceTitle": "Packaging Pack Export Smoke",
+  "currentSliceId": "packaged-settings-persistence-smoke-20260523-10184",
+  "currentSliceTitle": "Packaged Settings Persistence Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: local Linux Release PCK export and --main-pack boot smoke passed with explicit non-release boundaries.",
+  "currentSliceNotes": "Completed: PCK-launched settings persistence smoke passed and restored local settings state.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:01:58Z",
+  "updatedAt": "2026-05-23T16:08:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16661,6 +16661,40 @@
       "updatedAt": "2026-05-23T16:01:58Z",
       "completedAt": "2026-05-23T16:01:58Z",
       "completionNotes": "Completed: local Linux Release --export-pack produced a 287473012-byte PCK and --main-pack boot returned 0 with no fatal boot patterns; binary export templates remain explicitly reported as missing/non-required for this smoke."
+    },
+    {
+      "id": "packaged-settings-persistence-smoke-20260523-10184",
+      "title": "Packaged Settings Persistence Smoke",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Boot a focused settings persistence scene from an exported PCK and prove SettingsService writes to user://config, reloads persisted values, and restores the local settings file after the smoke.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-pack-export-smoke-report.md"
+      ],
+      "baselineChecks": [
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "A focused settings report scene is included in the exported PCK and runs through --main-pack.",
+        "SettingsService writes package-safe user://config/settings.cfg values, reloads them, and exposes the expected runtime values.",
+        "The smoke preserves/restores any pre-existing local settings file and records report evidence without claiming binary-export or clean-machine readiness."
+      ],
+      "nonGoals": [
+        "No binary export readiness claim.",
+        "No installer or clean-machine smoke-test claim.",
+        "No settings UX redesign."
+      ],
+      "updatedAt": "2026-05-23T16:08:51Z",
+      "completedAt": "2026-05-23T16:08:51Z",
+      "completionNotes": "Completed: exported a 287482540-byte Linux Release PCK, launched the packaged settings report scene with --main-pack --scene, verified user://config/settings.cfg direct ConfigFile and reloaded SettingsService values, and restored the original local settings file."
     }
   ],
   "completedImplementationEvidence": [
@@ -20229,6 +20263,47 @@
         "python3 tests/validate_repo.py"
       ],
       "remainingGap": "Release packaging still needs installed binary export templates, Linux/Windows executable export smoke tests, installer/export preset hardening, clean-machine validation, packaged settings persistence checks, and crash/error reporting policy."
+    },
+    {
+      "id": "packaged-settings-persistence-smoke-20260523-10184",
+      "title": "Packaged Settings Persistence Smoke",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "completedAt": "2026-05-23T16:08:51Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaged-settings-persistence-smoke-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "packaged-settings-persistence-smoke-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/packaged_settings_persistence_report.tscn",
+        "tests/packaged_settings_persistence_smoke.py",
+        "docs/packaged-settings-persistence-smoke-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/packaged_settings_persistence_smoke.py exports the Linux Release preset into .artifacts/packaged_settings_persistence_smoke/heroes-like.pck.",
+        "The runner starts res://tests/packaged_settings_persistence_report.tscn from the exported PCK through Godot --main-pack --scene.",
+        "The packaged scene verifies SettingsService.SETTINGS_FILE remains user://config/settings.cfg, writes test audio/presentation/accessibility settings, clears in-memory settings, and reloads them from the config file.",
+        "The scene report records matching direct ConfigFile values and reloaded SettingsService values for master volume 37, music volume 42, windowed mode, 1600x900 resolution, large UI text true, and reduce motion true.",
+        "The smoke restores any pre-existing local settings file or removes the temporary test file when none existed, and the current run reported restored_original_settings true.",
+        "The report keeps binary export, installer, Windows packaged smoke, clean-machine validation, and release readiness as explicit non-claims."
+      ],
+      "validation": [
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 -m py_compile tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "remainingGap": "Release packaging still needs installed binary export templates, Linux/Windows executable export smoke tests, installer/export preset hardening, clean-machine validation, and crash/error reporting policy."
     }
   ],
   "docsReadyEvidence": [
@@ -21279,25 +21354,39 @@
         "python3 tests/validate_repo.py"
       ],
       "summary": "Focused packaging pack-export smoke passed: export return code 0, --main-pack boot return code 0, 287473012-byte PCK, no fatal boot pattern matches, and binary export template status reported separately as missing/non-required."
+    },
+    {
+      "id": "packaged-settings-persistence-smoke-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T16:08:51Z",
+      "commands": [
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/packaging_pack_export_smoke.py",
+        "python3 -m py_compile tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "summary": "Focused packaged settings persistence smoke passed: export return code 0, packaged scene return code 0, 287482540-byte PCK, user://config/settings.cfg values reloaded correctly, original settings restored, and no fatal boot pattern matches."
     }
   ],
   "lastValidation": {
-    "sliceId": "packaging-pack-export-smoke-20260523-10184",
+    "sliceId": "packaged-settings-persistence-smoke-20260523-10184",
     "status": "passed",
     "updated": "2026-05-23",
     "commands": [
+      "python3 tests/packaged_settings_persistence_smoke.py",
       "python3 tests/packaging_pack_export_smoke.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
-      "python3 -m py_compile tests/packaging_pack_export_smoke.py tests/validate_repo.py",
+      "python3 -m py_compile tests/packaged_settings_persistence_smoke.py tests/packaging_pack_export_smoke.py tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check",
       "python3 tests/validate_repo.py"
     ]
   },
   "active_slice": {
-    "id": "packaging-pack-export-smoke-20260523-10184",
+    "id": "packaged-settings-persistence-smoke-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:01:58Z",
-    "note": "Completed: local Linux Release PCK export and --main-pack boot smoke passed with explicit non-release boundaries."
+    "updated": "2026-05-23T16:08:51Z",
+    "note": "Completed: PCK-launched settings persistence smoke passed and restored local settings state."
   }
 }
