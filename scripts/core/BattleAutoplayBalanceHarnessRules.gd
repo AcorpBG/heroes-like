@@ -4,6 +4,7 @@ extends RefCounted
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const DEFAULT_SAMPLE_LIMIT := 12
 const DEFAULT_MINIMUM_SAMPLE_COUNT := 6
@@ -28,6 +29,10 @@ const TUNING_QUEUE_COHORT_MARGIN_WATCH_PCT := 70
 const TUNING_QUEUE_COHORT_OUTCOME_WATCH_PCT := 90
 const TUNING_QUEUE_HIGH_PRIORITY := 80
 const TUNING_QUEUE_MEDIUM_PRIORITY := 50
+const RUNTIME_CONSEQUENCE_PROFILE_SCHEMA := "battle_autoplay_runtime_consequence_profile_v1"
+const RUNTIME_CONSEQUENCE_DISTRIBUTION_SCHEMA := "battle_autoplay_runtime_consequence_distribution_v1"
+const RUNTIME_CONSEQUENCE_GATE_POLICY := "report_only_runtime_consequence_thresholds_v1"
+const BATTLE_ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
 	"causeway-stand",
@@ -75,6 +80,7 @@ static func build_sampling_report(
 	var stalled_sample_count := int(aggregate.get("stalled_sample_count", 0))
 	var requested_minimum = min(minimum_samples, max_samples)
 	var combat_feel_gate := _combat_feel_gate(aggregate, samples.size(), max_samples, requested_minimum)
+	var runtime_consequence_gate := _runtime_consequence_gate(aggregate.get("runtime_consequence_distribution", {}), samples.size())
 	var tuning_queue := balance_tuning_queue(aggregate, samples, combat_feel_gate)
 	if samples.size() < requested_minimum:
 		warnings.append("Battle autoplay sampled %d/%d required cases; add authored encounters or widen scenarios before treating the distribution as tuned." % [samples.size(), requested_minimum])
@@ -125,6 +131,8 @@ static func build_sampling_report(
 			"pacing_band_distribution": aggregate.get("pacing_band_distribution", {}),
 			"initial_role_distribution": aggregate.get("initial_role_distribution", {}),
 			"initial_ability_distribution": aggregate.get("initial_ability_distribution", {}),
+			"runtime_consequence_distribution": aggregate.get("runtime_consequence_distribution", {}),
+			"runtime_consequence_gate": runtime_consequence_gate,
 			"balance_matrix": aggregate.get("balance_matrix", {}),
 			"balance_matrix_gate": aggregate.get("balance_matrix_gate", {}),
 			"combat_feel_gate": combat_feel_gate,
@@ -378,6 +386,9 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 	var initial_signal := _battle_signal(session.battle)
 	var initial_health := _side_health_totals(session.battle)
 	var initial_stack_profile := _stack_profile(session.battle)
+	var runtime_consequence_profile := _empty_runtime_consequence_profile(initial_stack_profile)
+	var last_animation_serial := int(session.battle.get("animation_event_serial", 0))
+	_collect_runtime_effect_state(session.battle, runtime_consequence_profile)
 	var battle_terrain := String(session.battle.get("terrain", "unknown"))
 	var encounter_difficulty := String(session.battle.get("encounter_difficulty", "unknown"))
 	var steps := 0
@@ -395,6 +406,8 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 		last_round = int(session.battle.get("round", last_round))
 		last_health = _side_health_totals(session.battle)
 		var ready_result: Dictionary = BattleRules.resolve_if_battle_ready(session)
+		last_animation_serial = _collect_runtime_events(session.battle, last_animation_serial, runtime_consequence_profile)
+		_collect_runtime_effect_state(session.battle, runtime_consequence_profile)
 		final_state = String(ready_result.get("state", "continue"))
 		if _is_terminal_state(final_state):
 			last_health = _terminal_health_estimate(final_state, last_health, last_health)
@@ -416,6 +429,8 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 			decision["action"] = action
 			decision["fallback_reason"] = "selected_autoplay_order_invalid"
 			result = BattleRules.perform_player_action(session, action)
+		last_animation_serial = _collect_runtime_events(session.battle, last_animation_serial, runtime_consequence_profile)
+		_collect_runtime_effect_state(session.battle, runtime_consequence_profile)
 		action_counts[action] = int(action_counts.get(action, 0)) + 1
 		player_order_count += 1
 		final_state = String(result.get("state", "continue"))
@@ -480,6 +495,7 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 		},
 		"pacing_band": _pacing_band(final_state, last_round, steps, step_limit),
 		"initial_stack_profile": initial_stack_profile,
+		"runtime_consequence_profile": _finalize_runtime_consequence_profile(runtime_consequence_profile),
 		"initial_battle_signature": _signature_for(initial_signal),
 		"final_signal_signature": _signature_for({
 			"state": final_state,
@@ -596,6 +612,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 	var pacing_band_distribution := {}
 	var initial_role_distribution := {}
 	var initial_ability_distribution := {}
+	var runtime_consequence_distribution := _empty_runtime_consequence_distribution()
 	for sample in samples:
 		if not (sample is Dictionary):
 			continue
@@ -631,6 +648,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		total_initial_initiative_spread += int(initiative_profile.get("spread", 0))
 		_merge_count_map(initial_role_distribution, profile.get("role_counts", {}))
 		_merge_count_map(initial_ability_distribution, profile.get("ability_counts", {}))
+		_merge_runtime_consequence_distribution(runtime_consequence_distribution, sample.get("runtime_consequence_profile", {}))
 		var action_counts: Dictionary = sample.get("action_counts", {}) if sample.get("action_counts", {}) is Dictionary else {}
 		for action in action_counts.keys():
 			action_distribution[String(action)] = int(action_distribution.get(String(action), 0)) + int(action_counts[action])
@@ -669,6 +687,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"pacing_band_distribution": pacing_band_distribution,
 		"initial_role_distribution": initial_role_distribution,
 		"initial_ability_distribution": initial_ability_distribution,
+		"runtime_consequence_distribution": _finalize_runtime_consequence_distribution(runtime_consequence_distribution, samples.size()),
 		"balance_matrix": balance_matrix,
 		"balance_matrix_gate": balance_matrix_gate,
 	}
@@ -738,6 +757,249 @@ static func _combat_feel_gate(aggregate: Dictionary, sample_count: int, requeste
 		"failure_count": hard_failures.size(),
 		"warnings": warnings,
 		"failures": hard_failures,
+	}
+
+static func _empty_runtime_consequence_profile(initial_stack_profile: Dictionary) -> Dictionary:
+	return {
+		"schema": RUNTIME_CONSEQUENCE_PROFILE_SCHEMA,
+		"policy": "deterministic_sample_observation_only",
+		"initial_ability_instance_count": int(initial_stack_profile.get("ability_instance_count", 0)),
+		"initial_ability_counts": initial_stack_profile.get("ability_counts", {}),
+		"event_counts": {},
+		"status_application_event_count": 0,
+		"status_expiration_event_count": 0,
+		"cast_event_count": 0,
+		"damage_event_count": 0,
+		"movement_event_count": 0,
+		"defend_event_count": 0,
+		"retaliation_event_count": 0,
+		"effect_observation_tick_count": 0,
+		"effect_observation_count": 0,
+		"ability_effect_observation_count": 0,
+		"spell_effect_observation_count": 0,
+		"positive_modifier_observation_count": 0,
+		"negative_modifier_observation_count": 0,
+		"max_active_effect_instances": 0,
+		"effect_id_counts": {},
+		"effect_source_type_counts": {},
+		"effect_side_observations": {},
+	}
+
+static func _collect_runtime_events(battle: Dictionary, last_serial: int, profile: Dictionary) -> int:
+	if battle.is_empty():
+		return last_serial
+	var next_serial := last_serial
+	var queue: Array = battle.get(BATTLE_ANIMATION_EVENT_QUEUE_KEY, []) if battle.get(BATTLE_ANIMATION_EVENT_QUEUE_KEY, []) is Array else []
+	var event_counts: Dictionary = profile.get("event_counts", {}) if profile.get("event_counts", {}) is Dictionary else {}
+	for event in queue:
+		if not (event is Dictionary):
+			continue
+		var serial := int(event.get("serial", 0))
+		if serial <= last_serial:
+			continue
+		next_serial = max(next_serial, serial)
+		var event_id := String(event.get("event_id", ""))
+		if event_id == "":
+			continue
+		event_counts[event_id] = int(event_counts.get(event_id, 0)) + 1
+		match event_id:
+			"battle_status_applied":
+				profile["status_application_event_count"] = int(profile.get("status_application_event_count", 0)) + 1
+			"battle_status_expired":
+				profile["status_expiration_event_count"] = int(profile.get("status_expiration_event_count", 0)) + 1
+			"battle_unit_cast":
+				profile["cast_event_count"] = int(profile.get("cast_event_count", 0)) + 1
+			"battle_unit_hit", "battle_unit_death":
+				profile["damage_event_count"] = int(profile.get("damage_event_count", 0)) + 1
+			"battle_unit_move":
+				profile["movement_event_count"] = int(profile.get("movement_event_count", 0)) + 1
+			"battle_unit_defend":
+				profile["defend_event_count"] = int(profile.get("defend_event_count", 0)) + 1
+			"battle_retaliation":
+				profile["retaliation_event_count"] = int(profile.get("retaliation_event_count", 0)) + 1
+	profile["event_counts"] = event_counts
+	return next_serial
+
+static func _collect_runtime_effect_state(battle: Dictionary, profile: Dictionary) -> void:
+	if battle.is_empty():
+		return
+	var active_instances := 0
+	var effect_id_counts: Dictionary = profile.get("effect_id_counts", {}) if profile.get("effect_id_counts", {}) is Dictionary else {}
+	var source_type_counts: Dictionary = profile.get("effect_source_type_counts", {}) if profile.get("effect_source_type_counts", {}) is Dictionary else {}
+	var side_observations: Dictionary = profile.get("effect_side_observations", {}) if profile.get("effect_side_observations", {}) is Dictionary else {}
+	var round_number := int(battle.get("round", 1))
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		var side := String(stack.get("side", "unknown"))
+		for effect in SpellRulesScript.active_effects_for_round(stack, round_number):
+			if not (effect is Dictionary):
+				continue
+			active_instances += 1
+			var effect_id := String(effect.get("effect_id", "unknown"))
+			var source_type := String(effect.get("source_type", "unknown"))
+			effect_id_counts[effect_id] = int(effect_id_counts.get(effect_id, 0)) + 1
+			source_type_counts[source_type] = int(source_type_counts.get(source_type, 0)) + 1
+			side_observations[side] = int(side_observations.get(side, 0)) + 1
+			if source_type == "ability":
+				profile["ability_effect_observation_count"] = int(profile.get("ability_effect_observation_count", 0)) + 1
+			elif source_type == "spell":
+				profile["spell_effect_observation_count"] = int(profile.get("spell_effect_observation_count", 0)) + 1
+			var modifiers: Dictionary = effect.get("modifiers", {}) if effect.get("modifiers", {}) is Dictionary else {}
+			for modifier_id in modifiers.keys():
+				var amount := int(modifiers[modifier_id])
+				if amount > 0:
+					profile["positive_modifier_observation_count"] = int(profile.get("positive_modifier_observation_count", 0)) + 1
+				elif amount < 0:
+					profile["negative_modifier_observation_count"] = int(profile.get("negative_modifier_observation_count", 0)) + 1
+	if active_instances > 0:
+		profile["effect_observation_tick_count"] = int(profile.get("effect_observation_tick_count", 0)) + 1
+		profile["effect_observation_count"] = int(profile.get("effect_observation_count", 0)) + active_instances
+		profile["max_active_effect_instances"] = max(int(profile.get("max_active_effect_instances", 0)), active_instances)
+	profile["effect_id_counts"] = effect_id_counts
+	profile["effect_source_type_counts"] = source_type_counts
+	profile["effect_side_observations"] = side_observations
+
+static func _finalize_runtime_consequence_profile(profile: Dictionary) -> Dictionary:
+	var result := profile.duplicate(true)
+	result["observed_effect_ids"] = _sorted_keys(result.get("effect_id_counts", {}))
+	result["observed_event_ids"] = _sorted_keys(result.get("event_counts", {}))
+	result["has_status_consequence"] = (
+		int(result.get("status_application_event_count", 0)) > 0
+		or int(result.get("effect_observation_count", 0)) > 0
+	)
+	result["has_ability_consequence"] = int(result.get("ability_effect_observation_count", 0)) > 0
+	result["has_spell_consequence"] = int(result.get("spell_effect_observation_count", 0)) > 0 or int(result.get("cast_event_count", 0)) > 0
+	result["profile_signature"] = _signature_for({
+		"schema": RUNTIME_CONSEQUENCE_PROFILE_SCHEMA,
+		"event_counts": result.get("event_counts", {}),
+		"effect_id_counts": result.get("effect_id_counts", {}),
+		"source_type_counts": result.get("effect_source_type_counts", {}),
+		"status_application_event_count": int(result.get("status_application_event_count", 0)),
+		"ability_effect_observation_count": int(result.get("ability_effect_observation_count", 0)),
+		"spell_effect_observation_count": int(result.get("spell_effect_observation_count", 0)),
+	})
+	return result
+
+static func _empty_runtime_consequence_distribution() -> Dictionary:
+	return {
+		"schema": RUNTIME_CONSEQUENCE_DISTRIBUTION_SCHEMA,
+		"policy": "deterministic_sample_observation_only",
+		"sample_count": 0,
+		"samples_with_initial_ability_count": 0,
+		"samples_with_status_consequence_count": 0,
+		"samples_with_ability_consequence_count": 0,
+		"samples_with_spell_consequence_count": 0,
+		"total_initial_ability_instance_count": 0,
+		"total_status_application_event_count": 0,
+		"total_status_expiration_event_count": 0,
+		"total_cast_event_count": 0,
+		"total_damage_event_count": 0,
+		"total_effect_observation_count": 0,
+		"total_ability_effect_observation_count": 0,
+		"total_spell_effect_observation_count": 0,
+		"max_active_effect_instances": 0,
+		"event_counts": {},
+		"effect_id_counts": {},
+		"effect_source_type_counts": {},
+		"effect_side_observations": {},
+	}
+
+static func _merge_runtime_consequence_distribution(distribution: Dictionary, profile_value: Variant) -> void:
+	if not (profile_value is Dictionary):
+		return
+	var profile: Dictionary = profile_value
+	distribution["sample_count"] = int(distribution.get("sample_count", 0)) + 1
+	var initial_ability_count := int(profile.get("initial_ability_instance_count", 0))
+	distribution["total_initial_ability_instance_count"] = int(distribution.get("total_initial_ability_instance_count", 0)) + initial_ability_count
+	if initial_ability_count > 0:
+		distribution["samples_with_initial_ability_count"] = int(distribution.get("samples_with_initial_ability_count", 0)) + 1
+	if bool(profile.get("has_status_consequence", false)):
+		distribution["samples_with_status_consequence_count"] = int(distribution.get("samples_with_status_consequence_count", 0)) + 1
+	if bool(profile.get("has_ability_consequence", false)):
+		distribution["samples_with_ability_consequence_count"] = int(distribution.get("samples_with_ability_consequence_count", 0)) + 1
+	if bool(profile.get("has_spell_consequence", false)):
+		distribution["samples_with_spell_consequence_count"] = int(distribution.get("samples_with_spell_consequence_count", 0)) + 1
+	for field_id in [
+		"status_application_event_count",
+		"status_expiration_event_count",
+		"cast_event_count",
+		"damage_event_count",
+		"effect_observation_count",
+		"ability_effect_observation_count",
+		"spell_effect_observation_count",
+	]:
+		var total_key := "total_%s" % field_id
+		distribution[total_key] = int(distribution.get(total_key, 0)) + int(profile.get(field_id, 0))
+	distribution["max_active_effect_instances"] = max(
+		int(distribution.get("max_active_effect_instances", 0)),
+		int(profile.get("max_active_effect_instances", 0))
+	)
+	var event_counts: Dictionary = distribution.get("event_counts", {}) if distribution.get("event_counts", {}) is Dictionary else {}
+	var effect_id_counts: Dictionary = distribution.get("effect_id_counts", {}) if distribution.get("effect_id_counts", {}) is Dictionary else {}
+	var source_type_counts: Dictionary = distribution.get("effect_source_type_counts", {}) if distribution.get("effect_source_type_counts", {}) is Dictionary else {}
+	var side_observations: Dictionary = distribution.get("effect_side_observations", {}) if distribution.get("effect_side_observations", {}) is Dictionary else {}
+	_merge_count_map(event_counts, profile.get("event_counts", {}))
+	_merge_count_map(effect_id_counts, profile.get("effect_id_counts", {}))
+	_merge_count_map(source_type_counts, profile.get("effect_source_type_counts", {}))
+	_merge_count_map(side_observations, profile.get("effect_side_observations", {}))
+	distribution["event_counts"] = event_counts
+	distribution["effect_id_counts"] = effect_id_counts
+	distribution["effect_source_type_counts"] = source_type_counts
+	distribution["effect_side_observations"] = side_observations
+
+static func _finalize_runtime_consequence_distribution(distribution: Dictionary, fallback_sample_count: int) -> Dictionary:
+	var result := distribution.duplicate(true)
+	result["sample_count"] = max(int(result.get("sample_count", 0)), fallback_sample_count)
+	result["observed_event_ids"] = _sorted_keys(result.get("event_counts", {}))
+	result["observed_effect_ids"] = _sorted_keys(result.get("effect_id_counts", {}))
+	result["observed_source_types"] = _sorted_keys(result.get("effect_source_type_counts", {}))
+	result["distribution_signature"] = _signature_for({
+		"schema": RUNTIME_CONSEQUENCE_DISTRIBUTION_SCHEMA,
+		"sample_count": int(result.get("sample_count", 0)),
+		"event_counts": result.get("event_counts", {}),
+		"effect_id_counts": result.get("effect_id_counts", {}),
+		"source_type_counts": result.get("effect_source_type_counts", {}),
+		"samples_with_ability_consequence_count": int(result.get("samples_with_ability_consequence_count", 0)),
+		"total_status_application_event_count": int(result.get("total_status_application_event_count", 0)),
+	})
+	return result
+
+static func _runtime_consequence_gate(distribution_value: Variant, sample_count: int) -> Dictionary:
+	var distribution: Dictionary = distribution_value if distribution_value is Dictionary else {}
+	var failures := []
+	if sample_count <= 0:
+		failures.append("no_runtime_consequence_samples")
+	if String(distribution.get("schema", "")) != RUNTIME_CONSEQUENCE_DISTRIBUTION_SCHEMA:
+		failures.append("runtime_consequence_distribution_schema_missing")
+	if int(distribution.get("total_initial_ability_instance_count", 0)) <= 0:
+		failures.append("no_initial_ability_surface_sampled")
+	if int(distribution.get("total_status_application_event_count", 0)) <= 0:
+		failures.append("no_status_application_events_observed")
+	if int(distribution.get("samples_with_ability_consequence_count", 0)) <= 0:
+		failures.append("no_ability_effect_observations")
+	if int(distribution.get("max_active_effect_instances", 0)) <= 0:
+		failures.append("no_active_effect_instances_observed")
+	return {
+		"status": "fail" if not failures.is_empty() else "pass",
+		"policy": RUNTIME_CONSEQUENCE_GATE_POLICY,
+		"sample_count": sample_count,
+		"samples_with_initial_ability_count": int(distribution.get("samples_with_initial_ability_count", 0)),
+		"samples_with_status_consequence_count": int(distribution.get("samples_with_status_consequence_count", 0)),
+		"samples_with_ability_consequence_count": int(distribution.get("samples_with_ability_consequence_count", 0)),
+		"samples_with_spell_consequence_count": int(distribution.get("samples_with_spell_consequence_count", 0)),
+		"total_status_application_event_count": int(distribution.get("total_status_application_event_count", 0)),
+		"total_ability_effect_observation_count": int(distribution.get("total_ability_effect_observation_count", 0)),
+		"total_spell_effect_observation_count": int(distribution.get("total_spell_effect_observation_count", 0)),
+		"max_active_effect_instances": int(distribution.get("max_active_effect_instances", 0)),
+		"thresholds": {
+			"min_initial_ability_instance_count": 1,
+			"min_status_application_event_count": 1,
+			"min_ability_consequence_sample_count": 1,
+			"min_active_effect_instances": 1,
+		},
+		"failure_count": failures.size(),
+		"failures": failures,
 	}
 
 static func _side_health_totals(battle: Dictionary) -> Dictionary:
@@ -1214,6 +1476,15 @@ static func _array_of_strings(value: Variant) -> Array:
 		return result
 	for item in value:
 		result.append(String(item))
+	result.sort()
+	return result
+
+static func _sorted_keys(value: Variant) -> Array:
+	var result := []
+	if not (value is Dictionary):
+		return result
+	for key in value.keys():
+		result.append(String(key))
 	result.sort()
 	return result
 

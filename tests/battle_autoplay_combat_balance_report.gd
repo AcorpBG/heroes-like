@@ -40,6 +40,7 @@ func _run() -> void:
 		"policy": "authored_encounter_terminal_margin_balance_gate_v1",
 		"max_average_terminal_margin_pct": MAX_AVERAGE_TERMINAL_MARGIN_PCT,
 		"summary": summary,
+		"runtime_consequence_gate": summary.get("runtime_consequence_gate", {}),
 		"samples": compact_samples,
 	}
 	if int(summary.get("average_terminal_health_margin_pct", 0)) > MAX_AVERAGE_TERMINAL_MARGIN_PCT:
@@ -52,6 +53,8 @@ func _run() -> void:
 		_fail("Combat-feel threshold gate still reports high_terminal_health_margin.", payload)
 		return
 	if not _assert_balance_matrix(summary, payload):
+		return
+	if not _assert_runtime_consequence_gate(summary, payload):
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
@@ -88,6 +91,23 @@ func _assert_balance_matrix(summary: Dictionary, payload: Dictionary) -> bool:
 		return false
 	if not outliers.is_empty():
 		_fail("Battle autoplay balance matrix still has terminal-margin outliers: %s" % outliers, payload)
+		return false
+	return true
+
+func _assert_runtime_consequence_gate(summary: Dictionary, payload: Dictionary) -> bool:
+	var distribution: Dictionary = summary.get("runtime_consequence_distribution", {}) if summary.get("runtime_consequence_distribution", {}) is Dictionary else {}
+	var gate: Dictionary = summary.get("runtime_consequence_gate", {}) if summary.get("runtime_consequence_gate", {}) is Dictionary else {}
+	if String(distribution.get("schema", "")) != "battle_autoplay_runtime_consequence_distribution_v1":
+		_fail("Battle autoplay runtime consequence distribution schema missing.", payload)
+		return false
+	if String(gate.get("policy", "")) != "report_only_runtime_consequence_thresholds_v1":
+		_fail("Battle autoplay runtime consequence gate policy missing.", payload)
+		return false
+	if String(gate.get("status", "")) != "pass":
+		_fail("Battle autoplay runtime consequence gate must pass for the current authored sample set: %s" % gate, payload)
+		return false
+	if int(distribution.get("samples_with_ability_consequence_count", 0)) <= 0:
+		_fail("Battle autoplay runtime consequence distribution did not observe ability consequences.", payload)
 		return false
 	return true
 

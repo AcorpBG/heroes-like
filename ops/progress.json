@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
-  "currentSliceTitle": "Main Menu Archived Campaign Empty-State Smoke",
+  "currentSliceId": "battle-autoplay-runtime-consequence-harness-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Runtime Consequence Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: archived campaign empty-state main menu smoke now matches the current campaign-domain reset, preserves package-backed skirmish launch coverage, and is gated by validate_repo plus a focused report.",
+  "currentSliceNotes": "Completed report-only battle autoplay runtime consequence harness: per-sample profiles, aggregate distribution, runtime consequence gate, focused report scene, shared report assertions, docs, and repository validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:50:00Z",
+  "updatedAt": "2026-05-23T21:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,74 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-runtime-consequence-harness-20260523-10184",
+      "title": "Battle Autoplay Runtime Consequence Harness",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/SpellRules.gd"
+      ],
+      "purpose": "Extend deterministic battle autoplay balance evidence from initial ability presence into observed runtime status, spell, and ability consequences during sampled battles.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_runtime_consequence_report.gd",
+        "tests/battle_autoplay_runtime_consequence_report.tscn",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-runtime-consequence-harness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Each sampled battle emits a runtime consequence profile with deterministic schema and event/effect observations.",
+        "The shared summary exposes aggregate runtime consequence distribution and a report-only gate.",
+        "Focused tests prove at least one sampled authored battle produces ability/status consequences and keep the report deterministic.",
+        "Repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No automatic runtime balance tuning.",
+        "No authored encounter roster retune unless the new report exposes an existing hard failure.",
+        "No final combat balance approval.",
+        "No new spell or unit ability content."
+      ],
+      "startedAt": "2026-05-23T21:37:10Z",
+      "updatedAt": "2026-05-23T21:55:00Z",
+      "notes": "Completed report-only battle autoplay runtime consequence harness: per-sample profiles, aggregate distribution, runtime consequence gate, focused report scene, shared report assertions, docs, and repository validation.",
+      "completedAt": "2026-05-23T21:55:00Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "runtime_consequence_gate": "pass",
+          "distribution_signature": "7d9508d8",
+          "sample_count": 12,
+          "samples_with_status_consequence_count": 12,
+          "samples_with_ability_consequence_count": 11,
+          "samples_with_spell_consequence_count": 12,
+          "total_status_application_event_count": 57,
+          "total_ability_effect_observation_count": 124,
+          "total_spell_effect_observation_count": 121
+        }
+      }
+    },
     {
       "id": "main-menu-archived-campaign-empty-state-smoke-20260523-10184",
       "title": "Main Menu Archived Campaign Empty-State Smoke",
@@ -22994,8 +23062,8 @@
     ],
     "summary": "Battle exit event motion presentation completed: BattleBoardView now reports retreat_withdraw and surrender_stand_down token motion for exit snapshots; AnimationCueCatalog and generated animation metadata treat surrender as its own battle troop state family; focused battle animation, animation contract, validation smoke, cue catalog, unit animation manifest, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
   },
-  "active_slice": "battle-exit-event-motion-presentation-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T20:40:07Z",
+  "active_slice": "battle-autoplay-runtime-consequence-harness-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T21:55:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",
