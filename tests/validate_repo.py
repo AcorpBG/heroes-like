@@ -20,6 +20,7 @@ SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
 RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
 UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
 AMBIENT_AUDIO_PATH = ROOT / "scripts" / "autoload" / "AmbientAudio.gd"
+MUSIC_AUDIO_PATH = ROOT / "scripts" / "autoload" / "MusicAudio.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
@@ -155,6 +156,9 @@ UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-rep
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
+MUSIC_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "music_audio_runtime_report.gd"
+MUSIC_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "music_audio_runtime_report.tscn"
+MUSIC_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "music-audio-runtime-baseline-report.md"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -17193,6 +17197,105 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Overworld ambient audio runtime doc is missing required text: {required_text}")
 
 
+def validate_music_audio_runtime(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    required_paths = (
+        project_path,
+        MUSIC_AUDIO_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        OUTCOME_SCRIPT_PATH,
+        MUSIC_AUDIO_REPORT_SCRIPT_PATH,
+        MUSIC_AUDIO_REPORT_SCENE_PATH,
+        MUSIC_AUDIO_REPORT_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing music audio runtime file: {path.relative_to(ROOT)}")
+
+    if project_path.exists():
+        project_text = project_path.read_text(encoding="utf-8")
+        ensure(
+            'MusicAudio="*res://scripts/autoload/MusicAudio.gd"' in project_text,
+            errors,
+            "project.godot must register MusicAudio as an autoload",
+        )
+
+    if MUSIC_AUDIO_PATH.exists():
+        music_text = MUSIC_AUDIO_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "class_name HeroesMusicAudio",
+            "AudioStreamGenerator",
+            "AudioStreamGeneratorPlayback",
+            "AudioStreamPlayer",
+            "SettingsService.master_volume_percent",
+            "SettingsService.music_volume_percent",
+            "func sync_context",
+            "func stop_music",
+            "func validation_summary",
+            "music_audio_runtime_v1",
+            "music_menu_theme",
+            "music_overworld_theme",
+            "music_battle_theme",
+            "music_outcome_theme",
+            "MAX_ACTIVE_PLAYERS",
+            "audio_bus",
+            "Music",
+            "Master",
+            "signature == _current_signature",
+        ):
+            ensure(required_token in music_text, errors, f"MusicAudio.gd is missing required token: {required_token}")
+
+    shell_requirements = (
+        (MAIN_MENU_SCRIPT_PATH, ("MusicAudio.sync_context", '"menu"', '"music_audio"')),
+        (OVERWORLD_SCRIPT_PATH, ("_sync_overworld_music_audio", "MusicAudio.sync_context", "validation_music_audio_summary", '"overworld"', '"music_audio"')),
+        (BATTLE_SCRIPT_PATH, ("_battle_music_metadata", "MusicAudio.sync_context", '"battle"', '"music_audio"')),
+        (OUTCOME_SCRIPT_PATH, ("_outcome_music_metadata", "MusicAudio.sync_context", '"outcome"', '"music_audio"')),
+    )
+    for path, tokens in shell_requirements:
+        if path.exists():
+            text = path.read_text(encoding="utf-8")
+            for required_token in tokens:
+                ensure(required_token in text, errors, f"{path.relative_to(ROOT)} is missing music audio token: {required_token}")
+
+    if MUSIC_AUDIO_REPORT_SCRIPT_PATH.exists():
+        report_text = MUSIC_AUDIO_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "MUSIC_AUDIO_RUNTIME_REPORT",
+            "MusicAudio.validation_reset",
+            "MusicAudio.sync_context",
+            "music_audio_runtime_v1",
+            "music_menu_theme",
+            "music_overworld_theme",
+            "music_battle_theme",
+            "music_outcome_theme",
+            "validation_snapshot",
+            "MainMenu.tscn",
+            "MAX_ACTIVE_PLAYERS",
+        ):
+            ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
+
+    if MUSIC_AUDIO_REPORT_DOC_PATH.exists():
+        doc_text = MUSIC_AUDIO_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Music Audio Runtime Baseline Report",
+            "music-audio-runtime-baseline-20260523-10184",
+            "scripts/autoload/MusicAudio.gd",
+            "AudioStreamGenerator",
+            "music_menu_theme",
+            "music_overworld_theme",
+            "music_battle_theme",
+            "music_outcome_theme",
+            "MainMenu",
+            "OverworldShell",
+            "BattleShell",
+            "ScenarioOutcomeShell",
+            "Not final music composition",
+            "No imported final audio assets",
+        ):
+            ensure(required_text in doc_text, errors, f"Music audio runtime doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -17288,6 +17391,7 @@ def main() -> int:
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
     validate_overworld_ambient_audio_runtime(errors)
+    validate_music_audio_runtime(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)

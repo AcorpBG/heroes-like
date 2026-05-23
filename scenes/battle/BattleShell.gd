@@ -109,6 +109,9 @@ func _ready() -> void:
 	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(phase_started)
 	_session.game_state = "battle"
 	phase_started = ProfileLogScript.begin_usec()
+	MusicAudio.sync_context("battle", "battle_shell_ready", _battle_music_metadata())
+	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	var initial_result := BattleRules.resolve_if_battle_ready(_session)
 	buckets["resolve_ready"] = ProfileLogScript.elapsed_ms(phase_started)
 	_last_message = String(initial_result.get("message", ""))
@@ -134,6 +137,17 @@ func _ready() -> void:
 	_refresh()
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
+
+func _battle_music_metadata() -> Dictionary:
+	if _session == null:
+		return {}
+	return {
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"encounter_id": String(_session.battle.get("encounter_id", "")) if _session.battle is Dictionary else "",
+		"encounter_difficulty": String(_session.battle.get("difficulty", _session.difficulty)) if _session.battle is Dictionary else _session.difficulty,
+	}
 
 func _on_prev_target_pressed() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -1605,6 +1619,7 @@ func validation_snapshot() -> Dictionary:
 	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
+		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,

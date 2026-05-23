@@ -67,6 +67,8 @@ UI audio cue runtime baseline added on 2026-05-23: `UiAudio` is now a generated-
 
 Overworld ambient audio runtime baseline added on 2026-05-23: `AmbientAudio` is now a generated-audio autoload that synthesizes bounded overworld ambience from live session terrain, dominant map terrain, day, hero position, and enemy pressure on the Master bus. `OverworldShell` syncs the service during ready/refresh and exposes validation summaries, while `tests/overworld_ambient_audio_runtime_report.tscn` proves terrain ambience, pressure and day-pulse layers, signature-based non-restart behavior, and shell snapshot evidence. This is runtime placeholder map ambience, not final sound design, imported ambient stems, music, or mixer polish.
 
+Music audio runtime baseline added on 2026-05-23: `MusicAudio` is now a generated-music autoload that routes deterministic menu, overworld, battle, and outcome context cues through layered `AudioStreamGenerator` playback, respects master/music mute state, and avoids restarting unchanged context signatures. `MainMenu`, `OverworldShell`, `BattleShell`, and `ScenarioOutcomeShell` sync the service and expose validation summaries, while `tests/music_audio_runtime_report.tscn` proves all four direct context routes plus a live menu-shell route. This is runtime placeholder music routing, not final composition, imported stems, mixer mastering, or soundtrack approval.
+
 Battle event playback sequencing added on 2026-05-23: `BattleBoardView` now preserves event serial timing in active playback records, adds a bounded target-reaction delay for hit/death/status/retaliation cue handoffs, derives generated sheet frame indexes from event progress instead of wall-clock only, and keeps delayed target audio as scheduled until its cue start. `tests/battle_event_animation_state_report.tscn` now proves source ranged cues start before target status cues and that scheduled target audio carries a positive sequence delay. This is deterministic presentation ordering for generated sheets/placeholders, not final authored animation timing, imported audio/VFX, or combat balance tuning.
 
 Battle exit animation handoff added on 2026-05-23: retreat and surrender now preserve pre-resolution `battle_exit_animation_snapshot` payloads before `session.battle` is cleared, `BattleBoardView` can render those presentation snapshots, and `BattleShell` briefly shows the exit animation while inputs are locked before routing to the overworld/outcome flow. `tests/battle_event_animation_state_report.tscn` now proves `battle_unit_retreat`/`retreat_withdraw_column` and `battle_unit_surrender`/`surrender_stand_down` are produced by real exit actions and render through the board snapshot path. This closes an exit-action presentation gap, not final authored animation timing, camera work, imported VFX/audio, or combat balance.
@@ -5321,6 +5323,43 @@ nonGoals:
 - No automatic tuning or authored content writeback.
 - No final combat balance approval.
 - No strategic AI rewrite, encounter retune, or manual-play replacement.
+
+Completed owner-directed implementation slice:
+
+id: `music-audio-runtime-baseline-20260523-10184`
+phase: `phase-5-playable-alpha-baseline`
+purpose: Add a runtime music state layer so top-level game contexts have deterministic music routing and validation evidence before final composed audio assets exist.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/autoload/UiAudio.gd`
+- `scripts/autoload/AmbientAudio.gd`
+- `project.godot`
+- `tests/validate_repo.py`
+implementationTargets:
+- `scripts/autoload/MusicAudio.gd`
+- `project.godot`
+- `scenes/menus/MainMenu.gd`
+- `scenes/overworld/OverworldShell.gd`
+- `scenes/battle/BattleShell.gd`
+- `scenes/results/ScenarioOutcomeShell.gd`
+- `tests/music_audio_runtime_report.gd`
+- `tests/music_audio_runtime_report.tscn`
+- `docs/music-audio-runtime-baseline-report.md`
+- `tests/validate_repo.py`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `MusicAudio` is registered as an autoload and respects master/music mute state.
+- Menu, overworld, battle, and outcome contexts sync deterministic generated music layer records.
+- Music state avoids restarting when the context signature is unchanged.
+- Validation summary exposes schema, current context, cue ids, layers, active player cap, records, and audio bus.
+- Focused report proves direct context routing plus a live shell routing path.
+nonGoals:
+- No final composed soundtrack.
+- No imported audio files.
+- No broad audio mixer redesign.
+- No save migration.
 
 Completed owner-directed implementation slice:
 
