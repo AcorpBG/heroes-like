@@ -12,11 +12,31 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 UNITS_PATH = ROOT / "content" / "units.json"
 MANIFEST_PATH = ROOT / "content" / "unit_art_manifest.json"
+ANIMATION_MANIFEST_PATH = ROOT / "content" / "unit_animation_manifest.json"
 ART_ROOT = ROOT / "art" / "units"
+ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 
 PORTRAIT_SIZE = (384, 512)
 BATTLE_ICON_SIZE = (160, 160)
 OVERWORLD_ICON_SIZE = (96, 96)
+ANIMATION_FRAME_SIZE = (64, 64)
+ANIMATION_FRAMES_PER_STATE = 4
+BATTLE_TROOP_ANIMATION_STATES = [
+    {"event_id": "battle_stack_idle", "family": "idle", "state": "idle_hold"},
+    {"event_id": "battle_stack_ready", "family": "ready", "state": "ready_active"},
+    {"event_id": "battle_unit_move", "family": "move", "state": "move_path_step"},
+    {"event_id": "battle_unit_melee_attack", "family": "attack", "state": "melee_windup_release"},
+    {"event_id": "battle_unit_ranged_attack", "family": "attack", "state": "ranged_aim_release"},
+    {"event_id": "battle_unit_hit", "family": "hit", "state": "hit_stagger"},
+    {"event_id": "battle_unit_death", "family": "death", "state": "death_fall"},
+    {"event_id": "battle_unit_cast", "family": "cast", "state": "cast_focus_release"},
+    {"event_id": "battle_status_applied", "family": "status", "state": "status_apply_loop"},
+    {"event_id": "battle_status_expired", "family": "status", "state": "status_expire"},
+    {"event_id": "battle_unit_defend", "family": "defend", "state": "defend_brace"},
+    {"event_id": "battle_unit_retaliation", "family": "retaliation", "state": "retaliation_snap"},
+    {"event_id": "battle_unit_retreat", "family": "retreat", "state": "retreat_withdraw"},
+    {"event_id": "battle_unit_surrender", "family": "retreat", "state": "surrender_lowered"},
+]
 
 PALETTES = {
     "faction_embercourt": {
@@ -68,6 +88,7 @@ def main() -> int:
     units = json.loads(UNITS_PATH.read_text(encoding="utf-8")).get("items", [])
     for subdir in ("portraits", "battle_icons", "overworld_icons"):
         (ART_ROOT / subdir).mkdir(parents=True, exist_ok=True)
+    ANIMATION_ROOT.mkdir(parents=True, exist_ok=True)
 
     manifest = {
         "schema_version": 1,
@@ -78,6 +99,20 @@ def main() -> int:
             "battle_icon": {"width": BATTLE_ICON_SIZE[0], "height": BATTLE_ICON_SIZE[1]},
             "overworld_icon": {"width": OVERWORLD_ICON_SIZE[0], "height": OVERWORLD_ICON_SIZE[1]},
         },
+        "items": [],
+    }
+    animation_manifest = {
+        "schema_id": "unit_animation_manifest_v1",
+        "generator": "deterministic_unit_animation_assets_v1",
+        "source": "content/units.json",
+        "surface": "battle_troop_sprite_sheet",
+        "frame_size": {"width": ANIMATION_FRAME_SIZE[0], "height": ANIMATION_FRAME_SIZE[1]},
+        "frames_per_state": ANIMATION_FRAMES_PER_STATE,
+        "sheet_size": {
+            "width": ANIMATION_FRAME_SIZE[0] * ANIMATION_FRAMES_PER_STATE,
+            "height": ANIMATION_FRAME_SIZE[1] * len(BATTLE_TROOP_ANIMATION_STATES),
+        },
+        "states": BATTLE_TROOP_ANIMATION_STATES,
         "items": [],
     }
 
@@ -92,10 +127,12 @@ def main() -> int:
         portrait_path = ART_ROOT / "portraits" / f"{unit_id}.png"
         battle_path = ART_ROOT / "battle_icons" / f"{unit_id}.png"
         overworld_path = ART_ROOT / "overworld_icons" / f"{unit_id}.png"
+        animation_path = ANIMATION_ROOT / f"{unit_id}.png"
 
         draw_portrait(unit, palette, motif, initials, portrait_path)
         draw_battle_icon(unit, palette, motif, initials, battle_path)
         draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+        draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
 
         manifest["items"].append(
             {
@@ -111,9 +148,24 @@ def main() -> int:
                 "overworld_icon": to_res_path(overworld_path),
             }
         )
+        animation_manifest["items"].append(
+            {
+                "id": unit_id,
+                "unit_id": unit_id,
+                "name": str(unit.get("name", unit_id)),
+                "faction_id": faction_key,
+                "tier": int(unit.get("tier", 1)),
+                "role": str(unit.get("role", "")),
+                "motif": motif,
+                "sprite_sheet": to_res_path(animation_path),
+                "states": [state["state"] for state in BATTLE_TROOP_ANIMATION_STATES],
+            }
+        )
 
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+    ANIMATION_MANIFEST_PATH.write_text(json.dumps(animation_manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
     print(f"generated {len(units)} unit art records into {ART_ROOT.relative_to(ROOT)}")
+    print(f"generated {len(units)} unit animation records into {ANIMATION_ROOT.relative_to(ROOT)}")
     return 0
 
 
@@ -291,6 +343,178 @@ def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, pa
     draw_unit_signature(draw, str(unit["id"]), OVERWORLD_ICON_SIZE, metal, (16, 18), 8)
     draw_centered_text(draw, initials, (20, 66, 76, 90), font(12, True), (20, 22, 24, 230))
     image.save(path)
+
+
+def draw_battle_troop_animation_sheet(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
+    sheet_size = (
+        ANIMATION_FRAME_SIZE[0] * ANIMATION_FRAMES_PER_STATE,
+        ANIMATION_FRAME_SIZE[1] * len(BATTLE_TROOP_ANIMATION_STATES),
+    )
+    sheet = Image.new("RGBA", sheet_size, (0, 0, 0, 0))
+    for state_index, state in enumerate(BATTLE_TROOP_ANIMATION_STATES):
+        for frame_index in range(ANIMATION_FRAMES_PER_STATE):
+            frame = draw_animation_frame(unit, palette, motif, initials, state, state_index, frame_index)
+            sheet.alpha_composite(
+                frame,
+                (
+                    frame_index * ANIMATION_FRAME_SIZE[0],
+                    state_index * ANIMATION_FRAME_SIZE[1],
+                ),
+            )
+    sheet.save(path)
+
+
+def draw_animation_frame(
+    unit: dict,
+    palette: dict,
+    motif: str,
+    initials: str,
+    state: dict,
+    state_index: int,
+    frame_index: int,
+) -> Image.Image:
+    image, draw = canvas(ANIMATION_FRAME_SIZE)
+    unit_id = str(unit["id"])
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    family = str(state["family"])
+    state_name = str(state["state"])
+    seed = hash_int(f"{unit_id}:{state_name}:{frame_index}")
+    phase = frame_index / max(1, ANIMATION_FRAMES_PER_STATE - 1)
+    center_x = 32 + animation_offset_x(family, state_name, frame_index, seed)
+    center_y = 34 + animation_offset_y(family, state_name, frame_index, seed)
+    size = 19 + ((seed >> 4) % 3)
+    alpha = 220
+    if family == "death":
+        center_y += 4 + frame_index * 2
+        size = max(12, size - frame_index * 2)
+        alpha = 230 - frame_index * 28
+    elif state_name == "surrender_lowered":
+        center_y += frame_index
+        size = max(14, size - 2)
+    elif family == "retreat":
+        alpha = 230 - frame_index * 18
+
+    draw.ellipse([9, 49, 55, 60], fill=with_alpha(scale_color(shadow, 0.55), 92))
+    draw_animation_state_accent(draw, state, frame_index, palette, seed)
+    draw_motif(draw, motif, (center_x, center_y), size, palette, f"{unit_id}:{state_name}:{frame_index}")
+    draw_unit_signature(draw, unit_id, ANIMATION_FRAME_SIZE, metal, (4 + (seed % 4), 5 + ((seed >> 3) % 4)), 5)
+    draw_animation_frame_signature(draw, unit_id, state_index, frame_index, metal)
+    draw_animation_palette_marks(draw, palette, seed, frame_index)
+    if family == "ready":
+        draw.ellipse([6, 6, 58, 58], outline=with_alpha(metal, 120 + frame_index * 28), width=2)
+    if family == "hit":
+        draw.line([(16, 18 + frame_index * 3), (48, 46 - frame_index * 4)], fill=with_alpha((245, 238, 218), 180), width=2)
+    if family == "death":
+        draw.line([(16, 47), (50, 54)], fill=with_alpha(primary, 115), width=3)
+    if state_name == "surrender_lowered":
+        draw.line([(14, 19), (14, 48)], fill=with_alpha(metal, 210), width=2)
+        draw.polygon([(14, 19), (31, 23), (14, 29)], fill=with_alpha((236, 232, 210), 190))
+    draw_centered_text(draw, initials[:2], (3, 46, 25, 62), font(8, True), with_alpha(scale_color(shadow, 0.65), alpha))
+    if alpha < 220:
+        fade = Image.new("RGBA", ANIMATION_FRAME_SIZE, (0, 0, 0, 255 - alpha))
+        image = Image.alpha_composite(image, fade)
+    _ = phase
+    return image
+
+
+def animation_offset_x(family: str, state_name: str, frame_index: int, seed: int) -> int:
+    if family == "move":
+        return [-7, -2, 3, 8][frame_index]
+    if state_name == "melee_windup_release":
+        return [-3, 2, 8, 1][frame_index]
+    if state_name == "ranged_aim_release":
+        return [-2, -1, 0, 2][frame_index]
+    if family == "hit":
+        return [-3, 4, -2, 2][frame_index]
+    if family == "retreat":
+        return [4, 0, -5, -10][frame_index]
+    if family == "retaliation":
+        return [3, -2, -7, -1][frame_index]
+    return ((seed >> 5) % 3) - 1
+
+
+def animation_offset_y(family: str, state_name: str, frame_index: int, seed: int) -> int:
+    if family == "idle":
+        return [0, -1, 0, 1][frame_index]
+    if family == "ready":
+        return [1, 0, -2, 0][frame_index]
+    if family == "move":
+        return [2, -1, 1, -2][frame_index]
+    if family == "cast":
+        return [2, 0, -3, -1][frame_index]
+    if family == "defend":
+        return [1, 0, 0, 1][frame_index]
+    return ((seed >> 8) % 3) - 1
+
+
+def draw_animation_state_accent(draw: ImageDraw.ImageDraw, state: dict, frame_index: int, palette: dict, seed: int) -> None:
+    family = str(state["family"])
+    state_name = str(state["state"])
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    metal = palette["metal"]
+    shadow = palette["shadow"]
+    pulse = 80 + frame_index * 34
+    if family == "move":
+        draw.line([(14 + frame_index * 4, 54), (28 + frame_index * 4, 54)], fill=with_alpha(metal, 145), width=2)
+        draw.line([(8 + frame_index * 5, 58), (18 + frame_index * 5, 58)], fill=with_alpha(metal, 95), width=1)
+    elif state_name == "melee_windup_release":
+        draw.arc([8, 10, 58, 58], 205 - frame_index * 14, 292 + frame_index * 18, fill=with_alpha(metal, 135 + frame_index * 22), width=2)
+    elif state_name == "ranged_aim_release":
+        draw.line([(13, 31), (51 + frame_index * 2, 25 - frame_index * 2)], fill=with_alpha(metal, 125 + frame_index * 28), width=2)
+        draw.ellipse([49 + frame_index * 2, 22 - frame_index * 2, 55 + frame_index * 2, 28 - frame_index * 2], fill=with_alpha(secondary, 150))
+    elif family == "cast":
+        for index in range(5):
+            angle = math.radians(index * 72 + frame_index * 18 + seed % 9)
+            x = 32 + math.cos(angle) * (18 + frame_index * 2)
+            y = 30 + math.sin(angle) * (18 + frame_index * 2)
+            draw.ellipse([x - 2, y - 2, x + 2, y + 2], fill=with_alpha(metal, 150))
+    elif family == "status":
+        for index in range(3):
+            y = 13 + ((index * 11 + frame_index * 3) % 32)
+            draw.ellipse([49, y, 55, y + 6], outline=with_alpha(secondary, 140), width=1)
+    elif family == "defend":
+        draw.polygon([(12, 16), (26, 9), (28, 47), (13, 52)], fill=with_alpha(scale_color(shadow, 0.75), 160), outline=with_alpha(metal, 170))
+    elif family == "retaliation":
+        draw.line([(50, 18), (18 - frame_index * 2, 39 + frame_index)], fill=with_alpha(metal, 160), width=2)
+    elif family == "retreat":
+        draw.line([(49 - frame_index * 7, 16), (55 - frame_index * 7, 16)], fill=with_alpha(primary, 110), width=2)
+    elif family == "death":
+        draw.arc([18, 36, 48, 64], 180, 350, fill=with_alpha(primary, 90 + frame_index * 20), width=2)
+    else:
+        draw.ellipse([12 - frame_index, 12 - frame_index, 52 + frame_index, 52 + frame_index], outline=with_alpha(secondary, pulse), width=1)
+
+
+def draw_animation_frame_signature(
+    draw: ImageDraw.ImageDraw,
+    unit_id: str,
+    state_index: int,
+    frame_index: int,
+    color: tuple[int, int, int],
+) -> None:
+    seed = hash_int(f"{unit_id}:animation:{state_index}:{frame_index}")
+    for index in range(4):
+        x = 49 + index * 3
+        y = 5 + ((seed >> (index * 4)) & 0x07)
+        draw.rectangle([x, y, x + 1, y + 1], fill=with_alpha(color, 160 + frame_index * 18))
+    draw.point((3 + (state_index % 10), 3 + frame_index), fill=with_alpha(color, 210))
+
+
+def draw_animation_palette_marks(draw: ImageDraw.ImageDraw, palette: dict, seed: int, frame_index: int) -> None:
+    colors = [
+        palette["primary"],
+        palette["secondary"],
+        palette["metal"],
+        palette["shadow"],
+        scale_color(palette["secondary"], 1.18),
+    ]
+    for index, color in enumerate(colors):
+        x = 5 + index * 4
+        y = 6 + ((seed >> (index * 3)) & 0x03) + frame_index
+        draw.rectangle([x, y, x + 2, y + 2], fill=with_alpha(color, 180))
 
 
 def draw_motif(draw: ImageDraw.ImageDraw, motif: str, center: tuple[int, int], size: int, palette: dict, unit_id: str) -> None:
