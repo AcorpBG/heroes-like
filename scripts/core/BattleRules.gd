@@ -5818,6 +5818,7 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.Ses
 static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
+	var exit_animation_snapshot := _battle_exit_animation_snapshot(session.battle, "retreat")
 	var base_summary := "The army withdraws from battle."
 	if _is_town_assault_context(session.battle.get("context", {})):
 		base_summary = "The assault breaks off from the walls."
@@ -5850,11 +5851,12 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
-	return {"ok": true, "message": final_message, "state": "retreat"}
+	return {"ok": true, "message": final_message, "state": "retreat", "battle_exit_animation_snapshot": exit_animation_snapshot}
 
 static func _finalize_surrender(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
+	var exit_animation_snapshot := _battle_exit_animation_snapshot(session.battle, "surrender")
 	var base_summary := "The commander lowers the banners and yields the field."
 	if _is_town_assault_context(session.battle.get("context", {})):
 		base_summary = "The commander yields the assault beneath the walls."
@@ -5886,7 +5888,7 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
-	return {"ok": true, "message": final_message, "state": "surrender"}
+	return {"ok": true, "message": final_message, "state": "surrender", "battle_exit_animation_snapshot": exit_animation_snapshot}
 
 static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []
@@ -10667,6 +10669,17 @@ static func _battle_seed(session: SessionStateStoreScript.SessionData) -> int:
 
 static func _battle_state_counter(session: SessionStateStoreScript.SessionData) -> int:
 	return hash(JSON.stringify(session.battle))
+
+static func _battle_exit_animation_snapshot(battle: Dictionary, outcome: String) -> Dictionary:
+	if battle.is_empty():
+		return {}
+	var snapshot := battle.duplicate(true)
+	snapshot["presentation_mode"] = "battle_exit_animation"
+	snapshot["presentation_outcome"] = outcome
+	snapshot["presentation_policy"] = "pre_resolution_animation_snapshot"
+	snapshot[STACK_ANIMATION_STATES_KEY] = _normalize_stack_animation_states(snapshot.get(STACK_ANIMATION_STATES_KEY, {}))
+	snapshot[ANIMATION_EVENT_QUEUE_KEY] = _normalize_animation_event_queue(snapshot.get(ANIMATION_EVENT_QUEUE_KEY, []))
+	return snapshot
 
 static func _clear_stack_animation_states(battle: Dictionary) -> void:
 	if battle.is_empty():

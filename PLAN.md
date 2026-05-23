@@ -51,6 +51,8 @@ Battle VFX cue presentation added on 2026-05-23: battle animation events now pre
 
 Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active battle audio cue ids into short generated `AudioStreamGenerator` waveforms on the Master bus, with per-cue timbre/duration specs for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle cues. The board exposes `audio_playback` validation records and rate-limits active generated players. `tests/battle_event_animation_state_report.tscn` proves ranged/status events synthesize audio cue waveforms and expire with playback. This is runtime placeholder audio playback, not final sound design, imported audio assets, music, ambience, mixer polish, or combat balance tuning.
 
+Battle exit animation handoff added on 2026-05-23: retreat and surrender now preserve pre-resolution `battle_exit_animation_snapshot` payloads before `session.battle` is cleared, `BattleBoardView` can render those presentation snapshots, and `BattleShell` briefly shows the exit animation while inputs are locked before routing to the overworld/outcome flow. `tests/battle_event_animation_state_report.tscn` now proves `battle_unit_retreat`/`retreat_withdraw_column` and `battle_unit_surrender`/`surrender_stand_down` are produced by real exit actions and render through the board snapshot path. This closes an exit-action presentation gap, not final authored animation timing, camera work, imported VFX/audio, or combat balance.
+
 Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBalanceHarnessRules` now provides deterministic report-only battle sampling for authored encounters, including outcome distribution, action distribution, completed/stalled counts, round/step pacing, side health totals, remaining-health percentages, and compact per-sample turn logs. `HeadlessSimulationHarnessRules` and `BalanceRegressionReportRules` both consume the shared sampler, and their focused tests assert the new pacing/action/health evidence. Current evidence is still narrow authored-scenario sampling for balance work, not automatic tuning, manual-play replacement, or final combat balance approval.
 
 Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle autoplay sampler now records per-sample terrain, encounter difficulty, initial stack counts, role mix, ability ids, initiative spread, action mix, invalid-order count, damage dealt by side, damage per round, pacing band, and terminal health margin. `BalanceRegressionReportRules` and `HeadlessSimulationHarnessRules` both surface the aggregate diagnostics, and their focused reports assert the new damage/action/terrain/difficulty/role/ability/initiative fields. This is balance instrumentation for tuning passes, not an automatic rebalance, authored encounter retune, AI rewrite, or final combat-feel approval.
@@ -5037,6 +5039,32 @@ completionCriteria:
 nonGoals:
 - No final imported audio assets.
 - No music, ambience, UI audio, mixer polish, camera, VFX asset, or combat balance tuning.
+
+Completed implementation slice:
+
+id: `battle-exit-animation-handoff-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Preserve and present retreat/surrender animation events before terminal battle routing clears the live battle payload.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scripts/core/BattleRules.gd`
+- `scenes/battle/BattleBoardView.gd`
+- `scenes/battle/BattleShell.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-exit-animation-handoff-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Retreat and surrender actions return a pre-resolution `battle_exit_animation_snapshot` carrying their generated animation states and event queue records.
+- `BattleBoardView` can render a presentation snapshot without requiring an active live `session.battle`.
+- `BattleShell` locks inputs, shows the exit snapshot briefly, and then routes to the normal battle outcome destination.
+- Focused validation proves retreat and surrender actions produce and render their expected exit animation states.
+nonGoals:
+- No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning.
+- No save migration or durable battle-state replacement.
 
 Completed owner-directed implementation slice:
 

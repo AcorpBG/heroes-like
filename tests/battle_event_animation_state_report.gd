@@ -26,6 +26,8 @@ func _run() -> void:
 	_validate_ranged_status_state()
 	_validate_death_state()
 	_validate_spell_cast_state()
+	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
+	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
 	await _validate_board_playback_lifecycle()
 	_report["ok"] = _errors.is_empty()
@@ -132,6 +134,44 @@ func _validate_spell_cast_state() -> void:
 	_expect_event("spell caster queue", session.battle, "player_0", "battle_unit_cast", "cast_support_anchor")
 	_expect_event("spell target queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
 	_report["cases"]["spell_cast"] = {"caster_state": caster_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+
+func _validate_exit_action_state(action_id: String, event_id: String, expected_state: String) -> void:
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	var result := BattleRulesScript.perform_player_action(session, action_id)
+	_expect_ok("%s exit action" % action_id, result)
+	_expect_equal("%s exit result state" % action_id, String(result.get("state", "")), action_id)
+	var snapshot: Dictionary = result.get("battle_exit_animation_snapshot", {}) if result.get("battle_exit_animation_snapshot", {}) is Dictionary else {}
+	if snapshot.is_empty():
+		_error("%s did not preserve a battle_exit_animation_snapshot before clearing battle." % action_id)
+		return
+	_expect_equal("%s exit presentation mode" % action_id, String(snapshot.get("presentation_mode", "")), "battle_exit_animation")
+	_expect_equal("%s exit presentation outcome" % action_id, String(snapshot.get("presentation_outcome", "")), action_id)
+	var player_state := BattleRulesScript.animation_state_for_stack(snapshot, _stack_by_id(snapshot, "player_0"))
+	_expect_equal("%s player exit animation state" % action_id, player_state, expected_state)
+	_expect_event("%s player exit queue" % action_id, snapshot, "player_0", event_id, expected_state)
+
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_presentation_snapshot(snapshot)
+	await get_tree().process_frame
+	var summary: Dictionary = view.validation_unit_art_summary()
+	view.queue_free()
+	await get_tree().process_frame
+	var observed_states := _observed_animation_states(summary)
+	_expect_equal("%s board exit animation state" % action_id, String(observed_states.get("player_0", "")), expected_state)
+	var playback: Dictionary = summary.get("animation_playback", {}) if summary.get("animation_playback", {}) is Dictionary else {}
+	if int(playback.get("active_playback_count", 0)) < 1:
+		_error("%s board exit playback did not keep the exit animation active: %s" % [action_id, playback])
+	_report["cases"][action_id] = {
+		"result_state": String(result.get("state", "")),
+		"snapshot_policy": String(snapshot.get("presentation_policy", "")),
+		"player_state": player_state,
+		"events": BattleRulesScript.animation_event_states(snapshot),
+		"queue": BattleRulesScript.animation_event_queue(snapshot),
+		"board_states": observed_states,
+		"board_playback": playback,
+	}
 
 func _validate_board_runtime_summary() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)

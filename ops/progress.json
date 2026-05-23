@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "strategic-ai-raid-regroup-retreat-20260523-10184",
-  "currentSliceTitle": "Strategic AI Raid Regroup Retreat",
+  "currentSliceId": "battle-exit-animation-handoff-20260523-10184",
+  "currentSliceTitle": "Battle Exit Animation Handoff",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: understrength enemy raids now retreat to owned matching-faction towns, pull garrison units into the host, emit regroup/retarget events, and resume targeting after crossing the regroup floor.",
+  "currentSliceNotes": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -15979,6 +15979,46 @@
         "No broad enemy economy planner.",
         "No town-defense rewrite, multi-hero grouping rewrite, or difficulty tuning."
       ]
+    },
+    {
+      "id": "battle-exit-animation-handoff-20260523-10184",
+      "title": "Battle Exit Animation Handoff",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Preserve and present retreat/surrender animation events before terminal battle routing clears the live battle payload.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-exit-animation-handoff-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Retreat and surrender actions return a pre-resolution battle_exit_animation_snapshot carrying expected event ids and animation states.",
+        "BattleBoardView can render presentation snapshots without requiring an active live session.battle.",
+        "BattleShell locks inputs, shows the exit snapshot briefly, and then routes to the normal battle outcome destination.",
+        "Focused validation proves retreat and surrender actions produce and render retreat_withdraw_column and surrender_stand_down."
+      ],
+      "nonGoals": [
+        "No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning.",
+        "No save migration or durable battle-state replacement."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18920,6 +18960,45 @@
         "git diff --check"
       ],
       "remainingGap": "This is a bounded regroup/retreat behavior; broad strategic AI quality, multi-hero grouping, enemy economy planning, town defense, objective sequencing, and difficulty tuning remain outside this slice."
+    },
+    {
+      "id": "battle-exit-animation-handoff-20260523-10184",
+      "title": "Battle Exit Animation Handoff",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-exit-animation-handoff-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-exit-animation-handoff-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Retreat and surrender finalization now returns battle_exit_animation_snapshot before clearing session.battle.",
+        "The snapshots preserve battle_unit_retreat/retreat_withdraw_column and battle_unit_surrender/surrender_stand_down queue records for board presentation.",
+        "BattleBoardView can render an explicit battle presentation snapshot outside the live session.battle payload.",
+        "BattleShell locks inputs, shows the exit snapshot, and routes after a short timer instead of dropping the exit animation immediately."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This closes retreat/surrender exit-action presentation handoff; final authored animation timing, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -19783,26 +19862,38 @@
         "git diff --check"
       ],
       "summary": "Focused AI raid regroup/retreat report passed: Vaska retreats to Duskfen Bastion, pulls garrison units into the host, emits regroup/retarget events, and leaves the original resource under player control; full validation gates passed."
+    },
+    {
+      "id": "battle-exit-animation-handoff-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with retreat and surrender exit snapshots proving board-rendered retreat_withdraw_column and surrender_stand_down before terminal routing."
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
+    "id": "battle-exit-animation-handoff-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_turn_transcript_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused AI raid regroup/retreat report passed: Vaska retreats to Duskfen Bastion, pulls garrison units into the host, emits regroup/retarget events, and leaves the original resource under player control; full repository validation gates passed."
+    "summary": "Focused battle event animation report passed with retreat and surrender exit snapshots proving board-rendered retreat_withdraw_column and surrender_stand_down before terminal routing; full repository validation gates passed."
   },
   "active_slice": {
-    "id": "strategic-ai-raid-regroup-retreat-20260523-10184",
+    "id": "battle-exit-animation-handoff-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: understrength enemy raids now retreat to owned matching-faction towns, pull garrison units into the host, and resume targeting after crossing the regroup floor."
+    "note": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked."
   }
 }
