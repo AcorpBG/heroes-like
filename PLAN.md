@@ -75,6 +75,8 @@ Battle autoplay combat-feel threshold gate added on 2026-05-23: the shared sampl
 
 Battle autoplay combat balance calibration added on 2026-05-23: the prior `high_terminal_health_margin` warning has a first bounded fix. `BattleAiRules` now scores no-attack melee repositioning so stacks do not defend forever after abstract distance closes but hex-board contact is still missing, the sampled early authored army groups have been retuned, and `tests/battle_autoplay_combat_balance_report.tscn` gates the default sampler at 65% average terminal margin. Current focused evidence is `average_terminal_health_margin_pct: 55`, a 3/3 victory/defeat split, preserved `low`/`medium`/`high` difficulty labels, and `combat_feel_gate.status: pass`. This is a first deterministic balance calibration, not final combat balance approval.
 
+Headless strategic AI live-turn harness added on 2026-05-23: `HeadlessSimulationHarnessRules` now treats `strategic_ai_live_turn_execution` as a required subsystem, running the River Pass Vaska/Sable resource-front fixture through `EnemyTurnRules.run_enemy_turn(...)`. `tests/headless_simulation_harness_report.tscn` asserts both resource fronts are seized, companion target reservation stays unique, assignment/seizure events exist, public event output does not leak internal task/score fields, and the harness remains report-only. This is one strategic AI harness fixture, not full AI quality, long-route planning, recruitment grouping, defense, retreat timing, or objective breadth.
+
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
 Strategic AI raid regroup/retreat added on 2026-05-23: understrength enemy raids now retarget to the nearest reachable owned matching-faction town, transfer spare town garrison units into the field host, synchronize commander army continuity, emit public regroup/retarget events, and resume normal objective selection after crossing the regroup floor. `tests/ai_raid_regroup_retreat_report.tscn` proves the River Pass Vaska raid retreats to Duskfen Bastion and leaves the original player-held resource alone. This is a bounded strategic-AI behavior improvement, not full enemy economy planning, multi-hero grouping, town-defense strategy, or difficulty tuning.
@@ -5438,6 +5440,31 @@ nonGoals:
 - No full strategic AI quality claim.
 - No persistent AI task board.
 - No long-route path quality, town/hero/artifact target expansion, or UI surfacing.
+
+Completed implementation slice:
+
+id: `headless-strategic-ai-live-turn-harness-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Promote live strategic AI resource-front execution into the shared headless simulation harness so AI-quality regressions are visible in the standard report suite.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/strategic-ai-live-turn-execution-report.md`
+implementationTargets:
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
+- The standard headless report runs a real `EnemyTurnRules.run_enemy_turn(...)` live commander fixture.
+- The harness asserts both River Pass resource fronts are seized, companion target reservation keeps Vaska/Sable targets unique, and assignment/seizure events exist.
+- The harness preserves report-only/no-save boundaries and checks public event output for internal score/task/reservation leaks.
+nonGoals:
+- No full strategic AI quality claim.
+- No automatic tuning or authored content writeback.
+- No long-route planning, recruitment grouping, defense rotation, retreat timing, or scenario-breadth completion.
 
 Completed implementation slice:
 

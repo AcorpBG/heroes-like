@@ -13229,6 +13229,58 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI hero task live turn execution doc is missing required text: {required_text}")
 
 
+def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
+    doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
+    for path in (
+        ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd",
+        ROOT / "tests" / "headless_simulation_harness_report.gd",
+        ROOT / "tests" / "headless_simulation_harness_report.tscn",
+        doc_path,
+    ):
+        ensure(path.exists(), errors, f"Missing headless strategic AI live turn harness file: {path.relative_to(ROOT)}")
+    harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
+    for required_token in (
+        '"strategic_ai_live_turn_execution"',
+        "func _strategic_ai_live_turn_execution",
+        "live_commander_resource_front_turn_execution",
+        "resource_fronts_seized",
+        "reserved_unique_targets",
+        "target_assignment_event_count",
+        "site_seizure_event_count",
+        "public_event_leak_tokens",
+        "no_hero_task_state_write_no_save_migration",
+        "EnemyTurnRules.run_enemy_turn(session)",
+    ):
+        ensure(required_token in harness_text, errors, f"Headless simulation harness is missing strategic AI live-turn token: {required_token}")
+    report_text = (ROOT / "tests" / "headless_simulation_harness_report.gd").read_text(encoding="utf-8")
+    for required_token in (
+        "strategic_ai_live_turn_execution",
+        "_assert_live_ai_turn_execution",
+        "river_free_company",
+        "river_signal_post",
+        "resource_fronts_seized",
+        "target_assignment_event_count",
+        "site_seizure_event_count",
+        "reserved_unique_targets",
+        "public_event_leak_tokens",
+        "no_hero_task_state_write_no_save_migration",
+    ):
+        ensure(required_token in report_text, errors, f"Headless simulation harness report is missing strategic AI assertion token: {required_token}")
+    if doc_path.exists():
+        doc_text = doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Headless Strategic AI Live Turn Harness Report",
+            "implementation evidence",
+            "`strategic_ai_live_turn_execution`",
+            "EnemyTurnRules.run_enemy_turn",
+            "resource_fronts_seized = 2",
+            "reserved_unique_targets = true",
+            "No save migration",
+            "not a full AI quality claim",
+        ):
+            ensure(required_text in doc_text, errors, f"Headless strategic AI live turn harness doc is missing required text: {required_text}")
+
+
 def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
     for path in (
         AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH,
@@ -16181,6 +16233,7 @@ def main() -> int:
     validate_ai_hero_task_state_normalizer_preservation(errors)
     validate_ai_hero_task_live_adoption_gate(errors)
     validate_ai_hero_task_live_turn_execution(errors)
+    validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_raid_regroup_retreat(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)

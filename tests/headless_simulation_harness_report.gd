@@ -50,6 +50,12 @@ func _assert_report(first: Dictionary) -> bool:
 	if battle_case.is_empty():
 		_fail("Headless simulation harness is missing battle resolver sampling evidence.")
 		return false
+	var live_ai_case := _find_case(first, "strategic_ai_live_turn_execution")
+	if live_ai_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI turn execution evidence.")
+		return false
+	if not _assert_live_ai_turn_execution(live_ai_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -131,6 +137,45 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_live_ai_turn_execution(live_ai_case: Dictionary) -> bool:
+	if String(live_ai_case.get("status", "")) != "pass":
+		_fail("Live strategic AI turn execution did not pass: %s" % JSON.stringify(live_ai_case))
+		return false
+	var summary: Dictionary = live_ai_case.get("summary", {}) if live_ai_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_ai_case.get("evidence", {}) if live_ai_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("primary_target_id", "")) != "river_free_company" or String(summary.get("companion_target_id", "")) != "river_signal_post":
+		_fail("Live strategic AI turn execution used unexpected target ids: %s" % summary)
+		return false
+	if int(summary.get("resource_fronts_seized", 0)) < 2:
+		_fail("Live strategic AI turn execution did not seize both resource fronts: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < 2 or int(summary.get("site_seizure_event_count", 0)) < 2:
+		_fail("Live strategic AI turn execution is missing assignment/seizure event evidence: %s" % summary)
+		return false
+	if not bool(summary.get("reserved_unique_targets", false)):
+		_fail("Live strategic AI turn execution did not prove companion target reservation: %s" % summary)
+		return false
+	var controllers_after: Dictionary = evidence.get("controllers_after", {}) if evidence.get("controllers_after", {}) is Dictionary else {}
+	if String(controllers_after.get("river_free_company", "")) != "faction_mireclaw" or String(controllers_after.get("river_signal_post", "")) != "faction_mireclaw":
+		_fail("Live strategic AI turn execution did not leave both sites under Mireclaw control: %s" % evidence)
+		return false
+	var primary_raid: Dictionary = evidence.get("primary_raid", {}) if evidence.get("primary_raid", {}) is Dictionary else {}
+	var companion_raid: Dictionary = evidence.get("companion_raid", {}) if evidence.get("companion_raid", {}) is Dictionary else {}
+	if String(primary_raid.get("target_placement_id", "")) != "river_free_company" or not bool(primary_raid.get("arrived", false)):
+		_fail("Live strategic AI primary raid did not arrive at Free Company: %s" % primary_raid)
+		return false
+	if String(companion_raid.get("target_placement_id", "")) != "river_signal_post" or not bool(companion_raid.get("arrived", false)):
+		_fail("Live strategic AI companion raid did not arrive at Signal Post: %s" % companion_raid)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI turn execution save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI turn execution leaked internal public-event tokens: %s" % leak_tokens)
+		return false
 	return true
 
 func _assert_combat_feel_gate(battle_summary: Dictionary) -> bool:
