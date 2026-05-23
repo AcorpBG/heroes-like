@@ -5048,7 +5048,12 @@ static func _resolve_attack_action(
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
-	_mark_stack_animation_event(session.battle, String(attacker.get("battle_id", "")), "battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack")
+	_mark_stack_animation_event(
+		session.battle,
+		String(attacker.get("battle_id", "")),
+		"battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack",
+		{"target_battle_id": String(target.get("battle_id", ""))}
+	)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -5062,7 +5067,7 @@ static func _resolve_attack_action(
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
-	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty())
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -5075,7 +5080,12 @@ static func _resolve_attack_action(
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
-		_mark_stack_animation_event(session.battle, String(defender_after.get("battle_id", "")), "battle_retaliation")
+		_mark_stack_animation_event(
+			session.battle,
+			String(defender_after.get("battle_id", "")),
+			"battle_retaliation",
+			{"target_battle_id": String(attacker.get("battle_id", ""))}
+		)
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
@@ -5091,7 +5101,7 @@ static func _resolve_attack_action(
 				"retaliation"
 			)
 		)
-		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty())
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
 		retaliated = true
 
 	var action_id := "shoot" if is_ranged else "strike"
@@ -5517,7 +5527,12 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
-	_mark_stack_animation_event(session.battle, String(attacker.get("battle_id", "")), "battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack")
+	_mark_stack_animation_event(
+		session.battle,
+		String(attacker.get("battle_id", "")),
+		"battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack",
+		{"target_battle_id": String(target.get("battle_id", ""))}
+	)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -5530,7 +5545,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
-	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty())
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -5543,7 +5558,12 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
-		_mark_stack_animation_event(session.battle, String(defender_after.get("battle_id", "")), "battle_retaliation")
+		_mark_stack_animation_event(
+			session.battle,
+			String(defender_after.get("battle_id", "")),
+			"battle_retaliation",
+			{"target_battle_id": String(attacker.get("battle_id", ""))}
+		)
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
@@ -5559,7 +5579,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 				"retaliation"
 			)
 		)
-		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty())
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -10661,32 +10681,38 @@ static func _mark_side_animation_event(battle: Dictionary, side: String, event_i
 			continue
 		_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), event_id)
 
-static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false) -> void:
+static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "") -> void:
 	if battle_id == "":
 		return
 	var target := _get_stack_by_id(battle, battle_id)
 	if target.is_empty():
 		return
+	var context := {"source_battle_id": source_battle_id} if source_battle_id != "" else {}
 	if _alive_count(target) <= 0:
-		_mark_stack_animation_event(battle, battle_id, "battle_unit_death")
+		_mark_stack_animation_event(battle, battle_id, "battle_unit_death", context)
 	elif had_status_effect:
-		_mark_stack_animation_event(battle, battle_id, "battle_status_applied")
+		_mark_stack_animation_event(battle, battle_id, "battle_status_applied", context)
 	else:
-		_mark_stack_animation_event(battle, battle_id, "battle_unit_hit")
+		_mark_stack_animation_event(battle, battle_id, "battle_unit_hit", context)
 
 static func _mark_spell_animation_states(battle: Dictionary, caster_stack: Dictionary, resolution: Dictionary) -> void:
-	_mark_stack_animation_event(battle, String(caster_stack.get("battle_id", "")), "battle_unit_cast")
 	var target_id := String(resolution.get("target_battle_id", "")).strip_edges()
+	_mark_stack_animation_event(
+		battle,
+		String(caster_stack.get("battle_id", "")),
+		"battle_unit_cast",
+		{"target_battle_id": target_id} if target_id != "" else {}
+	)
 	if target_id == "":
 		return
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var post_damage_effect = resolution.get("post_damage_effect", {})
-			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty())
+			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")))
 		"effect", "recover_effect", "cleanse_effect":
-			_mark_stack_animation_event(battle, target_id, "battle_status_applied")
+			_mark_stack_animation_event(battle, target_id, "battle_status_applied", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
 
-static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, event_id: String) -> void:
+static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, event_id: String, context: Dictionary = {}) -> void:
 	if battle.is_empty() or battle_id == "":
 		return
 	var state := String(ANIMATION_STATE_BY_EVENT.get(event_id, "")).strip_edges()
@@ -10705,6 +10731,8 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		"event_id": event_id,
 		"state": state,
 		"battle_id": battle_id,
+		"target_battle_id": String(context.get("target_battle_id", "")),
+		"source_battle_id": String(context.get("source_battle_id", "")),
 		"priority": priority,
 		"serial": serial,
 		"round": int(battle.get("round", 1)),
@@ -10735,6 +10763,8 @@ static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
 			"event_id": String(record.get("event_id", "")),
 			"state": state,
 			"battle_id": battle_id,
+			"target_battle_id": String(record.get("target_battle_id", "")),
+			"source_battle_id": String(record.get("source_battle_id", "")),
 			"priority": int(record.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(record.get("serial", 0))),
 			"round": max(1, int(record.get("round", 1))),
@@ -10758,6 +10788,8 @@ static func _normalize_animation_event_queue(value: Variant) -> Array:
 			"battle_id": battle_id,
 			"event_id": event_id,
 			"state": state,
+			"target_battle_id": String(entry.get("target_battle_id", "")),
+			"source_battle_id": String(entry.get("source_battle_id", "")),
 			"priority": int(entry.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(entry.get("serial", 0))),
 			"round": max(1, int(entry.get("round", 1))),

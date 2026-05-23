@@ -139,6 +139,7 @@ func _validate_board_runtime_summary() -> void:
 	var result := BattleRulesScript.perform_player_action(session, "shoot")
 	_expect_ok("board summary source action", result)
 	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
 	add_child(view)
 	view.set_battle_state(session)
 	await get_tree().process_frame
@@ -152,9 +153,13 @@ func _validate_board_runtime_summary() -> void:
 	_expect_equal("board runtime ranged attacker state", String(observed_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("board runtime status target state", String(observed_states.get("enemy_0", "")), "status_applied")
 	var cue_playback := _validate_active_cue_dispatch(summary)
+	var vfx_playback := _validate_active_vfx_presentation(summary)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
 	_report["cases"]["board_cue_dispatch"] = {
 		"active_cue_playback": cue_playback,
+	}
+	_report["cases"]["board_vfx_presentation"] = {
+		"active_vfx_playback": vfx_playback,
 	}
 
 func _validate_board_playback_lifecycle() -> void:
@@ -163,6 +168,7 @@ func _validate_board_playback_lifecycle() -> void:
 	var result := BattleRulesScript.perform_player_action(session, "shoot")
 	_expect_ok("board lifecycle source action", result)
 	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
 	add_child(view)
 	view.set_battle_state(session)
 	await get_tree().process_frame
@@ -170,23 +176,29 @@ func _validate_board_playback_lifecycle() -> void:
 	var active_states := _observed_animation_states(active_summary)
 	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
 	var active_cue: Dictionary = active_summary.get("cue_playback", {}) if active_summary.get("cue_playback", {}) is Dictionary else {}
+	var active_vfx: Dictionary = active_summary.get("vfx_playback", {}) if active_summary.get("vfx_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
 	if int(active_playback.get("active_playback_count", 0)) < 2:
 		_error("Playback lifecycle did not keep both source and target events active: %s" % active_playback)
 	if int(active_cue.get("active_cue_record_count", 0)) < 2:
 		_error("Cue lifecycle did not keep both source and target cue records active: %s" % active_cue)
+	if int(active_vfx.get("active_vfx_draw_count", 0)) < 2:
+		_error("VFX lifecycle did not keep source and target draw entries active: %s" % active_vfx)
 	await get_tree().create_timer(0.90).timeout
 	var expired_summary: Dictionary = view.validation_unit_art_summary()
 	var expired_states := _observed_animation_states(expired_summary)
 	var expired_playback: Dictionary = expired_summary.get("animation_playback", {}) if expired_summary.get("animation_playback", {}) is Dictionary else {}
 	var expired_cue: Dictionary = expired_summary.get("cue_playback", {}) if expired_summary.get("cue_playback", {}) is Dictionary else {}
+	var expired_vfx: Dictionary = expired_summary.get("vfx_playback", {}) if expired_summary.get("vfx_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
 	if int(expired_playback.get("active_playback_count", -1)) != 0:
 		_error("Playback lifecycle did not expire event states: %s" % expired_playback)
 	if int(expired_cue.get("active_cue_record_count", -1)) != 0:
 		_error("Cue lifecycle did not expire cue records: %s" % expired_cue)
+	if int(expired_vfx.get("active_vfx_draw_count", -1)) != 0:
+		_error("VFX lifecycle did not expire draw entries: %s" % expired_vfx)
 	view.queue_free()
 	await get_tree().process_frame
 	_report["cases"]["board_playback_lifecycle"] = {
@@ -196,6 +208,8 @@ func _validate_board_playback_lifecycle() -> void:
 		"expired_playback": expired_playback,
 		"active_cue_playback": active_cue,
 		"expired_cue_playback": expired_cue,
+		"active_vfx_playback": active_vfx,
+		"expired_vfx_playback": expired_vfx,
 	}
 
 func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
@@ -208,11 +222,31 @@ func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
 	var enemy_cue := _cue_record_for(cue_playback, "enemy_0")
 	_expect_equal("player cue event id", String(player_cue.get("event_id", "")), "battle_unit_ranged_attack")
 	_expect_equal("enemy cue event id", String(enemy_cue.get("event_id", "")), "battle_status_applied")
+	_expect_equal("player cue target", String(player_cue.get("target_battle_id", "")), "enemy_0")
+	_expect_equal("enemy cue source", String(enemy_cue.get("source_battle_id", "")), "player_0")
 	_expect_array_contains("player cue vfx", player_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_projectile_path")
 	_expect_array_contains("player cue audio", player_cue.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
 	_expect_array_contains("enemy cue vfx", enemy_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_status_residue")
 	_expect_array_contains("enemy cue audio", enemy_cue.get("selected_audio_cue_ids", []), "audio_placeholder_status_apply")
 	return cue_playback
+
+func _validate_active_vfx_presentation(summary: Dictionary) -> Dictionary:
+	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
+	if int(vfx_playback.get("active_vfx_draw_count", 0)) < 2:
+		_error("VFX presentation did not materialize both source and target draw entries: %s" % vfx_playback)
+	if int(vfx_playback.get("projectile_draw_count", 0)) < 1 or int(vfx_playback.get("status_draw_count", 0)) < 1:
+		_error("VFX presentation did not include projectile and status draw entries: %s" % vfx_playback)
+	var projectile := _vfx_entry_for(vfx_playback, "projectile_path")
+	var status := _vfx_entry_for(vfx_playback, "status_residue")
+	_expect_equal("projectile vfx cue", String(projectile.get("cue_id", "")), "vfx_placeholder_projectile_path")
+	_expect_equal("projectile vfx source", String(projectile.get("battle_id", "")), "player_0")
+	_expect_equal("projectile vfx target", String(projectile.get("target_battle_id", "")), "enemy_0")
+	_expect_equal("status vfx cue", String(status.get("cue_id", "")), "vfx_placeholder_status_residue")
+	_expect_equal("status vfx target battle id", String(status.get("battle_id", "")), "enemy_0")
+	_expect_equal("status vfx source", String(status.get("source_battle_id", "")), "player_0")
+	if int(projectile.get("start_q", -1)) == int(projectile.get("target_q", -1)) and int(projectile.get("start_r", -1)) == int(projectile.get("target_r", -1)):
+		_error("Projectile VFX did not span distinct source and target cells: %s" % projectile)
+	return vfx_playback
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
@@ -308,6 +342,14 @@ func _observed_animation_states(summary: Dictionary) -> Dictionary:
 func _cue_record_for(cue_playback: Dictionary, battle_id: String) -> Dictionary:
 	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}
 	return records.get(battle_id, {}) if records.get(battle_id, {}) is Dictionary else {}
+
+func _vfx_entry_for(vfx_playback: Dictionary, kind: String) -> Dictionary:
+	var entries: Array = vfx_playback.get("active_draw_entries", []) if vfx_playback.get("active_draw_entries", []) is Array else []
+	for entry in entries:
+		if entry is Dictionary and String(entry.get("kind", "")) == kind:
+			return entry
+	_error("Missing VFX draw entry kind %s in %s." % [kind, vfx_playback])
+	return {}
 
 func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
 	for event in BattleRulesScript.animation_event_queue(battle):

@@ -65,6 +65,10 @@ const TEXTURED_CENTER_FILL_ALPHA := 0.045
 const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
 const TEXTURED_GRID_MAX_CELL_FILL_ALPHA := 0.05
 const STACK_ANIMATION_EVENT_PLAYBACK_MSEC := 760
+const BATTLE_VFX_PROJECTILE_COLOR := Color(0.94, 0.96, 0.74, 0.88)
+const BATTLE_VFX_STATUS_COLOR := Color(0.50, 0.86, 0.74, 0.76)
+const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
+const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
 
 var _session = null
 var _battle: Dictionary = {}
@@ -428,6 +432,7 @@ func validation_unit_art_summary() -> Dictionary:
 		"missing_animation_units": stack_entries.filter(func(entry): return not bool(entry.get("animation_loaded", false))).map(func(entry): return String(entry.get("unit_id", ""))),
 		"animation_playback": validation_animation_playback_summary(),
 		"cue_playback": validation_cue_playback_summary(),
+		"vfx_playback": validation_vfx_playback_summary(),
 		"stacks": stack_entries,
 	}
 
@@ -470,6 +475,35 @@ func validation_cue_playback_summary() -> Dictionary:
 		"vfx_cue_count": vfx_cue_count,
 		"audio_cue_count": audio_cue_count,
 		"active_records": records,
+	}
+
+func validation_vfx_playback_summary() -> Dictionary:
+	_expire_animation_playback_records()
+	var stack_cells := _stack_cells()
+	var entries := _vfx_draw_entries(_current_hex_layout(), stack_cells)
+	var projectile_count := 0
+	var status_count := 0
+	var impact_count := 0
+	var cast_count := 0
+	for entry in entries:
+		if not (entry is Dictionary):
+			continue
+		match String(entry.get("kind", "")):
+			"projectile_path":
+				projectile_count += 1
+			"status_residue":
+				status_count += 1
+			"damage_tick", "melee_arc", "stack_fade":
+				impact_count += 1
+			"cast_anchor":
+				cast_count += 1
+	return {
+		"active_vfx_draw_count": entries.size(),
+		"projectile_draw_count": projectile_count,
+		"status_draw_count": status_count,
+		"impact_draw_count": impact_count,
+		"cast_draw_count": cast_count,
+		"active_draw_entries": entries,
 	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
@@ -801,6 +835,7 @@ func _draw() -> void:
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
 	_draw_stack_tokens(hex_layout, stack_cells)
+	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_turn_strip(field_rect)
 	_draw_footer_line(field_rect)
 
@@ -1013,6 +1048,7 @@ func _animation_playback_record_for_stack(battle_id: String) -> Dictionary:
 	if expires_at <= int(Time.get_ticks_msec()):
 		_stack_animation_playback_records.erase(battle_id)
 		_stack_animation_playback_until_msec.erase(battle_id)
+		_stack_animation_cue_playback_records.erase(battle_id)
 		return {}
 	var record: Dictionary = _stack_animation_playback_records.get(battle_id, {}) if _stack_animation_playback_records.get(battle_id, {}) is Dictionary else {}
 	return record.duplicate(true)
@@ -1042,11 +1078,13 @@ func _sync_animation_playback_records() -> void:
 		_latest_animation_serial_by_stack[battle_id] = serial
 		_stack_animation_playback_records[battle_id] = event.duplicate(true)
 		var cue_record := _animation_cue_playback_record_for_event(event)
+		var duration_msec := int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
 		if not cue_record.is_empty():
+			cue_record["started_at_msec"] = now
+			cue_record["expires_at_msec"] = now + max(1, duration_msec)
 			_stack_animation_cue_playback_records[battle_id] = cue_record
 		else:
 			_stack_animation_cue_playback_records.erase(battle_id)
-		var duration_msec := int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
 		_stack_animation_playback_until_msec[battle_id] = now + max(1, duration_msec)
 
 func _expire_animation_playback_records() -> void:
@@ -1070,6 +1108,8 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 		"event_id": event_id,
 		"state": String(event.get("state", "")),
 		"serial": int(event.get("serial", 0)),
+		"target_battle_id": String(event.get("target_battle_id", "")),
+		"source_battle_id": String(event.get("source_battle_id", "")),
 		"cue_id": String(policy.get("cue_id", "")),
 		"mode": String(policy.get("mode", AnimationCueCatalogScript.MODE_NORMAL)),
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
@@ -1243,6 +1283,177 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
+
+func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
+	for entry in _vfx_draw_entries(hex_layout, stack_cells):
+		if not (entry is Dictionary):
+			continue
+		var start := Vector2(float(entry.get("start_x", 0.0)), float(entry.get("start_y", 0.0)))
+		var end := Vector2(float(entry.get("end_x", 0.0)), float(entry.get("end_y", 0.0)))
+		var center := Vector2(float(entry.get("center_x", end.x)), float(entry.get("center_y", end.y)))
+		var radius := float(entry.get("hex_radius", 12.0))
+		var progress := float(entry.get("progress", 0.0))
+		match String(entry.get("kind", "")):
+			"projectile_path":
+				_draw_projectile_vfx(start, end, radius, progress)
+			"status_residue":
+				_draw_status_residue_vfx(center, radius, progress)
+			"damage_tick":
+				_draw_damage_tick_vfx(center, radius, progress)
+			"melee_arc":
+				_draw_melee_arc_vfx(start, end, radius, progress)
+			"stack_fade":
+				_draw_stack_fade_vfx(center, radius, progress)
+			"cast_anchor":
+				_draw_cast_anchor_vfx(center, radius, progress)
+			"path_ghost":
+				_draw_path_ghost_vfx(center, radius, progress)
+
+func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
+	var entries: Array = []
+	var radius := float(hex_layout.get("radius", 1.0))
+	for battle_id_value in _stack_animation_cue_playback_records.keys():
+		var battle_id := String(battle_id_value)
+		var record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+		var cue_ids: Array = record.get("selected_vfx_cue_ids", []) if record.get("selected_vfx_cue_ids", []) is Array else []
+		if cue_ids.is_empty() or not stack_cells.has(battle_id):
+			continue
+		var subject_cell: Vector2i = stack_cells.get(battle_id)
+		if not _cell_in_bounds(subject_cell):
+			continue
+		var source_id := String(record.get("source_battle_id", "")).strip_edges()
+		if source_id == "":
+			source_id = battle_id
+		var target_id := String(record.get("target_battle_id", "")).strip_edges()
+		if target_id == "":
+			target_id = battle_id
+		var source_cell: Vector2i = stack_cells.get(source_id, subject_cell)
+		var target_cell: Vector2i = stack_cells.get(target_id, subject_cell)
+		var source_center := _hex_center(source_cell, hex_layout)
+		var target_center := _hex_center(target_cell, hex_layout)
+		var subject_center := _hex_center(subject_cell, hex_layout)
+		var progress := _cue_playback_progress(record)
+		for cue_id_value in cue_ids:
+			var cue_id := String(cue_id_value)
+			var kind := _vfx_kind_for_cue_id(cue_id)
+			if kind == "":
+				continue
+			var start := source_center
+			var end := target_center
+			var center := subject_center
+			if kind == "projectile_path" or kind == "melee_arc":
+				start = subject_center
+				end = target_center
+				center = target_center
+			elif source_id != "" and stack_cells.has(source_id):
+				start = source_center
+			entries.append({
+				"cue_id": cue_id,
+				"kind": kind,
+				"battle_id": battle_id,
+				"event_id": String(record.get("event_id", "")),
+				"serial": int(record.get("serial", 0)),
+				"source_battle_id": source_id,
+				"target_battle_id": target_id,
+				"start_q": source_cell.x,
+				"start_r": source_cell.y,
+				"target_q": target_cell.x,
+				"target_r": target_cell.y,
+				"subject_q": subject_cell.x,
+				"subject_r": subject_cell.y,
+				"start_x": snappedf(start.x, 0.01),
+				"start_y": snappedf(start.y, 0.01),
+				"end_x": snappedf(end.x, 0.01),
+				"end_y": snappedf(end.y, 0.01),
+				"center_x": snappedf(center.x, 0.01),
+				"center_y": snappedf(center.y, 0.01),
+				"hex_radius": snappedf(radius, 0.01),
+				"progress": snappedf(progress, 0.001),
+			})
+	return entries
+
+func _vfx_kind_for_cue_id(cue_id: String) -> String:
+	match cue_id:
+		"vfx_placeholder_projectile_path":
+			return "projectile_path"
+		"vfx_placeholder_status_residue":
+			return "status_residue"
+		"vfx_placeholder_damage_tick":
+			return "damage_tick"
+		"vfx_placeholder_melee_arc":
+			return "melee_arc"
+		"vfx_placeholder_stack_fade":
+			return "stack_fade"
+		"vfx_placeholder_cast_anchor":
+			return "cast_anchor"
+		"vfx_placeholder_battle_path_ghost", "vfx_placeholder_withdraw_path":
+			return "path_ghost"
+	return ""
+
+func _cue_playback_progress(record: Dictionary) -> float:
+	var started := int(record.get("started_at_msec", Time.get_ticks_msec()))
+	var duration := maxi(1, int(record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)))
+	return clampf(float(Time.get_ticks_msec() - started) / float(duration), 0.0, 1.0)
+
+func _draw_projectile_vfx(start: Vector2, end: Vector2, radius: float, progress: float) -> void:
+	if start.distance_to(end) <= 1.0:
+		return
+	var alpha := maxf(0.20, 1.0 - progress * 0.42)
+	var color := Color(BATTLE_VFX_PROJECTILE_COLOR.r, BATTLE_VFX_PROJECTILE_COLOR.g, BATTLE_VFX_PROJECTILE_COLOR.b, BATTLE_VFX_PROJECTILE_COLOR.a * alpha)
+	var head := start.lerp(end, clampf(progress, 0.08, 0.96))
+	var tail := start.lerp(end, clampf(progress - 0.16, 0.0, 0.84))
+	draw_line(start, end, Color(color.r, color.g, color.b, 0.22), maxf(1.6, radius * 0.045), true)
+	draw_line(tail, head, color, maxf(2.4, radius * 0.075), true)
+	draw_circle(head, maxf(3.0, radius * 0.105), Color(color.r, color.g, color.b, 0.94))
+
+func _draw_status_residue_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var pulse := 1.0 + sin(progress * TAU) * 0.10
+	var alpha := maxf(0.18, 1.0 - progress * 0.35)
+	var color := Color(BATTLE_VFX_STATUS_COLOR.r, BATTLE_VFX_STATUS_COLOR.g, BATTLE_VFX_STATUS_COLOR.b, BATTLE_VFX_STATUS_COLOR.a * alpha)
+	draw_circle(center, radius * 0.58 * pulse, Color(color.r, color.g, color.b, 0.08), true)
+	draw_circle(center, radius * 0.70 * pulse, color, false, maxf(1.8, radius * 0.045), true)
+	for index in range(3):
+		var angle := progress * TAU + float(index) * TAU / 3.0
+		var pip := center + Vector2(cos(angle), sin(angle)) * radius * 0.46
+		draw_circle(pip, maxf(2.4, radius * 0.055), Color(color.r, color.g, color.b, 0.86))
+
+func _draw_damage_tick_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var span := radius * (0.26 + progress * 0.18)
+	var alpha := maxf(0.18, 1.0 - progress * 0.45)
+	var color := Color(BATTLE_VFX_DAMAGE_COLOR.r, BATTLE_VFX_DAMAGE_COLOR.g, BATTLE_VFX_DAMAGE_COLOR.b, BATTLE_VFX_DAMAGE_COLOR.a * alpha)
+	draw_line(center + Vector2(-span, -span * 0.40), center + Vector2(span, span * 0.40), color, maxf(2.0, radius * 0.06), true)
+	draw_line(center + Vector2(span * 0.32, -span), center + Vector2(-span * 0.32, span), color, maxf(1.8, radius * 0.05), true)
+
+func _draw_melee_arc_vfx(start: Vector2, end: Vector2, radius: float, progress: float) -> void:
+	var direction := (end - start).normalized() if start.distance_to(end) > 1.0 else Vector2.RIGHT
+	var normal := Vector2(-direction.y, direction.x)
+	var center := start.lerp(end, 0.55) + normal * radius * 0.18
+	var alpha := maxf(0.20, 1.0 - progress * 0.55)
+	var color := Color(BATTLE_VFX_DAMAGE_COLOR.r, BATTLE_VFX_DAMAGE_COLOR.g, BATTLE_VFX_DAMAGE_COLOR.b, 0.72 * alpha)
+	draw_line(start.lerp(center, 0.35), center, color, maxf(2.4, radius * 0.07), true)
+	draw_line(center, end.lerp(center, 0.35), color, maxf(2.4, radius * 0.07), true)
+
+func _draw_stack_fade_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.10, 1.0 - progress)
+	draw_circle(center, radius * (0.44 + progress * 0.38), Color(0.86, 0.88, 0.92, 0.34 * alpha), false, maxf(2.0, radius * 0.055), true)
+	draw_circle(center, radius * 0.22, Color(0.08, 0.09, 0.10, 0.18 * alpha), true)
+
+func _draw_cast_anchor_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.18, 1.0 - progress * 0.35)
+	var color := Color(BATTLE_VFX_CAST_COLOR.r, BATTLE_VFX_CAST_COLOR.g, BATTLE_VFX_CAST_COLOR.b, BATTLE_VFX_CAST_COLOR.a * alpha)
+	var points := PackedVector2Array([
+		center + Vector2(0.0, -radius * 0.74),
+		center + Vector2(radius * 0.54, 0.0),
+		center + Vector2(0.0, radius * 0.74),
+		center + Vector2(-radius * 0.54, 0.0),
+		center + Vector2(0.0, -radius * 0.74),
+	])
+	draw_polyline(points, color, maxf(1.8, radius * 0.045), true)
+	draw_circle(center, radius * 0.18, Color(color.r, color.g, color.b, 0.38), true)
+
+func _draw_path_ghost_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.16, 1.0 - progress * 0.60)
+	_draw_hex(center, radius * (0.50 + progress * 0.16), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.08 * alpha), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.48 * alpha), maxf(1.6, radius * 0.04))
 
 func _draw_turn_strip(field_rect: Rect2) -> void:
 	var strip_width: float = minf(field_rect.size.x - 20.0, 430.0)
