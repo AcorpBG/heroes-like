@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "headless-strategic-ai-live-route-progression-20260523-10184",
-  "currentSliceTitle": "Headless Strategic AI Live Route Progression",
+  "currentSliceId": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+  "currentSliceTitle": "Headless Strategic AI Live Regroup Retreat",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: standard headless harness now includes required live strategic AI route progression coverage from a distant raid origin through end-turn movement, target assignment, route closure, and resource seizure.",
+  "currentSliceNotes": "Completed: standard headless harness now includes live strategic AI regroup/retreat coverage and the public end-turn event surface carries high-importance regroup events.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16546,6 +16546,49 @@
         "No full strategic AI quality claim.",
         "No broad path-planning, recruitment grouping, town assault, defense rotation, retreat timing, or scenario-breadth completion."
       ]
+    },
+    {
+      "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+      "title": "Headless Strategic AI Live Regroup Retreat",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "purpose": "Promote live understrength raid regroup/retreat behavior into the shared headless simulation harness and public end-turn AI event surface.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS includes strategic_ai_live_regroup_retreat.",
+        "The standard headless report seeds an understrength Vaska raid aimed at river_free_company and advances it through OverworldRules.end_turn.",
+        "The harness proves the raid regroups at duskfen_bastion, increases strength, drains spare town garrison, clears its regroup target, and leaves river_free_company player-controlled.",
+        "The end-turn public event surface includes high-importance regroup events so ai_raid_regrouped is visible without leaking internal task/score/reservation fields.",
+        "The harness checks no durable hero_task_state, no save migration, and report-only boundaries."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No broad defense rotation, multi-hero grouping, town assault planner, recruitment economy rewrite, or difficulty tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -20028,6 +20071,48 @@
         "git diff --check"
       ],
       "remainingGap": "This proves one long-route resource-front progression fixture; broader strategic AI quality still needs path quality across maps, town assault priorities, recruitment grouping, defense rotation, retreat timing, objective handling, and difficulty tuning."
+    },
+    {
+      "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+      "title": "Headless Strategic AI Live Regroup Retreat",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "headless-strategic-ai-live-regroup-retreat-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "HeadlessSimulationHarnessRules now includes strategic_ai_live_regroup_retreat in REQUIRED_SUBSYSTEM_IDS.",
+        "The shared headless report seeds a damaged Vaska raid aimed at river_free_company and advances the normal OverworldRules.end_turn enemy cycle.",
+        "The regroup fixture proves strength rises from 21 to 191, Duskfen Bastion garrison drops from 5 to 0, last_regroup_town_id records duskfen_bastion, and river_free_company remains player-controlled.",
+        "EnemyAdventureRules now marks regroup assignment/completion as high-importance public activity so ai_raid_regrouped survives the standard end-turn event surface.",
+        "The harness asserts public event output has no internal task/score/reservation leaks and keeps no-save/report-only boundaries."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves one live retreat/regroup fixture in the standard harness; broader strategic AI quality still needs defense rotation, multi-hero grouping, town assault priorities, objective handling across scenarios, and difficulty tuning."
     }
   ],
   "docsReadyEvidence": [
@@ -21038,25 +21123,40 @@
         "git diff --check"
       ],
       "summary": "Focused headless harness report passed with strategic_ai_live_route_progression as a required subsystem, live assignment of river_free_company from distance 9, turn-by-turn route evidence, eventual faction_mireclaw seizure at distance 0, event evidence, and no-save/report-only boundaries."
+    },
+    {
+      "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused headless harness report passed with strategic_ai_live_regroup_retreat as a required subsystem, Vaska regrouping at Duskfen, strength 21->191, garrison 5->0, ai_raid_regrouped public event evidence, player control preserved on river_free_company, and no-save/report-only boundaries."
     }
   ],
   "lastValidation": {
-    "id": "headless-strategic-ai-live-route-progression-20260523-10184",
+    "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused headless harness report passed with strategic_ai_live_route_progression as a required subsystem, live assignment of river_free_company from distance 9, turn-by-turn route evidence, eventual faction_mireclaw seizure at distance 0, event evidence, and no-save/report-only boundaries."
+    "summary": "Focused headless harness report passed with strategic_ai_live_regroup_retreat as a required subsystem, Vaska regrouping at Duskfen, strength 21->191, garrison 5->0, ai_raid_regrouped public event evidence, player control preserved on river_free_company, and no-save/report-only boundaries."
   },
   "active_slice": {
-    "id": "headless-strategic-ai-live-route-progression-20260523-10184",
+    "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: long-route live strategic AI route progression is now covered by the standard headless harness."
+    "note": "Completed: live understrength raid regroup/retreat is now covered by the standard headless harness."
   }
 }

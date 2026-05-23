@@ -75,7 +75,7 @@ Battle autoplay combat-feel threshold gate added on 2026-05-23: the shared sampl
 
 Battle autoplay combat balance calibration added on 2026-05-23: the prior `high_terminal_health_margin` warning has a first bounded fix. `BattleAiRules` now scores no-attack melee repositioning so stacks do not defend forever after abstract distance closes but hex-board contact is still missing, the sampled early authored army groups have been retuned, and `tests/battle_autoplay_combat_balance_report.tscn` gates the default sampler at 65% average terminal margin. Current focused evidence is `average_terminal_health_margin_pct: 55`, a 3/3 victory/defeat split, preserved `low`/`medium`/`high` difficulty labels, and `combat_feel_gate.status: pass`. This is a first deterministic balance calibration, not final combat balance approval.
 
-Headless strategic AI live-turn harness added on 2026-05-23: `HeadlessSimulationHarnessRules` now treats `strategic_ai_live_turn_execution` as a required subsystem, running the River Pass Vaska/Sable resource-front fixture through `EnemyTurnRules.run_enemy_turn(...)`. It also treats `strategic_ai_live_route_progression` as required, running a distant Vaska route through repeated `OverworldRules.end_turn(...)` calls until `river_free_company` is assigned, approached from distance 9 to 0, and seized. `tests/headless_simulation_harness_report.tscn` asserts both immediate resource fronts are seized, companion target reservation stays unique, the long-route case records per-turn route evidence, assignment/seizure events exist, public event output does not leak internal task/score fields, and the harness remains report-only. This is focused strategic AI harness evidence, not full AI quality, broad path planning, recruitment grouping, defense, retreat timing, or objective breadth.
+Headless strategic AI live-turn harness added on 2026-05-23: `HeadlessSimulationHarnessRules` now treats `strategic_ai_live_turn_execution` as a required subsystem, running the River Pass Vaska/Sable resource-front fixture through `EnemyTurnRules.run_enemy_turn(...)`. It also treats `strategic_ai_live_route_progression` as required, running a distant Vaska route through repeated `OverworldRules.end_turn(...)` calls until `river_free_company` is assigned, approached from distance 9 to 0, and seized. A third required subsystem, `strategic_ai_live_regroup_retreat`, seeds an understrength Vaska raid, advances the normal end-turn enemy cycle, and proves it regroups at Duskfen Bastion, pulls garrison strength, emits `ai_raid_regrouped`, and leaves the original resource under player control. `tests/headless_simulation_harness_report.tscn` asserts immediate resource-front seizure, long-route progression, retreat/regroup behavior, assignment/seizure/regroup events, public event output without internal task/score leaks, and report-only harness boundaries. This is focused strategic AI harness evidence, not full AI quality, broad path planning, recruitment grouping, defense rotation, town assault priority, or objective breadth.
 
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
@@ -5489,6 +5489,34 @@ completionCriteria:
 nonGoals:
 - No full strategic AI quality claim.
 - No broad path-planning, recruitment grouping, town assault, defense rotation, retreat timing, or scenario-breadth completion.
+
+Completed implementation slice:
+
+id: `headless-strategic-ai-live-regroup-retreat-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Promote live understrength raid regroup/retreat behavior into the shared headless simulation harness and public end-turn AI event surface.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/strategic-ai-raid-regroup-retreat-report.md`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `scripts/core/OverworldRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `docs/headless-strategic-ai-live-turn-harness-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_regroup_retreat`.
+- The standard headless report seeds an understrength Vaska raid aimed at `river_free_company` and advances it through `OverworldRules.end_turn(...)`.
+- The harness proves the raid regroups at `duskfen_bastion`, increases strength, drains spare town garrison, clears its regroup target, and leaves `river_free_company` player-controlled.
+- The end-turn public event surface includes high-importance regroup events so `ai_raid_regrouped` is visible without leaking internal task/score/reservation fields.
+- The harness checks no durable `hero_task_state`, no save migration, and report-only boundaries.
+nonGoals:
+- No full strategic AI quality claim.
+- No broad defense rotation, multi-hero grouping, town assault planner, recruitment economy rewrite, or difficulty tuning.
 
 Completed implementation slice:
 

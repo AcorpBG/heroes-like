@@ -16,6 +16,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_pressure_tick",
 	"strategic_ai_live_turn_execution",
 	"strategic_ai_live_route_progression",
+	"strategic_ai_live_regroup_retreat",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
 	"save_replay_stability",
@@ -30,6 +31,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_pressure_tick(input_config),
 		_strategic_ai_live_turn_execution(input_config),
 		_strategic_ai_live_route_progression(input_config),
+		_strategic_ai_live_regroup_retreat(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
@@ -509,6 +511,136 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			"origin": {"x": int(origin.get("x", 0)), "y": int(origin.get("y", 0))},
 			"route_records": route_records,
 			"event_types": _event_types(all_events),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
+static func _strategic_ai_live_regroup_retreat(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_regroup_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_regroup_faction_id", "faction_mireclaw"))
+	var target_id := String(input_config.get("strategic_ai_live_regroup_target_id", "river_free_company"))
+	var regroup_town_id := String(input_config.get("strategic_ai_live_regroup_town_id", "duskfen_bastion"))
+	var roster_hero_id := String(input_config.get("strategic_ai_live_regroup_hero_id", "hero_vaska"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live regroup scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_regroup_retreat",
+			"live_understrength_raid_regroups_at_town",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_regroup_retreat",
+			"live_understrength_raid_regroups_at_town",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_resource_controller(session, target_id, "player", failures)
+	var raid_id := "headless_live_regroup_%s" % target_id
+	var seed_raid := _understrength_regroup_raid_seed(session, faction_id, roster_hero_id, raid_id, target_id)
+	var before_strength := EnemyAdventureRules.raid_strength(seed_raid)
+	var desired_before := EnemyAdventureRules.desired_raid_strength(seed_raid)
+	var regroup_needed_before := EnemyAdventureRules.raid_regroup_needed(seed_raid)
+	var garrison_before := _town_garrison_unit_count(session, regroup_town_id, "unit_bog_brute")
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append(seed_raid)
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var turn_result: Dictionary = OverworldRules.end_turn(session)
+	var events: Array = turn_result.get("enemy_activity_events", []) if turn_result.get("enemy_activity_events", []) is Array else []
+	var after_raid := _encounter_by_placement(session, raid_id)
+	var after_strength := EnemyAdventureRules.raid_strength(after_raid)
+	var garrison_after := _town_garrison_unit_count(session, regroup_town_id, "unit_bog_brute")
+	var resource_controller := _resource_controller(session, target_id)
+	var assignment_events := _event_count(events, "ai_target_assigned")
+	var regroup_events := _event_count(events, "ai_raid_regrouped")
+	if not bool(turn_result.get("ok", false)):
+		failures.append("End turn returned not-ok during live regroup retreat.")
+	if after_raid.is_empty():
+		failures.append("Live regroup raid disappeared after end-turn enemy cycle.")
+	if not regroup_needed_before:
+		failures.append("Live regroup fixture raid was not understrength before enemy turn.")
+	if assignment_events < 1:
+		failures.append("Live regroup did not surface an ai_target_assigned event.")
+	if regroup_events < 1:
+		failures.append("Live regroup did not surface an ai_raid_regrouped event.")
+	if after_strength <= before_strength:
+		failures.append("Live regroup did not increase raid strength: before=%d after=%d." % [before_strength, after_strength])
+	if garrison_after >= garrison_before:
+		failures.append("Live regroup did not pull from town garrison: before=%d after=%d." % [garrison_before, garrison_after])
+	if String(after_raid.get("last_regroup_town_id", "")) != regroup_town_id:
+		failures.append("Live regroup did not record regroup town %s." % regroup_town_id)
+	if String(after_raid.get("target_kind", "")) != "":
+		failures.append("Live regroup raid did not clear regroup target after rebuilding.")
+	if resource_controller == faction_id:
+		failures.append("Live regroup captured the original offensive resource instead of retreating.")
+	if _has_saved_hero_task_state(session):
+		failures.append("Live regroup wrote forbidden hero_task_state.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live regroup events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live regroup events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_regroup_retreat",
+		"live_understrength_raid_regroups_at_town",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"target_id": target_id,
+			"regroup_town_id": regroup_town_id,
+			"before_strength": before_strength,
+			"after_strength": after_strength,
+			"desired_before": desired_before,
+			"regroup_needed_before": regroup_needed_before,
+			"garrison_before": garrison_before,
+			"garrison_after": garrison_after,
+			"resource_controller_after": resource_controller,
+			"target_assignment_event_count": assignment_events,
+			"regroup_event_count": regroup_events,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"raid": _raid_execution_signal(after_raid),
+			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
 			"save_policy": "no_hero_task_state_write_no_save_migration",
 			"warnings": warnings,
@@ -1025,11 +1157,62 @@ static func _live_route_raid_seed(
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+static func _understrength_regroup_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	target_resource_id: String
+) -> Dictionary:
+	var node := _resource_node_by_placement(session, target_resource_id)
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": 8,
+		"y": 1,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"target_kind": "resource",
+		"target_placement_id": target_resource_id,
+		"target_label": "Free Company Camp",
+		"target_x": int(node.get("x", 0)),
+		"target_y": int(node.get("y", 0)),
+		"goal_x": int(node.get("x", 0)),
+		"goal_y": int(node.get("y", 0)),
+		"enemy_army": {
+			"id": "headless_regroup_fixture_host",
+			"name": "Damaged Raid Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 1}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
 static func _encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return encounter
 	return {}
+
+static func _town_garrison_unit_count(session: SessionStateStoreScript.SessionData, placement_id: String, unit_id: String) -> int:
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		for stack in town.get("garrison", []):
+			if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
+				return int(stack.get("count", 0))
+	return 0
 
 static func _event_count(events: Variant, event_type: String) -> int:
 	var count := 0
@@ -1083,6 +1266,8 @@ static func _raid_execution_signal(raid: Dictionary) -> Dictionary:
 		"x": int(raid.get("x", 0)),
 		"y": int(raid.get("y", 0)),
 		"goal_distance": int(raid.get("goal_distance", 9999)),
+		"last_regroup_town_id": String(raid.get("last_regroup_town_id", "")),
+		"last_regroup_strength_delta": int(raid.get("last_regroup_strength_delta", 0)),
 	}
 
 static func _target_signal(target: Dictionary) -> Dictionary:
