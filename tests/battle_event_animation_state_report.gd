@@ -594,18 +594,26 @@ func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
 	var audio_playback: Dictionary = summary.get("audio_playback", {}) if summary.get("audio_playback", {}) is Dictionary else {}
 	if int(audio_playback.get("active_audio_record_count", 0)) < 2:
 		_error("Audio playback did not materialize both source and target audio records: %s" % audio_playback)
-	if int(audio_playback.get("generated_waveform_count", 0)) + int(audio_playback.get("scheduled_record_count", 0)) < 2:
-		_error("Audio playback did not synthesize or schedule both source and target cue waveforms: %s" % audio_playback)
+	if int(audio_playback.get("imported_asset_count", 0)) + int(audio_playback.get("generated_waveform_count", 0)) + int(audio_playback.get("scheduled_record_count", 0)) < 2:
+		_error("Audio playback did not load, synthesize, or schedule both source and target cue sounds: %s" % audio_playback)
+	if int(audio_playback.get("imported_asset_count", 0)) + int(audio_playback.get("scheduled_record_count", 0)) < 2:
+		_error("Audio playback should prefer committed battle SFX assets while preserving scheduled target reactions: %s" % audio_playback)
 	var player_audio := _audio_record_for(audio_playback, "player_0")
 	var enemy_audio := _audio_record_for(audio_playback, "enemy_0")
 	_expect_array_contains("player audio runtime cue", player_audio.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
 	_expect_array_contains("enemy audio runtime cue", enemy_audio.get("selected_audio_cue_ids", []), "audio_placeholder_status_apply")
-	if int(player_audio.get("generated_waveform_count", 0)) < 1:
-		_error("Source audio cue should synthesize immediately: %s" % player_audio)
+	if int(player_audio.get("imported_asset_count", 0)) < 1:
+		_error("Source audio cue should load a committed runtime SFX asset immediately: %s" % player_audio)
+	if String(_audio_asset_path_for(player_audio, "audio_placeholder_ranged_release")).find("ranged_release.wav") < 0:
+		_error("Source audio cue did not report the ranged release runtime asset path: %s" % player_audio)
+	if int(enemy_audio.get("imported_asset_count", 0)) < 1 and not bool(enemy_audio.get("scheduled", false)):
+		_error("Target audio cue should load a committed runtime SFX asset after sequencing delay: %s" % enemy_audio)
 	if bool(enemy_audio.get("scheduled", false)) and int(enemy_audio.get("sequence_delay_msec", 0)) <= 0:
 		_error("Scheduled target audio cue should carry a positive sequence delay: %s" % enemy_audio)
 	if String(audio_playback.get("audio_bus", "")) != "Master":
-		_error("Audio playback should route generated battle cues through Master bus: %s" % audio_playback)
+		_error("Audio playback should route battle cues through Master bus: %s" % audio_playback)
+	if String(audio_playback.get("sfx_manifest_path", "")) != "res://content/battle_sfx_manifest.json":
+		_error("Audio playback did not report the battle SFX manifest path: %s" % audio_playback)
 	return audio_playback
 
 func _validate_active_camera_presentation(summary: Dictionary) -> Dictionary:
@@ -781,6 +789,15 @@ func _vfx_entry_for(vfx_playback: Dictionary, kind: String) -> Dictionary:
 func _audio_record_for(audio_playback: Dictionary, battle_id: String) -> Dictionary:
 	var records: Dictionary = audio_playback.get("active_records", {}) if audio_playback.get("active_records", {}) is Dictionary else {}
 	return records.get(battle_id, {}) if records.get(battle_id, {}) is Dictionary else {}
+
+func _audio_asset_path_for(audio_record: Dictionary, audio_id: String) -> String:
+	var records: Array = audio_record.get("asset_playbacks", []) if audio_record.get("asset_playbacks", []) is Array else []
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		if String(record.get("audio_id", "")) == audio_id:
+			return String(record.get("asset_path", ""))
+	return ""
 
 func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
 	for event in BattleRulesScript.animation_event_queue(battle):

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "skirmish-launch-briefing-ux-20260523-10184",
-  "currentSliceTitle": "Skirmish Launch Briefing UX",
+  "currentSliceId": "battle-runtime-sfx-asset-layer-20260523-10184",
+  "currentSliceTitle": "Battle Runtime SFX Asset Layer",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed skirmish launch briefing UX: compact Opening briefing and First decision handoff are now surfaced before launch.",
+  "currentSliceNotes": "Completed runtime battle SFX asset layer with committed WAV assets and imported-first playback validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:16:00Z",
+  "updatedAt": "2026-05-23T23:17:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,67 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-runtime-sfx-asset-layer-20260523-10184",
+      "title": "Battle Runtime SFX Asset Layer",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-audio-cue-playback-report.md",
+        "content/animation_event_cues.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd"
+      ],
+      "purpose": "Add a committed runtime WAV SFX asset layer for battle audio cues so board presentation can prefer imported assets before falling back to generated waveforms.",
+      "implementationTargets": [
+        "content/battle_sfx_manifest.json",
+        "art/audio/runtime/battle/*.wav",
+        "tools/generate_battle_sfx_assets.py",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-runtime-sfx-asset-layer-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Battle cue ids have deterministic original WAV assets listed in content/battle_sfx_manifest.json.",
+        "BattleBoardView prefers manifest-backed imported AudioStream assets and preserves generated waveform fallback.",
+        "Validation summaries expose imported asset counts, asset paths, fallback counts, player caps, bus, mute state, and lifecycle expiry.",
+        "Focused battle event report and repository validation gates pass."
+      ],
+      "nonGoals": [
+        "No final sound design approval.",
+        "No music, ambience, UI audio, or mixer mastering work.",
+        "No combat balance or encounter tuning.",
+        "No broad audio asset import pipeline redesign."
+      ],
+      "startedAt": "2026-05-23T23:08:07Z",
+      "updatedAt": "2026-05-23T23:17:00Z",
+      "notes": "Completed runtime battle SFX asset layer: every current battle audio cue id has a committed original WAV asset manifest entry, BattleBoardView prefers imported WAV playback before generated fallback, and focused validation proves imported runtime SFX playback evidence.",
+      "completedAt": "2026-05-23T23:17:00Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_battle_sfx_assets.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "battle_event_animation_state_report": "pass",
+          "manifest_schema": "battle_runtime_sfx_manifest_v1",
+          "battle_sfx_wav_asset_count": 14,
+          "imported_asset_count_gated": true,
+          "generated_waveform_fallback_preserved": true,
+          "final_sound_design_claimed": false
+        }
+      }
+    },
     {
       "id": "skirmish-launch-briefing-ux-20260523-10184",
       "title": "Skirmish Launch Briefing UX",
@@ -23689,7 +23750,7 @@
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
   "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T23:16:00Z",
+  "currentSliceUpdatedAt": "2026-05-23T23:17:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
