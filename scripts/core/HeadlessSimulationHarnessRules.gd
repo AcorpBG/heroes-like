@@ -5,6 +5,7 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
@@ -294,41 +295,15 @@ static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	)
 
 static func _battle_resolver_sampling(input_config: Dictionary) -> Dictionary:
-	var scenario_ids: Array = input_config.get("battle_scenario_ids", ["river-pass"])
-	var max_samples: int = max(1, int(input_config.get("battle_sample_limit", 1)))
-	var samples := []
-	var warnings := []
-	var deferred := []
-	for scenario_id_value in scenario_ids:
-		if samples.size() >= max_samples:
-			break
-		var scenario_id := String(scenario_id_value)
-		var scenario := ContentService.get_scenario(scenario_id)
-		if scenario.is_empty():
-			deferred.append("Missing battle scenario %s." % scenario_id)
-			continue
-		var encounters: Array = scenario.get("encounters", []) if scenario.get("encounters", []) is Array else []
-		if encounters.is_empty():
-			deferred.append("%s has no encounter placements for battle sampling." % scenario_id)
-			continue
-		for encounter in encounters:
-			if samples.size() >= max_samples:
-				break
-			if not (encounter is Dictionary):
-				continue
-			var sample := _run_battle_sample(scenario_id, encounter)
-			if sample.is_empty():
-				deferred.append("%s/%s could not create a battle payload." % [scenario_id, String(encounter.get("placement_id", ""))])
-			else:
-				samples.append(sample)
-	var distribution := {}
-	for sample in samples:
-		var outcome := String(sample.get("outcome_state", "unknown"))
-		distribution[outcome] = int(distribution.get(outcome, 0)) + 1
-	if samples.size() < 3:
-		warnings.append("Battle distribution is a narrow deterministic sample until the deeper Phase 3 runner exists.")
-	elif samples.size() < max_samples:
-		warnings.append("Battle sampling reached %d/%d requested samples; current authored encounters are sampled narrowly." % [samples.size(), max_samples])
+	var sample_report: Dictionary = BattleAutoplayBalanceHarnessRulesScript.build_sampling_report(
+		input_config,
+		"battle_scenario_ids",
+		"battle_sample_limit"
+	)
+	var samples: Array = sample_report.get("samples", []) if sample_report.get("samples", []) is Array else []
+	var warnings: Array = sample_report.get("warnings", []) if sample_report.get("warnings", []) is Array else []
+	var deferred: Array = sample_report.get("deferred", []) if sample_report.get("deferred", []) is Array else []
+	var summary: Dictionary = sample_report.get("summary", {}) if sample_report.get("summary", {}) is Dictionary else {}
 	var status := "warning"
 	if samples.is_empty():
 		status = "deferred"
@@ -338,12 +313,14 @@ static func _battle_resolver_sampling(input_config: Dictionary) -> Dictionary:
 		"battle_resolver_sampling",
 		"deterministic_battle_autoplay_samples",
 		status,
+		summary,
 		{
-			"sample_count": samples.size(),
-			"requested_sample_limit": max_samples,
-			"distribution": distribution,
+			"samples": samples,
+			"distribution": sample_report.get("distribution", {}),
+			"action_distribution": sample_report.get("action_distribution", {}),
+			"warnings": warnings,
+			"deferred": deferred,
 		},
-		{"samples": samples, "distribution": distribution, "warnings": warnings, "deferred": deferred},
 		warnings,
 		deferred
 	)
@@ -516,64 +493,6 @@ static func _generated_session_from_setup(setup: Dictionary) -> SessionStateStor
 	session.overworld["generated_random_map_retry_status"] = setup.get("retry_status", {})
 	OverworldRules.normalize_overworld_state(session)
 	return session
-
-static func _run_battle_sample(scenario_id: String, encounter: Dictionary) -> Dictionary:
-	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
-		scenario_id,
-		"normal",
-		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
-	)
-	session.battle = BattleRules.create_battle_payload(session, encounter)
-	if session.battle.is_empty():
-		return {}
-	var initial_signature := _signature_for(_battle_signal(session.battle))
-	var guard := 0
-	var final_state := "continue"
-	while guard < 24 and not session.battle.is_empty():
-		guard += 1
-		var ready_result: Dictionary = BattleRules.resolve_if_battle_ready(session)
-		final_state = String(ready_result.get("state", "continue"))
-		if final_state not in ["", "continue", "invalid"]:
-			break
-		if session.battle.is_empty():
-			break
-		var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
-		if String(active_stack.get("side", "")) != "player":
-			continue
-		_select_first_living_enemy(session)
-		var availability: Dictionary = BattleRules.action_availability(session.battle)
-		var action := "defend"
-		if bool(availability.get("shoot", false)):
-			action = "shoot"
-		elif bool(availability.get("strike", false)):
-			action = "strike"
-		elif bool(availability.get("advance", false)):
-			action = "advance"
-		var result: Dictionary = BattleRules.perform_player_action(session, action)
-		final_state = String(result.get("state", "continue"))
-		if final_state not in ["", "continue", "invalid"]:
-			break
-	return {
-		"scenario_id": scenario_id,
-		"encounter_placement_id": String(encounter.get("placement_id", "")),
-		"encounter_id": String(encounter.get("encounter_id", "")),
-		"turns_sampled": guard,
-		"outcome_state": final_state,
-		"initial_battle_signature": initial_signature,
-		"final_signal_signature": _signature_for({
-			"state": final_state,
-			"battle": _battle_signal(session.battle),
-			"status": String(session.scenario_status),
-		}),
-	}
-
-static func _select_first_living_enemy(session: SessionStateStoreScript.SessionData) -> void:
-	for stack in session.battle.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		if String(stack.get("side", "")) == "enemy" and int(stack.get("count", 0)) > 0 and int(stack.get("total_health", 0)) > 0:
-			BattleRules.select_target(session, String(stack.get("battle_id", "")))
-			return
 
 static func _generated_setup(input_config: Dictionary, seed: String) -> Dictionary:
 	var config: Dictionary = input_config.get("random_map_config", {}) if input_config.get("random_map_config", {}) is Dictionary else {}

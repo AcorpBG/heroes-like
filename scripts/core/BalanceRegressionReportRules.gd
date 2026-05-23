@@ -5,6 +5,7 @@ const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGener
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_SCHEMA_ID := "balance_regression_report_suite_v1"
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"
@@ -304,47 +305,29 @@ static func _scenario_viability(input_config: Dictionary, generated_sample: Dict
 	)
 
 static func _battle_outcome_distribution(input_config: Dictionary) -> Dictionary:
-	var sample_scenarios: Array = input_config.get("battle_sample_scenarios", ["river-pass"])
-	var samples := []
-	var warnings := []
-	var deferred := []
-	for scenario_id_value in sample_scenarios:
-		var scenario_id := String(scenario_id_value)
-		var scenario := ContentService.get_scenario(scenario_id)
-		if scenario.is_empty():
-			deferred.append("Missing battle sample scenario: %s." % scenario_id)
-			continue
-		var encounters: Array = scenario.get("encounters", []) if scenario.get("encounters", []) is Array else []
-		if encounters.is_empty():
-			deferred.append("%s has no encounter placements for battle sampling." % scenario_id)
-			continue
-		var sample := _run_battle_sample(scenario_id, encounters[0])
-		if sample.is_empty():
-			deferred.append("%s first encounter could not be sampled by current battle resolver." % scenario_id)
-		else:
-			samples.append(sample)
-	var distribution := {}
-	for sample in samples:
-		var outcome := String(sample.get("outcome_state", "unknown"))
-		distribution[outcome] = int(distribution.get(outcome, 0)) + 1
-	if samples.size() < 3:
-		warnings.append("Battle distribution sample is intentionally narrow until Phase 3 has a full headless runner.")
+	var sample_report: Dictionary = BattleAutoplayBalanceHarnessRulesScript.build_sampling_report(
+		input_config,
+		"battle_sample_scenarios",
+		"battle_sample_limit"
+	)
+	var samples: Array = sample_report.get("samples", []) if sample_report.get("samples", []) is Array else []
+	var warnings: Array = sample_report.get("warnings", []) if sample_report.get("warnings", []) is Array else []
+	var deferred: Array = sample_report.get("deferred", []) if sample_report.get("deferred", []) is Array else []
+	var summary: Dictionary = sample_report.get("summary", {}) if sample_report.get("summary", {}) is Dictionary else {}
 	var status := "warning"
 	if samples.is_empty():
 		status = "deferred"
 	elif deferred.is_empty() and warnings.is_empty():
 		status = "pass"
+	summary["policy"] = "deterministic_autoplay_sample_report_only"
 	return _section(
 		"battle_outcome_distribution",
 		status,
-		{
-			"sample_count": samples.size(),
-			"distribution": distribution,
-			"policy": "deterministic_autoplay_sample_report_only",
-		},
+		summary,
 		{
 			"samples": samples,
-			"distribution": distribution,
+			"distribution": sample_report.get("distribution", {}),
+			"action_distribution": sample_report.get("action_distribution", {}),
 			"warnings": warnings,
 			"deferred": deferred,
 		},
@@ -476,60 +459,6 @@ static func _save_replay_stability(input_config: Dictionary, generated_sample: D
 		warnings,
 		deferred
 	)
-
-static func _run_battle_sample(scenario_id: String, encounter: Dictionary) -> Dictionary:
-	var session = ScenarioFactoryScript.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
-	session.battle = BattleRules.create_battle_payload(session, encounter)
-	if session.battle.is_empty():
-		return {}
-	var first_signature := _signature_for(_battle_signal(session.battle))
-	var guard := 0
-	var final_state := "continue"
-	while guard < 24 and not session.battle.is_empty():
-		guard += 1
-		var ready_result := BattleRules.resolve_if_battle_ready(session)
-		final_state = String(ready_result.get("state", "continue"))
-		if final_state not in ["", "continue", "invalid"]:
-			break
-		if session.battle.is_empty():
-			break
-		var active_stack := BattleRules.get_active_stack(session.battle)
-		if String(active_stack.get("side", "")) != "player":
-			continue
-		_select_first_living_enemy(session)
-		var availability := BattleRules.action_availability(session.battle)
-		var action := "defend"
-		if bool(availability.get("shoot", false)):
-			action = "shoot"
-		elif bool(availability.get("strike", false)):
-			action = "strike"
-		elif bool(availability.get("advance", false)):
-			action = "advance"
-		var result := BattleRules.perform_player_action(session, action)
-		final_state = String(result.get("state", "continue"))
-		if final_state not in ["", "continue", "invalid"]:
-			break
-	return {
-		"scenario_id": scenario_id,
-		"encounter_placement_id": String(encounter.get("placement_id", "")),
-		"encounter_id": String(encounter.get("encounter_id", "")),
-		"turns_sampled": guard,
-		"outcome_state": final_state,
-		"initial_battle_signature": first_signature,
-		"final_signal_signature": _signature_for({
-			"state": final_state,
-			"battle": _battle_signal(session.battle),
-			"status": String(session.scenario_status),
-		}),
-	}
-
-static func _select_first_living_enemy(session) -> void:
-	for stack in session.battle.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		if String(stack.get("side", "")) == "enemy" and int(stack.get("count", 0)) > 0 and int(stack.get("total_health", 0)) > 0:
-			BattleRules.select_target(session, String(stack.get("battle_id", "")))
-			return
 
 static func _generated_session_viability(input_config: Dictionary, generated_sample: Dictionary = {}) -> Dictionary:
 	var generated := generated_sample if not generated_sample.is_empty() else _generated_map_case(input_config, "balance-scenario-viability-10184")

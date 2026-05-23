@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-animation-event-queue-lifecycle-20260523-10184",
-  "currentSliceTitle": "Battle Animation Event Queue Lifecycle",
+  "currentSliceId": "headless-battle-autoplay-balance-harness-20260523-10184",
+  "currentSliceTitle": "Headless Battle Autoplay Balance Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: battle animation events now have a bounded serial queue and board-side playback windows that expire back to normal stack states.",
+  "currentSliceNotes": "Completed: deterministic report-only battle autoplay sampling now feeds the headless simulation harness and balance regression suite with outcome, action, pacing, and health evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23",
   "statusTaxonomy": {
@@ -15651,6 +15651,46 @@
       "validationResults": [
         "Focused report passed with nine cases including queue coverage and board playback expiry."
       ]
+    },
+    {
+      "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+      "title": "Headless Battle Autoplay Balance Harness",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Strengthen combat-feel and balance work with deterministic report-only battle autoplay sampling across authored encounters.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Headless battle sampling emits deterministic authored-encounter outcome distribution and action distribution evidence.",
+        "Samples include round/step pacing, completed/stalled counts, initial/final side health, remaining-health percentages, and compact turn logs.",
+        "Headless simulation and balance regression focused reports assert the new battle autoplay evidence.",
+        "The harness remains report-only with no automatic tuning, runtime balance mutation, manual-play replacement, or final balance claim."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or content writeback.",
+        "No replacement for manual playtesting."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18328,6 +18368,40 @@
         "git diff --check"
       ],
       "remainingGap": "This adds event queue and playback lifecycle for generated unit sheets; final VFX, audio, camera timing, authored timing curves, and combat balance remain outside this slice."
+    },
+    {
+      "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+      "title": "Headless Battle Autoplay Balance Harness",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "headless-battle-autoplay-balance-harness-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAutoplayBalanceHarnessRules provides deterministic report-only authored encounter battle sampling with outcome distribution, action distribution, step and round pacing, completed/stalled counts, side health totals, remaining-health percentages, and compact turn logs.",
+        "HeadlessSimulationHarnessRules consumes the shared sampler for battle_resolver_sampling instead of the previous single shallow resolver sample.",
+        "BalanceRegressionReportRules consumes the same sampler for battle_outcome_distribution so balance evidence and headless harness evidence stay aligned.",
+        "Focused headless simulation and balance regression tests assert action, pacing, health, and per-sample evidence while preserving report-only boundaries."
+      ],
+      "nonClaims": [
+        "No final combat balance approval.",
+        "No automatic tuning or content writeback.",
+        "No replacement for manual playtesting."
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -19111,13 +19185,40 @@
         "git diff --check"
       ],
       "summary": "All 412 committed generated unit PNG assets and both unit art manifests matched fresh generator output; repo validation passed with the new gate wired in."
+    },
+    {
+      "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused headless simulation and balance regression reports passed with deterministic battle autoplay evidence; repo validation, Python compile, JSON syntax, and diff hygiene passed."
     }
   ],
-  "lastValidation": "Unit art reproducibility report passed with 103 units, 412 matching generated PNG assets, and both committed manifests matching fresh generator output; repository validation passed.",
+  "lastValidation": {
+    "id": "headless-battle-autoplay-balance-harness-20260523-10184",
+    "status": "passed",
+    "updatedAt": "2026-05-23T00:00:00Z",
+    "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+      "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/validate_repo.py",
+      "jq empty ops/progress.json",
+      "git diff --check"
+    ],
+    "summary": "Focused headless simulation and balance regression reports passed with deterministic battle autoplay evidence; repo validation, Python compile, JSON syntax, and diff hygiene passed."
+  },
   "active_slice": {
-    "id": "battle-animation-event-queue-lifecycle-20260523-10184",
+    "id": "headless-battle-autoplay-balance-harness-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: battle animation events now have a bounded serial queue and board-side playback windows that expire back to normal stack states."
+    "note": "Completed: deterministic report-only battle autoplay sampling now feeds the headless simulation harness and balance regression suite with outcome, action, pacing, and health evidence."
   }
 }
