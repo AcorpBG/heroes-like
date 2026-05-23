@@ -26,6 +26,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_multi_scenario_pressure_coverage",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
+	"battle_difficulty_sweep_sampling",
 	"save_replay_stability",
 	"generated_random_map_boundary",
 ]
@@ -48,6 +49,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_multi_scenario_pressure_coverage(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
+		_battle_difficulty_sweep_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
 		_generated_random_map_boundary(input_config, generated_sample),
 	]
@@ -1674,6 +1676,62 @@ static func _battle_resolver_sampling(input_config: Dictionary) -> Dictionary:
 		},
 		warnings,
 		deferred
+	)
+
+static func _battle_difficulty_sweep_sampling(input_config: Dictionary) -> Dictionary:
+	var sweep: Dictionary = BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report(input_config)
+	var rows: Array = sweep.get("rows", []) if sweep.get("rows", []) is Array else []
+	var row_summary := {}
+	var difficulty_ids := []
+	for row in rows:
+		if not (row is Dictionary):
+			continue
+		var difficulty_id := String(row.get("difficulty_id", ""))
+		if difficulty_id == "":
+			continue
+		difficulty_ids.append(difficulty_id)
+		row_summary[difficulty_id] = {
+			"sample_count": int(row.get("sample_count", 0)),
+			"completed_sample_count": int(row.get("completed_sample_count", 0)),
+			"combat_feel_gate_status": String(row.get("combat_feel_gate_status", "")),
+			"balance_matrix_gate_status": String(row.get("balance_matrix_gate_status", "")),
+			"tuning_queue_status": String(row.get("tuning_queue_status", "")),
+			"tuning_queue_item_count": int(row.get("tuning_queue_item_count", 0)),
+			"tuning_queue_signature": String(row.get("tuning_queue_signature", "")),
+			"average_terminal_health_margin_pct": int(row.get("average_terminal_health_margin_pct", 0)),
+			"primary_outcome_state": String(row.get("primary_outcome_state", "")),
+			"primary_outcome_pct": int(row.get("primary_outcome_pct", 0)),
+		}
+	var warnings: Array = sweep.get("warnings", []) if sweep.get("warnings", []) is Array else []
+	var failures: Array = sweep.get("failures", []) if sweep.get("failures", []) is Array else []
+	var status := _status_from(failures, warnings, [])
+	var summary := {
+		"schema": String(sweep.get("schema", "")),
+		"policy": String(sweep.get("policy", "")),
+		"sweep_status": String(sweep.get("status", "")),
+		"sweep_signature": String(sweep.get("sweep_signature", "")),
+		"difficulty_ids": difficulty_ids,
+		"row_count": rows.size(),
+		"sample_limit_per_difficulty": int(sweep.get("sample_limit_per_difficulty", 0)),
+		"minimum_sample_count_per_difficulty": int(sweep.get("minimum_sample_count_per_difficulty", 0)),
+		"row_summary": row_summary,
+		"deltas": sweep.get("deltas", {}),
+		"warning_count": warnings.size(),
+		"failure_count": failures.size(),
+	}
+	return _case(
+		"battle_difficulty_sweep_sampling",
+		"deterministic_battle_difficulty_sweep_samples",
+		status,
+		summary,
+		{
+			"rows": rows,
+			"deltas": sweep.get("deltas", {}),
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		[]
 	)
 
 static func _save_replay_stability(input_config: Dictionary, generated_sample: Dictionary = {}) -> Dictionary:

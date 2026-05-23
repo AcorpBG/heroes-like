@@ -13409,11 +13409,13 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
+    difficulty_sweep_doc_path = ROOT / "docs" / "headless-battle-difficulty-sweep-harness-report.md"
     for path in (
         ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd",
         ROOT / "tests" / "headless_simulation_harness_report.gd",
         ROOT / "tests" / "headless_simulation_harness_report.tscn",
         doc_path,
+        difficulty_sweep_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing headless strategic AI live turn harness file: {path.relative_to(ROOT)}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
@@ -13428,6 +13430,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         '"strategic_ai_live_regroup_retreat"',
         '"strategic_ai_live_recruitment_delivery"',
         '"strategic_ai_multi_scenario_pressure_coverage"',
+        '"battle_difficulty_sweep_sampling"',
         "func _strategic_ai_live_turn_execution",
         "func _strategic_ai_live_route_progression",
         "func _strategic_ai_live_town_governor_build_execution",
@@ -13438,6 +13441,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "func _strategic_ai_live_regroup_retreat",
         "func _strategic_ai_live_recruitment_delivery",
         "func _strategic_ai_multi_scenario_pressure_coverage",
+        "func _battle_difficulty_sweep_sampling",
         "live_commander_resource_front_turn_execution",
         "live_commander_resource_front_route_progression",
         "live_town_governor_builds_and_recruits_through_enemy_turn",
@@ -13505,6 +13509,8 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "no_hero_task_state_write_no_save_migration",
         "EnemyTurnRules.run_enemy_turn(session)",
         "OverworldRules.end_turn(session)",
+        "BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report",
+        "deterministic_battle_difficulty_sweep_samples",
     ):
         ensure(required_token in harness_text, errors, f"Headless simulation harness is missing strategic AI live-turn token: {required_token}")
     report_text = (ROOT / "tests" / "headless_simulation_harness_report.gd").read_text(encoding="utf-8")
@@ -13519,6 +13525,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "strategic_ai_live_regroup_retreat",
         "strategic_ai_live_recruitment_delivery",
         "strategic_ai_multi_scenario_pressure_coverage",
+        "battle_difficulty_sweep_sampling",
         "_assert_live_ai_turn_execution",
         "_assert_live_ai_route_progression",
         "_assert_live_ai_town_governor_build_execution",
@@ -13529,6 +13536,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "_assert_live_ai_regroup_retreat",
         "_assert_live_ai_recruitment_delivery",
         "_assert_live_ai_multi_scenario_pressure_coverage",
+        "_assert_battle_difficulty_sweep",
         "river_free_company",
         "river_signal_post",
         "duskfen_bastion",
@@ -13580,6 +13588,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "reserved_unique_targets",
         "public_event_leak_tokens",
         "no_hero_task_state_write_no_save_migration",
+        "battle_autoplay_difficulty_sweep_v1",
+        "report_only_launch_difficulty_balance_probe",
+        "no_observed_effect",
     ):
         ensure(required_token in report_text, errors, f"Headless simulation harness report is missing strategic AI assertion token: {required_token}")
     if doc_path.exists():
@@ -13640,6 +13651,23 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "not a full AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"Headless strategic AI live turn harness doc is missing required text: {required_text}")
+    if difficulty_sweep_doc_path.exists():
+        difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Headless Battle Difficulty Sweep Harness Report",
+            "headless-battle-difficulty-sweep-harness-20260523-10184",
+            "`battle_difficulty_sweep_sampling`",
+            "`deterministic_battle_difficulty_sweep_samples`",
+            "`battle_autoplay_difficulty_sweep_v1`",
+            "`report_only_launch_difficulty_balance_probe`",
+            "`sweep_signature`: `bc42c7b1`",
+            "`tuning_queue_status: clear`",
+            "`tuning_queue_item_count: 0`",
+            "`no_observed_effect: false`",
+            "No automatic tuning or authored content writeback.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in difficulty_sweep_doc_text, errors, f"Headless battle difficulty sweep harness doc is missing required text: {required_text}")
 
 
 def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
