@@ -69,6 +69,9 @@ const BATTLE_VFX_PROJECTILE_COLOR := Color(0.94, 0.96, 0.74, 0.88)
 const BATTLE_VFX_STATUS_COLOR := Color(0.50, 0.86, 0.74, 0.76)
 const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
 const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
+const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
+const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
+const BATTLE_AUDIO_BUS := "Master"
 
 var _session = null
 var _battle: Dictionary = {}
@@ -89,6 +92,8 @@ var _stack_animation_playback_records: Dictionary = {}
 var _stack_animation_playback_until_msec: Dictionary = {}
 var _latest_animation_serial_by_stack: Dictionary = {}
 var _stack_animation_cue_playback_records: Dictionary = {}
+var _stack_animation_audio_playback_records: Dictionary = {}
+var _active_audio_players: Array = []
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -104,6 +109,7 @@ func _notification(what: int) -> void:
 func _process(_delta: float) -> void:
 	if not _battle.is_empty():
 		_expire_animation_playback_records()
+		_cleanup_audio_players()
 		queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
@@ -433,6 +439,7 @@ func validation_unit_art_summary() -> Dictionary:
 		"animation_playback": validation_animation_playback_summary(),
 		"cue_playback": validation_cue_playback_summary(),
 		"vfx_playback": validation_vfx_playback_summary(),
+		"audio_playback": validation_audio_playback_summary(),
 		"stacks": stack_entries,
 	}
 
@@ -504,6 +511,28 @@ func validation_vfx_playback_summary() -> Dictionary:
 		"impact_draw_count": impact_count,
 		"cast_draw_count": cast_count,
 		"active_draw_entries": entries,
+	}
+
+func validation_audio_playback_summary() -> Dictionary:
+	_expire_animation_playback_records()
+	_cleanup_audio_players()
+	var records := {}
+	var audio_cue_count := 0
+	var generated_waveform_count := 0
+	for battle_id in _stack_animation_audio_playback_records.keys():
+		var record: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {}) if _stack_animation_audio_playback_records.get(battle_id, {}) is Dictionary else {}
+		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
+		audio_cue_count += audio_ids.size()
+		generated_waveform_count += int(record.get("generated_waveform_count", 0))
+		records[String(battle_id)] = record.duplicate(true)
+	return {
+		"active_audio_record_count": records.size(),
+		"audio_cue_count": audio_cue_count,
+		"generated_waveform_count": generated_waveform_count,
+		"active_player_count": _active_audio_player_count(),
+		"audio_bus": BATTLE_AUDIO_BUS,
+		"muted": SettingsService.master_volume_percent() <= 0,
+		"active_records": records,
 	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
@@ -1049,6 +1078,7 @@ func _animation_playback_record_for_stack(battle_id: String) -> Dictionary:
 		_stack_animation_playback_records.erase(battle_id)
 		_stack_animation_playback_until_msec.erase(battle_id)
 		_stack_animation_cue_playback_records.erase(battle_id)
+		_stack_animation_audio_playback_records.erase(battle_id)
 		return {}
 	var record: Dictionary = _stack_animation_playback_records.get(battle_id, {}) if _stack_animation_playback_records.get(battle_id, {}) is Dictionary else {}
 	return record.duplicate(true)
@@ -1066,6 +1096,7 @@ func _sync_animation_playback_records() -> void:
 			_stack_animation_playback_records.erase(battle_id)
 			_stack_animation_playback_until_msec.erase(battle_id)
 			_stack_animation_cue_playback_records.erase(battle_id)
+			_stack_animation_audio_playback_records.erase(battle_id)
 	for event in BattleRulesScript.animation_event_queue(_battle):
 		if not (event is Dictionary):
 			continue
@@ -1083,8 +1114,10 @@ func _sync_animation_playback_records() -> void:
 			cue_record["started_at_msec"] = now
 			cue_record["expires_at_msec"] = now + max(1, duration_msec)
 			_stack_animation_cue_playback_records[battle_id] = cue_record
+			_register_audio_cue_playback(cue_record)
 		else:
 			_stack_animation_cue_playback_records.erase(battle_id)
+			_stack_animation_audio_playback_records.erase(battle_id)
 		_stack_animation_playback_until_msec[battle_id] = now + max(1, duration_msec)
 
 func _expire_animation_playback_records() -> void:
@@ -1094,6 +1127,7 @@ func _expire_animation_playback_records() -> void:
 			_stack_animation_playback_until_msec.erase(battle_id)
 			_stack_animation_playback_records.erase(battle_id)
 			_stack_animation_cue_playback_records.erase(battle_id)
+			_stack_animation_audio_playback_records.erase(battle_id)
 
 func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 	var event_id := String(event.get("event_id", "")).strip_edges()
@@ -1454,6 +1488,167 @@ func _draw_cast_anchor_vfx(center: Vector2, radius: float, progress: float) -> v
 func _draw_path_ghost_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var alpha := maxf(0.16, 1.0 - progress * 0.60)
 	_draw_hex(center, radius * (0.50 + progress * 0.16), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.08 * alpha), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.48 * alpha), maxf(1.6, radius * 0.04))
+
+func _register_audio_cue_playback(cue_record: Dictionary) -> void:
+	var battle_id := String(cue_record.get("battle_id", "")).strip_edges()
+	if battle_id == "":
+		return
+	var audio_ids: Array = cue_record.get("selected_audio_cue_ids", []) if cue_record.get("selected_audio_cue_ids", []) is Array else []
+	if audio_ids.is_empty():
+		_stack_animation_audio_playback_records.erase(battle_id)
+		return
+	var generated_records := []
+	for audio_id_value in audio_ids:
+		var audio_id := String(audio_id_value).strip_edges()
+		if audio_id == "":
+			continue
+		var generated := _play_generated_audio_cue(audio_id, battle_id, int(cue_record.get("serial", 0)))
+		if not generated.is_empty():
+			generated_records.append(generated)
+	_stack_animation_audio_playback_records[battle_id] = {
+		"battle_id": battle_id,
+		"event_id": String(cue_record.get("event_id", "")),
+		"serial": int(cue_record.get("serial", 0)),
+		"cue_id": String(cue_record.get("cue_id", "")),
+		"selected_audio_cue_ids": audio_ids.duplicate(true),
+		"generated_waveform_count": generated_records.size(),
+		"generated_waveforms": generated_records,
+		"started_at_msec": int(cue_record.get("started_at_msec", Time.get_ticks_msec())),
+		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
+		"audio_bus": BATTLE_AUDIO_BUS,
+		"muted": SettingsService.master_volume_percent() <= 0,
+	}
+
+func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
+	var spec := _audio_cue_wave_spec(audio_id)
+	if spec.is_empty():
+		return {}
+	var duration_msec := int(spec.get("duration_msec", 120))
+	var frame_count := maxi(1, int(BATTLE_AUDIO_SAMPLE_RATE * float(duration_msec) / 1000.0))
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = BATTLE_AUDIO_SAMPLE_RATE
+	stream.buffer_length = maxf(0.05, float(duration_msec) / 1000.0 + 0.04)
+	var player := AudioStreamPlayer.new()
+	player.stream = stream
+	player.bus = BATTLE_AUDIO_BUS
+	player.volume_db = float(spec.get("volume_db", -12.0))
+	add_child(player)
+	_active_audio_players.append({
+		"player": player,
+		"battle_id": battle_id,
+		"audio_id": audio_id,
+		"serial": serial,
+		"expires_at_msec": int(Time.get_ticks_msec()) + duration_msec + 180,
+	})
+	_trim_audio_players()
+	player.play()
+	var playback = player.get_stream_playback()
+	if playback is AudioStreamGeneratorPlayback:
+		_push_generated_audio_frames(playback, spec, frame_count)
+	return {
+		"audio_id": audio_id,
+		"waveform": String(spec.get("waveform", "sine")),
+		"frequency_hz": float(spec.get("frequency_hz", 440.0)),
+		"secondary_frequency_hz": float(spec.get("secondary_frequency_hz", 0.0)),
+		"duration_msec": duration_msec,
+		"frame_count": frame_count,
+		"player_created": true,
+	}
+
+func _push_generated_audio_frames(playback: AudioStreamGeneratorPlayback, spec: Dictionary, frame_count: int) -> void:
+	var frequency := float(spec.get("frequency_hz", 440.0))
+	var secondary_frequency := float(spec.get("secondary_frequency_hz", 0.0))
+	var amplitude := float(spec.get("amplitude", 0.18))
+	var noise_amount := float(spec.get("noise", 0.0))
+	var waveform := String(spec.get("waveform", "sine"))
+	for index in range(frame_count):
+		var t := float(index) / BATTLE_AUDIO_SAMPLE_RATE
+		var progress := float(index) / float(maxi(1, frame_count - 1))
+		var envelope := _audio_envelope(progress)
+		var sample := 0.0
+		match waveform:
+			"triangle":
+				sample = _triangle_wave(frequency * t)
+			"square":
+				sample = 1.0 if sin(TAU * frequency * t) >= 0.0 else -1.0
+			_:
+				sample = sin(TAU * frequency * t)
+		if secondary_frequency > 0.0:
+			sample = sample * 0.72 + sin(TAU * secondary_frequency * t) * 0.28
+		if noise_amount > 0.0:
+			sample = sample * (1.0 - noise_amount) + _deterministic_audio_noise(index) * noise_amount
+		sample = clampf(sample * amplitude * envelope, -0.90, 0.90)
+		playback.push_frame(Vector2(sample, sample))
+
+func _audio_envelope(progress: float) -> float:
+	var attack := smoothstep(0.0, 0.12, progress)
+	var release := 1.0 - smoothstep(0.68, 1.0, progress)
+	return clampf(attack * release, 0.0, 1.0)
+
+func _triangle_wave(phase: float) -> float:
+	var wrapped: float = phase - floor(phase)
+	return 4.0 * abs(wrapped - 0.5) - 1.0
+
+func _deterministic_audio_noise(index: int) -> float:
+	var value := sin(float(index) * 12.9898 + 78.233) * 43758.5453
+	return (value - floor(value)) * 2.0 - 1.0
+
+func _audio_cue_wave_spec(audio_id: String) -> Dictionary:
+	match audio_id:
+		"audio_placeholder_ranged_release":
+			return {"waveform": "sine", "frequency_hz": 760.0, "secondary_frequency_hz": 1140.0, "duration_msec": 150, "amplitude": 0.16, "volume_db": -13.0}
+		"audio_placeholder_status_apply":
+			return {"waveform": "triangle", "frequency_hz": 420.0, "secondary_frequency_hz": 630.0, "duration_msec": 190, "amplitude": 0.14, "volume_db": -14.0}
+		"audio_placeholder_melee_release":
+			return {"waveform": "triangle", "frequency_hz": 260.0, "secondary_frequency_hz": 520.0, "duration_msec": 120, "amplitude": 0.18, "noise": 0.18, "volume_db": -12.0}
+		"audio_placeholder_hit":
+			return {"waveform": "square", "frequency_hz": 150.0, "duration_msec": 100, "amplitude": 0.13, "noise": 0.34, "volume_db": -13.0}
+		"audio_placeholder_unit_rout":
+			return {"waveform": "triangle", "frequency_hz": 180.0, "secondary_frequency_hz": 120.0, "duration_msec": 260, "amplitude": 0.13, "noise": 0.12, "volume_db": -14.0}
+		"audio_placeholder_cast":
+			return {"waveform": "sine", "frequency_hz": 520.0, "secondary_frequency_hz": 780.0, "duration_msec": 220, "amplitude": 0.14, "volume_db": -14.0}
+		"audio_placeholder_unit_step":
+			return {"waveform": "triangle", "frequency_hz": 220.0, "duration_msec": 80, "amplitude": 0.09, "noise": 0.18, "volume_db": -17.0}
+		"audio_placeholder_defend":
+			return {"waveform": "triangle", "frequency_hz": 300.0, "duration_msec": 100, "amplitude": 0.10, "volume_db": -16.0}
+		"audio_placeholder_retaliation":
+			return {"waveform": "triangle", "frequency_hz": 340.0, "secondary_frequency_hz": 170.0, "duration_msec": 130, "amplitude": 0.16, "noise": 0.12, "volume_db": -13.0}
+		"audio_placeholder_retreat_order", "audio_placeholder_surrender_order":
+			return {"waveform": "sine", "frequency_hz": 330.0, "secondary_frequency_hz": 250.0, "duration_msec": 210, "amplitude": 0.12, "volume_db": -15.0}
+		"audio_placeholder_turn_ready":
+			return {"waveform": "sine", "frequency_hz": 640.0, "duration_msec": 110, "amplitude": 0.09, "volume_db": -18.0}
+		"audio_placeholder_status_clear":
+			return {"waveform": "sine", "frequency_hz": 360.0, "secondary_frequency_hz": 540.0, "duration_msec": 150, "amplitude": 0.10, "volume_db": -17.0}
+		"audio_placeholder_idle_soft":
+			return {"waveform": "sine", "frequency_hz": 180.0, "duration_msec": 70, "amplitude": 0.04, "volume_db": -24.0}
+	return {}
+
+func _cleanup_audio_players() -> void:
+	var now := int(Time.get_ticks_msec())
+	var retained := []
+	for entry in _active_audio_players:
+		if not (entry is Dictionary):
+			continue
+		var player = entry.get("player", null)
+		var expired := int(entry.get("expires_at_msec", 0)) <= now
+		if player is AudioStreamPlayer and is_instance_valid(player) and not expired:
+			retained.append(entry)
+		elif player is AudioStreamPlayer and is_instance_valid(player):
+			player.queue_free()
+	_active_audio_players = retained
+
+func _trim_audio_players() -> void:
+	_cleanup_audio_players()
+	while _active_audio_players.size() > BATTLE_AUDIO_MAX_ACTIVE_PLAYERS:
+		var entry = _active_audio_players.pop_front()
+		if entry is Dictionary:
+			var player = entry.get("player", null)
+			if player is AudioStreamPlayer and is_instance_valid(player):
+				player.queue_free()
+
+func _active_audio_player_count() -> int:
+	_cleanup_audio_players()
+	return _active_audio_players.size()
 
 func _draw_turn_strip(field_rect: Rect2) -> void:
 	var strip_width: float = minf(field_rect.size.x - 20.0, 430.0)

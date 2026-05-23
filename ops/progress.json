@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-vfx-cue-presentation-20260523-10184",
-  "currentSliceTitle": "Battle VFX Cue Presentation",
+  "currentSliceId": "battle-audio-cue-playback-20260523-10184",
+  "currentSliceTitle": "Battle Audio Cue Playback",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: battle animation events now preserve source/target context and BattleBoardView renders active VFX cue ids as transient placeholder board effects that expire with playback.",
+  "currentSliceNotes": "Completed: BattleBoardView now maps active battle audio cue ids to generated AudioStreamGenerator waveforms on the Master bus and exposes playback validation records that expire with event playback.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23",
   "statusTaxonomy": {
@@ -15738,6 +15738,49 @@
       ]
     },
     {
+      "id": "battle-audio-cue-playback-20260523-10184",
+      "title": "Battle Audio Cue Playback",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "docs/battle-animation-cue-dispatch-report.md",
+        "docs/battle-vfx-cue-presentation-report.md"
+      ],
+      "purpose": "Make active battle audio cue ids produce runtime playback through generated cue-specific audio waveforms.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-audio-cue-playback-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active battle audio cue ids resolve to runtime generated AudioStreamGenerator playback records.",
+        "Generated battle audio routes through the Master bus and respects mute state through existing settings.",
+        "Playback records expose selected audio cue ids, generated waveform metadata, active player count, and expiry.",
+        "Focused validation proves ranged/status events synthesize audio cue waveforms and expire with playback."
+      ],
+      "nonGoals": [
+        "No final imported audio assets.",
+        "No music, ambience, UI audio, mixer polish, camera, VFX asset, or combat balance tuning."
+      ],
+      "validationResults": [
+        "Focused battle event animation report passed with board_audio_playback proving generated ranged/status cue waveforms and playback expiry."
+      ]
+    },
+    {
       "id": "headless-battle-autoplay-balance-harness-20260523-10184",
       "title": "Headless Battle Autoplay Balance Harness",
       "phase": "phase-2-deep-production-foundation",
@@ -18570,6 +18613,45 @@
       "remainingGap": "This is visible placeholder VFX presentation; final imported VFX assets, audio playback, camera work, authored timing, and combat balance remain outside this slice."
     },
     {
+      "id": "battle-audio-cue-playback-20260523-10184",
+      "title": "Battle Audio Cue Playback",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "docs/battle-animation-cue-dispatch-report.md",
+        "docs/battle-vfx-cue-presentation-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-audio-cue-playback-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-audio-cue-playback-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView converts active selected_audio_cue_ids into short generated AudioStreamGenerator sounds on the Master bus.",
+        "Cue-specific generated wave specs cover ranged, status, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle placeholder audio ids.",
+        "validation_unit_art_summary now exposes audio_playback with active records, generated waveform counts, active player count, bus, mute state, and waveform metadata.",
+        "tests/battle_event_animation_state_report.tscn validates board_audio_playback for ranged release and status apply cue synthesis plus lifecycle expiry."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is generated placeholder audio playback; final authored sound effects, imported audio assets, music, ambience, UI audio, mixer priority, platform QA, and combat balance remain outside this slice."
+    },
+    {
       "id": "headless-battle-autoplay-balance-harness-20260523-10184",
       "title": "Headless Battle Autoplay Balance Harness",
       "status": "completed",
@@ -19438,10 +19520,23 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with board_vfx_presentation proving projectile/status draw entries, source-target event context, and VFX expiry; full validation gates passed."
+    },
+    {
+      "id": "battle-audio-cue-playback-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with board_audio_playback proving generated ranged/status audio cue waveforms and playback expiry; full validation gates passed."
     }
   ],
   "lastValidation": {
-    "id": "battle-vfx-cue-presentation-20260523-10184",
+    "id": "battle-audio-cue-playback-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
@@ -19451,12 +19546,12 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with board_vfx_presentation proving projectile/status draw entries, source-target event context, and VFX expiry; full validation gates passed."
+    "summary": "Focused battle event animation report passed with board_audio_playback proving generated ranged/status audio cue waveforms and playback expiry; full validation gates passed."
   },
   "active_slice": {
-    "id": "battle-vfx-cue-presentation-20260523-10184",
+    "id": "battle-audio-cue-playback-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: active battle VFX cue ids materialize as source-target draw entries and visible placeholder board effects that expire with playback."
+    "note": "Completed: active battle audio cue ids synthesize generated waveform playback on the Master bus and expire with board playback."
   }
 }

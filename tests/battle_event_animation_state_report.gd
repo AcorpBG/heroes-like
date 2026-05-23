@@ -154,12 +154,16 @@ func _validate_board_runtime_summary() -> void:
 	_expect_equal("board runtime status target state", String(observed_states.get("enemy_0", "")), "status_applied")
 	var cue_playback := _validate_active_cue_dispatch(summary)
 	var vfx_playback := _validate_active_vfx_presentation(summary)
+	var audio_playback := _validate_active_audio_playback(summary)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
 	_report["cases"]["board_cue_dispatch"] = {
 		"active_cue_playback": cue_playback,
 	}
 	_report["cases"]["board_vfx_presentation"] = {
 		"active_vfx_playback": vfx_playback,
+	}
+	_report["cases"]["board_audio_playback"] = {
+		"active_audio_playback": audio_playback,
 	}
 
 func _validate_board_playback_lifecycle() -> void:
@@ -177,6 +181,7 @@ func _validate_board_playback_lifecycle() -> void:
 	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
 	var active_cue: Dictionary = active_summary.get("cue_playback", {}) if active_summary.get("cue_playback", {}) is Dictionary else {}
 	var active_vfx: Dictionary = active_summary.get("vfx_playback", {}) if active_summary.get("vfx_playback", {}) is Dictionary else {}
+	var active_audio: Dictionary = active_summary.get("audio_playback", {}) if active_summary.get("audio_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
 	if int(active_playback.get("active_playback_count", 0)) < 2:
@@ -185,12 +190,15 @@ func _validate_board_playback_lifecycle() -> void:
 		_error("Cue lifecycle did not keep both source and target cue records active: %s" % active_cue)
 	if int(active_vfx.get("active_vfx_draw_count", 0)) < 2:
 		_error("VFX lifecycle did not keep source and target draw entries active: %s" % active_vfx)
+	if int(active_audio.get("active_audio_record_count", 0)) < 2:
+		_error("Audio lifecycle did not keep source and target audio records active: %s" % active_audio)
 	await get_tree().create_timer(0.90).timeout
 	var expired_summary: Dictionary = view.validation_unit_art_summary()
 	var expired_states := _observed_animation_states(expired_summary)
 	var expired_playback: Dictionary = expired_summary.get("animation_playback", {}) if expired_summary.get("animation_playback", {}) is Dictionary else {}
 	var expired_cue: Dictionary = expired_summary.get("cue_playback", {}) if expired_summary.get("cue_playback", {}) is Dictionary else {}
 	var expired_vfx: Dictionary = expired_summary.get("vfx_playback", {}) if expired_summary.get("vfx_playback", {}) is Dictionary else {}
+	var expired_audio: Dictionary = expired_summary.get("audio_playback", {}) if expired_summary.get("audio_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
 	if int(expired_playback.get("active_playback_count", -1)) != 0:
@@ -199,6 +207,8 @@ func _validate_board_playback_lifecycle() -> void:
 		_error("Cue lifecycle did not expire cue records: %s" % expired_cue)
 	if int(expired_vfx.get("active_vfx_draw_count", -1)) != 0:
 		_error("VFX lifecycle did not expire draw entries: %s" % expired_vfx)
+	if int(expired_audio.get("active_audio_record_count", -1)) != 0:
+		_error("Audio lifecycle did not expire audio records: %s" % expired_audio)
 	view.queue_free()
 	await get_tree().process_frame
 	_report["cases"]["board_playback_lifecycle"] = {
@@ -210,6 +220,8 @@ func _validate_board_playback_lifecycle() -> void:
 		"expired_cue_playback": expired_cue,
 		"active_vfx_playback": active_vfx,
 		"expired_vfx_playback": expired_vfx,
+		"active_audio_playback": active_audio,
+		"expired_audio_playback": expired_audio,
 	}
 
 func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
@@ -247,6 +259,20 @@ func _validate_active_vfx_presentation(summary: Dictionary) -> Dictionary:
 	if int(projectile.get("start_q", -1)) == int(projectile.get("target_q", -1)) and int(projectile.get("start_r", -1)) == int(projectile.get("target_r", -1)):
 		_error("Projectile VFX did not span distinct source and target cells: %s" % projectile)
 	return vfx_playback
+
+func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
+	var audio_playback: Dictionary = summary.get("audio_playback", {}) if summary.get("audio_playback", {}) is Dictionary else {}
+	if int(audio_playback.get("active_audio_record_count", 0)) < 2:
+		_error("Audio playback did not materialize both source and target audio records: %s" % audio_playback)
+	if int(audio_playback.get("generated_waveform_count", 0)) < 2:
+		_error("Audio playback did not synthesize both source and target cue waveforms: %s" % audio_playback)
+	var player_audio := _audio_record_for(audio_playback, "player_0")
+	var enemy_audio := _audio_record_for(audio_playback, "enemy_0")
+	_expect_array_contains("player audio runtime cue", player_audio.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
+	_expect_array_contains("enemy audio runtime cue", enemy_audio.get("selected_audio_cue_ids", []), "audio_placeholder_status_apply")
+	if String(audio_playback.get("audio_bus", "")) != "Master":
+		_error("Audio playback should route generated battle cues through Master bus: %s" % audio_playback)
+	return audio_playback
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
@@ -350,6 +376,10 @@ func _vfx_entry_for(vfx_playback: Dictionary, kind: String) -> Dictionary:
 			return entry
 	_error("Missing VFX draw entry kind %s in %s." % [kind, vfx_playback])
 	return {}
+
+func _audio_record_for(audio_playback: Dictionary, battle_id: String) -> Dictionary:
+	var records: Dictionary = audio_playback.get("active_records", {}) if audio_playback.get("active_records", {}) is Dictionary else {}
+	return records.get(battle_id, {}) if records.get(battle_id, {}) is Dictionary else {}
 
 func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
 	for event in BattleRulesScript.animation_event_queue(battle):
