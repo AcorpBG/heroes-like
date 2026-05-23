@@ -14429,6 +14429,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "save_png",
         "alpha_coverage",
         "quantized_color_count",
+        "VISUAL_FINGERPRINT_BITS",
+        "unique_visual_fingerprint_count",
+        "func _visual_fingerprint",
+        "func _nearest_visual_neighbor",
     ):
         ensure(required_token in contact_sheet_report_text, errors, f"unit_art_contact_sheet_report.gd is missing token {required_token}")
 
