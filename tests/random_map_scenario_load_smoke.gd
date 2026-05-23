@@ -13,7 +13,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
-	if not _assert_native_domains_archived():
+	if not _assert_authored_domains_active_with_generated_boundary():
 		return
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		"scenario-load-smoke-10184",
@@ -88,23 +88,23 @@ func _run() -> void:
 	})])
 	get_tree().quit(0)
 
-func _assert_native_domains_archived() -> bool:
+func _assert_authored_domains_active_with_generated_boundary() -> bool:
 	var scenarios := ContentService.load_json(ContentService.SCENARIOS_PATH)
 	var campaigns := ContentService.load_json(ContentService.CAMPAIGNS_PATH)
-	if String(scenarios.get("domain_status", "")) != "archived_native_scenario_set_disabled":
-		_fail("Native scenario domain is not archived/disabled.")
+	if String(scenarios.get("domain_status", "")) != "":
+		_fail("Authored scenario domain is not active.")
 		return false
-	if String(campaigns.get("domain_status", "")) != "archived_native_campaign_set_disabled":
-		_fail("Native campaign domain is not archived/disabled.")
+	if String(campaigns.get("domain_status", "")) != "":
+		_fail("Authored campaign domain is not active.")
 		return false
 	for entry in ScenarioSelectRulesScript.build_skirmish_browser_entries():
 		if not (entry is Dictionary):
 			continue
 		if not ScenarioSelectRulesScript.maps_folder_package_id_is_valid(String(entry.get("scenario_id", ""))):
-			_fail("Archived native scenarios still appear in the skirmish browser.")
+			_fail("Authored scenarios crossed into the maps-folder package browser.")
 			return false
-	if not _campaign_rules().build_campaign_browser_entries({}).is_empty():
-		_fail("Archived native campaigns still appear in the campaign browser.")
+	if _campaign_rules().build_campaign_browser_entries({}).is_empty():
+		_fail("Active authored campaigns did not appear in the campaign browser.")
 		return false
 	return true
 

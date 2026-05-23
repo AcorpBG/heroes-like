@@ -3,6 +3,8 @@
 Slice: `main-menu-archived-campaign-empty-state-smoke-20260523-10184`
 Date: 2026-05-23
 
+Superseded: `player-facing-campaign-reactivation-smoke-20260523-10184` reactivated the authored campaign domain later on 2026-05-23. This report remains historical evidence for the archived-empty menu state only.
+
 ## Scope
 
 The current campaign domain reset is intentional: `content/campaigns.json` exposes `archived_native_campaign_set_disabled`, and player-facing campaign APIs return no selectable campaign arcs.

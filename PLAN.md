@@ -21,7 +21,9 @@ Rules:
 
 ## Current Tactical State
 
-Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework small-map h3maped reset**.
+Current phase: **Phase 5 - Playable Alpha Baseline**.
+
+Completed slice on 2026-05-23: `player-facing-campaign-reactivation-smoke-20260523-10184` reactivated the existing authored scenario and campaign domains for player-facing campaign browsing and focused smoke coverage. `content/campaigns.json` now exposes five active campaign arcs, `content/scenarios.json` exposes sixteen active authored scenarios, and `tests/player_facing_campaign_menu_smoke.tscn`, `tests/map_campaign_replayability_breadth_report.tscn`, and `tests/random_map_scenario_load_smoke.tscn` gate the live CampaignRules/menu path plus generated-map non-adoption boundaries. This is not a full campaign-breadth, final balance, or campaign-polish completion claim.
 
 Current tactical chain: owner-directed reset archives the native catalog-auto RMG implementation and the overgrown h3maped inspection/report code as legacy evidence/debug code, then restarts from a small 36x36-only h3maped-derived path. The active contract is strict: incomplete executable phases must block generation instead of being replaced by adapters, proxy blockers, count tuning, or self-declared validation. The replacement must derive behavior from `/root/Downloads/h3maped.exe` and the recovered h3maped spec, adapting only final object/content references to our runtime assets and registries after the relevant executable phase is actually ported. Completed child slices remain valid evidence for failure history and specific gates, but they are not a broad HoMM3-style production parity claim.
 

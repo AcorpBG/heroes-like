@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "content-runtime-overworld-family-allowlist-20260523-10184",
-  "currentSliceTitle": "Content Runtime Overworld Family Allowlist",
+  "currentSliceId": "player-facing-campaign-reactivation-smoke-20260523-10184",
+  "currentSliceTitle": "Player-Facing Campaign Reactivation Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime ContentService family allowlist alignment for authored overworld object/resource-site families.",
+  "currentSliceNotes": "Completed authored campaign/scenario domain reactivation for player-facing campaign browsing with focused campaign menu, replayability, and generated-map boundary smoke coverage.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:31:47Z",
+  "updatedAt": "2026-05-23T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,82 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "player-facing-campaign-reactivation-smoke-20260523-10184",
+      "title": "Player-Facing Campaign Reactivation Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "scripts/core/CampaignRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/map_campaign_replayability_breadth_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Move the existing authored campaign/scenario content from archived-only evidence into player-facing campaign APIs and menu smoke coverage.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/map_campaign_replayability_breadth_report.gd",
+        "tests/random_map_scenario_load_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/player-facing-campaign-reactivation-smoke-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Authored scenario and campaign domains are active and expose nonzero player-facing counts.",
+        "CampaignRules player-facing APIs expose authored campaign browser entries and a selectable opening chapter.",
+        "Focused campaign replayability report uses the active player-facing campaign API instead of archived helper paths.",
+        "Random-map smoke keeps generated packages out of authored campaign/scenario content while accepting active authored domains.",
+        "Repository validation gates the reactivated campaign report and does not require archived-empty menu copy."
+      ],
+      "nonGoals": [
+        "No claim that full campaign breadth, final balance, or campaign polish is complete.",
+        "No generated-map campaign adoption.",
+        "No new campaign schema migration."
+      ],
+      "startedAt": "2026-05-23T23:46:00Z",
+      "updatedAt": "2026-05-23T23:59:00Z",
+      "notes": "Completed after reactivating authored scenario/campaign domains, adding a focused player-facing campaign menu smoke, regating campaign replayability and random-map boundary reports around active authored domains, and preserving generated-map non-adoption boundaries. The broad menu_outcome_visual_smoke route was attempted and did not exit under headless quit-after, so this slice uses the narrower campaign menu smoke as the reliable menu gate.",
+      "completedAt": "2026-05-23T23:59:00Z",
+      "completionEvidence": [
+        "content/scenarios.json domain_status is active with player_facing_active_scenario_count 16.",
+        "content/campaigns.json domain_status is active with player_facing_active_campaign_count 5.",
+        "tests/player_facing_campaign_menu_smoke.tscn proves the main menu campaign board is active, exposes five campaigns, and can select campaign_reedfall / river-pass through campaign validation hooks.",
+        "tests/map_campaign_replayability_breadth_report.tscn now validates active player-facing campaign API exposure, chapter unlock/replay semantics, session boot, skirmish separation, and generated-map non-adoption.",
+        "tests/random_map_scenario_load_smoke.tscn accepts active authored domains while keeping generated drafts out of authored campaign/scenario content."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/random_map_scenario_load_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty content/scenarios.json content/campaigns.json ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "player_facing_campaign_count": 5,
+          "player_facing_scenario_count": 16,
+          "focused_menu_report": "PLAYER_FACING_CAMPAIGN_MENU_SMOKE",
+          "campaign_replayability_report": "MAP_CAMPAIGN_REPLAYABILITY_BREADTH_REPORT",
+          "random_map_boundary_report": "RANDOM_MAP_SCENARIO_LOAD_SMOKE",
+          "generated_campaign_adoption": false,
+          "full_campaign_breadth_claim": false
+        },
+        "not_run_or_inconclusive": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/menu_outcome_visual_smoke.tscn was attempted and manually killed after it did not exit under the headless quit-after window."
+        ]
+      }
+    },
     {
       "id": "content-runtime-overworld-family-allowlist-20260523-10184",
       "title": "Content Runtime Overworld Family Allowlist",
