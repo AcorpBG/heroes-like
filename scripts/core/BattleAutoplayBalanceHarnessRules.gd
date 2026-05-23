@@ -18,6 +18,13 @@ const BALANCE_MATRIX_MIN_DIFFICULTY_COHORTS := 3
 const BALANCE_MATRIX_MIN_TERRAIN_COHORTS := 2
 const BALANCE_MATRIX_MIN_ABILITY_COHORTS := 4
 const BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT := 90
+const TUNING_QUEUE_SCHEMA := "battle_autoplay_balance_tuning_queue_v1"
+const TUNING_QUEUE_POLICY := "report_only_no_runtime_tuning"
+const TUNING_QUEUE_SAMPLE_MARGIN_WATCH_PCT := 75
+const TUNING_QUEUE_COHORT_MARGIN_WATCH_PCT := 70
+const TUNING_QUEUE_COHORT_OUTCOME_WATCH_PCT := 90
+const TUNING_QUEUE_HIGH_PRIORITY := 80
+const TUNING_QUEUE_MEDIUM_PRIORITY := 50
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
 	"causeway-stand",
@@ -65,6 +72,7 @@ static func build_sampling_report(
 	var stalled_sample_count := int(aggregate.get("stalled_sample_count", 0))
 	var requested_minimum = min(minimum_samples, max_samples)
 	var combat_feel_gate := _combat_feel_gate(aggregate, samples.size(), max_samples, requested_minimum)
+	var tuning_queue := balance_tuning_queue(aggregate, samples, combat_feel_gate)
 	if samples.size() < requested_minimum:
 		warnings.append("Battle autoplay sampled %d/%d required cases; add authored encounters or widen scenarios before treating the distribution as tuned." % [samples.size(), requested_minimum])
 	elif samples.size() < max_samples:
@@ -116,13 +124,123 @@ static func build_sampling_report(
 			"balance_matrix": aggregate.get("balance_matrix", {}),
 			"balance_matrix_gate": aggregate.get("balance_matrix_gate", {}),
 			"combat_feel_gate": combat_feel_gate,
+			"balance_tuning_queue": tuning_queue,
 			"policy": "deterministic_autoplay_sample_report_only",
 		},
 		"distribution": aggregate.get("distribution", {}),
 		"action_distribution": aggregate.get("action_distribution", {}),
+		"balance_tuning_queue": tuning_queue,
 		"warnings": warnings,
 		"deferred": deferred,
 	}
+
+static func balance_tuning_queue(aggregate: Dictionary, samples: Array, combat_feel_gate: Dictionary = {}) -> Dictionary:
+	var items := []
+	var coverage := {
+		"sample_count": samples.size(),
+		"combat_feel_gate_status": String(combat_feel_gate.get("status", "")),
+		"combat_feel_warning_count": int(combat_feel_gate.get("warning_count", 0)),
+		"combat_feel_failure_count": int(combat_feel_gate.get("failure_count", 0)),
+		"balance_matrix_gate_status": "",
+		"balance_matrix_warning_count": 0,
+		"balance_matrix_failure_count": 0,
+		"sample_watch_count": 0,
+		"cohort_watch_count": 0,
+		"gate_item_count": 0,
+	}
+	for failure in combat_feel_gate.get("failures", []):
+		_append_tuning_item(items, "combat_feel_gate_failure", String(failure), 95, String(failure), 1, 0, "combat_feel_gate", {}, _owner_for_tuning_metric(String(failure)), _hint_for_tuning_metric(String(failure)))
+		coverage["gate_item_count"] = int(coverage.get("gate_item_count", 0)) + 1
+	for warning in combat_feel_gate.get("warnings", []):
+		_append_tuning_item(items, "combat_feel_gate_warning", String(warning), 70, String(warning), 1, 0, "combat_feel_gate", {}, _owner_for_tuning_metric(String(warning)), _hint_for_tuning_metric(String(warning)))
+		coverage["gate_item_count"] = int(coverage.get("gate_item_count", 0)) + 1
+	var matrix: Dictionary = aggregate.get("balance_matrix", {}) if aggregate.get("balance_matrix", {}) is Dictionary else {}
+	var matrix_gate: Dictionary = aggregate.get("balance_matrix_gate", {}) if aggregate.get("balance_matrix_gate", {}) is Dictionary else {}
+	coverage["balance_matrix_gate_status"] = String(matrix_gate.get("status", ""))
+	coverage["balance_matrix_warning_count"] = int(matrix_gate.get("warning_count", 0))
+	coverage["balance_matrix_failure_count"] = int(matrix_gate.get("failure_count", 0))
+	for failure in matrix_gate.get("failures", []):
+		_append_tuning_item(items, "balance_matrix_gate_failure", String(failure), 95, String(failure), 1, 0, "balance_matrix_gate", {}, _owner_for_tuning_metric(String(failure)), _hint_for_tuning_metric(String(failure)))
+		coverage["gate_item_count"] = int(coverage.get("gate_item_count", 0)) + 1
+	for warning in matrix_gate.get("warnings", []):
+		_append_tuning_item(items, "balance_matrix_gate_warning", String(warning), 65, String(warning), 1, 0, "balance_matrix_gate", {}, _owner_for_tuning_metric(String(warning)), _hint_for_tuning_metric(String(warning)))
+		coverage["gate_item_count"] = int(coverage.get("gate_item_count", 0)) + 1
+	for sample in samples:
+		if not (sample is Dictionary):
+			continue
+		var sample_ref := _sample_tuning_ref(sample)
+		var terminal_margin := int(sample.get("terminal_health_margin_pct", 0))
+		if terminal_margin >= TUNING_QUEUE_SAMPLE_MARGIN_WATCH_PCT:
+			_append_tuning_item(items, "sample_terminal_margin_watch", String(sample_ref.get("placement_id", "")), 80 if terminal_margin >= BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT else 60, "terminal_health_margin_pct", terminal_margin, TUNING_QUEUE_SAMPLE_MARGIN_WATCH_PCT, "sample", sample_ref, "encounter_tuning", "Inspect stack sizes, encounter difficulty label, terrain advantage, and first-contact distance for this sampled battle.")
+			coverage["sample_watch_count"] = int(coverage.get("sample_watch_count", 0)) + 1
+		var pacing_band := String(sample.get("pacing_band", ""))
+		if pacing_band in ["burst", "grind", "stalled"]:
+			_append_tuning_item(items, "sample_pacing_band_watch", String(sample_ref.get("placement_id", "")), 75 if pacing_band == "stalled" else 55, "pacing_band", pacing_band, "standard_or_extended", "sample", sample_ref, "encounter_tuning", "Review opening distance, speed, ranged pressure, and stack durability for the sampled battle pacing.")
+			coverage["sample_watch_count"] = int(coverage.get("sample_watch_count", 0)) + 1
+	var outliers: Array = matrix.get("terminal_margin_outliers", []) if matrix.get("terminal_margin_outliers", []) is Array else []
+	for outlier in outliers:
+		if not (outlier is Dictionary):
+			continue
+		_append_tuning_item(items, "matrix_terminal_margin_outlier", String(outlier.get("encounter_placement_id", "")), 85, "terminal_health_margin_pct", int(outlier.get("terminal_health_margin_pct", 0)), BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT, "balance_matrix", outlier, "encounter_tuning", "Retune the authored encounter or expected matchup before expanding this content band.")
+		coverage["cohort_watch_count"] = int(coverage.get("cohort_watch_count", 0)) + 1
+	for section_id in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_id, {}) if matrix.get(section_id, {}) is Dictionary else {}
+		var cohort_ids: Array = section.keys()
+		cohort_ids.sort()
+		for cohort_id_value in cohort_ids:
+			var cohort_id := String(cohort_id_value)
+			var cohort: Dictionary = section.get(cohort_id, {}) if section.get(cohort_id, {}) is Dictionary else {}
+			var sample_count := int(cohort.get("sample_count", 0))
+			if sample_count <= 0:
+				continue
+			var cohort_ref := {"section": section_id, "cohort_id": cohort_id, "sample_count": sample_count}
+			var average_margin := int(cohort.get("average_terminal_health_margin_pct", 0))
+			if average_margin >= TUNING_QUEUE_COHORT_MARGIN_WATCH_PCT:
+				_append_tuning_item(items, "cohort_terminal_margin_watch", "%s:%s" % [section_id, cohort_id], 70, "average_terminal_health_margin_pct", average_margin, TUNING_QUEUE_COHORT_MARGIN_WATCH_PCT, "cohort", cohort_ref, "encounter_tuning", "Compare this cohort against adjacent cohorts and adjust encounter rosters, stack counts, or terrain-specific pressure.")
+				coverage["cohort_watch_count"] = int(coverage.get("cohort_watch_count", 0)) + 1
+			var primary_outcome_pct := int(cohort.get("primary_outcome_pct", 0))
+			if sample_count >= 2 and primary_outcome_pct >= TUNING_QUEUE_COHORT_OUTCOME_WATCH_PCT:
+				_append_tuning_item(items, "cohort_outcome_bias_watch", "%s:%s" % [section_id, cohort_id], 65, "primary_outcome_pct", primary_outcome_pct, TUNING_QUEUE_COHORT_OUTCOME_WATCH_PCT, "cohort", cohort_ref, "encounter_tuning", "Check whether this cohort is intentionally one-sided or needs more varied encounter and matchup samples.")
+				coverage["cohort_watch_count"] = int(coverage.get("cohort_watch_count", 0)) + 1
+	var sorted_items := _sorted_tuning_items(items)
+	var categories := {}
+	var high_priority_count := 0
+	var medium_priority_count := 0
+	for item in sorted_items:
+		if not (item is Dictionary):
+			continue
+		categories[String(item.get("category", ""))] = true
+		var priority := int(item.get("priority", 0))
+		if priority >= TUNING_QUEUE_HIGH_PRIORITY:
+			high_priority_count += 1
+		elif priority >= TUNING_QUEUE_MEDIUM_PRIORITY:
+			medium_priority_count += 1
+	var category_ids: Array = categories.keys()
+	category_ids.sort()
+	coverage["categories"] = category_ids
+	var status := "clear"
+	if high_priority_count > 0:
+		status = "action_required"
+	elif not sorted_items.is_empty():
+		status = "watch"
+	var queue := {
+		"schema": TUNING_QUEUE_SCHEMA,
+		"policy": TUNING_QUEUE_POLICY,
+		"status": status,
+		"sample_count": samples.size(),
+		"item_count": sorted_items.size(),
+		"high_priority_count": high_priority_count,
+		"medium_priority_count": medium_priority_count,
+		"coverage": coverage,
+		"items": sorted_items,
+		"top_contributors": sorted_items.slice(0, min(5, sorted_items.size())),
+	}
+	queue["queue_signature"] = _signature_for({
+		"schema": TUNING_QUEUE_SCHEMA,
+		"policy": TUNING_QUEUE_POLICY,
+		"items": sorted_items,
+	})
+	return queue
 
 static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_limit: int = DEFAULT_STEP_LIMIT) -> Dictionary:
 	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
@@ -834,6 +952,108 @@ static func _count_map_total(source: Dictionary) -> int:
 	for key in source.keys():
 		total += int(source[key])
 	return total
+
+static func _append_tuning_item(
+	items: Array,
+	category: String,
+	ref_id: String,
+	priority: int,
+	metric: String,
+	observed: Variant,
+	target: Variant,
+	source: String,
+	context: Dictionary,
+	suggested_owner: String,
+	remediation_hint: String
+) -> void:
+	var item := {
+		"category": category,
+		"priority": priority,
+		"priority_band": _tuning_priority_band(priority),
+		"metric": metric,
+		"observed": observed,
+		"target": target,
+		"source": source,
+		"context": context,
+		"suggested_owner": suggested_owner,
+		"remediation_hint": remediation_hint,
+	}
+	item["id"] = "tuning_%s" % _hash32_hex(_stable_stringify({
+		"category": category,
+		"metric": metric,
+		"ref_id": ref_id,
+		"source": source,
+	}))
+	items.append(item)
+
+static func _sample_tuning_ref(sample: Dictionary) -> Dictionary:
+	return {
+		"scenario_id": String(sample.get("scenario_id", "")),
+		"placement_id": String(sample.get("encounter_placement_id", "")),
+		"encounter_id": String(sample.get("encounter_id", "")),
+		"outcome_state": String(sample.get("outcome_state", "")),
+		"terrain": String(sample.get("terrain", "")),
+		"encounter_difficulty": String(sample.get("encounter_difficulty", "")),
+		"pacing_band": String(sample.get("pacing_band", "")),
+	}
+
+static func _tuning_priority_band(priority: int) -> String:
+	if priority >= TUNING_QUEUE_HIGH_PRIORITY:
+		return "high"
+	if priority >= TUNING_QUEUE_MEDIUM_PRIORITY:
+		return "medium"
+	return "low"
+
+static func _owner_for_tuning_metric(metric: String) -> String:
+	if metric.contains("sample_count") or metric.contains("cohort") or metric.contains("missing_"):
+		return "content_coverage"
+	if metric.contains("invalid") or metric.contains("action"):
+		return "battle_ai"
+	if metric.contains("damage") or metric.contains("terminal") or metric.contains("outcome") or metric.contains("pacing"):
+		return "encounter_tuning"
+	return "balance_harness"
+
+static func _hint_for_tuning_metric(metric: String) -> String:
+	if metric.contains("sample_count") or metric.contains("cohort") or metric.contains("missing_"):
+		return "Add or select more authored encounter samples before treating this balance band as stable."
+	if metric.contains("invalid"):
+		return "Inspect action availability, target selection, and fallback order generation for the sampled battle state."
+	if metric.contains("action"):
+		return "Review tactical scoring weights and available order incentives for excessive action repetition."
+	if metric.contains("damage") or metric.contains("terminal"):
+		return "Compare initial power ratio, stack durability, and damage pacing before retuning encounter rosters."
+	if metric.contains("outcome"):
+		return "Inspect whether the current win/loss skew is intended for this difficulty or cohort."
+	if metric.contains("pacing"):
+		return "Check opening distance, initiative, movement speed, ranged pressure, and stack sizes for pacing extremes."
+	return "Inspect the linked report metric before making content or rules changes."
+
+static func _sorted_tuning_items(items: Array) -> Array:
+	var remaining := items.duplicate(true)
+	var sorted := []
+	while not remaining.is_empty():
+		var best_index := 0
+		for index in range(1, remaining.size()):
+			if _tuning_item_before(remaining[index], remaining[best_index]):
+				best_index = index
+		sorted.append(remaining[best_index])
+		remaining.remove_at(best_index)
+	return sorted
+
+static func _tuning_item_before(a: Variant, b: Variant) -> bool:
+	if not (a is Dictionary) or not (b is Dictionary):
+		return false
+	var left: Dictionary = a
+	var right: Dictionary = b
+	var left_priority := int(left.get("priority", 0))
+	var right_priority := int(right.get("priority", 0))
+	if left_priority != right_priority:
+		return left_priority > right_priority
+	var left_category := String(left.get("category", ""))
+	var right_category := String(right.get("category", ""))
+	if left_category != right_category:
+		return left_category < right_category
+	return String(left.get("id", "")) < String(right.get("id", ""))
 
 static func _battle_signal(battle: Dictionary) -> Dictionary:
 	if battle.is_empty():
