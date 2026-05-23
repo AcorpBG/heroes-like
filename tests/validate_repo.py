@@ -10103,6 +10103,25 @@ def validate_content(errors: list[str]) -> None:
             "campaign_breadth_complete",
         ):
             ensure(required_text in report_text, errors, f"Scenario deadline-loss variety report is missing required token: {required_text}")
+    for report_path in (
+        ROOT / "tests/map_campaign_replayability_breadth_report.gd",
+        ROOT / "tests/map_campaign_replayability_breadth_report.tscn",
+    ):
+        ensure(report_path.exists(), errors, f"Missing map/campaign replayability breadth report file: {report_path.relative_to(ROOT)}")
+    campaign_breadth_report_path = ROOT / "tests/map_campaign_replayability_breadth_report.gd"
+    if campaign_breadth_report_path.exists():
+        campaign_breadth_text = campaign_breadth_report_path.read_text(encoding="utf-8")
+        for required_text in (
+            "REQUIRED_CAMPAIGN_DOMAIN_STATUS",
+            "archived_native_campaign_set_disabled",
+            "_archived_campaign_id_for_scenario",
+            "_archived_chapter_action",
+            "_archived_skirmish_setup",
+            "player_facing_campaign_api_exposure",
+            "campaign_domain_archived",
+            "archived_scenario_domain",
+        ):
+            ensure(required_text in campaign_breadth_text, errors, f"Map/campaign replayability breadth report is missing archived-domain token: {required_text}")
     ensure(RELEASE_PLAYER_FACTIONS.issubset(scenario_player_factions), errors, "Scenario starts must cover all release player factions")
     ensure(len(scenario_hero_ids) >= 4, errors, "Scenario roster must expose at least four distinct lead heroes")
 

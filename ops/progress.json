@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "scenario-deadline-loss-variety-20260523-10184",
-  "currentSliceTitle": "Scenario Deadline Loss Variety",
+  "currentSliceId": "archived-campaign-breadth-report-regate-20260523-10184",
+  "currentSliceTitle": "Archived Campaign Breadth Report Regate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
+  "currentSliceNotes": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:19:00Z",
+  "updatedAt": "2026-05-23T21:43:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17413,6 +17413,68 @@
         "finale_deadline_count": 1,
         "known_unrelated_regression": "tests/map_campaign_replayability_breadth_report.tscn currently fails because active campaign lookup excludes archived campaign domain content; not part of this slice gate."
       }
+    },
+    {
+      "id": "archived-campaign-breadth-report-regate-20260523-10184",
+      "title": "Archived Campaign Breadth Report Regate",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Regate the map/campaign replayability breadth report against the current archived native campaign-domain contract without re-enabling player-facing archived campaign APIs.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/campaigns.json",
+        "tests/map_campaign_replayability_breadth_report.gd"
+      ],
+      "implementationTargets": [
+        "tests/map_campaign_replayability_breadth_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json content/campaigns.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The campaign replayability breadth report passes while the campaign domain remains archived/disabled and player-facing campaign APIs remain non-authoritative for archived content.",
+        "The report directly validates the archived Ninefold campaign docket, unlock/replay record semantics, session boot/carryover boundaries, skirmish-only boundaries, random-map provenance boundaries, and balance reflection.",
+        "Validation records the regated report as archived-domain evidence, not playable-alpha completion or active campaign menu readiness."
+      ],
+      "nonGoals": [
+        "No reactivation of archived campaign domain.",
+        "No new player-facing campaign menu behavior.",
+        "No playable-alpha completion claim."
+      ],
+      "startedAt": "2026-05-23T21:29:00Z",
+      "updatedAt": "2026-05-23T21:43:00Z",
+      "notes": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths.",
+      "completedAt": "2026-05-23T21:43:00Z",
+      "completionEvidence": [
+        "tests/map_campaign_replayability_breadth_report.gd now asserts the campaign domain stays archived_native_campaign_set_disabled.",
+        "The report verifies CampaignRules.campaign_ids() and build_campaign_browser_entries() expose zero archived campaigns under the reset contract.",
+        "The report uses direct archived-content helpers for campaign id lookup, chapter unlocks, replay labels, and skirmish setup metadata.",
+        "The report still boots campaign sessions with CampaignRules.build_session and archived skirmish sessions with ScenarioFactory, preserving live session evidence without reactivating menus.",
+        "The report passed and validation anchors in tests/validate_repo.py guard the archived-domain assumptions."
+      ],
+      "validationResults": {
+        "status": "passed",
+        "updatedAt": "2026-05-23T21:43:00Z",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json content/campaigns.json",
+          "git diff --check"
+        ],
+        "campaign_domain_status": "archived_native_campaign_set_disabled",
+        "player_facing_campaign_count": 0,
+        "archived_chapter_count": 3,
+        "report_id": "MAP_CAMPAIGN_REPLAYABILITY_BREADTH_REPORT"
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -22340,22 +22402,34 @@
     }
   ],
   "lastValidation": {
-    "id": "scenario-deadline-loss-variety-20260523-10184",
+    "id": "archived-campaign-breadth-report-regate-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T21:19:00Z",
+    "updatedAt": "2026-05-23T21:43:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
-      "jq empty content/scenarios.json ops/progress.json",
+      "jq empty ops/progress.json content/campaigns.json",
       "git diff --check"
     ],
-    "summary": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
-    "known_unrelated_regression": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn failed on archived campaign-domain lookup for ironbridge-stand/campaign_ninefold_survey; this was observed during extra regression probing and is not a selected gate for this slice."
+    "summary": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths."
   },
-  "active_slice": "scenario-deadline-loss-variety-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T21:19:00Z",
+  "active_slice": "archived-campaign-breadth-report-regate-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T21:43:00Z",
   "validationHistory": [
+    {
+      "id": "archived-campaign-breadth-report-regate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T21:43:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/campaigns.json",
+        "git diff --check"
+      ],
+      "summary": "Archived campaign breadth report regated: map_campaign_replayability_breadth_report now passes while content/campaigns.json remains archived_native_campaign_set_disabled, player-facing campaign APIs expose zero archived campaigns, archived Ninefold chapter/unlock/replay evidence is inspected directly, and live campaign/skirmish sessions still boot through factory/build-session paths."
+    },
     {
       "id": "scenario-deadline-loss-variety-20260523-10184",
       "status": "passed",
