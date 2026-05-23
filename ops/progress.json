@@ -3,8 +3,8 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-movement-token-motion-20260523-10184",
-  "currentSliceTitle": "Battle Movement Token Motion",
+  "currentSliceId": "battle-attack-hit-token-feedback-20260523-10184",
+  "currentSliceTitle": "Battle Attack And Hit Token Feedback",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -16203,6 +16203,42 @@
       "nonGoals": [
         "No final authored motion curves, per-unit locomotion timing, camera work, imported VFX/audio assets, or combat balance tuning."
       ]
+    },
+    {
+      "id": "battle-attack-hit-token-feedback-20260523-10184",
+      "title": "Battle Attack And Hit Token Feedback",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Use source/target battle event context to present attack, cast, hit, status, and death token feedback during playback instead of leaving stack tokens visually fixed.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-attack-hit-token-feedback-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active attack/cast/impact playback records compute bounded presentation transforms from source/target stack cells.",
+        "Stack token drawing, labels, health/count overlays, and hit shapes use the event-driven presentation center during normal playback.",
+        "Focused validation proves a real melee strike presents attacker lunge and target hit-stagger feedback while retaining melee VFX evidence."
+      ],
+      "nonGoals": [
+        "No final authored attack timing, camera shake, imported VFX/audio assets, or combat balance tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19335,6 +19371,43 @@
         "git diff --check"
       ],
       "remainingGap": "This closes runtime token motion for resolved battle movement events; final authored motion curves, per-unit locomotion timing, camera work, imported VFX/audio, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-attack-hit-token-feedback-20260523-10184",
+      "title": "Battle Attack And Hit Token Feedback",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-attack-hit-token-feedback-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-attack-hit-token-feedback-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now computes presentation transforms for melee attacks, retaliations, ranged attacks, casts, hits, status application, and deaths from active playback event context.",
+        "Melee/retaliation events lunge toward target cells, ranged/cast events apply compact recoil or anchor motion, and impact events use source_battle_id for hit stagger, status pulse, or death fallback.",
+        "Stack token drawing, health bars, count badges, captions, and click hit shapes now use the transformed presentation center.",
+        "The focused battle event animation report proves a real melee strike presents the attacker as melee_lunge and the target as hit_stagger while retaining melee VFX."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This closes a bounded attack/hit token feedback slice; final authored attack timing, camera shake, imported VFX/audio assets, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -20224,10 +20297,23 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with movement token presentation proving the stack center is in transit along the event path while move_path_step and path-ghost VFX remain active."
+    },
+    {
+      "id": "battle-attack-hit-token-feedback-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with melee_lunge attacker feedback, hit_stagger target feedback, and cue-driven melee VFX evidence; full repository validation gates passed."
     }
   ],
   "lastValidation": {
-    "id": "battle-movement-token-motion-20260523-10184",
+    "id": "battle-attack-hit-token-feedback-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
@@ -20237,12 +20323,12 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with movement token presentation proving the stack center is in transit along the event path while move_path_step and path-ghost VFX remain active."
+    "summary": "Focused battle event animation report passed with melee_lunge attacker feedback, hit_stagger target feedback, and cue-driven melee VFX evidence; full repository validation gates passed."
   },
   "active_slice": {
-    "id": "battle-movement-token-motion-20260523-10184",
+    "id": "battle-attack-hit-token-feedback-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: battle movement playback now presents the visible stack token in transit along the resolved event path instead of snapping immediately to the destination."
+    "note": "Completed: attack, cast, impact, status, and death events now drive bounded stack-token presentation transforms from source/target context."
   }
 }

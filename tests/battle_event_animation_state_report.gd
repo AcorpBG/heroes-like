@@ -22,7 +22,7 @@ func _run() -> void:
 	_validate_fallback_states()
 	_validate_defend_state()
 	_validate_move_state()
-	_validate_melee_hit_state()
+	await _validate_melee_hit_state()
 	_validate_ranged_status_state()
 	_validate_death_state()
 	_validate_spell_cast_state()
@@ -121,7 +121,31 @@ func _validate_melee_hit_state() -> void:
 	_expect_equal("melee target animation state", target_state, "hit_stagger")
 	_expect_event("melee attacker queue", session.battle, "player_0", "battle_unit_melee_attack", "melee_windup_release")
 	_expect_event("melee target queue", session.battle, "enemy_0", "battle_unit_hit", "hit_stagger")
-	_report["cases"]["melee_hit"] = {"attacker_state": attacker_state, "target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	await get_tree().create_timer(0.08).timeout
+	var board_summary := _board_summary_for_session(session)
+	var attacker_stack := _summary_stack_entry(board_summary, "player_0")
+	var target_stack := _summary_stack_entry(board_summary, "enemy_0")
+	_expect_equal("melee attacker presentation active", str(bool(attacker_stack.get("presentation_motion_active", false))), "true")
+	_expect_equal("melee attacker presentation role", String(attacker_stack.get("presentation_motion_role", "")), "melee_lunge")
+	_expect_equal("melee attacker presentation target", String(attacker_stack.get("presentation_motion_target_battle_id", "")), "enemy_0")
+	_expect_equal("hit target presentation active", str(bool(target_stack.get("presentation_motion_active", false))), "true")
+	_expect_equal("hit target presentation role", String(target_stack.get("presentation_motion_role", "")), "hit_stagger")
+	_expect_equal("hit target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "player_0")
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var melee_arc := _vfx_entry_for(vfx_playback, "melee_arc")
+	if float(attacker_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("start_x", 0.0)) + 0.05:
+		_error("Melee attacker token did not lunge toward the target: attacker=%s melee_arc=%s." % [attacker_stack, melee_arc])
+	if float(target_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("end_x", 0.0)) + 0.5:
+		_error("Melee target token did not stagger away from the source: target=%s melee_arc=%s." % [target_stack, melee_arc])
+	_report["cases"]["melee_hit"] = {
+		"attacker_state": attacker_state,
+		"target_state": target_state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_vfx": vfx_playback,
+		"attacker_stack": attacker_stack,
+		"target_stack": target_stack,
+	}
 
 func _validate_ranged_status_state() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)

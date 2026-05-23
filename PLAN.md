@@ -49,6 +49,8 @@ Battle movement path presentation added on 2026-05-23: `battle_unit_move` record
 
 Battle movement token motion added on 2026-05-23: `BattleBoardView` now uses active `battle_unit_move` playback records to render the moving stack token, health bar, count badge, caption, and hit shape at an interpolated presentation center between `from_q/from_r` and `to_q/to_r`. `tests/battle_event_animation_state_report.tscn` now proves a real move keeps the stack in `move_path_step`, draws the path ghost, and presents the token in transit instead of snapped directly to the destination. This is runtime event-driven token motion for resolved movement, not final authored motion curves, per-unit locomotion timing, camera work, imported VFX/audio, or combat balance tuning.
 
+Battle attack and hit token feedback added on 2026-05-23: `BattleBoardView` now uses attack, retaliation, ranged, cast, hit, status, and death event context to compute bounded token presentation transforms for lunge, recoil, cast anchoring, hit stagger, status pulse, and death fallback. The same transformed center drives the stack token, health bar, count badge, caption, and hit shape. `tests/battle_event_animation_state_report.tscn` now proves a real melee strike presents the attacker as `melee_lunge`, the target as `hit_stagger`, and keeps cue-driven melee VFX active. This is event-driven token feedback for readability, not final authored attack timing, camera shake, imported VFX/audio, or combat balance tuning.
+
 Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
 
 Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
@@ -4993,6 +4995,28 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-attack-hit-token-feedback-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Use source/target battle event context to present attack, cast, hit, status, and death token feedback during playback instead of leaving stack tokens visually fixed.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-attack-hit-token-feedback-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Active attack/cast/impact playback records compute bounded presentation transforms from source/target stack cells.
+- Stack token drawing, labels, health/count overlays, and hit shapes use the event-driven presentation center during normal playback.
+- Focused validation proves a real melee strike presents attacker lunge and target hit-stagger feedback while retaining melee VFX evidence.
+nonGoals:
+- No final authored attack timing, camera shake, imported VFX/audio assets, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 
