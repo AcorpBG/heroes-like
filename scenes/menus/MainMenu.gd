@@ -1568,6 +1568,7 @@ func _skirmish_front_check_payload(setup: Dictionary) -> Dictionary:
 	var scenario_name := String(setup.get("scenario_name", _selected_skirmish_id))
 	var difficulty_label := String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty)))
 	var launch_handoff := String(setup.get("launch_handoff", "")).strip_edges()
+	var briefing_check := String(setup.get("briefing_check", "")).strip_edges()
 	var front_context := String(setup.get("front_context", "")).strip_edges()
 	var action_consequence := String(setup.get("action_consequence", "")).strip_edges()
 	return {
@@ -1578,6 +1579,7 @@ func _skirmish_front_check_payload(setup: Dictionary) -> Dictionary:
 			"- Launch target: Launch Skirmish starts this front as a fresh Skirmish expedition on Day 1 at %s difficulty." % difficulty_label,
 			"- Selection: changing front rows updates briefing, commander preview, operational board, and launch target only.",
 			"- Handoff: %s" % launch_handoff if launch_handoff != "" else "",
+			"- Briefing: %s" % briefing_check if briefing_check != "" else "",
 			"- Front context: %s" % front_context if front_context != "" else "",
 			"- Action boundary: %s" % action_consequence if action_consequence != "" else "",
 			"- Not changed: campaign progress, latest save, and manual save slots stay unchanged until Launch Skirmish creates a fresh run.",

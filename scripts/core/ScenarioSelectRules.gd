@@ -351,10 +351,17 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		objective_stakes,
 		action_consequence
 	)
+	var briefing_check := _skirmish_briefing_check(
+		scenario,
+		ScenarioRulesScript.describe_scenario_briefing(scenario_id),
+		objective_stakes,
+		front_context,
+		readiness_summary
+	)
 	var setup_lines := []
 	setup_lines.append(launch_handoff)
 	setup_lines.append(launch_preview)
-	for context_line in [front_context, objective_stakes, readiness_summary, difficulty_check, difficulty_consequence]:
+	for context_line in [briefing_check, front_context, objective_stakes, readiness_summary, difficulty_check, difficulty_consequence]:
 		if String(context_line) != "":
 			setup_lines.append(String(context_line))
 	var briefing_summary: String = ScenarioRulesScript.describe_scenario_briefing(scenario_id)
@@ -385,7 +392,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	setup_lines.append(action_consequence)
 
 	var action_tooltip_lines := [launch_preview, launch_handoff]
-	for action_line in [front_context, readiness_summary, difficulty_check, difficulty_consequence, action_consequence]:
+	for action_line in [briefing_check, front_context, readiness_summary, difficulty_check, difficulty_consequence, action_consequence]:
 		if String(action_line) != "":
 			action_tooltip_lines.append(String(action_line))
 
@@ -401,6 +408,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"setup_summary": "\n".join(setup_lines),
 		"launch_preview": launch_preview,
 		"launch_handoff": launch_handoff,
+		"briefing_check": briefing_check,
 		"front_context": front_context,
 		"objective_stakes": objective_stakes,
 		"readiness_summary": readiness_summary,
@@ -563,8 +571,10 @@ static func build_maps_folder_package_skirmish_setup(package_id: String, difficu
 		return {}
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
 	var difficulty_label_text := difficulty_label(normalized_difficulty)
+	var briefing_check := _maps_folder_package_briefing_check(entry, normalized_difficulty)
 	var setup_lines := [
-		"Launch handoff: selected generated map starts from paired packages in maps/; authored scenario JSON stays out of this path.",
+		"Launch handoff: Generated package for selected generated map starts from paired maps/ files; authored scenario JSON stays out of this path.",
+		briefing_check,
 		String(entry.get("summary", "")),
 		"Packages: %s | %s" % [String(entry.get("map_path", "")), String(entry.get("scenario_path", ""))],
 		"Mode: %s | Difficulty: %s" % [launch_mode_label(SessionStateStoreScript.LAUNCH_MODE_SKIRMISH), difficulty_label_text],
@@ -586,6 +596,7 @@ static func build_maps_folder_package_skirmish_setup(package_id: String, difficu
 		"setup_summary": "\n".join(setup_lines),
 		"launch_preview": "Launch generated map package %s." % String(entry.get("display_name", package_id)),
 		"launch_handoff": String(setup_lines[0]),
+		"briefing_check": briefing_check,
 		"front_context": String(entry.get("front_context", "")),
 		"objective_stakes": "Package objective: defeat generated rivals from the loaded scenario document.",
 		"readiness_summary": String(entry.get("readiness_summary", "")),
@@ -2708,6 +2719,41 @@ static func _skirmish_readiness_summary(commander_preview: String, operational_b
 		return ""
 	return "Readiness watch: %s." % " | ".join(parts.slice(0, min(4, parts.size())))
 
+static func _skirmish_briefing_check(
+	_scenario: Dictionary,
+	briefing_summary: String,
+	objective_stakes: String,
+	front_context: String,
+	readiness_summary: String
+) -> String:
+	var briefing_line := _first_substantive_line(briefing_summary)
+	if briefing_line == "":
+		briefing_line = _first_substantive_line(objective_stakes)
+	if briefing_line == "":
+		briefing_line = "Open the map, identify the nearest guarded reward or town route, and commit the first hero day deliberately."
+	var first_decision := _first_substantive_line(readiness_summary)
+	if first_decision == "":
+		first_decision = _first_substantive_line(front_context)
+	if first_decision == "":
+		first_decision = "choose the opening route before ending Day 1"
+	return "Opening briefing: %s. First decision: %s." % [
+		_compact_sentence(briefing_line, 170),
+		_compact_sentence(first_decision, 130),
+	]
+
+static func _maps_folder_package_briefing_check(entry: Dictionary, difficulty_id: String) -> String:
+	var front_context := _first_substantive_line(String(entry.get("front_context", "")))
+	var readiness := _first_substantive_line(String(entry.get("readiness_summary", "")))
+	var first_decision := readiness
+	if first_decision == "":
+		first_decision = front_context
+	if first_decision == "":
+		first_decision = "scout the generated start ring, identify guards on rival-town routes, and secure the nearest income site"
+	return "Opening briefing: package-backed skirmish on %s. First decision: %s." % [
+		difficulty_label(difficulty_id),
+		_compact_sentence(first_decision, 96),
+	]
+
 static func _skirmish_difficulty_consequence(difficulty_id: String, recommended_difficulty: String) -> String:
 	var difficulty_text := difficulty_summary(difficulty_id)
 	var recommendation := "matches the recommended setup for this front"
@@ -2765,6 +2811,23 @@ static func _first_line_with_prefix(text: String, prefix: String) -> String:
 		if line.begins_with(prefix):
 			return line
 	return ""
+
+static func _first_substantive_line(text: String) -> String:
+	for raw_line in text.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line != "":
+			return line
+	return ""
+
+static func _compact_sentence(text: String, max_chars: int) -> String:
+	var value := text.strip_edges()
+	if max_chars <= 0 or value.length() <= max_chars:
+		return value
+	var clipped := value.substr(0, max_chars).strip_edges()
+	var last_space := clipped.rfind(" ")
+	if last_space > 40:
+		clipped = clipped.substr(0, last_space).strip_edges()
+	return "%s..." % clipped
 
 static func _battlefield_tag_summary(scenario: Dictionary) -> String:
 	var labels := []

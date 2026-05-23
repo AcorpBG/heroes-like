@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-decision-vfx-cue-coverage-20260523-10184",
-  "currentSliceTitle": "Battle Decision VFX Cue Coverage",
+  "currentSliceId": "skirmish-launch-briefing-ux-20260523-10184",
+  "currentSliceTitle": "Skirmish Launch Briefing UX",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed battle decision VFX cue coverage: BattleBoardView now maps all declared battle VFX cue ids, with focused defend brace_outline and surrender_marker report evidence.",
+  "currentSliceNotes": "Completed skirmish launch briefing UX: compact Opening briefing and First decision handoff are now surfaced before launch.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T22:44:11Z",
+  "updatedAt": "2026-05-23T23:16:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "skirmish-launch-briefing-ux-20260523-10184",
+      "title": "Skirmish Launch Briefing UX",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scenes/menus/MainMenu.gd",
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/menu_outcome_visual_smoke.gd"
+      ],
+      "purpose": "Expose a compact opening briefing and first-decision handoff on skirmish launch setup surfaces for authored and maps-folder package starts.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/skirmish-launch-briefing-ux-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Skirmish setup payloads expose briefing_check for authored and maps-folder package starts.",
+        "MainMenu surfaces the briefing check in the Skirmish Front Check tooltip and visible setup summary.",
+        "The main menu visual smoke gates Opening briefing and First decision handoff tokens.",
+        "Focused menu smoke, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No campaign-domain reactivation.",
+        "No scenario content rewrite.",
+        "No save/load behavior change.",
+        "No broad onboarding redesign.",
+        "No alpha completeness claim."
+      ],
+      "startedAt": "2026-05-23T23:05:00Z",
+      "updatedAt": "2026-05-23T23:16:00Z",
+      "notes": "Completed skirmish launch briefing UX: setup payloads expose Opening briefing and First decision handoff for authored and maps-folder package launches, and menu smoke gates the compact launch surface.",
+      "completedAt": "2026-05-23T23:16:00Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "menu_outcome_visual_smoke": "pass",
+          "briefing_check_payload": true,
+          "visible_opening_briefing": true,
+          "visible_first_decision": true,
+          "campaign_domain_reactivated": false,
+          "save_behavior_changed": false
+        }
+      }
+    },
     {
       "id": "battle-decision-vfx-cue-coverage-20260523-10184",
       "title": "Battle Decision VFX Cue Coverage",
@@ -22452,6 +22511,43 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "skirmish-launch-briefing-ux-20260523-10184",
+      "title": "Skirmish Launch Briefing UX",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T23:16:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/skirmish-launch-briefing-ux-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "skirmish-launch-briefing-ux-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/skirmish-launch-briefing-ux-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Skirmish setup payloads now include briefing_check for authored and maps-folder package starts.",
+        "MainMenu includes briefing_check in the Skirmish Front Check tooltip and compact setup summary.",
+        "The menu visual smoke gates Opening briefing and First decision handoff text on the skirmish launch surface.",
+        "This is UX comprehension polish only; no campaign-domain reactivation, scenario content rewrite, save/load behavior change, broad onboarding completion, or alpha completeness claim."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -23580,20 +23676,20 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-decision-vfx-cue-coverage-20260523-10184",
+    "id": "skirmish-launch-briefing-ux-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T22:44:11Z",
+    "updatedAt": "2026-05-23T23:16:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Battle decision VFX cue coverage passed: focused report has 18 cases, real defend materializes vfx_placeholder_brace_outline/brace_outline, real surrender materializes vfx_placeholder_surrender_marker/surrender_marker, and no declared battle VFX ids are missing from BattleBoardView."
+    "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
   "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T22:44:11Z",
+  "currentSliceUpdatedAt": "2026-05-23T23:16:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -23784,6 +23880,19 @@
         "git diff --check"
       ],
       "summary": "Battle decision VFX cue coverage passed: focused report has 18 cases, real defend materializes vfx_placeholder_brace_outline/brace_outline, real surrender materializes vfx_placeholder_surrender_marker/surrender_marker, and no declared battle VFX ids are missing from BattleBoardView."
+    },
+    {
+      "id": "skirmish-launch-briefing-ux-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T23:16:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
     }
   ]
 }
