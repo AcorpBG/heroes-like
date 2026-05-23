@@ -28,14 +28,14 @@ BATTLE_TROOP_ANIMATION_STATES = [
     {"event_id": "battle_unit_melee_attack", "family": "attack", "state": "melee_windup_release"},
     {"event_id": "battle_unit_ranged_attack", "family": "attack", "state": "ranged_aim_release"},
     {"event_id": "battle_unit_hit", "family": "hit", "state": "hit_stagger"},
-    {"event_id": "battle_unit_death", "family": "death", "state": "death_fall"},
-    {"event_id": "battle_unit_cast", "family": "cast", "state": "cast_focus_release"},
-    {"event_id": "battle_status_applied", "family": "status", "state": "status_apply_loop"},
-    {"event_id": "battle_status_expired", "family": "status", "state": "status_expire"},
+    {"event_id": "battle_unit_death", "family": "death", "state": "death_rout_remove"},
+    {"event_id": "battle_unit_cast", "family": "cast", "state": "cast_support_anchor"},
+    {"event_id": "battle_status_applied", "family": "status", "state": "status_applied"},
+    {"event_id": "battle_status_expired", "family": "status", "state": "status_expired"},
     {"event_id": "battle_unit_defend", "family": "defend", "state": "defend_brace"},
-    {"event_id": "battle_unit_retaliation", "family": "retaliation", "state": "retaliation_snap"},
-    {"event_id": "battle_unit_retreat", "family": "retreat", "state": "retreat_withdraw"},
-    {"event_id": "battle_unit_surrender", "family": "retreat", "state": "surrender_lowered"},
+    {"event_id": "battle_retaliation", "family": "attack", "state": "retaliation_release"},
+    {"event_id": "battle_unit_retreat", "family": "retreat", "state": "retreat_withdraw_column"},
+    {"event_id": "battle_unit_surrender", "family": "retreat", "state": "surrender_stand_down"},
 ]
 
 PALETTES = {
@@ -391,7 +391,7 @@ def draw_animation_frame(
         center_y += 4 + frame_index * 2
         size = max(12, size - frame_index * 2)
         alpha = 230 - frame_index * 28
-    elif state_name == "surrender_lowered":
+    elif state_name == "surrender_stand_down":
         center_y += frame_index
         size = max(14, size - 2)
     elif family == "retreat":
@@ -409,7 +409,7 @@ def draw_animation_frame(
         draw.line([(16, 18 + frame_index * 3), (48, 46 - frame_index * 4)], fill=with_alpha((245, 238, 218), 180), width=2)
     if family == "death":
         draw.line([(16, 47), (50, 54)], fill=with_alpha(primary, 115), width=3)
-    if state_name == "surrender_lowered":
+    if state_name == "surrender_stand_down":
         draw.line([(14, 19), (14, 48)], fill=with_alpha(metal, 210), width=2)
         draw.polygon([(14, 19), (31, 23), (14, 29)], fill=with_alpha((236, 232, 210), 190))
     draw_centered_text(draw, initials[:2], (3, 46, 25, 62), font(8, True), with_alpha(scale_color(shadow, 0.65), alpha))
@@ -431,7 +431,7 @@ def animation_offset_x(family: str, state_name: str, frame_index: int, seed: int
         return [-3, 4, -2, 2][frame_index]
     if family == "retreat":
         return [4, 0, -5, -10][frame_index]
-    if family == "retaliation":
+    if state_name == "retaliation_release":
         return [3, -2, -7, -1][frame_index]
     return ((seed >> 5) % 3) - 1
 
@@ -478,7 +478,7 @@ def draw_animation_state_accent(draw: ImageDraw.ImageDraw, state: dict, frame_in
             draw.ellipse([49, y, 55, y + 6], outline=with_alpha(secondary, 140), width=1)
     elif family == "defend":
         draw.polygon([(12, 16), (26, 9), (28, 47), (13, 52)], fill=with_alpha(scale_color(shadow, 0.75), 160), outline=with_alpha(metal, 170))
-    elif family == "retaliation":
+    elif state_name == "retaliation_release":
         draw.line([(50, 18), (18 - frame_index * 2, 39 + frame_index)], fill=with_alpha(metal, 160), width=2)
     elif family == "retreat":
         draw.line([(49 - frame_index * 7, 16), (55 - frame_index * 7, 16)], fill=with_alpha(primary, 110), width=2)

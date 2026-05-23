@@ -164,6 +164,8 @@ func _validate_battle_runtime_wiring() -> void:
 		_error("Battle runtime unit art report did not see visible stacks.")
 	if int(summary.get("battle_icon_loaded_count", 0)) != int(summary.get("visible_stack_count", 0)):
 		_error("Battle runtime did not load unit art for every visible stack: %s." % JSON.stringify(summary))
+	if int(summary.get("animation_sheet_loaded_count", 0)) != int(summary.get("visible_stack_count", 0)):
+		_error("Battle runtime did not load unit animation sheets for every visible stack: %s." % JSON.stringify(summary))
 	shell.queue_free()
 	await get_tree().process_frame
 

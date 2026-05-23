@@ -46,22 +46,22 @@
     {
       "event_id": "battle_unit_death",
       "family": "death",
-      "state": "death_fall"
+      "state": "death_rout_remove"
     },
     {
       "event_id": "battle_unit_cast",
       "family": "cast",
-      "state": "cast_focus_release"
+      "state": "cast_support_anchor"
     },
     {
       "event_id": "battle_status_applied",
       "family": "status",
-      "state": "status_apply_loop"
+      "state": "status_applied"
     },
     {
       "event_id": "battle_status_expired",
       "family": "status",
-      "state": "status_expire"
+      "state": "status_expired"
     },
     {
       "event_id": "battle_unit_defend",
@@ -69,19 +69,19 @@
       "state": "defend_brace"
     },
     {
-      "event_id": "battle_unit_retaliation",
-      "family": "retaliation",
-      "state": "retaliation_snap"
+      "event_id": "battle_retaliation",
+      "family": "attack",
+      "state": "retaliation_release"
     },
     {
       "event_id": "battle_unit_retreat",
       "family": "retreat",
-      "state": "retreat_withdraw"
+      "state": "retreat_withdraw_column"
     },
     {
       "event_id": "battle_unit_surrender",
       "family": "retreat",
-      "state": "surrender_lowered"
+      "state": "surrender_stand_down"
     }
   ],
   "items": [
@@ -101,14 +101,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -127,14 +127,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -153,14 +153,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -179,14 +179,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -205,14 +205,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -231,14 +231,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -257,14 +257,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -283,14 +283,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -309,14 +309,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -335,14 +335,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -361,14 +361,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -387,14 +387,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -413,14 +413,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -439,14 +439,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -465,14 +465,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -491,14 +491,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -517,14 +517,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -543,14 +543,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -569,14 +569,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -595,14 +595,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -621,14 +621,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -647,14 +647,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -673,14 +673,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -699,14 +699,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -725,14 +725,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -751,14 +751,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -777,14 +777,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -803,14 +803,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -829,14 +829,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -855,14 +855,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -881,14 +881,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -907,14 +907,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -933,14 +933,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -959,14 +959,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -985,14 +985,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1011,14 +1011,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1037,14 +1037,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1063,14 +1063,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1089,14 +1089,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1115,14 +1115,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1141,14 +1141,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1167,14 +1167,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1193,14 +1193,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1219,14 +1219,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1245,14 +1245,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1271,14 +1271,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1297,14 +1297,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1323,14 +1323,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1349,14 +1349,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1375,14 +1375,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1401,14 +1401,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1427,14 +1427,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1453,14 +1453,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1479,14 +1479,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1505,14 +1505,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1531,14 +1531,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1557,14 +1557,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1583,14 +1583,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1609,14 +1609,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1635,14 +1635,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1661,14 +1661,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1687,14 +1687,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1713,14 +1713,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1739,14 +1739,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1765,14 +1765,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1791,14 +1791,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1817,14 +1817,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1843,14 +1843,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1869,14 +1869,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1895,14 +1895,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1921,14 +1921,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1947,14 +1947,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1973,14 +1973,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -1999,14 +1999,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2025,14 +2025,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2051,14 +2051,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2077,14 +2077,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2103,14 +2103,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2129,14 +2129,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2155,14 +2155,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2181,14 +2181,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2207,14 +2207,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2233,14 +2233,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2259,14 +2259,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2285,14 +2285,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2311,14 +2311,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2337,14 +2337,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2363,14 +2363,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2389,14 +2389,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2415,14 +2415,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2441,14 +2441,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2467,14 +2467,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2493,14 +2493,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2519,14 +2519,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2545,14 +2545,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2571,14 +2571,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2597,14 +2597,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2623,14 +2623,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2649,14 +2649,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2675,14 +2675,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2701,14 +2701,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2727,14 +2727,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     },
     {
@@ -2753,14 +2753,14 @@
         "melee_windup_release",
         "ranged_aim_release",
         "hit_stagger",
-        "death_fall",
-        "cast_focus_release",
-        "status_apply_loop",
-        "status_expire",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
         "defend_brace",
-        "retaliation_snap",
-        "retreat_withdraw",
-        "surrender_lowered"
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
       ]
     }
   ]
