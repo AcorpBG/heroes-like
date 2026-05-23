@@ -73,7 +73,24 @@ func _validate_move_state() -> void:
 	_expect_ok("move action", result)
 	_expect_equal("move animation state", state, "move_path_step")
 	_expect_event("move queue", session.battle, "player_0", "battle_unit_move", "move_path_step")
-	_report["cases"]["move"] = {"state": state, "destination": destination, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	var move_event := _event_record_for(session.battle, "player_0", "battle_unit_move")
+	_expect_equal("move event from q", str(int(move_event.get("from_q", -1))), "0")
+	_expect_equal("move event from r", str(int(move_event.get("from_r", -1))), "3")
+	_expect_equal("move event to q", str(int(move_event.get("to_q", -1))), str(int(destination.get("q", -1))))
+	_expect_equal("move event to r", str(int(move_event.get("to_r", -1))), str(int(destination.get("r", -1))))
+	var board_summary := _board_summary_for_session(session)
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var path := _vfx_entry_for(vfx_playback, "path_ghost")
+	_expect_equal("move path ghost cue", String(path.get("cue_id", "")), "vfx_placeholder_battle_path_ghost")
+	if int(path.get("start_q", -1)) == int(path.get("target_q", -1)) and int(path.get("start_r", -1)) == int(path.get("target_r", -1)):
+		_error("Move path ghost did not span distinct source and destination cells: %s" % path)
+	_report["cases"]["move"] = {
+		"state": state,
+		"destination": destination,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_vfx": vfx_playback,
+	}
 
 func _validate_melee_hit_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
@@ -119,7 +136,7 @@ func _validate_death_state() -> void:
 	_expect_ok("death strike action", result)
 	_expect_equal("death target animation state", target_state, "death_rout_remove")
 	_expect_event("death target queue", session.battle, "enemy_0", "battle_unit_death", "death_rout_remove")
-	var board_summary := await _board_summary_for_session(session)
+	var board_summary := _board_summary_for_session(session)
 	var observed_states := _observed_animation_states(board_summary)
 	var death_stack := _summary_stack_entry(board_summary, "enemy_0")
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
@@ -411,10 +428,8 @@ func _board_summary_for_session(session: SessionStateStoreScript.SessionData) ->
 	view.size = Vector2(960.0, 540.0)
 	add_child(view)
 	view.set_battle_state(session)
-	await get_tree().process_frame
 	var summary: Dictionary = view.validation_unit_art_summary()
 	view.queue_free()
-	await get_tree().process_frame
 	return summary
 
 func _set_stack_field(battle: Dictionary, battle_id: String, key: String, value: Variant) -> void:
@@ -470,6 +485,13 @@ func _expect_event(label: String, battle: Dictionary, battle_id: String, event_i
 		):
 			return
 	_error("%s missing event %s/%s for %s in %s." % [label, event_id, state, battle_id, BattleRulesScript.animation_event_queue(battle)])
+
+func _event_record_for(battle: Dictionary, battle_id: String, event_id: String) -> Dictionary:
+	for event in BattleRulesScript.animation_event_queue(battle):
+		if event is Dictionary and String(event.get("battle_id", "")) == battle_id and String(event.get("event_id", "")) == event_id:
+			return event
+	_error("Missing event record %s for %s in %s." % [event_id, battle_id, BattleRulesScript.animation_event_queue(battle)])
+	return {}
 
 func _expect_ok(label: String, result: Dictionary) -> void:
 	if not bool(result.get("ok", false)):

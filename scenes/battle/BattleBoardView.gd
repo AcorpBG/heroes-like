@@ -1156,6 +1156,10 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 		"serial": int(event.get("serial", 0)),
 		"target_battle_id": String(event.get("target_battle_id", "")),
 		"source_battle_id": String(event.get("source_battle_id", "")),
+		"from_q": int(event.get("from_q", -1)),
+		"from_r": int(event.get("from_r", -1)),
+		"to_q": int(event.get("to_q", -1)),
+		"to_r": int(event.get("to_r", -1)),
 		"cue_id": String(policy.get("cue_id", "")),
 		"mode": String(policy.get("mode", AnimationCueCatalogScript.MODE_NORMAL)),
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
@@ -1375,6 +1379,10 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 			target_id = battle_id
 		var source_cell: Vector2i = stack_cells.get(source_id, subject_cell)
 		var target_cell: Vector2i = stack_cells.get(target_id, subject_cell)
+		var has_event_path := _cell_in_bounds(Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))) and _cell_in_bounds(Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1))))
+		if has_event_path:
+			source_cell = Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))
+			target_cell = Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1)))
 		var source_center := _hex_center(source_cell, hex_layout)
 		var target_center := _hex_center(target_cell, hex_layout)
 		var subject_center := _hex_center(subject_cell, hex_layout)
@@ -1391,6 +1399,10 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 				start = subject_center
 				end = target_center
 				center = target_center
+			elif kind == "path_ghost" and has_event_path:
+				start = source_center
+				end = target_center
+				center = source_center.lerp(target_center, progress)
 			elif source_id != "" and stack_cells.has(source_id):
 				start = source_center
 			entries.append({
