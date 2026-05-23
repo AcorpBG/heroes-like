@@ -84,6 +84,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_pressure_summary",
 	"ai_site_seized",
 	"ai_site_contested",
+	"ai_site_defended",
 	"ai_town_built",
 	"ai_town_recruited",
 	"ai_garrison_reinforced",
@@ -777,6 +778,7 @@ static func advance_raids(
 		var previous_target := _current_target_snapshot(encounter)
 		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
 		encounter = _redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id)
+		encounter = _redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id)
 		encounter = assign_target(session, config, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
@@ -1143,6 +1145,113 @@ static func _best_threatened_defense_town(
 			best_distance = distance
 			best = town
 	return best
+
+static func _redirect_raid_to_threatened_resource_defense(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
+		return raid
+	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id)
+	if defense_node.is_empty():
+		return raid
+	var resource_id := String(defense_node.get("placement_id", ""))
+	if resource_id == "":
+		return raid
+	var current_kind := String(raid.get("target_kind", ""))
+	var current_id := String(raid.get("target_placement_id", ""))
+	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if current_kind == "resource" and current_id == resource_id and _resource_defense_reason_active(current_codes):
+		return _refresh_target(session, raid)
+	var site := ContentService.get_resource_site(String(defense_node.get("site_id", "")))
+	raid["previous_target_kind"] = current_kind
+	raid["previous_target_placement_id"] = current_id
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_kind"] = "resource"
+	raid["target_placement_id"] = resource_id
+	raid["target_label"] = String(site.get("name", resource_id))
+	raid["target_public_reason"] = "defending held site"
+	raid["target_reason_codes"] = ["site_defense", "defend_front", "front_stabilization"]
+	raid["target_public_importance"] = "medium"
+	raid["target_debug_reason"] = "defending owned persistent resource under player threat"
+	raid["arrived"] = false
+	raid["site_defense_started_day"] = int(session.day)
+	raid["site_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "resource", resource_id)
+	return _refresh_target(session, raid)
+
+static func _best_threatened_resource_defense(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var hero_position := _primary_player_position(session)
+	var best := {}
+	var best_score := -999999
+	var best_distance := 9999
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not _resource_site_is_persistent(site):
+			continue
+		if String(node.get("collected_by_faction_id", "")) != faction_id:
+			continue
+		var front_state := _resource_defense_front_state(session, node, site, faction_id, hero_position)
+		if not bool(front_state.get("active", false)):
+			continue
+		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")))
+		if distance >= 9999:
+			continue
+		var hero_distance: int = abs(hero_position.x - target_tile.x) + abs(hero_position.y - target_tile.y)
+		var score := int(front_state.get("priority_bonus", 0))
+		score += int(min(80.0, float(_resource_site_strategic_value(site)) / 40.0))
+		score += max(0, 12 - hero_distance) * 14
+		score += max(0, 14 - distance) * 7
+		if String(config.get("priority_resource_placement_id", "")) == String(node.get("placement_id", "")):
+			score += 30
+		if score > best_score or (score == best_score and (distance < best_distance or (distance == best_distance and String(node.get("placement_id", "")) < String(best.get("placement_id", ""))))):
+			best_score = score
+			best_distance = distance
+			best = node
+	return best
+
+static func _resource_defense_front_state(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary,
+	faction_id: String,
+	hero_position: Vector2i
+) -> Dictionary:
+	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+	var explicit := false
+	var priority_bonus := 0
+	var mode := ""
+	if String(front.get("faction_id", faction_id)) == faction_id:
+		var state := String(front.get("state", ""))
+		explicit = bool(front.get("threatened_by_player", false)) or state in ["defend", "stabilizing", "threatened"]
+		explicit = explicit or int(front.get("defense_until_day", 0)) >= int(session.day)
+		priority_bonus = int(front.get("priority_bonus", 0))
+		mode = state
+	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var hero_distance: int = abs(hero_position.x - target_tile.x) + abs(hero_position.y - target_tile.y)
+	var threat_radius: int = max(4, min(8, 3 + max(0, int(site.get("pressure_guard", 0)))))
+	var derived_threat := hero_distance <= threat_radius
+	return {
+		"active": explicit or derived_threat,
+		"mode": mode if mode != "" else "nearby_player_threat",
+		"priority_bonus": priority_bonus,
+		"hero_distance": hero_distance,
+		"threat_radius": threat_radius,
+		"explicit": explicit,
+	}
 
 static func _primary_player_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
@@ -5020,6 +5129,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 	var codes := _normalize_string_array(reason_codes)
 	if "town_defense" in codes:
 		return "defending threatened town"
+	if "site_defense" in codes:
+		return "defending held site"
 	if "front_stabilization" in codes:
 		return "front stabilization"
 	if "retake_front" in codes:
@@ -7524,6 +7635,8 @@ static func _ai_event_summary(
 			return "%s seizes %s%s." % [actor_clause, target_label, reason_suffix]
 		"ai_site_contested":
 			return "%s contests %s%s." % [actor_clause, target_label, reason_suffix]
+		"ai_site_defended":
+			return "%s defends %s%s." % [actor_clause, target_label, reason_suffix]
 		"ai_pressure_summary":
 			return "%s pressure centers on %s%s." % [faction_label, target_label, reason_suffix]
 		"ai_raid_grouped":
@@ -8047,6 +8160,11 @@ static func _resolve_arrived_target(
 ) -> Dictionary:
 	match String(raid.get("target_kind", "")):
 		"resource":
+			var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
+			var node: Dictionary = node_result.get("node", {})
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(raid.get("target_reason_codes", []))):
+				return _defend_resource_target(session, raid, state, faction_id)
 			return _secure_resource_target(session, raid, state, faction_id)
 		"artifact":
 			return _secure_artifact_target(session, raid, state, faction_id)
@@ -8159,6 +8277,61 @@ static func _secure_resource_target(
 			"target_reason_codes": seized_codes,
 			"target_public_reason": _public_reason_from_codes(seized_codes),
 			"target_public_importance": "high" if previous_controller == "player" or _resource_site_is_persistent(site) else "medium",
+			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+
+static func _defend_resource_target(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
+	var node = node_result.get("node", {})
+	if int(node_result.get("index", -1)) < 0:
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if not _resource_node_defensible_by_faction(node, site, faction_id, reason_codes):
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var nodes = session.overworld.get("resource_nodes", [])
+	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+	front["state"] = "defend"
+	front["faction_id"] = faction_id
+	front["last_defended_day"] = int(session.day)
+	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 2)
+	front["source"] = "strategic_ai_resource_defense"
+	node["front"] = front
+	node["ai_defended_by_faction_id"] = faction_id
+	node["ai_defended_day"] = int(session.day)
+	node["ai_defense_until_day"] = max(int(node.get("ai_defense_until_day", 0)), int(session.day) + 2)
+	node["ai_defense_rating"] = max(int(node.get("ai_defense_rating", 0)), raid_strength(raid))
+	nodes[int(node_result.get("index", -1))] = node
+	session.overworld["resource_nodes"] = nodes
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
+	var defended_codes := ["site_defense", "defend_front", "front_stabilization"]
+	var site_label := String(site.get("name", "the site"))
+	var message := "%s digs in around %s." % [_raid_name(raid), site_label]
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_site_defended",
+		raid,
+		{
+			"target_kind": "resource",
+			"target_placement_id": String(raid.get("target_placement_id", "")),
+			"target_label": site_label,
+			"target_x": int(node.get("x", 0)),
+			"target_y": int(node.get("y", 0)),
+			"target_reason_codes": defended_codes,
+			"target_public_reason": _public_reason_from_codes(defended_codes),
+			"target_public_importance": "medium",
 			"target_debug_reason": String(raid.get("target_debug_reason", "")),
 		},
 		{
@@ -8727,7 +8900,12 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 				return false
 			var node: Dictionary = resource_result.get("node", {})
 			var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-			valid = _resource_node_contestable_by_faction(node, site, String(raid.get("spawned_by_faction_id", "")))
+			var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+			var raid_faction := String(raid.get("spawned_by_faction_id", ""))
+			valid = (
+				_resource_node_contestable_by_faction(node, site, raid_faction)
+				or _resource_node_defensible_by_faction(node, site, raid_faction, reason_codes)
+			)
 		"artifact":
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			valid = int(artifact_result.get("index", -1)) >= 0 and not bool(artifact_result.get("node", {}).get("collected", false))
@@ -8778,6 +8956,18 @@ static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictio
 	if _resource_site_is_persistent(site):
 		return String(node.get("collected_by_faction_id", "")) != faction_id
 	return not bool(node.get("collected", false))
+
+static func _resource_defense_reason_active(reason_codes: Array) -> bool:
+	var codes := _normalize_string_array(reason_codes)
+	return "site_defense" in codes or "defend_front" in codes or "front_stabilization" in codes
+
+static func _resource_node_defensible_by_faction(node: Dictionary, site: Dictionary, faction_id: String, reason_codes: Array) -> bool:
+	return (
+		faction_id != ""
+		and _resource_site_is_persistent(site)
+		and String(node.get("collected_by_faction_id", "")) == faction_id
+		and _resource_defense_reason_active(reason_codes)
+	)
 
 static func _resource_site_claim_rewards(site: Dictionary) -> Dictionary:
 	var rewards = site.get("claim_rewards", site.get("rewards", {}))

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "music-audio-runtime-baseline-20260523-10184",
-  "currentSliceTitle": "Music Audio Runtime Baseline",
+  "currentSliceId": "strategic-ai-resource-site-defense-20260523-10184",
+  "currentSliceTitle": "Strategic AI Resource Site Defense",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed generated-music runtime layer for menu, overworld, battle, and outcome contexts. This closes a placeholder music-routing baseline only; final composed soundtrack, imported stems, mixer mastering, and broad audio/VFX polish remain future production work.",
+  "currentSliceNotes": "Completed live strategic AI resource-site defense so owned persistent economy sites under player threat remain valid defense targets, record durable defended-site state, and emit public ai_site_defended evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T23:05:00Z",
+  "updatedAt": "2026-05-23T23:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,55 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-resource-site-defense-20260523-10184",
+      "title": "Strategic AI Resource Site Defense",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make active strategic AI raids defend threatened same-faction persistent resource sites through live turn execution and public event evidence.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/strategic-ai-resource-site-defense-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Owned persistent resource sites marked as threatened defense fronts remain valid resource targets for same-faction raids.",
+        "A live raid can retask from an offensive target to a threatened owned resource site without capturing the abandoned target.",
+        "Arriving at a same-faction resource-defense target records durable defense state and emits a public ai_site_defended event.",
+        "The shared headless simulation harness requires and validates strategic_ai_live_resource_site_defense.",
+        "No hero_task_state save migration or hidden debug-token public event leak is introduced."
+      ],
+      "nonGoals": [
+        "No full strategic AI rewrite.",
+        "No broad economy retuning.",
+        "No scenario content expansion beyond deterministic harness fixtures.",
+        "No final strategic AI quality claim."
+      ],
+      "startedAt": "2026-05-23T23:20:00Z",
+      "updatedAt": "2026-05-23T23:58:00Z",
+      "completedAt": "2026-05-23T23:58:00Z",
+      "completionEvidence": [
+        "EnemyAdventureRules now retasks active raids to threatened same-faction persistent resource sites using site_defense/defend_front/front_stabilization reason codes.",
+        "Same-faction persistent resource defense targets remain valid only for defense-coded orders; ordinary resource capture still requires contestability.",
+        "Resource-defense arrivals record ai_defended_by_faction_id, ai_defended_day, ai_defense_until_day, and ai_defense_rating, and emit public ai_site_defended events.",
+        "HeadlessSimulationHarnessRules now requires strategic_ai_live_resource_site_defense; the focused report passed with river_free_company defended by faction_mireclaw and river_signal_post left player-controlled.",
+        "Validation passed: headless_simulation_harness_report.tscn, ai_public_event_log_boundary_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tests/validate_repo.py, jq empty ops/progress.json, and git diff --check."
+      ],
+      "notes": "Completed from the remaining production-gap list under Strategic AI quality. This is one resource-defense behavior increment; final strategic AI quality, broad objective planning, and economy balance remain future production work."
+    },
     {
       "id": "music-audio-runtime-baseline-20260523-10184",
       "title": "Music Audio Runtime Baseline",
