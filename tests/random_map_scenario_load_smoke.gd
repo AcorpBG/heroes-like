@@ -97,12 +97,20 @@ func _assert_authored_domains_active_with_generated_boundary() -> bool:
 	if String(campaigns.get("domain_status", "")) != "":
 		_fail("Authored campaign domain is not active.")
 		return false
+	var authored_entry_count := 0
 	for entry in ScenarioSelectRulesScript.build_skirmish_browser_entries():
 		if not (entry is Dictionary):
 			continue
-		if not ScenarioSelectRulesScript.maps_folder_package_id_is_valid(String(entry.get("scenario_id", ""))):
-			_fail("Authored scenarios crossed into the maps-folder package browser.")
+		var browser_scenario_id := String(entry.get("scenario_id", ""))
+		if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(browser_scenario_id):
+			continue
+		if String(entry.get("source_kind", "")) != "authored_scenario" or ContentService.get_authored_scenario(browser_scenario_id).is_empty():
+			_fail("Skirmish browser exposed a non-authored, non-package entry.")
 			return false
+		authored_entry_count += 1
+	if authored_entry_count <= 0:
+		_fail("Active authored scenarios did not appear in the skirmish browser.")
+		return false
 	if _campaign_rules().build_campaign_browser_entries({}).is_empty():
 		_fail("Active authored campaigns did not appear in the campaign browser.")
 		return false
