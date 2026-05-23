@@ -78,16 +78,23 @@ func _assert_report(first: Dictionary) -> bool:
 		"action_diversity_count",
 		"primary_action_id",
 		"primary_action_pct",
+		"primary_outcome_state",
+		"primary_outcome_pct",
+		"primary_pacing_band",
+		"primary_pacing_band_pct",
 		"terrain_distribution",
 		"scenario_distribution",
 		"difficulty_distribution",
 		"pacing_band_distribution",
 		"initial_role_distribution",
 		"initial_ability_distribution",
+		"combat_feel_gate",
 	]:
 		if not battle_summary.has(String(required_summary_field)):
 			_fail("Battle resolver sampling is missing combat-feel diagnostic field: %s" % required_summary_field)
 			return false
+	if not _assert_combat_feel_gate(battle_summary):
+		return false
 	if int(battle_summary.get("average_total_damage_per_round", 0)) <= 0:
 		_fail("Battle resolver sampling did not expose positive damage pacing evidence.")
 		return false
@@ -119,6 +126,45 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_combat_feel_gate(battle_summary: Dictionary) -> bool:
+	var gate: Dictionary = battle_summary.get("combat_feel_gate", {}) if battle_summary.get("combat_feel_gate", {}) is Dictionary else {}
+	if gate.is_empty():
+		_fail("Battle resolver sampling is missing combat-feel threshold gate evidence.")
+		return false
+	if String(gate.get("policy", "")) != "report_only_combat_feel_thresholds_v1":
+		_fail("Battle resolver sampling combat-feel gate policy mismatch: %s" % gate)
+		return false
+	if String(gate.get("status", "")) not in ["pass", "warning", "fail"]:
+		_fail("Battle resolver sampling combat-feel gate status is unsupported: %s" % gate)
+		return false
+	var thresholds: Dictionary = gate.get("thresholds", {}) if gate.get("thresholds", {}) is Dictionary else {}
+	if thresholds.is_empty() or not thresholds.has("max_terminal_health_margin_pct") or not thresholds.has("min_total_damage_per_round"):
+		_fail("Battle resolver sampling combat-feel gate is missing threshold metadata: %s" % gate)
+		return false
+	for required_gate_field in [
+		"warning_count",
+		"failure_count",
+		"warnings",
+		"failures",
+		"primary_outcome_pct",
+		"primary_pacing_band_pct",
+	]:
+		if not gate.has(String(required_gate_field)):
+			_fail("Battle resolver sampling combat-feel gate is missing field: %s" % required_gate_field)
+			return false
+	var warnings: Array = gate.get("warnings", []) if gate.get("warnings", []) is Array else []
+	var failures: Array = gate.get("failures", []) if gate.get("failures", []) is Array else []
+	if warnings.size() != int(gate.get("warning_count", -1)) or failures.size() != int(gate.get("failure_count", -1)):
+		_fail("Battle resolver sampling combat-feel gate counts do not match warning/failure arrays: %s" % gate)
+		return false
+	if int(gate.get("sample_count", -1)) != int(battle_summary.get("sample_count", -2)):
+		_fail("Battle resolver sampling combat-feel gate sample count does not align with summary: %s" % gate)
+		return false
+	if int(gate.get("average_terminal_health_margin_pct", -1)) != int(battle_summary.get("average_terminal_health_margin_pct", -2)):
+		_fail("Battle resolver sampling combat-feel gate terminal margin does not align with summary: %s" % gate)
+		return false
 	return true
 
 func _find_case(report: Dictionary, subsystem_id: String) -> Dictionary:

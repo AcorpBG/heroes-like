@@ -15848,6 +15848,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "average_initial_initiative_spread",
             "action_diversity_count",
             "primary_action_pct",
+            "primary_outcome_pct",
+            "primary_pacing_band_pct",
+            "combat_feel_gate",
+            "report_only_combat_feel_thresholds_v1",
+            "COMBAT_FEEL_MAX_TERMINAL_MARGIN_PCT",
+            "COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND",
             "terrain_distribution",
             "difficulty_distribution",
             "pacing_band_distribution",
@@ -15864,6 +15870,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "func _stack_profile",
             "func _action_mix_summary",
             "func _pacing_band",
+            "func _combat_feel_gate",
+            "func _primary_count_entry",
         ):
             ensure(required_token in harness_text, errors, f"Battle autoplay balance harness is missing diagnostic token: {required_token}")
     if battle_ai_path.exists():
@@ -15886,6 +15894,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "pacing_band_distribution",
             "initial_ability_distribution",
             "requested_sample_limit",
+            "primary_outcome_pct",
+            "primary_pacing_band_pct",
+            "combat_feel_gate",
+            "report_only_combat_feel_thresholds_v1",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
     if tactical_report_path.exists():
@@ -15906,6 +15918,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "shared battle-AI non-spell tactical scoring",
             "multi-scenario",
             "scenario distribution",
+            "combat_feel_gate",
+            "report-only combat-feel threshold gate",
             "This is instrumentation for future tuning passes.",
         ):
             ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")

@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-camera-presentation-20260523-10184",
-  "currentSliceTitle": "Battle Camera Presentation",
+  "currentSliceId": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Combat Feel Threshold Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded event-driven battle camera presentation scaffolding; remaining battle production gaps are final authored timing, imported audio/VFX, camera direction, and combat balance.",
+  "currentSliceNotes": "Completed report-only battle autoplay combat-feel threshold gate; current deterministic samples flag high terminal health margin while final combat balance and authored retuning remain open.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16311,6 +16311,43 @@
       "nonGoals": [
         "No final authored cinematic timing, screen shake direction, imported VFX/audio assets, or combat balance tuning."
       ]
+    },
+    {
+      "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+      "title": "Battle Autoplay Combat Feel Threshold Gate",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Turn deterministic battle autoplay diagnostics into report-only combat-feel threshold gates for balance triage.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Sampler summary exposes combat_feel_gate with thresholds, status, warnings, and failures.",
+        "Balance and headless reports assert gate shape and alignment with summary metrics.",
+        "Current deterministic samples surface high terminal health margin as a warning without automatic tuning or content writeback."
+      ],
+      "nonGoals": [
+        "No authored encounter retune, unit-stat rebalance, automatic tuning, strategic AI rewrite, or final combat balance approval."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19556,6 +19593,45 @@
         "git diff --check"
       ],
       "remainingGap": "This closes deterministic board-side camera presentation scaffolding for active battle events; final authored cinematic timing, screen shake direction, imported VFX/audio assets, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+      "title": "Battle Autoplay Combat Feel Threshold Gate",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-combat-feel-threshold-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAutoplayBalanceHarnessRules now exposes a report-only combat_feel_gate with explicit thresholds, status, warnings, and failures.",
+        "The aggregate sampler summary now includes dominant outcome and pacing-band percentages used by the gate.",
+        "Balance and headless report tests assert combat_feel_gate policy, threshold metadata, warning/failure counts, and alignment with public summary metrics.",
+        "Current deterministic samples surface high_terminal_health_margin as a warning instead of treating the combat-feel surface as tuned.",
+        "The report doc and repository validation now gate the report-only threshold policy tokens."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is a report-only combat-feel gate for balance triage; authored encounter retuning, unit-stat balance, tactical AI quality, and final combat approval remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -20484,25 +20560,40 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with board_camera_presentation coverage for source-target/status focus records, positive bounded shake strength, and lifecycle expiry; full repository validation gates passed for the committed slice."
+    },
+    {
+      "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused balance/headless reports passed with combat_feel_gate coverage; the gate currently reports high_terminal_health_margin as a warning while preserving report-only/no-writeback boundaries."
     }
   ],
   "lastValidation": {
-    "id": "battle-camera-presentation-20260523-10184",
+    "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with board_camera_presentation coverage for source-target/status focus records, positive bounded shake strength, and lifecycle expiry; full repository validation gates passed for the committed slice."
+    "summary": "Focused balance/headless reports passed with combat_feel_gate coverage; the gate currently reports high_terminal_health_margin as a warning while preserving report-only/no-writeback boundaries."
   },
   "active_slice": {
-    "id": "battle-camera-presentation-20260523-10184",
+    "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: active battle events now produce bounded camera focus/shake records and a small normal-mode battlefield offset with focused report coverage."
+    "note": "Completed: deterministic battle autoplay summaries now expose report-only combat-feel threshold gate warnings for balance triage."
   }
 }
