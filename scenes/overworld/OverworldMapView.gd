@@ -219,6 +219,8 @@ var _overworld_art_manifest: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
+var _unit_art_textures: Dictionary = {}
+var _unit_art_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
 var _map_object_asset_ids: Dictionary = {}
@@ -1240,7 +1242,30 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	return true
 
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _draw_encounter_unit_icon(encounter, rect, remembered, tile):
+		return true
 	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
+
+func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var path := _encounter_overworld_icon_path(encounter)
+	if path == "":
+		return false
+	var texture: Variant = _unit_art_texture(path)
+	if not (texture is Texture2D):
+		return false
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
+	var extent := minf(rect.size.x, rect.size.y)
+	var icon_extent := maxf(14.0, extent * 0.68)
+	var center: Vector2 = anchor.get("center", rect.get_center())
+	var icon_center := center + Vector2(0.0, -extent * 0.14)
+	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
+	var ring_radius := icon_extent * 0.54
+	_canvas_draw_circle(icon_center + Vector2(1.5, 2.0), ring_radius, MARKER_SHADOW_COLOR)
+	_canvas_draw_circle(icon_center, ring_radius, Color(0.08, 0.07, 0.05, 0.88 if not remembered else 0.58))
+	_canvas_draw_circle(icon_center, ring_radius, MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR, false, maxf(2.0, extent * 0.028))
+	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
+	return true
 
 func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_decorative_object_asset_id(object), rect, remembered, _decorative_object_profile(object), tile)
@@ -2619,6 +2644,34 @@ func validation_view_metrics() -> Dictionary:
 			"standalone_map_object_tiles": _standalone_map_objects_by_tile.size(),
 			"hero_tiles": _heroes_by_tile.size(),
 		},
+		"unit_art": validation_unit_art_summary(),
+	}
+
+func validation_unit_art_summary() -> Dictionary:
+	var entries := []
+	var loaded_count := 0
+	var missing := []
+	for key in _encounters_by_tile.keys():
+		var encounter: Dictionary = _encounters_by_tile.get(key, {})
+		var unit_id := _encounter_primary_unit_id(encounter)
+		var path := _encounter_overworld_icon_path(encounter)
+		var loaded := path != "" and _unit_art_texture(path) is Texture2D
+		if loaded:
+			loaded_count += 1
+		elif unit_id != "":
+			missing.append(unit_id)
+		entries.append({
+			"tile_key": String(key),
+			"encounter_id": String(encounter.get("encounter_id", encounter.get("id", ""))),
+			"unit_id": unit_id,
+			"overworld_icon": path,
+			"loaded": loaded,
+		})
+	return {
+		"encounter_count": entries.size(),
+		"overworld_icon_loaded_count": loaded_count,
+		"missing_overworld_icon_units": missing,
+		"encounters": entries,
 	}
 
 func _rect2i_payload(rect: Rect2i) -> Dictionary:
@@ -5467,6 +5520,21 @@ func _object_texture_for_asset(asset_id: String):
 	_object_texture_missing[normalized_asset_id] = texture_path
 	return null
 
+func _unit_art_texture(path: String):
+	var normalized_path := path.strip_edges()
+	if normalized_path == "":
+		return null
+	if _unit_art_textures.has(normalized_path):
+		return _unit_art_textures.get(normalized_path)
+	if _unit_art_texture_missing.has(normalized_path):
+		return null
+	var texture = _texture_from_path(normalized_path)
+	if texture is Texture2D:
+		_unit_art_textures[normalized_path] = texture
+		return texture
+	_unit_art_texture_missing[normalized_path] = true
+	return null
+
 func _texture_from_path(texture_path: String):
 	if texture_path == "":
 		return null
@@ -5479,6 +5547,39 @@ func _texture_from_path(texture_path: String):
 		if image.load(texture_path) == OK:
 			return ImageTexture.create_from_image(image)
 	return null
+
+func _encounter_overworld_icon_path(encounter: Dictionary) -> String:
+	var unit_id := _encounter_primary_unit_id(encounter)
+	if unit_id == "":
+		return ""
+	var art := ContentService.get_unit_art(unit_id)
+	return String(art.get("overworld_icon", ""))
+
+func _encounter_primary_unit_id(encounter: Dictionary) -> String:
+	var direct_unit_id := String(encounter.get("unit_id", "")).strip_edges()
+	if direct_unit_id != "":
+		return direct_unit_id
+	var group_id := String(encounter.get("enemy_group_id", "")).strip_edges()
+	if group_id == "":
+		var encounter_id := String(encounter.get("encounter_id", encounter.get("id", ""))).strip_edges()
+		var definition := ContentService.get_encounter(encounter_id)
+		group_id = String(definition.get("enemy_group_id", "")).strip_edges()
+	if group_id == "":
+		return ""
+	var group := ContentService.get_army_group(group_id)
+	var best_unit_id := ""
+	var best_count := -1
+	for stack in group.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		var unit_id := String(stack.get("unit_id", "")).strip_edges()
+		if unit_id == "":
+			continue
+		var count := int(stack.get("count", 0))
+		if best_unit_id == "" or count > best_count:
+			best_unit_id = unit_id
+			best_count = count
+	return best_unit_id
 
 func _resource_object_profile(node: Dictionary) -> Dictionary:
 	if node.is_empty():

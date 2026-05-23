@@ -14298,6 +14298,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         UNIT_ART_GENERATOR_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
@@ -14381,6 +14383,24 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "draw_texture_rect(battle_icon",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+
+    overworld_map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_unit_art_summary",
+        "func _draw_encounter_unit_icon",
+        "func _encounter_overworld_icon_path",
+        "overworld_icon",
+    ):
+        ensure(required_token in overworld_map_view_text, errors, f"OverworldMapView.gd is missing unit art token {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_unit_art_summary",
+        "func _unit_id_for_recruit_action",
+        "TextureRect.new()",
+        "portrait",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing unit art token {required_token}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:

@@ -1,5 +1,7 @@
 extends Node
 
+const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")
+
 const OUTPUT_DIR := "res://.artifacts/unit_art_manifest_report"
 const UNIT_ART_MANIFEST := "res://content/unit_art_manifest.json"
 const EXPECTED_SURFACES := {
@@ -15,6 +17,8 @@ var _report := {
 	"manifest_count": 0,
 	"surface_counts": {},
 	"runtime_battle_art": {},
+	"runtime_overworld_art": {},
+	"runtime_town_art": {},
 	"errors": [],
 }
 
@@ -24,6 +28,8 @@ func _ready() -> void:
 func _run() -> void:
 	_ensure_output_dir()
 	_validate_manifest_assets()
+	await _validate_town_runtime_wiring()
+	await _validate_overworld_runtime_wiring()
 	await _validate_battle_runtime_wiring()
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
@@ -84,6 +90,53 @@ func _validate_manifest_assets() -> void:
 				_error("Unit %s %s art expected %s but got %s." % [unit_id, surface, expected_size, actual_size])
 			_report["surface_counts"][surface] = int(_report["surface_counts"].get(surface, 0)) + 1
 
+func _validate_town_runtime_wiring() -> void:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var active_town := _first_player_town(session)
+	if active_town.is_empty():
+		_error("Unit art runtime report could not find a player town.")
+		return
+	_move_active_hero_to_town(session, active_town)
+	SessionState.set_active_session(session)
+	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not shell.has_method("validation_unit_art_summary"):
+		_error("Town shell does not expose validation_unit_art_summary.")
+		shell.queue_free()
+		return
+	var summary: Dictionary = shell.call("validation_unit_art_summary")
+	_report["runtime_town_art"] = summary
+	if int(summary.get("recruit_action_count", 0)) <= 0:
+		_error("Town runtime unit art report did not see recruit actions.")
+	if int(summary.get("portrait_loaded_count", 0)) != int(summary.get("recruit_action_count", 0)):
+		_error("Town runtime did not load unit portraits for every recruit action: %s." % JSON.stringify(summary))
+	shell.queue_free()
+	await get_tree().process_frame
+
+func _validate_overworld_runtime_wiring() -> void:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state_for_runtime(session)
+	var view = OverworldMapViewScript.new()
+	view.size = Vector2(960, 640)
+	add_child(view)
+	view.set_map_state(session, session.overworld.get("map", []), OverworldRules.derive_map_size(session), Vector2i(3, 1))
+	await get_tree().process_frame
+	if not view.has_method("validation_unit_art_summary"):
+		_error("Overworld map view does not expose validation_unit_art_summary.")
+		view.queue_free()
+		return
+	var summary: Dictionary = view.call("validation_unit_art_summary")
+	_report["runtime_overworld_art"] = summary
+	if int(summary.get("encounter_count", 0)) <= 0:
+		_error("Overworld runtime unit art report did not see encounters.")
+	if int(summary.get("overworld_icon_loaded_count", 0)) != int(summary.get("encounter_count", 0)):
+		_error("Overworld runtime did not load unit icons for every encounter: %s." % JSON.stringify(summary))
+	view.queue_free()
+	await get_tree().process_frame
+
 func _validate_battle_runtime_wiring() -> void:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	var encounter := _first_encounter(session)
@@ -119,6 +172,27 @@ func _first_encounter(session) -> Dictionary:
 		if encounter is Dictionary:
 			return encounter
 	return {}
+
+func _first_player_town(session) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "")) == "player":
+			return town
+	return {}
+
+func _move_active_hero_to_town(session, town: Dictionary) -> void:
+	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary:
+		active_hero["position"] = position.duplicate(true)
+		session.overworld["hero"] = active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
 
 func _items(raw: Dictionary) -> Array:
 	var items = raw.get("items", [])
