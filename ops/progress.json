@@ -16018,6 +16018,42 @@
       ]
     },
     {
+      "id": "battle-death-animation-retention-20260523-10184",
+      "title": "Battle Death Animation Retention",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Keep defeated stacks visible for their active death animation and stack-fade VFX playback instead of dropping them from the board immediately.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-death-animation-retention-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Defeated zero-health stacks with active event playback remain board-visible for the death animation window.",
+        "Expired defeated stacks no longer occupy visible stack lists or board presentation slots.",
+        "Focused validation proves a real killing strike renders death_rout_remove and vfx_placeholder_stack_fade for the defeated target."
+      ],
+      "nonGoals": [
+        "No final authored death timing, corpse persistence, camera work, imported VFX/audio assets, or combat balance tuning."
+      ]
+    },
+    {
       "id": "battle-exit-animation-handoff-20260523-10184",
       "title": "Battle Exit Animation Handoff",
       "phase": "phase-2-deep-production-foundation",
@@ -19000,6 +19036,43 @@
         "git diff --check"
       ],
       "remainingGap": "This improves automated balance harness breadth; encounter retuning, stack-size pacing, ability-power tuning, spell autoplay, manual playtest approval, and final combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-death-animation-retention-20260523-10184",
+      "title": "Battle Death Animation Retention",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-death-animation-retention-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-death-animation-retention-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now treats zero-health stacks with active animation playback as transiently visible presentation stacks.",
+        "Visible-stack enumeration and stack-cell assignment both use the same dynamic event-playback visibility filter, so expired defeated stacks drop out of the board.",
+        "The board unit-art validation summary now reports alive_count and event_playback_visible per stack.",
+        "The focused battle event animation report now proves a real killing strike keeps the defeated enemy visible with death_rout_remove, alive_count 0, event_playback_visible true, and vfx_placeholder_stack_fade."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This fixes death-event presentation retention; final authored death timing, corpse persistence, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
     },
     {
       "id": "packaging-platform-readiness-20260523-10184",

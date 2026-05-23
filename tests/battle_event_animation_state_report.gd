@@ -119,7 +119,26 @@ func _validate_death_state() -> void:
 	_expect_ok("death strike action", result)
 	_expect_equal("death target animation state", target_state, "death_rout_remove")
 	_expect_event("death target queue", session.battle, "enemy_0", "battle_unit_death", "death_rout_remove")
-	_report["cases"]["death"] = {"target_state": target_state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	var board_summary := await _board_summary_for_session(session)
+	var observed_states := _observed_animation_states(board_summary)
+	var death_stack := _summary_stack_entry(board_summary, "enemy_0")
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var fade := _vfx_entry_for(vfx_playback, "stack_fade")
+	_expect_equal("death board target animation state", String(observed_states.get("enemy_0", "")), "death_rout_remove")
+	if int(death_stack.get("alive_count", -1)) != 0:
+		_error("Death board summary should retain the defeated stack with alive_count 0: %s" % death_stack)
+	if not bool(death_stack.get("event_playback_visible", false)):
+		_error("Death board summary did not mark the defeated stack as event-playback visible: %s" % death_stack)
+	_expect_equal("death fade vfx cue", String(fade.get("cue_id", "")), "vfx_placeholder_stack_fade")
+	_expect_equal("death fade vfx battle id", String(fade.get("battle_id", "")), "enemy_0")
+	_report["cases"]["death"] = {
+		"target_state": target_state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_states": observed_states,
+		"board_stack": death_stack,
+		"board_vfx": vfx_playback,
+	}
 
 func _validate_spell_cast_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
@@ -387,6 +406,17 @@ func _stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
 func _state_for(session: SessionStateStoreScript.SessionData, battle_id: String) -> String:
 	return BattleRulesScript.animation_state_for_stack(session.battle, _stack_by_id(session.battle, battle_id))
 
+func _board_summary_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	await get_tree().process_frame
+	var summary: Dictionary = view.validation_unit_art_summary()
+	view.queue_free()
+	await get_tree().process_frame
+	return summary
+
 func _set_stack_field(battle: Dictionary, battle_id: String, key: String, value: Variant) -> void:
 	var stacks: Array = battle.get("stacks", []) if battle.get("stacks", []) is Array else []
 	for index in range(stacks.size()):
@@ -408,6 +438,14 @@ func _observed_animation_states(summary: Dictionary) -> Dictionary:
 func _cue_record_for(cue_playback: Dictionary, battle_id: String) -> Dictionary:
 	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}
 	return records.get(battle_id, {}) if records.get(battle_id, {}) is Dictionary else {}
+
+func _summary_stack_entry(summary: Dictionary, battle_id: String) -> Dictionary:
+	var stacks: Array = summary.get("stacks", []) if summary.get("stacks", []) is Array else []
+	for entry in stacks:
+		if entry is Dictionary and String(entry.get("battle_id", "")) == battle_id:
+			return entry
+	_error("Missing board stack entry for %s in %s." % [battle_id, summary])
+	return {}
 
 func _vfx_entry_for(vfx_playback: Dictionary, kind: String) -> Dictionary:
 	var entries: Array = vfx_playback.get("active_draw_entries", []) if vfx_playback.get("active_draw_entries", []) is Array else []

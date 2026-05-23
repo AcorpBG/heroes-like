@@ -254,7 +254,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
 		_field_objectives = _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []).duplicate(true) if _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []) is Array else []
 		for stack in _battle.get("stacks", []):
-			if not (stack is Dictionary) or _stack_alive_count(stack) <= 0:
+			if not (stack is Dictionary) or not _stack_visible_for_presentation(stack):
 				continue
 			if String(stack.get("side", "")) == "player":
 				_player_stacks.append(stack)
@@ -439,6 +439,8 @@ func validation_unit_art_summary() -> Dictionary:
 			"animation_sheet": animation_path,
 			"animation_loaded": animation_loaded,
 			"animation_state": _animation_state_for_stack(stack),
+			"alive_count": _stack_alive_count(stack),
+			"event_playback_visible": _stack_alive_count(stack) <= 0 and not _animation_playback_record_for_stack(String(stack.get("battle_id", ""))).is_empty(),
 		})
 	return {
 		"visible_stack_count": stack_entries.size(),
@@ -2082,8 +2084,8 @@ func _terrain_grid_max_fill_alpha(texture_loaded: bool) -> float:
 func _stack_cells() -> Dictionary:
 	var cells := {}
 	var distance := clampi(int(_battle.get("distance", 1)), 0, 2)
-	_assign_stack_cells(cells, _player_stacks, "player", distance)
-	_assign_stack_cells(cells, _enemy_stacks, "enemy", distance)
+	_assign_stack_cells(cells, _visible_stack_list(_player_stacks), "player", distance)
+	_assign_stack_cells(cells, _visible_stack_list(_enemy_stacks), "enemy", distance)
 	return cells
 
 func _assign_stack_cells(cells: Dictionary, stacks: Array, side: String, distance: int) -> void:
@@ -2515,9 +2517,21 @@ func _validation_fallback_tooltip_position() -> Vector2:
 
 func _all_visible_stacks() -> Array:
 	var stacks := []
-	stacks.append_array(_player_stacks)
-	stacks.append_array(_enemy_stacks)
+	stacks.append_array(_visible_stack_list(_player_stacks))
+	stacks.append_array(_visible_stack_list(_enemy_stacks))
 	return stacks
+
+func _visible_stack_list(source_stacks: Array) -> Array:
+	var stacks := []
+	for stack in source_stacks:
+		if stack is Dictionary and _stack_visible_for_presentation(stack):
+			stacks.append(stack)
+	return stacks
+
+func _stack_visible_for_presentation(stack: Dictionary) -> bool:
+	if _stack_alive_count(stack) > 0:
+		return true
+	return not _animation_playback_record_for_stack(String(stack.get("battle_id", ""))).is_empty()
 
 func _stack_has_cell(battle_id: String, stack_cells: Dictionary) -> bool:
 	if battle_id == "" or not stack_cells.has(battle_id):
