@@ -4,6 +4,7 @@ signal stack_focus_requested(battle_id: String)
 signal hex_destination_requested(q: int, r: int)
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
+const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
 
 const HEX_COLUMNS := 11
 const HEX_ROWS := 7
@@ -83,6 +84,7 @@ var _unit_animation_sheet_missing: Dictionary = {}
 var _stack_animation_playback_records: Dictionary = {}
 var _stack_animation_playback_until_msec: Dictionary = {}
 var _latest_animation_serial_by_stack: Dictionary = {}
+var _stack_animation_cue_playback_records: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -425,6 +427,7 @@ func validation_unit_art_summary() -> Dictionary:
 		"animation_sheet_loaded_count": stack_entries.filter(func(entry): return bool(entry.get("animation_loaded", false))).size(),
 		"missing_animation_units": stack_entries.filter(func(entry): return not bool(entry.get("animation_loaded", false))).map(func(entry): return String(entry.get("unit_id", ""))),
 		"animation_playback": validation_animation_playback_summary(),
+		"cue_playback": validation_cue_playback_summary(),
 		"stacks": stack_entries,
 	}
 
@@ -440,6 +443,33 @@ func validation_animation_playback_summary() -> Dictionary:
 		"active_records": records,
 		"latest_serial_by_stack": _latest_animation_serial_by_stack.duplicate(true),
 		"queue_count": BattleRulesScript.animation_event_queue(_battle).size() if not _battle.is_empty() else 0,
+	}
+
+func validation_cue_playback_summary() -> Dictionary:
+	_expire_animation_playback_records()
+	var records := {}
+	var vfx_record_count := 0
+	var audio_record_count := 0
+	var vfx_cue_count := 0
+	var audio_cue_count := 0
+	for battle_id in _stack_animation_cue_playback_records.keys():
+		var record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+		var vfx_ids: Array = record.get("selected_vfx_cue_ids", []) if record.get("selected_vfx_cue_ids", []) is Array else []
+		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
+		if not vfx_ids.is_empty():
+			vfx_record_count += 1
+			vfx_cue_count += vfx_ids.size()
+		if not audio_ids.is_empty():
+			audio_record_count += 1
+			audio_cue_count += audio_ids.size()
+		records[String(battle_id)] = record.duplicate(true)
+	return {
+		"active_cue_record_count": records.size(),
+		"vfx_record_count": vfx_record_count,
+		"audio_record_count": audio_record_count,
+		"vfx_cue_count": vfx_cue_count,
+		"audio_cue_count": audio_cue_count,
+		"active_records": records,
 	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
@@ -999,6 +1029,7 @@ func _sync_animation_playback_records() -> void:
 		if not stack_ids.has(String(battle_id)):
 			_stack_animation_playback_records.erase(battle_id)
 			_stack_animation_playback_until_msec.erase(battle_id)
+			_stack_animation_cue_playback_records.erase(battle_id)
 	for event in BattleRulesScript.animation_event_queue(_battle):
 		if not (event is Dictionary):
 			continue
@@ -1010,7 +1041,13 @@ func _sync_animation_playback_records() -> void:
 			continue
 		_latest_animation_serial_by_stack[battle_id] = serial
 		_stack_animation_playback_records[battle_id] = event.duplicate(true)
-		_stack_animation_playback_until_msec[battle_id] = now + STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var cue_record := _animation_cue_playback_record_for_event(event)
+		if not cue_record.is_empty():
+			_stack_animation_cue_playback_records[battle_id] = cue_record
+		else:
+			_stack_animation_cue_playback_records.erase(battle_id)
+		var duration_msec := int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		_stack_animation_playback_until_msec[battle_id] = now + max(1, duration_msec)
 
 func _expire_animation_playback_records() -> void:
 	var now := int(Time.get_ticks_msec())
@@ -1018,6 +1055,35 @@ func _expire_animation_playback_records() -> void:
 		if int(_stack_animation_playback_until_msec.get(battle_id, 0)) <= now:
 			_stack_animation_playback_until_msec.erase(battle_id)
 			_stack_animation_playback_records.erase(battle_id)
+			_stack_animation_cue_playback_records.erase(battle_id)
+
+func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
+	var event_id := String(event.get("event_id", "")).strip_edges()
+	var battle_id := String(event.get("battle_id", "")).strip_edges()
+	if event_id == "" or battle_id == "":
+		return {}
+	var policy := AnimationCueCatalogScript.cue_playback_policy_for_event(event_id, _animation_preferences())
+	if policy.is_empty():
+		return {}
+	return {
+		"battle_id": battle_id,
+		"event_id": event_id,
+		"state": String(event.get("state", "")),
+		"serial": int(event.get("serial", 0)),
+		"cue_id": String(policy.get("cue_id", "")),
+		"mode": String(policy.get("mode", AnimationCueCatalogScript.MODE_NORMAL)),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
+		"selected_vfx_cue_ids": policy.get("selected_vfx_cue_ids", []),
+		"selected_audio_cue_ids": policy.get("selected_audio_cue_ids", []),
+		"max_duration_ms": int(policy.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
+		"audio_policy": String(policy.get("audio_policy", "")),
+	}
+
+func _animation_preferences() -> Dictionary:
+	return SettingsService.animation_preferences()
 
 func _animation_state_row_for_unit(unit_id: String, state_name: String) -> int:
 	var animation := ContentService.get_unit_animation(unit_id)
