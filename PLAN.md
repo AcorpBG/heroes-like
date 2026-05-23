@@ -49,6 +49,8 @@ Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves
 
 Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
 
+Battle death animation retention added on 2026-05-23: `BattleBoardView` now keeps zero-health stacks visible while an active death animation playback record exists, so `battle_unit_death` / `death_rout_remove` and `vfx_placeholder_stack_fade` actually render before the stack disappears from the board. The same visibility filter drives stack-cell assignment and visible-stack summaries so expired defeated stacks do not occupy presentation slots. `tests/battle_event_animation_state_report.tscn` now proves a real killing strike keeps the defeated target visible with `alive_count` 0 during death playback. This is presentation retention for generated sheets and placeholder VFX, not final authored death timing, corpse persistence, imported VFX/audio, camera work, or combat balance tuning.
+
 Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active battle audio cue ids into short generated `AudioStreamGenerator` waveforms on the Master bus, with per-cue timbre/duration specs for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle cues. The board exposes `audio_playback` validation records and rate-limits active generated players. `tests/battle_event_animation_state_report.tscn` proves ranged/status events synthesize audio cue waveforms and expire with playback. This is runtime placeholder audio playback, not final sound design, imported audio assets, music, ambience, mixer polish, or combat balance tuning.
 
 Battle exit animation handoff added on 2026-05-23: retreat and surrender now preserve pre-resolution `battle_exit_animation_snapshot` payloads before `session.battle` is cleared, `BattleBoardView` can render those presentation snapshots, and `BattleShell` briefly shows the exit animation while inputs are locked before routing to the overworld/outcome flow. `tests/battle_event_animation_state_report.tscn` now proves `battle_unit_retreat`/`retreat_withdraw_column` and `battle_unit_surrender`/`surrender_stand_down` are produced by real exit actions and render through the board snapshot path. This closes an exit-action presentation gap, not final authored animation timing, camera work, imported VFX/audio, or combat balance.
@@ -4987,6 +4989,28 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-death-animation-retention-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Keep defeated stacks visible for their active death animation and stack-fade VFX playback instead of dropping them from the board immediately.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-death-animation-retention-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Defeated zero-health stacks with active event playback remain board-visible for the death animation window.
+- Expired defeated stacks no longer occupy visible stack lists or board presentation slots.
+- Focused validation proves a real killing strike renders `death_rout_remove` and `vfx_placeholder_stack_fade` for the defeated target.
+nonGoals:
+- No final authored death timing, corpse persistence, camera work, imported VFX/audio assets, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 
