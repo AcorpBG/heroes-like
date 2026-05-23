@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "overworld-ambient-audio-runtime-baseline-20260523-10184",
-  "currentSliceTitle": "Overworld Ambient Audio Runtime Baseline",
+  "currentSliceId": "battle-autoplay-balance-tuning-queue-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Balance Tuning Queue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented AmbientAudio autoload for generated terrain/day/enemy-pressure overworld layers, wired OverworldShell validation sync, added focused ambient audio report/doc and repo validator gate, and preserved prevalidated movement post-action recaps uncovered by smoke validation. Validated with overworld_ambient_audio_runtime_report, validate_repo.py, py_compile, jq empty, and git diff --check; broad overworld_visual_smoke still fails on an older hard-coded terrain art-contract fixture unrelated to this slice.",
+  "currentSliceNotes": "Implemented deterministic report-only battle autoplay tuning queue output with 9 medium-priority watch items, stable signature f8dc048d, focused Godot report coverage, documentation, and repo validator gates. Validated with tuning queue report, existing combat balance report, validate_repo.py, py_compile, jq empty, and git diff --check.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T18:48:35Z",
+  "updatedAt": "2026-05-23T20:22:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17237,6 +17237,52 @@
       "startedAt": "2026-05-23T18:30:00Z",
       "completedAt": "2026-05-23T18:48:35Z",
       "notes": "Implemented AmbientAudio autoload for generated terrain/day/enemy-pressure overworld layers, wired OverworldShell validation sync, added focused ambient audio report/doc and repo validator gate, and preserved prevalidated movement post-action recaps uncovered by smoke validation. Validated with overworld_ambient_audio_runtime_report, validate_repo.py, py_compile, jq empty, and git diff --check; broad overworld_visual_smoke still fails on an older hard-coded terrain art-contract fixture unrelated to this slice."
+    },
+    {
+      "id": "battle-autoplay-balance-tuning-queue-20260523-10184",
+      "title": "Battle Autoplay Balance Tuning Queue",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add deterministic report-only tuning queue output to the battle autoplay balance harness so combat-feel work has prioritized sample/cohort items instead of only broad pass/warning gates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "docs/battle-autoplay-balance-matrix-diagnostics-report.md",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "BattleAutoplayBalanceHarnessRules exposes battle_autoplay_balance_tuning_queue_v1 report-only output with deterministic queue signatures.",
+        "Queue items include priority, metric, observed/target values, source context, suggested owner, and remediation hints for gate warnings/failures plus sample and cohort watch bands.",
+        "A focused Godot report proves schema, policy, deterministic signature, sorted item shape, top contributors, and terminal-margin watch coverage."
+      ],
+      "nonGoals": [
+        "No automatic tuning or content writeback.",
+        "No authored encounter retune.",
+        "No final combat balance approval."
+      ],
+      "updatedAt": "2026-05-23T20:22:00Z",
+      "startedAt": "2026-05-23T20:05:00Z",
+      "completedAt": "2026-05-23T20:22:00Z",
+      "completionNotes": "Completed: BattleAutoplayBalanceHarnessRules now emits battle_autoplay_balance_tuning_queue_v1 report-only output with deterministic queue signature f8dc048d, 9 medium-priority current watch items, sorted top contributors, sample/cohort/gate coverage, suggested owners, and remediation hints.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "This is actionable combat-feel triage over existing green threshold gates; it does not retune content or claim final combat balance."
     }
   ],
   "completedImplementationEvidence": [
@@ -22164,21 +22210,35 @@
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",
+    "id": "battle-autoplay-balance-tuning-queue-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T19:35:00Z",
+    "updatedAt": "2026-05-23T20:22:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ]
   },
-  "active_slice": "overworld-ambient-audio-runtime-baseline-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T18:48:35Z",
+  "active_slice": "battle-autoplay-balance-tuning-queue-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T20:22:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-balance-tuning-queue-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T20:22:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle autoplay tuning queue report passed with schema battle_autoplay_balance_tuning_queue_v1, policy report_only_no_runtime_tuning, deterministic signature f8dc048d, 9 medium-priority watch items, and existing combat balance/report/repo validation passed."
+    },
     {
       "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",
       "status": "passed",

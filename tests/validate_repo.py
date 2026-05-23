@@ -16387,12 +16387,15 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
     combat_balance_report_path = ROOT / "tests/battle_autoplay_combat_balance_report.gd"
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
+    tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
+    tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
+    tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16400,12 +16403,15 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         headless_report_path,
         combat_balance_report_path,
         combat_balance_scene_path,
+        tuning_queue_report_path,
+        tuning_queue_scene_path,
         tactical_report_path,
         tactical_scene_path,
         doc_path,
         calibration_doc_path,
         balance_matrix_doc_path,
         expanded_sample_doc_path,
+        tuning_queue_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16433,6 +16439,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_autoplay_balance_matrix_v1",
             "balance_matrix_gate",
             "report_only_balance_matrix_thresholds_v1",
+            "balance_tuning_queue",
+            "battle_autoplay_balance_tuning_queue_v1",
+            "report_only_no_runtime_tuning",
+            "queue_signature",
+            "top_contributors",
+            "remediation_hint",
             "side_power_scores",
             "matchup_band",
             "side_role_counts",
@@ -16453,6 +16465,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "func _action_mix_summary",
             "func _pacing_band",
             "func _combat_feel_gate",
+            "func balance_tuning_queue",
+            "func _append_tuning_item",
+            "func _sorted_tuning_items",
             "func _balance_matrix",
             "func _balance_matrix_gate",
             "func _stack_power_score",
@@ -16522,6 +16537,24 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if combat_balance_scene_path.exists():
         combat_balance_scene_text = combat_balance_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_combat_balance_report.gd" in combat_balance_scene_text, errors, "Battle autoplay combat balance scene is not wired to its script.")
+    if tuning_queue_report_path.exists():
+        tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_BALANCE_TUNING_QUEUE_REPORT",
+            "battle_autoplay_balance_tuning_queue_v1",
+            "report_only_no_runtime_tuning",
+            "queue_signature",
+            "repeat_queue_signature",
+            "sample_terminal_margin_watch",
+            "top_contributors",
+            "remediation_hint",
+            "suggested_owner",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in tuning_queue_text, errors, f"Battle autoplay tuning queue report is missing token: {required_token}")
+    if tuning_queue_scene_path.exists():
+        tuning_queue_scene_text = tuning_queue_scene_path.read_text(encoding="utf-8")
+        ensure("battle_autoplay_balance_tuning_queue_report.gd" in tuning_queue_scene_text, errors, "Battle autoplay tuning queue scene is not wired to its script.")
     if tactical_report_path.exists():
         tactical_report_text = tactical_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -16585,6 +16618,20 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "not final combat balance approval",
         ):
             ensure(required_text in expanded_sample_text, errors, f"Battle autoplay expanded sample doc is missing required text: {required_text}")
+    if tuning_queue_doc_path.exists():
+        tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Balance Tuning Queue Report",
+            "battle_autoplay_balance_tuning_queue_v1",
+            "report_only_no_runtime_tuning",
+            "balance_tuning_queue",
+            "queue_signature",
+            "top_contributors",
+            "remediation_hint",
+            "No automatic tuning or content writeback.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in tuning_queue_doc_text, errors, f"Battle autoplay tuning queue doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:
