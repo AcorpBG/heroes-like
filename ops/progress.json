@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-retaliation-event-presentation-20260523-10184",
-  "currentSliceTitle": "Battle Retaliation Event Presentation",
+  "currentSliceId": "battle-decision-vfx-cue-coverage-20260523-10184",
+  "currentSliceTitle": "Battle Decision VFX Cue Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed battle retaliation event presentation: real battle_retaliation now materializes retaliation_arc VFX and focused report coverage proves retaliation_release, target hit reaction, VFX, audio, and motion evidence.",
+  "currentSliceNotes": "Completed battle decision VFX cue coverage: BattleBoardView now maps all declared battle VFX cue ids, with focused defend brace_outline and surrender_marker report evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T22:38:43Z",
+  "updatedAt": "2026-05-23T22:44:11Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,64 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-decision-vfx-cue-coverage-20260523-10184",
+      "title": "Battle Decision VFX Cue Coverage",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd"
+      ],
+      "purpose": "Materialize remaining declared battle VFX cue ids in the board presentation path, with focused validation for real defend and surrender events.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "docs/battle-decision-vfx-cue-coverage-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "BattleBoardView maps vfx_placeholder_idle_shadow, vfx_placeholder_active_ring, vfx_placeholder_brace_outline, and vfx_placeholder_surrender_marker into draw entries.",
+        "The focused battle event animation report proves a real defend event materializes brace_outline VFX.",
+        "The focused battle event animation report proves a real surrender exit snapshot materializes surrender_marker VFX.",
+        "Focused Godot report, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final imported VFX art.",
+        "No final sound design.",
+        "No combat balance tuning.",
+        "No broad battle UX redesign."
+      ],
+      "startedAt": "2026-05-23T22:40:48Z",
+      "updatedAt": "2026-05-23T22:44:11Z",
+      "notes": "Completed remaining battle VFX cue mapper coverage: no declared battle VFX ids are missing from BattleBoardView, and real defend/surrender events assert brace_outline and surrender_marker draw entries.",
+      "completedAt": "2026-05-23T22:44:11Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "battle_event_animation_report_ok": true,
+          "battle_event_animation_case_count": 18,
+          "missing_battle_vfx_id_count": 0,
+          "defend_vfx_cue": "vfx_placeholder_brace_outline",
+          "defend_vfx_kind": "brace_outline",
+          "surrender_vfx_cue": "vfx_placeholder_surrender_marker",
+          "surrender_vfx_kind": "surrender_marker"
+        }
+      }
+    },
     {
       "id": "battle-retaliation-event-presentation-20260523-10184",
       "title": "Battle Retaliation Event Presentation",
@@ -22357,6 +22415,43 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-decision-vfx-cue-coverage-20260523-10184",
+      "title": "Battle Decision VFX Cue Coverage",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T22:44:11Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-decision-vfx-cue-coverage-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-decision-vfx-cue-coverage-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-decision-vfx-cue-coverage-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now maps vfx_placeholder_idle_shadow, vfx_placeholder_active_ring, vfx_placeholder_brace_outline, and vfx_placeholder_surrender_marker into board draw entries.",
+        "The focused battle event animation report proves a real defend action materializes vfx_placeholder_brace_outline as brace_outline.",
+        "The focused battle event animation report proves a real surrender exit snapshot materializes vfx_placeholder_surrender_marker as surrender_marker.",
+        "Current focused evidence reports 18 event-animation cases and zero missing declared battle VFX ids in BattleBoardView.",
+        "This is placeholder event presentation coverage only; no final imported VFX art, final sound design, combat balance tuning, or broad battle UX redesign."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -23485,9 +23580,9 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-retaliation-event-presentation-20260523-10184",
+    "id": "battle-decision-vfx-cue-coverage-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T22:38:43Z",
+    "updatedAt": "2026-05-23T22:44:11Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
@@ -23495,10 +23590,10 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Battle retaliation event presentation passed: focused battle event animation report has 18 cases with retaliation present, real battle_retaliation selects retaliation_release, target hit_stagger remains visible, vfx_placeholder_retaliation_arc materializes as retaliation_arc, and audio_placeholder_retaliation is dispatched."
+    "summary": "Battle decision VFX cue coverage passed: focused report has 18 cases, real defend materializes vfx_placeholder_brace_outline/brace_outline, real surrender materializes vfx_placeholder_surrender_marker/surrender_marker, and no declared battle VFX ids are missing from BattleBoardView."
   },
   "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T22:38:43Z",
+  "currentSliceUpdatedAt": "2026-05-23T22:44:11Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -23676,6 +23771,19 @@
         "git diff --check"
       ],
       "summary": "Battle retaliation event presentation passed: focused battle event animation report has 18 cases with retaliation present, real battle_retaliation selects retaliation_release, target hit_stagger remains visible, vfx_placeholder_retaliation_arc materializes as retaliation_arc, and audio_placeholder_retaliation is dispatched."
+    },
+    {
+      "id": "battle-decision-vfx-cue-coverage-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T22:44:11Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Battle decision VFX cue coverage passed: focused report has 18 cases, real defend materializes vfx_placeholder_brace_outline/brace_outline, real surrender materializes vfx_placeholder_surrender_marker/surrender_marker, and no declared battle VFX ids are missing from BattleBoardView."
     }
   ]
 }

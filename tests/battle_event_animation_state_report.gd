@@ -62,7 +62,17 @@ func _validate_defend_state() -> void:
 	_expect_ok("defend action", result)
 	_expect_equal("defend animation state", state, "defend_brace")
 	_expect_event("defend queue", session.battle, "player_0", "battle_unit_defend", "defend_brace")
-	_report["cases"]["defend"] = {"state": state, "events": BattleRulesScript.animation_event_states(session.battle), "queue": BattleRulesScript.animation_event_queue(session.battle)}
+	var board_summary := _board_summary_for_session(session)
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var brace_vfx := _vfx_entry_for(vfx_playback, "brace_outline")
+	_expect_equal("defend brace vfx cue", String(brace_vfx.get("cue_id", "")), "vfx_placeholder_brace_outline")
+	_expect_equal("defend brace vfx battle id", String(brace_vfx.get("battle_id", "")), "player_0")
+	_report["cases"]["defend"] = {
+		"state": state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_vfx": vfx_playback,
+	}
 
 func _validate_move_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 0, 3, 7, 3)
@@ -412,6 +422,11 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 	_expect_equal("%s board exit presentation active" % action_id, str(bool(exiting_stack.get("presentation_motion_active", false))), "true")
 	_expect_equal("%s board exit presentation event" % action_id, String(exiting_stack.get("presentation_motion_event_id", "")), event_id)
 	_expect_equal("%s board exit presentation role" % action_id, String(exiting_stack.get("presentation_motion_role", "")), expected_role)
+	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
+	if action_id == "surrender":
+		var surrender_vfx := _vfx_entry_for(vfx_playback, "surrender_marker")
+		_expect_equal("surrender marker vfx cue", String(surrender_vfx.get("cue_id", "")), "vfx_placeholder_surrender_marker")
+		_expect_equal("surrender marker vfx battle id", String(surrender_vfx.get("battle_id", "")), "player_0")
 	var motion_roles: Dictionary = summary.get("presentation_motion_roles", {}) if summary.get("presentation_motion_roles", {}) is Dictionary else {}
 	if int(motion_roles.get(expected_role, 0)) < 1:
 		_error("%s board exit presentation role was not counted in the board summary: %s" % [action_id, summary])
@@ -423,6 +438,7 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 		"queue": BattleRulesScript.animation_event_queue(snapshot),
 		"board_states": observed_states,
 		"board_playback": playback,
+		"board_vfx": vfx_playback,
 		"board_stack": exiting_stack,
 		"presentation_motion_roles": motion_roles,
 	}

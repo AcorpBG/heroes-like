@@ -1683,6 +1683,10 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 		var radius := float(entry.get("hex_radius", 12.0))
 		var progress := float(entry.get("progress", 0.0))
 		match String(entry.get("kind", "")):
+			"idle_shadow":
+				_draw_idle_shadow_vfx(center, radius, progress)
+			"active_ring":
+				_draw_active_ring_vfx(center, radius, progress)
 			"projectile_path":
 				_draw_projectile_vfx(start, end, radius, progress)
 			"status_residue":
@@ -1699,6 +1703,10 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_stack_fade_vfx(center, radius, progress)
 			"cast_anchor":
 				_draw_cast_anchor_vfx(center, radius, progress)
+			"brace_outline":
+				_draw_brace_outline_vfx(center, radius, progress)
+			"surrender_marker":
+				_draw_surrender_marker_vfx(center, radius, progress)
 			"path_ghost":
 				_draw_path_ghost_vfx(center, radius, progress)
 
@@ -1775,6 +1783,10 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 
 func _vfx_kind_for_cue_id(cue_id: String) -> String:
 	match cue_id:
+		"vfx_placeholder_idle_shadow":
+			return "idle_shadow"
+		"vfx_placeholder_active_ring":
+			return "active_ring"
 		"vfx_placeholder_projectile_path":
 			return "projectile_path"
 		"vfx_placeholder_status_residue":
@@ -1791,6 +1803,10 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "stack_fade"
 		"vfx_placeholder_cast_anchor":
 			return "cast_anchor"
+		"vfx_placeholder_brace_outline":
+			return "brace_outline"
+		"vfx_placeholder_surrender_marker":
+			return "surrender_marker"
 		"vfx_placeholder_battle_path_ghost", "vfx_placeholder_withdraw_path":
 			return "path_ghost"
 	return ""
@@ -1799,6 +1815,14 @@ func _cue_playback_progress(record: Dictionary) -> float:
 	var started := int(record.get("started_at_msec", Time.get_ticks_msec()))
 	var duration := maxi(1, int(record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)))
 	return clampf(float(Time.get_ticks_msec() - started) / float(duration), 0.0, 1.0)
+
+func _draw_idle_shadow_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.12, 0.28 - progress * 0.08)
+	draw_circle(center + Vector2(0.0, radius * 0.24), radius * 0.32, Color(0.02, 0.025, 0.03, alpha))
+
+func _draw_active_ring_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var pulse := 0.88 + sin(progress * TAU) * 0.05
+	draw_circle(center, radius * pulse, Color(ACTIVE_COLOR.r, ACTIVE_COLOR.g, ACTIVE_COLOR.b, 0.42), false, maxf(2.0, radius * 0.05), true)
 
 func _draw_projectile_vfx(start: Vector2, end: Vector2, radius: float, progress: float) -> void:
 	if start.distance_to(end) <= 1.0:
@@ -1874,6 +1898,25 @@ func _draw_cast_anchor_vfx(center: Vector2, radius: float, progress: float) -> v
 	])
 	draw_polyline(points, color, maxf(1.8, radius * 0.045), true)
 	draw_circle(center, radius * 0.18, Color(color.r, color.g, color.b, 0.38), true)
+
+func _draw_brace_outline_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.18, 1.0 - progress * 0.50)
+	var color := Color(0.76, 0.88, 1.0, 0.58 * alpha)
+	draw_circle(center, radius * 0.68, color, false, maxf(2.0, radius * 0.055), true)
+	draw_arc(center, radius * 0.48, PI * 0.12, PI * 0.88, 12, color, maxf(2.0, radius * 0.055), true)
+
+func _draw_surrender_marker_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.16, 1.0 - progress * 0.55)
+	var color := Color(0.92, 0.92, 0.86, 0.70 * alpha)
+	var pole_top := center + Vector2(0.0, -radius * 0.44)
+	var pole_bottom := center + Vector2(0.0, radius * 0.30)
+	draw_line(pole_top, pole_bottom, color, maxf(1.8, radius * 0.04), true)
+	var flag := PackedVector2Array([
+		pole_top,
+		pole_top + Vector2(radius * 0.34, radius * 0.10),
+		pole_top + Vector2(0.0, radius * 0.22),
+	])
+	draw_colored_polygon(flag, Color(color.r, color.g, color.b, 0.42 * alpha))
 
 func _draw_path_ghost_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var alpha := maxf(0.16, 1.0 - progress * 0.60)
