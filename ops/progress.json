@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-art-full-roster-generated-assets-20260523-10184",
-  "currentSliceTitle": "Unit Art Full Roster Generated Assets",
+  "currentSliceId": "unit-art-runtime-surface-adoption-20260523-10184",
+  "currentSliceTitle": "Unit Art Runtime Surface Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Full-roster generated unit art baseline completed with manifest, battle icon runtime loading, focused report, and repo validation gate.",
+  "currentSliceNotes": "Completed: town recruit portraits and overworld encounter icons now consume generated unit art; final hand-painted/animated art remains outside this slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:10:39Z",
+  "updatedAt": "2026-05-23T10:21:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -14981,6 +14981,61 @@
         "Generated 103 unit art records and 309 PNG files under art/units/.",
         "Battle runtime report loaded battle icons for every visible stack in the river-pass first encounter."
       ]
+    },
+    {
+      "id": "unit-art-runtime-surface-adoption-20260523-10184",
+      "title": "Unit Art Runtime Surface Adoption",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/unit_art_manifest.json",
+        "tests/unit_art_manifest_report.gd"
+      ],
+      "purpose": "Wire generated unit portraits and overworld icons into live player-facing town and overworld surfaces, extending the full-roster battle-art baseline.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/unit_art_manifest_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "content/unit_art_manifest.json covers 103 authored units with portrait, battle_icon, and overworld_icon paths",
+        "Battle runtime already loads generated battle_icon textures for visible stacks"
+      ],
+      "completionCriteria": [
+        "Town recruit actions display unit portrait textures when manifest art resolves.",
+        "Overworld encounter rendering displays unit overworld_icon textures when enemy groups resolve to a primary unit.",
+        "Focused Godot unit-art report validates live town portrait, overworld icon, and battle icon loading.",
+        "Repository validation gates the town, overworld, battle, manifest, and generator hooks."
+      ],
+      "nonGoals": [
+        "No copyrighted external unit art import.",
+        "No claim that final hand-painted production art direction is complete.",
+        "No animation-state sprite sheet implementation in this slice."
+      ],
+      "startedAt": "2026-05-23T10:21:07Z",
+      "updatedAt": "2026-05-23T10:21:40Z",
+      "notes": "Completed: live town recruit portraits and overworld encounter unit icons now consume the generated unit-art manifest, with focused report and repo validation coverage.",
+      "completedAt": "2026-05-23T10:21:40Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Focused unit art report and repository validation passed after wiring town portrait and overworld encounter icon surfaces.",
+      "evidenceHistory": [
+        "TownShell now displays generated portrait textures next to recruit actions and reports portrait loading through validation_unit_art_summary().",
+        "OverworldMapView now resolves encounter enemy groups to primary units, draws generated overworld_icon textures for encounter markers, and reports icon loading through validation_unit_art_summary().",
+        "tests/unit_art_manifest_report.tscn now validates manifest coverage plus live town, overworld, and battle unit-art loading; latest report covered 103 units, 309 PNG surfaces, one recruit portrait, three overworld encounter icons, and four battle stack icons with no missing art.",
+        "tests/validate_repo.py now gates town, overworld, battle, manifest, and generator unit-art hooks."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17231,6 +17286,44 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "unit-art-runtime-surface-adoption-20260523-10184",
+      "title": "Unit Art Runtime Surface Adoption",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T10:21:40Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/unit_art_manifest.json",
+        "tests/unit_art_manifest_report.gd"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-art-runtime-surface-adoption-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/town/TownShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/unit_art_manifest_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "TownShell now displays generated portrait textures next to recruit actions and reports portrait loading through validation_unit_art_summary().",
+        "OverworldMapView now resolves encounter enemy groups to primary units, draws generated overworld_icon textures for encounter markers, and reports icon loading through validation_unit_art_summary().",
+        "tests/unit_art_manifest_report.tscn now validates manifest coverage plus live town, overworld, and battle unit-art loading; latest report covered 103 units, 309 PNG surfaces, one recruit portrait, three overworld encounter icons, and four battle stack icons with no missing art.",
+        "tests/validate_repo.py now gates town, overworld, battle, manifest, and generator unit-art hooks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "Final hand-painted/animated production art direction is still not claimed by this generated-art adoption slice."
     }
   ],
   "docsReadyEvidence": [
@@ -17896,13 +17989,26 @@
     "Coordinate replay private context on 2026-05-13 after the fresh reset: active compact h3maped boundary now builds selected-template 0x4a1f3b link seeds and one-level 0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed coordinate replay without terrain, map-cell, zone-footprint, road, guard, blocker, runtime-player, or public-output materialization. Focused report asserts five link seeds with guard values [3000,3000,3000,6000,6000], completed phases [template_selection, player_slot_assignment, runtime_zone_records, link_seed_setup, coordinate_replay_and_zone_footprints], 18 coordinate placement steps, four interleaved 0x49b3c1 town-choice RNG calls selecting elemental/necropolis/inferno/fortress, final replay RNG state 255755822, bbox span 84, scaled zone centers (23,11), (21,22), (12,23), (18,4), (18,30), (12,11), generation still blocked with h3maped_small_clean_restart_generation_not_ready, and no old top-level inspection-ledger fields exposed.",
     "Reward coordinate commit boundary on 2026-05-13: active small h3maped module now records recovered 0x4aa9b7..0x4aab7b coordinate scan/random-pick boundary called by 0x4aab7e, including generated-cell generator+0x14/+0x20 owner-score gates, helpers 0x4aa603/0x4ae1fd/0x4ae52a/0x4aa3e9, RNG 0x4e7276, and focused assertions that private reward coordinate records, reward object adoption, public objects, roads, and package output remain blocked.",
     "Reward filter/final-commit helper boundaries on 2026-05-13: active small h3maped module now splits the 0x4aa9b7 blocker into recovered 0x4aa603..0x4aa9b4 filter gates and 0x4aa3e9..0x4aa603 generated-cell/object mutation. Focused report asserts 0x4aa603 child collision 0x49a6f9, special object type 0x36 neighborhood rejection, direction table 0x5a2658, validity helper 0x49a1d8, final footprint helper 0x49a09c, body collision scan, plus 0x4aa3e9 coordinate write to object +0x54..+0x5c, child vfunc slots +0x04/+0x08, transform helper 0x49d2c7, state setters 0x49a932/0x49aa63, and keeps private filter evaluation, generated-cell mutation, reward object adoption, and public package output blocked.",
-    "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval."
+    "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval.",
+    {
+      "id": "unit-art-runtime-surface-adoption-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T10:21:40Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused unit-art report and repo validation passed for full manifest plus town/overworld/battle runtime art loading."
+    }
   ],
   "lastValidation": "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval.",
   "active_slice": {
-    "id": "unit-art-full-roster-generated-assets-20260523-10184",
+    "id": "unit-art-runtime-surface-adoption-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Full-roster generated unit art baseline completed; broader production-unit-art goal remains open for final art direction and additional UI/map surface adoption."
+    "note": "Completed: town recruit portraits and overworld encounter icons now consume generated unit art; final hand-painted/animated art remains outside this slice."
   }
 }

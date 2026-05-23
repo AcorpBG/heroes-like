@@ -76,6 +76,8 @@ var _last_save_surface_profile := {}
 var _last_refresh_minimal := false
 var _last_town_stage_signature := ""
 var _last_departure_confirmation := {}
+var _unit_art_textures: Dictionary = {}
+var _unit_art_texture_missing: Dictionary = {}
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
@@ -1406,6 +1408,33 @@ func validation_action_catalog() -> Dictionary:
 		"hero": _duplicate_action_array(TownRules.get_hero_actions(_session)),
 	}
 
+func validation_unit_art_summary() -> Dictionary:
+	var action_entries := []
+	var loaded_count := 0
+	var missing := []
+	for action in TownRules.get_recruit_actions(_session):
+		if not (action is Dictionary):
+			continue
+		var unit_id := _unit_id_for_recruit_action(action)
+		var path := String(ContentService.get_unit_art(unit_id).get("portrait", ""))
+		var loaded := path != "" and _unit_art_texture(path) is Texture2D
+		if loaded:
+			loaded_count += 1
+		else:
+			missing.append(unit_id)
+		action_entries.append({
+			"action_id": String(action.get("id", "")),
+			"unit_id": unit_id,
+			"portrait": path,
+			"loaded": loaded,
+		})
+	return {
+		"recruit_action_count": action_entries.size(),
+		"portrait_loaded_count": loaded_count,
+		"missing_portrait_units": missing,
+		"actions": action_entries,
+	}
+
 func validation_force_refresh() -> Dictionary:
 	_refresh()
 	return validation_town_entity_cache_snapshot()
@@ -1597,13 +1626,29 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	for action in actions:
 		if not (action is Dictionary):
 			continue
+		var unit_id := _unit_id_for_recruit_action(action)
+		var portrait_path := String(ContentService.get_unit_art(unit_id).get("portrait", ""))
+		var portrait_texture: Variant = _unit_art_texture(portrait_path)
+		var row := HBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_theme_constant_override("separation", 8)
+		if portrait_texture is Texture2D:
+			var portrait := TextureRect.new()
+			portrait.texture = portrait_texture
+			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			portrait.custom_minimum_size = Vector2(42, 54)
+			portrait.tooltip_text = String(action.get("label", action.get("id", "Recruit")))
+			row.add_child(portrait)
 		var button := Button.new()
 		button.text = String(action.get("button_label", action.get("label", action.get("id", "Recruit"))))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = _town_action_button_tooltip(action, "recruit")
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_style_action_button(button)
 		button.pressed.connect(_on_recruit_action_pressed.bind(String(action.get("id", "")).trim_prefix("recruit:")))
-		_recruit_actions.add_child(button)
+		row.add_child(button)
+		_recruit_actions.add_child(row)
 
 func _rebuild_tavern_actions(actions_override: Variant = null) -> void:
 	for child in _tavern_actions.get_children():
@@ -1855,6 +1900,8 @@ func _button_tooltips(container: Container) -> Array:
 				"tooltip": child.tooltip_text,
 				"disabled": child.disabled,
 			})
+		elif child is Container:
+			tooltips.append_array(_button_tooltips(child))
 	return tooltips
 
 func _specialty_readiness_surface() -> Dictionary:
@@ -2990,6 +3037,43 @@ func _make_placeholder_label(text: String) -> Label:
 	label.custom_minimum_size = Vector2(188.0, 24.0)
 	label.tooltip_text = text
 	return label
+
+func _unit_id_for_recruit_action(action: Dictionary) -> String:
+	var unit_id := String(action.get("unit_id", "")).strip_edges()
+	if unit_id != "":
+		return unit_id
+	var action_id := String(action.get("id", "")).strip_edges()
+	if action_id.begins_with("recruit:"):
+		return action_id.trim_prefix("recruit:")
+	return action_id
+
+func _unit_art_texture(path: String):
+	var normalized_path := path.strip_edges()
+	if normalized_path == "":
+		return null
+	if _unit_art_textures.has(normalized_path):
+		return _unit_art_textures.get(normalized_path)
+	if _unit_art_texture_missing.has(normalized_path):
+		return null
+	var texture: Variant = _texture_from_path(normalized_path)
+	if texture is Texture2D:
+		_unit_art_textures[normalized_path] = texture
+		return texture
+	_unit_art_texture_missing[normalized_path] = true
+	return null
+
+func _texture_from_path(path: String):
+	if path == "":
+		return null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is Texture2D:
+			return resource
+	if FileAccess.file_exists(path):
+		var image := Image.new()
+		if image.load(path) == OK:
+			return ImageTexture.create_from_image(image)
+	return null
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
