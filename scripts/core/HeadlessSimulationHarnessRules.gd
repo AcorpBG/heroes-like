@@ -15,6 +15,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"scenario_session_turn_loop",
 	"strategic_ai_pressure_tick",
 	"strategic_ai_live_turn_execution",
+	"strategic_ai_live_route_progression",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
 	"save_replay_stability",
@@ -28,6 +29,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_scenario_session_turn_loop(input_config),
 		_strategic_ai_pressure_tick(input_config),
 		_strategic_ai_live_turn_execution(input_config),
+		_strategic_ai_live_route_progression(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
@@ -361,6 +363,152 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 			"primary_raid": _raid_execution_signal(primary_raid),
 			"companion_raid": _raid_execution_signal(companion_raid),
 			"event_types": _event_types(turn_result.get("events", [])),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
+static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_live_route_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_live_route_faction_id", "faction_mireclaw"))
+	var target_id := String(input_config.get("strategic_ai_live_route_target_id", "river_free_company"))
+	var origin: Dictionary = input_config.get("strategic_ai_live_route_origin", {"x": 7, "y": 1}) if input_config.get("strategic_ai_live_route_origin", {}) is Dictionary else {"x": 7, "y": 1}
+	var max_turns: int = max(1, int(input_config.get("strategic_ai_live_route_max_turns", 14)))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI live route scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_live_route_progression",
+			"live_commander_resource_front_route_progression",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_live_route_progression",
+			"live_commander_resource_front_route_progression",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		_update_enemy_state(session, state)
+	_set_resource_controller(session, target_id, "player", failures)
+	var raid_id := "headless_live_route_%s" % target_id
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append(_live_route_raid_seed(session, faction_id, "hero_vaska", raid_id, origin))
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var route_records := []
+	var all_events := []
+	var assigned_target := false
+	var seized_target := false
+	var initial_goal_distance := -1
+	var final_goal_distance := -1
+	for turn_index in range(max_turns):
+		var turn_result: Dictionary = OverworldRules.end_turn(session)
+		if not bool(turn_result.get("ok", false)):
+			failures.append("End turn returned not-ok during live route progression on turn %d." % (turn_index + 1))
+			break
+		var events: Array = turn_result.get("enemy_activity_events", []) if turn_result.get("enemy_activity_events", []) is Array else []
+		all_events.append_array(events)
+		var raid := _encounter_by_placement(session, raid_id)
+		if raid.is_empty():
+			failures.append("Live route raid disappeared on turn %d." % (turn_index + 1))
+			break
+		if String(raid.get("target_placement_id", "")) == target_id:
+			assigned_target = true
+		var current_distance := int(raid.get("goal_distance", 9999))
+		if assigned_target and initial_goal_distance < 0:
+			initial_goal_distance = current_distance
+		final_goal_distance = current_distance
+		route_records.append({
+			"turn": turn_index + 1,
+			"day": int(session.day),
+			"x": int(raid.get("x", 0)),
+			"y": int(raid.get("y", 0)),
+			"target_id": String(raid.get("target_placement_id", "")),
+			"goal_distance": current_distance,
+			"arrived": bool(raid.get("arrived", false)),
+			"controller": _resource_controller(session, target_id),
+		})
+		if String(_resource_controller(session, target_id)) == faction_id:
+			seized_target = true
+			break
+	var target_controller := _resource_controller(session, target_id)
+	if not assigned_target:
+		failures.append("Live route raid never assigned the expected resource target %s." % target_id)
+	if initial_goal_distance <= 0:
+		failures.append("Live route raid did not establish a positive route distance.")
+	if final_goal_distance < 0 or final_goal_distance >= initial_goal_distance:
+		failures.append("Live route raid did not reduce goal distance: initial=%d final=%d." % [initial_goal_distance, final_goal_distance])
+	if not seized_target or target_controller != faction_id:
+		failures.append("Live route raid did not seize %s within %d turns." % [target_id, max_turns])
+	if _has_saved_hero_task_state(session):
+		failures.append("Live route progression wrote forbidden hero_task_state.")
+	var assignment_events := _event_count(all_events, "ai_target_assigned")
+	var seizure_events := _event_count(all_events, "ai_site_seized")
+	if assignment_events < 1:
+		failures.append("Live route progression did not surface an ai_target_assigned event.")
+	if seizure_events < 1:
+		failures.append("Live route progression did not surface an ai_site_seized event.")
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(all_events, 12)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected live route events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public live route events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_live_route_progression",
+		"live_commander_resource_front_route_progression",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"target_id": target_id,
+			"turns_simulated": route_records.size(),
+			"assigned_target": assigned_target,
+			"seized_target": seized_target,
+			"initial_goal_distance": initial_goal_distance,
+			"final_goal_distance": final_goal_distance,
+			"target_controller": target_controller,
+			"target_assignment_event_count": assignment_events,
+			"site_seizure_event_count": seizure_events,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"origin": {"x": int(origin.get("x", 0)), "y": int(origin.get("y", 0))},
+			"route_records": route_records,
+			"event_types": _event_types(all_events),
 			"public_event_leak_tokens": public_event_leak_tokens,
 			"save_policy": "no_hero_task_state_write_no_save_migration",
 			"warnings": warnings,
@@ -831,6 +979,35 @@ static func _live_turn_raid_seed(
 		"encounter_id": "encounter_mire_raid",
 		"x": int(node.get("x", 0)),
 		"y": int(node.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _live_route_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	origin: Dictionary
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": int(origin.get("x", 0)),
+		"y": int(origin.get("y", 0)),
 		"difficulty": "pressure",
 		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
 		"spawned_by_faction_id": faction_id,

@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "headless-strategic-ai-live-turn-harness-20260523-10184",
-  "currentSliceTitle": "Headless Strategic AI Live Turn Harness",
+  "currentSliceId": "headless-strategic-ai-live-route-progression-20260523-10184",
+  "currentSliceTitle": "Headless Strategic AI Live Route Progression",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused headless harness adoption for live strategic AI resource-front turn execution with assignment/seizure/reservation evidence and report-only boundaries.",
+  "currentSliceNotes": "Completed: standard headless harness now includes required live strategic AI route progression coverage from a distant raid origin through end-turn movement, target assignment, route closure, and resource seizure.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16508,6 +16508,44 @@
       "nonGoals": [
         "No final combat balance approval, broad faction-vs-faction tuning, automatic content tuning, spell/autocast retune, strategic AI rewrite, or manual playtest replacement."
       ]
+    },
+    {
+      "id": "headless-strategic-ai-live-route-progression-20260523-10184",
+      "title": "Headless Strategic AI Live Route Progression",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "purpose": "Add long-route live strategic AI route progression evidence to the shared headless harness instead of only proving on-target resource-front execution.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS includes strategic_ai_live_route_progression.",
+        "The standard headless report seeds a distant no-target Vaska raid and advances it through repeated OverworldRules.end_turn calls.",
+        "The harness proves live AI assigns river_free_company, records per-turn route_records, reduces initial_goal_distance from 9 to final_goal_distance 0, and seizes the site for faction_mireclaw.",
+        "The harness checks assignment/seizure events, no durable hero_task_state, no save migration, and no public event leakage of internal task/score/reservation details."
+      ],
+      "nonGoals": [
+        "No full strategic AI quality claim.",
+        "No broad path-planning, recruitment grouping, town assault, defense rotation, retreat timing, or scenario-breadth completion."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19952,6 +19990,44 @@
         "git diff --check"
       ],
       "remainingGap": "This is one strategic AI harness fixture; broader AI quality still needs long-route planning, town assault priorities, recruitment grouping, defense rotation, retreat timing, objective handling across scenarios, and difficulty tuning."
+    },
+    {
+      "id": "headless-strategic-ai-live-route-progression-20260523-10184",
+      "title": "Headless Strategic AI Live Route Progression",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "headless-strategic-ai-live-route-progression-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "HeadlessSimulationHarnessRules now includes strategic_ai_live_route_progression in REQUIRED_SUBSYSTEM_IDS.",
+        "The shared headless report seeds a distant no-target Vaska raid at (7, 1) and advances it through repeated OverworldRules.end_turn calls.",
+        "The route fixture proves live AI assigns river_free_company, records route_records, reduces initial_goal_distance from 9 to final_goal_distance 0, and seizes the site for faction_mireclaw.",
+        "The harness asserts assignment/seizure events are present and public event output does not leak internal task/score/reservation fields.",
+        "The route progression case keeps no-save/report-only boundaries and writes no hero_task_state."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves one long-route resource-front progression fixture; broader strategic AI quality still needs path quality across maps, town assault priorities, recruitment grouping, defense rotation, retreat timing, objective handling, and difficulty tuning."
     }
   ],
   "docsReadyEvidence": [
@@ -20949,10 +21025,23 @@
         "git diff --check"
       ],
       "summary": "Focused headless harness report passed with strategic_ai_live_turn_execution as a required subsystem, two River Pass resource-front seizures, unique companion reservation targets, event evidence, and no-save/report-only boundaries."
+    },
+    {
+      "id": "headless-strategic-ai-live-route-progression-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused headless harness report passed with strategic_ai_live_route_progression as a required subsystem, live assignment of river_free_company from distance 9, turn-by-turn route evidence, eventual faction_mireclaw seizure at distance 0, event evidence, and no-save/report-only boundaries."
     }
   ],
   "lastValidation": {
-    "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
+    "id": "headless-strategic-ai-live-route-progression-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
@@ -20962,12 +21051,12 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused headless harness report passed with strategic_ai_live_turn_execution as a required subsystem, two River Pass resource-front seizures, unique companion reservation targets, event evidence, and no-save/report-only boundaries."
+    "summary": "Focused headless harness report passed with strategic_ai_live_route_progression as a required subsystem, live assignment of river_free_company from distance 9, turn-by-turn route evidence, eventual faction_mireclaw seizure at distance 0, event evidence, and no-save/report-only boundaries."
   },
   "active_slice": {
-    "id": "headless-strategic-ai-live-turn-harness-20260523-10184",
+    "id": "headless-strategic-ai-live-route-progression-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: standard headless harness now includes required live strategic AI turn execution coverage."
+    "note": "Completed: long-route live strategic AI route progression is now covered by the standard headless harness."
   }
 }
