@@ -92,6 +92,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_commander_role_observed",
 	"ai_raid_moved",
 	"ai_raid_arrived",
+	"ai_raid_regrouped",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -701,6 +702,7 @@ static func advance_raids(
 
 		encounter = ensure_raid_army(encounter, session)
 		var previous_target := _current_target_snapshot(encounter)
+		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
 		encounter = assign_target(session, config, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
@@ -734,7 +736,9 @@ static func advance_raids(
 				event_records.append(arrival_event)
 		encounters[index] = encounter
 
-		var target_label = String(encounter.get("target_label", "the frontier"))
+		var target_label = String(encounter.get("target_label", "the frontier")).strip_edges()
+		if target_label == "":
+			target_label = "the frontier"
 		if bool(encounter.get("arrived", false)):
 			pressure_counts[target_label] = int(pressure_counts.get(target_label, 0)) + 1
 			if int(encounter.get("days_active", 0)) >= max(1, int(config.get("raid_pillage_delay", 1))):
@@ -772,6 +776,60 @@ static func advance_raids(
 		"state": state,
 		"events": event_records,
 	}
+
+static func _redirect_understrength_raid_to_regroup(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) == "regroup":
+		return _refresh_target(session, raid)
+	if not raid_regroup_needed(raid):
+		return raid
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	if regroup_town.is_empty():
+		return raid
+	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_kind"] = "regroup"
+	raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+	raid["target_label"] = "%s regroup" % _town_name(regroup_town)
+	raid["target_public_reason"] = "regrouping understrength host"
+	raid["target_reason_codes"] = ["regroup_understrength", "army_consolidation", "town_defense"]
+	raid["target_public_importance"] = "medium"
+	raid["target_debug_reason"] = "raid strength below regroup floor"
+	raid["arrived"] = false
+	raid["regroup_started_day"] = int(session.day)
+	return _refresh_target(session, raid)
+
+static func _nearest_regroup_town(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	var best_distance := 9999
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if _town_faction_id(town) != faction_id:
+			continue
+		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var distance := _path_distance(session, current, [tile], String(raid.get("placement_id", "")))
+		if distance >= 9999:
+			continue
+		if distance < best_distance or (distance == best_distance and String(town.get("placement_id", "")) < String(best.get("placement_id", ""))):
+			best_distance = distance
+			best = town
+	return best
 
 static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -2721,6 +2779,16 @@ static func desired_raid_strength(encounter: Dictionary) -> int:
 		COMMANDER_OUTCOME_CAPITULATION:
 			multiplier += 0.06
 	return int(round(float(base_strength) * multiplier)) + veterancy_bonus
+
+static func raid_regroup_needed(encounter: Dictionary) -> bool:
+	if encounter.is_empty():
+		return false
+	if bool(encounter.get("arrived", false)) and String(encounter.get("target_kind", "")) != "regroup":
+		return false
+	var desired: int = max(1, desired_raid_strength(encounter))
+	var current: int = max(0, raid_strength(encounter))
+	var regroup_floor: int = max(45, int(round(float(desired) * 0.55)))
+	return current > 0 and current < regroup_floor
 
 static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var base_strength: int = max(
@@ -7627,6 +7695,8 @@ static func _resolve_arrived_target(
 			return _secure_artifact_target(session, raid, state, faction_id)
 		"encounter":
 			return _contest_encounter_target(session, raid, state, faction_id)
+		"regroup":
+			return _regroup_raid_at_town(session, raid, state, faction_id)
 		_:
 			return {"encounter": raid, "state": state, "event_message": ""}
 
@@ -7848,6 +7918,146 @@ static func _contest_encounter_target(
 		]
 	return {"encounter": raid, "state": state, "event_message": message}
 
+static func _regroup_raid_at_town(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	var town = town_result.get("town", {})
+	var town_index := int(town_result.get("index", -1))
+	if town_index < 0 or town.is_empty():
+		return {"encounter": raid, "state": state, "event_message": ""}
+	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return {"encounter": raid, "state": state, "event_message": ""}
+
+	var before_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var transfer_report := _transfer_town_garrison_to_raid(session, town_index, raid, max(0, desired_strength - before_strength))
+	raid = transfer_report.get("raid", raid)
+	var transferred_count := int(transfer_report.get("transferred_count", 0))
+	var transferred_strength := int(transfer_report.get("transferred_strength", 0))
+	var after_strength := raid_strength(raid)
+	raid["regrouped_day"] = int(session.day)
+	raid["last_regroup_town_id"] = String(town.get("placement_id", ""))
+	raid["last_regroup_strength_delta"] = transferred_strength
+
+	var ready_to_resume := not raid_regroup_needed(raid)
+	if ready_to_resume:
+		raid = _clear_regroup_target(raid)
+
+	var message := ""
+	if transferred_count > 0:
+		message = "%s regroups at %s and folds %d unit%s into the host." % [
+			_raid_name(raid),
+			_town_name(town),
+			transferred_count,
+			"" if transferred_count == 1 else "s",
+		]
+	else:
+		message = "%s regroups at %s but finds no spare garrison." % [_raid_name(raid), _town_name(town)]
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_raid_regrouped",
+		raid,
+		{
+			"target_kind": "town",
+			"target_placement_id": String(town.get("placement_id", "")),
+			"target_label": _town_name(town),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": ["regroup_understrength", "army_consolidation", "town_defense"],
+			"target_public_reason": "regrouping understrength host",
+			"target_public_importance": "medium",
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+
+static func _transfer_town_garrison_to_raid(
+	session: SessionStateStoreScript.SessionData,
+	town_index: int,
+	raid: Dictionary,
+	strength_needed: int
+) -> Dictionary:
+	if town_index < 0 or strength_needed <= 0:
+		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
+	var towns = session.overworld.get("towns", [])
+	if town_index >= towns.size() or not (towns[town_index] is Dictionary):
+		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
+	var town: Dictionary = towns[town_index]
+	var garrison_value = town.get("garrison", [])
+	if not (garrison_value is Array):
+		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
+	var garrison: Array = garrison_value
+	var army: Dictionary = _normalize_army_payload(raid.get("enemy_army", {}))
+	if army.is_empty():
+		army = _base_enemy_army(String(raid.get("encounter_id", raid.get("id", ""))))
+	if army.is_empty():
+		army = {"id": String(raid.get("encounter_id", "raid")), "name": "Raid Host", "stacks": []}
+
+	var remaining_strength: int = max(0, strength_needed)
+	var transferred_count := 0
+	var transferred_strength := 0
+	var new_garrison: Array = []
+	for stack_value in garrison:
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		var count: int = max(0, int(stack_value.get("count", 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		var unit_strength: int = max(1, _unit_strength_value(unit_id))
+		var take := 0
+		if remaining_strength > 0:
+			take = mini(count, max(1, int(ceil(float(remaining_strength) / float(unit_strength)))))
+		if take > 0:
+			army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, take)
+			transferred_count += take
+			var strength_delta: int = unit_strength * take
+			transferred_strength += strength_delta
+			remaining_strength = max(0, remaining_strength - strength_delta)
+		var left: int = count - take
+		if left > 0:
+			new_garrison.append({"unit_id": unit_id, "count": left})
+	town["garrison"] = new_garrison
+	towns[town_index] = town
+	session.overworld["towns"] = towns
+	raid["enemy_army"] = army
+	var commander_state = raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		raid["enemy_commander_state"] = sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(raid.get("encounter_id", raid.get("id", "")))
+		)
+	return {
+		"raid": raid,
+		"transferred_count": transferred_count,
+		"transferred_strength": transferred_strength,
+	}
+
+static func _clear_regroup_target(raid: Dictionary) -> Dictionary:
+	raid["target_kind"] = ""
+	raid["target_placement_id"] = ""
+	raid["target_label"] = ""
+	raid["target_x"] = int(raid.get("x", 0))
+	raid["target_y"] = int(raid.get("y", 0))
+	raid["goal_x"] = int(raid.get("x", 0))
+	raid["goal_y"] = int(raid.get("y", 0))
+	raid["goal_distance"] = 9999
+	raid["arrived"] = false
+	raid["target_public_reason"] = ""
+	raid["target_reason_codes"] = []
+	raid["target_public_importance"] = ""
+	raid["target_debug_reason"] = ""
+	return raid
+
 static func _reward_resources_for_empire(rewards: Variant) -> Dictionary:
 	var treasury = {}
 	if not (rewards is Dictionary):
@@ -7893,6 +8103,11 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0:
 				return _town_staging_tiles(session, town_result.get("town", {}))
+		"regroup":
+			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+			if int(town_result.get("index", -1)) >= 0:
+				var town: Dictionary = town_result.get("town", {})
+				return [Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))]
 		"resource", "artifact":
 			return [Vector2i(int(raid.get("target_x", int(raid.get("goal_x", 0)))), int(raid.get("target_y", int(raid.get("goal_y", 0)))))]
 		"encounter":
@@ -8060,6 +8275,17 @@ static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: 
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")))
+		"regroup":
+			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+			if int(town_result.get("index", -1)) >= 0:
+				var town = town_result.get("town", {})
+				var goal_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+				raid["target_label"] = "%s regroup" % _town_name(town)
+				raid["target_x"] = int(town.get("x", 0))
+				raid["target_y"] = int(town.get("y", 0))
+				raid["goal_x"] = goal_tile.x
+				raid["goal_y"] = goal_tile.y
+				raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")))
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
@@ -8122,6 +8348,13 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 		"town":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			valid = int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player"
+		"regroup":
+			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+			valid = (
+				int(town_result.get("index", -1)) >= 0
+				and String(town_result.get("town", {}).get("owner", "neutral")) == "enemy"
+				and _town_faction_id(town_result.get("town", {})) == String(raid.get("spawned_by_faction_id", ""))
+			)
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) < 0:
@@ -8318,6 +8551,10 @@ static func _find_encounter_by_placement(session: SessionStateStoreScript.Sessio
 static func _town_name(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("name", town_state.get("town_id", "Town")))
+
+static func _town_faction_id(town_state: Dictionary) -> String:
+	var town = ContentService.get_town(String(town_state.get("town_id", "")))
+	return String(town.get("faction_id", ""))
 
 static func _describe_count_map(verb: String, counts: Dictionary) -> String:
 	if counts.is_empty():

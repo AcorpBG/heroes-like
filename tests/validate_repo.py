@@ -112,6 +112,9 @@ AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-tas
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.gd"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.tscn"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-hero-task-adoption-gate-report.md"
+AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
+AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
+AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
@@ -13163,6 +13166,54 @@ def validate_ai_hero_task_live_adoption_gate(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI hero task live adoption gate doc is missing required boundary text: {required_text}")
 
 
+def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
+    for path in (
+        AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH,
+        AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH,
+        AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI raid regroup/retreat file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "raid_regroup_needed",
+        "_redirect_understrength_raid_to_regroup",
+        "_nearest_regroup_town",
+        "_regroup_raid_at_town",
+        "_transfer_town_garrison_to_raid",
+        "_clear_regroup_target",
+        '"ai_raid_regrouped"',
+        '"regroup"',
+        '"regroup_understrength"',
+        '"army_consolidation"',
+        '"town_defense"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid regroup/retreat token: {required_token}")
+    if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "understrength_raids_retreat_to_owned_town_and_pull_garrison",
+            "river_pass_understrength_raid_regroups_at_duskfen",
+            "ai_raid_regrouped",
+            "ai_target_assigned",
+            "last_regroup_town_id",
+            "resource_controller_after",
+            "save_version_before",
+            "save_version_after",
+        ):
+            ensure(required_token in report_text, errors, f"AI raid regroup/retreat report is missing token: {required_token}")
+    if AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.exists():
+        doc_text = AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Raid Regroup Retreat Report",
+            "strategic-ai-raid-regroup-retreat-20260523-10184",
+            "understrength raids retreat",
+            "Duskfen Bastion",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI raid regroup/retreat doc is missing required text: {required_text}")
+
+
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
     docs_path = ROOT / "docs" / "overworld-object-route-effect-authoring-validation-report.md"
     ensure(docs_path.exists(), errors, "Missing overworld object route-effect authoring validation report doc")
@@ -15928,6 +15979,7 @@ def main() -> int:
     validate_overworld_object_ai_valuation_route_effects(errors)
     validate_ai_hero_task_state_normalizer_preservation(errors)
     validate_ai_hero_task_live_adoption_gate(errors)
+    validate_ai_raid_regroup_retreat(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
@@ -16015,6 +16067,7 @@ def main() -> int:
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
     print("- strategic AI hero task-state normalizer preservation now proves optional future task boards survive only explicit normalization while old-save absence, malformed input, SaveService boundaries, and save version 9 remain intact")
+    print("- understrength enemy raids now retreat to owned towns, pull garrison units into the host, and emit regroup/retarget events without a save-version bump")
     print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
     print("- overworld terrain now uses authored autotile-ready grammar, structural road layers, renderer hooks, selected object assets, and procedural object fallbacks")
     print("- Ninefold Confluence keeps a 64x64 six-faction, nine-biome, all-neutral-dwelling breadth scenario under validation")
