@@ -2,7 +2,7 @@
 
 Status: implementation evidence.
 
-This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_defense_retask`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, and `strategic_ai_multi_scenario_pressure_coverage` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
+This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, and `strategic_ai_multi_scenario_pressure_coverage` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
 
 Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
@@ -12,6 +12,10 @@ Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_route_progression`.
 - `HeadlessSimulationHarnessRules.build_report(...)` also runs `live_commander_resource_front_route_progression` through repeated `OverworldRules.end_turn(...)` calls.
 - The route case starts Vaska at `(7, 1)` with no stored raid target, lets live AI choose `river_free_company`, records each turn in `route_records`, and requires the route to close before seizure.
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_governor_build_execution`.
+- `HeadlessSimulationHarnessRules.build_report(...)` runs `live_town_governor_builds_and_recruits_through_enemy_turn` through `EnemyTurnRules.run_enemy_turn(...)`.
+- The town-governor case seeds Duskfen Bastion with a bounded Mireclaw treasury, captures the report-only selected build and recruitment projection, then requires the live enemy turn to add the selected building, spend treasury, recruit units, and emit `ai_town_built`, `ai_town_recruited`, and a recruitment destination event.
+- The town-governor case keeps public compact event checks active so build/recruit score fields stay internal while live mutation evidence remains visible.
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_town_defense_retask`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_raid_retasks_to_stabilizing_owned_town` through `OverworldRules.end_turn(...)`.
 - The town-defense case marks Duskfen Bastion as a stabilizing Mireclaw front, starts a strong Vaska raid aimed at `river_free_company`, and requires the raid to retask to `duskfen_bastion` with `town_defense` and `front_stabilization` reason codes.
@@ -48,6 +52,7 @@ Validation evidence:
 - `live_understrength_raid_regroups_at_town`
 - `strategic_ai_live_turn_execution`
 - `strategic_ai_live_route_progression`
+- `strategic_ai_live_town_governor_build_execution`
 - `strategic_ai_live_town_defense_retask`
 - `strategic_ai_live_town_retake_assault`
 - `strategic_ai_live_raid_assault_grouping`
@@ -61,6 +66,13 @@ Validation evidence:
 - `turns_simulated = 10`
 - `assigned_target = true`
 - `seized_target = true`
+- `live_town_governor_builds_and_recruits_through_enemy_turn`
+- `selected_build_id`
+- `built_after_count > built_before_count`
+- `town_build_event_count >= 1`
+- `town_recruit_event_count >= 1`
+- `recruit_destination_event_count >= 1`
+- `ai_town_built`
 - `town_id = duskfen_bastion`
 - `previous_target_id = river_free_company`
 - `town_defense`
@@ -99,6 +111,7 @@ Validation evidence:
 Remaining gaps:
 - This is a deterministic harness fixture for one strategic AI behavior, not a full AI quality claim.
 - This route case proves one long-route resource-front progression fixture, not broad path quality.
+- This town-governor case proves one live Duskfen build/recruit execution fixture, not broad economy planning or final strategic AI quality.
 - This town-defense case proves one stabilizing-front retask fixture, not broad defense rotation.
 - This town-retake case proves one live retake-front battle queue fixture, not broad objective sequencing.
 - This raid-grouping case proves one adjacent support-column consolidation fixture, not a broad multi-hero army board or general grouping planner.
