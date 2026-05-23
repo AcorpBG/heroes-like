@@ -29,6 +29,8 @@ Do not infer product readiness from the completed queue. Completed Phase 2/RMG/p
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
 
+Owner-directed UI art study on 2026-05-23: the overworld, battle, and town interface art gap was audited without changing runtime scenes or manifests. Existing referenced raster/vector assets are present on disk (`1253` checked, `0` missing), but `art/ui` only contains the main-menu backdrop, so the actionable gap is production UI skin art for the three live interface shells. Three generated transparent study sheets were saved under `docs/art-studies/ui/2026-05-23/` and documented in `docs/ui-art-asset-gap-audit-2026-05-23.md`. These are not runtime/source asset ingestion and must not be wired into scenes until a later explicit ingestion slice selects crops, import paths, rollback, and screenshot validation.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:
