@@ -693,6 +693,25 @@ static func execute_prevalidated_route(
 	route_execution["scenario_eval_skipped"] = scenario_eval_skipped
 	route_execution["interaction_dispatch_mode"] = interaction_dispatch_mode
 	route_execution["descriptor_route_fog_reused"] = bool(interaction_result.get("descriptor_route_fog_reused", false))
+	if bool(result.get("ok", false)) and not result.has("post_action_recap"):
+		result = _attach_post_action_recap(
+			result,
+			session,
+			"move",
+			{
+				"from_x": pos.x,
+				"from_y": pos.y,
+				"to_x": final_tile.x,
+				"to_y": final_tile.y,
+				"route": route,
+				"target_context": {},
+				"route_steps": _route_tile_payloads(path.slice(1, reachable_steps + 1)),
+				"planned_destination": _route_tile_payload(destination_tile),
+				"reached_destination": reached_destination,
+			}
+		)
+		post_action_recap_skipped = false
+		route_execution["post_action_recap_skipped"] = false
 	_rules_profile_add_ms("execute_prevalidated_total_ms", execute_started_usec)
 	var rules_profile := _rules_profile_finish()
 	if not rules_profile.is_empty():

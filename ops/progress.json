@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "strategic-ai-live-town-governor-build-execution-20260523-10184",
-  "currentSliceTitle": "Strategic AI Live Town Governor Build Execution Harness",
+  "currentSliceId": "overworld-ambient-audio-runtime-baseline-20260523-10184",
+  "currentSliceTitle": "Overworld Ambient Audio Runtime Baseline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: the shared headless harness now requires strategic_ai_live_town_governor_build_execution, proving Duskfen Bastion live enemy-turn town-governor behavior adds building_slingers_post, spends treasury, recruits unit_blackbranch_cutthroat, emits ai_town_built/ai_town_recruited plus destination events, and keeps public event output leak-free.",
+  "currentSliceNotes": "Implemented AmbientAudio autoload for generated terrain/day/enemy-pressure overworld layers, wired OverworldShell validation sync, added focused ambient audio report/doc and repo validator gate, and preserved prevalidated movement post-action recaps uncovered by smoke validation. Validated with overworld_ambient_audio_runtime_report, validate_repo.py, py_compile, jq empty, and git diff --check; broad overworld_visual_smoke still fails on an older hard-coded terrain art-contract fixture unrelated to this slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T19:05:00Z",
+  "updatedAt": "2026-05-23T18:48:35Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17203,6 +17203,40 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "overworld-ambient-audio-runtime-baseline-20260523-10184",
+      "title": "Overworld Ambient Audio Runtime Baseline",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add a bounded generated ambient audio runtime layer for the overworld map so audio coverage is not limited to battle and UI cues.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/overworld-ambient-audio-runtime-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/overworld_ambient_audio_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "An AmbientAudio autoload can synthesize bounded overworld ambient audio layers on the Master bus from live session terrain/day/threat context.",
+        "OverworldShell syncs the ambient audio service from the active runtime session and exposes validation evidence in overworld snapshots.",
+        "A focused Godot report proves terrain and pressure layers, signature-based restart behavior, validation summaries, and report-only production boundaries."
+      ],
+      "nonGoals": [
+        "No imported final audio assets, music, or mixer mastering.",
+        "No save migration.",
+        "No broad audio direction approval."
+      ],
+      "updatedAt": "2026-05-23T18:48:35Z",
+      "startedAt": "2026-05-23T18:30:00Z",
+      "completedAt": "2026-05-23T18:48:35Z",
+      "notes": "Implemented AmbientAudio autoload for generated terrain/day/enemy-pressure overworld layers, wired OverworldShell validation sync, added focused ambient audio report/doc and repo validator gate, and preserved prevalidated movement post-action recaps uncovered by smoke validation. Validated with overworld_ambient_audio_runtime_report, validate_repo.py, py_compile, jq empty, and git diff --check; broad overworld_visual_smoke still fails on an older hard-coded terrain art-contract fixture unrelated to this slice."
     }
   ],
   "completedImplementationEvidence": [
@@ -22142,8 +22176,8 @@
       "git diff --check"
     ]
   },
-  "active_slice": "strategic-ai-live-town-governor-build-execution-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T19:35:00Z",
+  "active_slice": "overworld-ambient-audio-runtime-baseline-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T18:48:35Z",
   "validationHistory": [
     {
       "id": "strategic-ai-live-town-governor-build-execution-20260523-10184",

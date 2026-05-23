@@ -232,6 +232,7 @@ func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
 	_render_state()
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_done")
+	_sync_overworld_ambient_audio("ready")
 	call_deferred("_complete_deferred_generated_overworld_autosave")
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -859,12 +860,27 @@ func _refresh_with_request(request: Dictionary) -> void:
 	OverworldRules.end_normalized_read_scope(_session)
 	if compact_generated:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
+	_sync_overworld_ambient_audio("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 	_complete_refresh_request(request)
 	_profile_end("refresh", profile_start, {
 		"compact_generated": compact_generated,
 		"request": request.duplicate(true),
 	})
+
+func _sync_overworld_ambient_audio(source: String) -> void:
+	if _session == null:
+		return
+	var record := AmbientAudio.sync_overworld_session(_session, "overworld_shell_%s" % source)
+	_validation_profile["last_ambient_audio"] = {
+		"schema": String(record.get("schema", "")),
+		"cue_id": String(record.get("cue_id", "")),
+		"changed": bool(record.get("changed", false)),
+		"terrain_id": String(record.get("terrain_id", "")),
+		"threat_level": String(record.get("threat_level", "")),
+		"layer_count": int(record.get("layer_count", 0)),
+		"audio_bus": String(record.get("audio_bus", "")),
+	}
 
 func _make_refresh_request(reason: String, phases: Array, include_dirty: bool = true, full_refresh: bool = false) -> Dictionary:
 	_refresh_request_sequence += 1
@@ -6744,8 +6760,12 @@ func validation_snapshot() -> Dictionary:
 		"chrome": _validation_chrome_state(),
 		"debug_overlay": validation_debug_overlay_snapshot(),
 		"placement_debug_overlay": validation_placement_debug_overlay_snapshot(),
+		"ambient_audio": validation_ambient_audio_summary(),
 		"profile": validation_profile_snapshot(),
 	}
+
+func validation_ambient_audio_summary() -> Dictionary:
+	return AmbientAudio.validation_summary()
 
 func _validation_latest_save_summary_snapshot() -> Dictionary:
 	if _validation_uses_compact_save_surface():
