@@ -112,6 +112,10 @@ ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_valid
 ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validation-smoke-harness-report.md"
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_event_animation_state_report.gd"
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_event_animation_state_report.tscn"
+BATTLE_SFX_MANIFEST_PATH = CONTENT_DIR / "battle_sfx_manifest.json"
+BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
+BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
+BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
 BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
 BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH = ROOT / "tests" / "battle_intent_forecast_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
@@ -15264,6 +15268,53 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in content_service_text, errors, f"ContentService.gd is missing unit art token {required_token}")
 
+    ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
+    ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
+    required_battle_audio_ids = (
+        "audio_placeholder_ranged_release",
+        "audio_placeholder_status_apply",
+        "audio_placeholder_melee_release",
+        "audio_placeholder_hit",
+        "audio_placeholder_unit_rout",
+        "audio_placeholder_cast",
+        "audio_placeholder_unit_step",
+        "audio_placeholder_defend",
+        "audio_placeholder_retaliation",
+        "audio_placeholder_retreat_order",
+        "audio_placeholder_surrender_order",
+        "audio_placeholder_turn_ready",
+        "audio_placeholder_status_clear",
+        "audio_placeholder_idle_soft",
+    )
+    if BATTLE_SFX_MANIFEST_PATH.exists():
+        battle_sfx_manifest = json.loads(BATTLE_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(battle_sfx_manifest.get("schema") == "battle_runtime_sfx_manifest_v1", errors, "battle_sfx_manifest.json has the wrong schema")
+        ensure(battle_sfx_manifest.get("final_sound_design") is False, errors, "battle_sfx_manifest.json must not claim final sound design")
+        ensure(battle_sfx_manifest.get("audio_bus") == "Master", errors, "battle_sfx_manifest.json must route battle SFX through Master")
+        battle_sfx_cues = battle_sfx_manifest.get("cues", {})
+        ensure(isinstance(battle_sfx_cues, dict), errors, "battle_sfx_manifest.json cues must be an object")
+        for audio_id in required_battle_audio_ids:
+            cue = battle_sfx_cues.get(audio_id, {}) if isinstance(battle_sfx_cues, dict) else {}
+            ensure(isinstance(cue, dict), errors, f"battle_sfx_manifest.json is missing cue {audio_id}")
+            path_value = str(cue.get("path", ""))
+            ensure(path_value.startswith("res://art/audio/runtime/battle/"), errors, f"battle SFX cue {audio_id} must use the runtime battle audio folder")
+            wav_path = ROOT / path_value.removeprefix("res://")
+            ensure(wav_path.exists(), errors, f"battle SFX asset is missing for {audio_id}: {path_value}")
+            if wav_path.exists():
+                header = wav_path.read_bytes()[:12]
+                ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"battle SFX asset is not a WAV file: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs duration_msec")
+            ensure("volume_db" in cue, errors, f"battle SFX cue {audio_id} needs volume_db")
+    battle_sfx_generator_text = BATTLE_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if BATTLE_SFX_GENERATOR_PATH.exists() else ""
+    for required_token in (
+        "battle_sfx_manifest.json",
+        "SPECS",
+        "write_wav",
+        "wave.open",
+        "Manifest/spec cue mismatch",
+    ):
+        ensure(required_token in battle_sfx_generator_text, errors, f"generate_battle_sfx_assets.py is missing token {required_token}")
+
     battle_board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func validation_unit_art_summary",
@@ -15278,7 +15329,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _vfx_draw_entries",
         "func _register_audio_cue_playback",
         "func _activate_due_audio_cue_playback",
+        "func _play_audio_cue",
+        "func _play_imported_audio_cue",
         "func _play_generated_audio_cue",
+        "func _battle_sfx_manifest_cue",
+        "BATTLE_SFX_MANIFEST_PATH",
+        "imported_asset_count",
+        "generated_fallback_count",
+        "asset_playbacks",
         "STACK_ANIMATION_REACTION_DELAY_MSEC",
         "sequence_delay_msec",
         "animation_frame_index",
@@ -15492,8 +15550,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "death_fall_back",
         "active_vfx_draw_count",
         "active_audio_record_count",
+        "imported_asset_count",
         "generated_waveform_count",
         "scheduled_record_count",
+        "_audio_asset_path_for",
+        "battle_sfx_manifest.json",
         "sequence_delay_msec",
         "started_at_msec",
         "enemy_start <= player_start",
@@ -15542,6 +15603,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "_validate_retaliation_state",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
+    ensure(BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.exists(), errors, "battle-runtime-sfx-asset-layer-report.md is missing")
+    if BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.exists():
+        battle_sfx_doc_text = BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "battle-runtime-sfx-asset-layer-20260523-10184",
+            "battle_runtime_sfx_manifest_v1",
+            "content/battle_sfx_manifest.json",
+            "tools/generate_battle_sfx_assets.py",
+            "imported_asset_count",
+            "generated waveform fallback",
+            "No final sound design",
+        ):
+            ensure(required_token in battle_sfx_doc_text, errors, f"battle-runtime-sfx-asset-layer-report.md is missing token {required_token}")
 
     retaliation_doc_path = ROOT / "docs" / "battle-retaliation-event-presentation-report.md"
     ensure(retaliation_doc_path.exists(), errors, "battle-retaliation-event-presentation-report.md is missing")

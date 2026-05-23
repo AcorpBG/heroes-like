@@ -1,0 +1,93 @@
+{
+  "schema": "battle_runtime_sfx_manifest_v1",
+  "generated_by": "tools/generate_battle_sfx_assets.py",
+  "final_sound_design": false,
+  "audio_bus": "Master",
+  "sample_rate_hz": 22050,
+  "cues": {
+    "audio_placeholder_ranged_release": {
+      "path": "res://art/audio/runtime/battle/ranged_release.wav",
+      "duration_msec": 150,
+      "volume_db": -12.0,
+      "role": "ranged_release"
+    },
+    "audio_placeholder_status_apply": {
+      "path": "res://art/audio/runtime/battle/status_apply.wav",
+      "duration_msec": 190,
+      "volume_db": -13.5,
+      "role": "status_apply"
+    },
+    "audio_placeholder_melee_release": {
+      "path": "res://art/audio/runtime/battle/melee_release.wav",
+      "duration_msec": 120,
+      "volume_db": -11.5,
+      "role": "melee_release"
+    },
+    "audio_placeholder_hit": {
+      "path": "res://art/audio/runtime/battle/hit.wav",
+      "duration_msec": 100,
+      "volume_db": -12.5,
+      "role": "hit"
+    },
+    "audio_placeholder_unit_rout": {
+      "path": "res://art/audio/runtime/battle/unit_rout.wav",
+      "duration_msec": 260,
+      "volume_db": -13.5,
+      "role": "unit_rout"
+    },
+    "audio_placeholder_cast": {
+      "path": "res://art/audio/runtime/battle/cast.wav",
+      "duration_msec": 220,
+      "volume_db": -13.0,
+      "role": "cast"
+    },
+    "audio_placeholder_unit_step": {
+      "path": "res://art/audio/runtime/battle/unit_step.wav",
+      "duration_msec": 80,
+      "volume_db": -16.0,
+      "role": "unit_step"
+    },
+    "audio_placeholder_defend": {
+      "path": "res://art/audio/runtime/battle/defend.wav",
+      "duration_msec": 100,
+      "volume_db": -15.0,
+      "role": "defend"
+    },
+    "audio_placeholder_retaliation": {
+      "path": "res://art/audio/runtime/battle/retaliation.wav",
+      "duration_msec": 130,
+      "volume_db": -12.5,
+      "role": "retaliation"
+    },
+    "audio_placeholder_retreat_order": {
+      "path": "res://art/audio/runtime/battle/retreat_order.wav",
+      "duration_msec": 210,
+      "volume_db": -14.0,
+      "role": "retreat_order"
+    },
+    "audio_placeholder_surrender_order": {
+      "path": "res://art/audio/runtime/battle/surrender_order.wav",
+      "duration_msec": 210,
+      "volume_db": -14.0,
+      "role": "surrender_order"
+    },
+    "audio_placeholder_turn_ready": {
+      "path": "res://art/audio/runtime/battle/turn_ready.wav",
+      "duration_msec": 110,
+      "volume_db": -17.0,
+      "role": "turn_ready"
+    },
+    "audio_placeholder_status_clear": {
+      "path": "res://art/audio/runtime/battle/status_clear.wav",
+      "duration_msec": 150,
+      "volume_db": -16.0,
+      "role": "status_clear"
+    },
+    "audio_placeholder_idle_soft": {
+      "path": "res://art/audio/runtime/battle/idle_soft.wav",
+      "duration_msec": 70,
+      "volume_db": -23.0,
+      "role": "idle_soft"
+    }
+  }
+}

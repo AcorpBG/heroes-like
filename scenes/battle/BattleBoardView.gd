@@ -73,6 +73,7 @@ const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
 const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
 const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
 const BATTLE_AUDIO_BUS := "Master"
+const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_CAMERA_MAX_OFFSET_PX := 8.0
 
 var _session = null
@@ -96,6 +97,8 @@ var _latest_animation_serial_by_stack: Dictionary = {}
 var _stack_animation_cue_playback_records: Dictionary = {}
 var _stack_animation_audio_playback_records: Dictionary = {}
 var _active_audio_players: Array = []
+var _battle_sfx_manifest: Dictionary = {}
+var _battle_sfx_manifest_loaded := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -584,12 +587,16 @@ func validation_audio_playback_summary() -> Dictionary:
 	var records := {}
 	var audio_cue_count := 0
 	var generated_waveform_count := 0
+	var imported_asset_count := 0
+	var generated_fallback_count := 0
 	var scheduled_record_count := 0
 	for battle_id in _stack_animation_audio_playback_records.keys():
 		var record: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {}) if _stack_animation_audio_playback_records.get(battle_id, {}) is Dictionary else {}
 		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
 		audio_cue_count += audio_ids.size()
 		generated_waveform_count += int(record.get("generated_waveform_count", 0))
+		imported_asset_count += int(record.get("imported_asset_count", 0))
+		generated_fallback_count += int(record.get("generated_fallback_count", 0))
 		if bool(record.get("scheduled", false)):
 			scheduled_record_count += 1
 		records[String(battle_id)] = record.duplicate(true)
@@ -597,9 +604,13 @@ func validation_audio_playback_summary() -> Dictionary:
 		"active_audio_record_count": records.size(),
 		"audio_cue_count": audio_cue_count,
 		"generated_waveform_count": generated_waveform_count,
+		"imported_asset_count": imported_asset_count,
+		"generated_fallback_count": generated_fallback_count,
 		"scheduled_record_count": scheduled_record_count,
 		"active_player_count": _active_audio_player_count(),
 		"audio_bus": BATTLE_AUDIO_BUS,
+		"sfx_manifest_path": BATTLE_SFX_MANIFEST_PATH,
+		"sfx_manifest_loaded": _battle_sfx_manifest_loaded,
 		"muted": SettingsService.master_volume_percent() <= 0,
 		"active_records": records,
 	}
@@ -1940,7 +1951,11 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 			"cue_id": String(cue_record.get("cue_id", "")),
 			"selected_audio_cue_ids": audio_ids.duplicate(true),
 			"generated_waveform_count": 0,
+			"imported_asset_count": 0,
+			"generated_fallback_count": 0,
 			"generated_waveforms": [],
+			"imported_assets": [],
+			"asset_playbacks": [],
 			"started_at_msec": started_at,
 			"expires_at_msec": int(cue_record.get("expires_at_msec", started_at + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 			"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
@@ -1950,13 +1965,21 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		}
 		return
 	var generated_records := []
+	var imported_records := []
+	var asset_records := []
 	for audio_id_value in audio_ids:
 		var audio_id := String(audio_id_value).strip_edges()
 		if audio_id == "":
 			continue
-		var generated := _play_generated_audio_cue(audio_id, battle_id, int(cue_record.get("serial", 0)))
-		if not generated.is_empty():
-			generated_records.append(generated)
+		var playback := _play_audio_cue(audio_id, battle_id, int(cue_record.get("serial", 0)))
+		if playback.is_empty():
+			continue
+		asset_records.append(playback)
+		match String(playback.get("source", "")):
+			"imported_wav":
+				imported_records.append(playback)
+			_:
+				generated_records.append(playback)
 	_stack_animation_audio_playback_records[battle_id] = {
 		"battle_id": battle_id,
 		"event_id": String(cue_record.get("event_id", "")),
@@ -1964,13 +1987,74 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		"cue_id": String(cue_record.get("cue_id", "")),
 		"selected_audio_cue_ids": audio_ids.duplicate(true),
 		"generated_waveform_count": generated_records.size(),
+		"imported_asset_count": imported_records.size(),
+		"generated_fallback_count": generated_records.size(),
 		"generated_waveforms": generated_records,
+		"imported_assets": imported_records,
+		"asset_playbacks": asset_records,
 		"started_at_msec": int(cue_record.get("started_at_msec", Time.get_ticks_msec())),
 		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 		"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"muted": SettingsService.master_volume_percent() <= 0,
 		"scheduled": false,
+	}
+
+func _play_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
+	var imported := _play_imported_audio_cue(audio_id, battle_id, serial)
+	if not imported.is_empty():
+		return imported
+	var generated := _play_generated_audio_cue(audio_id, battle_id, serial)
+	if not generated.is_empty():
+		generated["source"] = "generated_waveform"
+	return generated
+
+func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
+	var cue := _battle_sfx_manifest_cue(audio_id)
+	if cue.is_empty():
+		return {}
+	var path := String(cue.get("path", "")).strip_edges()
+	if path == "":
+		return {}
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is AudioStream:
+			stream = resource
+	if stream == null and FileAccess.file_exists(path):
+		var wav_stream := AudioStreamWAV.load_from_file(path)
+		if wav_stream is AudioStream:
+			stream = wav_stream
+	if stream == null:
+		return {}
+	var duration_msec := int(cue.get("duration_msec", 120))
+	var stream_length := stream.get_length()
+	if stream_length > 0.0:
+		duration_msec = maxi(1, int(ceil(stream_length * 1000.0)))
+	var player := AudioStreamPlayer.new()
+	player.stream = stream
+	player.bus = BATTLE_AUDIO_BUS
+	player.volume_db = float(cue.get("volume_db", -12.0))
+	add_child(player)
+	_active_audio_players.append({
+		"player": player,
+		"battle_id": battle_id,
+		"audio_id": audio_id,
+		"source": "imported_wav",
+		"asset_path": path,
+		"serial": serial,
+		"expires_at_msec": int(Time.get_ticks_msec()) + duration_msec + 180,
+	})
+	_trim_audio_players()
+	player.play()
+	return {
+		"audio_id": audio_id,
+		"source": "imported_wav",
+		"asset_path": path,
+		"role": String(cue.get("role", "")),
+		"duration_msec": duration_msec,
+		"volume_db": float(cue.get("volume_db", -12.0)),
+		"player_created": true,
 	}
 
 func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
@@ -2008,6 +2092,26 @@ func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int)
 		"frame_count": frame_count,
 		"player_created": true,
 	}
+
+func _battle_sfx_manifest_cue(audio_id: String) -> Dictionary:
+	_load_battle_sfx_manifest()
+	var cues: Dictionary = _battle_sfx_manifest.get("cues", {}) if _battle_sfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(audio_id, {}) if cues.get(audio_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_battle_sfx_manifest() -> void:
+	if _battle_sfx_manifest_loaded:
+		return
+	_battle_sfx_manifest_loaded = true
+	_battle_sfx_manifest = {}
+	if not FileAccess.file_exists(BATTLE_SFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(BATTLE_SFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_battle_sfx_manifest = parsed
 
 func _push_generated_audio_frames(playback: AudioStreamGeneratorPlayback, spec: Dictionary, frame_count: int) -> void:
 	var frequency := float(spec.get("frequency_hz", 440.0))

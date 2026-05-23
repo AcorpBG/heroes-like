@@ -63,6 +63,8 @@ Battle death animation retention added on 2026-05-23: `BattleBoardView` now keep
 
 Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active battle audio cue ids into short generated `AudioStreamGenerator` waveforms on the Master bus, with per-cue timbre/duration specs for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle cues. The board exposes `audio_playback` validation records and rate-limits active generated players. `tests/battle_event_animation_state_report.tscn` proves ranged/status events synthesize audio cue waveforms and expire with playback. This is runtime placeholder audio playback, not final sound design, imported audio assets, music, ambience, mixer polish, or combat balance tuning.
 
+Battle runtime SFX asset layer added on 2026-05-23: `content/battle_sfx_manifest.json` now maps every current battle audio cue id to committed original WAV assets under `art/audio/runtime/battle/`, generated reproducibly by `tools/generate_battle_sfx_assets.py`. `BattleBoardView` prefers manifest-backed imported WAV streams and preserves generated waveform fallback when an asset is absent or unloadable, while `tests/battle_event_animation_state_report.tscn` proves the ranged/status runtime case reports imported SFX assets and lifecycle expiry. This is a runtime SFX asset-loading layer, not final sound design, mixer mastering, platform audio certification, music, ambience, UI audio, or combat balance tuning.
+
 UI audio cue runtime baseline added on 2026-05-23: `UiAudio` is now a generated-audio autoload that scans the scene tree, attaches to common Godot controls, and synthesizes `ui_click`, `ui_select`, `ui_adjust`, `ui_tab`, `ui_confirm`, and `ui_invalid` cue waveforms on the Master bus while preserving bounded validation records and mute state. `tests/ui_audio_cue_runtime_report.tscn` proves Button, OptionButton, HSlider, TabContainer, ItemList, confirm, and invalid-action cues produce playback records. This is runtime placeholder UI audio, not final sound design, imported UI audio assets, music, ambience, or mixer polish.
 
 Overworld ambient audio runtime baseline added on 2026-05-23: `AmbientAudio` is now a generated-audio autoload that synthesizes bounded overworld ambience from live session terrain, dominant map terrain, day, hero position, and enemy pressure on the Master bus. `OverworldShell` syncs the service during ready/refresh and exposes validation summaries, while `tests/overworld_ambient_audio_runtime_report.tscn` proves terrain ambience, pressure and day-pulse layers, signature-based non-restart behavior, and shell snapshot evidence. This is runtime placeholder map ambience, not final sound design, imported ambient stems, music, or mixer polish.
@@ -5442,6 +5444,36 @@ completionCriteria:
 nonGoals:
 - No final imported audio assets.
 - No music, ambience, UI audio, mixer polish, camera, VFX asset, or combat balance tuning.
+
+Completed implementation slice:
+
+id: `battle-runtime-sfx-asset-layer-20260523-10184`
+phase: `phase-5-playable-alpha-baseline`
+purpose: Add committed runtime WAV SFX assets for battle cue ids and make board playback prefer those assets before generated fallback.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/battle-audio-cue-playback-report.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `content/battle_sfx_manifest.json`
+- `art/audio/runtime/battle/*.wav`
+- `tools/generate_battle_sfx_assets.py`
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-runtime-sfx-asset-layer-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Battle cue ids have deterministic original WAV assets listed in `content/battle_sfx_manifest.json`.
+- `BattleBoardView` prefers manifest-backed imported `AudioStream` assets and preserves generated waveform fallback.
+- Validation summaries expose imported asset counts, asset paths, fallback counts, player caps, bus, mute state, and lifecycle expiry.
+- Focused battle event report and repository validation gates pass.
+nonGoals:
+- No final sound design approval.
+- No music, ambience, UI audio, or mixer mastering.
+- No combat balance or encounter tuning.
+- No broad audio asset import pipeline redesign.
 
 Completed implementation slice:
 
