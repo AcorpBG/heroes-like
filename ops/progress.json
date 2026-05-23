@@ -3,8 +3,8 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-exit-animation-handoff-20260523-10184",
-  "currentSliceTitle": "Battle Exit Animation Handoff",
+  "currentSliceId": "battle-movement-token-motion-20260523-10184",
+  "currentSliceTitle": "Battle Movement Token Motion",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -16167,6 +16167,42 @@
         "No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning.",
         "No save migration or durable battle-state replacement."
       ]
+    },
+    {
+      "id": "battle-movement-token-motion-20260523-10184",
+      "title": "Battle Movement Token Motion",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Use resolved movement event playback to present the stack token traveling along the source-to-destination path instead of snapping immediately to the destination cell.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-movement-token-motion-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active battle_unit_move playback records compute a stack presentation center from from_q/from_r, to_q/to_r, and cue playback progress.",
+        "Stack token drawing, labels, health/count overlays, and hit shapes use the movement presentation center during normal playback.",
+        "Focused validation proves a real move action presents the token in transit while retaining move_path_step and path-ghost VFX evidence."
+      ],
+      "nonGoals": [
+        "No final authored motion curves, per-unit locomotion timing, camera work, imported VFX/audio assets, or combat balance tuning."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -19262,6 +19298,43 @@
         "git diff --check"
       ],
       "remainingGap": "This closes retreat/surrender exit-action presentation handoff; final authored animation timing, camera work, imported VFX/audio assets, and combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-movement-token-motion-20260523-10184",
+      "title": "Battle Movement Token Motion",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-movement-token-motion-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-movement-token-motion-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now computes a movement presentation center for active battle_unit_move playback records using source and destination hexes plus cue progress.",
+        "Stack token drawing, health bar, count badge, caption, and hit shapes now use the movement presentation center while the move playback record is active.",
+        "Fast and reduced-motion animation modes snap movement presentation to the destination, while normal playback interpolates along the resolved event path.",
+        "The focused battle event animation report now proves a real move action keeps move_path_step, draws the path ghost, and presents the player stack in transit instead of immediately at the destination."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This closes runtime token motion for resolved battle movement events; final authored motion curves, per-unit locomotion timing, camera work, imported VFX/audio, and combat balance remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -20138,10 +20211,23 @@
         "git diff --check"
       ],
       "summary": "Focused battle event animation report passed with retreat and surrender exit snapshots proving board-rendered retreat_withdraw_column and surrender_stand_down before terminal routing."
+    },
+    {
+      "id": "battle-movement-token-motion-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with movement token presentation proving the stack center is in transit along the event path while move_path_step and path-ghost VFX remain active."
     }
   ],
   "lastValidation": {
-    "id": "battle-exit-animation-handoff-20260523-10184",
+    "id": "battle-movement-token-motion-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
@@ -20151,12 +20237,12 @@
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with retreat and surrender exit snapshots proving board-rendered retreat_withdraw_column and surrender_stand_down before terminal routing; full repository validation gates passed."
+    "summary": "Focused battle event animation report passed with movement token presentation proving the stack center is in transit along the event path while move_path_step and path-ghost VFX remain active."
   },
   "active_slice": {
-    "id": "battle-exit-animation-handoff-20260523-10184",
+    "id": "battle-movement-token-motion-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: retreat and surrender actions now preserve pre-resolution animation snapshots, render them through the battle board, and delay terminal routing briefly while inputs are locked."
+    "note": "Completed: battle movement playback now presents the visible stack token in transit along the resolved event path instead of snapping immediately to the destination."
   }
 }

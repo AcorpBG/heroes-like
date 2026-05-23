@@ -415,9 +415,14 @@ func validation_unit_art_summary() -> Dictionary:
 	var stack_entries := []
 	var loaded_count := 0
 	var missing := []
+	var stack_cells := _stack_cells()
+	var hex_layout := _current_hex_layout()
 	for stack in _all_visible_stacks():
 		if not (stack is Dictionary):
 			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		var cell: Vector2i = stack_cells.get(battle_id, Vector2i(-1, -1))
+		var presentation := _stack_presentation_summary(stack, cell, hex_layout)
 		var unit_id := String(stack.get("unit_id", ""))
 		var art := ContentService.get_unit_art(unit_id)
 		var path := String(art.get("battle_icon", ""))
@@ -432,15 +437,26 @@ func validation_unit_art_summary() -> Dictionary:
 		else:
 			missing.append(unit_id)
 		stack_entries.append({
-			"battle_id": String(stack.get("battle_id", "")),
+			"battle_id": battle_id,
 			"unit_id": unit_id,
 			"battle_icon": path,
 			"loaded": loaded,
 			"animation_sheet": animation_path,
 			"animation_loaded": animation_loaded,
 			"animation_state": _animation_state_for_stack(stack),
+			"cell_q": cell.x,
+			"cell_r": cell.y,
+			"presentation_x": presentation.get("presentation_x", 0.0),
+			"presentation_y": presentation.get("presentation_y", 0.0),
+			"presentation_motion_active": bool(presentation.get("presentation_motion_active", false)),
+			"presentation_motion_event_id": String(presentation.get("presentation_motion_event_id", "")),
+			"presentation_motion_from_q": int(presentation.get("presentation_motion_from_q", -1)),
+			"presentation_motion_from_r": int(presentation.get("presentation_motion_from_r", -1)),
+			"presentation_motion_to_q": int(presentation.get("presentation_motion_to_q", -1)),
+			"presentation_motion_to_r": int(presentation.get("presentation_motion_to_r", -1)),
+			"presentation_motion_progress": presentation.get("presentation_motion_progress", 1.0),
 			"alive_count": _stack_alive_count(stack),
-			"event_playback_visible": _stack_alive_count(stack) <= 0 and not _animation_playback_record_for_stack(String(stack.get("battle_id", ""))).is_empty(),
+			"event_playback_visible": _stack_alive_count(stack) <= 0 and not _animation_playback_record_for_stack(battle_id).is_empty(),
 		})
 	return {
 		"visible_stack_count": stack_entries.size(),
@@ -1297,7 +1313,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		if not stack_cells.has(battle_id):
 			continue
 		var cell: Vector2i = stack_cells.get(battle_id)
-		var center := _hex_center(cell, hex_layout)
+		var center := _stack_presentation_center(stack, cell, hex_layout)
 		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
@@ -1333,6 +1349,71 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
+
+func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Vector2:
+	var motion := _stack_presentation_motion(stack, cell, hex_layout)
+	if motion.is_empty():
+		return _hex_center(cell, hex_layout)
+	return Vector2(float(motion.get("center_x", 0.0)), float(motion.get("center_y", 0.0)))
+
+func _stack_presentation_summary(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Dictionary:
+	var center := _hex_center(cell, hex_layout)
+	var summary := {
+		"presentation_x": snappedf(center.x, 0.01),
+		"presentation_y": snappedf(center.y, 0.01),
+		"presentation_motion_active": false,
+		"presentation_motion_event_id": "",
+		"presentation_motion_from_q": -1,
+		"presentation_motion_from_r": -1,
+		"presentation_motion_to_q": -1,
+		"presentation_motion_to_r": -1,
+		"presentation_motion_progress": 1.0,
+	}
+	var motion := _stack_presentation_motion(stack, cell, hex_layout)
+	if motion.is_empty():
+		return summary
+	summary["presentation_x"] = motion.get("center_x", summary.get("presentation_x"))
+	summary["presentation_y"] = motion.get("center_y", summary.get("presentation_y"))
+	summary["presentation_motion_active"] = true
+	summary["presentation_motion_event_id"] = String(motion.get("event_id", ""))
+	summary["presentation_motion_from_q"] = int(motion.get("from_q", -1))
+	summary["presentation_motion_from_r"] = int(motion.get("from_r", -1))
+	summary["presentation_motion_to_q"] = int(motion.get("to_q", -1))
+	summary["presentation_motion_to_r"] = int(motion.get("to_r", -1))
+	summary["presentation_motion_progress"] = motion.get("progress", 0.0)
+	return summary
+
+func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Dictionary:
+	var battle_id := String(stack.get("battle_id", ""))
+	var record := _animation_playback_record_for_stack(battle_id)
+	if String(record.get("event_id", "")) != "battle_unit_move":
+		return {}
+	var from_cell := Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))
+	var to_cell := Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1)))
+	if not _cell_in_bounds(from_cell) or not _cell_in_bounds(to_cell):
+		return {}
+	if to_cell != cell:
+		return {}
+	var cue_record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+	var progress := 1.0
+	if not cue_record.is_empty():
+		progress = _cue_playback_progress(cue_record)
+		var mode := String(cue_record.get("mode", AnimationCueCatalogScript.MODE_NORMAL))
+		if mode == AnimationCueCatalogScript.MODE_FAST or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
+			progress = 1.0
+	var from_center := _hex_center(from_cell, hex_layout)
+	var to_center := _hex_center(to_cell, hex_layout)
+	var center := from_center.lerp(to_center, clampf(progress, 0.0, 1.0))
+	return {
+		"event_id": String(record.get("event_id", "")),
+		"from_q": from_cell.x,
+		"from_r": from_cell.y,
+		"to_q": to_cell.x,
+		"to_r": to_cell.y,
+		"center_x": snappedf(center.x, 0.01),
+		"center_y": snappedf(center.y, 0.01),
+		"progress": snappedf(progress, 0.001),
+	}
 
 func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	for entry in _vfx_draw_entries(hex_layout, stack_cells):
