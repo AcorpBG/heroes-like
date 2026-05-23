@@ -42,6 +42,7 @@ const ANIMATION_STATE_BY_EVENT := {
 	"battle_unit_death": "death_rout_remove",
 	"battle_unit_cast": "cast_support_anchor",
 	"battle_status_applied": "status_applied",
+	"battle_status_expired": "status_expired",
 	"battle_unit_defend": "defend_brace",
 	"battle_retaliation": "retaliation_release",
 	"battle_unit_retreat": "retreat_withdraw_column",
@@ -52,6 +53,7 @@ const ANIMATION_STATE_PRIORITY := {
 	"retreat_withdraw_column": 95,
 	"surrender_stand_down": 95,
 	"retaliation_release": 86,
+	"status_expired": 85,
 	"status_applied": 84,
 	"hit_stagger": 80,
 	"melee_windup_release": 60,
@@ -4946,6 +4948,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		"player"
 	)
 	var message = String(resolution.get("message", ""))
+	var animation_resolution: Dictionary = resolution.duplicate(true)
 	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
@@ -4985,6 +4988,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("cleanse_effect_ids", [])
 			)
+			animation_resolution["cleansed_effect_count"] = cleansed
 			if cleansed > 0:
 				message += " %s sheds %d pressure effect%s." % [
 					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
@@ -5021,7 +5025,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	_mark_spell_animation_states(session.battle, active_stack, resolution)
+	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -5590,6 +5594,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	session.battle["enemy_hero"] = resolution.get("hero", session.battle.get("enemy_hero", {}))
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
 	var message = String(resolution.get("message", ""))
+	var animation_resolution: Dictionary = resolution.duplicate(true)
 	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
@@ -5629,6 +5634,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("cleanse_effect_ids", [])
 			)
+			animation_resolution["cleansed_effect_count"] = cleansed
 			if cleansed > 0:
 				message += " %s sheds %d pressure effect%s." % [
 					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
@@ -5665,7 +5671,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	_mark_spell_animation_states(session.battle, active_stack, resolution)
+	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -7499,11 +7505,14 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		var stack = stacks[index]
 		if not (stack is Dictionary):
 			continue
+		var expired_effect_count := _expired_stack_effect_count(stack, round_number)
 		stack = SpellRulesScript.purge_expired_stack_effects(stack, round_number)
 		stack["defending"] = false
 		stack["retaliations_left"] = int(stack.get("retaliations", 1))
 		stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
 		stacks[index] = stack
+		if expired_effect_count > 0:
+			_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), "battle_status_expired")
 	battle["stacks"] = stacks
 	_sync_occupied_hexes(battle)
 	_apply_round_pressure_shifts(battle)
@@ -7913,6 +7922,15 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 		stacks[index] = stack
 		break
 	battle["stacks"] = stacks
+
+static func _expired_stack_effect_count(stack: Dictionary, round_number: int) -> int:
+	var expired := 0
+	var normalized_stack := SpellRulesScript.normalize_stack_effects(stack.duplicate(true))
+	var effects: Array = normalized_stack.get("effects", []) if normalized_stack.get("effects", []) is Array else []
+	for effect in effects:
+		if effect is Dictionary and int(effect.get("expires_after_round", 0)) < round_number:
+			expired += 1
+	return expired
 
 static func _cleanse_stack_effects(battle: Dictionary, battle_id: String, effect_ids: Variant) -> int:
 	var cleanse_ids := []
@@ -10895,8 +10913,13 @@ static func _mark_spell_animation_states(battle: Dictionary, caster_stack: Dicti
 		"damage":
 			var post_damage_effect = resolution.get("post_damage_effect", {})
 			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")))
-		"effect", "recover_effect", "cleanse_effect":
+		"effect", "recover_effect":
 			_mark_stack_animation_event(battle, target_id, "battle_status_applied", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
+		"cleanse_effect":
+			if int(resolution.get("cleansed_effect_count", 0)) > 0:
+				_mark_stack_animation_event(battle, target_id, "battle_status_expired", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
+			else:
+				_mark_stack_animation_event(battle, target_id, "battle_status_applied", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
 
 static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, event_id: String, context: Dictionary = {}) -> void:
 	if battle.is_empty() or battle_id == "":

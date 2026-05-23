@@ -26,6 +26,8 @@ func _run() -> void:
 	await _validate_ranged_status_state()
 	_validate_death_state()
 	await _validate_spell_cast_state()
+	await _validate_status_cleanse_state()
+	_validate_status_round_expiry_state()
 	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
@@ -265,6 +267,61 @@ func _validate_spell_cast_state() -> void:
 	case_payload["presentation_motion_count"] = motion_count
 	case_payload["presentation_motion_roles"] = motion_roles
 	_report["cases"]["spell_cast"] = case_payload
+
+func _validate_status_cleanse_state() -> void:
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	session.battle["player_commander_state"] = _spellcaster_state(["spell_prism_bastion"])
+	_set_stack_effects(session.battle, "player_0", [_status_effect("status_staggered", "Staggered", 3)])
+	var result := BattleRulesScript.cast_player_spell(session, "spell_prism_bastion")
+	_expect_ok("status cleanse spell action", result)
+	var state := _state_for(session, "player_0")
+	_expect_equal("status cleanse animation state", state, "status_expired")
+	_expect_event("status cleanse queue", session.battle, "player_0", "battle_status_expired", "status_expired")
+	var player_stack := _stack_by_id(session.battle, "player_0")
+	if _stack_has_effect(player_stack, "status_staggered"):
+		_error("Status cleanse did not remove the staggered effect: %s" % player_stack)
+	await get_tree().create_timer(0.08).timeout
+	var board_summary := _board_summary_for_session(session)
+	var observed_states := _observed_animation_states(board_summary)
+	_expect_equal("status cleanse board state", String(observed_states.get("player_0", "")), "status_expired")
+	var cleansed_stack := _summary_stack_entry(board_summary, "player_0")
+	_expect_equal("status cleanse presentation role", String(cleansed_stack.get("presentation_motion_role", "")), "status_clear")
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var clear_vfx := _vfx_entry_for(vfx_playback, "status_clear")
+	_expect_equal("status cleanse vfx cue", String(clear_vfx.get("cue_id", "")), "vfx_placeholder_status_clear")
+	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
+	var clear_audio := _audio_record_for(audio_playback, "player_0")
+	_expect_array_contains("status cleanse audio cue", clear_audio.get("selected_audio_cue_ids", []), "audio_placeholder_status_clear")
+	var camera_playback: Dictionary = board_summary.get("camera_playback", {}) if board_summary.get("camera_playback", {}) is Dictionary else {}
+	var focus_counts: Dictionary = camera_playback.get("focus_kind_counts", {}) if camera_playback.get("focus_kind_counts", {}) is Dictionary else {}
+	if int(focus_counts.get("status", 0)) < 1:
+		_error("Status cleanse did not create a status camera focus record: %s" % camera_playback)
+	_report["cases"]["status_cleanse"] = {
+		"state": state,
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_states": observed_states,
+		"board_stack": cleansed_stack,
+		"board_vfx": vfx_playback,
+		"board_audio": audio_playback,
+		"board_camera": camera_playback,
+	}
+
+func _validate_status_round_expiry_state() -> void:
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	_set_stack_effects(session.battle, "player_0", [_status_effect("status_harried", "Harried", 1)])
+	BattleRulesScript.advance_turn(session.battle)
+	var state := _state_for(session, "player_0")
+	_expect_equal("status round expiry animation state", state, "status_expired")
+	_expect_event("status round expiry queue", session.battle, "player_0", "battle_status_expired", "status_expired")
+	var player_stack := _stack_by_id(session.battle, "player_0")
+	if _stack_has_effect(player_stack, "status_harried"):
+		_error("Round expiry did not remove harried effect: %s" % player_stack)
+	_report["cases"]["status_round_expiry"] = {
+		"state": state,
+		"round": int(session.battle.get("round", 0)),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"events": BattleRulesScript.animation_event_states(session.battle),
+	}
 
 func _validate_exit_action_state(action_id: String, event_id: String, expected_state: String) -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
@@ -546,15 +603,45 @@ func _stack(unit_id: String, side: String, index: int, battle_id: String, count:
 	stack["hex"] = {"q": q, "r": r}
 	return stack
 
-func _spellcaster_state() -> Dictionary:
+func _spellcaster_state(known_spell_ids: Array = ["spell_cinder_burst"]) -> Dictionary:
 	return {
 		"name": "Report Caster",
 		"command": {"power": 2, "knowledge": 8},
 		"spellbook": {
-			"known_spell_ids": ["spell_cinder_burst"],
+			"known_spell_ids": known_spell_ids,
 			"mana": {"current": 40, "max": 40},
 		},
 	}
+
+func _set_stack_effects(battle: Dictionary, battle_id: String, effects: Array) -> void:
+	var stacks: Array = battle.get("stacks", []) if battle.get("stacks", []) is Array else []
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			stack["effects"] = effects.duplicate(true)
+			stacks[index] = stack
+			battle["stacks"] = stacks
+			return
+	_error("Missing stack %s while setting status effects." % battle_id)
+
+func _status_effect(effect_id: String, label: String, expires_after_round: int) -> Dictionary:
+	return {
+		"effect_id": effect_id,
+		"label": label,
+		"kind": effect_id,
+		"amount": 1,
+		"modifiers": {"initiative": -1},
+		"expires_after_round": expires_after_round,
+		"source_type": "battle_event_animation_state_report",
+		"source_id": effect_id,
+		"spell_id": "",
+	}
+
+func _stack_has_effect(stack: Dictionary, effect_id: String) -> bool:
+	for effect in stack.get("effects", []):
+		if effect is Dictionary and String(effect.get("effect_id", "")) == effect_id:
+			return true
+	return false
 
 func _stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
 	return BattleRulesScript._get_stack_by_id(battle, battle_id)
