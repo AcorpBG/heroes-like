@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-animation-runtime-cue-adoption-20260523-10184",
-  "currentSliceTitle": "Unit Animation Runtime Cue Adoption",
+  "currentSliceId": "unit-animation-visual-qa-contact-sheet-20260523-10184",
+  "currentSliceTitle": "Unit Animation Visual QA Contact Sheet Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: generated unit animation sheets are cue-aligned, validated by ContentService, and consumed by battle runtime token drawing.",
+  "currentSliceNotes": "Completed: generated unit animation sheets now pass full-sheet visual fingerprint uniqueness, nearest-neighbor diagnostics, and contact-sheet artifact generation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T11:00:02Z",
+  "updatedAt": "2026-05-23T11:06:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15303,6 +15303,55 @@
         "tests/unit_art_manifest_report.gd now validates battle runtime animation sheet loading in addition to static battle icon, overworld icon, and town portrait loading.",
         "tests/validate_repo.py gates the cue alignment, ContentService animation API, BattleBoardView animation drawing hook, and focused report tokens."
       ]
+    },
+    {
+      "id": "unit-animation-visual-qa-contact-sheet-20260523-10184",
+      "title": "Unit Animation Visual QA Contact Sheet Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "purpose": "Strengthen generated battle troop animation sheet visual QA beyond byte hashes by adding contact-sheet output, full-sheet visual fingerprints, and nearest-neighbor diagnostics.",
+      "implementationTargets": [
+        "tests/unit_animation_manifest_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored unit animation sprite sheet still loads and passes state coverage, dimension, non-empty frame, and frame-variation checks.",
+        "Every generated animation sprite sheet has a unique full-sheet visual fingerprint.",
+        "The report records nearest visual neighbors and writes a full-roster animation contact sheet for review.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No copyrighted external art import.",
+        "No final hand-painted unit art or authored animation direction approval claim.",
+        "No full battle event playback timeline system in this slice."
+      ],
+      "startedAt": "2026-05-23T11:06:50Z",
+      "updatedAt": "2026-05-23T11:06:50Z",
+      "notes": "Completed: all 103 authored units now pass generated battle animation sheet visual-fingerprint uniqueness checks, with nearest-neighbor diagnostics and a full-roster contact sheet artifact.",
+      "completedAt": "2026-05-23T11:06:50Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_animation_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit animation manifest report passed with 103 loaded sheets, 103 unique byte hashes, 103 unique visual fingerprints, 14 cue-matched states, and contact sheet artifact output.",
+      "evidenceHistory": [
+        "tests/unit_animation_manifest_report.tscn now writes res://.artifacts/unit_animation_manifest_report/battle_troop_animation_contact_sheet.png for full-roster generated animation review.",
+        "The report computes full-sheet visual fingerprints for every generated unit animation sprite sheet and passed with unique_sprite_sheet_visual_fingerprint_count=103.",
+        "The report records nearest_visual_neighbor diagnostics so closest generated animation sheet pairs remain visible during review.",
+        "tests/validate_repo.py gates the visual fingerprint, nearest-neighbor, and contact-sheet report tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17707,6 +17756,43 @@
         "git diff --check"
       ],
       "remainingGap": "This proves generated assets are byte-unique, visually non-empty, and composite-fingerprint unique; final hand-painted art direction and animation sprite sheets remain outside this slice."
+    },
+    {
+      "id": "unit-animation-visual-qa-contact-sheet-20260523-10184",
+      "title": "Unit Animation Visual QA Contact Sheet Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T11:06:50Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_animation_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-animation-visual-qa-contact-sheet-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_animation_manifest_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/unit_animation_manifest_report/battle_troop_animation_contact_sheet.png",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_animation_manifest_report.tscn now writes a full-roster battle troop animation contact sheet under .artifacts/unit_animation_manifest_report/.",
+        "The report passed with sprite_sheet_loaded_count=103, unique_sprite_sheet_hash_count=103, and unique_sprite_sheet_visual_fingerprint_count=103.",
+        "The report records nearest_visual_neighbor diagnostics for the closest generated animation sheet pair.",
+        "tests/validate_repo.py gates the animation report's visual fingerprint, nearest-neighbor, and contact-sheet tokens."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_animation_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves generated animation sheets are loadable, byte-unique, and full-sheet visual-fingerprint unique with a review artifact; final hand-painted animation direction remains outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18425,13 +18511,26 @@
         "git diff --check"
       ],
       "summary": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in."
+    },
+    {
+      "id": "unit-animation-visual-qa-contact-sheet-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T11:06:50Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_animation_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 103 generated unit animation sheets passed full-sheet visual-fingerprint uniqueness and contact-sheet artifact generation; repo validation passed with the strengthened gate wired in."
     }
   ],
-  "lastValidation": "Cue-aligned unit animation report passed with 103 sheets, 14 cue-matched states, and 103 unique sheet hashes; unit art runtime report passed with battle animation sheets loaded for visible stacks; unit production readiness and repository validation passed.",
+  "lastValidation": "Unit animation visual-QA report passed with 103 loaded sheets, 103 unique byte hashes, 103 unique visual fingerprints, 14 cue-matched states, nearest-neighbor diagnostics, and contact-sheet artifact output; repository validation passed.",
   "active_slice": {
-    "id": "unit-animation-runtime-cue-adoption-20260523-10184",
+    "id": "unit-animation-visual-qa-contact-sheet-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: generated unit animation sheets are cue-aligned, validated by ContentService, and consumed by battle runtime token drawing."
+    "note": "Completed: generated unit animation sheets now pass full-sheet visual fingerprint uniqueness, nearest-neighbor diagnostics, and contact-sheet artifact generation."
   }
 }

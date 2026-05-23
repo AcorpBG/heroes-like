@@ -7,6 +7,10 @@ const EXPECTED_SCHEMA_ID := "unit_animation_manifest_v1"
 const EXPECTED_GENERATOR := "deterministic_unit_animation_assets_v1"
 const EXPECTED_FRAME_SIZE := Vector2i(64, 64)
 const EXPECTED_FRAMES_PER_STATE := 4
+const CONTACT_THUMB_SIZE := Vector2i(64, 224)
+const CONTACT_COLUMNS := 8
+const CONTACT_SHEET_FILE := "battle_troop_animation_contact_sheet.png"
+const VISUAL_FINGERPRINT_BITS := 64
 const REQUIRED_STATE_FAMILIES := [
 	"idle",
 	"ready",
@@ -28,6 +32,9 @@ var _report := {
 	"state_count": 0,
 	"sprite_sheet_loaded_count": 0,
 	"unique_sprite_sheet_hash_count": 0,
+	"unique_sprite_sheet_visual_fingerprint_count": 0,
+	"nearest_visual_neighbor": {},
+	"contact_sheet": "",
 	"state_family_counts": {},
 	"units": [],
 	"errors": [],
@@ -53,6 +60,9 @@ func _run() -> void:
 	_validate_event_cue_alignment(states)
 	var records_by_unit := _index_by_unit_id(records)
 	var sheet_hashes := {}
+	var sheet_visual_fingerprints := {}
+	var fingerprint_records := []
+	var contact_entries := []
 	if records_by_unit.size() != units.size():
 		_error("Unit animation manifest count %d does not match authored unit count %d." % [records_by_unit.size(), units.size()])
 	for unit in units:
@@ -65,8 +75,22 @@ func _run() -> void:
 		if not records_by_unit.has(unit_id):
 			_error("Unit animation manifest is missing %s." % unit_id)
 			continue
-		_validate_unit_record(unit, records_by_unit[unit_id], states_by_name, frame_size, frames_per_state, sheet_size, sheet_hashes)
+		_validate_unit_record(
+			unit,
+			records_by_unit[unit_id],
+			states_by_name,
+			frame_size,
+			frames_per_state,
+			sheet_size,
+			sheet_hashes,
+			sheet_visual_fingerprints,
+			fingerprint_records,
+			contact_entries
+		)
 	_report["unique_sprite_sheet_hash_count"] = sheet_hashes.size()
+	_report["unique_sprite_sheet_visual_fingerprint_count"] = sheet_visual_fingerprints.size()
+	_report["nearest_visual_neighbor"] = _nearest_visual_neighbor(fingerprint_records)
+	_report["contact_sheet"] = _write_contact_sheet(contact_entries)
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -141,7 +165,10 @@ func _validate_unit_record(
 	frame_size: Vector2i,
 	frames_per_state: int,
 	sheet_size: Vector2i,
-	sheet_hashes: Dictionary
+	sheet_hashes: Dictionary,
+	sheet_visual_fingerprints: Dictionary,
+	fingerprint_records: Array,
+	contact_entries: Array
 ) -> void:
 	var unit_id := String(unit.get("id", "")).strip_edges()
 	var path := String(record.get("sprite_sheet", "")).strip_edges()
@@ -168,6 +195,22 @@ func _validate_unit_record(
 		_error("Unit %s animation sheet duplicates PNG bytes with %s." % [unit_id, sheet_hashes[hash]])
 	else:
 		sheet_hashes[hash] = unit_id
+	var visual_fingerprint := _visual_fingerprint(image)
+	var visual_signature := String(visual_fingerprint.get("signature", ""))
+	if sheet_visual_fingerprints.has(visual_signature):
+		_error("Unit %s animation sheet has duplicate visual fingerprint with %s." % [unit_id, sheet_visual_fingerprints[visual_signature]])
+	else:
+		sheet_visual_fingerprints[visual_signature] = unit_id
+	fingerprint_records.append({
+		"unit_id": unit_id,
+		"fingerprint": visual_fingerprint,
+	})
+	contact_entries.append({
+		"unit_id": unit_id,
+		"name": String(unit.get("name", "")),
+		"sprite_sheet": path,
+		"image": image.duplicate(),
+	})
 	var state_summaries := []
 	for row in range(states_by_name.size()):
 		var state_name := String(record_states[row]) if row < record_states.size() else ""
@@ -195,6 +238,7 @@ func _validate_unit_record(
 		"sprite_sheet": path,
 		"loaded": loaded,
 		"hash": hash,
+		"visual_fingerprint": visual_signature,
 		"states": state_summaries,
 	})
 
@@ -245,6 +289,181 @@ func _frame_signature(image: Image) -> String:
 		bits.append("1" if float(luminance) >= average else "0")
 	return "".join(bits)
 
+func _write_contact_sheet(entries: Array) -> String:
+	var rows := int(ceil(float(max(entries.size(), 1)) / float(CONTACT_COLUMNS)))
+	var margin := 8
+	var sheet_width := CONTACT_COLUMNS * CONTACT_THUMB_SIZE.x + (CONTACT_COLUMNS + 1) * margin
+	var sheet_height := rows * CONTACT_THUMB_SIZE.y + (rows + 1) * margin
+	var sheet := Image.create(sheet_width, sheet_height, false, Image.FORMAT_RGBA8)
+	sheet.fill(Color(0.04, 0.045, 0.055, 1.0))
+	for index in range(entries.size()):
+		var entry: Dictionary = entries[index] if entries[index] is Dictionary else {}
+		var image: Image = entry.get("image", null)
+		if image == null:
+			continue
+		var thumbnail := image.duplicate()
+		thumbnail.resize(CONTACT_THUMB_SIZE.x, CONTACT_THUMB_SIZE.y, Image.INTERPOLATE_LANCZOS)
+		var column := index % CONTACT_COLUMNS
+		var row := int(index / CONTACT_COLUMNS)
+		var destination := Vector2i(margin + column * (CONTACT_THUMB_SIZE.x + margin), margin + row * (CONTACT_THUMB_SIZE.y + margin))
+		sheet.blit_rect(thumbnail, Rect2i(Vector2i.ZERO, CONTACT_THUMB_SIZE), destination)
+	_report["contact_sheet_entries"] = entries.map(func(entry): return {
+		"unit_id": String(entry.get("unit_id", "")),
+		"name": String(entry.get("name", "")),
+		"sprite_sheet": String(entry.get("sprite_sheet", "")),
+	})
+	var output_path := "%s/%s" % [OUTPUT_DIR, CONTACT_SHEET_FILE]
+	var save_error := sheet.save_png(ProjectSettings.globalize_path(output_path))
+	if save_error != OK:
+		_error("Failed to write unit animation contact sheet to %s." % output_path)
+	return output_path
+
+func _visual_fingerprint(image: Image) -> Dictionary:
+	var average_hash_bits := _average_hash_bits(image)
+	var difference_hash_bits := _difference_hash_bits(image)
+	var sheet_pose_hash_bits := _sheet_pose_hash_bits(image)
+	var histogram := _color_histogram_bins(image)
+	var signature := "%s:%s:%s:%s" % [
+		_bits_to_string(average_hash_bits),
+		_bits_to_string(difference_hash_bits),
+		_bits_to_string(sheet_pose_hash_bits),
+		_int_array_to_string(histogram),
+	]
+	return {
+		"average_hash": _bits_to_string(average_hash_bits),
+		"difference_hash": _bits_to_string(difference_hash_bits),
+		"sheet_pose_hash": _bits_to_string(sheet_pose_hash_bits),
+		"histogram": histogram,
+		"signature": signature,
+	}
+
+func _nearest_visual_neighbor(fingerprint_records: Array) -> Dictionary:
+	if fingerprint_records.size() < 2:
+		return {}
+	var best_score := INF
+	var best_pair := {}
+	for left_index in range(fingerprint_records.size()):
+		var left: Dictionary = fingerprint_records[left_index]
+		for right_index in range(left_index + 1, fingerprint_records.size()):
+			var right: Dictionary = fingerprint_records[right_index]
+			var score := _visual_similarity_score(left.get("fingerprint", {}), right.get("fingerprint", {}))
+			if score < best_score:
+				best_score = score
+				best_pair = {
+					"unit_ids": [left.get("unit_id", ""), right.get("unit_id", "")],
+					"score": score,
+				}
+	return best_pair
+
+func _visual_similarity_score(left: Dictionary, right: Dictionary) -> float:
+	var average_distance := _bit_string_distance(String(left.get("average_hash", "")), String(right.get("average_hash", "")))
+	var difference_distance := _bit_string_distance(String(left.get("difference_hash", "")), String(right.get("difference_hash", "")))
+	var sheet_pose_distance := _bit_string_distance(String(left.get("sheet_pose_hash", "")), String(right.get("sheet_pose_hash", "")))
+	var histogram_distance := _histogram_distance(
+		left.get("histogram", []) if left.get("histogram", []) is Array else [],
+		right.get("histogram", []) if right.get("histogram", []) is Array else []
+	)
+	return float(average_distance + difference_distance + sheet_pose_distance) + histogram_distance * 16.0
+
+func _average_hash_bits(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(8, 8, Image.INTERPOLATE_LANCZOS)
+	var luminance_values := []
+	var total := 0.0
+	for y in range(8):
+		for x in range(8):
+			var luminance := _pixel_luminance(sample.get_pixel(x, y))
+			luminance_values.append(luminance)
+			total += luminance
+	var average := total / float(VISUAL_FINGERPRINT_BITS)
+	var bits := []
+	for luminance in luminance_values:
+		bits.append(1 if float(luminance) >= average else 0)
+	return bits
+
+func _difference_hash_bits(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(9, 8, Image.INTERPOLATE_LANCZOS)
+	var bits := []
+	for y in range(8):
+		for x in range(8):
+			var left := _pixel_luminance(sample.get_pixel(x, y))
+			var right := _pixel_luminance(sample.get_pixel(x + 1, y))
+			bits.append(1 if left > right else 0)
+	return bits
+
+func _sheet_pose_hash_bits(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(16, 56, Image.INTERPOLATE_LANCZOS)
+	var luminance_values := []
+	var total := 0.0
+	for y in range(56):
+		for x in range(16):
+			var luminance := _pixel_luminance(sample.get_pixel(x, y))
+			luminance_values.append(luminance)
+			total += luminance
+	var average := total / float(maxi(luminance_values.size(), 1))
+	var bits := []
+	for luminance in luminance_values:
+		bits.append(1 if float(luminance) >= average else 0)
+	return bits
+
+func _color_histogram_bins(image: Image) -> Array:
+	var bins := []
+	for _index in range(16):
+		bins.append(0)
+	var sample := image.duplicate()
+	sample.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+	var visible_pixels := 0
+	for y in range(16):
+		for x in range(16):
+			var color: Color = sample.get_pixel(x, y)
+			if color.a <= 0.03:
+				continue
+			visible_pixels += 1
+			var r_bin := int(clampf(color.r, 0.0, 0.999) * 2.0)
+			var g_bin := int(clampf(color.g, 0.0, 0.999) * 2.0)
+			var b_bin := int(clampf(color.b, 0.0, 0.999) * 4.0)
+			var index := r_bin * 8 + g_bin * 4 + b_bin
+			bins[index] = int(bins[index]) + 1
+	if visible_pixels <= 0:
+		return bins
+	for index in range(bins.size()):
+		bins[index] = int(round(float(bins[index]) * 100.0 / float(visible_pixels)))
+	return bins
+
+func _pixel_luminance(color: Color) -> float:
+	if color.a <= 0.03:
+		return 255.0
+	return (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) * 255.0
+
+func _bits_to_string(bits: Array) -> String:
+	var result := PackedStringArray()
+	for bit in bits:
+		result.append(str(int(bit)))
+	return "".join(result)
+
+func _int_array_to_string(values: Array) -> String:
+	var result := PackedStringArray()
+	for value in values:
+		result.append(str(int(value)))
+	return ",".join(result)
+
+func _bit_string_distance(left: String, right: String) -> int:
+	var limit: int = mini(left.length(), right.length())
+	var distance: int = abs(left.length() - right.length())
+	for index in range(limit):
+		if left[index] != right[index]:
+			distance += 1
+	return distance
+
+func _histogram_distance(left: Array, right: Array) -> float:
+	var limit: int = mini(left.size(), right.size())
+	var distance: float = float(abs(left.size() - right.size()))
+	for index in range(limit):
+		distance += abs(float(left[index]) - float(right[index])) / 100.0
+	return float(distance)
+
 func _load_image(path: String):
 	if path == "" or not FileAccess.file_exists(path):
 		return null
@@ -275,6 +494,9 @@ func _summary_payload() -> Dictionary:
 		"state_count": _report["state_count"],
 		"sprite_sheet_loaded_count": _report["sprite_sheet_loaded_count"],
 		"unique_sprite_sheet_hash_count": _report["unique_sprite_sheet_hash_count"],
+		"unique_sprite_sheet_visual_fingerprint_count": _report["unique_sprite_sheet_visual_fingerprint_count"],
+		"nearest_visual_neighbor": _report["nearest_visual_neighbor"],
+		"contact_sheet": _report["contact_sheet"],
 		"state_family_counts": _report["state_family_counts"],
 	}
 
