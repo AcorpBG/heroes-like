@@ -22,6 +22,7 @@ const CONTACT_SHEET_FILES := {
 	"battle_icon": "battle_icons_contact_sheet.png",
 	"overworld_icon": "overworld_icons_contact_sheet.png",
 }
+const VISUAL_FINGERPRINT_BITS := 64
 
 var _errors: Array[String] = []
 var _report := {
@@ -69,6 +70,8 @@ func _build_surface_report(surface: String, units: Array, manifest_by_unit: Dict
 	sheet.fill(Color(0.04, 0.045, 0.055, 1.0))
 
 	var records := []
+	var fingerprints := {}
+	var fingerprint_records := []
 	var loaded_count := 0
 	var visual_pass_count := 0
 	for index in range(units.size()):
@@ -89,6 +92,16 @@ func _build_surface_report(surface: String, units: Array, manifest_by_unit: Dict
 				visual_pass_count += 1
 			else:
 				_error("Unit %s %s art failed visual-density gate: %s." % [unit_id, surface, JSON.stringify(metrics)])
+			var fingerprint := _visual_fingerprint(image)
+			var signature := String(fingerprint.get("signature", ""))
+			if fingerprints.has(signature):
+				_error("Unit %s %s art has duplicate visual fingerprint with %s." % [unit_id, surface, fingerprints[signature]])
+			else:
+				fingerprints[signature] = unit_id
+			fingerprint_records.append({
+				"unit_id": unit_id,
+				"fingerprint": fingerprint,
+			})
 			var thumbnail: Image = image.duplicate()
 			thumbnail.resize(thumb_size.x, thumb_size.y, Image.INTERPOLATE_LANCZOS)
 			var column := index % columns
@@ -112,6 +125,7 @@ func _build_surface_report(surface: String, units: Array, manifest_by_unit: Dict
 	var save_error := sheet.save_png(ProjectSettings.globalize_path(output_path))
 	if save_error != OK:
 		_error("Failed to write %s contact sheet to %s." % [surface, output_path])
+	var nearest := _nearest_visual_neighbor(fingerprint_records)
 	return {
 		"contact_sheet": output_path,
 		"expected_size": {"x": expected_size.x, "y": expected_size.y},
@@ -120,6 +134,8 @@ func _build_surface_report(surface: String, units: Array, manifest_by_unit: Dict
 		"rows": rows,
 		"loaded_count": loaded_count,
 		"visual_pass_count": visual_pass_count,
+		"unique_visual_fingerprint_count": fingerprints.size(),
+		"nearest_visual_neighbor": nearest,
 		"records": records,
 	}
 
@@ -173,6 +189,135 @@ func _metrics_pass(metrics: Dictionary) -> bool:
 		and int(metrics.get("quantized_color_count", 0)) >= 8
 	)
 
+func _visual_fingerprint(image: Image) -> Dictionary:
+	var average_hash_bits := _average_hash_bits(image)
+	var difference_hash_bits := _difference_hash_bits(image)
+	var histogram := _color_histogram_bins(image)
+	var signature := "%s:%s:%s" % [
+		_bits_to_string(average_hash_bits),
+		_bits_to_string(difference_hash_bits),
+		_int_array_to_string(histogram),
+	]
+	return {
+		"average_hash": _bits_to_string(average_hash_bits),
+		"difference_hash": _bits_to_string(difference_hash_bits),
+		"histogram": histogram,
+		"signature": signature,
+	}
+
+func _nearest_visual_neighbor(fingerprint_records: Array) -> Dictionary:
+	if fingerprint_records.size() < 2:
+		return {}
+	var best_score := INF
+	var best_pair := {}
+	for left_index in range(fingerprint_records.size()):
+		var left: Dictionary = fingerprint_records[left_index]
+		for right_index in range(left_index + 1, fingerprint_records.size()):
+			var right: Dictionary = fingerprint_records[right_index]
+			var score := _visual_similarity_score(left.get("fingerprint", {}), right.get("fingerprint", {}))
+			if score < best_score:
+				best_score = score
+				best_pair = {
+					"unit_ids": [left.get("unit_id", ""), right.get("unit_id", "")],
+					"score": score,
+				}
+	return best_pair
+
+func _visual_similarity_score(left: Dictionary, right: Dictionary) -> float:
+	var average_distance := _bit_string_distance(String(left.get("average_hash", "")), String(right.get("average_hash", "")))
+	var difference_distance := _bit_string_distance(String(left.get("difference_hash", "")), String(right.get("difference_hash", "")))
+	var histogram_distance := _histogram_distance(
+		left.get("histogram", []) if left.get("histogram", []) is Array else [],
+		right.get("histogram", []) if right.get("histogram", []) is Array else []
+	)
+	return float(average_distance + difference_distance) + histogram_distance * 16.0
+
+func _average_hash_bits(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(8, 8, Image.INTERPOLATE_LANCZOS)
+	var luminance_values := []
+	var total := 0.0
+	for y in range(8):
+		for x in range(8):
+			var luminance := _pixel_luminance(sample.get_pixel(x, y))
+			luminance_values.append(luminance)
+			total += luminance
+	var average := total / float(VISUAL_FINGERPRINT_BITS)
+	var bits := []
+	for luminance in luminance_values:
+		bits.append(1 if float(luminance) >= average else 0)
+	return bits
+
+func _difference_hash_bits(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(9, 8, Image.INTERPOLATE_LANCZOS)
+	var bits := []
+	for y in range(8):
+		for x in range(8):
+			var left := _pixel_luminance(sample.get_pixel(x, y))
+			var right := _pixel_luminance(sample.get_pixel(x + 1, y))
+			bits.append(1 if left > right else 0)
+	return bits
+
+func _color_histogram_bins(image: Image) -> Array:
+	var sample := image.duplicate()
+	sample.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+	var histogram := []
+	for _index in range(48):
+		histogram.append(0)
+	for y in range(16):
+		for x in range(16):
+			var color: Color = sample.get_pixel(x, y)
+			if color.a <= 0.03:
+				continue
+			var red_index := clampi(int(color.r * 15.0), 0, 15)
+			var green_index := clampi(int(color.g * 15.0), 0, 15)
+			var blue_index := clampi(int(color.b * 15.0), 0, 15)
+			histogram[red_index] = int(histogram[red_index]) + 1
+			histogram[16 + green_index] = int(histogram[16 + green_index]) + 1
+			histogram[32 + blue_index] = int(histogram[32 + blue_index]) + 1
+	return histogram
+
+func _pixel_luminance(color: Color) -> float:
+	if color.a <= 0.03:
+		return 255.0
+	return (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) * 255.0
+
+func _bit_string_distance(left: String, right: String) -> int:
+	var length := mini(left.length(), right.length())
+	var distance: int = absi(left.length() - right.length())
+	for index in range(length):
+		if left[index] != right[index]:
+			distance += 1
+	return distance
+
+func _histogram_distance(left: Array, right: Array) -> float:
+	var length := mini(left.size(), right.size())
+	var distance := 0.0
+	var left_total := 0.0
+	var right_total := 0.0
+	for value in left:
+		left_total += float(value)
+	for value in right:
+		right_total += float(value)
+	for index in range(length):
+		var left_value := float(left[index]) / maxf(left_total, 1.0)
+		var right_value := float(right[index]) / maxf(right_total, 1.0)
+		distance += absf(left_value - right_value)
+	return distance
+
+func _bits_to_string(bits: Array) -> String:
+	var packed := PackedStringArray()
+	for bit in bits:
+		packed.append("1" if int(bit) != 0 else "0")
+	return "".join(packed)
+
+func _int_array_to_string(values: Array) -> String:
+	var packed := PackedStringArray()
+	for value in values:
+		packed.append(str(int(value)))
+	return ",".join(packed)
+
 func _load_image(path: String):
 	if path == "" or not FileAccess.file_exists(path):
 		return null
@@ -190,6 +335,8 @@ func _summary_payload() -> Dictionary:
 			"contact_sheet": surface_report.get("contact_sheet", ""),
 			"loaded_count": surface_report.get("loaded_count", 0),
 			"visual_pass_count": surface_report.get("visual_pass_count", 0),
+			"unique_visual_fingerprint_count": surface_report.get("unique_visual_fingerprint_count", 0),
+			"nearest_visual_neighbor": surface_report.get("nearest_visual_neighbor", {}),
 		}
 	return {
 		"ok": true,

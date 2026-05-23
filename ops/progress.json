@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-art-visual-qa-contact-sheet-20260523-10184",
-  "currentSliceTitle": "Unit Art Visual QA Contact Sheet Gate",
+  "currentSliceId": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
+  "currentSliceTitle": "Unit Art Composite Visual Fingerprint Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: all 103 authored units now pass generated-art visual-density checks for portrait, battle icon, and overworld icon surfaces, and the report writes full-roster contact sheets for review.",
+  "currentSliceNotes": "Completed: all 103 authored units now pass composite visual-fingerprint uniqueness checks for portrait, battle icon, and overworld icon surfaces, with nearest-neighbor diagnostics written by the contact-sheet report.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:34:44Z",
+  "updatedAt": "2026-05-23T10:40:11Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15137,6 +15137,55 @@
         "The report writes portraits_contact_sheet.png, battle_icons_contact_sheet.png, overworld_icons_contact_sheet.png, and report.json under .artifacts/unit_art_contact_sheet_report/ for full-roster visual review.",
         "tests/validate_repo.py gates the contact-sheet report script/scene and required visual-QA tokens."
       ]
+    },
+    {
+      "id": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
+      "title": "Unit Art Composite Visual Fingerprint Gate",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "purpose": "Strengthen generated-unit art uniqueness verification beyond byte hashes by adding composite visual fingerprints and nearest-neighbor reporting to the full-roster visual QA report.",
+      "implementationTargets": [
+        "tests/unit_art_contact_sheet_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored unit portrait, battle icon, and overworld icon still loads and passes visual-density checks.",
+        "Every generated art surface has a unique composite visual fingerprint combining average hash, difference hash, and coarse color histogram.",
+        "The report records nearest visual neighbors per surface for review of closest generated-art pairs.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No new copyrighted external art import.",
+        "No final hand-painted art direction claim.",
+        "No animation sprite-sheet implementation in this slice."
+      ],
+      "startedAt": "2026-05-23T10:40:11Z",
+      "updatedAt": "2026-05-23T10:40:11Z",
+      "notes": "Completed: all 103 authored units now pass composite visual-fingerprint uniqueness checks for portrait, battle icon, and overworld icon surfaces, with nearest-neighbor diagnostics written by the contact-sheet report.",
+      "completedAt": "2026-05-23T10:40:11Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit art contact-sheet report passed with unique_visual_fingerprint_count=103 for portrait, battle_icon, and overworld_icon surfaces; repository validation passed with the strengthened gate wired in.",
+      "evidenceHistory": [
+        "tests/unit_art_contact_sheet_report.tscn now computes composite visual fingerprints from average hash, difference hash, and coarse RGB histogram data for all 309 generated unit art PNG surfaces.",
+        "The report passed with unique_visual_fingerprint_count=103 on portrait, battle_icon, and overworld_icon surfaces while preserving loaded_count=103 and visual_pass_count=103 for each surface.",
+        "The report records nearest_visual_neighbor diagnostics per surface so the closest generated-art pairs stay visible during review.",
+        "tests/validate_repo.py gates the visual fingerprint and nearest-neighbor report tokens."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17504,6 +17553,43 @@
         "git diff --check"
       ],
       "remainingGap": "This proves generated assets are non-empty, loadable, and reviewable; final hand-painted art direction and animation sprite sheets remain outside this slice."
+    },
+    {
+      "id": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
+      "title": "Unit Art Composite Visual Fingerprint Gate",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T10:40:11Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-art-composite-visual-fingerprint-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tests/unit_art_contact_sheet_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/unit_art_contact_sheet_report/report.json",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_art_contact_sheet_report.tscn now computes composite visual fingerprints from average hash, difference hash, and coarse RGB histogram data for all 309 generated unit art PNG surfaces.",
+        "The report passed with unique_visual_fingerprint_count=103 on portrait, battle_icon, and overworld_icon surfaces while preserving loaded_count=103 and visual_pass_count=103 for each surface.",
+        "The report records nearest_visual_neighbor diagnostics per surface so the closest generated-art pairs stay visible during review.",
+        "tests/validate_repo.py gates the visual fingerprint and nearest-neighbor report tokens."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves generated assets are byte-unique, visually non-empty, and composite-fingerprint unique; final hand-painted art direction and animation sprite sheets remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18209,13 +18295,26 @@
         "git diff --check"
       ],
       "summary": "All 103 units passed the visual-QA contact-sheet report for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the new gate wired in."
+    },
+    {
+      "id": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T10:40:11Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_contact_sheet_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in."
     }
   ],
-  "lastValidation": "All 103 units passed the visual-QA contact-sheet report for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the new gate wired in.",
+  "lastValidation": "All 103 units passed composite visual-fingerprint uniqueness for portrait, battle_icon, and overworld_icon surfaces; repo validation passed with the strengthened gate wired in.",
   "active_slice": {
-    "id": "unit-art-visual-qa-contact-sheet-20260523-10184",
+    "id": "unit-art-composite-visual-fingerprint-gate-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: all 103 authored units now pass generated-art visual-density checks for portrait, battle icon, and overworld icon surfaces, and the report writes full-roster contact sheets for review."
+    "note": "Completed: all 103 authored units now pass composite visual-fingerprint uniqueness checks for portrait, battle icon, and overworld icon surfaces, with nearest-neighbor diagnostics written by the contact-sheet report."
   }
 }
