@@ -4974,6 +4974,31 @@ adoptionStatus:
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
 
+Completed owner-directed implementation slice:
+
+id: `strategic-ai-live-target-selection-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Move the first strategic AI hero-task surface from report-only evidence into bounded live target selection for new enemy raids.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/strategic-ai-hero-task-state-boundary-plan.md`
+- `docs/strategic-ai-live-hero-task-adoption-gate-report.md`
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `tests/ai_hero_task_live_target_selection_report.gd`
+- `tests/ai_hero_task_live_target_selection_report.tscn`
+- `docs/strategic-ai-live-target-selection-report.md`
+- `ops/progress.json`
+completionCriteria:
+- New raids with deployable commanders use derived live commander tasks for resource retake/contest/defense target selection before falling back to the global selector.
+- Active raid target reservations prevent companion commanders from duplicating the same exclusive resource target.
+- No durable `hero_task_state`, save-version bump, route actor rewrite, or save migration is introduced.
+nonGoals:
+- No full strategic AI quality claim.
+- No persistent task-board adoption.
+- No broad town/hero/artifact target rewrite.
+
 ### Phase 4 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
