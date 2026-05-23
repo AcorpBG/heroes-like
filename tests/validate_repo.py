@@ -115,6 +115,11 @@ AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
+EXPORT_PRESETS_PATH = ROOT / "export_presets.cfg"
+PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaging_platform_readiness_report.gd"
+PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_platform_readiness_report.tscn"
+PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH = ROOT / "docs" / "packaging-platform-readiness-report.md"
+GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -15779,6 +15784,84 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")
 
 
+def validate_packaging_platform_readiness(errors: list[str]) -> None:
+    required_paths = (
+        EXPORT_PRESETS_PATH,
+        PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH,
+        PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH,
+        PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH,
+        GDEXTENSION_MANIFEST_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing packaging/platform readiness file: {path.relative_to(ROOT)}")
+
+    if EXPORT_PRESETS_PATH.exists():
+        preset_text = EXPORT_PRESETS_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            'name="Linux Release"',
+            'platform="Linux/X11"',
+            'export_path="build/linux/heroes-like.x86_64"',
+            'name="Windows Release"',
+            'platform="Windows Desktop"',
+            'export_path="build/windows/heroes-like.exe"',
+            'export_filter="all_resources"',
+            'exclude_filter=".git/*,.godot/*,.artifacts/*,tmp/*,*.dll.a"',
+            'binary_format/embed_pck=false',
+        ):
+            ensure(required_text in preset_text, errors, f"export_presets.cfg is missing required packaging token: {required_text}")
+
+    if GDEXTENSION_MANIFEST_PATH.exists():
+        manifest_text = GDEXTENSION_MANIFEST_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            'entry_symbol = "aurelion_map_persistence_init"',
+            'compatibility_minimum = "4.6"',
+            'linux.editor.x86_64 = "res://bin/libaurelion_map_persistence.linux.template_debug.x86_64.so"',
+            'linux.debug.x86_64 = "res://bin/libaurelion_map_persistence.linux.template_debug.x86_64.so"',
+            'linux.release.x86_64 = "res://bin/libaurelion_map_persistence.linux.template_release.x86_64.so"',
+            'windows.editor.x86_64 = "res://bin/aurelion_map_persistence.windows.template_debug.x86_64.dll"',
+            'windows.debug.x86_64 = "res://bin/aurelion_map_persistence.windows.template_debug.x86_64.dll"',
+            'windows.release.x86_64 = "res://bin/aurelion_map_persistence.windows.template_release.x86_64.dll"',
+        ):
+            ensure(required_text in manifest_text, errors, f"GDExtension manifest is missing required packaging token: {required_text}")
+
+    for relative_path in (
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+    ):
+        path = ROOT / relative_path
+        ensure(path.exists(), errors, f"Missing native platform artifact: {relative_path}")
+        if path.exists():
+            ensure(path.stat().st_size > 0, errors, f"Native platform artifact is empty: {relative_path}")
+
+    if PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH.exists():
+        script_text = PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGING_PLATFORM_READINESS_REPORT",
+            "REQUIRED_NATIVE_LIBRARIES",
+            "REQUIRED_EXCLUDES",
+            "export_presets",
+            "native_extension",
+            "SettingsService.SETTINGS_FILE",
+            "ProfileLogScript.GENERAL_PROFILE_LOG_PATH",
+            "application/run/main_scene",
+        ):
+            ensure(required_token in script_text, errors, f"Packaging platform readiness report is missing required token: {required_token}")
+
+    if PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH.exists():
+        doc_text = PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaging Platform Readiness Report",
+            "packaging-platform-readiness-20260523-10184",
+            "Linux and Windows release presets",
+            "native GDExtension manifest coverage",
+            "does not require installed Godot export templates",
+            "does not claim release readiness",
+        ):
+            ensure(required_text in doc_text, errors, f"Packaging platform readiness doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -15861,6 +15944,7 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
+    validate_packaging_platform_readiness(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
@@ -15952,6 +16036,7 @@ def main() -> int:
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")
     print("- animation overworld object state contracts now cover idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and ambient-loop cue families")
     print("- animation validation smoke harness now proves catalog, policy, battle troop, and overworld object reports agree across representative battle/overworld/town/spell/artifact/UI events")
+    print("- Linux and Windows export presets, native extension libraries, packaged settings paths, and boot metadata now have a focused packaging/platform readiness gate")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:

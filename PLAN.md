@@ -55,6 +55,8 @@ Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBal
 
 Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle autoplay sampler now records per-sample terrain, encounter difficulty, initial stack counts, role mix, ability ids, initiative spread, action mix, invalid-order count, damage dealt by side, damage per round, pacing band, and terminal health margin. `BalanceRegressionReportRules` and `HeadlessSimulationHarnessRules` both surface the aggregate diagnostics, and their focused reports assert the new damage/action/terrain/difficulty/role/ability/initiative fields. This is balance instrumentation for tuning passes, not an automatic rebalance, authored encounter retune, AI rewrite, or final combat-feel approval.
 
+Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
+
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
 
 Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units now apply their authored status rider through the same battle ability path as ranged harry units, and `tests/unit_ability_runtime_report.tscn` probes all 143 authored unit ability instances across the 103-unit roster for a concrete runtime consequence. This strengthens the "fully implemented units" proof for current authored mechanics; final balance and hand-authored art approval remain outside this slice.
@@ -5161,6 +5163,9 @@ nonGoals:
 ### Phase 6 - Production Alpha Layer
 
 Goal: expand the playable alpha into a production-shaped game slice.
+
+Closed tactical slices:
+- `packaging-platform-readiness-20260523-10184`
 
 Paused tactical slices:
 
