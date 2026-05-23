@@ -56,8 +56,12 @@ TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
 BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
+BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
+UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
+UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
+UNIT_ART_ROOT = ROOT / "art" / "units"
 RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
@@ -14287,6 +14291,98 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing neutral battle token {required_token}")
 
 
+def validate_unit_art_assets(errors: list[str]) -> None:
+    required_paths = (
+        CONTENT_DIR / "units.json",
+        UNIT_ART_MANIFEST_PATH,
+        UNIT_ART_GENERATOR_PATH,
+        CONTENT_SERVICE_PATH,
+        BATTLE_BOARD_VIEW_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    units = items_index(load_json(CONTENT_DIR / "units.json"))
+    manifest = load_json(UNIT_ART_MANIFEST_PATH)
+    ensure(str(manifest.get("generator", "")) == "deterministic_unit_art_assets_v1", errors, "Unit art manifest must identify deterministic generator v1")
+
+    expected_sizes = {
+        "portrait": (384, 512),
+        "battle_icon": (160, 160),
+        "overworld_icon": (96, 96),
+    }
+    expected_dirs = {
+        "portrait": "portraits",
+        "battle_icon": "battle_icons",
+        "overworld_icon": "overworld_icons",
+    }
+
+    records_by_unit_id: dict[str, dict] = {}
+    duplicate_unit_ids: list[str] = []
+    for record in manifest.get("items", []):
+        if not isinstance(record, dict):
+            fail(errors, "Unit art manifest contains a non-object item")
+            continue
+        unit_id = str(record.get("unit_id", record.get("id", "")))
+        if not unit_id:
+            fail(errors, "Unit art manifest item is missing unit_id")
+            continue
+        if unit_id in records_by_unit_id:
+            duplicate_unit_ids.append(unit_id)
+        records_by_unit_id[unit_id] = record
+
+    ensure(len(records_by_unit_id) == len(units), errors, "Unit art manifest must contain exactly one record for every authored unit")
+    ensure(not duplicate_unit_ids, errors, "Unit art manifest must not duplicate unit ids: " + ", ".join(sorted(set(duplicate_unit_ids))[:8]))
+
+    missing_unit_ids = sorted(set(units.keys()) - set(records_by_unit_id.keys()))
+    extra_unit_ids = sorted(set(records_by_unit_id.keys()) - set(units.keys()))
+    ensure(not missing_unit_ids, errors, "Unit art manifest is missing authored units: " + ", ".join(missing_unit_ids[:12]))
+    ensure(not extra_unit_ids, errors, "Unit art manifest references unknown units: " + ", ".join(extra_unit_ids[:12]))
+
+    used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
+    for unit_id, unit in units.items():
+        record = records_by_unit_id.get(unit_id, {})
+        ensure(str(record.get("name", "")) == str(unit.get("name", "")), errors, f"Unit art manifest name mismatch for {unit_id}")
+        for surface, expected_size in expected_sizes.items():
+            raw_path = str(record.get(surface, ""))
+            ensure(raw_path.startswith(f"res://art/units/{expected_dirs[surface]}/"), errors, f"Unit art {unit_id} {surface} must live in art/units/{expected_dirs[surface]}")
+            ensure(raw_path.endswith(".png"), errors, f"Unit art {unit_id} {surface} must be a PNG path")
+            ensure(raw_path not in used_surface_paths[surface], errors, f"Unit art {surface} path is reused: {raw_path}")
+            used_surface_paths[surface].add(raw_path)
+            disk_path = res_path_to_disk(raw_path)
+            ensure(disk_path.exists(), errors, f"Unit art {unit_id} {surface} file is missing: {raw_path}")
+            if disk_path.exists():
+                ensure(png_size(disk_path) == expected_size, errors, f"Unit art {unit_id} {surface} must be {expected_size[0]}x{expected_size[1]} PNG: {raw_path}")
+
+    generator_text = UNIT_ART_GENERATOR_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "deterministic_unit_art_assets_v1",
+        "surface_sizes",
+        "portrait",
+        "battle_icon",
+        "overworld_icon",
+    ):
+        ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
+
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "UNIT_ART_PATH",
+        "func get_unit_art",
+        "func _validate_unit_art_manifest",
+    ):
+        ensure(required_token in content_service_text, errors, f"ContentService.gd is missing unit art token {required_token}")
+
+    battle_board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_unit_art_summary",
+        "func _unit_battle_icon_for_stack",
+        "draw_texture_rect(battle_icon",
+    ):
+        ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+
+
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
     payloads = {
         "scenarios": load_json(CONTENT_DIR / "scenarios.json"),
@@ -15394,6 +15490,7 @@ def main() -> int:
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
+    validate_unit_art_assets(errors)
     validate_six_faction_biome_scenario_breadth(errors)
     validate_town_frontline_reinforcement_delivery(errors)
     validate_convoy_interception_clash_slice(errors)
@@ -15484,6 +15581,7 @@ def main() -> int:
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
+    print("- unit art manifest now covers every authored unit with portrait, battle-icon, and overworld-icon PNG assets plus battle runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")

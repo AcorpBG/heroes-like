@@ -75,6 +75,8 @@ var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
 var _terrain_textures: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
+var _unit_battle_icon_textures: Dictionary = {}
+var _unit_battle_icon_missing: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -374,6 +376,35 @@ func validation_hex_layout_summary() -> Dictionary:
 
 func validation_terrain_backdrop_summary() -> Dictionary:
 	return validation_terrain_rendering_summary()
+
+func validation_unit_art_summary() -> Dictionary:
+	var stack_entries := []
+	var loaded_count := 0
+	var missing := []
+	for stack in _all_visible_stacks():
+		if not (stack is Dictionary):
+			continue
+		var unit_id := String(stack.get("unit_id", ""))
+		var art := ContentService.get_unit_art(unit_id)
+		var path := String(art.get("battle_icon", ""))
+		var texture := _unit_battle_icon_for_stack(stack)
+		var loaded := texture != null
+		if loaded:
+			loaded_count += 1
+		else:
+			missing.append(unit_id)
+		stack_entries.append({
+			"battle_id": String(stack.get("battle_id", "")),
+			"unit_id": unit_id,
+			"battle_icon": path,
+			"loaded": loaded,
+		})
+	return {
+		"visible_stack_count": stack_entries.size(),
+		"battle_icon_loaded_count": loaded_count,
+		"missing_battle_icon_units": missing,
+		"stacks": stack_entries,
+	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
 	var terrain_id := _battle_terrain_id()
@@ -829,6 +860,36 @@ func _terrain_texture_id(terrain_id: String) -> String:
 func _terrain_texture_path_for(texture_id: String) -> String:
 	return String(TERRAIN_TEXTURE_PATHS.get(texture_id, ""))
 
+func _unit_battle_icon_for_stack(stack: Dictionary) -> Texture2D:
+	var unit_id := String(stack.get("unit_id", ""))
+	if unit_id == "":
+		return null
+	var art := ContentService.get_unit_art(unit_id)
+	var path := String(art.get("battle_icon", ""))
+	if path == "":
+		return null
+	return _unit_battle_icon_texture(path)
+
+func _unit_battle_icon_texture(path: String) -> Texture2D:
+	if _unit_battle_icon_textures.has(path):
+		return _unit_battle_icon_textures[path]
+	if _unit_battle_icon_missing.has(path):
+		return null
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is Texture2D:
+			texture = resource
+	if texture == null and FileAccess.file_exists(path):
+		var image := Image.new()
+		if image.load(path) == OK:
+			texture = ImageTexture.create_from_image(image)
+	if texture != null:
+		_unit_battle_icon_textures[path] = texture
+		return texture
+	_unit_battle_icon_missing[path] = true
+	return null
+
 func _battle_terrain_id() -> String:
 	var terrain_id := String(_battle.get("terrain", "plains")).strip_edges().to_lower()
 	return terrain_id if terrain_id != "" else "plains"
@@ -955,7 +1016,13 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)
 		draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.90))))
 		draw_circle(center, token_radius, fill)
-		_draw_unit_glyph(center, token_radius, stack)
+		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
+		if battle_icon != null:
+			var icon_size := token_radius * 1.62
+			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
+			draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
+		else:
+			_draw_unit_glyph(center, token_radius, stack)
 		_draw_stack_health_bar(center, radius, stack)
 		_draw_count_badge(center, token_radius, stack)
 		_draw_stack_caption(center, radius, stack)

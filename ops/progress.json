@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-small-h3maped-port-10184",
-  "currentSliceTitle": "Native RMG Small h3maped Port",
+  "currentSliceId": "unit-art-full-roster-generated-assets-20260523-10184",
+  "currentSliceTitle": "Unit Art Full Roster Generated Assets",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Exact H3M blocker/guard surface repair completed: recovered H3M non-passable body masks now drive h3maped-derived package block masks, decorative filler keeps full passability bodies, and runtime starts are selected around exact masks instead of trimming blockers. Focused controlled blocker/guard audits for 3p seed 11, 2p seeds 28/73, and 3p seed 3 pass with zero body/block gaps; remaining object/movement deltas now match and reflect upstream object selection/placement/count drift.",
+  "currentSliceNotes": "Full-roster generated unit art baseline completed with manifest, battle icon runtime loading, focused report, and repo validation gate.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-22T00:00:00Z",
+  "updatedAt": "2026-05-23T10:10:39Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -14922,6 +14922,65 @@
       "startedAt": "2026-05-07T11:07:17Z",
       "completedAt": "2026-05-07T11:07:17Z",
       "notes": "Added an include_non_launchable_generated_packages index mode for map-editor consumers. Skirmish/browser entries keep the strict launchable-only path, while MapEditorShell requests the inspection index and labels non-launchable generated pairs as Inspect Only. Focused Godot package-browser/editor reports passed."
+    },
+    {
+      "id": "unit-art-full-roster-generated-assets-20260523-10184",
+      "title": "Unit Art Full Roster Generated Assets",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json"
+      ],
+      "purpose": "Generate and validate unique portrait, battle-icon, and overworld-icon art assets for every authored unit, and wire battle stacks to load the authored battle icon surface.",
+      "implementationTargets": [
+        "art/units/",
+        "content/unit_art_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "scripts/autoload/ContentService.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/unit_art_manifest_report.gd",
+        "tests/unit_art_manifest_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "content/units.json contains 103 authored unit records",
+        "art/units had no committed full-roster unit art surfaces before this slice"
+      ],
+      "completionCriteria": [
+        "Every authored unit has one manifest record with portrait, battle_icon, and overworld_icon paths.",
+        "Every generated surface is a unique PNG at the expected size: 384x512 portrait, 160x160 battle icon, and 96x96 overworld icon.",
+        "ContentService exposes and validates unit art manifest records.",
+        "BattleBoardView loads unit battle icons for visible stacks with the procedural glyph as fallback.",
+        "Focused Godot report validates manifest coverage, asset dimensions, unique paths, and live battle icon loading.",
+        "Repository validation includes the unit art manifest and runtime hook gate."
+      ],
+      "nonGoals": [
+        "No copyrighted external unit art import.",
+        "No claim that final hand-painted production art direction is complete.",
+        "No full overworld army-token or town recruitment portrait UI replacement beyond manifest/runtime availability in this slice."
+      ],
+      "updatedAt": "2026-05-23T10:10:39Z",
+      "startedAt": "2026-05-23T10:10:39Z",
+      "completedAt": "2026-05-23T10:10:39Z",
+      "notes": "Completed as a deterministic generated full-roster asset baseline: 103 units, 309 PNG surfaces, manifest validation, and battle stack icon runtime loading.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --import",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Focused unit art report and repository validation passed after generating/importing the full-roster PNG set.",
+      "evidenceHistory": [
+        "Generated 103 unit art records and 309 PNG files under art/units/.",
+        "Battle runtime report loaded battle icons for every visible stack in the river-pass first encounter."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17128,6 +17187,50 @@
         "git diff --check"
       ],
       "remainingGap": "Exact HoMM3 object placement, road quadrant shape, binary H3M parity, and full HoMM3-re algorithm parity are still not claimed; this slice closes the owner-medium category-count-preserving content clustering gap."
+    },
+    {
+      "id": "unit-art-full-roster-generated-assets-20260523-10184",
+      "title": "Unit Art Full Roster Generated Assets",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T10:10:39Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-art-full-roster-generated-assets-20260523-10184"
+      ],
+      "implementationRefs": [
+        "art/units/",
+        "content/unit_art_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "scripts/autoload/ContentService.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/unit_art_manifest_report.gd",
+        "tests/unit_art_manifest_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tools/generate_unit_art_assets.py reproducibly generates deterministic unit art records from content/units.json.",
+        "content/unit_art_manifest.json covers all 103 authored units with portrait, battle_icon, and overworld_icon surfaces.",
+        "art/units contains generated portrait, battle icon, and overworld icon PNGs for every authored unit.",
+        "ContentService validates manifest path shape and file existence and exposes get_unit_art(id).",
+        "BattleBoardView loads battle_icon textures for stack tokens while retaining the procedural glyph fallback.",
+        "tests/unit_art_manifest_report.tscn validates manifest coverage, PNG dimensions, unique paths, and live battle stack icon loading.",
+        "tests/validate_repo.py now gates unit art manifest coverage and runtime hook presence."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --import",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -17792,12 +17895,14 @@
     "Source-node rectangle private context on 2026-05-13 after the fresh reset: active compact h3maped boundary now builds 0x4a3a03 zone-footprint helper scheduling and 0x4cc788 initial source-node rectangle setup without boundary, span-fill, terrain, map-cell, runtime-player, or public-output materialization. Focused report asserts completed phases [template_selection, player_slot_assignment, runtime_zone_records, link_seed_setup, coordinate_replay_and_zone_footprints, zone_footprint_phase_boundary, source_node_rectangle], six queued 0x4a2777 helper inputs for runtime zones [0,1,2,3,4,5], no synthetic 0xd4 source-zone append for one-level land, initial source-node bounds -200..400, constants 0xffffff38 and 0x190, four 0x4cc955 rectangle edges, generation still blocked with h3maped_small_clean_restart_generation_not_ready, and next blocker polygon_split_model_0x4ccb64_0x4ccdfc.",
     "Coordinate replay private context on 2026-05-13 after the fresh reset: active compact h3maped boundary now builds selected-template 0x4a1f3b link seeds and one-level 0x4a17f5/0x4a1701/0x4a1ad8/0x4a19ed coordinate replay without terrain, map-cell, zone-footprint, road, guard, blocker, runtime-player, or public-output materialization. Focused report asserts five link seeds with guard values [3000,3000,3000,6000,6000], completed phases [template_selection, player_slot_assignment, runtime_zone_records, link_seed_setup, coordinate_replay_and_zone_footprints], 18 coordinate placement steps, four interleaved 0x49b3c1 town-choice RNG calls selecting elemental/necropolis/inferno/fortress, final replay RNG state 255755822, bbox span 84, scaled zone centers (23,11), (21,22), (12,23), (18,4), (18,30), (12,11), generation still blocked with h3maped_small_clean_restart_generation_not_ready, and no old top-level inspection-ledger fields exposed.",
     "Reward coordinate commit boundary on 2026-05-13: active small h3maped module now records recovered 0x4aa9b7..0x4aab7b coordinate scan/random-pick boundary called by 0x4aab7e, including generated-cell generator+0x14/+0x20 owner-score gates, helpers 0x4aa603/0x4ae1fd/0x4ae52a/0x4aa3e9, RNG 0x4e7276, and focused assertions that private reward coordinate records, reward object adoption, public objects, roads, and package output remain blocked.",
-    "Reward filter/final-commit helper boundaries on 2026-05-13: active small h3maped module now splits the 0x4aa9b7 blocker into recovered 0x4aa603..0x4aa9b4 filter gates and 0x4aa3e9..0x4aa603 generated-cell/object mutation. Focused report asserts 0x4aa603 child collision 0x49a6f9, special object type 0x36 neighborhood rejection, direction table 0x5a2658, validity helper 0x49a1d8, final footprint helper 0x49a09c, body collision scan, plus 0x4aa3e9 coordinate write to object +0x54..+0x5c, child vfunc slots +0x04/+0x08, transform helper 0x49d2c7, state setters 0x49a932/0x49aa63, and keeps private filter evaluation, generated-cell mutation, reward object adoption, and public package output blocked."
+    "Reward filter/final-commit helper boundaries on 2026-05-13: active small h3maped module now splits the 0x4aa9b7 blocker into recovered 0x4aa603..0x4aa9b4 filter gates and 0x4aa3e9..0x4aa603 generated-cell/object mutation. Focused report asserts 0x4aa603 child collision 0x49a6f9, special object type 0x36 neighborhood rejection, direction table 0x5a2658, validity helper 0x49a1d8, final footprint helper 0x49a09c, body collision scan, plus 0x4aa3e9 coordinate write to object +0x54..+0x5c, child vfunc slots +0x04/+0x08, transform helper 0x49d2c7, state setters 0x49a932/0x49aa63, and keeps private filter evaluation, generated-cell mutation, reward object adoption, and public package output blocked.",
+    "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval."
   ],
-  "lastValidation": "2026-05-20 selector input identity repair: controlled native snapshots now consume manifest inputs for seed, player count, human count, optional computer-only count, water mode, and level count, while the audit separates requested selector identity from observed saved-H3M identity. Existing controlled selector snapshots now pass reference_alignment for 2p seeds 28/73 and 3p seeds 3/11; 4p seed 10 is controlled_reference_template_identity_unverified because the recovered reference reports template 012 while native selects 027 and fresh h3maped regeneration blocked with missing output. Validation passed Python compile, Linux debug/release native builds, Windows debug/release native builds, strict Small boundary report, package surface topology report, public template matrix, controlled selector reaudit, python3 tests/validate_repo.py, jq empty ops/progress.json, git diff --check, and the heroes-progress helper. Full heavy phase snapshot export for seed 11 timed out at 600s and remains a tooling/performance follow-up.",
+  "lastValidation": "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval.",
   "active_slice": {
+    "id": "unit-art-full-roster-generated-assets-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-20",
-    "note": "Selector input identity repair completed: controlled snapshots now honor manifest inputs instead of observed saved-H3M humans. Existing selector snapshots pass reference alignment for 2p seeds 28/73 and 3p seeds 3/11; 4p seed 10 is classified as controlled_reference_template_identity_unverified pending a direct fresh h3maped reference."
+    "updated": "2026-05-23",
+    "note": "Full-roster generated unit art baseline completed; broader production-unit-art goal remains open for final art direction and additional UI/map surface adoption."
   }
 }

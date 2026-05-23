@@ -7,6 +7,7 @@ const ENCOUNTERS_PATH := "%s/encounters.json" % CONTENT_DIR
 const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
 const FACTIONS_PATH := "%s/factions.json" % CONTENT_DIR
 const UNITS_PATH := "%s/units.json" % CONTENT_DIR
+const UNIT_ART_PATH := "%s/unit_art_manifest.json" % CONTENT_DIR
 const ARMY_GROUPS_PATH := "%s/army_groups.json" % CONTENT_DIR
 const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
@@ -91,6 +92,17 @@ func get_hero(id: String) -> Dictionary:
 
 func get_unit(id: String) -> Dictionary:
 	return get_content_by_id(UNITS_PATH, id)
+
+func get_unit_art(id: String) -> Dictionary:
+	var raw := load_json(UNIT_ART_PATH)
+	if raw.is_empty():
+		return {}
+	for item in _items_from_raw(raw):
+		if not (item is Dictionary):
+			continue
+		if String(item.get("unit_id", item.get("id", ""))) == id:
+			return item
+	return {}
 
 func get_army_group(id: String) -> Dictionary:
 	return get_content_by_id(ARMY_GROUPS_PATH, id)
@@ -273,6 +285,16 @@ func _index_items(items: Array) -> Dictionary:
 			index[String(item["id"])] = item
 	return index
 
+func _index_unit_art_items(items: Array) -> Dictionary:
+	var index := {}
+	for item in items:
+		if not (item is Dictionary):
+			continue
+		var unit_id := String(item.get("unit_id", item.get("id", "")))
+		if unit_id != "":
+			index[unit_id] = item
+	return index
+
 func _map_object_footprint_area(item: Dictionary) -> int:
 	var footprint = item.get("footprint", {})
 	if not (footprint is Dictionary):
@@ -283,6 +305,7 @@ func _validate_content() -> void:
 	var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
 	var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
 	var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
+	var unit_art_index := _index_unit_art_items(_items_from_raw(load_json(UNIT_ART_PATH)))
 	var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
 	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
@@ -323,6 +346,7 @@ func _validate_content() -> void:
 		_validate_hero(hero, faction_index, spell_index)
 	for unit in unit_index.values():
 		_validate_unit(unit, faction_index)
+	_validate_unit_art_manifest(unit_index, unit_art_index)
 	for army_group in army_group_index.values():
 		_validate_army_group(army_group, faction_index, unit_index)
 	for building in building_index.values():
@@ -928,6 +952,22 @@ func _validate_unit(unit: Dictionary, faction_index: Dictionary) -> void:
 		push_warning("Unit %s must define hp > 0." % unit_id)
 	if int(unit.get("max_damage", 0)) <= 0:
 		push_warning("Unit %s must define max_damage > 0." % unit_id)
+
+func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Dictionary) -> void:
+	for unit_id in unit_index.keys():
+		if not unit_art_index.has(unit_id):
+			push_warning("Unit art manifest is missing unit %s." % unit_id)
+			continue
+		var record: Dictionary = unit_art_index.get(unit_id, {})
+		for surface in ["portrait", "battle_icon", "overworld_icon"]:
+			var path := String(record.get(surface, ""))
+			if path == "" or not path.begins_with("res://"):
+				push_warning("Unit art %s must define %s as a res:// path." % [unit_id, surface])
+			elif not FileAccess.file_exists(path):
+				push_warning("Unit art %s %s file is missing: %s." % [unit_id, surface, path])
+	for unit_id in unit_art_index.keys():
+		if not unit_index.has(unit_id):
+			push_warning("Unit art manifest references unknown unit %s." % unit_id)
 
 func _validate_army_group(army_group: Dictionary, faction_index: Dictionary, unit_index: Dictionary) -> void:
 	var group_id := String(army_group.get("id", ""))
