@@ -142,6 +142,8 @@ PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_pla
 PACKAGING_PLATFORM_READINESS_REPORT_DOC_PATH = ROOT / "docs" / "packaging-platform-readiness-report.md"
 PACKAGING_PACK_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_pack_export_smoke.py"
 PACKAGING_PACK_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-pack-export-smoke-report.md"
+PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_linux_export_smoke.py"
+PACKAGING_LINUX_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-linux-export-smoke-report.md"
 PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_windows_export_smoke.py"
 PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-windows-export-smoke-report.md"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_report.gd"
@@ -17009,6 +17011,71 @@ def validate_packaging_pack_export_smoke(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaging pack-export smoke doc is missing required text: {required_text}")
 
 
+def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
+    required_paths = (
+        PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,
+        PACKAGING_LINUX_EXPORT_SMOKE_DOC_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing packaging Linux export smoke file: {path.relative_to(ROOT)}")
+
+    if PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH.exists():
+        script_text = PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGING_LINUX_EXPORT_SMOKE",
+            "packaging_linux_export_smoke_v1",
+            "PRESET_NAME = \"Linux Release\"",
+            "--export-release",
+            "heroes-like.x86_64",
+            "heroes-like.pck",
+            "\\x7fELF",
+            "x86_64",
+            "stat.S_IXUSR",
+            "REQUIRED_LINUX_LIBRARIES",
+            "libaurelion_map_persistence.linux.template_release.x86_64.so",
+            "FATAL_EXPORT_PATTERNS",
+            "FATAL_BOOT_PATTERNS",
+            "does_not_claim",
+            "clean-machine smoke coverage",
+            "MIN_BINARY_BYTES",
+            "MIN_PCK_BYTES",
+            "report.json",
+        ):
+            ensure(required_token in script_text, errors, f"Packaging Linux export smoke script is missing required token: {required_token}")
+
+    app_router_path = ROOT / "scripts" / "autoload" / "AppRouter.gd"
+    if app_router_path.exists():
+        app_router_text = app_router_path.read_text(encoding="utf-8")
+        for required_token in (
+            "MAIN_MENU_PACKED_SCENE",
+            "SCENARIO_OUTCOME_PACKED_SCENE",
+            "BATTLE_PACKED_SCENE",
+            "TOWN_PACKED_SCENE",
+            "MAP_EDITOR_PACKED_SCENE",
+            "func _packed_scene_for_route",
+            "change_scene_to_packed(packed_scene)",
+        ):
+            ensure(required_token in app_router_text, errors, f"AppRouter packaged route support is missing required token: {required_token}")
+
+    if PACKAGING_LINUX_EXPORT_SMOKE_DOC_PATH.exists():
+        doc_text = PACKAGING_LINUX_EXPORT_SMOKE_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaging Linux Export Smoke Report",
+            "packaging-linux-binary-export-smoke-20260523-10184",
+            "Linux Release",
+            "--export-release",
+            "heroes-like.x86_64",
+            "heroes-like.pck",
+            "ELF x86_64",
+            "libaurelion_map_persistence.linux.template_release.x86_64.so",
+            "does not claim installer readiness",
+            "clean-machine smoke coverage",
+            "release readiness",
+            "report.json",
+        ):
+            ensure(required_text in doc_text, errors, f"Packaging Linux export smoke doc is missing required text: {required_text}")
+
+
 def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
     required_paths = (
         PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH,
@@ -17571,6 +17638,7 @@ def main() -> int:
     validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
+    validate_packaging_linux_export_smoke(errors)
     validate_packaging_windows_export_smoke(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
@@ -17673,6 +17741,7 @@ def main() -> int:
     print("- animation validation smoke harness now proves catalog, policy, battle troop, and overworld object reports agree across representative battle/overworld/town/spell/artifact/UI events")
     print("- Linux and Windows export presets, native extension libraries, packaged settings paths, and boot metadata now have a focused packaging/platform readiness gate")
     print("- the packaging smoke gate now exports a real Linux Release PCK, boots it with --main-pack, and keeps binary export/install/release readiness as explicit non-claims")
+    print("- Linux binary export smoke now exports a real Linux Release executable, checks ELF/PCK/native library placement, and boots it headlessly as local artifact evidence")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the Master bus")

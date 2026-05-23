@@ -11,7 +11,12 @@ const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
+const MAIN_MENU_PACKED_SCENE := preload("res://scenes/menus/MainMenu.tscn")
+const SCENARIO_OUTCOME_PACKED_SCENE := preload("res://scenes/results/ScenarioOutcomeShell.tscn")
 const OVERWORLD_PACKED_SCENE := preload("res://scenes/overworld/OverworldShell.tscn")
+const BATTLE_PACKED_SCENE := preload("res://scenes/battle/BattleShell.tscn")
+const TOWN_PACKED_SCENE := preload("res://scenes/town/TownShell.tscn")
+const MAP_EDITOR_PACKED_SCENE := preload("res://scenes/editor/MapEditorShell.tscn")
 const AUTOSAVE_DIRTY_FLAG := "runtime_autosave_dirty"
 const AUTOSAVE_PENDING_INTENT_FLAG := "runtime_autosave_pending_intent"
 const AUTOSAVE_PENDING_REASON_FLAG := "runtime_autosave_pending_reason"
@@ -340,13 +345,36 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	}
 
 func _change_scene(scene_path: String) -> void:
+	var packed_scene := _packed_scene_for_route(scene_path)
+	if packed_scene != null:
+		var packed_error := get_tree().change_scene_to_packed(packed_scene)
+		if packed_error != OK:
+			push_error("Failed to change scene to %s (error %d)." % [scene_path, packed_error])
+		return
 	if not FileAccess.file_exists(scene_path):
 		push_error("Scene file is missing: %s" % scene_path)
 		return
 
-	var error := get_tree().change_scene_to_packed(OVERWORLD_PACKED_SCENE) if scene_path == OVERWORLD_SCENE else get_tree().change_scene_to_file(scene_path)
+	var error := get_tree().change_scene_to_file(scene_path)
 	if error != OK:
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
+
+func _packed_scene_for_route(scene_path: String) -> PackedScene:
+	match scene_path:
+		MAIN_MENU_SCENE:
+			return MAIN_MENU_PACKED_SCENE
+		SCENARIO_OUTCOME_SCENE:
+			return SCENARIO_OUTCOME_PACKED_SCENE
+		OVERWORLD_SCENE:
+			return OVERWORLD_PACKED_SCENE
+		BATTLE_SCENE:
+			return BATTLE_PACKED_SCENE
+		TOWN_SCENE:
+			return TOWN_PACKED_SCENE
+		MAP_EDITOR_SCENE:
+			return MAP_EDITOR_PACKED_SCENE
+		_:
+			return null
 
 func _autosave_active_session(
 	session: SessionStateStoreScript.SessionData,
