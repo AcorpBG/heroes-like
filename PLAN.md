@@ -53,6 +53,8 @@ Battle attack and hit token feedback added on 2026-05-23: `BattleBoardView` now 
 
 Battle event token feedback coverage added on 2026-05-23: `BattleBoardView.validation_unit_art_summary()` now exposes active presentation motion totals and per-role counts, and `tests/battle_event_animation_state_report.tscn` proves ranged recoil, status pulse, cast anchor, and death fallback token roles in addition to melee lunge and hit stagger. This is focused validation coverage for existing event-driven token feedback, not final authored animation timing, camera work, imported VFX/audio, or combat balance tuning.
 
+Battle camera presentation added on 2026-05-23: `BattleBoardView` now derives board-side camera focus/shake records from active battle cue playback for movement, melee, retaliation, ranged, hit, death, cast, status, retreat, and surrender events, applies a small bounded battlefield offset in normal animation mode, and exposes `camera_playback` validation summaries. `tests/battle_event_animation_state_report.tscn` now proves ranged/status events create source-target/status camera records and that camera records expire with the event playback lifecycle. This is deterministic camera presentation scaffolding, not final authored cinematic timing, screen shake direction, imported VFX/audio, or combat balance tuning.
+
 Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
 
 Battle VFX cue presentation added on 2026-05-23: battle animation events now preserve source/target stack context for attacks, retaliation, damage, status, death, and spell events, and `BattleBoardView` maps active VFX cue ids into transient board draw entries and lightweight canvas effects for projectile paths, status residue, damage ticks, melee arcs, stack fades, cast anchors, and movement ghosts. `tests/battle_event_animation_state_report.tscn` now proves ranged/status cue ids produce source-target VFX draw entries and expire with playback. This is visible placeholder VFX presentation, not final imported VFX assets, audio playback, camera work, or combat balance tuning.
@@ -5041,6 +5043,28 @@ completionCriteria:
 - Repository validation gates require the new focused report fields and role assertions.
 nonGoals:
 - No final authored animation timing, camera work, imported VFX/audio assets, or combat balance tuning.
+
+Completed owner-directed implementation slice:
+
+id: `battle-camera-presentation-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Derive bounded board-side camera focus and shake presentation from active battle event playback records.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-camera-presentation-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Active movement, attack, impact, spell, status, and exit battle cue records can produce camera presentation records with focus kind, source/target cells, focus coordinates, and bounded shake strength.
+- Normal animation playback applies a bounded battlefield offset while reduced-motion and fast modes suppress camera shake strength.
+- Focused validation proves ranged/status event playback creates source-target/status camera records and that camera records expire with event playback.
+nonGoals:
+- No final authored cinematic timing, screen shake direction, imported VFX/audio assets, or combat balance tuning.
 
 Completed owner-directed implementation slice:
 

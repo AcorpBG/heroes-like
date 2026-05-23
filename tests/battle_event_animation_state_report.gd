@@ -326,6 +326,7 @@ func _validate_board_runtime_summary() -> void:
 	var cue_playback := _validate_active_cue_dispatch(summary)
 	var vfx_playback := _validate_active_vfx_presentation(summary)
 	var audio_playback := _validate_active_audio_playback(summary)
+	var camera_playback := _validate_active_camera_presentation(summary)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
 	_report["cases"]["board_cue_dispatch"] = {
 		"active_cue_playback": cue_playback,
@@ -335,6 +336,9 @@ func _validate_board_runtime_summary() -> void:
 	}
 	_report["cases"]["board_audio_playback"] = {
 		"active_audio_playback": audio_playback,
+	}
+	_report["cases"]["board_camera_presentation"] = {
+		"active_camera_playback": camera_playback,
 	}
 
 func _validate_board_playback_lifecycle() -> void:
@@ -353,6 +357,7 @@ func _validate_board_playback_lifecycle() -> void:
 	var active_cue: Dictionary = active_summary.get("cue_playback", {}) if active_summary.get("cue_playback", {}) is Dictionary else {}
 	var active_vfx: Dictionary = active_summary.get("vfx_playback", {}) if active_summary.get("vfx_playback", {}) is Dictionary else {}
 	var active_audio: Dictionary = active_summary.get("audio_playback", {}) if active_summary.get("audio_playback", {}) is Dictionary else {}
+	var active_camera: Dictionary = active_summary.get("camera_playback", {}) if active_summary.get("camera_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
 	if int(active_playback.get("active_playback_count", 0)) < 2:
@@ -363,6 +368,8 @@ func _validate_board_playback_lifecycle() -> void:
 		_error("VFX lifecycle did not keep source and target draw entries active: %s" % active_vfx)
 	if int(active_audio.get("active_audio_record_count", 0)) < 2:
 		_error("Audio lifecycle did not keep source and target audio records active: %s" % active_audio)
+	if int(active_camera.get("active_camera_record_count", 0)) < 2:
+		_error("Camera lifecycle did not keep source and target presentation records active: %s" % active_camera)
 	await get_tree().create_timer(0.90).timeout
 	var expired_summary: Dictionary = view.validation_unit_art_summary()
 	var expired_states := _observed_animation_states(expired_summary)
@@ -370,6 +377,7 @@ func _validate_board_playback_lifecycle() -> void:
 	var expired_cue: Dictionary = expired_summary.get("cue_playback", {}) if expired_summary.get("cue_playback", {}) is Dictionary else {}
 	var expired_vfx: Dictionary = expired_summary.get("vfx_playback", {}) if expired_summary.get("vfx_playback", {}) is Dictionary else {}
 	var expired_audio: Dictionary = expired_summary.get("audio_playback", {}) if expired_summary.get("audio_playback", {}) is Dictionary else {}
+	var expired_camera: Dictionary = expired_summary.get("camera_playback", {}) if expired_summary.get("camera_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
 	if int(expired_playback.get("active_playback_count", -1)) != 0:
@@ -380,6 +388,8 @@ func _validate_board_playback_lifecycle() -> void:
 		_error("VFX lifecycle did not expire draw entries: %s" % expired_vfx)
 	if int(expired_audio.get("active_audio_record_count", -1)) != 0:
 		_error("Audio lifecycle did not expire audio records: %s" % expired_audio)
+	if int(expired_camera.get("active_camera_record_count", -1)) != 0:
+		_error("Camera lifecycle did not expire presentation records: %s" % expired_camera)
 	view.queue_free()
 	await get_tree().process_frame
 	_report["cases"]["board_playback_lifecycle"] = {
@@ -393,6 +403,8 @@ func _validate_board_playback_lifecycle() -> void:
 		"expired_vfx_playback": expired_vfx,
 		"active_audio_playback": active_audio,
 		"expired_audio_playback": expired_audio,
+		"active_camera_playback": active_camera,
+		"expired_camera_playback": expired_camera,
 	}
 
 func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
@@ -444,6 +456,26 @@ func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
 	if String(audio_playback.get("audio_bus", "")) != "Master":
 		_error("Audio playback should route generated battle cues through Master bus: %s" % audio_playback)
 	return audio_playback
+
+func _validate_active_camera_presentation(summary: Dictionary) -> Dictionary:
+	var camera_playback: Dictionary = summary.get("camera_playback", {}) if summary.get("camera_playback", {}) is Dictionary else {}
+	if int(camera_playback.get("active_camera_record_count", 0)) < 2:
+		_error("Camera presentation did not materialize both source and target event records: %s" % camera_playback)
+	if int(camera_playback.get("shake_record_count", 0)) < 2:
+		_error("Camera presentation did not mark ranged/status records with impact shake: %s" % camera_playback)
+	var focus_counts: Dictionary = camera_playback.get("focus_kind_counts", {}) if camera_playback.get("focus_kind_counts", {}) is Dictionary else {}
+	if int(focus_counts.get("source_target", 0)) < 1 or int(focus_counts.get("status", 0)) < 1:
+		_error("Camera presentation did not classify source-target and status focus kinds: %s" % camera_playback)
+	if String(camera_playback.get("strongest_event_id", "")) == "":
+		_error("Camera presentation did not identify a strongest active event: %s" % camera_playback)
+	if float(camera_playback.get("strongest_shake_strength", 0.0)) <= 0.0:
+		_error("Camera presentation did not expose positive shake strength: %s" % camera_playback)
+	var max_offset := float(camera_playback.get("max_offset_px", 0.0))
+	if max_offset <= 0.0:
+		_error("Camera presentation did not expose a positive max offset: %s" % camera_playback)
+	if absf(float(camera_playback.get("offset_x", 0.0))) > max_offset + 0.01 or absf(float(camera_playback.get("offset_y", 0.0))) > max_offset + 0.01:
+		_error("Camera presentation offset exceeded its bounded max: %s" % camera_playback)
+	return camera_playback
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(

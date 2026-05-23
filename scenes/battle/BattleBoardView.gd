@@ -72,6 +72,7 @@ const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
 const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
 const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
 const BATTLE_AUDIO_BUS := "Master"
+const BATTLE_CAMERA_MAX_OFFSET_PX := 8.0
 
 var _session = null
 var _battle: Dictionary = {}
@@ -478,6 +479,7 @@ func validation_unit_art_summary() -> Dictionary:
 		"cue_playback": validation_cue_playback_summary(),
 		"vfx_playback": validation_vfx_playback_summary(),
 		"audio_playback": validation_audio_playback_summary(),
+		"camera_playback": validation_camera_playback_summary(),
 		"presentation_motion_count": presentation_motion_count,
 		"presentation_motion_roles": presentation_motion_roles,
 		"stacks": stack_entries,
@@ -573,6 +575,38 @@ func validation_audio_playback_summary() -> Dictionary:
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"muted": SettingsService.master_volume_percent() <= 0,
 		"active_records": records,
+	}
+
+func validation_camera_playback_summary() -> Dictionary:
+	_expire_animation_playback_records()
+	var stack_cells := _stack_cells()
+	var hex_layout := _current_hex_layout()
+	var records := _camera_playback_records(hex_layout, stack_cells)
+	var focus_kind_counts := {}
+	var shake_record_count := 0
+	var strongest_record := {}
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		var focus_kind := String(record.get("focus_kind", "")).strip_edges()
+		if focus_kind != "":
+			focus_kind_counts[focus_kind] = int(focus_kind_counts.get(focus_kind, 0)) + 1
+		if float(record.get("shake_strength", 0.0)) > 0.0:
+			shake_record_count += 1
+		if strongest_record.is_empty() or float(record.get("shake_strength", 0.0)) > float(strongest_record.get("shake_strength", 0.0)):
+			strongest_record = record
+	var offset := _battle_camera_offset_for_records(records)
+	return {
+		"active_camera_record_count": records.size(),
+		"focus_kind_counts": focus_kind_counts,
+		"shake_record_count": shake_record_count,
+		"strongest_event_id": String(strongest_record.get("event_id", "")),
+		"strongest_focus_kind": String(strongest_record.get("focus_kind", "")),
+		"strongest_shake_strength": snappedf(float(strongest_record.get("shake_strength", 0.0)), 0.001),
+		"offset_x": snappedf(offset.x, 0.01),
+		"offset_y": snappedf(offset.y, 0.01),
+		"max_offset_px": BATTLE_CAMERA_MAX_OFFSET_PX,
+		"records": records,
 	}
 
 func validation_terrain_rendering_summary() -> Dictionary:
@@ -898,6 +932,7 @@ func _draw() -> void:
 	var field_rect := board_rect.grow(-12.0)
 	var hex_field_rect := _hex_field_rect(field_rect)
 	var hex_layout := _hex_layout(hex_field_rect)
+	hex_layout = _camera_adjusted_hex_layout(hex_layout)
 	var terrain_texture_loaded := _draw_terrain(field_rect, hex_layout)
 	_draw_hex_grid(hex_layout, terrain_texture_loaded)
 	_draw_field_objectives(hex_layout)
@@ -2398,6 +2433,145 @@ func _current_hex_layout() -> Dictionary:
 	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
 	var field_rect := board_rect.grow(-12.0)
 	return _hex_layout(_hex_field_rect(field_rect))
+
+func _camera_adjusted_hex_layout(hex_layout: Dictionary) -> Dictionary:
+	var adjusted := hex_layout.duplicate(true)
+	var offset := _battle_camera_offset_for_records(_camera_playback_records(hex_layout, _stack_cells()))
+	if offset.length() <= 0.01:
+		return adjusted
+	var origin: Vector2 = adjusted.get("origin", Vector2.ZERO)
+	adjusted["origin"] = origin + offset
+	var rect: Rect2 = adjusted.get("rect", Rect2())
+	adjusted["rect"] = Rect2(rect.position + offset, rect.size)
+	return adjusted
+
+func _camera_playback_records(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
+	var records: Array = []
+	for battle_id_value in _stack_animation_cue_playback_records.keys():
+		var battle_id := String(battle_id_value)
+		var cue_record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+		if cue_record.is_empty() or not stack_cells.has(battle_id):
+			continue
+		var camera_record := _camera_playback_record_for_cue(cue_record, hex_layout, stack_cells)
+		if not camera_record.is_empty():
+			records.append(camera_record)
+	return records
+
+func _camera_playback_record_for_cue(cue_record: Dictionary, hex_layout: Dictionary, stack_cells: Dictionary) -> Dictionary:
+	var battle_id := String(cue_record.get("battle_id", "")).strip_edges()
+	if battle_id == "" or not stack_cells.has(battle_id):
+		return {}
+	var subject_cell: Vector2i = stack_cells.get(battle_id)
+	var source_id := String(cue_record.get("source_battle_id", "")).strip_edges()
+	if source_id == "":
+		source_id = battle_id
+	var target_id := String(cue_record.get("target_battle_id", "")).strip_edges()
+	if target_id == "":
+		target_id = battle_id
+	var source_cell: Vector2i = stack_cells.get(source_id, subject_cell)
+	var target_cell: Vector2i = stack_cells.get(target_id, subject_cell)
+	var from_cell := Vector2i(int(cue_record.get("from_q", -1)), int(cue_record.get("from_r", -1)))
+	var to_cell := Vector2i(int(cue_record.get("to_q", -1)), int(cue_record.get("to_r", -1)))
+	if _cell_in_bounds(from_cell) and _cell_in_bounds(to_cell):
+		source_cell = from_cell
+		target_cell = to_cell
+	var subject_center := _hex_center(subject_cell, hex_layout)
+	var source_center := _hex_center(source_cell, hex_layout)
+	var target_center := _hex_center(target_cell, hex_layout)
+	var event_id := String(cue_record.get("event_id", ""))
+	var focus_kind := _camera_focus_kind_for_event(event_id)
+	if focus_kind == "":
+		return {}
+	var focus := subject_center
+	match focus_kind:
+		"travel":
+			focus = source_center.lerp(target_center, _cue_playback_progress(cue_record))
+		"source_target", "spell":
+			focus = source_center.lerp(target_center, 0.5)
+		"impact", "status", "exit":
+			focus = target_center
+	var shake_strength := _camera_shake_strength_for_event(event_id)
+	var mode := String(cue_record.get("mode", AnimationCueCatalogScript.MODE_NORMAL))
+	if mode == AnimationCueCatalogScript.MODE_FAST or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
+		shake_strength = 0.0
+	return {
+		"battle_id": battle_id,
+		"event_id": event_id,
+		"serial": int(cue_record.get("serial", 0)),
+		"focus_kind": focus_kind,
+		"source_battle_id": source_id,
+		"target_battle_id": target_id,
+		"subject_q": subject_cell.x,
+		"subject_r": subject_cell.y,
+		"source_q": source_cell.x,
+		"source_r": source_cell.y,
+		"target_q": target_cell.x,
+		"target_r": target_cell.y,
+		"focus_x": snappedf(focus.x, 0.01),
+		"focus_y": snappedf(focus.y, 0.01),
+		"progress": snappedf(_cue_playback_progress(cue_record), 0.001),
+		"shake_strength": snappedf(shake_strength, 0.001),
+		"mode": mode,
+	}
+
+func _camera_focus_kind_for_event(event_id: String) -> String:
+	match event_id:
+		"battle_unit_move":
+			return "travel"
+		"battle_unit_ranged_attack", "battle_unit_melee_attack", "battle_retaliation":
+			return "source_target"
+		"battle_unit_cast":
+			return "spell"
+		"battle_unit_hit", "battle_unit_death":
+			return "impact"
+		"battle_status_applied":
+			return "status"
+		"battle_unit_retreat", "battle_unit_surrender":
+			return "exit"
+	return ""
+
+func _camera_shake_strength_for_event(event_id: String) -> float:
+	match event_id:
+		"battle_unit_death":
+			return 0.62
+		"battle_unit_hit":
+			return 0.38
+		"battle_unit_melee_attack", "battle_retaliation":
+			return 0.24
+		"battle_unit_ranged_attack":
+			return 0.16
+		"battle_unit_cast":
+			return 0.12
+		"battle_status_applied":
+			return 0.10
+		"battle_unit_retreat", "battle_unit_surrender":
+			return 0.08
+	return 0.0
+
+func _battle_camera_offset_for_records(records: Array) -> Vector2:
+	if records.is_empty():
+		return Vector2.ZERO
+	var strongest := {}
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		if strongest.is_empty() or float(record.get("shake_strength", 0.0)) > float(strongest.get("shake_strength", 0.0)):
+			strongest = record
+	if strongest.is_empty():
+		return Vector2.ZERO
+	var progress := clampf(float(strongest.get("progress", 0.0)), 0.0, 1.0)
+	var shake_strength := clampf(float(strongest.get("shake_strength", 0.0)), 0.0, 1.0)
+	if shake_strength <= 0.0:
+		return Vector2.ZERO
+	var decay := 1.0 - progress
+	var serial := float(int(strongest.get("serial", 0)))
+	var pulse := Vector2(sin(progress * TAU * 2.0 + serial), cos(progress * TAU * 1.5 + serial * 0.61))
+	if pulse.length() > 0.0:
+		pulse = pulse.normalized()
+	var offset := pulse * BATTLE_CAMERA_MAX_OFFSET_PX * shake_strength * decay
+	if offset.length() > BATTLE_CAMERA_MAX_OFFSET_PX:
+		offset = offset.normalized() * BATTLE_CAMERA_MAX_OFFSET_PX
+	return offset
 
 func _is_legal_destination_cell(cell: Vector2i) -> bool:
 	if not _cell_in_bounds(cell):
