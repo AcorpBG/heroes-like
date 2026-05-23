@@ -5416,6 +5416,31 @@ nonGoals:
 
 Completed implementation slice:
 
+id: `strategic-ai-live-turn-execution-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove live commander resource-front target selection is executed by the real enemy turn loop and produces map-control consequences without adding durable task state.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/strategic-ai-live-target-selection-report.md`
+implementationTargets:
+- `tests/ai_hero_task_live_turn_execution_report.gd`
+- `tests/ai_hero_task_live_turn_execution_report.tscn`
+- `docs/strategic-ai-live-turn-execution-report.md`
+- `tests/validate_repo.py`
+- `ops/progress.json`
+completionCriteria:
+- `EnemyTurnRules.run_enemy_turn(...)` assigns no-target live commanders to derived resource-front targets through the existing raid advancement path.
+- River Pass live-turn validation proves Vaska seizes `river_free_company` while companion reservation steers Sable to `river_signal_post`.
+- Both assigned live targets emit `ai_target_assigned` and `ai_site_seized` events through normal arrival resolution.
+- No durable `hero_task_state`, save-version bump, save migration, or public event leak is introduced.
+nonGoals:
+- No full strategic AI quality claim.
+- No persistent AI task board.
+- No long-route path quality, town/hero/artifact target expansion, or UI surfacing.
+
+Completed implementation slice:
+
 id: `strategic-ai-raid-regroup-retreat-20260523-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Add bounded strategic AI retreat/regroup behavior so damaged active raids can rebuild at owned towns before resuming pressure.
