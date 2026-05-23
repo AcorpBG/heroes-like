@@ -8,7 +8,7 @@ const REQUIRED_POLICY := "report_only_launch_difficulty_balance_probe"
 const REQUIRED_DIFFICULTIES := ["normal", "hard"]
 const REQUIRED_SAMPLE_LIMIT := 12
 const MAX_NORMAL_TUNING_QUEUE_ITEMS := 0
-const MAX_HARD_TUNING_QUEUE_ITEMS := 3
+const MAX_HARD_TUNING_QUEUE_ITEMS := 0
 const RESOLVED_HARD_WATCH_COHORT_IDS := ["bloodrush", "formation_guard", "stonewake-watch"]
 
 func _ready() -> void:
@@ -102,7 +102,7 @@ func _assert_hard_queue(row: Dictionary, payload: Dictionary) -> bool:
 		return false
 	var item_count := int(row.get("tuning_queue_item_count", 0))
 	if item_count > MAX_HARD_TUNING_QUEUE_ITEMS:
-		_fail("Hard difficulty tuning queue regressed above the current watch budget.", payload)
+		_fail("Hard difficulty tuning queue must remain clear.", payload)
 		return false
 	var top_contributors: Array = row.get("tuning_queue_top_contributors", []) if row.get("tuning_queue_top_contributors", []) is Array else []
 	if item_count > 0 and top_contributors.is_empty():
@@ -158,6 +158,7 @@ func _compact_rows(rows_value: Variant) -> Array:
 			"tuning_queue_item_count": int(row.get("tuning_queue_item_count", 0)),
 			"tuning_queue_signature": String(row.get("tuning_queue_signature", "")),
 			"tuning_queue_categories": row.get("tuning_queue_categories", []),
+			"tuning_queue_top_contributors": row.get("tuning_queue_top_contributors", []),
 		})
 	return compact
 

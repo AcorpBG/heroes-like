@@ -16528,6 +16528,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
     forest_balance_doc_path = ROOT / "docs/battle-autoplay-forest-cohort-balance-pass-report.md"
     hard_watch_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-pass-report.md"
+    hard_queue_clear_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     runtime_consequence_doc_path = ROOT / "docs/battle-autoplay-runtime-consequence-harness-report.md"
     runtime_consequence_matrix_doc_path = ROOT / "docs/battle-autoplay-runtime-consequence-matrix-report.md"
@@ -16560,6 +16561,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         cohort_balance_doc_path,
         forest_balance_doc_path,
         hard_watch_doc_path,
+        hard_queue_clear_doc_path,
         difficulty_sweep_doc_path,
         runtime_consequence_doc_path,
         runtime_consequence_matrix_doc_path,
@@ -16984,6 +16986,22 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in hard_watch_doc_text, errors, f"Battle autoplay hard difficulty watch doc is missing required text: {required_text}")
+    if hard_queue_clear_doc_path.exists():
+        hard_queue_clear_doc_text = hard_queue_clear_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Hard Difficulty Queue Clear Pass Report",
+            "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
+            "MAX_HARD_TUNING_QUEUE_ITEMS := 0",
+            "8a238ca3",
+            "bc42c7b1",
+            "tuning_queue_item_count",
+            "0",
+            "river_pass_hollow_mire",
+            "causeway_reed_camp",
+            "normal-vs-hard",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in hard_queue_clear_doc_text, errors, f"Battle autoplay hard difficulty queue clear doc is missing required text: {required_text}")
     if difficulty_sweep_doc_path.exists():
         difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
         for required_text in (
@@ -17021,7 +17039,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "report_only_runtime_consequence_matrix_thresholds_v1",
             "runtime_consequence_matrix_gate.status",
             "matrix_signature",
-            "0fd488df",
+            "cab8ca24",
             "zero_consequence_sample_count",
             "ability_consequence_cohort_count",
             "difficulty, terrain, scenario, matchup, and ability presence",

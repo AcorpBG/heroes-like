@@ -19,7 +19,7 @@ The prior runtime consequence harness proved that sampled battles produce status
 ## Current Evidence
 
 - `runtime_consequence_matrix_gate.status`: `pass`
-- `matrix_signature`: `0fd488df`
+- `matrix_signature`: `cab8ca24`
 - `sample_count`: `12`
 - `difficulty_cohort_count`: `3`
 - `terrain_cohort_count`: `3`
