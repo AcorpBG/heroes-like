@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
-  "currentSliceTitle": "Strategic AI Multi-Scenario Pressure Coverage",
+  "currentSliceId": "battle-status-clear-animation-presentation-20260523-10184",
+  "currentSliceTitle": "Battle Status Clear Animation Presentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: shared headless harness now proves live enemy pressure launches across 5 authored scenarios and 9 enemy faction cases. Prismhearth Watch preserves halo_spire as a faction_mireclaw controller base, controller-owned enemy towns survive session normalization/control transitions, and normal enemy turns launch pressure without hero_task_state/save/public-event leaks.",
+  "currentSliceNotes": "Completed: status cleanse and round-expiry removals now emit battle_status_expired/status_expired, BattleBoardView presents status_clear motion/VFX/audio/camera records, and the focused animation report proves Prism Bastion cleanse plus round-expiry purge cases.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T18:18:00Z",
+  "updatedAt": "2026-05-23T18:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17072,6 +17072,49 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-status-clear-animation-presentation-20260523-10184",
+      "title": "Battle Status Clear Animation Presentation",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Present status cleanse and round-expiry effects as first-class battle animation events instead of reusing status-apply presentation.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-status-clear-animation-presentation-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "BattleRules maps battle_status_expired to status_expired and emits it for real spell cleanse results and round-start expired effect purges.",
+        "BattleBoardView presents battle_status_expired through status_clear token motion, VFX draw entries, audio cue dispatch, and status camera focus.",
+        "The focused battle event animation report proves Prism Bastion cleanse and round-expiry cases with status_expired/status_clear evidence."
+      ],
+      "nonGoals": [
+        "No final authored VFX/audio assets.",
+        "No combat balance tuning or spell retune.",
+        "No broad battle UI redesign."
+      ],
+      "updatedAt": "2026-05-23T18:35:00Z",
+      "startedAt": "2026-05-23T18:25:00Z",
+      "completedAt": "2026-05-23T18:35:00Z",
+      "completionNotes": "Completed: status cleanse and round-expiry removals now emit battle_status_expired/status_expired, BattleBoardView presents status_clear motion/VFX/audio/camera records, and the focused animation report proves Prism Bastion cleanse plus round-expiry purge cases.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -20809,6 +20852,44 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-status-clear-animation-presentation-20260523-10184",
+      "title": "Battle Status Clear Animation Presentation",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T18:35:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-status-clear-animation-presentation-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-status-clear-animation-presentation-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "docs/battle-status-clear-animation-presentation-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleRules maps battle_status_expired to status_expired and emits it for real spell cleanse removals and round-start expired-effect purges.",
+        "BattleBoardView maps the event to status_clear token motion, vfx_placeholder_status_clear, audio_placeholder_status_clear, and status camera focus/shake records.",
+        "The focused battle event animation report now includes status_cleanse and status_round_expiry cases and passes with 17 total cases.",
+        "This is placeholder-cue presentation coverage only; final VFX/audio art and combat balance tuning remain non-goals."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -21888,26 +21969,35 @@
         "python3 tests/validate_repo.py"
       ],
       "summary": "Focused packaged runtime issue-log smoke passed: export return code 0, packaged scene return code 0, 287498580-byte PCK, one sanitized issue record under user://debug, latest issue snapshot present, and no fatal boot pattern matches."
+    },
+    {
+      "id": "battle-status-clear-animation-presentation-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T18:35:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle animation report passed with 17 cases including status_cleanse and status_round_expiry; validate_repo, py_compile, progress JSON, diff whitespace, and headless simulation harness passed. Headless harness retained the known generated-map deferred boundary warning while reporting ok true."
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-23T18:18:00Z",
-    "sliceId": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
+    "id": "battle-status-clear-animation-presentation-20260523-10184",
+    "status": "passed",
+    "updatedAt": "2026-05-23T18:35:00Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
-    ],
-    "status": "passed"
+    ]
   },
-  "active_slice": {
-    "id": "strategic-ai-multi-scenario-pressure-coverage-20260523-10184",
-    "status": "completed",
-    "updated": "2026-05-23T18:18:00Z",
-    "note": "Completed: shared headless harness now proves live enemy pressure launches across 5 authored scenarios and 9 enemy faction cases. Prismhearth Watch preserves halo_spire as a faction_mireclaw controller base, controller-owned enemy towns survive session normalization/control transitions, and normal enemy turns launch pressure without hero_task_state/save/public-event leaks."
-  },
-  "currentSliceUpdatedAt": "2026-05-23T18:18:00Z"
+  "active_slice": "battle-status-clear-animation-presentation-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T18:35:00Z"
 }

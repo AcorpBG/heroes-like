@@ -562,7 +562,7 @@ func validation_vfx_playback_summary() -> Dictionary:
 		match String(entry.get("kind", "")):
 			"projectile_path":
 				projectile_count += 1
-			"status_residue":
+			"status_residue", "status_clear":
 				status_count += 1
 			"damage_tick", "melee_arc", "stack_fade":
 				impact_count += 1
@@ -1245,7 +1245,7 @@ func _sequence_delay_msec_for_event(event: Dictionary, cue_record: Dictionary) -
 	var policy := String(cue_record.get("selected_playback_policy", "")).strip_edges()
 	if policy.begins_with("queue_after_"):
 		return STACK_ANIMATION_REACTION_DELAY_MSEC
-	if event_id in ["battle_unit_hit", "battle_unit_death", "battle_status_applied"] and String(event.get("source_battle_id", "")).strip_edges() != "":
+	if event_id in ["battle_unit_hit", "battle_unit_death", "battle_status_applied", "battle_status_expired"] and String(event.get("source_battle_id", "")).strip_edges() != "":
 		return STACK_ANIMATION_REACTION_DELAY_MSEC
 	if event_id == "battle_retaliation":
 		return STACK_ANIMATION_REACTION_DELAY_MSEC
@@ -1510,6 +1510,8 @@ func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: D
 			return _attack_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress, "cast_anchor")
 		"battle_unit_hit", "battle_status_applied", "battle_unit_death":
 			return _impact_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress)
+		"battle_status_expired":
+			return _status_clear_presentation_motion(record, battle_id, cell, hex_layout, stack_cells, progress)
 	return {}
 
 func _stack_presentation_progress(battle_id: String) -> float:
@@ -1619,6 +1621,31 @@ func _impact_presentation_motion(record: Dictionary, battle_id: String, cell: Ve
 		"progress": snappedf(progress, 0.001),
 	}
 
+func _status_clear_presentation_motion(record: Dictionary, battle_id: String, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary, progress: float) -> Dictionary:
+	if not _cell_in_bounds(cell):
+		return {}
+	var source_id := String(record.get("source_battle_id", "")).strip_edges()
+	var source_cell := cell
+	if source_id != "" and stack_cells.has(source_id):
+		source_cell = stack_cells.get(source_id)
+	var origin := _hex_center(cell, hex_layout)
+	var radius := float(hex_layout.get("radius", 1.0))
+	var lift := sin(progress * PI) * radius * 0.08
+	var center := origin + Vector2(0.0, -lift)
+	return {
+		"event_id": String(record.get("event_id", "")),
+		"role": "status_clear",
+		"source_battle_id": source_id,
+		"target_battle_id": battle_id,
+		"from_q": source_cell.x,
+		"from_r": source_cell.y,
+		"to_q": cell.x,
+		"to_r": cell.y,
+		"center_x": snappedf(center.x, 0.01),
+		"center_y": snappedf(center.y, 0.01),
+		"progress": snappedf(progress, 0.001),
+	}
+
 func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	for entry in _vfx_draw_entries(hex_layout, stack_cells):
 		if not (entry is Dictionary):
@@ -1633,6 +1660,8 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_projectile_vfx(start, end, radius, progress)
 			"status_residue":
 				_draw_status_residue_vfx(center, radius, progress)
+			"status_clear":
+				_draw_status_clear_vfx(center, radius, progress)
 			"damage_tick":
 				_draw_damage_tick_vfx(center, radius, progress)
 			"melee_arc":
@@ -1721,6 +1750,8 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "projectile_path"
 		"vfx_placeholder_status_residue":
 			return "status_residue"
+		"vfx_placeholder_status_clear":
+			return "status_clear"
 		"vfx_placeholder_damage_tick":
 			return "damage_tick"
 		"vfx_placeholder_melee_arc":
@@ -1759,6 +1790,16 @@ func _draw_status_residue_vfx(center: Vector2, radius: float, progress: float) -
 		var angle := progress * TAU + float(index) * TAU / 3.0
 		var pip := center + Vector2(cos(angle), sin(angle)) * radius * 0.46
 		draw_circle(pip, maxf(2.4, radius * 0.055), Color(color.r, color.g, color.b, 0.86))
+
+func _draw_status_clear_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.12, 1.0 - progress)
+	var color := Color(0.72, 0.88, 1.0, 0.72 * alpha)
+	var inner := radius * (0.24 + progress * 0.14)
+	var outer := radius * (0.64 + progress * 0.24)
+	draw_circle(center, outer, Color(color.r, color.g, color.b, 0.06), true)
+	draw_circle(center, outer, color, false, maxf(1.6, radius * 0.04), true)
+	draw_line(center + Vector2(-inner, 0.0), center + Vector2(inner, 0.0), color, maxf(1.6, radius * 0.045), true)
+	draw_line(center + Vector2(0.0, -inner), center + Vector2(0.0, inner), color, maxf(1.6, radius * 0.045), true)
 
 func _draw_damage_tick_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var span := radius * (0.26 + progress * 0.18)
@@ -2612,7 +2653,7 @@ func _camera_focus_kind_for_event(event_id: String) -> String:
 			return "spell"
 		"battle_unit_hit", "battle_unit_death":
 			return "impact"
-		"battle_status_applied":
+		"battle_status_applied", "battle_status_expired":
 			return "status"
 		"battle_unit_retreat", "battle_unit_surrender":
 			return "exit"
@@ -2630,7 +2671,7 @@ func _camera_shake_strength_for_event(event_id: String) -> float:
 			return 0.16
 		"battle_unit_cast":
 			return 0.12
-		"battle_status_applied":
+		"battle_status_applied", "battle_status_expired":
 			return 0.10
 		"battle_unit_retreat", "battle_unit_surrender":
 			return 0.08
