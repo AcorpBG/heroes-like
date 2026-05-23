@@ -16513,6 +16513,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     difficulty_sweep_scene_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.tscn"
     runtime_consequence_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.gd"
     runtime_consequence_scene_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.tscn"
+    runtime_consequence_matrix_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_matrix_report.gd"
+    runtime_consequence_matrix_scene_path = ROOT / "tests/battle_autoplay_runtime_consequence_matrix_report.tscn"
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     withdrawal_report_path = ROOT / "tests/battle_ai_withdrawal_decision_report.gd"
@@ -16528,6 +16530,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     hard_watch_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     runtime_consequence_doc_path = ROOT / "docs/battle-autoplay-runtime-consequence-harness-report.md"
+    runtime_consequence_matrix_doc_path = ROOT / "docs/battle-autoplay-runtime-consequence-matrix-report.md"
     withdrawal_doc_path = ROOT / "docs/battle-ai-withdrawal-decision-report.md"
     for path in (
         harness_path,
@@ -16542,6 +16545,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         difficulty_sweep_scene_path,
         runtime_consequence_report_path,
         runtime_consequence_scene_path,
+        runtime_consequence_matrix_report_path,
+        runtime_consequence_matrix_scene_path,
         tactical_report_path,
         tactical_scene_path,
         withdrawal_report_path,
@@ -16557,6 +16562,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         hard_watch_doc_path,
         difficulty_sweep_doc_path,
         runtime_consequence_doc_path,
+        runtime_consequence_matrix_doc_path,
         withdrawal_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
@@ -16594,10 +16600,14 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "runtime_consequence_gate",
             "battle_autoplay_runtime_consequence_profile_v1",
             "battle_autoplay_runtime_consequence_distribution_v1",
+            "battle_autoplay_runtime_consequence_matrix_v1",
             "report_only_runtime_consequence_thresholds_v1",
+            "report_only_runtime_consequence_matrix_thresholds_v1",
             "func _collect_runtime_events",
             "func _collect_runtime_effect_state",
             "func _runtime_consequence_gate",
+            "func _runtime_consequence_matrix",
+            "func _runtime_consequence_matrix_gate",
             "report_only_launch_difficulty_balance_probe",
             "DEFAULT_DIFFICULTY_SWEEP_IDS",
             "battle_launch_difficulty",
@@ -16665,8 +16675,11 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "initial_ability_distribution",
             "runtime_consequence_distribution",
             "runtime_consequence_gate",
+            "runtime_consequence_matrix",
+            "runtime_consequence_matrix_gate",
             "battle_autoplay_runtime_consequence_profile_v1",
             "report_only_runtime_consequence_thresholds_v1",
+            "report_only_runtime_consequence_matrix_thresholds_v1",
             "balance_matrix",
             "balance_matrix_gate",
             "report_only_balance_matrix_thresholds_v1",
@@ -16699,7 +16712,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "must pass without terminal-margin warnings",
             "runtime_consequence_distribution",
             "runtime_consequence_gate",
+            "runtime_consequence_matrix",
+            "runtime_consequence_matrix_gate",
             "Battle autoplay runtime consequence gate must pass",
+            "Battle autoplay runtime consequence matrix gate must pass",
             "not outliers.is_empty()",
             "report_only_balance_matrix_thresholds_v1",
             "get_tree().quit(1)",
@@ -16766,6 +16782,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "report_only_runtime_consequence_thresholds_v1",
             "runtime_consequence_distribution",
             "runtime_consequence_gate",
+            "runtime_consequence_matrix",
+            "runtime_consequence_matrix_gate",
             "samples_with_ability_consequence_count",
             "total_status_application_event_count",
             "observed_source_types",
@@ -16778,6 +16796,30 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if runtime_consequence_scene_path.exists():
         runtime_consequence_scene_text = runtime_consequence_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_runtime_consequence_report.gd" in runtime_consequence_scene_text, errors, "Battle autoplay runtime consequence scene is not wired to its script.")
+    if runtime_consequence_matrix_report_path.exists():
+        runtime_consequence_matrix_text = runtime_consequence_matrix_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_RUNTIME_CONSEQUENCE_MATRIX_REPORT",
+            "battle_autoplay_runtime_consequence_matrix_v1",
+            "report_only_runtime_consequence_matrix_thresholds_v1",
+            "runtime_consequence_matrix",
+            "runtime_consequence_matrix_gate",
+            "matrix_signature",
+            "repeat_matrix_signature",
+            "zero_consequence_sample_count",
+            "ability_consequence_cohort_count",
+            "difficulty",
+            "terrain",
+            "scenario",
+            "matchup",
+            "ability_presence",
+            "battle_status_applied",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in runtime_consequence_matrix_text, errors, f"Battle autoplay runtime consequence matrix report is missing token: {required_token}")
+    if runtime_consequence_matrix_scene_path.exists():
+        runtime_consequence_matrix_scene_text = runtime_consequence_matrix_scene_path.read_text(encoding="utf-8")
+        ensure("battle_autoplay_runtime_consequence_matrix_report.gd" in runtime_consequence_matrix_scene_text, errors, "Battle autoplay runtime consequence matrix scene is not wired to its script.")
     if tactical_report_path.exists():
         tactical_report_text = tactical_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -16970,6 +17012,23 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in runtime_consequence_doc_text, errors, f"Battle autoplay runtime consequence doc is missing required text: {required_text}")
+    if runtime_consequence_matrix_doc_path.exists():
+        runtime_consequence_matrix_doc_text = runtime_consequence_matrix_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Runtime Consequence Matrix Report",
+            "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+            "battle_autoplay_runtime_consequence_matrix_v1",
+            "report_only_runtime_consequence_matrix_thresholds_v1",
+            "runtime_consequence_matrix_gate.status",
+            "matrix_signature",
+            "0fd488df",
+            "zero_consequence_sample_count",
+            "ability_consequence_cohort_count",
+            "difficulty, terrain, scenario, matchup, and ability presence",
+            "report-only balance instrumentation",
+            "No final combat balance.",
+        ):
+            ensure(required_text in runtime_consequence_matrix_doc_text, errors, f"Battle autoplay runtime consequence matrix doc is missing required text: {required_text}")
     if withdrawal_doc_path.exists():
         withdrawal_doc_text = withdrawal_doc_path.read_text(encoding="utf-8")
         for required_text in (

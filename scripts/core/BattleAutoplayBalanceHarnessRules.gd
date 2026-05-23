@@ -31,7 +31,9 @@ const TUNING_QUEUE_HIGH_PRIORITY := 80
 const TUNING_QUEUE_MEDIUM_PRIORITY := 50
 const RUNTIME_CONSEQUENCE_PROFILE_SCHEMA := "battle_autoplay_runtime_consequence_profile_v1"
 const RUNTIME_CONSEQUENCE_DISTRIBUTION_SCHEMA := "battle_autoplay_runtime_consequence_distribution_v1"
+const RUNTIME_CONSEQUENCE_MATRIX_SCHEMA := "battle_autoplay_runtime_consequence_matrix_v1"
 const RUNTIME_CONSEQUENCE_GATE_POLICY := "report_only_runtime_consequence_thresholds_v1"
+const RUNTIME_CONSEQUENCE_MATRIX_GATE_POLICY := "report_only_runtime_consequence_matrix_thresholds_v1"
 const BATTLE_ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
@@ -81,6 +83,7 @@ static func build_sampling_report(
 	var requested_minimum = min(minimum_samples, max_samples)
 	var combat_feel_gate := _combat_feel_gate(aggregate, samples.size(), max_samples, requested_minimum)
 	var runtime_consequence_gate := _runtime_consequence_gate(aggregate.get("runtime_consequence_distribution", {}), samples.size())
+	var runtime_consequence_matrix_gate := _runtime_consequence_matrix_gate(aggregate.get("runtime_consequence_matrix", {}), samples.size())
 	var tuning_queue := balance_tuning_queue(aggregate, samples, combat_feel_gate)
 	if samples.size() < requested_minimum:
 		warnings.append("Battle autoplay sampled %d/%d required cases; add authored encounters or widen scenarios before treating the distribution as tuned." % [samples.size(), requested_minimum])
@@ -133,6 +136,8 @@ static func build_sampling_report(
 			"initial_ability_distribution": aggregate.get("initial_ability_distribution", {}),
 			"runtime_consequence_distribution": aggregate.get("runtime_consequence_distribution", {}),
 			"runtime_consequence_gate": runtime_consequence_gate,
+			"runtime_consequence_matrix": aggregate.get("runtime_consequence_matrix", {}),
+			"runtime_consequence_matrix_gate": runtime_consequence_matrix_gate,
 			"balance_matrix": aggregate.get("balance_matrix", {}),
 			"balance_matrix_gate": aggregate.get("balance_matrix_gate", {}),
 			"combat_feel_gate": combat_feel_gate,
@@ -658,6 +663,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 	var primary_pacing_band := _primary_count_entry(pacing_band_distribution, "pacing_band")
 	var balance_matrix := _balance_matrix(samples)
 	var balance_matrix_gate := _balance_matrix_gate(balance_matrix, samples.size())
+	var runtime_consequence_matrix := _runtime_consequence_matrix(samples)
 	return {
 		"distribution": distribution,
 		"action_distribution": action_distribution,
@@ -688,6 +694,7 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"initial_role_distribution": initial_role_distribution,
 		"initial_ability_distribution": initial_ability_distribution,
 		"runtime_consequence_distribution": _finalize_runtime_consequence_distribution(runtime_consequence_distribution, samples.size()),
+		"runtime_consequence_matrix": runtime_consequence_matrix,
 		"balance_matrix": balance_matrix,
 		"balance_matrix_gate": balance_matrix_gate,
 	}
@@ -999,6 +1006,143 @@ static func _runtime_consequence_gate(distribution_value: Variant, sample_count:
 			"min_active_effect_instances": 1,
 		},
 		"failure_count": failures.size(),
+		"failures": failures,
+	}
+
+static func _runtime_consequence_matrix(samples: Array) -> Dictionary:
+	var matrix := {
+		"schema": RUNTIME_CONSEQUENCE_MATRIX_SCHEMA,
+		"policy": "deterministic_runtime_consequence_cohort_observation_only",
+		"sample_count": samples.size(),
+		"difficulty": {},
+		"terrain": {},
+		"scenario": {},
+		"matchup": {},
+		"ability_presence": {},
+		"zero_consequence_samples": [],
+	}
+	for sample in samples:
+		if not (sample is Dictionary):
+			continue
+		var entry: Dictionary = sample
+		_update_runtime_consequence_cohort(matrix["difficulty"], String(entry.get("encounter_difficulty", "unknown")), entry)
+		_update_runtime_consequence_cohort(matrix["terrain"], String(entry.get("terrain", "unknown")), entry)
+		_update_runtime_consequence_cohort(matrix["scenario"], String(entry.get("scenario_id", "unknown")), entry)
+		var stack_profile: Dictionary = entry.get("initial_stack_profile", {}) if entry.get("initial_stack_profile", {}) is Dictionary else {}
+		_update_runtime_consequence_cohort(matrix["matchup"], String(stack_profile.get("matchup_band", "unknown")), entry)
+		var ability_counts: Dictionary = stack_profile.get("ability_counts", {}) if stack_profile.get("ability_counts", {}) is Dictionary else {}
+		for ability_id in ability_counts.keys():
+			_update_runtime_consequence_cohort(matrix["ability_presence"], String(ability_id), entry)
+		var runtime_profile: Dictionary = entry.get("runtime_consequence_profile", {}) if entry.get("runtime_consequence_profile", {}) is Dictionary else {}
+		if not bool(runtime_profile.get("has_status_consequence", false)) and not bool(runtime_profile.get("has_ability_consequence", false)) and not bool(runtime_profile.get("has_spell_consequence", false)):
+			matrix["zero_consequence_samples"].append(_sample_tuning_ref(entry))
+	for section_key in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_key, {}) if matrix.get(section_key, {}) is Dictionary else {}
+		for cohort_id in section.keys():
+			section[cohort_id] = _finalize_runtime_consequence_cohort(section[cohort_id])
+	matrix["matrix_signature"] = _signature_for({
+		"schema": RUNTIME_CONSEQUENCE_MATRIX_SCHEMA,
+		"difficulty": matrix.get("difficulty", {}),
+		"terrain": matrix.get("terrain", {}),
+		"scenario": matrix.get("scenario", {}),
+		"matchup": matrix.get("matchup", {}),
+		"ability_presence": matrix.get("ability_presence", {}),
+		"zero_consequence_samples": matrix.get("zero_consequence_samples", []),
+	})
+	return matrix
+
+static func _update_runtime_consequence_cohort(section: Dictionary, cohort_id: String, sample: Dictionary) -> void:
+	var normalized_id := cohort_id if cohort_id != "" else "unknown"
+	var cohort: Dictionary = section.get(normalized_id, {}) if section.get(normalized_id, {}) is Dictionary else {}
+	if cohort.is_empty():
+		cohort = _empty_runtime_consequence_distribution()
+		cohort["sample_refs"] = []
+	_merge_runtime_consequence_distribution(cohort, sample.get("runtime_consequence_profile", {}))
+	var sample_refs: Array = cohort.get("sample_refs", []) if cohort.get("sample_refs", []) is Array else []
+	if sample_refs.size() < 3:
+		sample_refs.append(_sample_tuning_ref(sample))
+	cohort["sample_refs"] = sample_refs
+	section[normalized_id] = cohort
+
+static func _finalize_runtime_consequence_cohort(cohort: Dictionary) -> Dictionary:
+	var result := _finalize_runtime_consequence_distribution(cohort, int(cohort.get("sample_count", 0)))
+	result["profile_sample_refs"] = result.get("sample_refs", [])
+	result.erase("sample_refs")
+	return {
+		"sample_count": int(result.get("sample_count", 0)),
+		"samples_with_initial_ability_count": int(result.get("samples_with_initial_ability_count", 0)),
+		"samples_with_status_consequence_count": int(result.get("samples_with_status_consequence_count", 0)),
+		"samples_with_ability_consequence_count": int(result.get("samples_with_ability_consequence_count", 0)),
+		"samples_with_spell_consequence_count": int(result.get("samples_with_spell_consequence_count", 0)),
+		"total_status_application_event_count": int(result.get("total_status_application_event_count", 0)),
+		"total_cast_event_count": int(result.get("total_cast_event_count", 0)),
+		"total_effect_observation_count": int(result.get("total_effect_observation_count", 0)),
+		"total_ability_effect_observation_count": int(result.get("total_ability_effect_observation_count", 0)),
+		"total_spell_effect_observation_count": int(result.get("total_spell_effect_observation_count", 0)),
+		"max_active_effect_instances": int(result.get("max_active_effect_instances", 0)),
+		"observed_event_ids": result.get("observed_event_ids", []),
+		"observed_effect_ids": result.get("observed_effect_ids", []),
+		"observed_source_types": result.get("observed_source_types", []),
+		"effect_id_counts": result.get("effect_id_counts", {}),
+		"effect_source_type_counts": result.get("effect_source_type_counts", {}),
+		"profile_sample_refs": result.get("profile_sample_refs", []),
+		"cohort_signature": String(result.get("distribution_signature", "")),
+	}
+
+static func _runtime_consequence_matrix_gate(matrix_value: Variant, sample_count: int) -> Dictionary:
+	var matrix: Dictionary = matrix_value if matrix_value is Dictionary else {}
+	var failures := []
+	var warnings := []
+	if sample_count <= 0:
+		failures.append("no_runtime_consequence_matrix_samples")
+	if String(matrix.get("schema", "")) != RUNTIME_CONSEQUENCE_MATRIX_SCHEMA:
+		failures.append("runtime_consequence_matrix_schema_missing")
+	for section_id in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_id, {}) if matrix.get(section_id, {}) is Dictionary else {}
+		if section.is_empty():
+			failures.append("missing_%s_runtime_consequence_cohorts" % section_id)
+			continue
+		for cohort_id in section.keys():
+			var cohort: Dictionary = section.get(cohort_id, {}) if section.get(cohort_id, {}) is Dictionary else {}
+			if int(cohort.get("samples_with_status_consequence_count", 0)) <= 0:
+				failures.append("%s_%s_missing_status_consequence" % [section_id, String(cohort_id)])
+			if section_id in ["difficulty", "terrain", "scenario", "matchup"] and int(cohort.get("samples_with_spell_consequence_count", 0)) <= 0:
+				warnings.append("%s_%s_missing_spell_consequence" % [section_id, String(cohort_id)])
+	var ability_presence: Dictionary = matrix.get("ability_presence", {}) if matrix.get("ability_presence", {}) is Dictionary else {}
+	var ability_consequence_cohort_count := 0
+	for cohort_id in ability_presence.keys():
+		var cohort: Dictionary = ability_presence.get(cohort_id, {}) if ability_presence.get(cohort_id, {}) is Dictionary else {}
+		if int(cohort.get("samples_with_ability_consequence_count", 0)) > 0:
+			ability_consequence_cohort_count += 1
+	if ability_consequence_cohort_count <= 0:
+		failures.append("no_ability_presence_cohort_with_runtime_consequence")
+	var zero_consequence_samples: Array = matrix.get("zero_consequence_samples", []) if matrix.get("zero_consequence_samples", []) is Array else []
+	if not zero_consequence_samples.is_empty():
+		failures.append("zero_runtime_consequence_samples_present")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"policy": RUNTIME_CONSEQUENCE_MATRIX_GATE_POLICY,
+		"sample_count": sample_count,
+		"difficulty_cohort_count": (matrix.get("difficulty", {}) if matrix.get("difficulty", {}) is Dictionary else {}).keys().size(),
+		"terrain_cohort_count": (matrix.get("terrain", {}) if matrix.get("terrain", {}) is Dictionary else {}).keys().size(),
+		"scenario_cohort_count": (matrix.get("scenario", {}) if matrix.get("scenario", {}) is Dictionary else {}).keys().size(),
+		"matchup_cohort_count": (matrix.get("matchup", {}) if matrix.get("matchup", {}) is Dictionary else {}).keys().size(),
+		"ability_presence_cohort_count": ability_presence.keys().size(),
+		"ability_consequence_cohort_count": ability_consequence_cohort_count,
+		"zero_consequence_sample_count": zero_consequence_samples.size(),
+		"thresholds": {
+			"min_ability_consequence_cohorts": 1,
+			"max_zero_consequence_samples": 0,
+			"status_consequence_required_per_cohort": true,
+		},
+		"warning_count": warnings.size(),
+		"failure_count": failures.size(),
+		"warnings": warnings,
 		"failures": failures,
 	}
 

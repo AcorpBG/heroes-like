@@ -93,6 +93,8 @@ func _assert_report(first: Dictionary) -> bool:
 		"initial_ability_distribution",
 		"runtime_consequence_distribution",
 		"runtime_consequence_gate",
+		"runtime_consequence_matrix",
+		"runtime_consequence_matrix_gate",
 		"balance_matrix",
 		"balance_matrix_gate",
 		"combat_feel_gate",
@@ -249,6 +251,17 @@ func _assert_runtime_consequence_gate(battle_summary: Dictionary) -> bool:
 		return false
 	if int(distribution.get("total_status_application_event_count", 0)) <= 0:
 		_fail("Battle outcome distribution did not observe status application runtime events: %s" % distribution)
+		return false
+	var matrix: Dictionary = battle_summary.get("runtime_consequence_matrix", {}) if battle_summary.get("runtime_consequence_matrix", {}) is Dictionary else {}
+	var matrix_gate: Dictionary = battle_summary.get("runtime_consequence_matrix_gate", {}) if battle_summary.get("runtime_consequence_matrix_gate", {}) is Dictionary else {}
+	if String(matrix.get("schema", "")) != "battle_autoplay_runtime_consequence_matrix_v1":
+		_fail("Battle outcome distribution runtime consequence matrix schema mismatch: %s" % matrix)
+		return false
+	if String(matrix_gate.get("policy", "")) != "report_only_runtime_consequence_matrix_thresholds_v1":
+		_fail("Battle outcome distribution runtime consequence matrix gate policy mismatch: %s" % matrix_gate)
+		return false
+	if String(matrix_gate.get("status", "")) != "pass":
+		_fail("Battle outcome distribution runtime consequence matrix gate must pass: %s" % matrix_gate)
 		return false
 	return true
 
