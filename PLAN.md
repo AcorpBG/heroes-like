@@ -113,6 +113,8 @@ Battle autoplay hard difficulty queue clear pass added on 2026-05-23: the remain
 
 Headless battle difficulty sweep harness added on 2026-05-23: the now-clear normal-vs-hard battle autoplay sweep is part of the required shared `HeadlessSimulationHarnessRules` subsystem set. The `battle_difficulty_sweep_sampling` case wraps `battle_autoplay_difficulty_sweep_v1`, asserts normal and hard tuning queues are clear, preserves the observed normal-vs-hard effect, and exposes compact sweep evidence through the headless report. Current focused evidence reports standalone `sweep_signature: bc42c7b1`, headless case signature `f6e32bbf`, headless harness signature `56ae7622`, normal and hard queue signatures `829808c9`, both rows at `tuning_queue_item_count: 0`, and `no_observed_effect: false`. This is automated balance-harness strengthening, not new encounter retuning, automatic tuning, or final combat balance approval.
 
+Headless balance harness CLI added on 2026-05-23: `tools/run_headless_balance_harness.py` now runs the existing Godot battle autoplay, balance regression, and headless simulation harness reports as one artifact-producing command. The standard suite writes per-case logs plus `.artifacts/headless_balance_harness_cli/manifest.json` with schema `headless_balance_harness_cli_v1`, parsed report markers, statuses, signatures, durations, command lines, and report-only policy checks. This makes the automated balance harness easier to run before content scaling, but it is not automatic tuning, authored content writeback, CI provider wiring, manual-play replacement, or final combat balance approval.
+
 Battle autoplay runtime consequence harness added on 2026-05-23: the deterministic battle balance sampler now extends initial ability presence into observed runtime effects. Each sample emits `battle_autoplay_runtime_consequence_profile_v1`, shared summaries emit `battle_autoplay_runtime_consequence_distribution_v1`, and `runtime_consequence_gate` uses `report_only_runtime_consequence_thresholds_v1`. Current focused evidence has stable distribution signature `a537a308`, 12/12 status-consequence samples, 10 ability-consequence samples, 12 spell-consequence samples, 55 status application events, 118 ability-effect observations, and 117 spell-effect observations. `tests/battle_autoplay_runtime_consequence_report.tscn`, the combat balance report, the balance regression suite, and the headless simulation harness gate the new surface. This is automated combat-feel evidence, not automatic tuning, new ability content, broad encounter retuning, or final combat balance approval.
 
 Battle autoplay runtime consequence matrix added on 2026-05-23: the aggregate runtime consequence harness now breaks observed status, spell, and ability effects into deterministic cohorts for difficulty, terrain, scenario, matchup, and ability presence. The new `battle_autoplay_runtime_consequence_matrix_v1` surface and `report_only_runtime_consequence_matrix_thresholds_v1` gate are asserted by `tests/battle_autoplay_runtime_consequence_matrix_report.tscn`, the existing runtime consequence report, the combat balance report, the balance regression suite, and the headless simulation harness. Current focused evidence reports `matrix_signature: cab8ca24`, 12 samples, 3 difficulty cohorts, 3 terrain cohorts, 4 scenario cohorts, 2 matchup cohorts, 8 ability-presence cohorts, 8 ability-consequence cohorts, and zero zero-consequence samples. This is report-only balance instrumentation, not encounter retuning, new ability content, spell redesign, player-facing UI, or final combat balance approval.
@@ -5474,6 +5476,39 @@ nonGoals:
 - No music, ambience, UI audio, or mixer mastering.
 - No combat balance or encounter tuning.
 - No broad audio asset import pipeline redesign.
+
+Completed implementation slice:
+
+id: `headless-balance-harness-cli-20260523-10184`
+phase: `phase-5-playable-alpha-baseline`
+purpose: Add a single artifact-producing CLI runner for the existing automated battle balance, balance regression, and headless simulation harness reports.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `scripts/core/BalanceRegressionReportRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+implementationTargets:
+- `tools/run_headless_balance_harness.py`
+- `tests/validate_repo.py`
+- `docs/headless-balance-harness-cli-report.md`
+- `ops/progress.json`
+completionCriteria:
+- `python3 tools/run_headless_balance_harness.py --suite standard` runs battle autoplay combat balance, balance regression, and headless simulation reports as one command.
+- The runner writes `.artifacts/headless_balance_harness_cli/manifest.json` with schema `headless_balance_harness_cli_v1`, per-case command, marker, status, signature, duration, and output log paths.
+- The CLI preserves report-only policy checks and does not tune content, write authored content, replace manual playtesting, or claim final combat balance.
+- Repository validation gates runner tokens and documentation.
+validation:
+- `python3 tools/run_headless_balance_harness.py --suite standard`
+- `python3 tests/validate_repo.py`
+- `python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py`
+- `jq empty ops/progress.json`
+- `git diff --check`
+nonGoals:
+- No automatic balance tuning.
+- No authored content writeback.
+- No final combat balance approval.
+- No CI provider wiring or platform packaging change.
 
 Completed implementation slice:
 
