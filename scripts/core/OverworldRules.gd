@@ -786,7 +786,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 		messages.append(enemy_message)
 	var result := _finalize_action_result(session, true, " ".join(messages))
 	result["enemy_activity_summary"] = enemy_activity_summary
-	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 6)
+	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 10)
 	result["resource_income_summary"] = _describe_resource_delta(total_income)
 	result["weekly_muster_summary"] = _end_turn_muster_summary(weekly_growth_messages, site_muster_messages)
 	result["movement_reset_summary"] = "Move %d/%d ready" % [
@@ -3547,6 +3547,7 @@ static func _enemy_activity_event_is_player_facing(event: Dictionary) -> bool:
 		"ai_commander_role_observed",
 		"ai_raid_moved",
 		"ai_raid_arrived",
+		"ai_raid_regrouped",
 	]:
 		return false
 	var text := _enemy_activity_public_text(String(event.get("summary", "")))

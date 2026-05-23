@@ -800,7 +800,7 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["target_label"] = "%s regroup" % _town_name(regroup_town)
 	raid["target_public_reason"] = "regrouping understrength host"
 	raid["target_reason_codes"] = ["regroup_understrength", "army_consolidation", "town_defense"]
-	raid["target_public_importance"] = "medium"
+	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = "raid strength below regroup floor"
 	raid["arrived"] = false
 	raid["regroup_started_day"] = int(session.day)
@@ -7970,7 +7970,7 @@ static func _regroup_raid_at_town(
 			"target_y": int(town.get("y", 0)),
 			"target_reason_codes": ["regroup_understrength", "army_consolidation", "town_defense"],
 			"target_public_reason": "regrouping understrength host",
-			"target_public_importance": "medium",
+			"target_public_importance": "high",
 		},
 		{
 			"summary": message,

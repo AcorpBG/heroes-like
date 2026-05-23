@@ -62,6 +62,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_route_progression(live_route_case):
 		return false
+	var live_regroup_case := _find_case(first, "strategic_ai_live_regroup_retreat")
+	if live_regroup_case.is_empty():
+		_fail("Headless simulation harness is missing live strategic AI regroup/retreat evidence.")
+		return false
+	if not _assert_live_ai_regroup_retreat(live_regroup_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -143,6 +149,47 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_live_ai_regroup_retreat(live_regroup_case: Dictionary) -> bool:
+	if String(live_regroup_case.get("status", "")) != "pass":
+		_fail("Live strategic AI regroup/retreat did not pass: %s" % JSON.stringify(live_regroup_case))
+		return false
+	var summary: Dictionary = live_regroup_case.get("summary", {}) if live_regroup_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = live_regroup_case.get("evidence", {}) if live_regroup_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("target_id", "")) != "river_free_company" or String(summary.get("regroup_town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI regroup/retreat used unexpected target/town ids: %s" % summary)
+		return false
+	if not bool(summary.get("regroup_needed_before", false)):
+		_fail("Live strategic AI regroup/retreat fixture was not understrength before the turn: %s" % summary)
+		return false
+	if int(summary.get("after_strength", 0)) <= int(summary.get("before_strength", 0)):
+		_fail("Live strategic AI regroup/retreat did not increase raid strength: %s" % summary)
+		return false
+	if int(summary.get("garrison_after", 9999)) >= int(summary.get("garrison_before", 0)):
+		_fail("Live strategic AI regroup/retreat did not pull from town garrison: %s" % summary)
+		return false
+	if String(summary.get("resource_controller_after", "")) == "faction_mireclaw":
+		_fail("Live strategic AI regroup/retreat captured the offensive target instead of retreating: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < 1 or int(summary.get("regroup_event_count", 0)) < 1:
+		_fail("Live strategic AI regroup/retreat is missing assignment/regroup events: %s" % summary)
+		return false
+	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
+	if String(raid.get("target_kind", "")) != "" or String(raid.get("last_regroup_town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI regroup/retreat did not clear target and record Duskfen: %s" % raid)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Live strategic AI regroup/retreat save policy changed: %s" % evidence)
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_target_assigned" not in event_types or "ai_raid_regrouped" not in event_types:
+		_fail("Live strategic AI regroup/retreat missing event type evidence: %s" % event_types)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Live strategic AI regroup/retreat leaked internal public-event tokens: %s" % leak_tokens)
+		return false
 	return true
 
 func _assert_live_ai_route_progression(live_route_case: Dictionary) -> bool:
