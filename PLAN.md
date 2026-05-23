@@ -63,6 +63,8 @@ Battle death animation retention added on 2026-05-23: `BattleBoardView` now keep
 
 Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active battle audio cue ids into short generated `AudioStreamGenerator` waveforms on the Master bus, with per-cue timbre/duration specs for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle cues. The board exposes `audio_playback` validation records and rate-limits active generated players. `tests/battle_event_animation_state_report.tscn` proves ranged/status events synthesize audio cue waveforms and expire with playback. This is runtime placeholder audio playback, not final sound design, imported audio assets, music, ambience, mixer polish, or combat balance tuning.
 
+Battle event playback sequencing added on 2026-05-23: `BattleBoardView` now preserves event serial timing in active playback records, adds a bounded target-reaction delay for hit/death/status/retaliation cue handoffs, derives generated sheet frame indexes from event progress instead of wall-clock only, and keeps delayed target audio as scheduled until its cue start. `tests/battle_event_animation_state_report.tscn` now proves source ranged cues start before target status cues and that scheduled target audio carries a positive sequence delay. This is deterministic presentation ordering for generated sheets/placeholders, not final authored animation timing, imported audio/VFX, or combat balance tuning.
+
 Battle exit animation handoff added on 2026-05-23: retreat and surrender now preserve pre-resolution `battle_exit_animation_snapshot` payloads before `session.battle` is cleared, `BattleBoardView` can render those presentation snapshots, and `BattleShell` briefly shows the exit animation while inputs are locked before routing to the overworld/outcome flow. `tests/battle_event_animation_state_report.tscn` now proves `battle_unit_retreat`/`retreat_withdraw_column` and `battle_unit_surrender`/`surrender_stand_down` are produced by real exit actions and render through the board snapshot path. This closes an exit-action presentation gap, not final authored animation timing, camera work, imported VFX/audio, or combat balance.
 
 Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBalanceHarnessRules` now provides deterministic report-only battle sampling for authored encounters, including outcome distribution, action distribution, completed/stalled counts, round/step pacing, side health totals, remaining-health percentages, and compact per-sample turn logs. `HeadlessSimulationHarnessRules` and `BalanceRegressionReportRules` both consume the shared sampler, and their focused tests assert the new pacing/action/health evidence. Current evidence is still narrow authored-scenario sampling for balance work, not automatic tuning, manual-play replacement, or final combat balance approval.
@@ -5158,6 +5160,30 @@ completionCriteria:
 - Focused balance and headless reports fail if default sampling does not reach the requested sample limit or does not span multiple authored scenarios.
 nonGoals:
 - No encounter retune, automatic balance tuning, authored content writeback, spell autoplay expansion, or final combat balance approval.
+
+Completed owner-directed implementation slice:
+
+id: `battle-event-playback-sequencing-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add deterministic source-action to target-reaction sequencing to active battle event playback so presentation no longer starts every cue at the same wall-clock instant.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-event-playback-sequencing-report.md`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Active playback/cue records expose observed, start, expiry, and sequence-delay timing metadata.
+- Hit, death, status, and retaliation target reactions receive a bounded positive sequence delay after source action cues.
+- Generated unit animation frame selection uses event playback progress for active event states.
+- Focused validation proves ranged source cues start before target status cues and delayed target audio is scheduled with positive sequence delay.
+nonGoals:
+- No final authored animation timing, imported audio/VFX assets, save-schema change, combat balance tuning, or broad battle UI redesign.
 
 Completed owner-directed implementation slice:
 

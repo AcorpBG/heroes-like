@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-autoplay-combat-balance-calibration-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Combat Balance Calibration",
+  "currentSliceId": "battle-event-playback-sequencing-20260523-10184",
+  "currentSliceTitle": "Battle Event Playback Sequencing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed first deterministic battle autoplay combat-balance calibration; standard sampler now clears terminal-margin gate, but final combat balance remains open.",
+  "currentSliceNotes": "Completed deterministic battle event playback sequencing; target reaction cues now carry bounded sequence delay metadata and generated animation frames follow event progress.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -16313,6 +16313,43 @@
       ]
     },
     {
+      "id": "battle-event-playback-sequencing-20260523-10184",
+      "title": "Battle Event Playback Sequencing",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Add deterministic source-action to target-reaction sequencing to active battle event playback so presentation no longer starts every cue at the same wall-clock instant.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-event-playback-sequencing-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active playback/cue records expose observed, start, expiry, and sequence-delay timing metadata.",
+        "Hit, death, status, and retaliation target reactions receive a bounded positive sequence delay after source action cues.",
+        "Generated unit animation frame selection uses event playback progress for active event states.",
+        "Focused validation proves ranged source cues start before target status cues and delayed target audio is scheduled with positive sequence delay."
+      ],
+      "nonGoals": [
+        "No final authored animation timing, imported audio/VFX assets, save-schema change, combat balance tuning, or broad battle UI redesign."
+      ]
+    },
+    {
       "id": "battle-autoplay-combat-feel-threshold-gate-20260523-10184",
       "title": "Battle Autoplay Combat Feel Threshold Gate",
       "phase": "phase-4-headless-ai-agent-balance-harness",
@@ -19723,6 +19760,44 @@
         "git diff --check"
       ],
       "remainingGap": "This is a first deterministic sampler calibration; final combat balance, broad faction-vs-faction tuning, spell/autocast tuning, manual playtest feel, and larger sample breadth remain open."
+    },
+    {
+      "id": "battle-event-playback-sequencing-20260523-10184",
+      "title": "Battle Event Playback Sequencing",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-event-playback-sequencing-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-event-playback-sequencing-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView active playback and cue records now expose observed_at_msec, started_at_msec, expires_at_msec, and sequence_delay_msec.",
+        "Hit, death, status, and retaliation target reactions receive a bounded positive delay after source action cues.",
+        "Generated unit animation sheet frames for active event states are selected from event playback progress.",
+        "Delayed target audio cue records are kept as scheduled records until the cue start rather than being treated as missing.",
+        "Focused validation proves ranged source cues start before target status cues and delayed target audio carries positive sequence delay."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is deterministic sequencing for generated-sheet and placeholder cue playback; final authored animation timing, imported audio/VFX, cinematic direction, and combat balance remain open."
     }
   ],
   "docsReadyEvidence": [
@@ -20681,28 +20756,38 @@
         "git diff --check"
       ],
       "summary": "Focused combat balance calibration passed with average terminal margin 55, combat_feel_gate.status pass, no high_terminal_health_margin warning, a 3/3 victory-defeat split, and preserved low/medium/high difficulty labels."
+    },
+    {
+      "id": "battle-event-playback-sequencing-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with source-to-target cue sequencing, positive target reaction sequence delay, event-progress animation frame selection, and scheduled delayed target audio coverage."
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
+    "id": "battle-event-playback-sequencing-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused combat balance calibration passed with average terminal margin 55, combat_feel_gate.status pass, no high_terminal_health_margin warning, a 3/3 victory-defeat split, and preserved low/medium/high difficulty labels."
+    "summary": "Focused battle event animation report passed with source-to-target cue sequencing, positive target reaction sequence delay, event-progress animation frame selection, and scheduled delayed target audio coverage."
   },
   "active_slice": {
-    "id": "battle-autoplay-combat-balance-calibration-20260523-10184",
+    "id": "battle-event-playback-sequencing-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: standard battle autoplay sampler now passes the terminal-margin combat-feel gate after tactical reposition scoring and authored encounter retune."
+    "note": "Completed: active battle event playback now sequences source action cues before target reactions and records bounded sequence-delay metadata."
   }
 }

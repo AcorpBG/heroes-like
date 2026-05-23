@@ -65,6 +65,7 @@ const TEXTURED_CENTER_FILL_ALPHA := 0.045
 const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
 const TEXTURED_GRID_MAX_CELL_FILL_ALPHA := 0.05
 const STACK_ANIMATION_EVENT_PLAYBACK_MSEC := 760
+const STACK_ANIMATION_REACTION_DELAY_MSEC := 70
 const BATTLE_VFX_PROJECTILE_COLOR := Color(0.94, 0.96, 0.74, 0.88)
 const BATTLE_VFX_STATUS_COLOR := Color(0.50, 0.86, 0.74, 0.76)
 const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
@@ -110,6 +111,7 @@ func _notification(what: int) -> void:
 func _process(_delta: float) -> void:
 	if not _battle.is_empty():
 		_expire_animation_playback_records()
+		_activate_due_audio_cue_playback()
 		_cleanup_audio_players()
 		queue_redraw()
 
@@ -452,6 +454,7 @@ func validation_unit_art_summary() -> Dictionary:
 			"animation_sheet": animation_path,
 			"animation_loaded": animation_loaded,
 			"animation_state": _animation_state_for_stack(stack),
+			"animation_frame_index": _animation_frame_index_for_stack(stack),
 			"cell_q": cell.x,
 			"cell_r": cell.y,
 			"presentation_x": presentation.get("presentation_x", 0.0),
@@ -488,12 +491,21 @@ func validation_unit_art_summary() -> Dictionary:
 func validation_animation_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
 	var records := {}
+	var delayed_record_count := 0
+	var max_sequence_delay_msec := 0
 	for battle_id in _stack_animation_playback_records.keys():
 		var record: Dictionary = _stack_animation_playback_records.get(battle_id, {}) if _stack_animation_playback_records.get(battle_id, {}) is Dictionary else {}
+		var sequence_delay := int(record.get("sequence_delay_msec", 0))
+		if sequence_delay > 0:
+			delayed_record_count += 1
+			max_sequence_delay_msec = maxi(max_sequence_delay_msec, sequence_delay)
 		records[String(battle_id)] = record.duplicate(true)
 	return {
 		"playback_duration_msec": STACK_ANIMATION_EVENT_PLAYBACK_MSEC,
+		"reaction_delay_msec": STACK_ANIMATION_REACTION_DELAY_MSEC,
 		"active_playback_count": records.size(),
+		"delayed_record_count": delayed_record_count,
+		"max_sequence_delay_msec": max_sequence_delay_msec,
 		"active_records": records,
 		"latest_serial_by_stack": _latest_animation_serial_by_stack.duplicate(true),
 		"queue_count": BattleRulesScript.animation_event_queue(_battle).size() if not _battle.is_empty() else 0,
@@ -501,15 +513,22 @@ func validation_animation_playback_summary() -> Dictionary:
 
 func validation_cue_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
+	_activate_due_audio_cue_playback()
 	var records := {}
 	var vfx_record_count := 0
 	var audio_record_count := 0
 	var vfx_cue_count := 0
 	var audio_cue_count := 0
+	var delayed_record_count := 0
+	var max_sequence_delay_msec := 0
 	for battle_id in _stack_animation_cue_playback_records.keys():
 		var record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
 		var vfx_ids: Array = record.get("selected_vfx_cue_ids", []) if record.get("selected_vfx_cue_ids", []) is Array else []
 		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
+		var sequence_delay := int(record.get("sequence_delay_msec", 0))
+		if sequence_delay > 0:
+			delayed_record_count += 1
+			max_sequence_delay_msec = maxi(max_sequence_delay_msec, sequence_delay)
 		if not vfx_ids.is_empty():
 			vfx_record_count += 1
 			vfx_cue_count += vfx_ids.size()
@@ -523,6 +542,9 @@ func validation_cue_playback_summary() -> Dictionary:
 		"audio_record_count": audio_record_count,
 		"vfx_cue_count": vfx_cue_count,
 		"audio_cue_count": audio_cue_count,
+		"delayed_record_count": delayed_record_count,
+		"max_sequence_delay_msec": max_sequence_delay_msec,
+		"reaction_delay_msec": STACK_ANIMATION_REACTION_DELAY_MSEC,
 		"active_records": records,
 	}
 
@@ -557,20 +579,25 @@ func validation_vfx_playback_summary() -> Dictionary:
 
 func validation_audio_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
+	_activate_due_audio_cue_playback()
 	_cleanup_audio_players()
 	var records := {}
 	var audio_cue_count := 0
 	var generated_waveform_count := 0
+	var scheduled_record_count := 0
 	for battle_id in _stack_animation_audio_playback_records.keys():
 		var record: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {}) if _stack_animation_audio_playback_records.get(battle_id, {}) is Dictionary else {}
 		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
 		audio_cue_count += audio_ids.size()
 		generated_waveform_count += int(record.get("generated_waveform_count", 0))
+		if bool(record.get("scheduled", false)):
+			scheduled_record_count += 1
 		records[String(battle_id)] = record.duplicate(true)
 	return {
 		"active_audio_record_count": records.size(),
 		"audio_cue_count": audio_cue_count,
 		"generated_waveform_count": generated_waveform_count,
+		"scheduled_record_count": scheduled_record_count,
 		"active_player_count": _active_audio_player_count(),
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"muted": SettingsService.master_volume_percent() <= 0,
@@ -1128,8 +1155,16 @@ func _unit_animation_sheet_texture(path: String) -> Texture2D:
 func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	var state_name := _animation_state_for_stack(stack)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
-	var frame := int(Time.get_ticks_msec() / 180) % 4
+	var frame := _animation_frame_index_for_stack(stack)
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
+
+func _animation_frame_index_for_stack(stack: Dictionary) -> int:
+	var battle_id := String(stack.get("battle_id", ""))
+	var playback_record := _animation_playback_record_for_stack(battle_id)
+	if playback_record.is_empty():
+		return int(Time.get_ticks_msec() / 180) % 4
+	var progress := _stack_presentation_progress(battle_id)
+	return clampi(int(floor(progress * 4.0)), 0, 3)
 
 func _animation_state_for_stack(stack: Dictionary) -> String:
 	var playback_record := _animation_playback_record_for_stack(String(stack.get("battle_id", "")))
@@ -1182,18 +1217,39 @@ func _sync_animation_playback_records() -> void:
 		if serial <= int(_latest_animation_serial_by_stack.get(battle_id, 0)):
 			continue
 		_latest_animation_serial_by_stack[battle_id] = serial
-		_stack_animation_playback_records[battle_id] = event.duplicate(true)
 		var cue_record := _animation_cue_playback_record_for_event(event)
-		var duration_msec := int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var sequence_delay_msec := _sequence_delay_msec_for_event(event, cue_record)
+		var duration_msec: int = int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var started_at_msec := now + sequence_delay_msec
+		var expires_at_msec: int = started_at_msec + max(1, duration_msec)
+		var playback_record: Dictionary = event.duplicate(true)
+		playback_record["observed_at_msec"] = now
+		playback_record["started_at_msec"] = started_at_msec
+		playback_record["expires_at_msec"] = expires_at_msec
+		playback_record["sequence_delay_msec"] = sequence_delay_msec
+		_stack_animation_playback_records[battle_id] = playback_record
 		if not cue_record.is_empty():
-			cue_record["started_at_msec"] = now
-			cue_record["expires_at_msec"] = now + max(1, duration_msec)
+			cue_record["observed_at_msec"] = now
+			cue_record["started_at_msec"] = started_at_msec
+			cue_record["expires_at_msec"] = expires_at_msec
+			cue_record["sequence_delay_msec"] = sequence_delay_msec
 			_stack_animation_cue_playback_records[battle_id] = cue_record
 			_register_audio_cue_playback(cue_record)
 		else:
 			_stack_animation_cue_playback_records.erase(battle_id)
 			_stack_animation_audio_playback_records.erase(battle_id)
-		_stack_animation_playback_until_msec[battle_id] = now + max(1, duration_msec)
+		_stack_animation_playback_until_msec[battle_id] = expires_at_msec
+
+func _sequence_delay_msec_for_event(event: Dictionary, cue_record: Dictionary) -> int:
+	var event_id := String(event.get("event_id", "")).strip_edges()
+	var policy := String(cue_record.get("selected_playback_policy", "")).strip_edges()
+	if policy.begins_with("queue_after_"):
+		return STACK_ANIMATION_REACTION_DELAY_MSEC
+	if event_id in ["battle_unit_hit", "battle_unit_death", "battle_status_applied"] and String(event.get("source_battle_id", "")).strip_edges() != "":
+		return STACK_ANIMATION_REACTION_DELAY_MSEC
+	if event_id == "battle_retaliation":
+		return STACK_ANIMATION_REACTION_DELAY_MSEC
+	return 0
 
 func _expire_animation_playback_records() -> void:
 	var now := int(Time.get_ticks_msec())
@@ -1750,6 +1806,25 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 	if audio_ids.is_empty():
 		_stack_animation_audio_playback_records.erase(battle_id)
 		return
+	var now := int(Time.get_ticks_msec())
+	var started_at := int(cue_record.get("started_at_msec", now))
+	if started_at > now:
+		_stack_animation_audio_playback_records[battle_id] = {
+			"battle_id": battle_id,
+			"event_id": String(cue_record.get("event_id", "")),
+			"serial": int(cue_record.get("serial", 0)),
+			"cue_id": String(cue_record.get("cue_id", "")),
+			"selected_audio_cue_ids": audio_ids.duplicate(true),
+			"generated_waveform_count": 0,
+			"generated_waveforms": [],
+			"started_at_msec": started_at,
+			"expires_at_msec": int(cue_record.get("expires_at_msec", started_at + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
+			"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
+			"audio_bus": BATTLE_AUDIO_BUS,
+			"muted": SettingsService.master_volume_percent() <= 0,
+			"scheduled": true,
+		}
+		return
 	var generated_records := []
 	for audio_id_value in audio_ids:
 		var audio_id := String(audio_id_value).strip_edges()
@@ -1768,8 +1843,10 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		"generated_waveforms": generated_records,
 		"started_at_msec": int(cue_record.get("started_at_msec", Time.get_ticks_msec())),
 		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
+		"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"muted": SettingsService.master_volume_percent() <= 0,
+		"scheduled": false,
 	}
 
 func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
@@ -1889,6 +1966,17 @@ func _cleanup_audio_players() -> void:
 		elif player is AudioStreamPlayer and is_instance_valid(player):
 			player.queue_free()
 	_active_audio_players = retained
+
+func _activate_due_audio_cue_playback() -> void:
+	var now := int(Time.get_ticks_msec())
+	for battle_id_value in _stack_animation_cue_playback_records.keys():
+		var battle_id := String(battle_id_value)
+		var cue_record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+		if cue_record.is_empty() or int(cue_record.get("started_at_msec", now)) > now:
+			continue
+		var audio_record: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {}) if _stack_animation_audio_playback_records.get(battle_id, {}) is Dictionary else {}
+		if audio_record.is_empty() or bool(audio_record.get("scheduled", false)):
+			_register_audio_cue_playback(cue_record)
 
 func _trim_audio_players() -> void:
 	_cleanup_audio_players()

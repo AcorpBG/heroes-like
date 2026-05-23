@@ -314,6 +314,7 @@ func _validate_board_runtime_summary() -> void:
 	add_child(view)
 	view.set_battle_state(session)
 	await get_tree().process_frame
+	await get_tree().create_timer(0.16).timeout
 	var summary: Dictionary = view.validation_unit_art_summary()
 	view.queue_free()
 	await get_tree().process_frame
@@ -351,6 +352,7 @@ func _validate_board_playback_lifecycle() -> void:
 	add_child(view)
 	view.set_battle_state(session)
 	await get_tree().process_frame
+	await get_tree().create_timer(0.16).timeout
 	var active_summary: Dictionary = view.validation_unit_art_summary()
 	var active_states := _observed_animation_states(active_summary)
 	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
@@ -419,6 +421,12 @@ func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
 	_expect_equal("enemy cue event id", String(enemy_cue.get("event_id", "")), "battle_status_applied")
 	_expect_equal("player cue target", String(player_cue.get("target_battle_id", "")), "enemy_0")
 	_expect_equal("enemy cue source", String(enemy_cue.get("source_battle_id", "")), "player_0")
+	var player_start := int(player_cue.get("started_at_msec", 0))
+	var enemy_start := int(enemy_cue.get("started_at_msec", 0))
+	if player_start <= 0 or enemy_start <= player_start:
+		_error("Cue dispatch did not sequence target reaction after source action: player=%s enemy=%s." % [player_cue, enemy_cue])
+	if int(enemy_cue.get("sequence_delay_msec", 0)) <= 0:
+		_error("Target reaction cue did not carry a positive sequence delay: %s." % enemy_cue)
 	_expect_array_contains("player cue vfx", player_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_projectile_path")
 	_expect_array_contains("player cue audio", player_cue.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
 	_expect_array_contains("enemy cue vfx", enemy_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_status_residue")
@@ -447,12 +455,16 @@ func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
 	var audio_playback: Dictionary = summary.get("audio_playback", {}) if summary.get("audio_playback", {}) is Dictionary else {}
 	if int(audio_playback.get("active_audio_record_count", 0)) < 2:
 		_error("Audio playback did not materialize both source and target audio records: %s" % audio_playback)
-	if int(audio_playback.get("generated_waveform_count", 0)) < 2:
-		_error("Audio playback did not synthesize both source and target cue waveforms: %s" % audio_playback)
+	if int(audio_playback.get("generated_waveform_count", 0)) + int(audio_playback.get("scheduled_record_count", 0)) < 2:
+		_error("Audio playback did not synthesize or schedule both source and target cue waveforms: %s" % audio_playback)
 	var player_audio := _audio_record_for(audio_playback, "player_0")
 	var enemy_audio := _audio_record_for(audio_playback, "enemy_0")
 	_expect_array_contains("player audio runtime cue", player_audio.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
 	_expect_array_contains("enemy audio runtime cue", enemy_audio.get("selected_audio_cue_ids", []), "audio_placeholder_status_apply")
+	if int(player_audio.get("generated_waveform_count", 0)) < 1:
+		_error("Source audio cue should synthesize immediately: %s" % player_audio)
+	if bool(enemy_audio.get("scheduled", false)) and int(enemy_audio.get("sequence_delay_msec", 0)) <= 0:
+		_error("Scheduled target audio cue should carry a positive sequence delay: %s" % enemy_audio)
 	if String(audio_playback.get("audio_bus", "")) != "Master":
 		_error("Audio playback should route generated battle cues through Master bus: %s" % audio_playback)
 	return audio_playback
