@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSliceId": "packaged-runtime-issue-log-smoke-20260523-10184",
-  "currentSliceTitle": "Packaged Runtime Issue Log Smoke",
+  "currentPhase": "phase-2-deep-production-foundation",
+  "currentSliceId": "ui-audio-cue-runtime-baseline-20260523-10184",
+  "currentSliceTitle": "UI Audio Cue Runtime Baseline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: packaged runtime issue-log smoke passed with user://debug JSONL/snapshot evidence.",
+  "currentSliceNotes": "Completed: UiAudio autoload attaches common Godot UI controls, synthesizes bounded generated cues on the Master bus, respects SettingsService master-volume mute state, and focused runtime coverage proved click/select/adjust/tab/confirm/invalid records.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T16:14:14Z",
+  "updatedAt": "2026-05-23T16:15:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16730,6 +16730,46 @@
       "updatedAt": "2026-05-23T16:14:14Z",
       "completedAt": "2026-05-23T16:14:14Z",
       "completionNotes": "Completed: RuntimeIssueLog autoload writes sanitized user://debug JSONL and latest-issue snapshots; packaged smoke exported a 287498580-byte Linux Release PCK, launched the report scene through --main-pack --scene, emitted one issue record, read it back, and found no fatal boot patterns."
+    },
+    {
+      "id": "ui-audio-cue-runtime-baseline-20260523-10184",
+      "title": "UI Audio Cue Runtime Baseline",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add a reusable generated UI audio cue service that attaches to live UI controls and proves button, picker, slider, tab, list, confirm, and invalid-action cue playback records.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ui_audio_cue_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "UiAudio is registered as an autoload and attaches to common Godot UI controls without per-screen wiring.",
+        "Generated UI cue playback uses AudioStreamGenerator on the Master bus and respects SettingsService master volume mute state.",
+        "Focused validation proves button, option, slider, tab, item-list, confirm, and invalid-action cues produce bounded playback records."
+      ],
+      "nonGoals": [
+        "No final imported UI audio assets.",
+        "No music or ambient audio.",
+        "No mixer polish or final sound design claim."
+      ],
+      "updatedAt": "2026-05-23T16:20:57Z",
+      "completedAt": "2026-05-23T16:20:57Z",
+      "completionNotes": "Completed: UiAudio autoload attaches common Godot UI controls, synthesizes bounded generated cues on the Master bus, respects SettingsService master-volume mute state, and focused runtime coverage proved click/select/adjust/tab/confirm/invalid records.",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ui_audio_cue_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -20383,6 +20423,46 @@
         "python3 tests/validate_repo.py"
       ],
       "remainingGap": "Release packaging still needs native crash capture policy, Linux/Windows executable smoke tests, clean-machine validation, installer/export preset hardening, and final support workflow decisions."
+    },
+    {
+      "id": "ui-audio-cue-runtime-baseline-20260523-10184",
+      "title": "UI Audio Cue Runtime Baseline",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T16:20:57Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "docs/ui-audio-cue-runtime-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "ui-audio-cue-runtime-baseline-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/autoload/UiAudio.gd",
+        "project.godot",
+        "tests/ui_audio_cue_runtime_report.gd",
+        "tests/ui_audio_cue_runtime_report.tscn",
+        "docs/ui-audio-cue-runtime-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "UiAudio is registered as a project autoload and scans/attaches newly added common UI controls without per-screen wiring.",
+        "Generated cue playback uses AudioStreamGenerator and AudioStreamPlayer on the Master bus with bounded active players and bounded validation records.",
+        "The runtime honors SettingsService.master_volume_percent mute state before creating audio players.",
+        "The focused Godot report exercised Button, OptionButton, HSlider, TabContainer, ItemList, confirm, and invalid-action cues and emitted seven records across ui_click, ui_select, ui_adjust, ui_tab, ui_confirm, and ui_invalid.",
+        "The report keeps final imported sound effects, music, ambient audio, mixer polish, and final sound design as explicit non-claims."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ui_audio_cue_runtime_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -21479,9 +21559,10 @@
     ]
   },
   "active_slice": {
-    "id": "packaged-runtime-issue-log-smoke-20260523-10184",
+    "id": "ui-audio-cue-runtime-baseline-20260523-10184",
     "status": "completed",
-    "updated": "2026-05-23T16:14:14Z",
-    "note": "Completed: packaged runtime issue-log smoke passed with user://debug JSONL/snapshot evidence."
-  }
+    "updated": "2026-05-23T16:20:57Z",
+    "note": "Completed: UiAudio autoload attaches common Godot UI controls, synthesizes bounded generated cues on the Master bus, respects SettingsService master-volume mute state, and focused runtime coverage proved click/select/adjust/tab/confirm/invalid records."
+  },
+  "currentSliceUpdatedAt": "2026-05-23T16:21:15Z"
 }

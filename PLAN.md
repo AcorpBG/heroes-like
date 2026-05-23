@@ -63,6 +63,8 @@ Battle death animation retention added on 2026-05-23: `BattleBoardView` now keep
 
 Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active battle audio cue ids into short generated `AudioStreamGenerator` waveforms on the Master bus, with per-cue timbre/duration specs for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, ready, status-clear, and idle cues. The board exposes `audio_playback` validation records and rate-limits active generated players. `tests/battle_event_animation_state_report.tscn` proves ranged/status events synthesize audio cue waveforms and expire with playback. This is runtime placeholder audio playback, not final sound design, imported audio assets, music, ambience, mixer polish, or combat balance tuning.
 
+UI audio cue runtime baseline added on 2026-05-23: `UiAudio` is now a generated-audio autoload that scans the scene tree, attaches to common Godot controls, and synthesizes `ui_click`, `ui_select`, `ui_adjust`, `ui_tab`, `ui_confirm`, and `ui_invalid` cue waveforms on the Master bus while preserving bounded validation records and mute state. `tests/ui_audio_cue_runtime_report.tscn` proves Button, OptionButton, HSlider, TabContainer, ItemList, confirm, and invalid-action cues produce playback records. This is runtime placeholder UI audio, not final sound design, imported UI audio assets, music, ambience, or mixer polish.
+
 Battle event playback sequencing added on 2026-05-23: `BattleBoardView` now preserves event serial timing in active playback records, adds a bounded target-reaction delay for hit/death/status/retaliation cue handoffs, derives generated sheet frame indexes from event progress instead of wall-clock only, and keeps delayed target audio as scheduled until its cue start. `tests/battle_event_animation_state_report.tscn` now proves source ranged cues start before target status cues and that scheduled target audio carries a positive sequence delay. This is deterministic presentation ordering for generated sheets/placeholders, not final authored animation timing, imported audio/VFX, or combat balance tuning.
 
 Battle exit animation handoff added on 2026-05-23: retreat and surrender now preserve pre-resolution `battle_exit_animation_snapshot` payloads before `session.battle` is cleared, `BattleBoardView` can render those presentation snapshots, and `BattleShell` briefly shows the exit animation while inputs are locked before routing to the overworld/outcome flow. `tests/battle_event_animation_state_report.tscn` now proves `battle_unit_retreat`/`retreat_withdraw_column` and `battle_unit_surrender`/`surrender_stand_down` are produced by real exit actions and render through the board snapshot path. This closes an exit-action presentation gap, not final authored animation timing, camera work, imported VFX/audio, or combat balance.
@@ -5295,6 +5297,30 @@ nonGoals:
 - No automatic tuning or authored content writeback.
 - No final combat balance approval.
 - No strategic AI rewrite, encounter retune, or manual-play replacement.
+
+Completed owner-directed implementation slice:
+
+id: `ui-audio-cue-runtime-baseline-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add a generated UI audio cue service that attaches to common controls and provides runtime feedback for menu/town/overworld/battle UI interactions.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/autoload/UiAudio.gd`
+- `project.godot`
+- `tests/ui_audio_cue_runtime_report.gd`
+- `tests/ui_audio_cue_runtime_report.tscn`
+- `tests/validate_repo.py`
+- `docs/ui-audio-cue-runtime-report.md`
+- `ops/progress.json`
+completionCriteria:
+- `UiAudio` is registered as an autoload and attaches to common Godot controls without per-screen wiring.
+- Generated UI cue playback uses `AudioStreamGenerator` on the Master bus and exposes bounded validation records.
+- Focused validation proves Button, OptionButton, HSlider, TabContainer, ItemList, confirm, and invalid-action cue records.
+nonGoals:
+- No final imported UI audio assets.
+- No music, ambience, mixer polish, or final sound design claim.
 
 Completed owner-directed implementation slice:
 
