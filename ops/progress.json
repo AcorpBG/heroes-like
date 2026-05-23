@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-autoplay-balance-tuning-queue-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Balance Tuning Queue",
+  "currentSliceId": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Queue-Driven Combat Balance Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented deterministic report-only battle autoplay tuning queue output with 9 medium-priority watch items, stable signature f8dc048d, focused Godot report coverage, documentation, and repo validator gates. Validated with tuning queue report, existing combat balance report, validate_repo.py, py_compile, jq empty, and git diff --check.",
+  "currentSliceNotes": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T20:22:00Z",
+  "updatedAt": "2026-05-23T20:49:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17283,6 +17283,70 @@
         "git diff --check"
       ],
       "notes": "This is actionable combat-feel triage over existing green threshold gates; it does not retune content or claim final combat balance."
+    },
+    {
+      "id": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
+      "title": "Battle Autoplay Queue-Driven Combat Balance Pass",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Use the battle autoplay tuning queue to make a bounded authored army-group balance pass over the current worst sampled combat-feel outliers.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-balance-tuning-queue-report.md",
+        "docs/battle-autoplay-combat-balance-calibration-report.md",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md",
+        "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The queue-driven balance pass reduces current sample-level terminal-margin and burst-pacing watch pressure without breaking combat_feel_gate or balance_matrix_gate.",
+        "Authored army-group changes remain scoped to sampled encounter groups and preserve existing encounter ids, battlefield identity tags, and validator contracts.",
+        "Focused report evidence records the before/after queue item count, signature, and remaining non-final balance risks."
+      ],
+      "nonGoals": [
+        "No automatic tuning system.",
+        "No broad faction-vs-faction balance approval.",
+        "No spell/autocast or strategic AI rewrite."
+      ],
+      "updatedAt": "2026-05-23T20:49:00Z",
+      "startedAt": "2026-05-23T20:36:00Z",
+      "notes": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0.",
+      "completedAt": "2026-05-23T20:49:00Z",
+      "completionEvidence": [
+        "Authored army group retune changed army_blackbranch_raiders to include 2 bog_brute and one fewer mire_slinger, improving low/forest survivability without changing encounter ids.",
+        "Authored army group retune changed army_ripper_vanguard from 4 to 3 gorefen_ripper, reducing high/grass burst pressure while preserving the roster identity.",
+        "Battle autoplay tuning queue now reports queue_signature 95f5ac7e, item_count 5, high_priority_count 0, sample_watch_count 0, gate_item_count 0, and only medium-priority cohort watches.",
+        "Battle autoplay combat balance report keeps combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0, completed_sample_count 12, and no stalled or invalid-order samples.",
+        "Focused report docs record before/after queue metrics and explicitly keep final combat balance approval out of scope."
+      ],
+      "validationResults": {
+        "status": "passed",
+        "updatedAt": "2026-05-23T20:49:00Z",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json content/army_groups.json",
+          "git diff --check"
+        ],
+        "queue_signature": "95f5ac7e",
+        "item_count": 5,
+        "high_priority_count": 0,
+        "sample_watch_count": 0,
+        "gate_item_count": 0,
+        "combat_feel_gate_status": "pass",
+        "balance_matrix_gate_status": "pass"
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -22210,21 +22274,36 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-balance-tuning-queue-20260523-10184",
+    "id": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T20:22:00Z",
+    "updatedAt": "2026-05-23T20:49:00Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json",
+      "jq empty ops/progress.json content/army_groups.json",
       "git diff --check"
-    ]
+    ],
+    "summary": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0."
   },
-  "active_slice": "battle-autoplay-balance-tuning-queue-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T20:22:00Z",
+  "active_slice": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T20:49:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T20:49:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/army_groups.json",
+        "git diff --check"
+      ],
+      "summary": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0."
+    },
     {
       "id": "battle-autoplay-balance-tuning-queue-20260523-10184",
       "status": "passed",

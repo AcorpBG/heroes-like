@@ -5,6 +5,7 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_AUTOPLAY_BALANCE_TUNING_QUEUE_REPORT"
 const REQUIRED_SCHEMA := "battle_autoplay_balance_tuning_queue_v1"
 const REQUIRED_POLICY := "report_only_no_runtime_tuning"
+const MAX_CURRENT_WATCH_ITEMS := 5
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -39,8 +40,14 @@ func _run() -> void:
 	if String(queue.get("queue_signature", "")) == "" or String(queue.get("queue_signature", "")) != String(repeat_queue.get("queue_signature", "")):
 		_fail("Battle autoplay tuning queue signature is missing or non-deterministic.", payload)
 		return
+	if int(queue.get("high_priority_count", 0)) != 0:
+		_fail("Battle autoplay tuning queue should not have high-priority action-required items after the queue-driven balance pass.", payload)
+		return
 	if int(queue.get("item_count", 0)) <= 0:
-		_fail("Battle autoplay tuning queue should expose actionable current watch items.", payload)
+		_fail("Battle autoplay tuning queue should keep remaining cohort watch items visible.", payload)
+		return
+	if int(queue.get("item_count", 0)) > MAX_CURRENT_WATCH_ITEMS:
+		_fail("Battle autoplay tuning queue regressed above the current watch-item budget.", payload)
 		return
 	if not _assert_queue_items(queue, payload):
 		return
@@ -58,8 +65,14 @@ func _assert_queue_items(queue: Dictionary, payload: Dictionary) -> bool:
 		_fail("Battle autoplay tuning queue top contributors should expose one to five items.", payload)
 		return false
 	var categories: Array = coverage.get("categories", []) if coverage.get("categories", []) is Array else []
-	if not ("sample_terminal_margin_watch" in categories):
-		_fail("Battle autoplay tuning queue should include current terminal-margin sample watch coverage.", payload)
+	if int(coverage.get("sample_watch_count", -1)) != 0:
+		_fail("Battle autoplay tuning queue should have no sample-level terminal-margin or pacing watches after the balance pass.", payload)
+		return false
+	if int(coverage.get("gate_item_count", -1)) != 0:
+		_fail("Battle autoplay tuning queue should have no combat-feel or balance-matrix gate watch items after the balance pass.", payload)
+		return false
+	if not ("cohort_outcome_bias_watch" in categories):
+		_fail("Battle autoplay tuning queue should keep remaining cohort outcome-bias watch coverage visible.", payload)
 		return false
 	var previous_priority := 999
 	var saw_remediation_hint := false

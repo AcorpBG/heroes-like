@@ -16396,6 +16396,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
+    queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     for path in (
         harness_path,
         battle_ai_path,
@@ -16412,6 +16413,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         balance_matrix_doc_path,
         expanded_sample_doc_path,
         tuning_queue_doc_path,
+        queue_balance_doc_path,
     ):
         ensure(path.exists(), errors, f"Missing battle autoplay balance diagnostic file: {path.relative_to(ROOT)}")
     if harness_path.exists():
@@ -16545,7 +16547,11 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "report_only_no_runtime_tuning",
             "queue_signature",
             "repeat_queue_signature",
-            "sample_terminal_margin_watch",
+            "MAX_CURRENT_WATCH_ITEMS",
+            "sample_watch_count",
+            "gate_item_count",
+            "cohort_outcome_bias_watch",
+            "high-priority action-required",
             "top_contributors",
             "remediation_hint",
             "suggested_owner",
@@ -16632,6 +16638,24 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in tuning_queue_doc_text, errors, f"Battle autoplay tuning queue doc is missing required text: {required_text}")
+    if queue_balance_doc_path.exists():
+        queue_balance_doc_text = queue_balance_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Queue-Driven Combat Balance Pass Report",
+            "army_blackbranch_raiders",
+            "army_ripper_vanguard",
+            "queue_signature",
+            "95f5ac7e",
+            "item_count",
+            "5",
+            "high_priority_count",
+            "sample_watch_count",
+            "gate_item_count",
+            "combat_feel_gate.status",
+            "balance_matrix_gate.status",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in queue_balance_doc_text, errors, f"Battle autoplay queue-driven balance doc is missing required text: {required_text}")
 
 
 def validate_packaging_platform_readiness(errors: list[str]) -> None:
