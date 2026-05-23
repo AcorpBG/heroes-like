@@ -600,6 +600,7 @@ func _refresh() -> void:
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
+	var intent_forecast := BattleRules.intent_forecast_payload(_session)
 	_action_guide.visible = true
 	_set_compact_label(
 		_action_guide,
@@ -612,6 +613,7 @@ func _refresh() -> void:
 	)
 	_action_guide.tooltip_text = _join_tooltip_sections([
 		String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session))),
+		String(intent_forecast.get("tooltip_text", "")),
 		String(position_check.get("tooltip_text", "")),
 		String(objective_check.get("tooltip_text", "")),
 	])
@@ -1595,6 +1597,7 @@ func validation_snapshot() -> Dictionary:
 	var spell_timing_board := BattleRules.describe_spell_timing_board(_session)
 	var timing_check := _battle_timing_check_cue_surface(spell_timing_board)
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
+	var intent_forecast := BattleRules.intent_forecast_payload(_session)
 	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
@@ -1639,6 +1642,9 @@ func validation_snapshot() -> Dictionary:
 		"objective_check": objective_check,
 		"objective_check_visible_text": String(objective_check.get("visible_text", "")),
 		"objective_check_tooltip_text": String(objective_check.get("tooltip_text", "")),
+		"intent_forecast": intent_forecast,
+		"intent_forecast_visible_text": String(intent_forecast.get("visible_text", "")),
+		"intent_forecast_tooltip_text": String(intent_forecast.get("tooltip_text", "")),
 		"target_cycle_cue": _battle_target_cycle_cue_surface(
 			String(active_stack.get("side", "")) == "player",
 			active_stack,

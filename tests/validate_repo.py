@@ -106,6 +106,8 @@ ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_valid
 ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validation-smoke-harness-report.md"
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_event_animation_state_report.gd"
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_event_animation_state_report.tscn"
+BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
+BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH = ROOT / "tests" / "battle_intent_forecast_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
@@ -11675,6 +11677,57 @@ def validate_battle_order_consequence_board(errors: list[str]) -> None:
     ensure("func choose_enemy_action" in battle_ai_text, errors, "BattleAiRules.gd must keep choose_enemy_action for battle order consequence surfacing")
 
 
+def validate_battle_intent_forecast(errors: list[str]) -> None:
+    required_paths = (
+        BATTLE_SCRIPT_PATH,
+        BATTLE_RULES_PATH,
+        BATTLE_AI_RULES_PATH,
+        BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH,
+        BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle intent forecast file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func intent_forecast_payload",
+        "func describe_intent_forecast",
+        "func _intent_forecast_action_id",
+        "func _intent_forecast_expected_result",
+        "func _intent_forecast_confidence_line",
+        "BattleAiRulesScript.choose_stack_tactical_order",
+        "Intent Forecast",
+        "Expected result:",
+        "Confidence:",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle intent-forecast token: {required_token}")
+
+    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BattleRules.intent_forecast_payload",
+        '"intent_forecast"',
+        '"intent_forecast_visible_text"',
+        '"intent_forecast_tooltip_text"',
+    ):
+        ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle intent-forecast token: {required_token}")
+
+    report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BATTLE_INTENT_FORECAST_REPORT",
+        "Intent forecast:",
+        "Expected result:",
+        "Confidence:",
+        "does not spend an action",
+        "enemy initiative",
+    ):
+        ensure(required_token in report_text, errors, f"battle_intent_forecast_report.gd is missing required token: {required_token}")
+
+    scene_text = BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure("battle_intent_forecast_report.gd" in scene_text, errors, "battle_intent_forecast_report.tscn must reference its report script")
+
+
 def validate_battle_spell_timing_board(errors: list[str]) -> None:
     required_paths = (SESSION_STATE_PATH, BATTLE_SCENE_PATH, BATTLE_SCRIPT_PATH, BATTLE_RULES_PATH, SPELL_RULES_PATH, BATTLE_AI_RULES_PATH)
     for path in required_paths:
@@ -16263,6 +16316,7 @@ def main() -> int:
     validate_battle_shell_release_polish(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
+    validate_battle_intent_forecast(errors)
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
@@ -16351,6 +16405,7 @@ def main() -> int:
     print("- retreat and surrender now preserve pre-resolution battle animation snapshots for board presentation before terminal routing")
     print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics")
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
+    print("- the battle shell now exposes a scored intent forecast with preferred order, target, expected result, risk, and confidence evidence")
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")
     print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")
     print("- battle encounters now also author cover lines, obstruction lines, and firing-lane control points that drive movement pressure, ranged threat, commander safety, AI scoring, and shell summaries")

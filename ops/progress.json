@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
-  "currentSliceTitle": "Headless Strategic AI Live Regroup Retreat",
+  "currentSliceId": "battle-intent-forecast-20260523-10184",
+  "currentSliceTitle": "Battle Intent Forecast",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: standard headless harness now includes live strategic AI regroup/retreat coverage and the public end-turn event surface carries high-importance regroup events.",
+  "currentSliceNotes": "Completed: compact scored battle intent forecast is surfaced in BattleShell and covered by focused validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T00:00:00Z",
+  "updatedAt": "2026-05-23T15:53:36.482174Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -16589,6 +16589,44 @@
         "No full strategic AI quality claim.",
         "No broad defense rotation, multi-hero grouping, town assault planner, recruitment economy rewrite, or difficulty tuning."
       ]
+    },
+    {
+      "id": "battle-intent-forecast-20260523-10184",
+      "title": "Battle Intent Forecast",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-intent-forecast-report.md"
+      ],
+      "purpose": "Add a compact, read-only battle intent forecast that tells the player the preferred order, target, expected consequence, risk, and confidence for the current tactical window.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_intent_forecast_report.gd",
+        "tests/battle_intent_forecast_report.tscn",
+        "tests/validate_repo.py",
+        "docs/battle-intent-forecast-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "BattleRules exposes a read-only intent forecast payload with preferred order, target, expected result, risk, and confidence fields.",
+        "BattleShell surfaces the forecast through the existing compact action-guide tooltip and validation snapshot without adding a new permanent panel.",
+        "Focused validation proves scored strike selection, expected result/risk/confidence copy, no battle-state mutation, and enemy-initiative lockout."
+      ],
+      "nonGoals": [
+        "No final combat balance approval, broad encounter retune, final VFX/audio, or full battle UX redesign."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -20113,6 +20151,11 @@
         "git diff --check"
       ],
       "remainingGap": "This proves one live retreat/regroup fixture in the standard harness; broader strategic AI quality still needs defense rotation, multi-hero grouping, town assault priorities, objective handling across scenarios, and difficulty tuning."
+    },
+    {
+      "sliceId": "battle-intent-forecast-20260523-10184",
+      "summary": "BattleRules now exposes a read-only scored intent forecast; BattleShell adds it to action-guide tooltip and validation snapshots; focused report proves scored strike selection, expected consequence/risk/confidence copy, no mutation, and enemy-initiative lockout.",
+      "updated": "2026-05-23"
     }
   ],
   "docsReadyEvidence": [
@@ -21137,26 +21180,36 @@
         "git diff --check"
       ],
       "summary": "Focused headless harness report passed with strategic_ai_live_regroup_retreat as a required subsystem, Vaska regrouping at Duskfen, strength 21->191, garrison 5->0, ai_raid_regrouped public event evidence, player control preserved on river_free_company, and no-save/report-only boundaries."
+    },
+    {
+      "sliceId": "battle-intent-forecast-20260523-10184",
+      "status": "passed",
+      "updated": "2026-05-23",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
-    "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+    "sliceId": "battle-intent-forecast-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T00:00:00Z",
+    "updated": "2026-05-23",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
-    ],
-    "summary": "Focused headless harness report passed with strategic_ai_live_regroup_retreat as a required subsystem, Vaska regrouping at Duskfen, strength 21->191, garrison 5->0, ai_raid_regrouped public event evidence, player control preserved on river_free_company, and no-save/report-only boundaries."
+    ]
   },
   "active_slice": {
-    "id": "headless-strategic-ai-live-regroup-retreat-20260523-10184",
+    "id": "battle-intent-forecast-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: live understrength raid regroup/retreat is now covered by the standard headless harness."
+    "note": "Completed: compact scored battle intent forecast is surfaced in BattleShell and covered by focused validation."
   }
 }
