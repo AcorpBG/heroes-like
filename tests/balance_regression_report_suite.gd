@@ -39,6 +39,28 @@ func _assert_report(first: Dictionary) -> bool:
 		if status not in ["pass", "warning", "deferred"]:
 			_fail("Balance regression report section returned unsupported status: %s / %s" % [section.get("section_id", ""), status])
 			return false
+	var battle_section := _find_section(first, "battle_outcome_distribution")
+	if battle_section.is_empty():
+		_fail("Balance regression report is missing battle outcome distribution evidence.")
+		return false
+	var battle_summary: Dictionary = battle_section.get("summary", {})
+	var battle_evidence: Dictionary = battle_section.get("evidence", {})
+	var action_distribution: Dictionary = battle_summary.get("action_distribution", {}) if battle_summary.get("action_distribution", {}) is Dictionary else {}
+	var battle_samples: Array = battle_evidence.get("samples", []) if battle_evidence.get("samples", []) is Array else []
+	if int(battle_summary.get("sample_count", 0)) <= 0 or battle_samples.is_empty():
+		_fail("Battle outcome distribution did not emit autoplay samples.")
+		return false
+	if int(battle_summary.get("step_limit", 0)) <= 0 or int(battle_summary.get("average_round_reached", 0)) <= 0:
+		_fail("Battle outcome distribution is missing pacing metrics.")
+		return false
+	if action_distribution.is_empty():
+		_fail("Battle outcome distribution is missing action metrics.")
+		return false
+	var first_battle_sample: Dictionary = battle_samples[0]
+	for required_field in ["initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "action_counts"]:
+		if not first_battle_sample.has(String(required_field)):
+			_fail("Battle outcome distribution sample is missing field: %s" % required_field)
+			return false
 	if int(statuses.get("pass", 0)) <= 0:
 		_fail("Balance regression report did not pass any mature surface.")
 		return false
@@ -55,6 +77,12 @@ func _assert_report(first: Dictionary) -> bool:
 			_fail("Balance regression compact report contains forbidden claim token: %s" % forbidden)
 			return false
 	return true
+
+func _find_section(report: Dictionary, section_id: String) -> Dictionary:
+	for section in report.get("sections", []):
+		if section is Dictionary and String(section.get("section_id", "")) == section_id:
+			return section
+	return {}
 
 func _fail(message: String) -> void:
 	push_error(message)

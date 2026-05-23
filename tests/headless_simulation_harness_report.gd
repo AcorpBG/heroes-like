@@ -46,6 +46,31 @@ func _assert_report(first: Dictionary) -> bool:
 		if status not in ["pass", "warning", "deferred"]:
 			_fail("Headless simulation harness returned unsupported case status: %s / %s" % [simulation_case.get("subsystem_id", ""), status])
 			return false
+	var battle_case := _find_case(first, "battle_resolver_sampling")
+	if battle_case.is_empty():
+		_fail("Headless simulation harness is missing battle resolver sampling evidence.")
+		return false
+	var battle_summary: Dictionary = battle_case.get("summary", {})
+	var battle_evidence: Dictionary = battle_case.get("evidence", {})
+	if int(battle_summary.get("sample_count", 0)) <= 0:
+		_fail("Battle resolver sampling did not emit any autoplay samples.")
+		return false
+	if int(battle_summary.get("step_limit", 0)) <= 0 or int(battle_summary.get("average_steps_sampled", 0)) <= 0:
+		_fail("Battle resolver sampling is missing autoplay pacing metrics.")
+		return false
+	var action_distribution: Dictionary = battle_summary.get("action_distribution", {}) if battle_summary.get("action_distribution", {}) is Dictionary else {}
+	if action_distribution.is_empty():
+		_fail("Battle resolver sampling is missing action distribution metrics.")
+		return false
+	var battle_samples: Array = battle_evidence.get("samples", []) if battle_evidence.get("samples", []) is Array else []
+	if battle_samples.is_empty():
+		_fail("Battle resolver sampling is missing per-sample evidence.")
+		return false
+	var first_battle_sample: Dictionary = battle_samples[0]
+	for required_field in ["steps_sampled", "round_reached", "initial_health", "final_health", "player_health_remaining_pct", "enemy_health_remaining_pct", "action_counts"]:
+		if not first_battle_sample.has(String(required_field)):
+			_fail("Battle resolver sample is missing field: %s" % required_field)
+			return false
 	if int(statuses.get("pass", 0)) <= 0:
 		_fail("Headless simulation harness did not pass any mature subsystem.")
 		return false
@@ -62,6 +87,12 @@ func _assert_report(first: Dictionary) -> bool:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
 	return true
+
+func _find_case(report: Dictionary, subsystem_id: String) -> Dictionary:
+	for simulation_case in report.get("cases", []):
+		if simulation_case is Dictionary and String(simulation_case.get("subsystem_id", "")) == subsystem_id:
+			return simulation_case
+	return {}
 
 func _fail(message: String) -> void:
 	push_error(message)
