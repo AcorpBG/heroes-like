@@ -87,12 +87,16 @@ func _assert_report(first: Dictionary) -> bool:
 		"pacing_band_distribution",
 		"initial_role_distribution",
 		"initial_ability_distribution",
+		"balance_matrix",
+		"balance_matrix_gate",
 		"combat_feel_gate",
 	]:
 		if not battle_summary.has(String(required_summary_field)):
 			_fail("Battle outcome distribution summary is missing combat-feel diagnostic field: %s" % required_summary_field)
 			return false
 	if not _assert_combat_feel_gate(battle_summary):
+		return false
+	if not _assert_balance_matrix_gate(battle_summary):
 		return false
 	if int(battle_summary.get("action_diversity_count", 0)) <= 0 or String(battle_summary.get("primary_action_id", "")) == "":
 		_fail("Battle outcome distribution did not expose a usable action-mix diagnostic: %s" % battle_summary)
@@ -114,7 +118,7 @@ func _assert_report(first: Dictionary) -> bool:
 		_fail("Battle outcome distribution did not use the shared tactical autoplay scoring policy: %s" % autoplay_decision)
 		return false
 	var initial_stack_profile: Dictionary = first_battle_sample.get("initial_stack_profile", {}) if first_battle_sample.get("initial_stack_profile", {}) is Dictionary else {}
-	if not initial_stack_profile.has("initiative") or not initial_stack_profile.has("role_counts") or not initial_stack_profile.has("ability_counts"):
+	if not initial_stack_profile.has("initiative") or not initial_stack_profile.has("role_counts") or not initial_stack_profile.has("ability_counts") or not initial_stack_profile.has("side_power_scores") or not initial_stack_profile.has("matchup_band") or not initial_stack_profile.has("side_role_counts") or not initial_stack_profile.has("side_ability_counts"):
 		_fail("Battle outcome distribution sample is missing stack role/ability/initiative diagnostics: %s" % first_battle_sample)
 		return false
 	if int(statuses.get("pass", 0)) <= 0:
@@ -170,6 +174,43 @@ func _assert_combat_feel_gate(battle_summary: Dictionary) -> bool:
 		return false
 	if int(gate.get("average_terminal_health_margin_pct", -1)) != int(battle_summary.get("average_terminal_health_margin_pct", -2)):
 		_fail("Battle outcome distribution combat-feel gate terminal margin does not align with summary: %s" % gate)
+		return false
+	return true
+
+func _assert_balance_matrix_gate(battle_summary: Dictionary) -> bool:
+	var matrix: Dictionary = battle_summary.get("balance_matrix", {}) if battle_summary.get("balance_matrix", {}) is Dictionary else {}
+	var gate: Dictionary = battle_summary.get("balance_matrix_gate", {}) if battle_summary.get("balance_matrix_gate", {}) is Dictionary else {}
+	if String(matrix.get("schema", "")) != "battle_autoplay_balance_matrix_v1":
+		_fail("Battle outcome distribution balance matrix schema mismatch: %s" % matrix)
+		return false
+	if String(matrix.get("policy", "")) != "report_only_balance_matrix_v1":
+		_fail("Battle outcome distribution balance matrix policy mismatch: %s" % matrix)
+		return false
+	if String(gate.get("policy", "")) != "report_only_balance_matrix_thresholds_v1":
+		_fail("Battle outcome distribution balance matrix gate policy mismatch: %s" % gate)
+		return false
+	if String(gate.get("status", "")) not in ["pass", "warning", "fail"]:
+		_fail("Battle outcome distribution balance matrix gate status is unsupported: %s" % gate)
+		return false
+	if String(gate.get("status", "")) == "fail":
+		_fail("Battle outcome distribution balance matrix gate failed: %s" % gate)
+		return false
+	for section_id in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_id, {}) if matrix.get(section_id, {}) is Dictionary else {}
+		if section.is_empty():
+			_fail("Battle outcome distribution balance matrix missing section: %s" % section_id)
+			return false
+	var difficulty: Dictionary = matrix.get("difficulty", {}) if matrix.get("difficulty", {}) is Dictionary else {}
+	for required_difficulty in ["low", "medium", "high"]:
+		if not difficulty.has(required_difficulty):
+			_fail("Battle outcome distribution balance matrix missing difficulty cohort: %s" % required_difficulty)
+			return false
+	if int(gate.get("sample_count", -1)) != int(battle_summary.get("sample_count", -2)):
+		_fail("Battle outcome distribution balance matrix gate sample count does not align with summary: %s" % gate)
+		return false
+	var outliers: Array = matrix.get("terminal_margin_outliers", []) if matrix.get("terminal_margin_outliers", []) is Array else []
+	if outliers.size() != int(gate.get("terminal_margin_outlier_count", -1)):
+		_fail("Battle outcome distribution balance matrix outlier count does not match gate: %s" % gate)
 		return false
 	return true
 

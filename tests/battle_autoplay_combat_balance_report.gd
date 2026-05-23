@@ -28,6 +28,8 @@ func _run() -> void:
 			"damage_per_round": sample.get("damage_per_round", {}),
 			"action_mix": sample.get("action_mix", {}),
 			"pacing_band": String(sample.get("pacing_band", "")),
+			"matchup_band": String((sample.get("initial_stack_profile", {}) as Dictionary).get("matchup_band", "")) if sample.get("initial_stack_profile", {}) is Dictionary else "",
+			"side_power_scores": (sample.get("initial_stack_profile", {}) as Dictionary).get("side_power_scores", {}) if sample.get("initial_stack_profile", {}) is Dictionary else {},
 		})
 	var gate: Dictionary = summary.get("combat_feel_gate", {}) if summary.get("combat_feel_gate", {}) is Dictionary else {}
 	var warnings: Array = gate.get("warnings", []) if gate.get("warnings", []) is Array else []
@@ -45,8 +47,42 @@ func _run() -> void:
 	if "high_terminal_health_margin" in warnings:
 		_fail("Combat-feel threshold gate still reports high_terminal_health_margin.", payload)
 		return
+	if not _assert_balance_matrix(summary, payload):
+		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _assert_balance_matrix(summary: Dictionary, payload: Dictionary) -> bool:
+	var matrix: Dictionary = summary.get("balance_matrix", {}) if summary.get("balance_matrix", {}) is Dictionary else {}
+	var gate: Dictionary = summary.get("balance_matrix_gate", {}) if summary.get("balance_matrix_gate", {}) is Dictionary else {}
+	if String(matrix.get("schema", "")) != "battle_autoplay_balance_matrix_v1":
+		_fail("Battle autoplay balance matrix schema missing.", payload)
+		return false
+	if String(gate.get("policy", "")) != "report_only_balance_matrix_thresholds_v1":
+		_fail("Battle autoplay balance matrix gate policy missing.", payload)
+		return false
+	if String(gate.get("status", "")) == "fail":
+		_fail("Battle autoplay balance matrix gate failed: %s" % gate, payload)
+		return false
+	for section_id in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
+		var section: Dictionary = matrix.get(section_id, {}) if matrix.get(section_id, {}) is Dictionary else {}
+		if section.is_empty():
+			_fail("Battle autoplay balance matrix missing section: %s" % section_id, payload)
+			return false
+	var difficulty: Dictionary = matrix.get("difficulty", {}) if matrix.get("difficulty", {}) is Dictionary else {}
+	for required_difficulty in ["low", "medium", "high"]:
+		if not difficulty.has(required_difficulty):
+			_fail("Battle autoplay balance matrix missing difficulty cohort: %s" % required_difficulty, payload)
+			return false
+	var matchup: Dictionary = matrix.get("matchup", {}) if matrix.get("matchup", {}) is Dictionary else {}
+	if not matchup.has("even") and not matchup.has("player_advantaged") and not matchup.has("player_disadvantaged"):
+		_fail("Battle autoplay balance matrix missing matchup cohorts: %s" % matchup, payload)
+		return false
+	var outliers: Array = matrix.get("terminal_margin_outliers", []) if matrix.get("terminal_margin_outliers", []) is Array else []
+	if outliers.size() != int(gate.get("terminal_margin_outlier_count", -1)):
+		_fail("Battle autoplay balance matrix outlier count does not match gate: %s" % gate, payload)
+		return false
+	return true
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false
