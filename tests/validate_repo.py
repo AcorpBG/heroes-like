@@ -62,6 +62,8 @@ OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_ROOT = ROOT / "art" / "units"
+UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
+UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
@@ -14300,6 +14302,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
         TOWN_SCRIPT_PATH,
+        UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH,
+        UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing unit art asset file: {path.relative_to(ROOT)}")
@@ -14365,6 +14369,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "portrait",
         "battle_icon",
         "overworld_icon",
+        "draw_unit_signature",
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
 
@@ -14401,6 +14406,16 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "portrait",
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing unit art token {required_token}")
+
+    readiness_report_text = UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "UNIT_PRODUCTION_READINESS_REPORT",
+        "BattleRulesScript._build_battle_stack",
+        "BattleRulesScript._normalize_stack",
+        "art_surface_unique_hash_counts",
+        "units_without_live_reference",
+    ):
+        ensure(required_token in readiness_report_text, errors, f"unit_production_readiness_report.gd is missing token {required_token}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:

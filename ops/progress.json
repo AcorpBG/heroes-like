@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "unit-art-runtime-surface-adoption-20260523-10184",
-  "currentSliceTitle": "Unit Art Runtime Surface Adoption",
+  "currentSliceId": "unit-production-readiness-audit-20260523-10184",
+  "currentSliceTitle": "Unit Production Readiness Audit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: town recruit portraits and overworld encounter icons now consume generated unit art; final hand-painted/animated art remains outside this slice.",
+  "currentSliceNotes": "Completed: all units pass the focused production-readiness audit for mechanics, references, loadable unique art, and battle stack normalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T10:21:40Z",
+  "updatedAt": "2026-05-23T10:29:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15036,6 +15036,57 @@
         "tests/unit_art_manifest_report.tscn now validates manifest coverage plus live town, overworld, and battle unit-art loading; latest report covered 103 units, 309 PNG surfaces, one recruit portrait, three overworld encounter icons, and four battle stack icons with no missing art.",
         "tests/validate_repo.py now gates town, overworld, battle, manifest, and generator unit-art hooks."
       ]
+    },
+    {
+      "id": "unit-production-readiness-audit-20260523-10184",
+      "title": "Unit Production Readiness Audit",
+      "phase": "production-unit-art-baseline",
+      "status": "completed",
+      "classification": "owner_directed_unit_art_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "purpose": "Add a focused gate proving every authored unit has complete gameplay fields, live content references, loadable art surfaces, and can materialize as a normalized battle stack.",
+      "implementationTargets": [
+        "tests/unit_production_readiness_report.gd",
+        "tests/unit_production_readiness_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored unit is checked for required gameplay stats, cost, growth, role/ranged fields, abilities, and supported battle stack normalization.",
+        "Every authored unit has loadable portrait, battle_icon, and overworld_icon surfaces from the manifest.",
+        "Every authored unit has at least one live content reference through faction ladders, buildings, towns, army groups, neutral dwellings, resource sites, or scenario scripts.",
+        "Focused Godot report and repository validation pass."
+      ],
+      "nonGoals": [
+        "No new copyrighted external art import.",
+        "No final hand-painted art direction claim.",
+        "No animation sprite-sheet implementation in this slice."
+      ],
+      "startedAt": "2026-05-23T10:25:09Z",
+      "updatedAt": "2026-05-23T10:29:02Z",
+      "notes": "Completed: all authored units now pass a focused production-readiness gate for gameplay fields, live references, loadable unique art, and BattleRules stack materialization/normalization.",
+      "completedAt": "2026-05-23T10:29:02Z",
+      "validationResults": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_production_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "lastValidation": "Unit art manifest report, unit production readiness report, repository validation, Python compile, JSON, and diff checks passed.",
+      "evidenceHistory": [
+        "tests/unit_production_readiness_report.tscn audits all 103 authored units for required gameplay fields, non-empty cost/growth/abilities, live content references, loadable portrait/battle/overworld textures, unique per-surface PNG hashes, and BattleRules stack materialization/normalization.",
+        "The readiness report passed with stack_materialized_count=103, normalized_stack_count=103, portrait/battle_icon/overworld_icon load counts of 103 each, unique hash counts of 103 each, and zero units_without_live_reference.",
+        "tools/generate_unit_art_assets.py now adds deterministic unit-signature marks to battle and overworld icons so generated PNG bytes are unique per unit.",
+        "tests/validate_repo.py gates the production-readiness report and generator signature hook."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -17324,6 +17375,47 @@
         "git diff --check"
       ],
       "remainingGap": "Final hand-painted/animated production art direction is still not claimed by this generated-art adoption slice."
+    },
+    {
+      "id": "unit-production-readiness-audit-20260523-10184",
+      "title": "Unit Production Readiness Audit",
+      "status": "completed",
+      "phase": "production-unit-art-baseline",
+      "completedAt": "2026-05-23T10:29:02Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/units.json",
+        "content/unit_art_manifest.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "unit-production-readiness-audit-20260523-10184"
+      ],
+      "implementationRefs": [
+        "tools/generate_unit_art_assets.py",
+        "art/units/battle_icons/",
+        "art/units/overworld_icons/",
+        "tests/unit_production_readiness_report.gd",
+        "tests/unit_production_readiness_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "tests/unit_production_readiness_report.tscn audits all 103 authored units for required gameplay fields, non-empty cost/growth/abilities, live content references, loadable portrait/battle/overworld textures, unique per-surface PNG hashes, and BattleRules stack materialization/normalization.",
+        "The readiness report passed with stack_materialized_count=103, normalized_stack_count=103, portrait/battle_icon/overworld_icon load counts of 103 each, unique hash counts of 103 each, and zero units_without_live_reference.",
+        "tools/generate_unit_art_assets.py now adds deterministic unit-signature marks to battle and overworld icons so generated PNG bytes are unique per unit.",
+        "tests/validate_repo.py gates the production-readiness report and generator signature hook."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_production_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This proves current generated assets and unit mechanics are consumable and unique; final hand-painted art direction and animation sprite sheets remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -18002,13 +18094,27 @@
         "git diff --check"
       ],
       "summary": "Focused unit-art report and repo validation passed for full manifest plus town/overworld/battle runtime art loading."
+    },
+    {
+      "id": "unit-production-readiness-audit-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T10:29:02Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_art_manifest_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/unit_production_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "All 103 units passed production-readiness audit with unique loadable art surfaces and BattleRules stack materialization/normalization."
     }
   ],
   "lastValidation": "Unit art full-roster generated asset slice completed on 2026-05-23: generated 309 PNG surfaces for 103 authored units, added content/unit_art_manifest.json, wired ContentService validation/get_unit_art, loaded battle stack icons in BattleBoardView with procedural fallback, and added focused/unit repo validation. Validation passed Godot asset import, tests/unit_art_manifest_report.tscn, python3 tests/validate_repo.py, python3 -m py_compile tools/generate_unit_art_assets.py tests/validate_repo.py, jq empty ops/progress.json, and git diff --check. This remains a generated-art baseline, not final hand-painted art approval.",
   "active_slice": {
-    "id": "unit-art-runtime-surface-adoption-20260523-10184",
+    "id": "unit-production-readiness-audit-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: town recruit portraits and overworld encounter icons now consume generated unit art; final hand-painted/animated art remains outside this slice."
+    "note": "Completed: all units pass the focused production-readiness audit for mechanics, references, loadable unique art, and battle stack normalization."
   }
 }
