@@ -9150,6 +9150,8 @@ def validate_content(errors: list[str]) -> None:
     }
     skirmish_scenario_ids: list[str] = []
     skirmish_only_scenario_ids: list[str] = []
+    deadline_loss_scenario_ids: set[str] = set()
+    deadline_loss_skirmish_scenario_ids: set[str] = set()
     scenario_player_factions: set[str] = set()
     scenario_hero_ids: set[str] = set()
     authored_unit_ability_ids: set[str] = set()
@@ -9917,6 +9919,12 @@ def validate_content(errors: list[str]) -> None:
                         ensure(int(objective.get("threshold", 0)) > 0, errors, f"Scenario {scenario_id} objective {objective_id} must define threshold > 0")
                     elif objective_type == "day_at_least":
                         ensure(int(objective.get("day", 0)) > 0, errors, f"Scenario {scenario_id} objective {objective_id} must define day > 0")
+                        if objective_bucket == "defeat":
+                            ensure(bool(str(objective.get("label", ""))), errors, f"Scenario {scenario_id} deadline loss objective {objective_id} must define a player-facing label")
+                            ensure(int(objective.get("day", 0)) >= 5, errors, f"Scenario {scenario_id} deadline loss objective {objective_id} must use a generous day threshold")
+                            deadline_loss_scenario_ids.add(scenario_id)
+                            if scenario_id in skirmish_scenario_ids:
+                                deadline_loss_skirmish_scenario_ids.add(scenario_id)
                     else:
                         fail(errors, f"Scenario {scenario_id} objective {objective_id} has unsupported type {objective_type}")
 
@@ -10073,6 +10081,28 @@ def validate_content(errors: list[str]) -> None:
     ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
     ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")
     ensure(bool(skirmish_only_scenario_ids), errors, "Scenario roster should include at least one authored skirmish-only front")
+    required_deadline_loss_scenarios = {"river-pass", "causeway-stand", "fen-crown", "mireford-skirmish", "ninefold-confluence"}
+    ensure(required_deadline_loss_scenarios.issubset(deadline_loss_scenario_ids), errors, "Scenario deadline-loss variety slice must keep deadline defeat objectives on the Reedfall chain, skirmish-only front, and Ninefold finale")
+    ensure(len(deadline_loss_skirmish_scenario_ids) >= 5, errors, "Scenario deadline-loss variety slice must cover at least five skirmish-launchable scenarios")
+    for report_path in (
+        ROOT / "tests/scenario_deadline_loss_variety_report.gd",
+        ROOT / "tests/scenario_deadline_loss_variety_report.tscn",
+    ):
+        ensure(report_path.exists(), errors, f"Missing scenario deadline-loss variety report file: {report_path.relative_to(ROOT)}")
+    report_text_path = ROOT / "tests/scenario_deadline_loss_variety_report.gd"
+    if report_text_path.exists():
+        report_text = report_text_path.read_text(encoding="utf-8")
+        for required_text in (
+            "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT",
+            "REQUIRED_DEADLINE_SCENARIO_IDS",
+            "day_at_least",
+            "campaign_deadline_count",
+            "skirmish_deadline_count",
+            "finale_deadline_count",
+            "final_scenario_balance",
+            "campaign_breadth_complete",
+        ):
+            ensure(required_text in report_text, errors, f"Scenario deadline-loss variety report is missing required token: {required_text}")
     ensure(RELEASE_PLAYER_FACTIONS.issubset(scenario_player_factions), errors, "Scenario starts must cover all release player factions")
     ensure(len(scenario_hero_ids) >= 4, errors, "Scenario roster must expose at least four distinct lead heroes")
 

@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-4-headless-ai-agent-balance-harness",
-  "currentSliceId": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Queue-Driven Combat Balance Pass",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSliceId": "scenario-deadline-loss-variety-20260523-10184",
+  "currentSliceTitle": "Scenario Deadline Loss Variety",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0.",
+  "currentSliceNotes": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T20:49:00Z",
+  "updatedAt": "2026-05-23T21:19:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -17347,6 +17347,72 @@
         "combat_feel_gate_status": "pass",
         "balance_matrix_gate_status": "pass"
       }
+    },
+    {
+      "id": "scenario-deadline-loss-variety-20260523-10184",
+      "title": "Scenario Deadline Loss Variety",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "purpose": "Add bounded day-deadline defeat pressure to selected authored campaign/skirmish scenarios and gate that the new objective type can resolve real sessions as defeat without replacing existing victory/loss conditions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "scripts/core/ScenarioRules.gd"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/scenario_deadline_loss_variety_report.gd",
+        "tests/scenario_deadline_loss_variety_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Selected authored scenarios include explicit day_at_least defeat objectives with generous deadlines and player-facing labels.",
+        "The focused report proves deadline objectives are present across campaign/skirmish/finale content and can resolve live sessions as defeat when the day threshold is reached.",
+        "Existing objective validation and repository gates continue to pass without claiming scenario breadth or final campaign polish is complete."
+      ],
+      "nonGoals": [
+        "No new full campaign arc.",
+        "No final scenario balance approval.",
+        "No random-map production parity claim."
+      ],
+      "startedAt": "2026-05-23T21:06:00Z",
+      "updatedAt": "2026-05-23T21:19:00Z",
+      "notes": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
+      "completedAt": "2026-05-23T21:19:00Z",
+      "completionEvidence": [
+        "Added day_at_least defeat objective hold_pass_before_daybreak to river-pass for Day 9.",
+        "Added day_at_least defeat objective seize_causeway_before_daybreak to causeway-stand for Day 11.",
+        "Added day_at_least defeat objective break_fen_crown_before_daybreak to fen-crown for Day 13.",
+        "Added day_at_least defeat objective hold_ford_before_daybreak to mireford-skirmish for Day 10.",
+        "Added day_at_least defeat objective chart_confluence_before_daybreak to ninefold-confluence for Day 24.",
+        "Focused report boots each scenario, verifies pre-deadline in_progress state, deadline defeat resolution, and visible objective labels."
+      ],
+      "validationResults": {
+        "status": "passed",
+        "updatedAt": "2026-05-23T21:19:00Z",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty content/scenarios.json ops/progress.json",
+          "git diff --check"
+        ],
+        "deadline_scenario_count": 5,
+        "campaign_deadline_count": 4,
+        "skirmish_deadline_count": 5,
+        "finale_deadline_count": 1,
+        "known_unrelated_regression": "tests/map_campaign_replayability_breadth_report.tscn currently fails because active campaign lookup excludes archived campaign domain content; not part of this slice gate."
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -22274,22 +22340,36 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
+    "id": "scenario-deadline-loss-variety-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T20:49:00Z",
+    "updatedAt": "2026-05-23T21:19:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json content/army_groups.json",
+      "jq empty content/scenarios.json ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Queue-driven authored army-group balance pass completed: queue reduced from 9 medium-priority items/signature f8dc048d to 5 medium-priority cohort watches/signature 95f5ac7e, sample_watch_count 0, gate_item_count 0, high_priority_count 0, combat_feel_gate.status pass, balance_matrix_gate.status pass, terminal_margin_outlier_count 0."
+    "summary": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
+    "known_unrelated_regression": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn failed on archived campaign-domain lookup for ironbridge-stand/campaign_ninefold_survey; this was observed during extra regression probing and is not a selected gate for this slice."
   },
-  "active_slice": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T20:49:00Z",
+  "active_slice": "scenario-deadline-loss-variety-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T21:19:00Z",
   "validationHistory": [
+    {
+      "id": "scenario-deadline-loss-variety-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T21:19:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Scenario deadline-loss variety completed: five authored scenarios now carry day_at_least defeat objectives; focused report proves four campaign-available scenarios, five skirmish-available scenarios, the skirmish-only front, and the Ninefold finale resolve live sessions as defeat on the authored deadline while remaining in progress one day earlier.",
+      "known_unrelated_regression": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn failed on archived campaign-domain lookup for ironbridge-stand/campaign_ninefold_survey; this was observed during extra regression probing and is not a selected gate for this slice."
+    },
     {
       "id": "battle-autoplay-queue-driven-combat-balance-pass-20260523-10184",
       "status": "passed",
