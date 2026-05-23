@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-runtime-consequence-harness-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Runtime Consequence Harness",
+  "currentSliceId": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Runtime Consequence Matrix",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed report-only battle autoplay runtime consequence harness: per-sample profiles, aggregate distribution, runtime consequence gate, focused report scene, shared report assertions, docs, and repository validation.",
+  "currentSliceNotes": "Completed runtime consequence matrix: deterministic cohorts for scenario, terrain, difficulty, matchup, and ability presence; current gate passes with zero zero-consequence samples.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T21:55:00Z",
+  "updatedAt": "2026-05-23T21:57:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -18119,6 +18119,75 @@
         "archived_chapter_count": 3,
         "report_id": "MAP_CAMPAIGN_REPLAYABILITY_BREADTH_REPORT"
       }
+    },
+    {
+      "id": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+      "title": "Battle Autoplay Runtime Consequence Matrix",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "docs/battle-autoplay-runtime-consequence-harness-report.md"
+      ],
+      "purpose": "Break observed battle autoplay status, ability, and spell runtime consequences into deterministic cohorts so balance work can see where consequences are missing or overconcentrated.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_runtime_consequence_matrix_report.gd",
+        "tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "tests/battle_autoplay_runtime_consequence_report.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-runtime-consequence-matrix-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The shared battle sampler emits a deterministic runtime consequence cohort matrix and report-only gate.",
+        "The matrix covers difficulty, terrain, scenario, matchup, and ability-presence cohorts using observed runtime consequence profiles.",
+        "Focused tests prove deterministic signatures and require status, spell, and ability consequence coverage across current authored cohorts.",
+        "Repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No automatic ability, spell, or encounter retuning.",
+        "No new unit abilities or spell content.",
+        "No final combat balance approval.",
+        "No player-facing UI changes."
+      ],
+      "startedAt": "2026-05-23T21:56:00Z",
+      "updatedAt": "2026-05-23T21:57:00Z",
+      "notes": "Completed report-only battle autoplay runtime consequence cohort matrix with deterministic matrix/gate, focused report scene, shared report assertions, docs, and repository validation.",
+      "completedAt": "2026-05-23T21:57:00Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "runtime_consequence_matrix_gate": "pass",
+          "matrix_signature": "0fd488df",
+          "sample_count": 12,
+          "difficulty_cohort_count": 3,
+          "terrain_cohort_count": 3,
+          "scenario_cohort_count": 4,
+          "matchup_cohort_count": 2,
+          "ability_presence_cohort_count": 8,
+          "ability_consequence_cohort_count": 8,
+          "zero_consequence_sample_count": 0
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -21935,6 +22004,51 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+      "title": "Battle Autoplay Runtime Consequence Matrix",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T21:57:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-runtime-consequence-matrix-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-runtime-consequence-matrix-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_runtime_consequence_matrix_report.gd",
+        "tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "tests/battle_autoplay_runtime_consequence_report.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/battle-autoplay-runtime-consequence-matrix-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "The shared battle autoplay sampler now emits battle_autoplay_runtime_consequence_matrix_v1 with difficulty, terrain, scenario, matchup, and ability-presence cohorts.",
+        "The report-only runtime consequence matrix gate passes for the current 12-sample authored set with matrix_signature 0fd488df.",
+        "Current matrix evidence covers 3 difficulty cohorts, 3 terrain cohorts, 4 scenario cohorts, 2 matchup cohorts, 8 ability-presence cohorts, and 8 ability-consequence cohorts.",
+        "Zero sampled battles have no runtime consequence evidence; this is instrumentation only, not final combat balance approval or automatic tuning."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -23043,27 +23157,44 @@
         "git diff --check"
       ],
       "summary": "Expanded deterministic battle autoplay sample breadth passed: 12/12 focused samples across four scenarios; combat_feel_gate pass, balance_matrix_gate pass, no terminal-margin outliers, no stalled samples, and no invalid orders. Headless harness remained ok true with the known generated-map deferred warning."
+    },
+    {
+      "id": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T21:57:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Runtime consequence matrix passed: matrix_signature 0fd488df; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
     }
   ],
   "lastValidation": {
-    "id": "battle-exit-event-motion-presentation-20260523-10184",
+    "id": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T20:40:07Z",
+    "updatedAt": "2026-05-23T21:57:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_battle_troop_state_contract_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_validation_smoke_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/animation_event_cue_catalog_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/unit_animation_manifest_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py tools/generate_unit_art_assets.py",
-      "jq empty ops/progress.json content/animation_event_cues.json content/unit_animation_manifest.json",
+      "python3 -m py_compile tests/validate_repo.py",
+      "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Battle exit event motion presentation completed: BattleBoardView now reports retreat_withdraw and surrender_stand_down token motion for exit snapshots; AnimationCueCatalog and generated animation metadata treat surrender as its own battle troop state family; focused battle animation, animation contract, validation smoke, cue catalog, unit animation manifest, repository validation, JSON validation, py_compile, and diff whitespace checks passed."
+    "summary": "Runtime consequence matrix passed: matrix_signature 0fd488df; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
   },
-  "active_slice": "battle-autoplay-runtime-consequence-harness-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T21:55:00Z",
+  "active_slice": "battle-autoplay-runtime-consequence-matrix-20260523-10184",
+  "currentSliceUpdatedAt": "2026-05-23T21:57:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-forest-cohort-balance-pass-20260523-10184",

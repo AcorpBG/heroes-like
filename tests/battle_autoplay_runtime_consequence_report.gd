@@ -18,6 +18,8 @@ func _run() -> void:
 	var distribution: Dictionary = summary.get("runtime_consequence_distribution", {}) if summary.get("runtime_consequence_distribution", {}) is Dictionary else {}
 	var repeat_distribution: Dictionary = repeat_summary.get("runtime_consequence_distribution", {}) if repeat_summary.get("runtime_consequence_distribution", {}) is Dictionary else {}
 	var gate: Dictionary = summary.get("runtime_consequence_gate", {}) if summary.get("runtime_consequence_gate", {}) is Dictionary else {}
+	var matrix: Dictionary = summary.get("runtime_consequence_matrix", {}) if summary.get("runtime_consequence_matrix", {}) is Dictionary else {}
+	var matrix_gate: Dictionary = summary.get("runtime_consequence_matrix_gate", {}) if summary.get("runtime_consequence_matrix_gate", {}) is Dictionary else {}
 	var samples: Array = report.get("samples", []) if report.get("samples", []) is Array else []
 	var payload := {
 		"ok": true,
@@ -26,6 +28,10 @@ func _run() -> void:
 		"distribution_schema": String(distribution.get("schema", "")),
 		"gate_policy": String(gate.get("policy", "")),
 		"gate_status": String(gate.get("status", "")),
+		"matrix_schema": String(matrix.get("schema", "")),
+		"matrix_gate_policy": String(matrix_gate.get("policy", "")),
+		"matrix_gate_status": String(matrix_gate.get("status", "")),
+		"matrix_signature": String(matrix.get("matrix_signature", "")),
 		"sample_count": int(distribution.get("sample_count", 0)),
 		"samples_with_status_consequence_count": int(distribution.get("samples_with_status_consequence_count", 0)),
 		"samples_with_ability_consequence_count": int(distribution.get("samples_with_ability_consequence_count", 0)),
@@ -51,6 +57,15 @@ func _run() -> void:
 		return
 	if String(gate.get("status", "")) != "pass":
 		_fail("Runtime consequence gate did not pass.", payload)
+		return
+	if String(matrix.get("schema", "")) != "battle_autoplay_runtime_consequence_matrix_v1":
+		_fail("Runtime consequence matrix schema missing.", payload)
+		return
+	if String(matrix_gate.get("policy", "")) != "report_only_runtime_consequence_matrix_thresholds_v1":
+		_fail("Runtime consequence matrix gate policy missing.", payload)
+		return
+	if String(matrix_gate.get("status", "")) != "pass":
+		_fail("Runtime consequence matrix gate did not pass.", payload)
 		return
 	if int(distribution.get("sample_count", 0)) != int(summary.get("sample_count", -1)):
 		_fail("Runtime consequence sample count does not match summary sample count.", payload)
