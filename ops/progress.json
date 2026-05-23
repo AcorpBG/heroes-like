@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "headless-battle-difficulty-sweep-harness-20260523-10184",
-  "currentSliceTitle": "Headless Battle Difficulty Sweep Harness",
+  "currentSliceId": "battle-retaliation-event-presentation-20260523-10184",
+  "currentSliceTitle": "Battle Retaliation Event Presentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed headless battle difficulty sweep harness integration: the required shared headless harness now carries normal-vs-hard difficulty sweep evidence, clear normal/hard tuning queues, and observed hard-effect deltas.",
+  "currentSliceNotes": "Completed battle retaliation event presentation: real battle_retaliation now materializes retaliation_arc VFX and focused report coverage proves retaliation_release, target hit reaction, VFX, audio, and motion evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23T22:28:51Z",
+  "updatedAt": "2026-05-23T22:38:43Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-retaliation-event-presentation-20260523-10184",
+      "title": "Battle Retaliation Event Presentation",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json",
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd"
+      ],
+      "purpose": "Close the real retaliation presentation gap by making battle_retaliation cue playback visible through board VFX and focused live-event validation.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "docs/battle-retaliation-event-presentation-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "BattleBoardView materializes vfx_placeholder_retaliation_arc from battle_retaliation cue playback.",
+        "The focused battle event animation report proves a real retaliation event selects retaliation_release, presents a retaliation lunge, emits retaliation VFX and audio, and records target hit reaction.",
+        "Repository validation gates the new retaliation presentation coverage and report document.",
+        "Focused Godot report, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final authored animation timing.",
+        "No imported VFX or final sound design.",
+        "No combat balance tuning.",
+        "No broad battle UX redesign."
+      ],
+      "startedAt": "2026-05-23T22:33:06Z",
+      "updatedAt": "2026-05-23T22:38:43Z",
+      "notes": "Completed retaliation presentation gap: BattleBoardView draws vfx_placeholder_retaliation_arc as retaliation_arc and battle_event_animation_state_report proves real retaliation playback.",
+      "completedAt": "2026-05-23T22:38:43Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "battle_event_animation_report_ok": true,
+          "battle_event_animation_case_count": 18,
+          "retaliation_case_present": true,
+          "retaliation_state": "retaliation_release",
+          "retaliation_target_state": "hit_stagger",
+          "retaliation_vfx_cue": "vfx_placeholder_retaliation_arc",
+          "retaliation_vfx_kind": "retaliation_arc",
+          "retaliation_audio_cue": "audio_placeholder_retaliation"
+        }
+      }
+    },
     {
       "id": "battle-autoplay-runtime-consequence-harness-20260523-10184",
       "title": "Battle Autoplay Runtime Consequence Harness",
@@ -22261,6 +22320,43 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-retaliation-event-presentation-20260523-10184",
+      "title": "Battle Retaliation Event Presentation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-23T22:38:43Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-retaliation-event-presentation-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-retaliation-event-presentation-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-retaliation-event-presentation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView now maps vfx_placeholder_retaliation_arc to a visible retaliation_arc draw entry and draws a distinct placeholder counterstrike arc.",
+        "The focused battle event animation report drives a real melee strike that triggers battle_retaliation and proves retaliation_release on the counterstriking stack.",
+        "The same report proves target hit_stagger, vfx_placeholder_retaliation_arc, audio_placeholder_retaliation, and presentation motion roles for the retaliation path.",
+        "Current focused evidence reports 18 battle event animation cases with retaliation present.",
+        "This is event-driven generated-sheet and placeholder-cue presentation coverage only; no combat balance tuning, imported VFX/audio, or final authored animation timing."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -23389,21 +23485,20 @@
     }
   ],
   "lastValidation": {
-    "id": "headless-battle-difficulty-sweep-harness-20260523-10184",
+    "id": "battle-retaliation-event-presentation-20260523-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T22:28:51Z",
+    "updatedAt": "2026-05-23T22:38:43Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Headless battle difficulty sweep harness passed: required battle_difficulty_sweep_sampling case status pass, case signature f6e32bbf, harness signature 56ae7622 with known generated-map deferred boundary warning, standalone sweep_signature bc42c7b1, normal and hard queue signatures 829808c9, both rows tuning_queue_item_count 0 and status clear, and normal_vs_hard no_observed_effect false."
+    "summary": "Battle retaliation event presentation passed: focused battle event animation report has 18 cases with retaliation present, real battle_retaliation selects retaliation_release, target hit_stagger remains visible, vfx_placeholder_retaliation_arc materializes as retaliation_arc, and audio_placeholder_retaliation is dispatched."
   },
   "active_slice": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
-  "currentSliceUpdatedAt": "2026-05-23T22:28:51Z",
+  "currentSliceUpdatedAt": "2026-05-23T22:38:43Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
@@ -23568,6 +23663,19 @@
         "git diff --check"
       ],
       "summary": "Headless battle difficulty sweep harness passed: required battle_difficulty_sweep_sampling case status pass, case signature f6e32bbf, harness signature 56ae7622 with known generated-map deferred boundary warning, standalone sweep_signature bc42c7b1, normal and hard queue signatures 829808c9, both rows tuning_queue_item_count 0 and status clear, and normal_vs_hard no_observed_effect false."
+    },
+    {
+      "id": "battle-retaliation-event-presentation-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T22:38:43Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Battle retaliation event presentation passed: focused battle event animation report has 18 cases with retaliation present, real battle_retaliation selects retaliation_release, target hit_stagger remains visible, vfx_placeholder_retaliation_arc materializes as retaliation_arc, and audio_placeholder_retaliation is dispatched."
     }
   ]
 }

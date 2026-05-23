@@ -23,6 +23,7 @@ func _run() -> void:
 	_validate_defend_state()
 	_validate_move_state()
 	await _validate_melee_hit_state()
+	_validate_retaliation_state()
 	await _validate_ranged_status_state()
 	_validate_death_state()
 	await _validate_spell_cast_state()
@@ -147,6 +148,60 @@ func _validate_melee_hit_state() -> void:
 		"board_vfx": vfx_playback,
 		"attacker_stack": attacker_stack,
 		"target_stack": target_stack,
+	}
+
+func _validate_retaliation_state() -> void:
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
+	_set_stack_field(session.battle, "player_0", "total_health", 999)
+	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+	_set_stack_field(session.battle, "enemy_0", "retaliations_left", 1)
+	var result := BattleRulesScript.perform_player_action(session, "strike")
+	var retaliator_state := _state_for(session, "enemy_0")
+	var target_state := _state_for(session, "player_0")
+	_expect_ok("retaliation source strike action", result)
+	_expect_equal("retaliator animation state", retaliator_state, "retaliation_release")
+	_expect_equal("retaliation target animation state", target_state, "hit_stagger")
+	_expect_event("retaliator queue", session.battle, "enemy_0", "battle_retaliation", "retaliation_release")
+	_expect_event("retaliation target hit queue", session.battle, "player_0", "battle_unit_hit", "hit_stagger")
+	var retaliation_event := _event_record_for(session.battle, "enemy_0", "battle_retaliation")
+	_expect_equal("retaliation event target", String(retaliation_event.get("target_battle_id", "")), "player_0")
+	var board_summary := _board_summary_for_session(session)
+	var retaliator_stack := _summary_stack_entry(board_summary, "enemy_0")
+	var target_stack := _summary_stack_entry(board_summary, "player_0")
+	_expect_equal("retaliator presentation active", str(bool(retaliator_stack.get("presentation_motion_active", false))), "true")
+	_expect_equal("retaliator presentation event", String(retaliator_stack.get("presentation_motion_event_id", "")), "battle_retaliation")
+	_expect_equal("retaliator presentation role", String(retaliator_stack.get("presentation_motion_role", "")), "melee_lunge")
+	_expect_equal("retaliator presentation target", String(retaliator_stack.get("presentation_motion_target_battle_id", "")), "player_0")
+	_expect_equal("retaliation target presentation role", String(target_stack.get("presentation_motion_role", "")), "hit_stagger")
+	_expect_equal("retaliation target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "enemy_0")
+	var cue_playback: Dictionary = board_summary.get("cue_playback", {}) if board_summary.get("cue_playback", {}) is Dictionary else {}
+	var retaliator_cue := _cue_record_for(cue_playback, "enemy_0")
+	_expect_array_contains("retaliator cue vfx", retaliator_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_retaliation_arc")
+	_expect_array_contains("retaliator cue audio", retaliator_cue.get("selected_audio_cue_ids", []), "audio_placeholder_retaliation")
+	if int(retaliator_cue.get("sequence_delay_msec", 0)) <= 0:
+		_error("Retaliation cue did not carry a sequence delay after the initiating hit: %s" % retaliator_cue)
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var retaliation_arc := _vfx_entry_for(vfx_playback, "retaliation_arc")
+	_expect_equal("retaliation vfx cue", String(retaliation_arc.get("cue_id", "")), "vfx_placeholder_retaliation_arc")
+	_expect_equal("retaliation vfx source", String(retaliation_arc.get("battle_id", "")), "enemy_0")
+	_expect_equal("retaliation vfx target", String(retaliation_arc.get("target_battle_id", "")), "player_0")
+	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
+	var retaliator_audio := _audio_record_for(audio_playback, "enemy_0")
+	_expect_array_contains("retaliation audio cue", retaliator_audio.get("selected_audio_cue_ids", []), "audio_placeholder_retaliation")
+	var motion_roles: Dictionary = board_summary.get("presentation_motion_roles", {}) if board_summary.get("presentation_motion_roles", {}) is Dictionary else {}
+	if int(motion_roles.get("melee_lunge", 0)) < 1 or int(motion_roles.get("hit_stagger", 0)) < 1:
+		_error("Retaliation presentation roles were not counted in the board summary: %s" % board_summary)
+	_report["cases"]["retaliation"] = {
+		"retaliator_state": retaliator_state,
+		"target_state": target_state,
+		"events": BattleRulesScript.animation_event_states(session.battle),
+		"queue": BattleRulesScript.animation_event_queue(session.battle),
+		"board_stack": retaliator_stack,
+		"target_stack": target_stack,
+		"board_cue": cue_playback,
+		"board_vfx": vfx_playback,
+		"board_audio": audio_playback,
+		"presentation_motion_roles": motion_roles,
 	}
 
 func _validate_ranged_status_state() -> void:
