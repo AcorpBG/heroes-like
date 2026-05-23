@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
-  "currentSliceTitle": "Battle Autoplay Combat-Feel Diagnostics",
+  "currentSliceId": "packaging-platform-readiness-20260523-10184",
+  "currentSliceTitle": "Packaging Platform Readiness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: deterministic battle autoplay samples now expose combat-feel diagnostics for damage pacing, action mix, terrain, difficulty, roles, abilities, and initiative spread.",
+  "currentSliceNotes": "Completed: Linux/Windows export presets, native GDExtension artifact checks, user:// runtime path checks, and boot metadata checks now have a focused readiness report.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
@@ -15899,6 +15899,46 @@
         "No final combat balance approval.",
         "No strategic AI rewrite, encounter retune, or manual-play replacement."
       ]
+    },
+    {
+      "id": "packaging-platform-readiness-20260523-10184",
+      "title": "Packaging Platform Readiness",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Add focused repository gates for Linux/Windows export configuration, native platform artifacts, packaged runtime paths, and boot metadata.",
+      "implementationTargets": [
+        "export_presets.cfg",
+        "tests/packaging_platform_readiness_report.gd",
+        "tests/packaging_platform_readiness_report.tscn",
+        "tests/validate_repo.py",
+        "docs/packaging-platform-readiness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Linux and Windows release export presets exist with platform output paths and local/development exclusions.",
+        "Native GDExtension manifest entries cover Linux and Windows editor/debug/release libraries.",
+        "Referenced native Linux .so and Windows .dll artifacts exist and are non-empty.",
+        "Packaged settings and debug/profile paths remain under user://.",
+        "Project boot metadata remains pinned to the Boot scene, app name, and icon."
+      ],
+      "nonGoals": [
+        "No installer completion.",
+        "No clean-machine packaged smoke-test claim.",
+        "No release readiness claim."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18765,6 +18805,43 @@
         "git diff --check"
       ],
       "remainingGap": "This is balance instrumentation; authored encounter retuning, stack-size pacing, ability-power tuning, tactical AI quality, terrain-value tuning, difficulty curves, and manual playtest approval remain outside this slice."
+    },
+    {
+      "id": "packaging-platform-readiness-20260523-10184",
+      "title": "Packaging Platform Readiness",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "packaging-platform-readiness-20260523-10184"
+      ],
+      "implementationRefs": [
+        "export_presets.cfg",
+        "tests/packaging_platform_readiness_report.gd",
+        "tests/packaging_platform_readiness_report.tscn",
+        "tests/validate_repo.py",
+        "docs/packaging-platform-readiness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Linux and Windows release export presets now target build/linux/heroes-like.x86_64 and build/windows/heroes-like.exe.",
+        "Export presets exclude local/development material including .git, .godot, .artifacts, tmp, and native .dll.a import libraries.",
+        "The focused Godot report validates native GDExtension Linux/Windows editor/debug/release library manifest entries and checks that referenced .so/.dll files exist and are non-empty.",
+        "The report validates package-safe user:// settings and debug/profile paths plus project boot metadata."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is a repository readiness gate; installer/export execution, clean-machine packaged smoke tests, crash reporting hardening, and release readiness remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -19617,23 +19694,22 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
+    "id": "packaging-platform-readiness-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/packaging_platform_readiness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused balance regression and headless simulation reports passed with damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics; full repository validation gates passed."
+    "summary": "Focused packaging/platform readiness report passed with Linux/Windows export preset checks, native GDExtension artifact checks, packaged user:// path checks, and boot metadata checks; full repository validation gates passed."
   },
   "active_slice": {
-    "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
+    "id": "packaging-platform-readiness-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: battle autoplay balance sampling now exposes actionable combat-feel diagnostics while remaining report-only."
+    "note": "Completed: packaging/platform readiness now has focused Linux/Windows export, native artifact, runtime path, and boot metadata gates."
   }
 }
