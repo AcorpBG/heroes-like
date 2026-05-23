@@ -41,6 +41,8 @@ Unit battle-animation baseline added on 2026-05-23: `content/unit_animation_mani
 
 Unit animation runtime adoption added on 2026-05-23: `ContentService` now treats `content/unit_animation_manifest.json` as a first-class content manifest with `get_unit_animation()` and startup validation, and `BattleBoardView` draws animated token frames from each unit's generated sprite sheet while retaining static battle icons as fallback. The animation manifest is now cross-checked against `content/animation_event_cues.json` so generated state names match the cue catalog for death, cast, status, retaliation, retreat, and surrender events. `tests/unit_art_manifest_report.tscn` now verifies battle runtime animation sheet loading for visible stacks in addition to town portraits, overworld icons, and battle icons. This is a runtime adoption pass for generated sheets, not a complete authored combat-animation direction pass.
 
+Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
+
 Previous owner-directed RMG corrective slice `native-rmg-generalized-policy-regate-10184` is superseded by this reset. It remains evidence for diagnostics, tooling, and failure history, not the production generator direction.
 
 Current owner-directed RMG reset slice:

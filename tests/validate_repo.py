@@ -14538,7 +14538,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _validate_event_cue_alignment",
         "func _frame_metrics_pass",
         "func _frame_signature",
+        "func _visual_fingerprint",
+        "func _nearest_visual_neighbor",
+        "CONTACT_SHEET_FILE",
         "unique_sprite_sheet_hash_count",
+        "unique_sprite_sheet_visual_fingerprint_count",
     ):
         ensure(required_token in animation_report_text, errors, f"unit_animation_manifest_report.gd is missing token {required_token}")
 
