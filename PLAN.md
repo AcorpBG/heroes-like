@@ -69,6 +69,8 @@ Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBal
 
 Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle autoplay sampler now records per-sample terrain, encounter difficulty, initial stack counts, role mix, ability ids, initiative spread, action mix, invalid-order count, damage dealt by side, damage per round, pacing band, and terminal health margin. `BalanceRegressionReportRules` and `HeadlessSimulationHarnessRules` both surface the aggregate diagnostics, and their focused reports assert the new damage/action/terrain/difficulty/role/ability/initiative fields. This is balance instrumentation for tuning passes, not an automatic rebalance, authored encounter retune, AI rewrite, or final combat-feel approval.
 
+Battle autoplay combat-feel threshold gate added on 2026-05-23: the shared sampler now exposes `combat_feel_gate` with report-only thresholds for sample breadth, stalled samples, invalid orders, action diversity/dominance, damage pacing, terminal health margin, outcome bias, and burst/grind/stalled pacing dominance. The current deterministic samples surface high terminal health margin as a structured warning, so balance risk is visible in the standard reports without automatic tuning, content writeback, or a final combat-feel approval claim.
+
 Packaging/platform readiness gate added on 2026-05-23: `export_presets.cfg` now defines Linux and Windows release presets targeting `build/linux/heroes-like.x86_64` and `build/windows/heroes-like.exe`, with local/dev exclusions for `.git`, `.godot`, `.artifacts`, `tmp`, and native `.dll.a` import libraries. `tests/packaging_platform_readiness_report.tscn` validates export preset shape, native GDExtension Linux/Windows editor/debug/release library manifest entries, non-empty referenced native `.so`/`.dll` artifacts, packaged settings/debug paths under `user://`, and boot metadata. This is a repository readiness gate for future packaged smoke tests, not installer completion or release readiness.
 
 Strategic AI raid regroup/retreat added on 2026-05-23: understrength enemy raids now retarget to the nearest reachable owned matching-faction town, transfer spare town garrison units into the field host, synchronize commander army continuity, emit public regroup/retarget events, and resume normal objective selection after crossing the regroup floor. `tests/ai_raid_regroup_retreat_report.tscn` proves the River Pass Vaska raid retreats to Duskfen Bastion and leaves the original player-held resource alone. This is a bounded strategic-AI behavior improvement, not full enemy economy planning, multi-hero grouping, town-defense strategy, or difficulty tuning.
@@ -5154,6 +5156,28 @@ completionCriteria:
 - Focused balance and headless reports fail if default sampling does not reach the requested sample limit or does not span multiple authored scenarios.
 nonGoals:
 - No encounter retune, automatic balance tuning, authored content writeback, spell autoplay expansion, or final combat balance approval.
+
+Completed owner-directed implementation slice:
+
+id: `battle-autoplay-combat-feel-threshold-gate-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Turn deterministic battle autoplay diagnostics into report-only combat-feel threshold gates for balance triage.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `tests/balance_regression_report_suite.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-autoplay-combat-feel-diagnostics-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Sampler summary exposes `combat_feel_gate` with thresholds/status/warnings/failures.
+- Balance and headless reports assert gate shape and alignment with summary metrics.
+- Current deterministic samples surface high terminal health margin as a warning without automatic tuning or content writeback.
+nonGoals:
+- No authored encounter retune, unit-stat rebalance, automatic tuning, strategic AI rewrite, or final combat balance approval.
 
 Completed owner-directed implementation slice:
 

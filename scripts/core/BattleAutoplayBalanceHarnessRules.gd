@@ -8,6 +8,12 @@ const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const DEFAULT_SAMPLE_LIMIT := 6
 const DEFAULT_MINIMUM_SAMPLE_COUNT := 3
 const DEFAULT_STEP_LIMIT := 72
+const COMBAT_FEEL_MIN_ACTION_DIVERSITY := 3
+const COMBAT_FEEL_MAX_PRIMARY_ACTION_PCT := 70
+const COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND := 12
+const COMBAT_FEEL_MAX_TERMINAL_MARGIN_PCT := 65
+const COMBAT_FEEL_MAX_OUTCOME_BIAS_PCT := 75
+const COMBAT_FEEL_MAX_BURST_OR_GRIND_PCT := 50
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
 	"causeway-stand",
@@ -54,6 +60,7 @@ static func build_sampling_report(
 	var completed_sample_count := int(aggregate.get("completed_sample_count", 0))
 	var stalled_sample_count := int(aggregate.get("stalled_sample_count", 0))
 	var requested_minimum = min(minimum_samples, max_samples)
+	var combat_feel_gate := _combat_feel_gate(aggregate, samples.size(), max_samples, requested_minimum)
 	if samples.size() < requested_minimum:
 		warnings.append("Battle autoplay sampled %d/%d required cases; add authored encounters or widen scenarios before treating the distribution as tuned." % [samples.size(), requested_minimum])
 	elif samples.size() < max_samples:
@@ -66,6 +73,8 @@ static func build_sampling_report(
 		warnings.append("Battle autoplay produced %d invalid player order(s); action choice or availability needs inspection." % int(aggregate.get("invalid_order_count", 0)))
 	if int(aggregate.get("action_diversity_count", 0)) <= 1 and completed_sample_count > 0:
 		warnings.append("Battle autoplay action mix collapsed to one order type; tactical depth needs inspection.")
+	for gate_warning in combat_feel_gate.get("warnings", []):
+		warnings.append(String(gate_warning))
 	return {
 		"samples": samples,
 		"summary": {
@@ -90,12 +99,17 @@ static func build_sampling_report(
 			"action_diversity_count": aggregate.get("action_diversity_count", 0),
 			"primary_action_id": String(aggregate.get("primary_action_id", "")),
 			"primary_action_pct": aggregate.get("primary_action_pct", 0),
+			"primary_outcome_state": String(aggregate.get("primary_outcome_state", "")),
+			"primary_outcome_pct": aggregate.get("primary_outcome_pct", 0),
+			"primary_pacing_band": String(aggregate.get("primary_pacing_band", "")),
+			"primary_pacing_band_pct": aggregate.get("primary_pacing_band_pct", 0),
 			"terrain_distribution": aggregate.get("terrain_distribution", {}),
 			"scenario_distribution": aggregate.get("scenario_distribution", {}),
 			"difficulty_distribution": aggregate.get("difficulty_distribution", {}),
 			"pacing_band_distribution": aggregate.get("pacing_band_distribution", {}),
 			"initial_role_distribution": aggregate.get("initial_role_distribution", {}),
 			"initial_ability_distribution": aggregate.get("initial_ability_distribution", {}),
+			"combat_feel_gate": combat_feel_gate,
 			"policy": "deterministic_autoplay_sample_report_only",
 		},
 		"distribution": aggregate.get("distribution", {}),
@@ -372,6 +386,8 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 			action_distribution[String(action)] = int(action_distribution.get(String(action), 0)) + int(action_counts[action])
 	var count: int = max(1, samples.size())
 	var primary_action := _primary_action(action_distribution)
+	var primary_outcome := _primary_count_entry(distribution, "outcome")
+	var primary_pacing_band := _primary_count_entry(pacing_band_distribution, "pacing_band")
 	return {
 		"distribution": distribution,
 		"action_distribution": action_distribution,
@@ -390,12 +406,83 @@ static func _aggregate_samples(samples: Array) -> Dictionary:
 		"action_diversity_count": action_distribution.keys().size(),
 		"primary_action_id": String(primary_action.get("action", "")),
 		"primary_action_pct": int(primary_action.get("pct", 0)),
+		"primary_outcome_state": String(primary_outcome.get("outcome", "")),
+		"primary_outcome_pct": int(primary_outcome.get("pct", 0)),
+		"primary_pacing_band": String(primary_pacing_band.get("pacing_band", "")),
+		"primary_pacing_band_pct": int(primary_pacing_band.get("pct", 0)),
 		"terrain_distribution": terrain_distribution,
 		"scenario_distribution": scenario_distribution,
 		"difficulty_distribution": difficulty_distribution,
 		"pacing_band_distribution": pacing_band_distribution,
 		"initial_role_distribution": initial_role_distribution,
 		"initial_ability_distribution": initial_ability_distribution,
+	}
+
+static func _combat_feel_gate(aggregate: Dictionary, sample_count: int, requested_sample_limit: int, requested_minimum: int) -> Dictionary:
+	var warnings := []
+	var hard_failures := []
+	var primary_pacing_band := String(aggregate.get("primary_pacing_band", ""))
+	var burst_or_grind_pct := 0
+	if primary_pacing_band in ["burst", "grind", "stalled"]:
+		burst_or_grind_pct = int(aggregate.get("primary_pacing_band_pct", 0))
+	if sample_count < requested_minimum:
+		hard_failures.append("sample_count_below_minimum")
+	elif sample_count < requested_sample_limit:
+		warnings.append("sample_count_below_requested_limit")
+	if int(aggregate.get("completed_sample_count", 0)) <= 0 and sample_count > 0:
+		hard_failures.append("no_completed_samples")
+	if int(aggregate.get("stalled_sample_count", 0)) > 0:
+		warnings.append("stalled_samples_present")
+	if int(aggregate.get("invalid_order_count", 0)) > 0:
+		warnings.append("invalid_autoplay_orders_present")
+	if int(aggregate.get("action_diversity_count", 0)) < COMBAT_FEEL_MIN_ACTION_DIVERSITY:
+		warnings.append("low_action_diversity")
+	if int(aggregate.get("primary_action_pct", 0)) > COMBAT_FEEL_MAX_PRIMARY_ACTION_PCT:
+		warnings.append("dominant_action_over_threshold")
+	if int(aggregate.get("average_total_damage_per_round", 0)) < COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND:
+		warnings.append("low_damage_pacing")
+	if int(aggregate.get("average_terminal_health_margin_pct", 0)) > COMBAT_FEEL_MAX_TERMINAL_MARGIN_PCT:
+		warnings.append("high_terminal_health_margin")
+	if int(aggregate.get("primary_outcome_pct", 0)) > COMBAT_FEEL_MAX_OUTCOME_BIAS_PCT:
+		warnings.append("outcome_bias_over_threshold")
+	if burst_or_grind_pct > COMBAT_FEEL_MAX_BURST_OR_GRIND_PCT:
+		warnings.append("pacing_band_extreme_over_threshold")
+	var status := "pass"
+	if not hard_failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"policy": "report_only_combat_feel_thresholds_v1",
+		"sample_count": sample_count,
+		"requested_sample_limit": requested_sample_limit,
+		"minimum_sample_count": requested_minimum,
+		"completed_sample_count": int(aggregate.get("completed_sample_count", 0)),
+		"stalled_sample_count": int(aggregate.get("stalled_sample_count", 0)),
+		"invalid_order_count": int(aggregate.get("invalid_order_count", 0)),
+		"action_diversity_count": int(aggregate.get("action_diversity_count", 0)),
+		"primary_action_id": String(aggregate.get("primary_action_id", "")),
+		"primary_action_pct": int(aggregate.get("primary_action_pct", 0)),
+		"average_total_damage_per_round": int(aggregate.get("average_total_damage_per_round", 0)),
+		"average_terminal_health_margin_pct": int(aggregate.get("average_terminal_health_margin_pct", 0)),
+		"primary_outcome_state": String(aggregate.get("primary_outcome_state", "")),
+		"primary_outcome_pct": int(aggregate.get("primary_outcome_pct", 0)),
+		"primary_pacing_band": primary_pacing_band,
+		"primary_pacing_band_pct": int(aggregate.get("primary_pacing_band_pct", 0)),
+		"burst_or_grind_pct": burst_or_grind_pct,
+		"thresholds": {
+			"min_action_diversity": COMBAT_FEEL_MIN_ACTION_DIVERSITY,
+			"max_primary_action_pct": COMBAT_FEEL_MAX_PRIMARY_ACTION_PCT,
+			"min_total_damage_per_round": COMBAT_FEEL_MIN_TOTAL_DAMAGE_PER_ROUND,
+			"max_terminal_health_margin_pct": COMBAT_FEEL_MAX_TERMINAL_MARGIN_PCT,
+			"max_outcome_bias_pct": COMBAT_FEEL_MAX_OUTCOME_BIAS_PCT,
+			"max_burst_or_grind_pct": COMBAT_FEEL_MAX_BURST_OR_GRIND_PCT,
+		},
+		"warning_count": warnings.size(),
+		"failure_count": hard_failures.size(),
+		"warnings": warnings,
+		"failures": hard_failures,
 	}
 
 static func _side_health_totals(battle: Dictionary) -> Dictionary:
@@ -505,6 +592,23 @@ static func _primary_action(action_counts: Dictionary) -> Dictionary:
 		"count": best_count,
 		"pct": int(round(float(best_count) * 100.0 / float(max(1, total)))),
 	}
+
+static func _primary_count_entry(counts: Dictionary, id_key: String) -> Dictionary:
+	var best_id := ""
+	var best_count := 0
+	var total := 0
+	for key in counts.keys():
+		var count := int(counts[key])
+		total += count
+		if count > best_count or (count == best_count and (best_id == "" or String(key) < best_id)):
+			best_id = String(key)
+			best_count = count
+	var result := {
+		"count": best_count,
+		"pct": int(round(float(best_count) * 100.0 / float(max(1, total)))),
+	}
+	result[id_key] = best_id
+	return result
 
 static func _pacing_band(final_state: String, round_reached: int, steps: int, step_limit: int) -> String:
 	if final_state == "stalled_step_limit" or steps >= step_limit:
