@@ -151,7 +151,11 @@ func _validate_board_runtime_summary() -> void:
 			observed_states[String(entry.get("battle_id", ""))] = String(entry.get("animation_state", ""))
 	_expect_equal("board runtime ranged attacker state", String(observed_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("board runtime status target state", String(observed_states.get("enemy_0", "")), "status_applied")
+	var cue_playback := _validate_active_cue_dispatch(summary)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
+	_report["cases"]["board_cue_dispatch"] = {
+		"active_cue_playback": cue_playback,
+	}
 
 func _validate_board_playback_lifecycle() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
@@ -165,18 +169,24 @@ func _validate_board_playback_lifecycle() -> void:
 	var active_summary: Dictionary = view.validation_unit_art_summary()
 	var active_states := _observed_animation_states(active_summary)
 	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
+	var active_cue: Dictionary = active_summary.get("cue_playback", {}) if active_summary.get("cue_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
 	if int(active_playback.get("active_playback_count", 0)) < 2:
 		_error("Playback lifecycle did not keep both source and target events active: %s" % active_playback)
+	if int(active_cue.get("active_cue_record_count", 0)) < 2:
+		_error("Cue lifecycle did not keep both source and target cue records active: %s" % active_cue)
 	await get_tree().create_timer(0.90).timeout
 	var expired_summary: Dictionary = view.validation_unit_art_summary()
 	var expired_states := _observed_animation_states(expired_summary)
 	var expired_playback: Dictionary = expired_summary.get("animation_playback", {}) if expired_summary.get("animation_playback", {}) is Dictionary else {}
+	var expired_cue: Dictionary = expired_summary.get("cue_playback", {}) if expired_summary.get("cue_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
 	if int(expired_playback.get("active_playback_count", -1)) != 0:
 		_error("Playback lifecycle did not expire event states: %s" % expired_playback)
+	if int(expired_cue.get("active_cue_record_count", -1)) != 0:
+		_error("Cue lifecycle did not expire cue records: %s" % expired_cue)
 	view.queue_free()
 	await get_tree().process_frame
 	_report["cases"]["board_playback_lifecycle"] = {
@@ -184,7 +194,25 @@ func _validate_board_playback_lifecycle() -> void:
 		"expired_states": expired_states,
 		"active_playback": active_playback,
 		"expired_playback": expired_playback,
+		"active_cue_playback": active_cue,
+		"expired_cue_playback": expired_cue,
 	}
+
+func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
+	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
+	if int(cue_playback.get("active_cue_record_count", 0)) < 2:
+		_error("Cue dispatch did not keep both source and target cue records active: %s" % cue_playback)
+	if int(cue_playback.get("vfx_record_count", 0)) < 2 or int(cue_playback.get("audio_record_count", 0)) < 2:
+		_error("Cue dispatch did not resolve VFX/audio ids for both records: %s" % cue_playback)
+	var player_cue := _cue_record_for(cue_playback, "player_0")
+	var enemy_cue := _cue_record_for(cue_playback, "enemy_0")
+	_expect_equal("player cue event id", String(player_cue.get("event_id", "")), "battle_unit_ranged_attack")
+	_expect_equal("enemy cue event id", String(enemy_cue.get("event_id", "")), "battle_status_applied")
+	_expect_array_contains("player cue vfx", player_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_projectile_path")
+	_expect_array_contains("player cue audio", player_cue.get("selected_audio_cue_ids", []), "audio_placeholder_ranged_release")
+	_expect_array_contains("enemy cue vfx", enemy_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_status_residue")
+	_expect_array_contains("enemy cue audio", enemy_cue.get("selected_audio_cue_ids", []), "audio_placeholder_status_apply")
+	return cue_playback
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
@@ -277,6 +305,10 @@ func _observed_animation_states(summary: Dictionary) -> Dictionary:
 			observed_states[String(entry.get("battle_id", ""))] = String(entry.get("animation_state", ""))
 	return observed_states
 
+func _cue_record_for(cue_playback: Dictionary, battle_id: String) -> Dictionary:
+	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}
+	return records.get(battle_id, {}) if records.get(battle_id, {}) is Dictionary else {}
+
 func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
 	for event in BattleRulesScript.animation_event_queue(battle):
 		if not (event is Dictionary):
@@ -296,6 +328,13 @@ func _expect_ok(label: String, result: Dictionary) -> void:
 func _expect_equal(label: String, actual: String, expected: String) -> void:
 	if actual != expected:
 		_error("%s expected %s but got %s." % [label, expected, actual])
+
+func _expect_array_contains(label: String, values: Variant, expected: String) -> void:
+	if not (values is Array):
+		_error("%s expected an array containing %s but got %s." % [label, expected, values])
+		return
+	if expected not in values:
+		_error("%s expected %s in %s." % [label, expected, values])
 
 func _write_json(path: String, payload: Dictionary) -> void:
 	var file := FileAccess.open(ProjectSettings.globalize_path(path), FileAccess.WRITE)

@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "headless-battle-autoplay-balance-harness-20260523-10184",
-  "currentSliceTitle": "Headless Battle Autoplay Balance Harness",
+  "currentSliceId": "battle-animation-cue-dispatch-20260523-10184",
+  "currentSliceTitle": "Battle Animation Cue Dispatch",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: deterministic report-only battle autoplay sampling now feeds the headless simulation harness and balance regression suite with outcome, action, pacing, and health evidence.",
+  "currentSliceNotes": "Completed: BattleBoardView now resolves active battle animation events through the cue catalog and exposes transient VFX/audio cue dispatch records that expire with playback.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-23",
   "statusTaxonomy": {
@@ -15653,6 +15653,48 @@
       ]
     },
     {
+      "id": "battle-animation-cue-dispatch-20260523-10184",
+      "title": "Battle Animation Cue Dispatch",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "purpose": "Resolve active battle animation events through the cue catalog at runtime and expose selected VFX/audio placeholder cue ids for board-side presentation playback.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-animation-cue-dispatch-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Active battle animation events resolve cue-catalog playback policy through AnimationCueCatalog.cue_playback_policy_for_event(...).",
+        "Board validation summaries expose transient cue playback records with selected VFX/audio cue ids.",
+        "Cue records expire with the existing board-side animation playback lifecycle.",
+        "Focused validation proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids."
+      ],
+      "nonGoals": [
+        "No final imported audio/VFX assets.",
+        "No camera, screen shake, authored timing curve, or mixer integration.",
+        "No combat balance tuning."
+      ],
+      "validationResults": [
+        "Focused battle event animation report passed with board_cue_dispatch and playback lifecycle expiry coverage."
+      ]
+    },
+    {
       "id": "headless-battle-autoplay-balance-harness-20260523-10184",
       "title": "Headless Battle Autoplay Balance Harness",
       "phase": "phase-2-deep-production-foundation",
@@ -18409,6 +18451,43 @@
       "remainingGap": "This adds event queue and playback lifecycle for generated unit sheets; final VFX, audio, camera timing, authored timing curves, and combat balance remain outside this slice."
     },
     {
+      "id": "battle-animation-cue-dispatch-20260523-10184",
+      "title": "Battle Animation Cue Dispatch",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/animation_event_cues.json"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-animation-cue-dispatch-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-animation-cue-dispatch-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleBoardView resolves each newly observed animation event through AnimationCueCatalog.cue_playback_policy_for_event(...) using SettingsService animation preferences.",
+        "The board keeps transient cue playback records with cue id, selected animation state, selected visual/playback/blocking policies, VFX cue ids, audio cue ids, audio policy, and max duration.",
+        "validation_unit_art_summary now exposes cue_playback so focused reports can assert active VFX/audio dispatch records.",
+        "tests/battle_event_animation_state_report.tscn validates ranged attack and status-applied cue dispatch plus cue-record expiry with playback."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is runtime cue dispatch over placeholder ids; final audio/VFX asset import, camera work, authored timing, and combat balance remain outside this slice."
+    },
+    {
       "id": "headless-battle-autoplay-balance-harness-20260523-10184",
       "title": "Headless Battle Autoplay Balance Harness",
       "status": "completed",
@@ -19251,25 +19330,38 @@
         "git diff --check"
       ],
       "summary": "Focused live target selection report passed: Vaska uses live commander-task targeting for river_free_company while Sable respects that reservation and targets river_signal_post; full validation gates passed."
+    },
+    {
+      "id": "battle-animation-cue-dispatch-20260523-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-23T00:00:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Focused battle event animation report passed with board_cue_dispatch coverage proving ranged/status VFX/audio placeholder cue ids and cue-record expiry; full validation gates passed."
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-live-target-selection-20260523-10184",
+    "id": "battle-animation-cue-dispatch-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused live target selection report passed: Vaska uses live commander-task targeting for river_free_company while Sable respects that reservation and targets river_signal_post; full validation gates passed."
+    "summary": "Focused battle event animation report passed with board_cue_dispatch coverage proving ranged/status VFX/audio placeholder cue ids and cue-record expiry; full validation gates passed."
   },
   "active_slice": {
-    "id": "strategic-ai-live-target-selection-20260523-10184",
+    "id": "battle-animation-cue-dispatch-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: new enemy raids can use live commander-task resource target selection without durable hero_task_state writes, save-version changes, route execution rewrites, or save migrations."
+    "note": "Completed: active battle animation events resolve through the cue catalog and expose transient VFX/audio placeholder dispatch records that expire with board playback."
   }
 }

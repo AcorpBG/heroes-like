@@ -45,6 +45,8 @@ Battle event animation state adoption added on 2026-05-23: `BattleRules` now own
 
 Battle animation event queue lifecycle added on 2026-05-23: `BattleRules` now records a bounded serial event queue alongside the current per-stack state map, and `BattleBoardView` syncs new records into short playback windows that expire back to active, defend, or idle fallback poses. `tests/battle_event_animation_state_report.tscn` now validates queue coverage for movement, melee, ranged, hit, death, cast, status, and defend events, then proves live board playback expiry. This remains a generated-sheet presentation lifecycle slice, not final VFX/audio/camera timing, authored animation timing, or combat balance tuning.
 
+Battle cue dispatch adoption added on 2026-05-23: `BattleBoardView` now resolves each active battle animation event through `AnimationCueCatalog.cue_playback_policy_for_event(...)`, keeps a transient board-side cue dispatch record with selected VFX/audio cue ids and preference-aware timing policy, and exposes it through validation summaries. `tests/battle_event_animation_state_report.tscn` proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids and expire with playback. This is runtime cue dispatch over placeholder ids, not final imported audio/VFX/camera work.
+
 Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBalanceHarnessRules` now provides deterministic report-only battle sampling for authored encounters, including outcome distribution, action distribution, completed/stalled counts, round/step pacing, side health totals, remaining-health percentages, and compact per-sample turn logs. `HeadlessSimulationHarnessRules` and `BalanceRegressionReportRules` both consume the shared sampler, and their focused tests assert the new pacing/action/health evidence. Current evidence is still narrow authored-scenario sampling for balance work, not automatic tuning, manual-play replacement, or final combat balance approval.
 
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
@@ -4973,6 +4975,31 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-animation-cue-dispatch-20260523-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Resolve active battle animation events through the cue catalog at runtime and expose selected VFX/audio placeholder cue ids for board-side presentation playback.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/animation_event_cues.json`
+implementationTargets:
+- `scenes/battle/BattleBoardView.gd`
+- `tests/battle_event_animation_state_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-animation-cue-dispatch-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Active battle animation events resolve cue-catalog playback policy through `AnimationCueCatalog.cue_playback_policy_for_event(...)`.
+- Board validation summaries expose transient cue playback records with selected VFX/audio cue ids.
+- Cue records expire with the existing board-side animation playback lifecycle.
+- Focused validation proves ranged/status events dispatch projectile/status VFX placeholders plus audio placeholder ids.
+nonGoals:
+- No final imported audio/VFX assets.
+- No camera, screen shake, authored timing curve, or mixer integration.
+- No combat balance tuning.
 
 Completed owner-directed implementation slice:
 
