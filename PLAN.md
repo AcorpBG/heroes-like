@@ -53,6 +53,8 @@ Battle audio cue playback added on 2026-05-23: `BattleBoardView` now maps active
 
 Headless battle autoplay balance harness added on 2026-05-23: `BattleAutoplayBalanceHarnessRules` now provides deterministic report-only battle sampling for authored encounters, including outcome distribution, action distribution, completed/stalled counts, round/step pacing, side health totals, remaining-health percentages, and compact per-sample turn logs. `HeadlessSimulationHarnessRules` and `BalanceRegressionReportRules` both consume the shared sampler, and their focused tests assert the new pacing/action/health evidence. Current evidence is still narrow authored-scenario sampling for balance work, not automatic tuning, manual-play replacement, or final combat balance approval.
 
+Battle autoplay combat-feel diagnostics added on 2026-05-23: the shared battle autoplay sampler now records per-sample terrain, encounter difficulty, initial stack counts, role mix, ability ids, initiative spread, action mix, invalid-order count, damage dealt by side, damage per round, pacing band, and terminal health margin. `BalanceRegressionReportRules` and `HeadlessSimulationHarnessRules` both surface the aggregate diagnostics, and their focused reports assert the new damage/action/terrain/difficulty/role/ability/initiative fields. This is balance instrumentation for tuning passes, not an automatic rebalance, authored encounter retune, AI rewrite, or final combat-feel approval.
+
 Unit animation visual-QA contact-sheet gate added on 2026-05-23: `tests/unit_animation_manifest_report.tscn` now writes a full-roster battle troop animation contact sheet, asserts unique full-sheet visual fingerprints for every generated unit animation sheet, and records nearest visual neighbors for review. This strengthens the generated animation baseline beyond byte hashes and runtime loadability; it is still not final hand-painted animation approval.
 
 Unit ability runtime consequence gate added on 2026-05-23: melee `harry` units now apply their authored status rider through the same battle ability path as ranged harry units, and `tests/unit_ability_runtime_report.tscn` probes all 143 authored unit ability instances across the 103-unit roster for a concrete runtime consequence. This strengthens the "fully implemented units" proof for current authored mechanics; final balance and hand-authored art approval remain outside this slice.
@@ -4979,6 +4981,32 @@ adoptionStatus:
 - Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
+
+Completed owner-directed implementation slice:
+
+id: `battle-autoplay-combat-feel-diagnostics-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Expand deterministic battle autoplay sampling into actionable combat-feel diagnostics for balance work.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `scripts/core/BalanceRegressionReportRules.gd`
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/balance_regression_report_suite.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-autoplay-combat-feel-diagnostics-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Per-sample autoplay evidence includes terrain, encounter difficulty, initial stack profile, role mix, ability ids, initiative spread, action mix, damage totals, damage per round, pacing band, terminal health margin, and invalid-order count.
+- Aggregate balance/headless summaries expose damage pacing, action diversity, dominant action, terrain/difficulty distribution, pacing bands, role distribution, ability distribution, and average initiative spread.
+- Focused balance and headless reports assert the new combat-feel diagnostics.
+nonGoals:
+- No automatic tuning or authored content writeback.
+- No final combat balance approval.
+- No strategic AI rewrite, encounter retune, or manual-play replacement.
 
 Completed owner-directed implementation slice:
 

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "battle-audio-cue-playback-20260523-10184",
-  "currentSliceTitle": "Battle Audio Cue Playback",
+  "currentSliceId": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
+  "currentSliceTitle": "Battle Autoplay Combat-Feel Diagnostics",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: BattleBoardView now maps active battle audio cue ids to generated AudioStreamGenerator waveforms on the Master bus and exposes playback validation records that expire with event playback.",
+  "currentSliceNotes": "Completed: deterministic battle autoplay samples now expose combat-feel diagnostics for damage pacing, action mix, terrain, difficulty, roles, abilities, and initiative spread.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-23",
+  "updatedAt": "2026-05-23T00:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -15858,6 +15858,47 @@
         "No persistent task-board adoption.",
         "No broad town, hero, or artifact target rewrite."
       ]
+    },
+    {
+      "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
+      "title": "Battle Autoplay Combat-Feel Diagnostics",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Expand deterministic battle autoplay sampling into actionable combat-feel diagnostics for balance work.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Per-sample autoplay evidence includes terrain, encounter difficulty, initial stack profile, role mix, ability ids, initiative spread, action mix, damage totals, damage per round, pacing band, terminal health margin, and invalid-order count.",
+        "Aggregate balance/headless summaries expose damage pacing, action diversity, dominant action, terrain/difficulty distribution, pacing bands, role distribution, ability distribution, and average initiative spread.",
+        "Focused balance and headless reports assert the new combat-feel diagnostics."
+      ],
+      "nonGoals": [
+        "No automatic tuning or authored content writeback.",
+        "No final combat balance approval.",
+        "No strategic AI rewrite, encounter retune, or manual-play replacement."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -18684,6 +18725,46 @@
         "No automatic tuning or content writeback.",
         "No replacement for manual playtesting."
       ]
+    },
+    {
+      "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
+      "title": "Battle Autoplay Combat-Feel Diagnostics",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-combat-feel-diagnostics-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAutoplayBalanceHarnessRules now records terrain, encounter difficulty, initial role/ability/initiative profile, action mix, damage totals, damage per round, pacing band, terminal margin, and invalid-order count per sample.",
+        "The shared aggregate summary exposes damage pacing, action diversity, dominant action percentage, terminal margin, terrain/difficulty distribution, pacing bands, role distribution, ability distribution, and average initiative spread.",
+        "BalanceRegressionReportRules and HeadlessSimulationHarnessRules consume the same richer sampler output, keeping balance and headless evidence aligned.",
+        "Focused balance regression and headless simulation reports assert the new combat-feel diagnostics."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This is balance instrumentation; authored encounter retuning, stack-size pacing, ability-power tuning, tactical AI quality, terrain-value tuning, difficulty curves, and manual playtest approval remain outside this slice."
     }
   ],
   "docsReadyEvidence": [
@@ -19536,22 +19617,23 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-audio-cue-playback-20260523-10184",
+    "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
     "status": "passed",
     "updatedAt": "2026-05-23T00:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_event_animation_state_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Focused battle event animation report passed with board_audio_playback proving generated ranged/status audio cue waveforms and playback expiry; full validation gates passed."
+    "summary": "Focused balance regression and headless simulation reports passed with damage pacing, action mix, terrain, difficulty, role, ability, and initiative diagnostics; full repository validation gates passed."
   },
   "active_slice": {
-    "id": "battle-audio-cue-playback-20260523-10184",
+    "id": "battle-autoplay-combat-feel-diagnostics-20260523-10184",
     "status": "completed",
     "updated": "2026-05-23",
-    "note": "Completed: active battle audio cue ids synthesize generated waveform playback on the Master bus and expire with board playback."
+    "note": "Completed: battle autoplay balance sampling now exposes actionable combat-feel diagnostics while remaining report-only."
   }
 }
