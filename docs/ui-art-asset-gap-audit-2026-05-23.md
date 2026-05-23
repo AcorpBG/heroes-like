@@ -124,15 +124,39 @@ Runtime wiring:
 - `scenes/battle/BattleShell.gd` applies battle banner/log/unit/footer panel skins.
 - `scenes/town/TownShell.gd` applies town banner/crest/parchment/recruit/ledger/build panel skins.
 
+## Runtime Skin Correction
+
+The first crop-based runtime pass produced visible scale problems: oversized edge art, center ornaments stretching across wide surfaces, and no shared button-state art. The corrected runtime skin replaces those crude stretched crops with compact, original, nine-patch-safe raster skins:
+
+- Panel and bar assets now keep ornamentation inside fixed margins and use plain, stretch-safe center regions.
+- `FrontierVisualKit.texture_panel_style()` caps texture margins so source art cannot balloon on large shells.
+- `FrontierVisualKit.apply_button()` now routes primary, secondary, and danger buttons through shared runtime button assets with normal, hover, pressed, and disabled states.
+- Representative shell buttons are verified by `tests/ui_runtime_skin_visual_report.tscn` in addition to panel textures.
+
+Shared button assets:
+
+- `art/ui/runtime/shared/button_primary_normal.png`
+- `art/ui/runtime/shared/button_primary_hover.png`
+- `art/ui/runtime/shared/button_primary_pressed.png`
+- `art/ui/runtime/shared/button_primary_disabled.png`
+- `art/ui/runtime/shared/button_secondary_normal.png`
+- `art/ui/runtime/shared/button_secondary_hover.png`
+- `art/ui/runtime/shared/button_secondary_pressed.png`
+- `art/ui/runtime/shared/button_secondary_disabled.png`
+- `art/ui/runtime/shared/button_danger_normal.png`
+- `art/ui/runtime/shared/button_danger_hover.png`
+- `art/ui/runtime/shared/button_danger_pressed.png`
+- `art/ui/runtime/shared/button_danger_disabled.png`
+
 Non-headless screenshot validation:
 
 ```bash
 GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a godot4 --path . tests/ui_runtime_skin_visual_report.tscn
 ```
 
-Result: passed. The report asserts selected panels in all three shells are backed by the expected runtime `StyleBoxTexture` resources and writes screenshots to `.artifacts/ui_runtime_skin_visual_report/overworld.png`, `.artifacts/ui_runtime_skin_visual_report/battle.png`, and `.artifacts/ui_runtime_skin_visual_report/town.png`.
+Result: passed after the runtime skin correction. The report asserts selected panels and representative buttons in all three shells are backed by the expected runtime `StyleBoxTexture` resources and writes screenshots to `.artifacts/ui_runtime_skin_visual_report/overworld.png`, `.artifacts/ui_runtime_skin_visual_report/battle.png`, and `.artifacts/ui_runtime_skin_visual_report/town.png`.
 
-Visual inspection: the generated screenshots show the runtime skins applied to the live shells with readable text and without blocking the dominant overworld map, battle board, or town stage surfaces.
+Visual inspection: the corrected screenshots show consistent dark wood/iron/brass UI framing, stretch-safe bars without distorted center ornaments, button texture assets in live use, readable text, and no blocking of the dominant overworld map, battle board, or town stage surfaces.
 
 ## Remaining Boundary
 
