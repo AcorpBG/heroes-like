@@ -15901,6 +15901,43 @@
       ]
     },
     {
+      "id": "battle-autoplay-scenario-breadth-gate-20260523-10184",
+      "title": "Battle Autoplay Scenario Breadth Gate",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Widen deterministic battle autoplay default coverage across authored scenario encounters and gate multi-scenario requested sample breadth.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The default battle autoplay sampler uses an authored scenario set instead of only river-pass.",
+        "Aggregate balance/headless battle summaries expose scenario_distribution alongside existing combat-feel metrics.",
+        "Focused balance and headless reports fail if default sampling does not reach the requested sample limit or does not span multiple authored scenarios."
+      ],
+      "nonGoals": [
+        "No encounter retune, automatic balance tuning, authored content writeback, spell autoplay expansion, or final combat balance approval."
+      ]
+    },
+    {
       "id": "packaging-platform-readiness-20260523-10184",
       "title": "Packaging Platform Readiness",
       "phase": "phase-6-production-alpha-layer",
@@ -18925,6 +18962,44 @@
         "git diff --check"
       ],
       "remainingGap": "This improves balance-harness tactical fidelity; authored encounter retuning, stack-size pacing, ability-power tuning, spell autoplay, manual playtest approval, and final combat balance remain outside this slice."
+    },
+    {
+      "id": "battle-autoplay-scenario-breadth-gate-20260523-10184",
+      "title": "Battle Autoplay Scenario Breadth Gate",
+      "status": "completed",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
+      "completedAt": "2026-05-23T00:00:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-scenario-breadth-gate-20260523-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-combat-feel-diagnostics-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "BattleAutoplayBalanceHarnessRules now uses a default authored scenario list instead of sampling only river-pass when no explicit scenario ids are provided.",
+        "Aggregate battle summaries now include scenario_distribution so balance/headless reports expose which authored scenarios contributed samples.",
+        "Focused balance regression and headless simulation reports now fail when default sampling does not reach the requested sample limit or does not cover multiple authored scenarios.",
+        "The standard six-sample run now completes requested breadth with three river-pass samples and three causeway-stand samples instead of warning on narrow encounter availability."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingGap": "This improves automated balance harness breadth; encounter retuning, stack-size pacing, ability-power tuning, spell autoplay, manual playtest approval, and final combat balance remain outside this slice."
     },
     {
       "id": "packaging-platform-readiness-20260523-10184",

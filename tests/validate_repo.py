@@ -15824,6 +15824,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "pacing_band_distribution",
             "initial_role_distribution",
             "initial_ability_distribution",
+            "DEFAULT_SCENARIO_IDS",
+            "scenario_distribution",
             "damage_totals",
             "damage_per_round",
             "initial_stack_profile",
@@ -15851,8 +15853,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "average_total_damage_per_round",
             "initial_stack_profile",
             "terrain_distribution",
+            "scenario_distribution",
             "pacing_band_distribution",
             "initial_ability_distribution",
+            "requested_sample_limit",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
     if tactical_report_path.exists():
@@ -15871,6 +15875,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "damage per round",
             "initiative",
             "shared battle-AI non-spell tactical scoring",
+            "multi-scenario",
+            "scenario distribution",
             "This is instrumentation for future tuning passes.",
         ):
             ensure(required_text in doc_text, errors, f"Battle autoplay combat-feel diagnostics doc is missing required text: {required_text}")

@@ -4990,6 +4990,28 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `battle-autoplay-scenario-breadth-gate-20260523-10184`
+phase: `phase-4-headless-ai-agent-balance-harness`
+purpose: Widen deterministic battle autoplay default coverage across authored scenario encounters and gate multi-scenario requested sample breadth.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+implementationTargets:
+- `scripts/core/BattleAutoplayBalanceHarnessRules.gd`
+- `tests/balance_regression_report_suite.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `tests/validate_repo.py`
+- `docs/battle-autoplay-combat-feel-diagnostics-report.md`
+- `ops/progress.json`
+completionCriteria:
+- The default battle autoplay sampler uses an authored scenario set instead of only `river-pass`.
+- Aggregate balance/headless battle summaries expose `scenario_distribution` alongside existing combat-feel metrics.
+- Focused balance and headless reports fail if default sampling does not reach the requested sample limit or does not span multiple authored scenarios.
+nonGoals:
+- No encounter retune, automatic balance tuning, authored content writeback, spell autoplay expansion, or final combat balance approval.
+
+Completed owner-directed implementation slice:
+
 id: `battle-autoplay-tactical-order-scoring-20260523-10184`
 phase: `phase-4-headless-ai-agent-balance-harness`
 purpose: Replace deterministic balance autoplay's shoot-first player policy with shared tactical order scoring so combat-feel samples reflect target, action, terrain, ability, cohesion, and defend/advance tradeoffs.
