@@ -101,6 +101,8 @@ RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
+TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_cost_curve_report.py"
+TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-cost-curve-report.md"
 TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-town-development-breadth-parity-report.md"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
@@ -2725,6 +2727,80 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
     ensure("get_town_build_status(town, building_id, session.day)" in town_rules_text, errors, "TownRules build action surface must pass the active day into build status")
     ensure("get_town_build_options(town, current_day)" in town_rules_text, errors, "TownRules must derive build actions with current-day build blocking")
+
+
+def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
+    ensure(TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH.exists(), errors, "Missing town development cost curve report")
+    ensure(TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH.exists(), errors, "Missing town development cost curve report doc")
+    if not TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH.exists():
+        return
+    result = subprocess.run(
+        [sys.executable, str(TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH)],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        if result.stdout:
+            errors.append(result.stdout.strip())
+        if result.stderr:
+            errors.append(result.stderr.strip())
+        errors.append("Town development cost curve report failed")
+        return
+    marker = "TOWN_DEVELOPMENT_COST_CURVE_REPORT "
+    ensure(marker in result.stdout, errors, "Town development cost curve report did not emit its report marker")
+    report_payload = {}
+    for line in result.stdout.splitlines():
+        if line.startswith(marker):
+            try:
+                report_payload = json.loads(line[len(marker):])
+            except json.JSONDecodeError as exc:
+                errors.append(f"Town development cost curve report emitted invalid JSON: {exc}")
+            break
+    ensure(report_payload.get("schema") == "town_development_cost_curve_report_v1", errors, "Town development cost curve report schema mismatch")
+    ensure(int(report_payload.get("authored_town_count", 0)) >= 15, errors, "Town development cost curve report must cover all authored towns")
+    ensure(int(report_payload.get("faction_count", 0)) >= 6, errors, "Town development cost curve report must cover all six factions")
+    ensure(int(report_payload.get("signature_tier_count", 0)) == 7, errors, "Town development cost curve report must enforce seven signature tiers")
+    ensure(int(report_payload.get("high_tier_start", 0)) == 5, errors, "Town development cost curve report must keep rare costs at tier 5+")
+    ensure(int(report_payload.get("min_common_only_to_rare_ratio", 0)) >= 2, errors, "Town development cost curve report must keep common-only buildings dominant")
+    town_rows = report_payload.get("towns", {})
+    ensure(isinstance(town_rows, dict) and len(town_rows) >= 15, errors, "Town development cost curve report must emit every town row")
+    if isinstance(town_rows, dict):
+        for town_id, row in town_rows.items():
+            if not isinstance(row, dict):
+                errors.append(f"{town_id} cost curve row must be a dictionary")
+                continue
+            ensure(int(row.get("gold_cost_building_count", 0)) == int(row.get("target_building_count", -1)), errors, f"{town_id} must cost gold on every development target")
+            ensure(float(row.get("common_only_to_rare_ratio", 0.0)) >= 2.0, errors, f"{town_id} must keep at least 2:1 common-only to rare-cost buildings")
+            ensure(int(row.get("rare_cost_building_count", 0)) >= 3, errors, f"{town_id} must retain high-tier rare-resource pressure")
+    script_text = TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    doc_text = TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "TOWN_DEVELOPMENT_COST_CURVE_REPORT",
+        "town_development_cost_curve_report_v1",
+        "MIN_COMMON_ONLY_TO_RARE_RATIO",
+        "HIGH_TIER_START",
+        "SIGNATURE_TIER_COUNT",
+        "prerequisite_closure",
+        "common_only_to_rare_ratio",
+        "rare cost must be gated behind tier",
+        "gold must remain the dominant numeric development cost",
+    ):
+        ensure(required_token in script_text, errors, f"Town development cost curve report is missing token {required_token}")
+    for required_text in (
+        "Economy Town Development Cost Curve Report",
+        "economy-town-development-cost-curve-20260524-10184",
+        "town_development_cost_curve_report_v1",
+        "15 authored towns",
+        "six faction signature ladders",
+        "tier 5+",
+        "2:1 common-only",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Town development cost curve doc is missing required text: {required_text}")
 
 
 def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
@@ -19642,6 +19718,7 @@ def main() -> int:
     validate_economy_rare_resource_activation_policy(errors)
     validate_market_faction_cost_policy(errors)
     validate_town_development_balance_policy(errors)
+    validate_town_development_cost_curve_policy(errors)
     validate_town_development_runtime_balance_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_live_stockpile_resource_surface(errors)
