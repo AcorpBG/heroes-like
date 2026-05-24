@@ -18,6 +18,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_route_progression",
 	"strategic_ai_live_town_governor_build_execution",
 	"strategic_ai_live_town_defense_retask",
+	"strategic_ai_multi_scenario_town_defense_retask",
 	"strategic_ai_live_resource_site_defense",
 	"strategic_ai_live_town_retake_assault",
 	"strategic_ai_live_raid_assault_grouping",
@@ -41,6 +42,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_route_progression(input_config),
 		_strategic_ai_live_town_governor_build_execution(input_config),
 		_strategic_ai_live_town_defense_retask(input_config),
+		_strategic_ai_multi_scenario_town_defense_retask(input_config),
 		_strategic_ai_live_resource_site_defense(input_config),
 		_strategic_ai_live_town_retake_assault(input_config),
 		_strategic_ai_live_raid_assault_grouping(input_config),
@@ -1064,6 +1066,176 @@ static func _strategic_ai_live_town_defense_retask(input_config: Dictionary) -> 
 		deferred
 	)
 
+static func _strategic_ai_multi_scenario_town_defense_retask(input_config: Dictionary) -> Dictionary:
+	var scenario_ids: Array = input_config.get("strategic_ai_town_defense_coverage_scenario_ids", [
+		"river-pass",
+		"prismhearth-watch",
+		"glassroad-sundering",
+		"glassfen-breakers",
+		"ninefold-confluence",
+	])
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario_rows := []
+	var faction_rows := []
+	var public_boundary_events := []
+	var event_type_map := {}
+	var retasked_faction_count := 0
+	var target_assignment_event_count := 0
+	for scenario_id_value in scenario_ids:
+		var scenario_id := String(scenario_id_value)
+		var scenario := ContentService.get_scenario(scenario_id)
+		if scenario.is_empty():
+			deferred.append("Missing strategic AI town-defense coverage scenario %s." % scenario_id)
+			continue
+		var enemy_configs: Array = scenario.get("enemy_factions", []) if scenario.get("enemy_factions", []) is Array else []
+		if enemy_configs.is_empty():
+			deferred.append("%s has no enemy_factions for town-defense coverage." % scenario_id)
+			continue
+		var scenario_retask_count := 0
+		for config in enemy_configs:
+			if not (config is Dictionary):
+				continue
+			var faction_id := String(config.get("faction_id", ""))
+			if faction_id == "":
+				continue
+			var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+				scenario_id,
+				"normal",
+				SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+			)
+			OverworldRules.normalize_overworld_state(session)
+			OverworldRules.refresh_fog_of_war(session)
+			EnemyTurnRules.normalize_enemy_states(session)
+			EnemyAdventureRules.normalize_all_commander_rosters(session)
+			var state := _enemy_state_for_faction(session, faction_id)
+			if state.is_empty():
+				failures.append("%s has no enemy state for %s." % [scenario_id, faction_id])
+				continue
+			state["pressure"] = 0
+			_update_enemy_state(session, state)
+			var town_signal := _first_controller_town_signal_for_faction(session, faction_id)
+			var previous_target := _first_resource_node_signal_for_harness(session)
+			var town_id := String(town_signal.get("placement_id", ""))
+			var previous_target_id := String(previous_target.get("placement_id", ""))
+			if town_id == "":
+				failures.append("%s/%s has no owned enemy controller town for defense retask coverage." % [scenario_id, faction_id])
+				continue
+			if previous_target_id == "":
+				failures.append("%s/%s has no resource node for defense retask previous target." % [scenario_id, faction_id])
+				continue
+			var roster_hero_id := _first_commander_hero_id_for_faction(session, faction_id)
+			if roster_hero_id == "":
+				failures.append("%s/%s has no commander hero for defense retask coverage." % [scenario_id, faction_id])
+				continue
+			_set_resource_controller(session, previous_target_id, "player", failures)
+			_set_town_stabilizing_front(session, town_id, faction_id, failures)
+			_set_player_position(session, {"x": int(previous_target.get("x", 0)), "y": int(previous_target.get("y", 0))})
+			var raid_id := "headless_multi_defense_%s_%s" % [scenario_id.replace("-", "_"), faction_id.replace("faction_", "")]
+			var seed_raid := _town_defense_retask_raid_seed(session, faction_id, roster_hero_id, raid_id, previous_target_id)
+			seed_raid["x"] = int(town_signal.get("x", seed_raid.get("x", 0)))
+			seed_raid["y"] = int(town_signal.get("y", seed_raid.get("y", 0)))
+			var regroup_needed_before := EnemyAdventureRules.raid_regroup_needed(seed_raid)
+			var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+			encounters.append(seed_raid)
+			session.overworld["encounters"] = encounters
+			var turn_result: Dictionary = OverworldRules.end_turn(session)
+			var events: Array = turn_result.get("enemy_activity_events", []) if turn_result.get("enemy_activity_events", []) is Array else []
+			for event_type in _event_types(events):
+				event_type_map[String(event_type)] = true
+			for event in events:
+				if not (event is Dictionary):
+					continue
+				if String(event.get("event_type", "")) != "ai_target_assigned":
+					continue
+				var event_reason_codes := _string_array(event.get("reason_codes", []))
+				if (
+					String(event.get("faction_id", "")) == faction_id
+					and String(event.get("actor_id", "")) == raid_id
+					and String(event.get("target_id", "")) == town_id
+					and "town_defense" in event_reason_codes
+				):
+					public_boundary_events.append(event)
+			var after_raid := _encounter_by_placement(session, raid_id)
+			var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+			var assignment_events := _event_count_for_faction(events, "ai_target_assigned", faction_id)
+			target_assignment_event_count += assignment_events
+			var resource_controller := _resource_controller(session, previous_target_id)
+			var retasked := (
+				bool(turn_result.get("ok", false))
+				and not after_raid.is_empty()
+				and not regroup_needed_before
+				and String(after_raid.get("target_kind", "")) == "town"
+				and String(after_raid.get("target_placement_id", "")) == town_id
+				and String(after_raid.get("previous_target_placement_id", "")) == previous_target_id
+				and "town_defense" in reason_codes
+				and "front_stabilization" in reason_codes
+				and assignment_events > 0
+				and resource_controller != faction_id
+				and not _has_saved_hero_task_state(session)
+			)
+			if not retasked:
+				failures.append("%s/%s did not retask active raid to defend %s." % [scenario_id, faction_id, town_id])
+			else:
+				retasked_faction_count += 1
+				scenario_retask_count += 1
+			faction_rows.append({
+				"scenario_id": scenario_id,
+				"faction_id": faction_id,
+				"town_id": town_id,
+				"previous_target_id": previous_target_id,
+				"roster_hero_id": roster_hero_id,
+				"retasked": retasked,
+				"regroup_needed_before": regroup_needed_before,
+				"target_kind": String(after_raid.get("target_kind", "")),
+				"target_placement_id": String(after_raid.get("target_placement_id", "")),
+				"previous_target_preserved": String(after_raid.get("previous_target_placement_id", "")) == previous_target_id,
+				"target_reason_codes": reason_codes,
+				"target_assignment_event_count": assignment_events,
+				"resource_controller_after": resource_controller,
+			})
+		scenario_rows.append({
+			"scenario_id": scenario_id,
+			"faction_count": enemy_configs.size(),
+			"retasked_faction_count": scenario_retask_count,
+		})
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(public_boundary_events, 24)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected multi-scenario town-defense events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public multi-scenario town-defense events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var event_types := event_type_map.keys()
+	event_types.sort()
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_multi_scenario_town_defense_retask",
+		"live_enemy_town_defense_retask_across_scenario_breadth",
+		status,
+		{
+			"scenario_count": scenario_rows.size(),
+			"faction_case_count": faction_rows.size(),
+			"retasked_faction_count": retasked_faction_count,
+			"target_assignment_event_count": target_assignment_event_count,
+			"warning_count": warnings.size(),
+			"deferred_count": deferred.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"scenarios": scenario_rows,
+			"faction_cases": faction_rows,
+			"event_types": event_types,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _strategic_ai_live_resource_site_defense(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("strategic_ai_live_resource_defense_scenario_id", "river-pass"))
 	var faction_id := String(input_config.get("strategic_ai_live_resource_defense_faction_id", "faction_mireclaw"))
@@ -2057,6 +2229,21 @@ static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionDat
 			return state
 	return {}
 
+static func _first_commander_hero_id_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
+	var roster: Array = EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	for commander in roster:
+		if commander is Dictionary:
+			var hero_id := String(commander.get("hero_id", ""))
+			if hero_id != "":
+				return hero_id
+	var faction := ContentService.get_faction(faction_id)
+	var hero_ids: Array = faction.get("hero_ids", []) if faction.get("hero_ids", []) is Array else []
+	for hero_id_value in hero_ids:
+		var hero_id := String(hero_id_value)
+		if hero_id != "":
+			return hero_id
+	return ""
+
 static func _update_enemy_state(session: SessionStateStoreScript.SessionData, replacement: Dictionary) -> void:
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
 	for index in range(states.size()):
@@ -2095,6 +2282,21 @@ static func _resource_node_by_placement(session: SessionStateStoreScript.Session
 	for node in session.overworld.get("resource_nodes", []):
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return node
+	return {}
+
+static func _first_resource_node_signal_for_harness(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary):
+			continue
+		var placement_id := String(node.get("placement_id", ""))
+		if placement_id == "":
+			continue
+		return {
+			"placement_id": placement_id,
+			"resource_id": String(node.get("resource_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+		}
 	return {}
 
 static func _set_resource_defense_front(
@@ -2574,6 +2776,8 @@ static func _first_controller_town_signal_for_faction(session: SessionStateStore
 			"town_id": String(town.get("town_id", "")),
 			"template_faction_id": _town_template_faction_id_for_harness(town),
 			"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
 		}
 	return {}
 

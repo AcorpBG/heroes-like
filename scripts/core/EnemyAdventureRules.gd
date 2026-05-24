@@ -1156,6 +1156,9 @@ static func _redirect_raid_to_threatened_resource_defense(
 		return raid
 	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
 		return raid
+	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if String(raid.get("target_kind", "")) == "town" and "town_defense" in active_reason_codes:
+		return _refresh_target(session, raid)
 	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id)
 	if defense_node.is_empty():
 		return raid
@@ -9109,6 +9112,9 @@ static func _town_name(town_state: Dictionary) -> String:
 	return String(town.get("name", town_state.get("town_id", "Town")))
 
 static func _town_faction_id(town_state: Dictionary) -> String:
+	var controller := String(town_state.get("controlling_faction_id", ""))
+	if String(town_state.get("owner", "neutral")) == "enemy" and controller != "":
+		return controller
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("faction_id", ""))
 

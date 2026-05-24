@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "music-runtime-track-asset-layer-20260524-10184",
-  "currentSliceTitle": "Music Runtime Track Asset Layer",
+  "currentSliceId": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
+  "currentSliceTitle": "Strategic AI Multi-Scenario Town Defense Retask",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed music runtime track asset layer with manifest-backed WAV playback and generated fallback.",
+  "currentSliceNotes": "Expanded the shared headless strategic AI harness from one River Pass town-defense fixture to five-scenario/9-faction town-defense retask coverage; all faction cases retask to same-faction stabilizing towns with no hero_task_state writes or public-event leaks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T03:32:00Z",
+  "updatedAt": "2026-05-24T04:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,55 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
+      "title": "Strategic AI Multi-Scenario Town Defense Retask",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-town-defense-retask-report.md"
+      ],
+      "purpose": "Broaden town-defense retask evidence from one River Pass fixture to multi-scenario/faction live enemy-turn coverage in the shared headless harness.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-town-defense-retask-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "HeadlessSimulationHarnessRules adds required subsystem strategic_ai_multi_scenario_town_defense_retask.",
+        "The subsystem runs the normal enemy end-turn cycle across the existing five-scenario strategic AI pressure coverage set.",
+        "Each enemy faction case seeds a stabilizing owned town and active raid with a previous offensive target, then proves the raid retasks to town defense.",
+        "The report proves target assignment events, town_defense/front_stabilization reason codes, previous target preservation, no old-target capture, no hero_task_state writes, and no public event leaks.",
+        "Repository validation and the shared headless harness gate the new subsystem."
+      ],
+      "nonGoals": [
+        "No final strategic AI quality claim.",
+        "No durable commander task board.",
+        "No broad objective planner rewrite.",
+        "No authored content retune or save migration."
+      ],
+      "startedAt": "2026-05-24T03:45:00Z",
+      "completedAt": "2026-05-24T04:30:00Z",
+      "updatedAt": "2026-05-24T04:30:00Z",
+      "completionEvidence": [
+        "HeadlessSimulationHarnessRules now includes strategic_ai_multi_scenario_town_defense_retask and live_enemy_town_defense_retask_across_scenario_breadth.",
+        "Shared harness covers river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and ninefold-confluence.",
+        "Focused result: scenario_count = 5, faction_case_count = 9, retasked_faction_count = 9, target_assignment_event_count = 13, failure_count = 0.",
+        "EnemyAdventureRules honors controlling_faction_id for enemy-owned occupied towns and prevents resource-site defense from overwriting an active town_defense target.",
+        "Validation passed: GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn."
+      ],
+      "notes": "Completed after adding multi-scenario/faction retask coverage and tightening the public event boundary to the seeded defense assignment events."
+    },
     {
       "id": "music-runtime-track-asset-layer-20260524-10184",
       "title": "Music Runtime Track Asset Layer",
@@ -24496,8 +24545,8 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "music-runtime-track-asset-layer-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
+  "active_slice": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T04:30:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
