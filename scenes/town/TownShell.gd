@@ -552,13 +552,14 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary) -> Arra
 			continue
 		var available: int = max(0, int(action.get("available_count", 0)))
 		var direct_count: int = min(available, TownRules._max_affordable_count(_session, unit_cost))
-		var market_count: int = TownRules._max_market_affordable_count(town, resources, unit_cost, available)
+		var market_count: int = TownRules._max_market_affordable_count(_session, town, resources, unit_cost, available)
 		var market_summary: String = ""
 		if market_count > direct_count:
 			market_summary = TownRules._market_coverage_line(OverworldRules.town_cost_readiness(
 				town,
 				resources,
-				TownRules._multiply_resource_cost(unit_cost, market_count)
+				TownRules._multiply_resource_cost(unit_cost, market_count),
+				int(_session.day) if _session != null else -1
 			))
 		var shortfall_summary: String = ""
 		if market_count <= 0:

@@ -95,6 +95,9 @@ ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH = ROOT / "docs" / "economy-capture-income
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.gd"
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.tscn"
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-live-stockpile-resource-surface-report.md"
+RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.gd"
+RUNTIME_MARKET_CAP_REPORT_SCENE_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.tscn"
+RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap-persistence-report.md"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
@@ -2068,7 +2071,7 @@ def build_economy_resource_report() -> dict:
     for market_resource_id in ("wood", "ore"):
         report["usage"][market_resource_id]["used_by"]["market_rules"] += 1
         append_unique(report["usage"][market_resource_id]["source_paths"]["market_profiles"], "legacy_common_exchange")
-    report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "inferred_from_current_town_market_code", "buy_resources": ["wood", "ore"], "sell_resources": ["wood", "ore"], "buy_caps_present": False, "sell_caps_present": False, "refresh_cadence_present": False, "rare_resource_buying_enabled": False, "warnings": ["legacy market has no serialized weekly caps", "legacy market is common-resource only", "legacy market code is hardcoded to wood/ore"]}
+    report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "runtime_town_market_caps", "buy_resources": ["wood", "ore"], "sell_resources": ["wood", "ore"], "buy_caps_present": True, "sell_caps_present": True, "refresh_cadence_present": True, "refresh_cadence": "weekly", "usage_storage": "town.market_usage", "rare_resource_buying_enabled": False, "warnings": []}
     legacy_market_resources = set(report["market_caps"]["legacy_common_exchange"]["buy_resources"]) | set(report["market_caps"]["legacy_common_exchange"]["sell_resources"])
     if legacy_market_resources.intersection(ECONOMY_RARE_RESOURCE_IDS):
         warning = "legacy normal market exposes rare-resource exchange before caps and save state"
@@ -2507,8 +2510,8 @@ def build_market_faction_cost_report() -> dict:
             "normal_market_resource_ids": list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
             "rare_resource_activation": "live_stockpile",
             "normal_market_rare_buying_enabled": False,
-            "runtime_market_cap_adoption": False,
-            "market_cap_support": "strict_fixture_and_report_only_until weekly state, UI, AI, and save semantics are selected",
+            "runtime_market_cap_adoption": True,
+            "market_cap_support": "weekly town.market_usage runtime state, cap-aware actions/readiness, and save-resume report",
             "faction_cost_hook": "live recruitment discounts from faction, town, and building profiles",
             "save_version_bump": False,
             "broad_rebalance": False,
@@ -2589,12 +2592,15 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
     ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Market/faction-cost policy must expose the full live stockpile set")
     ensure(policy.get("normal_market_resource_ids", []) == list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS), errors, "Normal market must remain bounded to wood and ore")
     ensure(bool(policy.get("normal_market_rare_buying_enabled", True)) is False, errors, "Normal market must not buy staged rare resources")
+    ensure(bool(policy.get("runtime_market_cap_adoption", False)) is True, errors, "Market/faction-cost policy must adopt runtime weekly market caps")
     ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Market/faction-cost slice must keep rare resources live but outside normal market buying")
     ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Market/faction-cost slice must not require a save-version bump")
     ensure(bool(policy.get("broad_rebalance", True)) is False, errors, "Market/faction-cost slice must not perform a broad rebalance")
     ensure("const SAVE_VERSION := 9" in session_store_text, errors, "Market/faction-cost slice must preserve SessionStateStore SAVE_VERSION 9")
     ensure("const SAVE_VERSION := 9" in autoload_session_text, errors, "Market/faction-cost slice must preserve autoload SessionState SAVE_VERSION 9")
-    ensure('for resource_key in ["wood", "ore"]' in overworld_rules_text, errors, "Town market rules must stay visibly bounded to wood and ore")
+    ensure('const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]' in overworld_rules_text, errors, "Town market rules must stay visibly bounded to wood and ore")
+    ensure('"market_usage": _normalize_town_market_usage_state' in overworld_rules_text, errors, "Town normalization must preserve runtime market usage")
+    ensure("Weekly market cap reached" in overworld_rules_text, errors, "Market execution must reject over-cap exchange orders")
     ensure("static func town_recruit_cost" in overworld_rules_text and "_recruitment_discount_percent" in overworld_rules_text, errors, "Town recruit costs must still apply faction/town/building discount hooks")
 
     market_cases = report.get("market_cases", [])
@@ -18877,6 +18883,58 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Music audio runtime doc is missing required text: {required_text}")
 
 
+def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
+    ensure(RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH.exists(), errors, "Runtime market cap persistence report script is missing")
+    ensure(RUNTIME_MARKET_CAP_REPORT_SCENE_PATH.exists(), errors, "Runtime market cap persistence report scene is missing")
+    ensure(RUNTIME_MARKET_CAP_REPORT_DOC_PATH.exists(), errors, "Runtime market cap persistence report doc is missing")
+    if not RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = RUNTIME_MARKET_CAP_REPORT_SCENE_PATH.read_text(encoding="utf-8") if RUNTIME_MARKET_CAP_REPORT_SCENE_PATH.exists() else ""
+    doc_text = RUNTIME_MARKET_CAP_REPORT_DOC_PATH.read_text(encoding="utf-8") if RUNTIME_MARKET_CAP_REPORT_DOC_PATH.exists() else ""
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+
+    for required_token in (
+        "RUNTIME_MARKET_CAP_PERSISTENCE_REPORT",
+        "runtime_market_cap_persistence_report_v1",
+        "market:buy:wood:1",
+        "market:sell:ore:1",
+        "Weekly market cap reached",
+        "SaveService.save_runtime_manual_session",
+        "SaveService.restore_manual_session",
+        "rare_resource_buying_enabled",
+    ):
+        ensure(required_token in script_text, errors, f"Runtime market cap report is missing token {required_token}")
+    ensure("res://tests/runtime_market_cap_persistence_report.gd" in scene_text, errors, "Runtime market cap scene must load its report script")
+    for required_token in (
+        "const NORMAL_MARKET_RESOURCE_KEYS",
+        "const MARKET_BASE_BUY_CAP",
+        "const MARKET_BASE_SELL_CAP",
+        "_normalize_town_market_usage_state",
+        "_market_cap_state_for_quote",
+        "_market_usage_summary",
+        '"market_usage": _normalize_town_market_usage_state',
+        "cap_remaining",
+        "Weekly market cap reached",
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"Overworld market cap runtime is missing token {required_token}")
+    ensure("_max_market_affordable_count(session" in town_rules_text, errors, "Town recruitment readiness must pass the session into cap-aware market affordability")
+    ensure("can_afford_cost_with_town_market(town, treasury, cost, int(session.day))" in enemy_turn_text, errors, "Enemy town build readiness must use cap-aware market affordability")
+    for required_text in (
+        "Economy Runtime Market Cap Persistence Report",
+        "economy-runtime-market-cap-persistence-20260524-10184",
+        "town.market_usage",
+        "weekly caps",
+        "save/resume",
+        "common-resource only",
+        "not final scenario-wide economy tuning",
+    ):
+        ensure(required_text in doc_text, errors, f"Runtime market cap doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -18986,6 +19044,7 @@ def main() -> int:
     validate_town_development_runtime_balance_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_live_stockpile_resource_surface(errors)
+    validate_runtime_market_cap_persistence(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:

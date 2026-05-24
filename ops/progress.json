@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
-  "currentSliceTitle": "Economy Live Stockpile Resource Surface Breadth",
+  "currentSliceId": "economy-runtime-market-cap-persistence-20260524-10184",
+  "currentSliceTitle": "Economy Runtime Market Cap Persistence",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Full live stockpile resource summaries now flow through OverworldRules and generated-map resource text; runtime normalization, income merging, controlled site income, spending, and save/resume evidence preserve all nine live resource keys while generic costs remain sparse.",
+  "currentSliceNotes": "Completed. Weekly runtime market caps are enforced and persisted via town.market_usage; save/resume and next-week reset are covered by a focused Godot report.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T15:45:00Z",
+  "updatedAt": "2026-05-24T15:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -20450,6 +20450,83 @@
         "jq empty ops/progress.json (pass)",
         "git diff --check (pass)"
       ]
+    },
+    {
+      "id": "economy-runtime-market-cap-persistence-20260524-10184",
+      "title": "Economy Runtime Market Cap Persistence",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T15:55:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-runtime-market-cap-persistence-report.md",
+        "docs/economy-market-faction-costs-report.md",
+        "docs/economy-resource-schema-migration-plan.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/TownRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scenes/town/TownShell.gd",
+        "tests/runtime_market_cap_persistence_report.gd",
+        "tests/runtime_market_cap_persistence_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-runtime-market-cap-persistence-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Town market state exposes weekly common-resource buy and sell caps.",
+        "Live market actions disable and reject over-cap exchange orders at the rule layer.",
+        "Per-town market usage is persisted on runtime town state and survives save/resume without a save-version bump.",
+        "Weekly cap usage resets when the session advances into a new week.",
+        "Normal markets remain bounded to wood and ore and do not buy rare resources.",
+        "Repository validation gates the runtime market-cap persistence report."
+      ],
+      "notes": "Completed. Normal town markets now expose weekly common-resource buy/sell caps, live actions disable and reject over-cap exchanges, town.market_usage persists through save/resume, and cap usage resets on the next week. River and resonant exchange upgrades keep distinct cap bonuses while rare-resource market buying remains disabled.",
+      "completedAt": "2026-05-24T15:55:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py --market-faction-cost-report",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "schema": "economy_runtime_market_cap_persistence_completion_v1",
+        "normal_market_resource_ids": [
+          "wood",
+          "ore"
+        ],
+        "weekly_buy_caps": {
+          "wood": 6,
+          "ore": 6
+        },
+        "weekly_sell_caps": {
+          "wood": 8,
+          "ore": 8
+        },
+        "specialty_cap_bonuses": [
+          "river_wood",
+          "resonant_ore"
+        ],
+        "over_cap_actions_disabled": true,
+        "over_cap_execution_rejected": true,
+        "town_market_usage_persisted": true,
+        "save_resume_preserves_market_usage": true,
+        "next_week_resets_market_usage": true,
+        "rare_resource_buying_enabled": false,
+        "save_version_bump": false,
+        "runtime_town_balance_still_passes": true
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -24745,6 +24822,80 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-runtime-market-cap-persistence-20260524-10184",
+      "title": "Economy Runtime Market Cap Persistence",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T15:55:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-runtime-market-cap-persistence-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-runtime-market-cap-persistence-20260524-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/TownRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scenes/town/TownShell.gd",
+        "tests/runtime_market_cap_persistence_report.gd",
+        "tests/runtime_market_cap_persistence_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-runtime-market-cap-persistence-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Town market state exposes weekly buy/sell caps for normal wood/ore exchange and profile-specific river/resonant cap bonuses.",
+        "Live market actions carry cap metadata, disable when exhausted, and reject over-cap execution in OverworldRules.",
+        "Per-town town.market_usage is normalized by week, saved with runtime town state, restored from manual save, and reset after advancing to week 2.",
+        "Normal markets remain common-resource only; rare-resource buying remains disabled while high-tier town costs continue to spend rare resources.",
+        "Focused runtime market-cap report, live stockpile report, capture/income report, deterministic and live town-development reports, repository validation, strict economy fixtures, py-compile, jq, and diff checks passed."
+      ],
+      "completionEvidence": {
+        "schema": "economy_runtime_market_cap_persistence_completion_v1",
+        "normal_market_resource_ids": [
+          "wood",
+          "ore"
+        ],
+        "weekly_buy_caps": {
+          "wood": 6,
+          "ore": 6
+        },
+        "weekly_sell_caps": {
+          "wood": 8,
+          "ore": 8
+        },
+        "specialty_cap_bonuses": [
+          "river_wood",
+          "resonant_ore"
+        ],
+        "over_cap_actions_disabled": true,
+        "over_cap_execution_rejected": true,
+        "town_market_usage_persisted": true,
+        "save_resume_preserves_market_usage": true,
+        "next_week_resets_market_usage": true,
+        "rare_resource_buying_enabled": false,
+        "save_version_bump": false,
+        "runtime_town_balance_still_passes": true
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py --market-faction-cost-report",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -25919,32 +26070,51 @@
         "git diff --check"
       ],
       "summary": "Live stockpile resource surface breadth passed: full resource summary, rare site income, end-turn mutation, save/resume continuity, existing capture-income, and all-authored-town runtime balance checks are green."
+    },
+    {
+      "id": "economy-runtime-market-cap-persistence-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T15:55:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py --market-faction-cost-report",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
-    "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+    "id": "economy-runtime-market-cap-persistence-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T15:45:00Z",
+    "updatedAt": "2026-05-24T15:55:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/town_development_balance_report.py",
+      "python3 tests/validate_repo.py --market-faction-cost-report",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
-    ],
-    "summary": "Live stockpile resource surface breadth passed: focused report proved full nine-resource summaries, zero-valued rare audit summaries, controlled rare-resource site income, live end-turn mutation, and save/resume continuity; existing capture-income and all-authored-town runtime balance reports remained green."
+    ]
   },
   "active_slice": {
-    "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
-    "title": "Economy Live Stockpile Resource Surface Breadth",
+    "id": "economy-runtime-market-cap-persistence-20260524-10184",
+    "title": "Economy Runtime Market Cap Persistence",
     "status": "completed",
-    "updatedAt": "2026-05-24T15:45:00Z"
+    "updatedAt": "2026-05-24T15:55:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T15:45:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T15:55:00Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -26404,7 +26574,25 @@
         "git diff --check"
       ],
       "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
+    },
+    {
+      "id": "economy-runtime-market-cap-persistence-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T15:55:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py --market-faction-cost-report",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
-  "currentSlice": "economy-live-stockpile-resource-surface-breadth-20260524-10184"
+  "currentSlice": "economy-runtime-market-cap-persistence-20260524-10184"
 }

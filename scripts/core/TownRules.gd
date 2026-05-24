@@ -894,7 +894,7 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
 		var cost = building.get("cost", {})
 		var projection: String = OverworldRulesScript.describe_town_build_projection(session, town, building_id)
-		var readiness: Dictionary = OverworldRulesScript.town_cost_readiness(town, resources, cost)
+		var readiness: Dictionary = OverworldRulesScript.town_cost_readiness(town, resources, cost, int(session.day))
 		var direct_affordable := bool(readiness.get("direct_affordable", false))
 		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
 		var market_summary := _market_coverage_line(readiness)
@@ -971,7 +971,7 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var weekly_growth := int(OverworldRulesScript.town_weekly_growth(town, session).get(unit_id, 0))
 		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
-		var market_affordable_count := _max_market_affordable_count(town, resources, unit_cost, available)
+		var market_affordable_count := _max_market_affordable_count(session, town, resources, unit_cost, available)
 		var direct_recruit_cost := _multiply_resource_cost(unit_cost, direct_affordable_count)
 		var recruit_impact_line := _recruit_choice_impact_line(unit_id, direct_affordable_count, available)
 		var market_summary := ""
@@ -979,12 +979,13 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 			var market_readiness: Dictionary = OverworldRulesScript.town_cost_readiness(
 				town,
 				resources,
-				_multiply_resource_cost(unit_cost, market_affordable_count)
+				_multiply_resource_cost(unit_cost, market_affordable_count),
+				int(session.day)
 			)
 			market_summary = _market_coverage_line(market_readiness)
 		var shortfall_summary := ""
 		if market_affordable_count <= 0:
-			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost))
+			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost, int(session.day)))
 		var summary_lines := [
 			"%s x%d | %s | Weekly +%d | Cost %s" % [
 				String(unit.get("name", unit_id)),
@@ -1395,7 +1396,8 @@ static func _response_order_ledger_line(session: SessionStateStoreScript.Session
 				_cost_shortfall_line(OverworldRulesScript.town_cost_readiness(
 					town,
 					session.overworld.get("resources", {}),
-					action.get("resource_cost", {})
+					action.get("resource_cost", {}),
+					int(session.day)
 				)),
 			]
 	if bool(recovery.get("active", false)):
@@ -2170,6 +2172,7 @@ static func _disabled_reason_line(ready: bool, market_coverable: bool, market_su
 	return "Blocked: stores are too thin"
 
 static func _max_market_affordable_count(
+	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	resources: Dictionary,
 	unit_cost: Variant,
@@ -2179,7 +2182,8 @@ static func _max_market_affordable_count(
 		if OverworldRulesScript.can_afford_cost_with_town_market(
 			town,
 			resources,
-			_multiply_resource_cost(unit_cost, recruit_count)
+			_multiply_resource_cost(unit_cost, recruit_count),
+			int(session.day) if session != null else -1
 		):
 			return recruit_count
 	return 0
