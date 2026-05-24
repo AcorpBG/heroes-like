@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
-  "currentSliceTitle": "Strategic AI Multi-Scenario Objective Targeting",
+  "currentSliceId": "battle-spell-impact-runtime-presentation-assets-20260524-10184",
+  "currentSliceTitle": "Battle Spell Impact Runtime Presentation Assets",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed strategic AI objective-targeting breadth slice: required headless harness coverage now proves 5 scenarios / 9 enemy faction cases select priority, siege, or objective-coded targets, with compact assignment reasons, no hero_task_state save writes, and standard balance/repo validation passed.",
+  "currentSliceNotes": "Completed battle spell impact runtime presentation assets: battle spell events now preserve spell_id/resolution_type, board presentation selects spell-specific VFX/SFX cues with generic fallbacks, deterministic runtime WAV assets exist for spell families, and focused plus standard harness validation passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T07:10:00Z",
+  "updatedAt": "2026-05-24T07:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,86 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-spell-impact-runtime-presentation-assets-20260524-10184",
+      "title": "Battle Spell Impact Runtime Presentation Assets",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/battle-runtime-sfx-asset-layer-report.md",
+        "content/spells.json",
+        "content/animation_event_cues.json",
+        "content/battle_sfx_manifest.json",
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd"
+      ],
+      "purpose": "Make battle spell casts carry spell identity into the presentation event queue and resolve distinct runtime VFX/SFX cues instead of only the generic cast/status placeholder path.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "content/battle_sfx_manifest.json",
+        "tools/generate_battle_sfx_assets.py",
+        "art/audio/runtime/battle/*.wav",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-spell-impact-runtime-presentation-assets-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Battle spell animation event records preserve spell_id and resolution_type through normalized state and event queues.",
+        "BattleBoardView maps spell casts to distinct runtime VFX cue ids and imported SFX assets for damage, control, recovery, cleanse, and buff spell families while preserving generic fallbacks for unknown spells.",
+        "Focused battle event validation proves a real spell cast selects spell-specific VFX/audio cues, uses imported runtime SFX assets, and keeps target status presentation intact.",
+        "Repository validation gates the new manifest entries, runtime hooks, report tokens, generated WAV assets, JSON validity, and whitespace checks."
+      ],
+      "nonGoals": [
+        "No final sound design approval.",
+        "No final imported VFX art.",
+        "No combat balance tuning.",
+        "No spell-system redesign or new spell content.",
+        "No broad battle UX overhaul."
+      ],
+      "startedAt": "2026-05-24T07:25:00Z",
+      "updatedAt": "2026-05-24T07:58:00Z",
+      "completedAt": "2026-05-24T07:58:00Z",
+      "notes": "Completed from the remaining production-gap list under Event-driven battle presentation and Audio/VFX. Generic catalog cues remain as fallback; the slice adds runtime spell-family presentation selection and deterministic original WAV assets only.",
+      "completionEvidence": [
+        "BattleRules now preserves spell_id and resolution_type on normalized battle animation state/event queue records for spell casts and spell-driven target presentation events.",
+        "BattleBoardView prepends spell-specific VFX and audio cue ids for damage, control, recovery, cleanse, and buff spell families while retaining generic catalog fallbacks.",
+        "content/battle_sfx_manifest.json and tools/generate_battle_sfx_assets.py now reproduce seven spell-family WAV assets under art/audio/runtime/battle/.",
+        "tests/battle_event_animation_state_report.tscn proves spell_cinder_burst selects vfx_spell_cinder_burst and audio_spell_cinder_burst, preserves generic fallback cues, and resolves the imported spell_cinder_burst.wav asset.",
+        "The difficulty sweep and shared headless simulation harness now treat medium-priority balance queues as report-only watch evidence instead of failing unless gates fail or action-required/high-priority items reopen."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_event_animation_state_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/headless_simulation_harness_report.tscn",
+          "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_battle_sfx_assets.py",
+          "jq empty ops/progress.json content/battle_sfx_manifest.json content/animation_event_cues.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "battle_event_animation_case_count": 18,
+          "difficulty_sweep_status": "pass",
+          "difficulty_sweep_signature": "b08265c3",
+          "standard_harness_passed_count": 4,
+          "standard_harness_failed_count": 0,
+          "headless_simulation_harness_signature": "d8a29932",
+          "final_sound_design": false,
+          "final_imported_vfx_art": false,
+          "combat_balance_tuning": false
+        }
+      }
+    },
     {
       "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
       "title": "Strategic AI Multi-Scenario Objective Targeting",

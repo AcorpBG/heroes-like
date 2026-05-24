@@ -319,6 +319,24 @@ func _validate_spell_cast_state() -> void:
 		_error("Spell/status presentation motion count was too low: %s." % board_summary)
 	if int(motion_roles.get("cast_anchor", 0)) < 1 or int(motion_roles.get("status_pulse", 0)) < 1:
 		_error("Spell/status presentation roles were not counted in board summary: %s." % board_summary)
+	var caster_event := _event_record_for(session.battle, "player_0", "battle_unit_cast")
+	var target_event := _event_record_for(session.battle, "enemy_0", "battle_status_applied")
+	_expect_equal("spell caster event spell id", String(caster_event.get("spell_id", "")), "spell_cinder_burst")
+	_expect_equal("spell target event spell id", String(target_event.get("spell_id", "")), "spell_cinder_burst")
+	var cue_playback: Dictionary = board_summary.get("cue_playback", {}) if board_summary.get("cue_playback", {}) is Dictionary else {}
+	var caster_cue := _cue_record_for(cue_playback, "player_0")
+	_expect_array_contains("spell caster cue vfx", caster_cue.get("selected_vfx_cue_ids", []), "vfx_spell_cinder_burst")
+	_expect_array_contains("spell caster cue audio", caster_cue.get("selected_audio_cue_ids", []), "audio_spell_cinder_burst")
+	_expect_array_contains("spell caster generic vfx fallback", caster_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_cast_anchor")
+	_expect_array_contains("spell caster generic audio fallback", caster_cue.get("selected_audio_cue_ids", []), "audio_placeholder_cast")
+	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var spell_vfx := _vfx_entry_for(vfx_playback, "spell_cinder_burst")
+	_expect_equal("spell-specific vfx cue", String(spell_vfx.get("cue_id", "")), "vfx_spell_cinder_burst")
+	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
+	var caster_audio := _audio_record_for(audio_playback, "player_0")
+	_expect_array_contains("spell caster runtime audio", caster_audio.get("selected_audio_cue_ids", []), "audio_spell_cinder_burst")
+	if String(_audio_asset_path_for(caster_audio, "audio_spell_cinder_burst")).find("spell_cinder_burst.wav") < 0:
+		_error("Spell-specific audio did not use the imported Cinder Burst runtime WAV asset: %s" % caster_audio)
 	var case_payload := {
 		"caster_state": caster_state,
 		"target_state": target_state,
@@ -331,6 +349,9 @@ func _validate_spell_cast_state() -> void:
 	case_payload["target_presentation_source"] = String(target_stack.get("presentation_motion_source_battle_id", ""))
 	case_payload["presentation_motion_count"] = motion_count
 	case_payload["presentation_motion_roles"] = motion_roles
+	case_payload["spell_specific_caster_cue"] = caster_cue
+	case_payload["spell_specific_vfx"] = spell_vfx
+	case_payload["spell_specific_audio"] = caster_audio
 	_report["cases"]["spell_cast"] = case_payload
 
 func _validate_status_cleanse_state() -> void:
