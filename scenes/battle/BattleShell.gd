@@ -507,13 +507,30 @@ func _refresh() -> void:
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
+	var presentation_event := BattleRules.latest_animation_event_presentation_payload(_session)
+	var presentation_text := String(presentation_event.get("visible_text", "")).strip_edges()
+	var presentation_dispatch_text := dispatch_text
+	if presentation_text != "":
+		presentation_dispatch_text = "%s\n%s" % [presentation_text, dispatch_text]
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
-	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
+	var action_context_surface := _battle_action_context_surface(presentation_dispatch_text, action_confirmation)
 	if action_context_surface.is_empty():
-		_set_compact_label(_event_label, dispatch_text, 1)
+		_set_compact_label(_event_label, presentation_dispatch_text, 2 if presentation_text != "" else 1)
+		if presentation_text != "":
+			_event_label.tooltip_text = _join_tooltip_sections([
+				String(presentation_event.get("tooltip_text", "")),
+				dispatch_text,
+			])
 	else:
-		_set_compact_label(_event_label, "%s\n%s" % [String(action_context_surface.get("visible_text", "")), dispatch_text], 1)
-		_event_label.tooltip_text = String(action_context_surface.get("tooltip_text", _event_label.tooltip_text))
+		_set_compact_label(
+			_event_label,
+			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text],
+			2 if presentation_text != "" else 1
+		)
+		_event_label.tooltip_text = _join_tooltip_sections([
+			String(action_context_surface.get("tooltip_text", _event_label.tooltip_text)),
+			String(presentation_event.get("tooltip_text", "")),
+		])
 	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
@@ -1616,6 +1633,7 @@ func validation_snapshot() -> Dictionary:
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
+	var presentation_event := BattleRules.latest_animation_event_presentation_payload(_session)
 	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
@@ -1710,6 +1728,11 @@ func validation_snapshot() -> Dictionary:
 		"battle_action_context": action_context_surface,
 		"battle_action_context_text": String(action_context_surface.get("visible_text", "")),
 		"battle_action_context_tooltip_text": String(action_context_surface.get("tooltip_text", "")),
+		"battle_presentation_event": presentation_event,
+		"battle_presentation_event_visible_text": String(presentation_event.get("visible_text", "")),
+		"battle_presentation_event_tooltip_text": String(presentation_event.get("tooltip_text", "")),
+		"battle_presentation_event_source": String(presentation_event.get("source", "")),
+		"battle_presentation_event_id": String(presentation_event.get("event_id", "")),
 		"battle_tab_readiness": _battle_tab_readiness_payload(),
 		"battle_tab_titles": _battle_tab_titles(),
 		"battle_tab_readiness_tooltip_text": _battle_tabs.tooltip_text,

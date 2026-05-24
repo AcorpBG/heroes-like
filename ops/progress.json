@@ -20114,6 +20114,29 @@
           "runtime_consequence_matrix_signature": "cab8ca24"
         }
       }
+    },
+    {
+      "id": "battle-event-presentation-shell-surface-20260524-10184",
+      "title": "Battle Event Presentation Shell Surface",
+      "status": "completed",
+      "phase": "phase-4-battle-presentation-polish",
+      "summary": "BattleShell now surfaces latest battle animation events as player-facing action cues; the focused battle event report gates shell snapshot visibility and repo validation gates the slice doc/tokens.",
+      "files": [
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "docs/battle-event-presentation-shell-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_event_animation_state_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 -m py_compile tests/validate_repo.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_layout_smoke.tscn (fail: existing direct-actionable blocked-handoff assertion, outside presentation-cue change)"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -25930,5 +25953,6 @@
       ],
       "summary": "Content runtime overworld family allowlist passed: ContentService now accepts authored staged resource front, support producer, shrine, sign waypoint, scenario objective, and faction landmark resource-site families plus matching authored map-object families; focused battle autoplay report output had zero unsupported-family or warning lines."
     }
-  ]
+  ],
+  "currentSlice": null
 }
