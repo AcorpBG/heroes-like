@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Active Scenario Breadth Harness",
+  "currentSliceId": "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Active Scenario Outlier Retune",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Extended deterministic battle autoplay balance evidence from the four-scenario default to all 16 active authored scenarios and all 51 current encounter placements; the broader report passes coverage/no-stall/no-invalid-order gates and surfaces a report-only action-required tuning queue.",
+  "currentSliceNotes": "Completed bounded active-scenario battle outlier retune: authored army-group counts now reduce the full active-content breadth queue from 54 to 40 items and high-priority items from 28 to 14 while preserving 16 active scenarios, 51 encounter samples, zero stalls, zero invalid orders, and report-only balance warnings.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T05:05:00Z",
+  "updatedAt": "2026-05-24T05:40:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,54 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+      "title": "Battle Autoplay Active Scenario Outlier Retune",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/army_groups.json",
+        "content/encounters.json",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "docs/battle-autoplay-active-scenario-breadth-report.md"
+      ],
+      "purpose": "Use the active-scenario breadth queue to make a first bounded content retune pass against the highest terminal-margin battle outliers.",
+      "implementationTargets": [
+        "content/army_groups.json",
+        "content/encounters.json",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "docs/battle-autoplay-active-scenario-outlier-retune-report.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Top active-breadth terminal-margin outlier encounters are retuned through authored encounter/army content, not runtime balance mutation.",
+        "The active-scenario breadth report still samples all 16 active authored scenarios and 51 current encounter placements with no stalled samples, no invalid orders, and no missing scenario ids.",
+        "The active-scenario tuning queue shows reduced high-priority outlier pressure or records exact remaining top contributors without claiming final balance.",
+        "Focused combat balance, difficulty sweep, standard headless balance CLI, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or runtime balance changes.",
+        "No broad combat model rewrite.",
+        "No new authored scenarios or encounter placements."
+      ],
+      "startedAt": "2026-05-24T05:20:00Z",
+      "updatedAt": "2026-05-24T05:40:00Z",
+      "notes": "Completed as a bounded first retune pass. Remaining high-priority active breadth contributors are documented for future balance work.",
+      "completedAt": "2026-05-24T05:40:00Z",
+      "completionEvidence": [
+        "Authored army-group retune adjusted Barrow Pickets, Lantern Battery, Relay Pickets, Halo Reserve, Bellwake Privateers, Charter Bastion Reserve, Nightglass Dominion, and Orevein Exactors without runtime combat formula or AI-rule mutation.",
+        "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT passed with active_scenario_count = 16, expected_encounter_count = 51, sample_count = 51, completed_sample_count = 51, stalled_sample_count = 0, invalid_order_count = 0, and missing_scenario_ids = [].",
+        "Active breadth queue improved from item_count = 54 and high_priority_count = 28 at signature e4d8c04a to item_count = 40 and high_priority_count = 14 at signature 04bf99d5; first pass intermediate signature was b4a2ed49.",
+        "Current report remains action_required with report-only balance_matrix/runtime_consequence_matrix warnings and documents remaining top contributors instead of claiming final combat balance.",
+        "Validation passed: focused active-scenario breadth report, focused combat balance report, difficulty sweep, standard headless balance CLI, repository validation, Python compile, JSON validation, and diff whitespace checks."
+      ]
+    },
     {
       "id": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
       "title": "Battle Autoplay Active Scenario Breadth Harness",
@@ -23452,6 +23500,45 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+      "title": "Battle Autoplay Active Scenario Outlier Retune",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T05:40:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-active-scenario-outlier-retune-report.md",
+        "docs/battle-autoplay-active-scenario-breadth-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-active-scenario-outlier-retune-20260524-10184"
+      ],
+      "implementationRefs": [
+        "content/army_groups.json",
+        "docs/battle-autoplay-active-scenario-outlier-retune-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Retuned a bounded batch of active-scenario terminal-margin outliers through authored army-group counts only.",
+        "Active breadth coverage remains 16 scenarios, 51 samples, zero stalls, zero invalid orders, and no missing scenario ids.",
+        "Active breadth queue pressure fell from 54 total / 28 high-priority to 40 total / 14 high-priority; queue signatures: e4d8c04a -> b4a2ed49 -> 04bf99d5.",
+        "Remaining top contributors are documented; this does not claim final combat balance or enable automatic/runtime tuning."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -24592,9 +24679,25 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T05:05:00Z",
+  "active_slice": "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T05:40:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T05:40:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Active scenario outlier retune validation passed; active breadth queue reduced to 40 total items and 14 high-priority items with all coverage/no-stall/no-invalid-order checks clear."
+    },
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
       "status": "passed",

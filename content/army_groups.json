@@ -116,8 +116,8 @@
       "name": "Barrow Pickets",
       "faction_id": "faction_mireclaw",
       "stacks": [
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 10},
-        {"unit_id": "unit_mire_slinger", "count": 6}
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 14},
+        {"unit_id": "unit_mire_slinger", "count": 9}
       ]
     },
     {
@@ -207,9 +207,9 @@
       "name": "Charter Bastion Reserve",
       "faction_id": "faction_embercourt",
       "stacks": [
-        {"unit_id": "unit_river_guard", "count": 8},
-        {"unit_id": "unit_ember_archer", "count": 6},
-        {"unit_id": "unit_citadel_pikeward", "count": 4}
+        {"unit_id": "unit_river_guard", "count": 7},
+        {"unit_id": "unit_ember_archer", "count": 5},
+        {"unit_id": "unit_citadel_pikeward", "count": 3}
       ]
     },
     {
@@ -269,9 +269,9 @@
       "name": "Lantern Battery",
       "faction_id": "faction_embercourt",
       "stacks": [
-        {"unit_id": "unit_ember_archer", "count": 10},
+        {"unit_id": "unit_ember_archer", "count": 8},
         {"unit_id": "unit_river_guard", "count": 5},
-        {"unit_id": "unit_citadel_pikeward", "count": 2}
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
       ]
     },
     {
@@ -309,10 +309,10 @@
       "name": "Nightglass Dominion",
       "faction_id": "faction_mireclaw",
       "stacks": [
-        {"unit_id": "unit_bog_brute", "count": 6},
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 7},
-        {"unit_id": "unit_mire_slinger", "count": 5},
-        {"unit_id": "unit_gorefen_ripper", "count": 4}
+        {"unit_id": "unit_bog_brute", "count": 5},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 4},
+        {"unit_id": "unit_gorefen_ripper", "count": 3}
       ]
     },
     {
@@ -330,8 +330,8 @@
       "name": "Relay Pickets",
       "faction_id": "faction_sunvault",
       "stacks": [
-        {"unit_id": "unit_shard_guard", "count": 8},
-        {"unit_id": "unit_prism_adept", "count": 4}
+        {"unit_id": "unit_shard_guard", "count": 7},
+        {"unit_id": "unit_prism_adept", "count": 3}
       ]
     },
     {
@@ -369,9 +369,9 @@
       "name": "Halo Reserve",
       "faction_id": "faction_sunvault",
       "stacks": [
-        {"unit_id": "unit_shard_guard", "count": 7},
-        {"unit_id": "unit_prism_adept", "count": 5},
-        {"unit_id": "unit_mirror_duelist", "count": 4},
+        {"unit_id": "unit_shard_guard", "count": 6},
+        {"unit_id": "unit_prism_adept", "count": 4},
+        {"unit_id": "unit_mirror_duelist", "count": 3},
         {"unit_id": "unit_aurora_ballista", "count": 1}
       ]
     },
@@ -785,9 +785,9 @@
       "name": "Orevein Exactors",
       "faction_id": "faction_brasshollow",
       "stacks": [
-        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 7},
-        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
-        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 2}
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3}
       ]
     },
     {
@@ -795,9 +795,9 @@
       "name": "Bellwake Privateers",
       "faction_id": "faction_veilmourn",
       "stacks": [
-        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 8},
-        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 4},
-        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 2}
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 11},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 6},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 3}
       ]
     }
   ]
