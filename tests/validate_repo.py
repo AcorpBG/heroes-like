@@ -13974,9 +13974,11 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "`deterministic_battle_difficulty_sweep_samples`",
             "`battle_autoplay_difficulty_sweep_v1`",
             "`report_only_launch_difficulty_balance_probe`",
-            "`sweep_signature`: `bc42c7b1`",
+            "`sweep_signature`: `4361f7f7`",
             "`tuning_queue_status: clear`",
             "`tuning_queue_item_count: 0`",
+            "`tuning_queue_status: watch`",
+            "`tuning_queue_item_count: 3`",
             "`no_observed_effect: false`",
             "No automatic tuning or authored content writeback.",
             "No final combat balance approval.",
@@ -17084,6 +17086,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
     forest_balance_doc_path = ROOT / "docs/battle-autoplay-forest-cohort-balance-pass-report.md"
     hard_watch_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-pass-report.md"
+    hard_watch_retune_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-watch-retune-report.md"
     hard_queue_clear_doc_path = ROOT / "docs/battle-autoplay-hard-difficulty-queue-clear-pass-report.md"
     difficulty_sweep_doc_path = ROOT / "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md"
     runtime_consequence_doc_path = ROOT / "docs/battle-autoplay-runtime-consequence-harness-report.md"
@@ -17124,6 +17127,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         cohort_balance_doc_path,
         forest_balance_doc_path,
         hard_watch_doc_path,
+        hard_watch_retune_doc_path,
         hard_queue_clear_doc_path,
         difficulty_sweep_doc_path,
         runtime_consequence_doc_path,
@@ -17757,6 +17761,27 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in hard_watch_doc_text, errors, f"Battle autoplay hard difficulty watch doc is missing required text: {required_text}")
+    if hard_watch_retune_doc_path.exists():
+        hard_watch_retune_doc_text = hard_watch_retune_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Hard Difficulty Watch Retune Report",
+            "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+            "battle_autoplay_difficulty_sweep_v1",
+            "f3f8507f",
+            "4361f7f7",
+            "c286b819",
+            "MAX_NORMAL_TUNING_QUEUE_ITEMS := 0",
+            "MAX_HARD_TUNING_QUEUE_ITEMS := 3",
+            "army_blackfen_gateward",
+            "army_willow_mill_pack",
+            "river_pass_ghoul_grove",
+            "tuning_queue_item_count = 3",
+            "cohort_outcome_bias_watch",
+            "No automatic tuning or authored content writeback.",
+            "No runtime balance mutation.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in hard_watch_retune_doc_text, errors, f"Battle autoplay hard difficulty watch retune doc is missing required text: {required_text}")
     if hard_queue_clear_doc_path.exists():
         hard_queue_clear_doc_text = hard_queue_clear_doc_path.read_text(encoding="utf-8")
         for required_text in (

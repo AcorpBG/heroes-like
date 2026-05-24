@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
-  "currentSliceTitle": "Strategic AI Multi-Scenario Recruitment Delivery",
+  "currentSliceId": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Hard Difficulty Watch Retune",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed strategic-AI breadth slice: recruitment delivery now runs as a required shared-harness and focused-report case across five authored scenario/faction cases, proving live town recruits are consumed into understrength active raid hosts.",
+  "currentSliceNotes": "Completed bounded hard-difficulty combat balance retune: hard watch items reduced from 6 to 3 while normal remains clear and active breadth stays clear.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T12:50:00Z",
+  "updatedAt": "2026-05-24T13:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+      "title": "Battle Autoplay Hard Difficulty Watch Retune",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md",
+        "docs/headless-battle-difficulty-sweep-harness-report.md"
+      ],
+      "purpose": "Reduce the current hard difficulty battle-autoplay watch queue from the latest difficulty sweep without weakening the normal queue or turning report-only balance evidence into runtime tuning.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/army_groups.json",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-hard-difficulty-watch-retune-report.md",
+        "docs/headless-battle-difficulty-sweep-harness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The focused difficulty sweep keeps normal clear with tuning_queue_item_count 0.",
+        "The hard difficulty row has fewer watch items than the current baseline of 6 while preserving pass status and an observable normal-vs-hard effect.",
+        "Any combat retune is authored content only and scoped to current hard-row contributors such as forest, Causeway Stand, low sample, formation_guard, and Stonewake Watch.",
+        "Shared headless harness, repository validation, JSON validation, Python compilation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No automatic tuning or runtime balance mutation.",
+        "No final combat balance claim.",
+        "No broad unit-stat rewrite.",
+        "No new scenario content."
+      ],
+      "startedAt": "2026-05-24T13:05:00Z",
+      "updatedAt": "2026-05-24T13:25:00Z",
+      "notes": "Completed as a bounded combat-feel/balance increment, not final combat balance or runtime tuning.",
+      "completedAt": "2026-05-24T13:25:00Z",
+      "completionEvidence": [
+        "Focused difficulty sweep passed with normal tuning_queue_item_count 0 and hard tuning_queue_item_count 3.",
+        "Hard queue moved from f3f8507f/6 items to c286b819/3 items; remaining hard watches are cohort_outcome_bias_watch only.",
+        "Authored retune is scoped to River Pass Ghoul Grove, Blackfen Gateward, and Willow Mill Pack counts.",
+        "Active scenario breadth remained clear with 51/51 completed samples, zero stalls, zero invalid orders, and queue_signature 829808c9.",
+        "Shared headless simulation harness passed with difficulty sweep case signature 6e40b418 and known generated-map deferred boundary only."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
       "title": "Strategic AI Multi-Scenario Recruitment Delivery",
@@ -20062,6 +20118,50 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+      "title": "Battle Autoplay Hard Difficulty Watch Retune",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T13:25:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md",
+        "docs/headless-battle-difficulty-sweep-harness-report.md",
+        "docs/battle-autoplay-hard-difficulty-watch-retune-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "battle-autoplay-hard-difficulty-watch-retune-20260524-10184"
+      ],
+      "implementationRefs": [
+        "content/scenarios.json",
+        "content/army_groups.json",
+        "tests/battle_autoplay_difficulty_sweep_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-hard-difficulty-watch-retune-report.md",
+        "docs/battle-autoplay-difficulty-sweep-balance-harness-report.md",
+        "docs/headless-battle-difficulty-sweep-harness-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Hard difficulty row watch queue reduced from 6 medium items to 3 while preserving report-only policy.",
+        "Normal row remains clear with tuning_queue_item_count 0 and queue_signature 829808c9.",
+        "Hard terminal-margin and sample watches are clear; remaining watches are cohort_outcome_bias_watch for formation_guard, forest, and stonewake-watch.",
+        "Active scenario breadth remained clear across 16 active scenarios and 51 authored encounter samples.",
+        "No automatic tuning, no runtime balance mutation, no broad unit-stat rewrite, and no final combat balance claim."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+        "git diff --check"
+      ]
+    },
+    {
       "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
       "title": "Strategic AI Multi-Scenario Recruitment Delivery",
       "status": "completed",
@@ -24862,6 +24962,7 @@
     }
   },
   "validationResults": [
+    "2026-05-24 battle autoplay hard difficulty watch retune: Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418.",
     "2026-05-24 strategic AI multi-scenario recruitment delivery: Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-20 town scheduling/input alignment: tools/rmg_h3m_native_phase_snapshot_export.gd now drives native snapshots from controlled-reference manifests, including observed human/computer split. src/gdextension/src/h3maped_small_rmg.cpp now follows the recovered 0x4a8d2c first-success town/castle scheduling shape, routes remaining minimum/density work through 0x4a8db2/0x4a901a including player-owned categories, and preserves full closest-candidate tie vectors. Five controlled audits were refreshed: 2p seeds 28/73 keep reference_alignment_pass; 3p/4p cases now expose real template-selection drift instead of stale input drift (seed 11 h3maped template 018 vs native 046, seed 3 template 000 vs native 024, seed 10 template 012 vs native 048). 2p blocker deltas remain explicit, with object-blocked tiles low by 201/115 and movement-blocked tiles low by 447/383. Validation passed Linux debug/release native builds, Windows debug/release native builds, controlled snapshot/audit for five seeds, strict Small boundary report, package surface topology report, public template matrix, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
     "2026-05-19 guards/rewards/blocker convergence: src/gdextension/src/h3maped_small_rmg.cpp now materializes reward guard records from the reward commit path, records score-gate recovery for reward coordinates without treating it as exact parity, seeds decorative occupancy from full mine/reward footprints plus reward guards, and adopts decorative objects with recovered H3M source body footprints while keeping movement block masks separate. tools/rmg_phase_drift_audit.py now includes reward guard and recovery evidence in private/package counts and earliest-divergence reporting. Fresh controlled seed-11 audit keeps reference_alignment_pass; same-seed diagnostic drift is explicit: rewards 45 vs h3maped 52, guards 24 vs 29, objects 250 vs 299, object-blocked tiles 659 vs 816, guarded-blocked tiles 749 vs 903, movement-blocked tiles 364 vs 816, guarded-movement-blocked tiles 490 vs 903, decorations 163 vs 158, and road cells 84 vs 81. Refreshed broad Small-land audit has 37/37 green native cases; averages are 253.62 package objects, 4.89 towns, 23.54 mines, 35.49 rewards, 36.92 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Validation passed Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, refreshed broad divergence export/audit, Python compilation, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
@@ -25400,22 +25501,38 @@
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+    "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T12:50:00Z",
+    "updatedAt": "2026-05-24T13:25:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json",
+      "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
       "git diff --check"
     ],
-    "summary": "Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed."
+    "summary": "Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418."
   },
-  "active_slice": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T12:50:00Z",
+  "active_slice": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T13:25:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T13:25:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+        "git diff --check"
+      ],
+      "summary": "Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418."
+    },
     {
       "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
       "status": "passed",

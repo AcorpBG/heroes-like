@@ -7,8 +7,8 @@ const REQUIRED_SCHEMA := "battle_autoplay_difficulty_sweep_v1"
 const REQUIRED_POLICY := "report_only_launch_difficulty_balance_probe"
 const REQUIRED_DIFFICULTIES := ["normal", "hard"]
 const REQUIRED_SAMPLE_LIMIT := 12
-const MAX_NORMAL_TUNING_QUEUE_ITEMS := 6
-const MAX_HARD_TUNING_QUEUE_ITEMS := 6
+const MAX_NORMAL_TUNING_QUEUE_ITEMS := 0
+const MAX_HARD_TUNING_QUEUE_ITEMS := 3
 
 func _ready() -> void:
 	call_deferred("_run")
