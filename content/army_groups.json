@@ -98,8 +98,8 @@
       "name": "Ford Reavers",
       "faction_id": "faction_mireclaw",
       "stacks": [
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
-        {"unit_id": "unit_mire_slinger", "count": 5}
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 13},
+        {"unit_id": "unit_mire_slinger", "count": 8}
       ]
     },
     {
@@ -207,9 +207,9 @@
       "name": "Charter Bastion Reserve",
       "faction_id": "faction_embercourt",
       "stacks": [
-        {"unit_id": "unit_river_guard", "count": 7},
-        {"unit_id": "unit_ember_archer", "count": 5},
-        {"unit_id": "unit_citadel_pikeward", "count": 3}
+        {"unit_id": "unit_river_guard", "count": 6},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 2}
       ]
     },
     {
@@ -309,10 +309,10 @@
       "name": "Nightglass Dominion",
       "faction_id": "faction_mireclaw",
       "stacks": [
-        {"unit_id": "unit_bog_brute", "count": 5},
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 6},
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 5},
         {"unit_id": "unit_mire_slinger", "count": 4},
-        {"unit_id": "unit_gorefen_ripper", "count": 3}
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
       ]
     },
     {
@@ -359,9 +359,9 @@
       "name": "Aurora Battery",
       "faction_id": "faction_sunvault",
       "stacks": [
-        {"unit_id": "unit_aurora_ballista", "count": 3},
-        {"unit_id": "unit_prism_adept", "count": 6},
-        {"unit_id": "unit_shard_guard", "count": 6}
+        {"unit_id": "unit_aurora_ballista", "count": 1},
+        {"unit_id": "unit_prism_adept", "count": 4},
+        {"unit_id": "unit_shard_guard", "count": 4}
       ]
     },
     {
@@ -391,10 +391,10 @@
       "name": "Daybreak Matrix",
       "faction_id": "faction_sunvault",
       "stacks": [
-        {"unit_id": "unit_shard_guard", "count": 7},
-        {"unit_id": "unit_prism_adept", "count": 6},
-        {"unit_id": "unit_aurora_ballista", "count": 2},
-        {"unit_id": "unit_mirror_duelist", "count": 4}
+        {"unit_id": "unit_shard_guard", "count": 6},
+        {"unit_id": "unit_prism_adept", "count": 5},
+        {"unit_id": "unit_aurora_ballista", "count": 1},
+        {"unit_id": "unit_mirror_duelist", "count": 3}
       ]
     },
     {
@@ -785,9 +785,9 @@
       "name": "Orevein Exactors",
       "faction_id": "faction_brasshollow",
       "stacks": [
-        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
-        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6},
-        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3}
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 10},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 7},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 4}
       ]
     },
     {
