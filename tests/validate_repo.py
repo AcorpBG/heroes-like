@@ -5,6 +5,7 @@ import json
 import argparse
 import re
 import struct
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -736,8 +737,8 @@ MARKET_FACTION_COST_REPORT_SCHEMA = "market_faction_cost_report_v1"
 ECONOMY_RESOURCE_REGISTRY_POLICY_ID = "wood_canonical_v1"
 ECONOMY_STAGED_RARE_RESOURCE_IDS = ("aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt")
 ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS, "experience")
-ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore"}
-ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS = ("gold", "wood", "ore")
+ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS}
+ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS = ("gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS)
 ECONOMY_NORMAL_MARKET_RESOURCE_IDS = ("wood", "ore")
 ECONOMY_TARGET_ONLY_RESOURCE_IDS: set[str] = set()
 ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
@@ -1700,12 +1701,12 @@ def load_economy_resource_registry() -> dict:
             {"id": "gold", "display_name": "Gold", "category": "liquidity", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 10, "stockpile": True},
             {"id": "wood", "display_name": "Wood", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 20, "stockpile": True, "report_only": True},
             {"id": "ore", "display_name": "Ore", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 30, "stockpile": True},
-            {"id": "aetherglass", "display_name": "Aetherglass", "category": "arcane_material", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 100, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "aetherglass_orchard"},
-            {"id": "embergrain", "display_name": "Embergrain", "category": "supply", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 110, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "embergrain_yard"},
-            {"id": "peatwax", "display_name": "Peatwax", "category": "local_fuel_rite", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 120, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "peatwax_cut"},
-            {"id": "verdant_grafts", "display_name": "Verdant grafts", "category": "living_material", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 130, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "graft_nursery"},
-            {"id": "brass_scrip", "display_name": "Brass scrip", "category": "contract_credit", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 140, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "contract_foundry"},
-            {"id": "memory_salt", "display_name": "Memory salt", "category": "salvage_memory", "market_tier": "restricted_rare", "default_visible": False, "legacy_aliases": [], "canonical_status": "staged_limited", "ui_sort": 150, "stockpile": True, "report_only": True, "activation_status": "staged_report_only", "source_readiness": "planned_source_family", "source_site_family": "memory_salt_salvage"},
+            {"id": "aetherglass", "display_name": "Aetherglass", "category": "arcane_material", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 100, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "aetherglass_orchard"},
+            {"id": "embergrain", "display_name": "Embergrain", "category": "supply", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 110, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "embergrain_yard"},
+            {"id": "peatwax", "display_name": "Peatwax", "category": "local_fuel_rite", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 120, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "peatwax_cut"},
+            {"id": "verdant_grafts", "display_name": "Verdant grafts", "category": "living_material", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 130, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "graft_nursery"},
+            {"id": "brass_scrip", "display_name": "Brass scrip", "category": "contract_credit", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 140, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "contract_foundry"},
+            {"id": "memory_salt", "display_name": "Memory salt", "category": "salvage_memory", "market_tier": "restricted_rare", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 150, "stockpile": True, "report_only": False, "activation_status": "live_stockpile", "source_readiness": "live_resource_front", "source_site_family": "memory_salt_salvage"},
             {"id": "experience", "display_name": "Experience", "category": "progression_reward", "market_tier": "none", "default_visible": False, "legacy_aliases": [], "canonical_status": "non_stockpile_reward", "ui_sort": 900, "stockpile": False},
         ],
     }
@@ -1748,8 +1749,8 @@ def economy_rare_resource_report_entry(resource_id: str, registry_items: dict[st
         "material_cue": str(item.get("material_cue", "")),
         "production_occurrences": len(usage_entry.get("occurrences", [])),
         "availability": str(usage_entry.get("availability", "")),
-        "live_costs_enabled": False,
-        "live_sources_enabled": False,
+        "live_costs_enabled": True,
+        "live_sources_enabled": True,
         "normal_market_buying_enabled": False,
         "save_version_bump_required": False,
     }
@@ -1936,30 +1937,30 @@ def build_economy_resource_report() -> dict:
         "staged_resource_fronts": {},
         "ui_report": {},
         "activation_gates": {
-            "rules": "staged_report_only",
-            "ui_report": "registry_rows_visible_in_economy_resource_report",
-            "content_sources": "planned_source_families_only",
+            "rules": "live_stockpile",
+            "ui_report": "registry_rows_visible_in_economy_resource_report_and_runtime_resource_surfaces",
+            "content_sources": "live_resource_fronts_and_high_tier_costs",
             "save_compatibility": "old_saves_accept_absent_rare_resources_without_version_bump",
             "market": "normal_market_rare_buying_disabled",
-            "broad_costs": "not_enabled",
+            "broad_costs": "high_tier_town_development_enabled",
         },
         "registry_policy": {
             "policy_id": ECONOMY_RESOURCE_REGISTRY_POLICY_ID,
-            "mode": "report_only_registry_policy",
+            "mode": "live_stockpile_registry_policy",
             "decision": "keep_wood_as_live_authored_and_save_id",
             "live_stockpile_resource_ids": list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS),
-            "staged_limited_resource_ids": list(ECONOMY_STAGED_RARE_RESOURCE_IDS),
+            "staged_limited_resource_ids": [],
             "target_only_resource_ids": [],
             "non_stockpile_reward_ids": ["experience"],
             "wood_policy": "wood is the canonical live authored/save id with no alternate target id or alias path",
-            "production_content_migration": False,
+            "production_content_migration": True,
             "runtime_adoption": "not_active",
             "save_rewrite": False,
             "save_version_bump": False,
-            "rare_resource_activation": "staged_report_only",
-            "live_rare_resource_activation": False,
+            "rare_resource_activation": "live_stockpile",
+            "live_rare_resource_activation": True,
         },
-        "compatibility_adapters": {"runtime_adoption": "not_needed", "report_normalization": "none", "wood_live_id": "wood", "target_resource_ids": [], "save_rewrite": False},
+        "compatibility_adapters": {"runtime_adoption": "live_resource_dicts_accept_absent_keys", "report_normalization": "none", "wood_live_id": "wood", "target_resource_ids": [], "save_rewrite": False},
         "old_save_compatibility": old_save_compatibility,
         "warnings": [],
         "errors": [],
@@ -2036,8 +2037,8 @@ def build_economy_resource_report() -> dict:
                 )
                 if resource_id not in ECONOMY_RARE_RESOURCE_IDS:
                     front_entry["warnings"].append(f"staged_resource_outputs uses unsupported rare resource {resource_id}")
-                if str(output.get("activation_status", "")) != "staged_report_only" or not bool(output.get("report_only", False)) or bool(output.get("live_reward", True)):
-                    front_entry["warnings"].append(f"staged output {resource_id} is not report-only")
+                if str(output.get("activation_status", "")) != "live_stockpile" or bool(output.get("report_only", True)) or not bool(output.get("live_reward", False)):
+                    front_entry["warnings"].append(f"rare output {resource_id} is not live_stockpile")
             for warning in front_entry["warnings"]:
                 add_economy_report_warning(report, f"{site_id}: {warning}")
             report["staged_resource_fronts"][site_id] = front_entry
@@ -2106,14 +2107,14 @@ def validate_economy_wood_canonical_policy(errors: list[str]) -> None:
     autoload_session_text = (ROOT / "scripts/autoload/SessionState.gd").read_text(encoding="utf-8")
 
     ensure(str(policy.get("decision", "")) == "keep_wood_as_live_authored_and_save_id", errors, "Economy resource policy must keep wood as the live authored/save id")
-    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Economy resource policy must keep live stockpile ids as gold, wood, and ore")
+    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Economy resource policy must expose all selected live stockpile ids")
     ensure(policy.get("target_only_resource_ids", []) == [], errors, "Economy resource policy must not define target-only resource ids")
-    ensure(bool(policy.get("production_content_migration", True)) is False, errors, "Economy resource policy must not enable production content migration")
+    ensure(bool(policy.get("production_content_migration", False)) is True, errors, "Economy resource policy must enable production content migration")
     ensure(bool(policy.get("save_rewrite", True)) is False, errors, "Economy resource policy must not rewrite saves")
     ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Economy resource policy must not require a save-version bump")
-    ensure(str(policy.get("rare_resource_activation", "")) == "staged_report_only", errors, "Economy resource policy must stage rare resources as report-only")
-    ensure(bool(policy.get("live_rare_resource_activation", True)) is False, errors, "Economy resource policy must not activate rare resources in live rules")
-    ensure(str(adapters.get("runtime_adoption", "")) == "not_needed", errors, "Economy resource policy must not require a compatibility adapter")
+    ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Economy resource policy must activate rare resources as live stockpiles")
+    ensure(bool(policy.get("live_rare_resource_activation", False)) is True, errors, "Economy resource policy must activate rare resources in live rules")
+    ensure(str(adapters.get("runtime_adoption", "")) == "live_resource_dicts_accept_absent_keys", errors, "Economy resource policy must use absent-key-compatible live resource dicts")
     ensure(adapters.get("target_resource_ids", []) == [], errors, "Economy resource policy must not expose target resource ids")
     ensure(bool(adapters.get("save_rewrite", True)) is False, errors, "Economy compatibility adapter must not rewrite saves")
     ensure(alias_pairs == [], errors, "Economy resource policy must not report resource alias pairs")
@@ -2140,9 +2141,9 @@ def validate_economy_rare_resource_activation_policy(errors: list[str]) -> None:
     session_store_text = SESSION_STATE_STORE_PATH.read_text(encoding="utf-8")
     autoload_session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
 
-    ensure(policy.get("staged_limited_resource_ids", []) == list(ECONOMY_STAGED_RARE_RESOURCE_IDS), errors, "Rare-resource policy must expose the selected staged rare ids in order")
-    ensure(str(policy.get("rare_resource_activation", "")) == "staged_report_only", errors, "Rare-resource activation must stay staged/report-only")
-    ensure(bool(policy.get("live_rare_resource_activation", True)) is False, errors, "Rare resources must not be activated in live rules")
+    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Rare-resource policy must expose the full live stockpile set in order")
+    ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Rare-resource activation must be live_stockpile")
+    ensure(bool(policy.get("live_rare_resource_activation", False)) is True, errors, "Rare resources must be activated in live rules")
     ensure(report.get("activation_gates", {}).get("market", "") == "normal_market_rare_buying_disabled", errors, "Rare-resource gates must keep normal market buying disabled")
     ensure(report.get("activation_gates", {}).get("save_compatibility", "") == "old_saves_accept_absent_rare_resources_without_version_bump", errors, "Rare-resource gates must preserve old-save compatibility")
     ensure(report.get("market_caps", {}).get("legacy_common_exchange", {}).get("rare_resource_buying_enabled", True) is False, errors, "Legacy normal market must not buy rare resources")
@@ -2158,15 +2159,15 @@ def validate_economy_rare_resource_activation_policy(errors: list[str]) -> None:
         row = ui_rows.get(resource_id, {})
         ensure(bool(item), errors, f"Rare resource {resource_id} must be present in the report registry")
         ensure(bool(item.get("stockpile", False)), errors, f"Rare resource {resource_id} must be staged as a future stockpile resource")
-        ensure(str(item.get("canonical_status", "")) == "staged_limited", errors, f"Rare resource {resource_id} must use staged_limited canonical status")
-        ensure(str(item.get("activation_status", "")) == "staged_report_only", errors, f"Rare resource {resource_id} must stay report-only")
-        ensure(bool(item.get("report_only", False)), errors, f"Rare resource {resource_id} must be marked report_only")
+        ensure(str(item.get("canonical_status", "")) == "canonical_live_id", errors, f"Rare resource {resource_id} must use canonical_live_id status")
+        ensure(str(item.get("activation_status", "")) == "live_stockpile", errors, f"Rare resource {resource_id} must be live_stockpile")
+        ensure(bool(item.get("report_only", True)) is False, errors, f"Rare resource {resource_id} must not remain report_only")
         ensure(bool(item.get("source_site_family", "")), errors, f"Rare resource {resource_id} must name a planned source-site family")
         ensure(bool(item.get("icon_hint_id", "")), errors, f"Rare resource {resource_id} must expose an icon hint for future UI work")
         ensure(bool(item.get("material_cue", "")), errors, f"Rare resource {resource_id} must expose a material cue")
-        ensure(str(usage.get("availability", "")) == "registry_only", errors, f"Rare resource {resource_id} must not have live production usage yet")
-        ensure(len(usage.get("occurrences", [])) == 0, errors, f"Rare resource {resource_id} must not appear in live costs, rewards, starts, grants, or income yet")
-        ensure(rare.get("production_occurrences", -1) == 0, errors, f"Rare resource {resource_id} report must show zero production occurrences")
+        ensure(str(usage.get("availability", "")) == "available", errors, f"Rare resource {resource_id} must have live sources and costs")
+        ensure(len(usage.get("occurrences", [])) > 0, errors, f"Rare resource {resource_id} must appear in live sources or costs")
+        ensure(rare.get("production_occurrences", 0) > 0, errors, f"Rare resource {resource_id} report must show production occurrences")
         ensure(rare.get("normal_market_buying_enabled", True) is False, errors, f"Rare resource {resource_id} must not be normal-market buyable")
         ensure(row.get("report_visible", False) is True, errors, f"Rare resource {resource_id} must be visible in report/UI rows")
 
@@ -2254,9 +2255,9 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
             ensure("canonical_target_id" not in item, errors, "Strict registry must not define a target id for wood")
             ensure("target_aliases" not in item or item.get("target_aliases", []) == [], errors, "Strict registry must not define target aliases for wood")
         if resource_id in ECONOMY_RARE_RESOURCE_IDS:
-            ensure(str(item.get("canonical_status", "")) == "staged_limited", errors, f"Strict registry must mark rare resource {resource_id} as staged_limited")
-            ensure(str(item.get("activation_status", "")) == "staged_report_only", errors, f"Strict registry must keep rare resource {resource_id} report-only")
-            ensure(bool(item.get("report_only", False)), errors, f"Strict registry must mark rare resource {resource_id} report_only")
+            ensure(str(item.get("canonical_status", "")) == "canonical_live_id", errors, f"Strict registry must mark rare resource {resource_id} as canonical_live_id")
+            ensure(str(item.get("activation_status", "")) == "live_stockpile", errors, f"Strict registry must activate rare resource {resource_id}")
+            ensure(bool(item.get("report_only", True)) is False, errors, f"Strict registry must not keep rare resource {resource_id} report_only")
             ensure(str(item.get("market_tier", "")) == "restricted_rare", errors, f"Strict registry must keep rare resource {resource_id} out of normal common markets")
             ensure(bool(item.get("source_site_family", "")), errors, f"Strict registry rare resource {resource_id} must name source_site_family")
 
@@ -2498,7 +2499,7 @@ def build_market_faction_cost_report() -> dict:
         "policy": {
             "live_stockpile_resource_ids": list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS),
             "normal_market_resource_ids": list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
-            "rare_resource_activation": "staged_report_only",
+            "rare_resource_activation": "live_stockpile",
             "normal_market_rare_buying_enabled": False,
             "runtime_market_cap_adoption": False,
             "market_cap_support": "strict_fixture_and_report_only_until weekly state, UI, AI, and save semantics are selected",
@@ -2579,10 +2580,10 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
 
     ensure(report.get("schema", "") == MARKET_FACTION_COST_REPORT_SCHEMA, errors, "Market/faction-cost report must use the selected schema")
-    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Market/faction-cost policy must keep live stockpile ids as gold, wood, and ore")
+    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Market/faction-cost policy must expose the full live stockpile set")
     ensure(policy.get("normal_market_resource_ids", []) == list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS), errors, "Normal market must remain bounded to wood and ore")
     ensure(bool(policy.get("normal_market_rare_buying_enabled", True)) is False, errors, "Normal market must not buy staged rare resources")
-    ensure(str(policy.get("rare_resource_activation", "")) == "staged_report_only", errors, "Market/faction-cost slice must keep rare resources report-only")
+    ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Market/faction-cost slice must keep rare resources live but outside normal market buying")
     ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Market/faction-cost slice must not require a save-version bump")
     ensure(bool(policy.get("broad_rebalance", True)) is False, errors, "Market/faction-cost slice must not perform a broad rebalance")
     ensure("const SAVE_VERSION := 9" in session_store_text, errors, "Market/faction-cost slice must preserve SessionStateStore SAVE_VERSION 9")
@@ -2616,7 +2617,37 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
         ensure(case.get("cost_reduced", False) is True, errors, f"{case_id} must reduce the base cost")
         ensure(case.get("resource_ids_preserved", False) is True, errors, f"{case_id} must preserve resource ids rather than creating hidden grants")
         ensure(case.get("live_resource_ids_only", False) is True, errors, f"{case_id} must use only live stockpile resources")
-        ensure(case.get("rare_resource_ids_used", []) == [], errors, f"{case_id} must not use staged rare resources")
+        ensure(case.get("rare_resource_ids_used", []) == [], errors, f"{case_id} must not use rare resources in recruitment discounts")
+
+
+def validate_town_development_balance_policy(errors: list[str]) -> None:
+    script_path = ROOT / "tests" / "town_development_balance_report.py"
+    ensure(script_path.exists(), errors, "Missing town development balance report")
+    if not script_path.exists():
+        return
+    result = subprocess.run(
+        [sys.executable, str(script_path)],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        if result.stdout:
+            errors.append(result.stdout.strip())
+        if result.stderr:
+            errors.append(result.stderr.strip())
+        errors.append("Town development balance report failed")
+        return
+    ensure("TOWN_DEVELOPMENT_BALANCE_REPORT" in result.stdout, errors, "Town development balance report did not emit its report marker")
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in overworld_rules_text, errors, "OverworldRules must declare the full live stockpile resource set")
+    ensure("last_build_day" in overworld_rules_text and "already completed a build order today" in overworld_rules_text, errors, "OverworldRules must enforce one build per town per day")
+    ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
+    ensure("get_town_build_status(town, building_id, session.day)" in town_rules_text, errors, "TownRules build action surface must pass the active day into build status")
 
 
 def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
@@ -2637,7 +2668,9 @@ def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
         'const SCENARIO_ID := "glassroad-sundering"',
         'const RELAY_SITE := "glassroad_watch_relay"',
         'const LENS_HOUSE_SITE := "glassroad_lens_house"',
-        'const STOCKPILE_KEYS := ["gold", "wood", "ore"]',
+        'const STOCKPILE_KEYS := [',
+        '"aetherglass"',
+        '"memory_salt"',
         "OverworldRules.collect_active_resource",
         "OverworldRules.end_turn",
         "OverworldRules.build_in_active_town",
@@ -2648,7 +2681,7 @@ def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
     ):
         ensure(required_token in script_text, errors, f"Economy capture/income expansion report is missing token {required_token}")
     ensure("res://tests/economy_capture_income_expansion_report.gd" in scene_text, errors, "Economy capture/income expansion scene must load its report script")
-    ensure("rare resources remain staged/report-only" in doc_text.lower(), errors, "Economy capture/income expansion report must keep rare resources staged/report-only")
+    ensure("rare resources are live stockpiles" in doc_text.lower(), errors, "Economy capture/income expansion report must align with live rare-resource stockpiles")
     ensure("`wood` remains canonical" in doc_text, errors, "Economy capture/income expansion report must record wood as canonical")
     ensure("No `SAVE_VERSION` bump" in doc_text, errors, "Economy capture/income expansion report must reject save-version bump scope")
 
@@ -4033,8 +4066,6 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
             add_error(f"{object_id}: Batch 002 objects must author persistent/control or cooldown interaction metadata")
 
         live_ids = live_resource_ids(site)
-        if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
-            add_error(f"{object_id}: staged rare resources must not appear in live reward, income, service, or response-cost fields")
         for resource_id in sorted(live_ids.intersection(ECONOMY_STOCKPILE_RESOURCE_IDS)):
             append_unique(section["common_live_resource_ids"], resource_id)
         if role in {"common_mine", "support_producer"}:
@@ -4053,8 +4084,8 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
                 append_unique(section["staged_rare_resource_ids"], resource_id)
             if resource_id not in ECONOMY_RARE_RESOURCE_IDS:
                 add_error(f"{object_id}: rare-resource front uses unsupported rare resource {resource_id}")
-            if str(staged_object.get("activation_status", "")) != "staged_report_only" or not bool(staged_object.get("report_only", False)) or bool(staged_object.get("live_reward", True)):
-                add_error(f"{object_id}: rare-resource front object metadata must remain staged/report-only")
+            if str(staged_object.get("activation_status", "")) != "live_stockpile" or bool(staged_object.get("report_only", True)) or not bool(staged_object.get("live_reward", False)):
+                add_error(f"{object_id}: rare-resource front object metadata must be live_stockpile")
             if not staged_outputs:
                 add_error(f"{object_id}: rare-resource front site must author staged_resource_outputs")
             else:
@@ -4064,8 +4095,8 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
                         append_unique(section["staged_rare_resource_ids"], output_resource_id)
                     if output_resource_id not in ECONOMY_RARE_RESOURCE_IDS:
                         add_error(f"{object_id}: staged_resource_outputs uses unsupported rare resource {output_resource_id}")
-                    if not isinstance(output, dict) or str(output.get("activation_status", "")) != "staged_report_only" or not bool(output.get("report_only", False)) or bool(output.get("live_reward", True)):
-                        add_error(f"{object_id}: staged_resource_outputs must remain report-only and non-live")
+                    if not isinstance(output, dict) or str(output.get("activation_status", "")) != "live_stockpile" or bool(output.get("report_only", True)) or not bool(output.get("live_reward", False)):
+                        add_error(f"{object_id}: staged_resource_outputs must be live_stockpile")
                 section["staged_front_report_only_count"] += 1
             if not isinstance(site.get("guard_profile", {}), dict) or not site.get("guard_profile", {}):
                 add_error(f"{object_id}: rare-resource front must author guard_profile expectation metadata")
@@ -4080,7 +4111,7 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
         if section["common_mine_count"] < 9:
             add_error("Batch 002 must include at least 9 common live-resource mines/fronts")
         if section["rare_resource_front_count"] != 9:
-            add_error("Batch 002 must include 9 staged rare-resource fronts")
+            add_error("Batch 002 must include 9 live rare-resource fronts")
         if section["support_producer_count"] != 6:
             add_error("Batch 002 must include 6 support producer buildings")
         if section["normalized_resource_object_count"] < 1:
@@ -18856,6 +18887,7 @@ def main() -> int:
     validate_economy_wood_canonical_policy(errors)
     validate_economy_rare_resource_activation_policy(errors)
     validate_market_faction_cost_policy(errors)
+    validate_town_development_balance_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
@@ -18936,8 +18968,9 @@ def main() -> int:
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
     print("- unit art manifests now cover every authored unit with portrait, battle-icon, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
-    print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
-    print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
+    print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")
+    print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
+    print("- seed-town development balance gate proves six faction towns can fully develop within 30 turns under authored profiles and one-build-per-town-per-day enforcement")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")

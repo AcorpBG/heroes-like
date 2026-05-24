@@ -21441,12 +21441,13 @@
       },
       "staged_resource_front": {
         "resource_id": "aetherglass",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "aetherglass_lens_house",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_sunfall_aetherglass_yard",
@@ -21556,12 +21557,13 @@
       },
       "staged_resource_front": {
         "resource_id": "aetherglass",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "aetherglass_lens_house",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_embergrain_warm_granary",
@@ -21671,12 +21673,13 @@
       },
       "staged_resource_front": {
         "resource_id": "embergrain",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "embergrain_granary",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_charcoal_embergrain_store",
@@ -21801,12 +21804,13 @@
       },
       "staged_resource_front": {
         "resource_id": "embergrain",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "embergrain_granary",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_peatwax_reed_yard",
@@ -21906,12 +21910,13 @@
       },
       "staged_resource_front": {
         "resource_id": "peatwax",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "peatwax_yard",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_verdant_graft_nursery",
@@ -22021,12 +22026,13 @@
       },
       "staged_resource_front": {
         "resource_id": "verdant_grafts",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "graft_nursery",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_brass_scrip_mint",
@@ -22136,12 +22142,13 @@
       },
       "staged_resource_front": {
         "resource_id": "brass_scrip",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "brass_scrip_mint",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_underway_brass_scrip_press",
@@ -22251,12 +22258,13 @@
       },
       "staged_resource_front": {
         "resource_id": "brass_scrip",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "brass_scrip_mint",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_memory_salt_pan",
@@ -22381,12 +22389,13 @@
       },
       "staged_resource_front": {
         "resource_id": "memory_salt",
-        "activation_status": "staged_report_only",
-        "report_only": true,
-        "live_reward": false,
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
         "source_site_family": "memory_salt_pan",
         "planned_cadence": "daily"
-      }
+      },
+      "live_resource_front": true
     },
     {
       "id": "object_wind_press",

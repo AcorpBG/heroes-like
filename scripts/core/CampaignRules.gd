@@ -12,7 +12,17 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const PROFILE_VERSION := 1
-const RESOURCE_KEYS := ["gold", "wood", "ore"]
+const RESOURCE_KEYS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 static func _scenario_select_rules():
 	return load("res://scripts/core/ScenarioSelectRules.gd")
@@ -1845,8 +1855,11 @@ static func _normalize_flag_dict(value: Variant) -> Dictionary:
 static func _normalize_resource_dict(value: Variant) -> Dictionary:
 	var normalized := {}
 	if value is Dictionary:
-		for key in RESOURCE_KEYS:
-			var amount := int(max(0, int(value.get(key, 0))))
+		for key_value in value.keys():
+			var key := String(key_value)
+			if key == "experience" or key == "":
+				continue
+			var amount := int(max(0, int(value.get(key_value, 0))))
 			if amount > 0:
 				normalized[key] = amount
 	return normalized

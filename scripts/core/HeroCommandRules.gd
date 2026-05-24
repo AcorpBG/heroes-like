@@ -1023,7 +1023,9 @@ static func _normalize_resources(value: Variant) -> Dictionary:
 static func _describe_resources(resources: Variant) -> String:
 	var normalized := _normalize_resources(resources)
 	var parts := []
-	for key in ["gold", "wood", "ore"]:
+	var keys := normalized.keys()
+	keys.sort()
+	for key in keys:
 		var amount := int(normalized.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])

@@ -14,7 +14,7 @@ The executable evidence is `tests/economy_capture_income_expansion_report.gd` an
 
 The focused Godot report exercises current runtime rules for the Glassroad relay/lens-house loop:
 
-- starts `glassroad-sundering` with live stockpile resources `gold`, `wood`, and `ore`;
+- starts `glassroad-sundering` with the live stockpile resource set: `gold`, `wood`, `ore`, `aetherglass`, `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`;
 - claims `glassroad_watch_relay` through `OverworldRules.collect_active_resource`;
 - advances a day and asserts visible `Field sites yield 25 gold`;
 - claims `glassroad_lens_house`, proving persistent control plus immediate field recruits;
@@ -25,7 +25,7 @@ The focused Godot report exercises current runtime rules for the Glassroad relay
 - recruits one `unit_prism_adept`;
 - saves to manual slot 3 and restores through `SaveService`, matching day, resources, controlled sites, town build state, recruits, army, game state, scenario status, and `SAVE_VERSION 9`.
 
-The report deliberately positions the hero on selected sites as a deterministic fixture. It does not add resources directly, change content, force battle outcomes, migrate saves, activate rare resources, alter normal market exchange, or rebalance Glassroad.
+The report deliberately positions the hero on selected sites as a deterministic fixture. It does not add resources directly, collect rare-resource sites, change content, force battle outcomes, migrate saves, alter normal market exchange, or rebalance Glassroad. Rare-resource activation is covered by the town-development balance gate.
 
 ## Validation
 
@@ -47,7 +47,7 @@ python3 tests/validate_repo.py --strict-economy-resource-fixtures
 ## Boundaries
 
 - `wood` remains canonical.
-- Rare resources remain staged/report-only.
+- Rare resources are live stockpiles; this Glassroad fixture simply does not collect rare-resource sites.
 - Normal town market exchange remains bounded to `wood` and `ore`.
 - No `SAVE_VERSION` bump or save migration.
 - No broad market migration, faction-cost rebalance, route/pathing migration, renderer/editor change, or production JSON migration.

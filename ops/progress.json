@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Hard Difficulty Watch Retune",
+  "currentSliceId": "economy-town-development-live-balance-gate-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Live Balance Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded hard-difficulty combat balance retune: hard watch items reduced from 6 to 3 while normal remains clear and active breadth stays clear.",
+  "currentSliceNotes": "Completed. Live stockpile normalization now covers gold, wood, ore, aetherglass, embergrain, peatwax, verdant_grafts, brass_scrip, and memory_salt; rare-resource fronts are live sources; high-tier faction signature buildings use matching rare resources; town builds are limited to one per town per day; and the deterministic seed-town development report proves all six faction seed towns complete within 30 turns.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T13:25:00Z",
+  "updatedAt": "2026-05-24T13:42:54Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,100 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-live-balance-gate-20260524-10184",
+      "title": "Economy Town Development Live Balance Gate",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-rare-resource-activation-report.md",
+        "docs/economy-market-faction-costs-report.md"
+      ],
+      "purpose": "Move the town economy from report-only rare resources toward live production readiness by making all authored resources stockpiles, enforcing one construction order per town per day, and validating seed-town development can finish within the 30-turn target under an authored balance profile.",
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "content/resource_sites.json",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/ScenarioScriptRules.gd",
+        "scripts/core/TownRules.gd",
+        "tests/validate_repo.py",
+        "tests/town_development_balance_report.py",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "content/map_objects.json",
+        "docs/economy-capture-income-loop-expansion-report.md",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/CampaignRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/HeroCommandRules.gd",
+        "tests/economy_capture_income_expansion_report.gd",
+        "tests/fixtures/economy_resource_schema/resource_registry.json",
+        "tests/town_battle_visual_smoke.gd",
+        "scenes/town/TownShell.gd"
+      ],
+      "completionCriteria": [
+        "Gold, wood, ore, aetherglass, embergrain, peatwax, verdant_grafts, brass_scrip, and memory_salt are accepted as live stockpile resources in runtime resource normalization and validation.",
+        "High-tier faction signature buildings use faction-appropriate rare resources while low and mid town development remains primarily gold, wood, and ore.",
+        "Each seed faction town exposes seven unique unit-building tiers and at least one unique faction-feel development path.",
+        "A town cannot complete more than one build order on the same day, and the rule is covered by validation.",
+        "A deterministic balance report proves each six-faction seed town can fully develop within 30 turns using its authored development balance profile."
+      ],
+      "nonGoals": [
+        "No final market cap/save-schema migration.",
+        "No claim of final combat, AI, RMG, or campaign balance.",
+        "No broad UI redesign or final art direction."
+      ],
+      "startedAt": "2026-05-24T13:10:53Z",
+      "updatedAt": "2026-05-24T13:42:54Z",
+      "notes": "Completed. Live stockpile normalization now covers gold, wood, ore, aetherglass, embergrain, peatwax, verdant_grafts, brass_scrip, and memory_salt; rare-resource fronts are live sources; high-tier faction signature buildings use matching rare resources; town builds are limited to one per town per day; and the deterministic seed-town development report proves all six faction seed towns complete within 30 turns.",
+      "completedAt": "2026-05-24T13:42:54Z",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "godot --headless --log-file /tmp/heroes-like-economy-capture.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "godot --headless --log-file /tmp/heroes-like-town-smoke.log --path . --scene res://tests/town_battle_visual_smoke.tscn"
+      ],
+      "completionEvidence": {
+        "schema": "economy_town_development_live_balance_gate_completion_v1",
+        "live_stockpile_resources": [
+          "gold",
+          "wood",
+          "ore",
+          "aetherglass",
+          "embergrain",
+          "peatwax",
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "rare_resources": [
+          "aetherglass",
+          "embergrain",
+          "peatwax",
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "target_turns": 30,
+        "seed_town_completion_days": {
+          "town_highwater_keep": 20,
+          "town_nightglass_redoubt": 21,
+          "town_prismhearth": 21,
+          "town_thornwake_graftroot_caravan": 8,
+          "town_brasshollow_orevein_gantry": 8,
+          "town_veilmourn_bellwake_harbor": 8
+        }
+      }
+    },
     {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
       "title": "Battle Autoplay Hard Difficulty Watch Retune",
@@ -25567,7 +25661,7 @@
     "summary": "Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418."
   },
   "active_slice": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T13:25:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T13:42:54Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",

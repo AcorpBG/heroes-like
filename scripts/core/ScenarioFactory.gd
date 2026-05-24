@@ -222,6 +222,7 @@ static func _build_town_states(placements: Variant) -> Array:
 			"recovery": _duplicate_dict(placement.get("recovery", {})),
 			"front": _duplicate_dict(placement.get("front", {})),
 			"occupation": _duplicate_dict(placement.get("occupation", {})),
+			"last_build_day": max(0, int(placement.get("last_build_day", 0))),
 		}
 		town_state["available_recruits"] = _seed_recruits_for_town_state(town_state)
 		towns.append(
@@ -343,10 +344,13 @@ static func _normalize_position(value: Variant) -> Dictionary:
 	return {"x": 0, "y": 0}
 
 static func _normalize_resources(value: Variant) -> Dictionary:
-	var resources := {"gold": 0, "wood": 0, "ore": 0}
+	var resources := {}
 	if value is Dictionary:
-		for key in resources.keys():
-			resources[key] = max(0, int(value.get(key, 0)))
+		for key in value.keys():
+			var resource_key := String(key)
+			if resource_key == "experience" or resource_key == "":
+				continue
+			resources[resource_key] = max(0, int(value.get(key, 0)))
 	return resources
 
 static func _duplicate_array(value: Variant) -> Array:

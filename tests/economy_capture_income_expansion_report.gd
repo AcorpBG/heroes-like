@@ -10,7 +10,17 @@ const CASH_PICKUP := "market_cache"
 const MARKET_BUILDING := "building_market_square"
 const UPGRADE_BUILDING := "building_starseer_annex"
 const RECRUIT_UNIT := "unit_prism_adept"
-const STOCKPILE_KEYS := ["gold", "wood", "ore"]
+const STOCKPILE_KEYS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 var _failed := false
 
@@ -100,7 +110,7 @@ func _run() -> void:
 		"resource_policy": {
 			"live_stockpile_keys": STOCKPILE_KEYS,
 			"wood_canonical": true,
-			"rare_resources": "staged_report_only",
+			"rare_resources": "live_stockpile",
 			"save_version": SessionStateStore.SAVE_VERSION,
 		},
 		"baseline": baseline,
@@ -126,7 +136,8 @@ func _run() -> void:
 		"save_resume": save_resume,
 		"caveats": [
 			"Fixture positions the hero on selected sites to exercise current economy rules deterministically.",
-			"No rare resources, save migration, market migration, hidden grants, or broad rebalance are used.",
+			"This Glassroad fixture does not collect rare-resource sites; rare resources are covered by the town-development balance gate.",
+			"No save migration, market migration, hidden grants, or broad rebalance are used.",
 			"Battle/path viability is covered by existing Glassroad proof surfaces; this report focuses on capture, income, spend, recruit, and save continuity.",
 		],
 	}

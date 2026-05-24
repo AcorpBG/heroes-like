@@ -3232,9 +3232,9 @@
           "resource_id": "aetherglass",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "aetherglass_lens_house"
         }
       ],
@@ -3271,7 +3271,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "aetherglass": 1
+      },
+      "claim_rewards": {
+        "aetherglass": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_sunfall_aetherglass_yard",
@@ -3284,9 +3291,9 @@
           "resource_id": "aetherglass",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "aetherglass_lens_house"
         }
       ],
@@ -3323,7 +3330,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "aetherglass": 1
+      },
+      "claim_rewards": {
+        "aetherglass": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_embergrain_warm_granary",
@@ -3336,9 +3350,9 @@
           "resource_id": "embergrain",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "embergrain_granary"
         }
       ],
@@ -3375,7 +3389,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "embergrain": 1
+      },
+      "claim_rewards": {
+        "embergrain": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_charcoal_embergrain_store",
@@ -3388,9 +3409,9 @@
           "resource_id": "embergrain",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "embergrain_granary"
         }
       ],
@@ -3427,7 +3448,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "embergrain": 1
+      },
+      "claim_rewards": {
+        "embergrain": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_peatwax_reed_yard",
@@ -3440,9 +3468,9 @@
           "resource_id": "peatwax",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "peatwax_yard"
         }
       ],
@@ -3479,7 +3507,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "peatwax": 1
+      },
+      "claim_rewards": {
+        "peatwax": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_verdant_graft_nursery",
@@ -3492,9 +3527,9 @@
           "resource_id": "verdant_grafts",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "graft_nursery"
         }
       ],
@@ -3531,7 +3566,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "verdant_grafts": 1
+      },
+      "claim_rewards": {
+        "verdant_grafts": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_brass_scrip_mint",
@@ -3544,9 +3586,9 @@
           "resource_id": "brass_scrip",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "brass_scrip_mint"
         }
       ],
@@ -3583,7 +3625,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "brass_scrip": 1
+      },
+      "claim_rewards": {
+        "brass_scrip": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_underway_brass_scrip_press",
@@ -3596,9 +3645,9 @@
           "resource_id": "brass_scrip",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "brass_scrip_mint"
         }
       ],
@@ -3635,7 +3684,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "brass_scrip": 1
+      },
+      "claim_rewards": {
+        "brass_scrip": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_memory_salt_pan",
@@ -3648,9 +3704,9 @@
           "resource_id": "memory_salt",
           "cadence": "daily",
           "planned_amount": 1,
-          "activation_status": "staged_report_only",
-          "report_only": true,
-          "live_reward": false,
+          "activation_status": "live_stockpile",
+          "report_only": false,
+          "live_reward": true,
           "source_site_family": "memory_salt_pan"
         }
       ],
@@ -3687,7 +3743,14 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "control_income": {
+        "memory_salt": 1
+      },
+      "claim_rewards": {
+        "memory_salt": 1
+      },
+      "live_resource_front": true
     },
     {
       "id": "site_wind_press",
