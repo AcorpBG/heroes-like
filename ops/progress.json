@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Seven Tier Recruitment Runway",
+  "currentSliceId": "economy-town-recruitment-ui-surface-20260524-10184",
+  "currentSliceTitle": "Economy Town Recruitment UI Surface",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active-scenario post-development seven-tier recruitment gate. The active scenario development runway report now keeps completed player towns in full authored sessions through the remaining 30-turn economy window, applies recovery relief and weekly musters, then recruits 126/126 tier cases through OverworldRules.recruit_in_active_town.",
+  "currentSliceNotes": "Completed TownShell recruitment UI surface gate. Recruit buttons now carry visible tier labels, reserve text names unlocked and locked units by tier, and the focused TownShell report proves 42/42 six-faction recruit UI tier cases with loaded portraits and direct affordability.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:59:45Z",
+  "updatedAt": "2026-05-24T23:59:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-recruitment-ui-surface-20260524-10184",
+      "title": "Economy Town Recruitment UI Surface",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T23:59:55Z",
+      "completedAt": "2026-05-24T23:59:55Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-recruitment-ui-surface-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/TownRules.gd",
+        "tests/town_recruitment_ui_surface_report.gd",
+        "tests/town_recruitment_ui_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-recruitment-ui-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Town recruit buttons include visible tier labels so the player can distinguish the seven-tier ladder in the live TownShell.",
+        "Town recruitment reserve text names unlocked and locked units by tier.",
+        "A focused Godot report instantiates the live TownShell for all six faction seed towns with seven developed unit tiers waiting in reserve.",
+        "The report proves all 42 recruit UI tier cases expose matching tier metadata, visible button text, button tooltips, recruitment tooltip text, direct affordability, and loaded portraits.",
+        "Repository validation gates the report, scene, documentation, and TownRules/TownShell source hooks."
+      ],
+      "notes": "Completed: TownShell recruitment UI now exposes seven-tier identity directly on recruit buttons and validation proves all six faction ladders are player-facing.",
+      "completionEvidence": {
+        "faction_case_count": 6,
+        "recruitment_action_count": 42,
+        "tier_button_case_count": 42,
+        "portrait_loaded_count": 42,
+        "target_tier_count": 7,
+        "validated": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
       "title": "Economy Active Scenario Seven Tier Recruitment Runway",
@@ -27299,31 +27345,41 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+    "id": "economy-town-recruitment-ui-surface-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T23:59:45Z",
+    "updatedAt": "2026-05-24T23:59:55Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-scenario-seven-tier-runway.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-ironbridge.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-mireford.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-      "python3 tests/town_development_balance_report.py",
-      "python3 tests/town_development_cost_curve_report.py",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Active scenario seven-tier recruitment runway passed: 16 active scenarios, 18/18 player-town development cases, 18/18 post-development recruitment cases, and 126/126 tier recruitments through live OverworldRules.recruit_in_active_town; Highwater bridgehead ore reserve probes passed for ironbridge-stand and mireford-skirmish."
+    "summary": "Town recruitment UI surface passed: six faction seed towns, 42 live recruitment actions, 42/42 visible tier-labeled recruit buttons/tooltips, 42 loaded unit portraits, and direct affordability for every waiting tier."
   },
   "active_slice": {
-    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
-    "title": "Economy Active Scenario Seven Tier Recruitment Runway",
+    "id": "economy-town-recruitment-ui-surface-20260524-10184",
+    "title": "Economy Town Recruitment UI Surface",
     "status": "completed",
-    "updatedAt": "2026-05-24T23:59:45Z"
+    "updatedAt": "2026-05-24T23:59:55Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T23:59:45Z",
+  "currentSliceUpdatedAt": "2026-05-24T23:59:55Z",
   "validationHistory": [
+    {
+      "id": "economy-town-recruitment-ui-surface-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T23:59:55Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town recruitment UI surface passed: six faction seed towns, 42 live recruitment actions, 42/42 visible tier-labeled recruit buttons/tooltips, 42 loaded unit portraits, and direct affordability for every waiting tier."
+    },
     {
       "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
       "status": "passed",
@@ -27961,24 +28017,20 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
-    "title": "Economy Active Scenario Seven Tier Recruitment Runway",
+    "id": "economy-town-recruitment-ui-surface-20260524-10184",
+    "title": "Economy Town Recruitment UI Surface",
     "status": "completed",
-    "updatedAt": "2026-05-24T23:59:45Z"
+    "updatedAt": "2026-05-24T23:59:55Z"
   },
   "validation": [
     {
-      "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+      "id": "economy-town-recruitment-ui-surface-20260524-10184",
       "status": "passed",
-      "updatedAt": "2026-05-24T23:59:45Z",
+      "updatedAt": "2026-05-24T23:59:55Z",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-scenario-seven-tier-runway.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-ironbridge.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-mireford.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
         "python3 tests/validate_repo.py",
         "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-        "python3 tests/town_development_balance_report.py",
-        "python3 tests/town_development_cost_curve_report.py",
         "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
         "jq empty ops/progress.json",
         "git diff --check"
