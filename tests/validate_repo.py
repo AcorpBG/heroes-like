@@ -114,6 +114,9 @@ ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "ec
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.tscn"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-unit-tier-runtime-surface-report.md"
+TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_economy_resource_ui_surface_report.gd"
+TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_economy_resource_ui_surface_report.tscn"
+TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-economy-resource-ui-surface-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -19189,6 +19192,52 @@ def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
     ensure(high_tier_rare_cases == covered_factions * 3, errors, "Every faction tier 5-7 unit building must cost that faction's rare resource")
 
 
+def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
+    ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town economy resource UI surface report script is missing")
+    ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town economy resource UI surface report scene is missing")
+    ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_DOC_PATH.exists(), errors, "Town economy resource UI surface report doc is missing")
+    if not TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_DOC_PATH.exists() else ""
+    town_shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+
+    for required_token in (
+        "TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT",
+        "town_economy_resource_ui_surface_report_v1",
+        "TownShellScene",
+        "validation_resource_ledger_snapshot",
+        "LIVE_STOCKPILE_RESOURCE_IDS",
+        "RARE_RESOURCE_IDS",
+        "market_coverable",
+        "direct_affordable",
+        "shortfall_summary",
+        "resources_full_ledger_text",
+        "resources_tooltip_text",
+    ):
+        ensure(required_token in script_text, errors, f"Town economy resource UI surface report is missing token {required_token}")
+    ensure("res://tests/town_economy_resource_ui_surface_report.gd" in scene_text, errors, "Town economy resource UI surface scene must load its report script")
+    for required_token in (
+        "func validation_resource_ledger_snapshot",
+        "func _resource_ledger_tooltip_text",
+        "OverworldRules.describe_resource_stockpile",
+        "resources_full_ledger_text",
+        "resources_tooltip_text",
+        "LIVE_STOCKPILE_RESOURCE_KEYS",
+    ):
+        ensure(required_token in town_shell_text, errors, f"TownShell resource ledger surface is missing token {required_token}")
+    for required_text in (
+        "Economy Town Resource UI Surface Report",
+        "economy-town-resource-ui-surface-20260524-10184",
+        "town_economy_resource_ui_surface_report_v1",
+        "six faction seed towns",
+        "normal markets remain common-resource only",
+    ):
+        ensure(required_text in doc_text, errors, f"Town economy resource UI surface doc is missing text: {required_text}")
+
+
 def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
     ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town development runway report script is missing")
     ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists(), errors, "Active scenario town development runway report scene is missing")
@@ -19502,6 +19551,7 @@ def main() -> int:
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
     validate_town_unit_tier_runtime_surface(errors)
+    validate_town_economy_resource_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
     validate_active_scenario_ai_town_development_runway(errors)
     validate_animation_event_cue_catalog(errors)
