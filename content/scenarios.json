@@ -2794,7 +2794,7 @@
           ]
         },
         {"placement_id": "prismhearth_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 11202},
-        {"placement_id": "prismhearth_halo_reserve", "encounter_id": "encounter_halo_reserve", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 11203}
+        {"placement_id": "prismhearth_halo_reserve", "encounter_id": "encounter_halo_reserve", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 11203, "enemy_army": {"id": "army_prismhearth_halo_reserve_watch", "name": "Prismhearth Halo Reserve Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_prism_adept", "count": 2}, {"unit_id": "unit_mirror_duelist", "count": 2}, {"unit_id": "unit_aurora_ballista", "count": 1}]}}
       ]
     },
     {
@@ -3244,8 +3244,8 @@
         {"placement_id": "array_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "daybreak_array", "encounter_id": "encounter_daybreak_array", "x": 4, "y": 1, "difficulty": "high", "combat_seed": 13201},
-        {"placement_id": "daybreak_drum_circle", "encounter_id": "encounter_drum_circle", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 13202},
+        {"placement_id": "daybreak_array", "encounter_id": "encounter_daybreak_array", "x": 4, "y": 1, "difficulty": "high", "combat_seed": 13201, "enemy_army": {"id": "army_daybreak_array_watch", "name": "Daybreak Array Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 6}, {"unit_id": "unit_prism_adept", "count": 2}, {"unit_id": "unit_mirror_duelist", "count": 1}]}},
+        {"placement_id": "daybreak_drum_circle", "encounter_id": "encounter_drum_circle", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 13202, "enemy_army": {"id": "army_daybreak_drum_circle_watch", "name": "Daybreak Drum Circle Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 2}, {"unit_id": "unit_blackbranch_cutthroat", "count": 4}, {"unit_id": "unit_mire_slinger", "count": 3}]}},
         {"placement_id": "daybreak_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 13203}
       ]
     },
@@ -3496,6 +3496,15 @@
           "y": 1,
           "difficulty": "medium",
           "combat_seed": 14201,
+          "enemy_army": {
+            "id": "army_glassfen_relay_pickets_watch",
+            "name": "Glassfen Relay Pickets Watch",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {"unit_id": "unit_shard_guard", "count": 6},
+              {"unit_id": "unit_prism_adept", "count": 3}
+            ]
+          },
           "field_objectives": [
             {
               "id": "relay_kill_lane",
@@ -3510,7 +3519,7 @@
             }
           ]
         },
-        {"placement_id": "glassfen_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 14202},
+        {"placement_id": "glassfen_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 14202, "enemy_army": {"id": "army_glassfen_glasswing_sortie_watch", "name": "Glassfen Glasswing Sortie Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_shard_guard", "count": 4}, {"unit_id": "unit_mirror_duelist", "count": 1}]}},
         {"placement_id": "glassfen_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 14203}
       ]
     },
@@ -3961,7 +3970,17 @@
           "x": 7,
           "y": 4,
           "difficulty": "medium",
-          "combat_seed": 10202
+          "combat_seed": 10202,
+          "enemy_army": {
+            "id": "army_mireford_silt_hunters_watch",
+            "name": "Mireford Silt Hunters Watch",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {"unit_id": "unit_bog_brute", "count": 5},
+              {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
+              {"unit_id": "unit_mire_slinger", "count": 2}
+            ]
+          }
         },
         {
           "placement_id": "ironbridge_reed_totemists",

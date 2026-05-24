@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-reopened-queue-retune-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Reopened Queue Retune",
+  "currentSliceId": "battle-autoplay-active-watch-cohort-retune-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Active Watch Cohort Retune",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed reopened deterministic battle autoplay queue retune: River Pass Ghoul Grove, Fen Crown Bone Ferry Watch, and Ninefold Basalt Gatehouse Watch now use placement-local authored army overrides; the default queue is clear, active breadth high-priority items are 0, and standard headless balance validation passed.",
+  "currentSliceNotes": "Completed placement-local authored army tuning for the active-scenario combat watch cohort: active breadth queue pressure dropped from 16 to 7 items, high_priority_count stayed 0, the active report completed 51/51 samples with zero stalls/invalid orders/missing scenario ids, and the default battle tuning queue remained clear.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T09:05:00Z",
+  "updatedAt": "2026-05-24T09:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-active-watch-cohort-retune-20260524-10184",
+      "title": "Battle Autoplay Active Watch Cohort Retune",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "content/encounters.json",
+        "content/army_groups.json",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd"
+      ],
+      "purpose": "Reduce the remaining medium-priority active-scenario combat watch contributors after the default battle autoplay queue has been cleared.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "docs/battle-autoplay-active-watch-cohort-retune-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Targeted active-breadth watch contributors are reduced through placement-local authored enemy_army overrides, not shared unit-stat or combat-rule mutation.",
+        "The default battle autoplay tuning queue remains clear.",
+        "The active-scenario breadth report still samples all active authored encounters with zero stalls, zero invalid orders, no missing scenario ids, and zero high-priority items.",
+        "Focused combat balance, standard headless balance CLI, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or runtime balance mutation.",
+        "No shared unit-stat changes.",
+        "No broad combat model rewrite.",
+        "No new scenario/campaign breadth."
+      ],
+      "startedAt": "2026-05-24T09:20:00Z",
+      "updatedAt": "2026-05-24T09:45:00Z",
+      "completedAt": "2026-05-24T09:45:00Z",
+      "notes": "Completed from active breadth queue signature d8a427ba: 16 medium-priority items, 0 high-priority items, and top contributors in Prismhearth Watch, Daybreak Spire, Glassfen Breakers, rough terrain, Mireford Skirmish, and Ironbridge Stand.",
+      "completionEvidence": [
+        "content/scenarios.json now gives prismhearth_halo_reserve, daybreak_array, daybreak_drum_circle, glassfen_relay_pickets, glassfen_glasswing_sortie, and bridge_silt_hunters placement-local enemy_army overrides without changing shared unit stats, shared army groups, or combat rules.",
+        "The tested ninefold_orevein_exactors local override was removed after it overcorrected into a high-margin player win; the placement remains on its shared non-high-priority baseline.",
+        "battle_autoplay_active_scenario_breadth_report.tscn passed with 16 active scenarios, 51/51 completed samples, zero stalls, zero invalid orders, no missing scenario ids, queue_signature 0d5a4b3b, item_count 7, and high_priority_count 0.",
+        "battle_autoplay_balance_tuning_queue_report.tscn passed with status clear, item_count 0, high_priority_count 0, medium_priority_count 0, and queue_signature 829808c9.",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going passed all 4 standard cases with no failed checks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
       "title": "Battle Autoplay Reopened Queue Retune",
@@ -25075,24 +25131,40 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
+    "id": "battle-autoplay-active-watch-cohort-retune-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T09:05:00Z",
+    "updatedAt": "2026-05-24T09:45:00Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
       "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
       "jq empty ops/progress.json content/scenarios.json",
       "git diff --check"
     ],
-    "summary": "Reopened battle autoplay queue retune passed: default tuning queue is clear with item_count 0 and signature 829808c9; active breadth covers 16 active scenarios and 51 authored encounter samples with zero stalls, zero invalid orders, no missing scenario ids, high_priority_count 0, and signature d8a427ba; standard headless balance harness passed 4/4 cases."
+    "summary": "Active watch cohort retune passed: active breadth queue pressure dropped from 16 to 7 items with high_priority_count 0, queue_signature 0d5a4b3b, 16 active scenarios, 51/51 completed authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, default tuning queue still clear with signature 829808c9, and the standard headless balance harness passed 4/4 cases."
   },
-  "active_slice": "battle-autoplay-reopened-queue-retune-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T09:05:00Z",
+  "active_slice": "battle-autoplay-active-watch-cohort-retune-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T09:45:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-active-watch-cohort-retune-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T09:45:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "summary": "Active watch cohort retune validation passed: active breadth queue is watch with 7 medium-priority items, high_priority_count 0, queue_signature 0d5a4b3b, all 51 authored encounter samples completed, default queue remains clear with signature 829808c9, and standard headless balance harness passed all four cases."
+    },
     {
       "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
       "status": "passed",
