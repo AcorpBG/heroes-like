@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-goal-scorecard-20260524-10184",
-  "currentSliceTitle": "Economy Town Goal Scorecard",
+  "currentSliceId": "economy-town-runtime-scorecard-integration-20260524-10184",
+  "currentSliceTitle": "Economy Town Runtime Scorecard Integration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "The economy/town goal scorecard now consolidates the owner requirements into one regression gate. It passes 7/7 checks over live resources, 15 authored towns completing in 23-28 days, one build per town turn, common-resource-dominant cost shape, 2/4/6 rare pressure, six distinct faction town identities with unique buildings, seven-tier unit ladders, and active-scenario resource coverage.",
+  "currentSliceNotes": "The economy/town scorecard now has an optional runtime-inclusive mode. It passes 10/10 checks by folding in live Godot town runtime development/recruitment, active player-town scenario runway, and active AI-town scenario runway evidence while the default validator keeps the fast deterministic path.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:23:48Z",
+  "updatedAt": "2026-05-24T23:40:19Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,31 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-runtime-scorecard-integration-20260524-10184",
+      "title": "Economy Town Runtime Scorecard Integration",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T23:40:19Z",
+      "startedAt": "2026-05-24T23:24:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "summary": "The economy/town scorecard now has an optional runtime-inclusive mode. It passes 10/10 checks by folding in live Godot town runtime development/recruitment, active player-town scenario runway, and active AI-town scenario runway evidence while the default validator keeps the fast deterministic path.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-24T23:40:19Z"
+    },
     {
       "id": "economy-town-goal-scorecard-20260524-10184",
       "title": "Economy Town Goal Scorecard",

@@ -2959,6 +2959,11 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "high_tier_rare_resource_pressure",
         "faction_identity_and_unique_towns",
         "seven_tier_unit_buildings",
+        "live_runtime_development_and_recruitment",
+        "active_scenario_player_runway_runtime",
+        "active_scenario_ai_runway_runtime",
+        "--include-runtime",
+        "GODOT_RUNTIME_REPORTS",
         "EXPECTED_SIGNATURE_RARE_CURVE",
         "MIN_UNIQUE_NON_UNIT_PER_TOWN",
     ):
@@ -2974,6 +2979,10 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "MIN_RARE_DEVELOPMENT_SPEND = 14",
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "seven unit tiers",
+        "`--include-runtime` mode",
+        "15/15 live runtime town-development and recruitment cases",
+        "18/18 active player-town runway cases",
+        "20/20 active AI-town runway cases",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
