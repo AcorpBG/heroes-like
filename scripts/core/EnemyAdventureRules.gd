@@ -3509,15 +3509,24 @@ static func _append_encounter_candidate(
 	seen[seen_key] = true
 	var staging_tiles = _encounter_staging_tiles(session, encounter)
 	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
+	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
+	var priority_bonus := priority_target_bonus(config, placement_id)
+	if goal_distance >= 9999 and priority_bonus > 0:
+		var encounter_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		var direct_distance: int = abs(origin_pos.x - encounter_tile.x) + abs(origin_pos.y - encounter_tile.y)
+		if direct_distance <= 3:
+			goal_distance = direct_distance
+			goal_tile = encounter_tile
 	if goal_distance >= 9999:
 		return
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var objective_anchor = _encounter_is_objective_anchor(session, encounter)
 	var object_breakdown := neutral_encounter_object_valuation_breakdown(session, config, encounter, origin_pos, faction_id)
 	var reason_codes: Array = _normalize_string_array(object_breakdown.get("reason_codes", []))
 	if reason_codes.is_empty():
 		reason_codes = _default_reason_codes_for_target("encounter", placement_id, {"objective_anchor": objective_anchor})
+	if priority_bonus > 0 and "objective_front" not in reason_codes:
+		reason_codes.append("objective_front")
 	var public_reason := String(object_breakdown.get("public_reason", ""))
 	if public_reason == "":
 		public_reason = _public_reason_from_codes(reason_codes)

@@ -2,7 +2,7 @@
 
 Status: implementation evidence.
 
-This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_multi_scenario_town_defense_retask`, `strategic_ai_live_resource_site_defense`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, and `strategic_ai_multi_scenario_pressure_coverage` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
+This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_multi_scenario_town_defense_retask`, `strategic_ai_live_resource_site_defense`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, `strategic_ai_multi_scenario_pressure_coverage`, and `strategic_ai_multi_scenario_objective_targeting` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
 
 Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
@@ -49,6 +49,10 @@ Implemented behavior:
 - Prismhearth Watch explicitly keeps occupied `halo_spire` as a `faction_mireclaw` controller base even though the underlying town template is Sunvault, so Mireclaw pressure no longer starts without an operational town.
 - Enemy AI town ownership checks use controller faction for pressure/launch/posture purposes, while build/recruitment behavior remains guarded to same-template towns.
 - The case checks public AI event output for internal score/task/reservation leak tokens.
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_multi_scenario_objective_targeting`.
+- `HeadlessSimulationHarnessRules.build_report(...)` runs `live_enemy_objective_priority_targets_across_scenario_breadth` for the same five-scenario, 9 enemy-faction breadth set.
+- The objective-targeting case seeds objective pressure without running a full turn, primes player-held priority fronts where needed, and requires each enemy faction to select a priority, siege, or objective-coded target with compact public reason codes.
+- The case covers nearby lane blockers as valid priority encounter targets when the blocker itself makes normal staging tiles unreachable.
 - The evidence keeps the existing report-only harness boundaries: no automatic tuning, no authored content writeback, no manual play replacement, and no alpha/parity claim.
 - No save migration.
 
@@ -70,6 +74,7 @@ Validation evidence:
 - `strategic_ai_live_regroup_retreat`
 - `strategic_ai_live_recruitment_delivery`
 - `strategic_ai_multi_scenario_pressure_coverage`
+- `strategic_ai_multi_scenario_objective_targeting`
 - `resource_fronts_seized = 2`
 - `reserved_unique_targets = true`
 - `initial_goal_distance = 9`
@@ -115,9 +120,12 @@ Validation evidence:
 - `ai_raid_reinforced`
 - `raid_unit_after = 5`
 - `live_enemy_pressure_launches_across_scenario_breadth`
+- `live_enemy_objective_priority_targets_across_scenario_breadth`
 - `scenario_count = 5`
 - `faction_case_count = 9`
 - `launched_faction_count = 9`
+- `objective_targeted_count = 9`
+- `priority_reason_count = 9`
 - `target_assignment_event_count = 15`
 - `prismhearth_controller_town_id = halo_spire`
 - `prismhearth_controlling_faction_id = faction_mireclaw`
@@ -139,4 +147,5 @@ Remaining gaps:
 - This regroup case proves one retreat/rebuild fixture, not broad defense rotation or difficulty tuning.
 - This recruitment case proves one town-to-active-raid delivery fixture, not broad recruiting, army grouping, or economy planning.
 - This multi-scenario pressure case proves launch/base coverage across five authored scenarios and 9 enemy faction cases, not broad campaign quality or final objective planning.
+- This multi-scenario objective-targeting case proves priority/siege/objective target selection across five authored scenarios and 9 enemy faction cases, not final objective sequencing or full strategic AI quality.
 - Town assault priorities, defense rotation, longer objective sequencing, and difficulty tuning still need broader harness cases.

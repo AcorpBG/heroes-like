@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-active-scenario-watch-retune-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Active Scenario Watch Retune",
+  "currentSliceId": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+  "currentSliceTitle": "Strategic AI Multi-Scenario Objective Targeting",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded active-scenario watch retune: authored army-group counts reduce the active breadth watch queue from 23 to 20 items while keeping high-priority items at 0, active breadth matrix pass, 16 scenarios, 51 samples, zero stalls, and zero invalid orders.",
+  "currentSliceNotes": "Completed strategic AI objective-targeting breadth slice: required headless harness coverage now proves 5 scenarios / 9 enemy faction cases select priority, siege, or objective-coded targets, with compact assignment reasons, no hero_task_state save writes, and standard balance/repo validation passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T06:45:00Z",
+  "updatedAt": "2026-05-24T07:10:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,63 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+      "title": "Strategic AI Multi-Scenario Objective Targeting",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "completedAt": "2026-05-24T07:10:00Z",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-multi-scenario-objective-targeting-report.md",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "content/scenarios.json"
+      ],
+      "purpose": "Add required headless harness coverage proving enemy AI objective and priority target selection across active authored scenario breadth.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "content/scenarios.json",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-multi-scenario-objective-targeting-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The shared headless simulation harness treats strategic_ai_multi_scenario_objective_targeting as a required subsystem.",
+        "The case covers river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and ninefold-confluence enemy faction cases.",
+        "Every covered faction case selects a priority, siege, or objective-coded target and emits compact public target assignment evidence.",
+        "No hero_task_state save write, public event leak, automatic tuning, or save migration is introduced.",
+        "Focused headless harness, standard balance harness, repository validation, Python compile, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final strategic AI quality claim.",
+        "No persistent task board or save migration.",
+        "No broad objective planner rewrite.",
+        "No combat or economy retuning."
+      ],
+      "evidence": [
+        "HeadlessSimulationHarnessRules now requires strategic_ai_multi_scenario_objective_targeting and runs live_enemy_objective_priority_targets_across_scenario_breadth.",
+        "The case covers river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and ninefold-confluence across 9 enemy faction cases.",
+        "Objective targeting reports objective_targeted_count 9, target_assignment_event_count 9, priority_reason_count 9, and no public event leak tokens.",
+        "EnemyAdventureRules keeps nearby priority encounter blockers targetable when the blocker itself makes normal staging tiles unreachable.",
+        "Ninefold Veilmourn priority targeting now points at the authored lane blocker ninefold_bellwake_privateers instead of the future scripted pressure id."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "battle-autoplay-active-scenario-watch-retune-20260524-10184",
       "title": "Battle Autoplay Active Scenario Watch Retune",
@@ -24837,21 +24894,36 @@
     }
   ],
   "lastValidation": {
-    "id": "skirmish-launch-briefing-ux-20260523-10184",
+    "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-23T23:16:00Z",
+    "updatedAt": "2026-05-24T07:10:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+      "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json",
+      "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+      "jq empty ops/progress.json content/scenarios.json",
       "git diff --check"
     ],
-    "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
+    "summary": "Strategic AI objective targeting validation passed: headless harness required objective-targeting case reports 5 scenarios, 9 faction cases, objective_targeted_count 9, target_assignment_event_count 9, priority_reason_count 9, standard suite passed 4/4 with headless_simulation_harness signature 3d777345, and repo validation/JSON/whitespace checks passed."
   },
-  "active_slice": "battle-autoplay-active-scenario-watch-retune-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T06:45:00Z",
+  "active_slice": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T07:10:00Z",
   "validationHistory": [
+    {
+      "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T07:10:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "summary": "Strategic AI objective targeting validation passed; new required harness case live_enemy_objective_priority_targets_across_scenario_breadth covers 5 scenarios / 9 enemy faction cases with objective_targeted_count 9, target_assignment_event_count 9, priority_reason_count 9, no public event leaks, and no hero_task_state save writes."
+    },
     {
       "id": "battle-autoplay-active-scenario-watch-retune-20260524-10184",
       "status": "passed",
