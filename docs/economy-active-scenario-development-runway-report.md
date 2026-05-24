@@ -14,16 +14,19 @@ The strengthened gate now runs construction inside the full scenario session sta
 
 The latest strengthening keeps completed towns inside the active scenario session through the rest of the 30-turn development window, applies recovery relief and weekly musters, then proves the owning faction's seven-tier ladder through live recruit actions. Each completed case calls `TownRules.get_recruit_actions`, checks tier metadata, availability, weekly growth, and direct affordability, then recruits one unit from every tier through `OverworldRules.recruit_in_active_town`.
 
+The delayed-source strengthening adds `active_scenario_town_delayed_source_replay_v1` inside the same report. Each player-town case now also runs a fresh full scenario session where authored economy sources are not granted up front. Source ownership is delayed by live route-derived acquisition days using 12 route steps per day, plus one extra day for guarded sources. The delayed replay then reruns live town construction against the same 30-turn target, proving 18/18 delayed-source replay cases and current completion days from day 21 to day 25 with at least five days of remaining margin.
+
 ## Evidence Boundaries
 
 - The report covers active authored scenarios and active player-town cases.
 - Current focused evidence completes all 18 active player-town cases within the 30-turn target and observes high-tier rare-resource spending in every case.
 - Current focused evidence completes 18/18 active player-town recruitment cases after development and recruits 126/126 tier recruitment cases through live active-town recruitment.
+- Current focused evidence completes 18/18 delayed-source replay cases after route-derived source acquisition delays, with delayed completion days ranging from day 21 to day 25.
 - Secured sources must come from the active scenario's authored `resource_nodes`; no synthetic resource sites are added.
 - Highwater bridgehead starts in `ironbridge-stand` and `mireford-skirmish` include the authored `bridge_ore_reserve` ore source so their full development runway can still afford sequential tier 4-7 recruitment by turn 30.
 - Construction preserves the active scenario's authored overworld state, including map, resource nodes, encounters, and enemy state data.
 - Focused economy-day advancement is intentional report scope; it proves town/resource-income runway without treating strategic AI turns as part of this gate.
-- The runway assumes the relevant authored economy sources have been secured, so this is not final scenario-wide route balance; route safety, encounter pacing, and guard pressure remain separate scenario-balance concerns.
+- The secured-source runway remains as an isolation proof, while the delayed-source replay adds route/guard timing pressure. This is still not final scenario-wide route balance; full encounter pacing and manual-play campaign approval remain separate scenario-balance concerns.
 - Construction still uses live town rules, build action surfaces, resource spending, daily income, and same-day build rejection.
 - Rare resources remain authored-source driven; normal town markets stay common-resource only.
 - No `SAVE_VERSION` bump is required.
