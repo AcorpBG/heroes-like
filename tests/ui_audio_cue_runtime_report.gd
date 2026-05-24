@@ -84,6 +84,8 @@ func _validate_summary() -> void:
 	_expect(int(summary.get("record_count", 0)) >= 7, "Expected at least seven UI audio records.")
 	_expect(String(summary.get("audio_bus", "")) == "Master", "UI audio must route through the Master bus.")
 	_expect(int(summary.get("max_active_players", 0)) == UiAudio.MAX_ACTIVE_PLAYERS, "UI audio summary must expose max active player cap.")
+	_expect(String(summary.get("sfx_manifest_path", "")) == "res://content/ui_sfx_manifest.json", "UI audio summary must expose the UI SFX manifest path.")
+	_expect(bool(summary.get("sfx_manifest_loaded", false)), "UI audio runtime should load the UI SFX manifest.")
 	var counts: Dictionary = summary.get("cue_counts", {}) if summary.get("cue_counts", {}) is Dictionary else {}
 	for cue_id in ["ui_click", "ui_select", "ui_adjust", "ui_tab", "ui_confirm", "ui_invalid"]:
 		_expect(int(counts.get(cue_id, 0)) >= 1, "Missing expected UI audio cue %s in %s." % [cue_id, counts])
@@ -94,6 +96,10 @@ func _validate_summary() -> void:
 		_expect(float(entry.get("duration_sec", 0.0)) > 0.0, "UI audio record must include positive duration: %s" % entry)
 		_expect(float(entry.get("frequency", 0.0)) > 0.0, "UI audio record must include positive frequency: %s" % entry)
 		_expect(entry.has("played"), "UI audio record must expose played/muted state: %s" % entry)
+		_expect(String(entry.get("playback_source", "")) == "imported_wav", "UI audio record should prefer imported runtime SFX assets: %s" % entry)
+		_expect(String(entry.get("asset_path", "")).begins_with("res://art/audio/runtime/ui/"), "UI audio record must expose runtime UI SFX asset path: %s" % entry)
+		_expect(int(entry.get("imported_asset_count", 0)) == 1, "UI audio record should count the imported asset playback: %s" % entry)
+		_expect(int(entry.get("generated_fallback_count", 0)) == 0, "UI audio record should not use generated fallback when the asset is present: %s" % entry)
 
 func _write_json(path: String, payload: Dictionary) -> void:
 	var file := FileAccess.open(ProjectSettings.globalize_path(path), FileAccess.WRITE)
@@ -110,6 +116,7 @@ func _summary_payload() -> Dictionary:
 		"record_count": int(summary.get("record_count", 0)),
 		"cue_counts": summary.get("cue_counts", {}),
 		"audio_bus": String(summary.get("audio_bus", "")),
+		"sfx_manifest_loaded": bool(summary.get("sfx_manifest_loaded", false)),
 	}
 
 func _expect(condition: bool, message: String) -> void:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "active-scenario-deadline-loss-breadth-20260524-10184",
-  "currentSliceTitle": "Active Scenario Deadline Loss Breadth",
+  "currentSliceId": "ui-runtime-sfx-asset-layer-20260524-10184",
+  "currentSliceTitle": "UI Runtime SFX Asset Layer",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed authored timed-loss pressure and focused deadline report coverage for every active authored scenario.",
+  "currentSliceNotes": "Completed manifest-backed runtime UI SFX asset layer with generated waveform fallback and focused control-cue validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T02:02:00Z",
+  "updatedAt": "2026-05-24T02:34:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,75 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "ui-runtime-sfx-asset-layer-20260524-10184",
+      "title": "UI Runtime SFX Asset Layer",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/UiAudio.gd",
+        "tests/ui_audio_cue_runtime_report.gd",
+        "docs/ui-audio-cue-runtime-report.md"
+      ],
+      "purpose": "Replace generated-only UI cue playback with a manifest-backed runtime UI SFX asset layer while preserving generated waveform fallback.",
+      "implementationTargets": [
+        "content/ui_sfx_manifest.json",
+        "tools/generate_ui_sfx_assets.py",
+        "art/audio/runtime/ui/",
+        "scripts/autoload/UiAudio.gd",
+        "tests/ui_audio_cue_runtime_report.gd",
+        "tests/validate_repo.py",
+        "docs/ui-audio-cue-runtime-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "UI SFX manifest maps click/select/adjust/tab/confirm/invalid cues to committed runtime WAV assets.",
+        "The generator reproducibly writes all UI runtime WAV assets from the manifest.",
+        "UiAudio prefers manifest-backed WAV streams and keeps generated waveform fallback when assets are unavailable.",
+        "Focused UI audio report proves common controls and manual confirm/invalid cues use imported runtime UI assets.",
+        "Repository validation gates the UI SFX manifest, assets, generator, runtime hooks, and focused report evidence."
+      ],
+      "nonGoals": [
+        "No final sound design approval.",
+        "No music, ambience, or mixer mastering.",
+        "No gameplay behavior changes.",
+        "No imported third-party audio."
+      ],
+      "startedAt": "2026-05-24T02:22:00Z",
+      "updatedAt": "2026-05-24T02:34:00Z",
+      "notes": "Completed by adding a UI SFX manifest, reproducible WAV generator, committed runtime UI WAV assets, UiAudio manifest loading with generated fallback, and focused report/repo gates.",
+      "completedAt": "2026-05-24T02:34:00Z",
+      "completionEvidence": [
+        "content/ui_sfx_manifest.json maps ui_click, ui_select, ui_adjust, ui_tab, ui_confirm, and ui_invalid to runtime WAV assets under art/audio/runtime/ui/.",
+        "tools/generate_ui_sfx_assets.py regenerated all six original UI WAV assets from the manifest.",
+        "UiAudio now prefers manifest-backed AudioStream WAV playback and preserves generated AudioStreamGenerator fallback.",
+        "UI_AUDIO_CUE_RUNTIME_REPORT passed with record_count 7, sfx_manifest_loaded true, and all records using imported_wav playback.",
+        "tests/validate_repo.py gates the manifest, WAV headers, generator, runtime hooks, and focused report tokens."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "python3 tools/generate_ui_sfx_assets.py",
+          "jq empty content/ui_sfx_manifest.json ops/progress.json",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ui_audio_cue_runtime_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_ui_sfx_assets.py",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "UI_AUDIO_CUE_RUNTIME_REPORT",
+          "record_count": 7,
+          "sfx_manifest_loaded": true,
+          "cue_count": 6,
+          "runtime_asset_root": "art/audio/runtime/ui",
+          "final_sound_design_claim": false
+        }
+      }
+    },
     {
       "id": "active-scenario-deadline-loss-breadth-20260524-10184",
       "title": "Active Scenario Deadline Loss Breadth",
@@ -24286,7 +24355,7 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "active-scenario-deadline-loss-breadth-20260524-10184",
+  "active_slice": "ui-runtime-sfx-asset-layer-20260524-10184",
   "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {
