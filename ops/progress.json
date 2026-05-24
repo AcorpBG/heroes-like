@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "player-facing-authored-skirmish-launch-smoke-20260524-10184",
-  "currentSliceTitle": "Player-Facing Authored Skirmish Launch Smoke",
+  "currentSliceId": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
+  "currentSliceTitle": "Player-Facing Authored Launch Save Summary Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused authored skirmish browser smoke launch coverage for an actual Skirmish-mode session from river-pass.",
+  "currentSliceNotes": "Completed focused campaign and authored skirmish launch save-summary coverage for resumable autosave metadata after real player-facing menu launches.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T00:55:00Z",
+  "updatedAt": "2026-05-24T01:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,78 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
+      "title": "Player-Facing Authored Launch Save Summary Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/SaveService.gd",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "docs/player-facing-campaign-reactivation-smoke-report.md",
+        "docs/player-facing-authored-skirmish-browser-report.md"
+      ],
+      "purpose": "Prove the reactivated player-facing campaign and authored skirmish launch paths produce resumable save summaries with correct launch-mode, scenario, campaign, and resume-target metadata.",
+      "implementationTargets": [
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/player-facing-campaign-reactivation-smoke-report.md",
+        "docs/player-facing-authored-skirmish-browser-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused campaign launch smoke writes a runtime autosave after starting campaign_reedfall / river-pass and asserts latest loadable summary metadata.",
+        "Focused authored skirmish launch smoke writes a runtime autosave after starting river-pass and asserts latest loadable summary metadata.",
+        "Campaign autosave summary preserves campaign id/name/chapter, Campaign launch mode, saved-from launch mode, in-progress status, and overworld resume target.",
+        "Skirmish autosave summary preserves Skirmish launch mode, saved-from launch mode, in-progress status, and overworld resume target without leaking campaign metadata.",
+        "Repository validation gates the new save-summary evidence tokens."
+      ],
+      "nonGoals": [
+        "No full load-route replay.",
+        "No scenario balance or campaign breadth claim.",
+        "No save format migration.",
+        "No broad UX overhaul."
+      ],
+      "startedAt": "2026-05-24T01:12:00Z",
+      "updatedAt": "2026-05-24T01:28:00Z",
+      "notes": "Completed by extending the focused campaign and authored skirmish launch smokes to write runtime autosaves and assert latest loadable summary metadata.",
+      "completedAt": "2026-05-24T01:28:00Z",
+      "completionEvidence": [
+        "tests/player_facing_campaign_menu_smoke.tscn now reports latest_save_resume_target=overworld and latest_save_campaign_id=campaign_reedfall after Campaign-mode launch.",
+        "tests/player_facing_skirmish_browser_smoke.tscn now reports latest_save_resume_target=overworld and latest_save_launch_mode=skirmish after authored Skirmish-mode launch.",
+        "Campaign save summary checks require Campaign launch mode, saved-from launch mode, campaign id/name/chapter metadata, in-progress status, and overworld resume target.",
+        "Skirmish save summary checks require Skirmish launch mode, saved-from launch mode, in-progress status, overworld resume target, and no campaign metadata leak.",
+        "tests/validate_repo.py gates the new save-summary smoke tokens and report text."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_skirmish_browser_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "campaign_report": "PLAYER_FACING_CAMPAIGN_MENU_SMOKE",
+          "campaign_id": "campaign_reedfall",
+          "campaign_scenario_id": "river-pass",
+          "campaign_latest_save_resume_target": "overworld",
+          "skirmish_report": "PLAYER_FACING_SKIRMISH_BROWSER_SMOKE",
+          "skirmish_scenario_id": "river-pass",
+          "skirmish_latest_save_launch_mode": "skirmish",
+          "skirmish_latest_save_resume_target": "overworld",
+          "full_load_route_replay_claim": false
+        }
+      }
+    },
     {
       "id": "player-facing-authored-skirmish-launch-smoke-20260524-10184",
       "title": "Player-Facing Authored Skirmish Launch Smoke",
@@ -24149,7 +24221,7 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "content-runtime-overworld-family-allowlist-20260523-10184",
+  "active_slice": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
   "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {

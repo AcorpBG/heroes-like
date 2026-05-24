@@ -74,6 +74,9 @@ func _run() -> void:
 	if String(launch_result.get("active_campaign_name", "")) == "" or String(launch_result.get("active_campaign_chapter_label", "")) == "":
 		_fail("Started campaign session missed campaign name or chapter label: %s." % JSON.stringify(launch_result))
 		return
+	var save_summary := _autosave_started_campaign_session()
+	if save_summary.is_empty():
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -86,8 +89,37 @@ func _run() -> void:
 		"launch_started": bool(launch_result.get("started", false)),
 		"active_launch_mode": String(launch_result.get("active_launch_mode", "")),
 		"active_campaign_id": String(launch_result.get("active_campaign_id", "")),
+		"latest_save_resume_target": String(save_summary.get("resume_target", "")),
+		"latest_save_campaign_id": String(save_summary.get("campaign_id", "")),
 	})])
 	tree.quit(0)
+
+func _autosave_started_campaign_session() -> Dictionary:
+	var save_result: Dictionary = SaveService.save_runtime_autosave_session(SessionState.ensure_active_session())
+	if not bool(save_result.get("ok", false)):
+		_fail("Started campaign session could not write a resumable autosave: %s." % JSON.stringify(save_result))
+		return {}
+	var summary: Dictionary = save_result.get("summary", {}) if save_result.get("summary", {}) is Dictionary else {}
+	if summary.is_empty():
+		_fail("Started campaign session autosave did not expose a save summary: %s." % JSON.stringify(save_result))
+		return {}
+	var latest_summary: Dictionary = SaveService.latest_loadable_summary()
+	if String(latest_summary.get("scenario_id", "")) != START_SCENARIO_ID:
+		_fail("Latest loadable summary did not point at the started campaign chapter: %s." % JSON.stringify(latest_summary))
+		return {}
+	if String(summary.get("scenario_id", "")) != START_SCENARIO_ID:
+		_fail("Campaign autosave summary scenario id is wrong: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("launch_mode", "")) != SessionState.LAUNCH_MODE_CAMPAIGN or String(summary.get("saved_from_launch_mode", "")) != SessionState.LAUNCH_MODE_CAMPAIGN:
+		_fail("Campaign autosave summary did not preserve Campaign launch mode: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("resume_target", "")) != "overworld" or String(summary.get("scenario_status", "")) != "in_progress":
+		_fail("Campaign autosave summary did not advertise in-progress overworld resume: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("campaign_id", "")) != CAMPAIGN_ID or String(summary.get("campaign_name", "")) == "" or String(summary.get("chapter_label", "")) == "":
+		_fail("Campaign autosave summary missed campaign metadata: %s." % JSON.stringify(summary))
+		return {}
+	return summary
 
 func _fail(message: String) -> void:
 	push_error("%s: %s" % [REPORT_ID, message])

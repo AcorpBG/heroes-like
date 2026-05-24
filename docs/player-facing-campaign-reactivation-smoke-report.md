@@ -13,6 +13,7 @@ This is a focused activation and smoke-gate slice. It makes the existing Campaig
 
 - `CampaignRules` is the live campaign browser and launch source of truth.
 - `PLAYER_FACING_CAMPAIGN_MENU_SMOKE` now validates both preview/selectability and `validation_start_selected_campaign_chapter` Campaign-mode session launch for `campaign_reedfall` / `river-pass`.
+- The same focused smoke writes the started Campaign-mode session through `SaveService.save_runtime_autosave_session`, then requires `latest_loadable_summary` to preserve the chapter id, Campaign launch mode, saved-from launch mode, campaign metadata, in-progress status, and overworld resume target as a resumable autosave.
 - `menu_outcome_visual_smoke` validates the active campaign board path, launch preview, chapter selection, commander preview, and operational board copy.
 - `map_campaign_replayability_breadth_report` validates active campaign API exposure, chapter unlock/replay semantics, campaign-session boot, skirmish-session separation, and generated-map non-adoption boundaries.
 - Random-map smoke continues to require generated map packages to stay out of authored scenario and campaign content.
