@@ -16886,6 +16886,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     active_breadth_doc_path = ROOT / "docs/battle-autoplay-active-scenario-breadth-report.md"
+    active_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-outlier-retune-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
@@ -16922,6 +16923,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         balance_matrix_doc_path,
         expanded_sample_doc_path,
         active_breadth_doc_path,
+        active_outlier_retune_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
@@ -17321,6 +17323,47 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in active_breadth_doc_text, errors, f"Battle autoplay active scenario breadth doc is missing required text: {required_text}")
+    if active_outlier_retune_doc_path.exists():
+        active_outlier_retune_doc_text = active_outlier_retune_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Active Scenario Outlier Retune Report",
+            "battle-autoplay-active-scenario-outlier-retune-20260524-10184",
+            "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
+            "army_barrow_pickets",
+            "army_lantern_battery",
+            "army_relay_pickets",
+            "army_halo_reserve",
+            "army_bellwake_privateers",
+            "army_charter_bastion_reserve",
+            "army_nightglass_dominion",
+            "army_orevein_exactors",
+            "barrow_pickets",
+            "ninefold_bellwake_privateers",
+            "glassfen_relay_pickets",
+            "charter_beacon_wardens",
+            "prismhearth_halo_reserve",
+            "daybreak_drum_circle",
+            "surge_charter_guard",
+            "ninefold_orevein_exactors",
+            "balance_tuning_queue.item_count",
+            "54",
+            "40",
+            "balance_tuning_queue.high_priority_count",
+            "28",
+            "14",
+            "e4d8c04a",
+            "b4a2ed49",
+            "04bf99d5",
+            "completed_sample_count",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "Remaining top contributors",
+            "No automatic tuning.",
+            "No authored content writeback.",
+            "No runtime balance changes.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in active_outlier_retune_doc_text, errors, f"Battle autoplay active scenario outlier retune doc is missing required text: {required_text}")
     if tuning_queue_doc_path.exists():
         tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
         for required_text in (
