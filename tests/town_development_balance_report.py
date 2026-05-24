@@ -21,8 +21,10 @@ RARE_RESOURCES = {
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
 TARGET_TURNS = 30
-MIN_BUILDABLE_TARGETS = 12
-MIN_NON_UNIT_BUILDABLE_TARGETS = 5
+MIN_BUILDABLE_TARGETS = 20
+MIN_NON_UNIT_BUILDABLE_TARGETS = 12
+MIN_BREADTH_PARITY_BUILDINGS = 5
+MIN_COMPLETION_DAY = 20
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
     "faction_thornwake",
@@ -167,6 +169,7 @@ def main() -> int:
         "target_turns": TARGET_TURNS,
         "live_resources": sorted(LIVE_RESOURCES),
         "rare_sources": sorted(rare_source_ids),
+        "min_completion_day": MIN_COMPLETION_DAY,
         "towns": {},
         "errors": errors,
     }
@@ -237,8 +240,8 @@ def main() -> int:
             if str(buildings.get(building_id, {}).get("content_status", "")) == SIX_FACTION_BREADTH_PARITY_STATUS
         ]
         if faction_id in SIX_FACTION_BREADTH_PARITY_FACTIONS:
-            if len(breadth_parity_ids) < MIN_NON_UNIT_BUILDABLE_TARGETS:
-                errors.append(f"{town_id} must include at least {MIN_NON_UNIT_BUILDABLE_TARGETS} six-faction breadth-parity buildings")
+            if len(breadth_parity_ids) < MIN_BREADTH_PARITY_BUILDINGS:
+                errors.append(f"{town_id} must include at least {MIN_BREADTH_PARITY_BUILDINGS} six-faction breadth-parity buildings")
             else:
                 breadth_parity_town_count += 1
         signature_ids = [str(value) for value in faction.get("signature_building_ids", [])]
@@ -258,6 +261,8 @@ def main() -> int:
             errors.append(f"{town_id} did not fully develop: {result['missing_buildings']}")
         if int(result["completion_day"]) > TARGET_TURNS:
             errors.append(f"{town_id} completed on day {result['completion_day']}, above target {TARGET_TURNS}")
+        if int(result["completion_day"]) < MIN_COMPLETION_DAY:
+            errors.append(f"{town_id} completed on day {result['completion_day']}, below production pacing floor {MIN_COMPLETION_DAY}")
         if int(result["build_count"]) > TARGET_TURNS:
             errors.append(f"{town_id} violates one-build-per-turn count")
 
@@ -266,6 +271,7 @@ def main() -> int:
     report["breadth_parity_town_count"] = breadth_parity_town_count
     report["min_buildable_targets"] = MIN_BUILDABLE_TARGETS
     report["min_non_unit_buildable_targets"] = MIN_NON_UNIT_BUILDABLE_TARGETS
+    report["min_breadth_parity_buildings"] = MIN_BREADTH_PARITY_BUILDINGS
 
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))

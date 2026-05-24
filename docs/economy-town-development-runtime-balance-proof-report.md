@@ -17,6 +17,7 @@ The executable evidence is `tests/town_development_runtime_balance_report.gd` an
 The report proves:
 
 - all 15 authored towns complete their authored buildable development within the 30-turn target;
+- all authored towns now keep at least 20 buildable development targets, at least 12 non-unit targets, and a day-20 production pacing floor;
 - town construction uses live Godot build rules, not a Python-only simulation;
 - every authored town rejects a same-day second build with the live one-build-per-town-per-day guard;
 - the town build-action surface no longer exposes same-day follow-up build actions after a build;
@@ -27,14 +28,14 @@ The report proves:
 
 The current strengthened runtime evidence covers all 15 authored towns and 105 recruitment cases: 15 towns complete development, 15 towns pass seven-tier recruitment end to end, and all 105 tier recruitment actions add a unit to the field army through `OverworldRules.recruit_in_active_town(...)`.
 
-The seed-town completion days from the first runtime proof remain:
+The seed-town completion days after the late unique-chain expansion are:
 
-- Embercourt `town_highwater_keep`: day 17
-- Mireclaw `town_nightglass_redoubt`: day 18
-- Sunvault `town_prismhearth`: day 18
-- Thornwake `town_thornwake_graftroot_caravan`: day 7
-- Brasshollow `town_brasshollow_orevein_gantry`: day 7
-- Veilmourn `town_veilmourn_bellwake_harbor`: day 7
+- Embercourt `town_highwater_keep`: day 22
+- Mireclaw `town_nightglass_redoubt`: day 23
+- Sunvault `town_prismhearth`: day 23
+- Thornwake `town_thornwake_graftroot_caravan`: day 22
+- Brasshollow `town_brasshollow_orevein_gantry`: day 20
+- Veilmourn `town_veilmourn_bellwake_harbor`: day 20
 
 ## Runtime Rule Fix
 

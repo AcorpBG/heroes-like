@@ -107,6 +107,7 @@ TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_develop
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_save_resume_report.tscn"
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-save-resume-report.md"
 TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-town-development-breadth-parity-report.md"
+TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH = ROOT / "docs" / "economy-town-development-pacing-parity-report.md"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
@@ -2672,6 +2673,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     script_path = ROOT / "tests" / "town_development_balance_report.py"
     ensure(script_path.exists(), errors, "Missing town development balance report")
     ensure(TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists(), errors, "Missing town development breadth parity report doc")
+    ensure(TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.exists(), errors, "Missing town development pacing parity report doc")
     if not script_path.exists():
         return
     result = subprocess.run(
@@ -2711,17 +2713,21 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         if not isinstance(result, dict):
             errors.append(f"{town_id} town development result must be a dictionary")
             continue
-        ensure(int(result.get("target_building_count", 0)) >= 12, errors, f"{town_id} must expose at least twelve buildable development targets")
-        ensure(int(result.get("non_unit_building_count", 0)) >= 5, errors, f"{town_id} must expose at least five non-unit development targets")
+        ensure(int(result.get("target_building_count", 0)) >= 20, errors, f"{town_id} must expose at least twenty buildable development targets")
+        ensure(int(result.get("non_unit_building_count", 0)) >= 12, errors, f"{town_id} must expose at least twelve non-unit development targets")
+        ensure(int(result.get("completion_day", 0)) >= 20, errors, f"{town_id} must not finish before the day-20 production pacing floor")
         ensure(int(result.get("build_count", 0)) == int(result.get("target_building_count", -1)), errors, f"{town_id} must build every target development building")
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     balance_report_text = script_path.read_text(encoding="utf-8")
     breadth_doc_text = TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists() else ""
+    pacing_doc_text = TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.exists() else ""
     for token in (
-        "MIN_BUILDABLE_TARGETS = 12",
-        "MIN_NON_UNIT_BUILDABLE_TARGETS = 5",
+        "MIN_BUILDABLE_TARGETS = 20",
+        "MIN_NON_UNIT_BUILDABLE_TARGETS = 12",
+        "MIN_BREADTH_PARITY_BUILDINGS = 5",
+        "MIN_COMPLETION_DAY = 20",
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "breadth_parity_town_count",
         "non_unit_building_count",
@@ -2730,13 +2736,28 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     for required_text in (
         "Economy Six-Faction Town Development Breadth Parity Report",
         "economy-six-faction-town-development-breadth-parity-20260524-10184",
-        "at least 12 buildable development targets",
-        "at least 5 non-unit development targets",
+        "at least 20 buildable development targets",
+        "at least 12 non-unit development targets",
+        "day-20 production pacing floor",
         "six_faction_town_breadth_parity",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
         ensure(required_text in breadth_doc_text, errors, f"Town development breadth parity doc is missing required text: {required_text}")
+    for required_text in (
+        "Economy Town Development Pacing Parity Report",
+        "economy-town-development-pacing-parity-20260524-10184",
+        "at least 20 buildable development targets",
+        "at least 12 non-unit targets",
+        "day-20 production pacing floor",
+        "completion days now range from day 23 to day 28",
+        "completion days now range from day 20 to day 23",
+        "127 runtime payoff cases",
+        "at least 56 faction-unique non-unit buildings",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in pacing_doc_text, errors, f"Town development pacing parity doc is missing required text: {required_text}")
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in overworld_rules_text, errors, "OverworldRules must declare the full live stockpile resource set")
     ensure("last_build_day" in overworld_rules_text and "already completed a build order today" in overworld_rules_text, errors, "OverworldRules must enforce one build per town per day")
     ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
@@ -2839,6 +2860,7 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         "authored_town_count",
         "MIN_BUILDABLE_TARGETS",
         "MIN_NON_UNIT_BUILDABLE_TARGETS",
+        "MIN_COMPLETION_DAY",
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "target_building_count",
         "non_unit_building_count",
@@ -19569,8 +19591,8 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
         "town_unique_building_runtime_payoff_report_v1",
         "six factions",
         "15 authored towns",
-        "30 faction-unique non-unit buildings",
-        "75 runtime payoff cases",
+        "at least 56 faction-unique non-unit buildings",
+        "127 runtime payoff cases",
         "at least five unique non-unit buildings per faction",
         "at least five unique non-unit buildings per authored town",
         "live income, readiness, pressure, reinforcement, spell, or market surface",
@@ -19626,7 +19648,7 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
                 covered_towns += 1
     ensure(covered_factions >= 6, errors, "Town unique building runtime payoff gate must cover all six factions")
     ensure(covered_towns >= 15, errors, "Town unique building runtime payoff gate must cover all authored faction towns")
-    ensure(len(unique_non_unit_building_ids) >= 30, errors, "Town unique building runtime payoff gate must cover at least 30 unique non-unit buildings")
+    ensure(len(unique_non_unit_building_ids) >= 56, errors, "Town unique building runtime payoff gate must cover at least 56 unique non-unit buildings")
     ensure(rare_unique_cases >= 6, errors, "Town unique building runtime payoff gate must cover at least one rare-cost unique building per faction")
 
 

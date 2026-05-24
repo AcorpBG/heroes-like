@@ -5,9 +5,9 @@ Report schema: `town_unique_building_runtime_payoff_report_v1`
 
 ## Scope
 
-This slice closes the six-faction unique non-unit town building payoff gap in the economy and town-development goal. It covers six factions, 15 authored towns, 30 faction-unique non-unit buildings, and 75 runtime payoff cases.
+This slice closes the six-faction unique non-unit town building payoff gap in the economy and town-development goal. It now covers six factions, 15 authored towns, at least 56 faction-unique non-unit buildings, and 127 runtime payoff cases.
 
-Every faction now exposes at least five unique non-unit buildings per faction, and every authored faction town includes at least five unique non-unit buildings per authored town. Embercourt, Mireclaw, and Sunvault gained faction-specific economy, support, magic, defense, and civic buildings; Thornwake, Brasshollow, and Veilmourn existing parity buildings now carry explicit faction ownership metadata.
+Every faction now exposes at least five unique non-unit buildings per faction, and every authored faction town includes at least five unique non-unit buildings per authored town. Embercourt, Mireclaw, and Sunvault retain their faction-specific economy, support, magic, defense, and civic buildings; Thornwake, Brasshollow, and Veilmourn now carry deeper late unique non-unit chains so their full town arcs no longer finish as shallow 12-build paths.
 
 ## Runtime Evidence
 

@@ -2,8 +2,9 @@ extends Node
 
 const TARGET_TURNS := 30
 const TARGET_TIER_COUNT := 7
-const MIN_BUILDABLE_TARGETS := 12
-const MIN_NON_UNIT_BUILDABLE_TARGETS := 5
+const MIN_BUILDABLE_TARGETS := 20
+const MIN_NON_UNIT_BUILDABLE_TARGETS := 12
+const MIN_COMPLETION_DAY := 20
 const SIX_FACTION_BREADTH_PARITY_STATUS := "six_faction_town_breadth_parity"
 const REPORT_SCHEMA := "town_development_runtime_balance_report_v1"
 const HERO_ID := "hero_lyra"
@@ -49,6 +50,7 @@ func _run() -> void:
 	var report := {
 		"schema": REPORT_SCHEMA,
 		"target_turns": TARGET_TURNS,
+		"min_completion_day": MIN_COMPLETION_DAY,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"normal_market_resource_ids": COMMON_MARKET_RESOURCE_IDS,
 		"authored_town_count": 0,
@@ -69,6 +71,8 @@ func _run() -> void:
 		report["towns"][town_id] = town_result
 		if not bool(town_result.get("completed", false)):
 			_errors.append("%s did not complete in %d turns" % [town_id, TARGET_TURNS])
+		if int(town_result.get("completion_day", 0)) < MIN_COMPLETION_DAY:
+			_errors.append("%s completed before the production pacing floor day %d" % [town_id, MIN_COMPLETION_DAY])
 		if not bool(town_result.get("same_day_reject_ok", false)):
 			_errors.append("%s did not reject same-day second build" % town_id)
 		if not bool(town_result.get("build_actions_after_build_blocked", false)):

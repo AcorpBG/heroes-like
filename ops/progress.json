@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-recruitment-ui-surface-20260524-10184",
-  "currentSliceTitle": "Economy Town Recruitment UI Surface",
+  "currentSliceId": "economy-town-development-pacing-parity-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Pacing Parity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed TownShell recruitment UI surface gate. Recruit buttons now carry visible tier labels, reserve text names unlocked and locked units by tier, and the focused TownShell report proves 42/42 six-faction recruit UI tier cases with loaded portraits and direct affordability.",
+  "currentSliceNotes": "Completed town development pacing parity. All authored towns now gate at least 20 buildable targets, at least 12 non-unit targets, a day-20 production pacing floor, and the 30-turn cap; live runtime construction and unique-building payoff reports cover the expanded faction town chains.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:59:55Z",
+  "updatedAt": "2026-05-24T21:05:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,67 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-pacing-parity-20260524-10184",
+      "title": "Economy Town Development Pacing Parity",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T21:05:33Z",
+      "completedAt": "2026-05-24T21:05:33Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-pacing-parity-report.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-six-faction-town-development-breadth-parity-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "docs/economy-town-unique-building-runtime-payoff-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All authored towns expose at least 20 buildable town-development targets and at least 12 non-unit targets.",
+        "Deterministic town-development balance rejects shallow completion before the day-20 production pacing floor while preserving the 30-turn cap.",
+        "Live Godot town-development runtime report gates the same breadth and day-20 floor through OverworldRules/TownRules construction, same-day build rejection, rare-resource spend, and post-development seven-tier recruitment.",
+        "Thornwake, Brasshollow, and Veilmourn towns receive deeper faction-unique late non-unit chains with common-resource costs and rare-resource capstones.",
+        "Unique-building runtime payoff coverage expands to the deeper faction-specific town chains."
+      ],
+      "notes": "Completed: newer faction town arcs no longer count as production-shaped after 12 builds; deterministic and live runtime gates now enforce breadth plus a day-20 pacing floor.",
+      "completionEvidence": {
+        "authored_town_count": 15,
+        "min_buildable_targets": 20,
+        "min_non_unit_targets": 12,
+        "deterministic_completion_day_range": [
+          23,
+          28
+        ],
+        "live_runtime_completion_day_range": [
+          20,
+          23
+        ],
+        "unique_runtime_payoff_case_count": 127,
+        "unique_non_unit_building_floor": 56,
+        "target_turns": 30,
+        "validated": [
+          "python3 tests/town_development_balance_report.py",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-town-recruitment-ui-surface-20260524-10184",
       "title": "Economy Town Recruitment UI Surface",
@@ -27345,27 +27406,45 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-town-recruitment-ui-surface-20260524-10184",
+    "id": "economy-town-development-pacing-parity-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T23:59:55Z",
+    "updatedAt": "2026-05-24T21:05:33Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
+      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-      "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Town recruitment UI surface passed: six faction seed towns, 42 live recruitment actions, 42/42 visible tier-labeled recruit buttons/tooltips, 42 loaded unit portraits, and direct affordability for every waiting tier."
+    "summary": "Town development pacing parity passed: 15 authored towns, minimum 20 buildable targets, minimum 12 non-unit targets, deterministic completion days 23-28, live runtime completion days 20-23, and 127 unique-building runtime payoff cases."
   },
   "active_slice": {
-    "id": "economy-town-recruitment-ui-surface-20260524-10184",
-    "title": "Economy Town Recruitment UI Surface",
+    "id": "economy-town-development-pacing-parity-20260524-10184",
+    "title": "Economy Town Development Pacing Parity",
     "status": "completed",
-    "updatedAt": "2026-05-24T23:59:55Z"
+    "updatedAt": "2026-05-24T21:05:33Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T23:59:55Z",
+  "currentSliceUpdatedAt": "2026-05-24T21:05:33Z",
   "validationHistory": [
+    {
+      "id": "economy-town-development-pacing-parity-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T21:05:33Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town development pacing parity passed: 15 authored towns, minimum 20 buildable targets, minimum 12 non-unit targets, deterministic completion days 23-28, live runtime completion days 20-23, and 127 unique-building runtime payoff cases."
+    },
     {
       "id": "economy-town-recruitment-ui-surface-20260524-10184",
       "status": "passed",
@@ -28017,12 +28096,27 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-recruitment-ui-surface-20260524-10184",
-    "title": "Economy Town Recruitment UI Surface",
+    "id": "economy-town-development-pacing-parity-20260524-10184",
+    "title": "Economy Town Development Pacing Parity",
     "status": "completed",
-    "updatedAt": "2026-05-24T23:59:55Z"
+    "updatedAt": "2026-05-24T21:05:33Z"
   },
   "validation": [
+    {
+      "id": "economy-town-development-pacing-parity-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T21:05:33Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "economy-town-recruitment-ui-surface-20260524-10184",
       "status": "passed",
