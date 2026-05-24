@@ -2158,7 +2158,7 @@
         ["grass", "grass", "grass", "grass", "water", "water", "grass", "grass", "grass", "grass", "grass"],
         ["grass", "grass", "grass", "grass", "grass", "water", "grass", "grass", "grass", "grass", "grass"],
         ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
-        ["grass", "water", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
         ["grass", "water", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass", "grass"],
         ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass"]
       ],
@@ -2375,8 +2375,11 @@
         }
       ],
       "resource_nodes": [
+        {"placement_id": "surge_riverwatch_wood", "site_id": "site_wood_wagon", "x": 0, "y": 4},
+        {"placement_id": "surge_riverwatch_ore", "site_id": "site_ore_crates", "x": 1, "y": 3},
         {"placement_id": "surge_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
         {"placement_id": "surge_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "surge_inner_ore", "site_id": "site_ore_crates", "x": 3, "y": 5},
         {"placement_id": "surge_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
         {"placement_id": "surge_cache", "site_id": "site_waystone_cache", "x": 9, "y": 0},
         {"placement_id": "surge_signal_post", "site_id": "site_ember_signal_post", "x": 8, "y": 1},

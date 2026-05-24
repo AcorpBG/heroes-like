@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-resource-ui-surface-20260524-10184",
-  "currentSliceTitle": "Economy Town Resource UI Surface",
+  "currentSliceId": "economy-active-scenario-town-economy-source-route-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Town Economy Source Route",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "TownShell now exposes a full nine-resource ledger tooltip/snapshot, and a focused live TownShell report covers six faction seed towns, rare-cost blocked readiness, common-only markets, and direct affordability after stocking rare resources.",
+  "currentSliceNotes": "Completed live route-access evidence for all active player towns: 54/54 wood, ore, and faction-rare source routes are reachable under live overworld movement rules.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T17:13:02Z",
+  "updatedAt": "2026-05-24T18:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,58 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+      "title": "Economy Active Scenario Town Economy Source Route",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T18:58:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-town-economy-source-route-report.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/active_scenario_town_economy_source_route_report.gd",
+        "tests/active_scenario_town_economy_source_route_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-economy-source-route-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A focused live report boots all active authored scenarios and checks every player town for reachable wood, ore, and faction rare resource sources.",
+        "Route search uses live overworld blocker, action-destination, route-interaction, and blocked-corner rules.",
+        "All current active player-town resource route cases are reachable within common and rare route step caps.",
+        "Lockmarsh Surge player towns have reachable common-resource routes without relying on unreachable isolated sources.",
+        "Repository validation gates the report, scene, documentation, and static source-candidate coverage."
+      ],
+      "notes": "Completed active authored-scenario player-town economy source route access report and Lockmarsh Surge source-route correction.",
+      "completedAt": "2026-05-24T18:58:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 tests/town_development_balance_report.py",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "resource_route_case_count": 54,
+        "reachable_route_case_count": 54,
+        "max_common_route_steps": 24,
+        "max_rare_route_steps": 40,
+        "notes": "Focused live route report proves every active player town can reach wood, ore, and faction rare-resource sources through live overworld blocker, interaction destination, and blocked-corner route rules. Lockmarsh Surge now has reachable Riverwatch and Murkward common-resource routes."
+      }
+    },
     {
       "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
       "title": "Economy Six-Faction Town Development Breadth Parity",
@@ -20833,6 +20885,43 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+      "title": "Economy Active Scenario Town Economy Source Route",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T18:58:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-town-economy-source-route-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-town-economy-source-route-20260524-10184"
+      ],
+      "implementationRefs": [
+        "content/scenarios.json",
+        "tests/active_scenario_town_economy_source_route_report.gd",
+        "tests/active_scenario_town_economy_source_route_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-economy-source-route-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+        "python3 tests/town_development_balance_report.py (pass)",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py (pass)",
+        "jq empty ops/progress.json content/scenarios.json (pass)",
+        "git diff --check (pass)"
+      ],
+      "summary": "Active authored-scenario player towns now have live-route evidence for reachable wood, ore, and faction-rare sources. Lockmarsh Surge was corrected with Riverwatch-local common sources and an opened lane while Murkward keeps reachable inner ore; all 54 route cases pass within caps."
+    },
+    {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
       "title": "Economy Live Stockpile Resource Surface Breadth",
       "status": "completed",
@@ -26656,29 +26745,48 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+    "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T17:13:02Z",
+    "updatedAt": "2026-05-24T18:58:00Z",
     "commands": [
-      "python3 tests/town_development_balance_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-breadth-parity.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-player-runway-breadth-parity.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-ai-runway-breadth-parity.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+      "python3 tests/town_development_balance_report.py",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
-      "jq empty ops/progress.json content/buildings.json content/towns.json",
+      "jq empty ops/progress.json content/scenarios.json",
       "git diff --check"
     ]
   },
   "active_slice": {
-    "id": "economy-town-resource-ui-surface-20260524-10184",
-    "title": "Economy Town Resource UI Surface",
+    "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+    "title": "Economy Active Scenario Town Economy Source Route",
     "status": "completed",
-    "updatedAt": "2026-05-24T17:58:00Z"
+    "updatedAt": "2026-05-24T18:58:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T17:58:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T18:58:00Z",
   "validationHistory": [
+    {
+      "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T18:58:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 tests/town_development_balance_report.py",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "summary": "Active scenario town economy source route passed: 16 active scenarios, 18 player-town cases, and 54/54 reachable wood/ore/rare source routes; active rare access, player runway, AI runway, strict economy fixtures, deterministic balance, repo validation, py_compile, jq, and diff hygiene remained green."
+    },
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
       "status": "passed",
@@ -27235,5 +27343,24 @@
     "title": "Economy Town Resource UI Surface",
     "status": "completed",
     "updatedAt": "2026-05-24T17:58:00Z"
-  }
+  },
+  "validation": [
+    {
+      "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T18:58:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 tests/town_development_balance_report.py",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ]
+    }
+  ]
 }
