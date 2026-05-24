@@ -22,6 +22,7 @@ RARE_RESOURCES = {
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2
+MIN_RARE_DEVELOPMENT_SPEND = 14
 SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
 
@@ -191,6 +192,8 @@ def main() -> int:
             errors.append(f"{town_id} must keep gold as a cost on every development target")
         if int(total_costs.get(town_rare_id, 0)) <= 0:
             errors.append(f"{town_id} must spend its faction rare resource across development")
+        if int(total_costs.get(town_rare_id, 0)) < MIN_RARE_DEVELOPMENT_SPEND:
+            errors.append(f"{town_id} must spend at least {MIN_RARE_DEVELOPMENT_SPEND} faction rare resources across development")
         if int(total_costs.get("gold", 0)) <= int(total_costs.get("wood", 0)) + int(total_costs.get("ore", 0)):
             errors.append(f"{town_id} gold must remain the dominant numeric development cost")
         if int(total_costs.get("wood", 0)) <= 0 or int(total_costs.get("ore", 0)) <= 0:
@@ -219,6 +222,7 @@ def main() -> int:
         "common_resources": sorted(COMMON_RESOURCES),
         "rare_resources": sorted(RARE_RESOURCES),
         "min_common_only_to_rare_ratio": MIN_COMMON_ONLY_TO_RARE_RATIO,
+        "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
         "faction_curves": faction_curves,
         "towns": town_rows,
         "errors": errors,
