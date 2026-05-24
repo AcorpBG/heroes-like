@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-unique-building-runtime-payoff-20260524-10184",
-  "currentSliceTitle": "Economy Town Unique Building Runtime Payoff",
+  "currentSliceId": "economy-active-scenario-full-session-development-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Full Session Development Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed six-faction unique non-unit town development payoff gate. Embercourt, Mireclaw, and Sunvault now have five faction-specific non-unit town buildings each, Thornwake/Brasshollow/Veilmourn parity buildings carry faction ownership metadata, and focused runtime evidence covers six factions, 15 authored towns, 30 unique non-unit buildings, 75 runtime payoff cases, and six rare-cost unique cases.",
+  "currentSliceNotes": "Completed active-scenario full-session player-town development runway gate. The focused report now runs construction inside ScenarioFactory-created active scenario sessions, records authored map/resource-node/encounter/enemy-state evidence, completes 18/18 player-town cases within 30 turns, observes rare-resource spend in every case, and uses focused economy-day advancement over live town and controlled resource-site income without invoking the full strategic enemy turn loop for every simulated build day.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:55:00Z",
+  "updatedAt": "2026-05-24T23:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,53 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-full-session-development-runway-20260524-10184",
+      "title": "Economy Active Scenario Full Session Development Runway",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T23:35:00Z",
+      "completedAt": "2026-05-24T23:35:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md"
+      ],
+      "implementationTargets": [
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active-scenario player-town development runway report no longer builds stripped local runway sessions for player-town cases.",
+        "Every covered player-town case runs construction inside the ScenarioFactory-created active scenario session.",
+        "Every covered player-town case records full-session map, resource-node, encounter, and enemy-state evidence.",
+        "The report uses a focused active-scenario economy-day step over live town income and controlled resource-site income instead of the full strategic enemy turn loop.",
+        "The report still proves 30-turn completion, rare-resource spending, one-build-per-town-per-turn rejection, and common-only market boundaries.",
+        "Repository validation gates the strengthened report, documentation, and scene contract."
+      ],
+      "notes": "Completed: active-scenario player-town development runway now proves full-session construction over authored scenario state, with focused economy-day advancement for town/resource income.",
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "completed_case_count": 18,
+        "rare_spend_case_count": 18,
+        "full_session_case_count": 18,
+        "target_turns": 30,
+        "validated": [
+          "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=river-pass godot --headless --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+          "godot --headless --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-town-unique-building-runtime-payoff-20260524-10184",
       "title": "Economy Town Unique Building Runtime Payoff",
