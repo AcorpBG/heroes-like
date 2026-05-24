@@ -235,7 +235,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	var resources = session.overworld.get("resources", {})
 	if not (resources is Dictionary) or resources.is_empty():
 		resources = _normalize_scenario_resources(scenario.get("starting_resources", {}))
-	session.overworld["resources"] = _normalize_scenario_resources(resources)
+	session.overworld["resources"] = _normalize_live_resource_stockpile(_normalize_scenario_resources(resources))
 
 	if not session.overworld.has("towns") or not (session.overworld.get("towns") is Array):
 		session.overworld["towns"] = _build_scenario_town_states(scenario.get("towns", []))
@@ -748,7 +748,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 
 	var occupation_messages := _advance_all_town_occupations(session)
 	var recovery_messages := _advance_all_town_recovery(session)
-	var town_income := {"gold": 0, "wood": 0, "ore": 0}
+	var town_income := _empty_live_resource_stockpile()
 	var weekly_growth_messages := []
 	var should_apply_weekly_growth := is_weekly_growth_day(session.day)
 	var towns = session.overworld.get("towns", [])
@@ -2428,12 +2428,17 @@ static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: 
 	return profile
 
 static func describe_resources(session: SessionStateStoreScript.SessionData) -> String:
-	var resources = session.overworld.get("resources", {})
-	return "Gold %d | Wood %d | Ore %d" % [
-		int(resources.get("gold", 0)),
-		int(resources.get("wood", 0)),
-		int(resources.get("ore", 0)),
-	]
+	return describe_resource_stockpile(session.overworld.get("resources", {}))
+
+static func describe_resource_stockpile(resources: Variant, include_zero_rare: bool = false) -> String:
+	var normalized := _normalize_live_resource_stockpile(resources)
+	var parts := []
+	for resource_key in _resource_keys_for_payload(normalized):
+		var amount := int(normalized.get(resource_key, 0))
+		var common_resource: bool = resource_key in ["gold", "wood", "ore"]
+		if common_resource or include_zero_rare or amount > 0:
+			parts.append("%s %d" % [_resource_display_name(resource_key), amount])
+	return " | ".join(parts)
 
 static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
@@ -4164,7 +4169,7 @@ static func perform_town_response_action(
 	return _execute_town_response_action(session, town, action_id)
 
 static func controlled_resource_site_income(session: SessionStateStoreScript.SessionData, controller_id: String) -> Dictionary:
-	var income := {"gold": 0, "wood": 0, "ore": 0}
+	var income := _empty_live_resource_stockpile()
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
@@ -4175,7 +4180,7 @@ static func controlled_resource_site_income(session: SessionStateStoreScript.Ses
 	return income
 
 static func _player_daily_income_projection(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var town_income := {"gold": 0, "wood": 0, "ore": 0}
+	var town_income := _empty_live_resource_stockpile()
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
@@ -7822,7 +7827,7 @@ static func _movement_max_from_hero(hero: Dictionary, session: SessionStateStore
 	return HeroCommandRulesScript.movement_max_for_hero(hero, session)
 
 static func _calculate_town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	var income := {"gold": 0, "wood": 0, "ore": 0}
+	var income := _empty_live_resource_stockpile()
 	var built_buildings := _normalize_built_buildings_for_town_state(town)
 	for building_id_value in built_buildings:
 		var building := ContentService.get_building(String(building_id_value))
@@ -9607,8 +9612,8 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 
 static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant) -> Dictionary:
 	var state := _town_market_state(town)
-	var normalized_pool := _add_resource_sets({"gold": 0, "wood": 0, "ore": 0}, _normalize_resource_dict(pool))
-	var normalized_cost := _add_resource_sets({"gold": 0, "wood": 0, "ore": 0}, _normalize_resource_dict(cost))
+	var normalized_pool := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(pool))
+	var normalized_cost := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(cost))
 	var direct_affordable := _resource_pool_meets_cost(normalized_pool, normalized_cost)
 	var market_active := bool(state.get("active", false))
 	var direct_shortfall := _resource_pool_shortfall(normalized_pool, normalized_cost)
@@ -10056,7 +10061,7 @@ static func _cost_discount_from_profile(profile: Variant, unit_id: String) -> in
 	return int(discounts.get(unit_id, 0))
 
 static func _spend_resources(session: SessionStateStoreScript.SessionData, cost: Variant) -> void:
-	var resources = session.overworld.get("resources", {}).duplicate(true)
+	var resources := _normalize_live_resource_stockpile(session.overworld.get("resources", {}))
 	if cost is Dictionary:
 		for key in cost.keys():
 			var resource_key := String(key)
@@ -10064,7 +10069,7 @@ static func _spend_resources(session: SessionStateStoreScript.SessionData, cost:
 	session.overworld["resources"] = resources
 
 static func _add_resources(session: SessionStateStoreScript.SessionData, delta: Variant) -> void:
-	var resources = session.overworld.get("resources", {}).duplicate(true)
+	var resources := _normalize_live_resource_stockpile(session.overworld.get("resources", {}))
 	if delta is Dictionary:
 		for key in delta.keys():
 			var resource_key := String(key)
@@ -10086,10 +10091,13 @@ static func _apply_resource_transaction_to_pool(pool: Dictionary, cost: Variant,
 			pool[resource_key] = max(0, int(pool.get(resource_key, 0)) + int(gain[key]))
 
 static func _add_resource_sets(base: Variant, delta: Variant) -> Dictionary:
-	var merged := {"gold": 0, "wood": 0, "ore": 0}
+	var merged := {}
 	if base is Dictionary:
-		for key in merged.keys():
-			merged[key] = int(base.get(key, 0))
+		for key in base.keys():
+			var resource_key := String(key)
+			if resource_key == "experience" or resource_key == "":
+				continue
+			merged[resource_key] = int(base.get(key, 0))
 	if delta is Dictionary:
 		for key in delta.keys():
 			var resource_key := String(key)
@@ -10104,6 +10112,44 @@ static func _normalize_resource_dict(value: Variant) -> Dictionary:
 		for key in value.keys():
 			normalized[String(key)] = max(0, int(value[key]))
 	return normalized
+
+static func _empty_live_resource_stockpile() -> Dictionary:
+	var resources := {}
+	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
+		resources[resource_key] = 0
+	return resources
+
+static func _normalize_live_resource_stockpile(value: Variant) -> Dictionary:
+	var normalized := _empty_live_resource_stockpile()
+	if value is Dictionary:
+		for key in value.keys():
+			var resource_key := String(key)
+			if resource_key == "experience" or resource_key == "":
+				continue
+			normalized[resource_key] = max(0, int(value.get(key, 0)))
+	return normalized
+
+static func _resource_display_name(resource_key: String) -> String:
+	match resource_key:
+		"gold":
+			return "Gold"
+		"wood":
+			return "Wood"
+		"ore":
+			return "Ore"
+		"aetherglass":
+			return "Aetherglass"
+		"embergrain":
+			return "Embergrain"
+		"peatwax":
+			return "Peatwax"
+		"verdant_grafts":
+			return "Verdant grafts"
+		"brass_scrip":
+			return "Brass scrip"
+		"memory_salt":
+			return "Memory salt"
+	return resource_key.replace("_", " ").capitalize()
 
 static func _resource_keys_for_payload(value: Variant) -> Array:
 	var keys := []
