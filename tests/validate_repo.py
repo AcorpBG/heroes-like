@@ -103,6 +103,9 @@ TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_deve
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
 TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_cost_curve_report.py"
 TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-cost-curve-report.md"
+TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_save_resume_report.gd"
+TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_save_resume_report.tscn"
+TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-save-resume-report.md"
 TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-town-development-breadth-parity-report.md"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
@@ -2831,6 +2834,49 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         ensure(token in script_text, errors, f"Town development runtime balance report is missing token {token}")
     ensure("res://tests/town_development_runtime_balance_report.gd" in scene_text, errors, "Town development runtime balance scene must load its report script")
     ensure("live Godot rules" in doc_text and "same-day second build" in doc_text, errors, "Town development runtime balance doc must record live-rule and same-day-build evidence")
+
+
+def validate_town_development_save_resume_policy(errors: list[str]) -> None:
+    ensure(TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH.exists(), errors, "Missing town development save/resume report script")
+    ensure(TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH.exists(), errors, "Missing town development save/resume report scene")
+    ensure(TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH.exists(), errors, "Missing town development save/resume report doc")
+    if not TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH.exists():
+        return
+    script_text = TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH.exists() else ""
+    for token in (
+        "TOWN_DEVELOPMENT_SAVE_RESUME_REPORT",
+        "town_development_save_resume_report_v1",
+        "SaveService.save_runtime_manual_session",
+        "SaveService.restore_manual_session",
+        "same_day_guard_after_restore",
+        "build_actions_after_restore_blocked",
+        "resume_target_town",
+        "rare_resume_case_count",
+        "completed_case_count",
+        "SAVE_SCENARIO_ID",
+        "_force_town_development_state",
+        "LIVE_STOCKPILE_RESOURCE_IDS",
+        "RARE_RESOURCE_IDS",
+        "already completed a build order today",
+    ):
+        ensure(token in script_text, errors, f"Town development save/resume report is missing token {token}")
+    ensure("res://tests/town_development_save_resume_report.gd" in scene_text, errors, "Town development save/resume scene must load its report script")
+    ensure("TownDevelopmentSaveResumeReport" in scene_text, errors, "Town development save/resume scene must expose a named report node")
+    for required_text in (
+        "Economy Town Development Save Resume Report",
+        "economy-town-development-save-resume-20260524-10184",
+        "town_development_save_resume_report_v1",
+        "15 authored towns",
+        "SaveService",
+        "rare-resource build",
+        "one-build-per-day",
+        "resume_target",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Town development save/resume doc is missing required text: {required_text}")
 
 
 def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
@@ -19720,6 +19766,7 @@ def main() -> int:
     validate_town_development_balance_policy(errors)
     validate_town_development_cost_curve_policy(errors)
     validate_town_development_runtime_balance_policy(errors)
+    validate_town_development_save_resume_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_live_stockpile_resource_surface(errors)
     validate_runtime_market_cap_persistence(errors)
@@ -19812,6 +19859,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
+    print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")

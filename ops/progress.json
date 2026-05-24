@@ -3,8 +3,8 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-cost-curve-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Cost Curve",
+  "currentSliceId": "economy-town-development-save-resume-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Save Resume",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed deterministic cost-curve gate for all 15 authored towns and all six faction signature ladders. Every development target costs gold, every town spends wood and ore, common-only development remains at least 2:1 over rare-cost buildings, rare costs use only the town faction rare resource, and rare costs remain tier 5+ gated.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -39,6 +39,57 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-save-resume-20260524-10184",
+      "title": "Economy Town Development Save Resume",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T20:20:00Z",
+      "completedAt": "2026-05-24T20:20:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-save-resume-report.md"
+      ],
+      "implementationTargets": [
+        "tests/town_development_save_resume_report.gd",
+        "tests/town_development_save_resume_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-save-resume-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All authored towns save and resume after the first rare-resource development build.",
+        "Manual save summaries resume to the town surface after the checkpoint.",
+        "Built buildings, resources, available recruits, active town flag, and last build day are preserved across restore.",
+        "The same-day second-build guard remains blocked after restore.",
+        "Build actions remain blocked after restoring same-day build state.",
+        "All authored towns still complete all development targets within the 30-turn balance target after restore.",
+        "No SAVE_VERSION bump is introduced."
+      ],
+      "notes": "Completed: live Godot save/resume report now proves authored town-development continuity across rare-resource checkpoints, town resume targeting, and one-build-per-day state for all 15 authored towns.",
+      "completionEvidence": {
+        "authored_town_count": 15,
+        "save_resume_case_count": 15,
+        "rare_resume_case_count": 15,
+        "same_day_guard_case_count": 15,
+        "resume_target_case_count": 15,
+        "target_turns": 30,
+        "validation": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-save-resume-final.log --path . --scene res://tests/town_development_save_resume_report.tscn (pass)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-save-resume.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (pass)",
+          "python3 tests/town_development_cost_curve_report.py (pass)",
+          "python3 tests/town_development_balance_report.py (pass)",
+          "python3 tests/validate_repo.py (pass)",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py (pass)",
+          "jq empty ops/progress.json (pass)",
+          "git diff --check (pass)"
+        ]
+      }
+    },
     {
       "id": "economy-town-development-cost-curve-20260524-10184",
       "title": "Economy Town Development Cost Curve",
@@ -20936,6 +20987,41 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-town-development-save-resume-20260524-10184",
+      "title": "Economy Town Development Save Resume",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T20:20:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-save-resume-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-development-save-resume-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/town_development_save_resume_report.gd",
+        "tests/town_development_save_resume_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-save-resume-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-save-resume-final.log --path . --scene res://tests/town_development_save_resume_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-save-resume.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (pass)",
+        "python3 tests/town_development_cost_curve_report.py (pass)",
+        "python3 tests/town_development_balance_report.py (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)"
+      ],
+      "summary": "Town-development save/resume continuity now has a focused live Godot gate: 15 authored towns save immediately after first rare-resource development spend, restore built buildings/resources/recruits/active-town flag/last-build-day state, resume to town, keep same-day second builds blocked, and still complete within the 30-turn target."
+    },
+    {
       "id": "economy-town-development-cost-curve-20260524-10184",
       "title": "Economy Town Development Cost Curve",
       "status": "completed",
@@ -26831,30 +26917,47 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-town-development-cost-curve-20260524-10184",
+    "id": "economy-town-development-save-resume-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T19:45:00Z",
+    "updatedAt": "2026-05-24T20:20:00Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-save-resume-final.log --path . --scene res://tests/town_development_save_resume_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-save-resume.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/town_development_cost_curve_report.py",
       "python3 tests/town_development_balance_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-cost-curve.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-cost-curve.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-cost-curve.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+      "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
-    ]
+    ],
+    "summary": "Town development save/resume passed: 15 authored towns preserve rare-resource build checkpoints, one-build-per-day guards, town resume targets, and 30-turn completion after restore."
   },
   "active_slice": {
-    "id": "economy-town-development-cost-curve-20260524-10184",
-    "title": "Economy Town Development Cost Curve",
+    "id": "economy-town-development-save-resume-20260524-10184",
+    "title": "Economy Town Development Save Resume",
     "status": "completed",
-    "updatedAt": "2026-05-24T19:45:00Z"
+    "updatedAt": "2026-05-24T20:20:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T19:45:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T20:20:00Z",
   "validationHistory": [
+    {
+      "id": "economy-town-development-save-resume-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T20:20:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-save-resume-final.log --path . --scene res://tests/town_development_save_resume_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-save-resume.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town development save/resume passed: 15 authored towns preserve rare-resource build checkpoints, one-build-per-day guards, town resume targets, and 30-turn completion after restore."
+    },
     {
       "id": "economy-town-development-cost-curve-20260524-10184",
       "status": "passed",
