@@ -37,6 +37,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 	ContentService.clear_generated_scenario_drafts()
 	var generated_sample := _generated_setup(input_config, "headless-harness-generated-boundary-10184")
 	var cases := [
+		_battle_difficulty_sweep_sampling(input_config),
 		_scenario_session_turn_loop(input_config),
 		_strategic_ai_pressure_tick(input_config),
 		_strategic_ai_live_turn_execution(input_config),
@@ -53,7 +54,6 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_multi_scenario_objective_targeting(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
-		_battle_difficulty_sweep_sampling(input_config),
 		_save_replay_stability(input_config, generated_sample),
 		_generated_random_map_boundary(input_config, generated_sample),
 	]
@@ -2016,7 +2016,12 @@ static func _battle_resolver_sampling(input_config: Dictionary) -> Dictionary:
 	)
 
 static func _battle_difficulty_sweep_sampling(input_config: Dictionary) -> Dictionary:
-	var sweep: Dictionary = BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report(input_config)
+	var sweep_config := input_config.duplicate(true)
+	if not sweep_config.has("battle_difficulty_sweep_sample_limit"):
+		sweep_config["battle_difficulty_sweep_sample_limit"] = BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT
+	if not sweep_config.has("battle_difficulty_sweep_minimum_sample_count"):
+		sweep_config["battle_difficulty_sweep_minimum_sample_count"] = int(sweep_config.get("battle_difficulty_sweep_sample_limit", BattleAutoplayBalanceHarnessRulesScript.DEFAULT_SAMPLE_LIMIT))
+	var sweep: Dictionary = BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report(sweep_config)
 	var rows: Array = sweep.get("rows", []) if sweep.get("rows", []) is Array else []
 	var row_summary := {}
 	var difficulty_ids := []

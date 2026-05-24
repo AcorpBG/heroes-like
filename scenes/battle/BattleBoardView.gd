@@ -1279,6 +1279,10 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 	var policy := AnimationCueCatalogScript.cue_playback_policy_for_event(event_id, _animation_preferences())
 	if policy.is_empty():
 		return {}
+	var selected_vfx_cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
+	var selected_audio_cue_ids: Array = policy.get("selected_audio_cue_ids", []) if policy.get("selected_audio_cue_ids", []) is Array else []
+	selected_vfx_cue_ids = _spell_specific_vfx_cue_ids_for_event(event, selected_vfx_cue_ids)
+	selected_audio_cue_ids = _spell_specific_audio_cue_ids_for_event(event, selected_audio_cue_ids)
 	return {
 		"battle_id": battle_id,
 		"event_id": event_id,
@@ -1290,17 +1294,100 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 		"from_r": int(event.get("from_r", -1)),
 		"to_q": int(event.get("to_q", -1)),
 		"to_r": int(event.get("to_r", -1)),
+		"spell_id": String(event.get("spell_id", "")),
+		"resolution_type": String(event.get("resolution_type", "")),
 		"cue_id": String(policy.get("cue_id", "")),
 		"mode": String(policy.get("mode", AnimationCueCatalogScript.MODE_NORMAL)),
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
 		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
 		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
-		"selected_vfx_cue_ids": policy.get("selected_vfx_cue_ids", []),
-		"selected_audio_cue_ids": policy.get("selected_audio_cue_ids", []),
+		"selected_vfx_cue_ids": selected_vfx_cue_ids,
+		"selected_audio_cue_ids": selected_audio_cue_ids,
 		"max_duration_ms": int(policy.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 		"audio_policy": String(policy.get("audio_policy", "")),
 	}
+
+func _spell_specific_vfx_cue_ids_for_event(event: Dictionary, base_ids: Array) -> Array:
+	var event_id := String(event.get("event_id", "")).strip_edges()
+	if not ["battle_unit_cast", "battle_unit_hit", "battle_unit_death", "battle_status_applied", "battle_status_expired"].has(event_id):
+		return base_ids.duplicate(true)
+	var cue_id := _spell_specific_vfx_cue_id(String(event.get("spell_id", "")), String(event.get("resolution_type", "")))
+	if cue_id == "":
+		return base_ids.duplicate(true)
+	return _prepend_unique_string(cue_id, base_ids)
+
+func _spell_specific_audio_cue_ids_for_event(event: Dictionary, base_ids: Array) -> Array:
+	var event_id := String(event.get("event_id", "")).strip_edges()
+	if not ["battle_unit_cast", "battle_unit_hit", "battle_unit_death", "battle_status_applied", "battle_status_expired"].has(event_id):
+		return base_ids.duplicate(true)
+	var cue_id := _spell_specific_audio_cue_id(String(event.get("spell_id", "")), String(event.get("resolution_type", "")))
+	if cue_id == "":
+		return base_ids.duplicate(true)
+	return _prepend_unique_string(cue_id, base_ids)
+
+func _prepend_unique_string(value: String, items: Array) -> Array:
+	var result := []
+	var normalized := value.strip_edges()
+	if normalized != "":
+		result.append(normalized)
+	for item in items:
+		var item_text := String(item).strip_edges()
+		if item_text != "" and not result.has(item_text):
+			result.append(item_text)
+	return result
+
+func _spell_specific_vfx_cue_id(spell_id: String, resolution_type: String) -> String:
+	match spell_id.strip_edges():
+		"spell_cinder_burst":
+			return "vfx_spell_cinder_burst"
+		"spell_coal_rain":
+			return "vfx_spell_coal_rain"
+		"spell_sunlance_arc":
+			return "vfx_spell_sunlance_arc"
+		"spell_briar_bind":
+			return "vfx_spell_briar_bind"
+		"spell_graft_mend":
+			return "vfx_spell_graft_mend"
+		"spell_prism_bastion", "spell_resonant_chorus":
+			return "vfx_spell_prism_bastion"
+	var family := resolution_type.strip_edges()
+	match family:
+		"cleanse_effect":
+			return "vfx_spell_prism_bastion"
+		"recover_effect":
+			return "vfx_spell_graft_mend"
+		"effect":
+			return "vfx_spell_command_ward"
+		"damage":
+			return "vfx_spell_cinder_burst"
+	return ""
+
+func _spell_specific_audio_cue_id(spell_id: String, resolution_type: String) -> String:
+	match spell_id.strip_edges():
+		"spell_cinder_burst":
+			return "audio_spell_cinder_burst"
+		"spell_coal_rain":
+			return "audio_spell_coal_rain"
+		"spell_sunlance_arc":
+			return "audio_spell_sunlance_arc"
+		"spell_briar_bind":
+			return "audio_spell_briar_bind"
+		"spell_graft_mend":
+			return "audio_spell_graft_mend"
+		"spell_prism_bastion", "spell_resonant_chorus":
+			return "audio_spell_prism_bastion"
+	var family := resolution_type.strip_edges()
+	match family:
+		"cleanse_effect":
+			return "audio_spell_prism_bastion"
+		"recover_effect":
+			return "audio_spell_graft_mend"
+		"effect":
+			return "audio_spell_command_ward"
+		"damage":
+			return "audio_spell_cinder_burst"
+	return ""
 
 func _animation_preferences() -> Dictionary:
 	return SettingsService.animation_preferences()
@@ -1720,6 +1807,20 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_surrender_marker_vfx(center, radius, progress)
 			"path_ghost":
 				_draw_path_ghost_vfx(center, radius, progress)
+			"spell_cinder_burst":
+				_draw_spell_cinder_burst_vfx(center, radius, progress)
+			"spell_coal_rain":
+				_draw_spell_coal_rain_vfx(center, radius, progress)
+			"spell_sunlance_arc":
+				_draw_spell_sunlance_arc_vfx(start, end, radius, progress)
+			"spell_briar_bind":
+				_draw_spell_briar_bind_vfx(center, radius, progress)
+			"spell_graft_mend":
+				_draw_spell_graft_mend_vfx(center, radius, progress)
+			"spell_prism_bastion":
+				_draw_spell_prism_bastion_vfx(center, radius, progress)
+			"spell_command_ward":
+				_draw_spell_command_ward_vfx(center, radius, progress)
 
 func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
 	var entries: Array = []
@@ -1820,6 +1921,20 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "surrender_marker"
 		"vfx_placeholder_battle_path_ghost", "vfx_placeholder_withdraw_path":
 			return "path_ghost"
+		"vfx_spell_cinder_burst":
+			return "spell_cinder_burst"
+		"vfx_spell_coal_rain":
+			return "spell_coal_rain"
+		"vfx_spell_sunlance_arc":
+			return "spell_sunlance_arc"
+		"vfx_spell_briar_bind":
+			return "spell_briar_bind"
+		"vfx_spell_graft_mend":
+			return "spell_graft_mend"
+		"vfx_spell_prism_bastion":
+			return "spell_prism_bastion"
+		"vfx_spell_command_ward":
+			return "spell_command_ward"
 	return ""
 
 func _cue_playback_progress(record: Dictionary) -> float:
@@ -1932,6 +2047,71 @@ func _draw_surrender_marker_vfx(center: Vector2, radius: float, progress: float)
 func _draw_path_ghost_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var alpha := maxf(0.16, 1.0 - progress * 0.60)
 	_draw_hex(center, radius * (0.50 + progress * 0.16), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.08 * alpha), Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.48 * alpha), maxf(1.6, radius * 0.04))
+
+func _draw_spell_cinder_burst_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.14, 1.0 - progress * 0.72)
+	var flare := Color(1.0, 0.42, 0.16, 0.72 * alpha)
+	draw_circle(center, radius * (0.26 + progress * 0.34), Color(flare.r, flare.g, flare.b, 0.14 * alpha), true)
+	for index in range(6):
+		var angle := progress * TAU * 0.35 + float(index) * TAU / 6.0
+		var inner := center + Vector2(cos(angle), sin(angle)) * radius * 0.18
+		var outer := center + Vector2(cos(angle), sin(angle)) * radius * (0.52 + progress * 0.20)
+		draw_line(inner, outer, flare, maxf(1.8, radius * 0.045), true)
+
+func _draw_spell_coal_rain_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.16, 1.0 - progress * 0.62)
+	for index in range(5):
+		var lane := (float(index) - 2.0) * radius * 0.16
+		var head := center + Vector2(lane, -radius * 0.56 + radius * progress * 0.82)
+		var tail := head + Vector2(-radius * 0.14, -radius * 0.22)
+		draw_line(tail, head, Color(0.92, 0.32, 0.18, 0.76 * alpha), maxf(1.8, radius * 0.045), true)
+		draw_circle(head, maxf(2.2, radius * 0.05), Color(0.12, 0.10, 0.08, 0.72 * alpha))
+
+func _draw_spell_sunlance_arc_vfx(start: Vector2, end: Vector2, radius: float, progress: float) -> void:
+	var source := start if start.distance_to(end) > 1.0 else end + Vector2(-radius, 0.0)
+	var alpha := maxf(0.18, 1.0 - progress * 0.46)
+	var head := source.lerp(end, clampf(progress, 0.12, 1.0))
+	draw_line(source, end, Color(1.0, 0.90, 0.46, 0.24 * alpha), maxf(2.0, radius * 0.05), true)
+	draw_line(source.lerp(head, 0.38), head, Color(1.0, 0.78, 0.24, 0.86 * alpha), maxf(2.8, radius * 0.08), true)
+	draw_circle(head, maxf(3.0, radius * 0.08), Color(1.0, 0.96, 0.58, 0.82 * alpha))
+
+func _draw_spell_briar_bind_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.18, 1.0 - progress * 0.58)
+	var color := Color(0.36, 0.74, 0.40, 0.78 * alpha)
+	draw_arc(center, radius * (0.34 + progress * 0.16), PI * 0.10, PI * 1.78, 18, color, maxf(2.0, radius * 0.052), true)
+	draw_arc(center, radius * (0.50 + progress * 0.10), PI * 1.08, PI * 2.78, 18, color, maxf(1.8, radius * 0.046), true)
+	for index in range(3):
+		var angle := float(index) * TAU / 3.0 + progress * 0.8
+		draw_line(center + Vector2(cos(angle), sin(angle)) * radius * 0.24, center + Vector2(cos(angle), sin(angle)) * radius * 0.62, color, maxf(1.6, radius * 0.04), true)
+
+func _draw_spell_graft_mend_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.18, 1.0 - progress * 0.54)
+	var color := Color(0.58, 1.0, 0.70, 0.74 * alpha)
+	var span := radius * (0.22 + progress * 0.10)
+	draw_circle(center, radius * (0.46 + progress * 0.12), Color(color.r, color.g, color.b, 0.08 * alpha), true)
+	draw_line(center + Vector2(-span, 0.0), center + Vector2(span, 0.0), color, maxf(2.2, radius * 0.06), true)
+	draw_line(center + Vector2(0.0, -span), center + Vector2(0.0, span), color, maxf(2.2, radius * 0.06), true)
+
+func _draw_spell_prism_bastion_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.16, 1.0 - progress * 0.50)
+	var color := Color(0.66, 0.90, 1.0, 0.72 * alpha)
+	var points := PackedVector2Array([
+		center + Vector2(0.0, -radius * 0.62),
+		center + Vector2(radius * 0.48, -radius * 0.10),
+		center + Vector2(radius * 0.32, radius * 0.54),
+		center + Vector2(-radius * 0.32, radius * 0.54),
+		center + Vector2(-radius * 0.48, -radius * 0.10),
+		center + Vector2(0.0, -radius * 0.62),
+	])
+	draw_polyline(points, color, maxf(1.9, radius * 0.05), true)
+	draw_circle(center, radius * (0.18 + progress * 0.10), Color(color.r, color.g, color.b, 0.18 * alpha), true)
+
+func _draw_spell_command_ward_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.18, 1.0 - progress * 0.44)
+	var color := Color(1.0, 0.84, 0.42, 0.72 * alpha)
+	draw_circle(center, radius * (0.58 + progress * 0.10), Color(color.r, color.g, color.b, 0.06 * alpha), true)
+	draw_arc(center, radius * 0.60, PI * 0.08, PI * 0.92, 14, color, maxf(2.0, radius * 0.05), true)
+	draw_arc(center, radius * 0.60, PI * 1.08, PI * 1.92, 14, color, maxf(2.0, radius * 0.05), true)
 
 func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 	var battle_id := String(cue_record.get("battle_id", "")).strip_edges()
@@ -2179,6 +2359,20 @@ func _audio_cue_wave_spec(audio_id: String) -> Dictionary:
 			return {"waveform": "sine", "frequency_hz": 360.0, "secondary_frequency_hz": 540.0, "duration_msec": 150, "amplitude": 0.10, "volume_db": -17.0}
 		"audio_placeholder_idle_soft":
 			return {"waveform": "sine", "frequency_hz": 180.0, "duration_msec": 70, "amplitude": 0.04, "volume_db": -24.0}
+		"audio_spell_cinder_burst":
+			return {"waveform": "triangle", "frequency_hz": 220.0, "secondary_frequency_hz": 760.0, "duration_msec": 260, "amplitude": 0.18, "noise": 0.18, "volume_db": -12.0}
+		"audio_spell_coal_rain":
+			return {"waveform": "triangle", "frequency_hz": 185.0, "secondary_frequency_hz": 520.0, "duration_msec": 300, "amplitude": 0.16, "noise": 0.24, "volume_db": -12.5}
+		"audio_spell_sunlance_arc":
+			return {"waveform": "sine", "frequency_hz": 690.0, "secondary_frequency_hz": 1380.0, "duration_msec": 240, "amplitude": 0.16, "volume_db": -12.0}
+		"audio_spell_briar_bind":
+			return {"waveform": "triangle", "frequency_hz": 260.0, "secondary_frequency_hz": 390.0, "duration_msec": 270, "amplitude": 0.14, "noise": 0.12, "volume_db": -13.0}
+		"audio_spell_graft_mend":
+			return {"waveform": "sine", "frequency_hz": 380.0, "secondary_frequency_hz": 570.0, "duration_msec": 280, "amplitude": 0.13, "volume_db": -13.5}
+		"audio_spell_prism_bastion":
+			return {"waveform": "sine", "frequency_hz": 510.0, "secondary_frequency_hz": 1020.0, "duration_msec": 270, "amplitude": 0.13, "volume_db": -13.5}
+		"audio_spell_command_ward":
+			return {"waveform": "sine", "frequency_hz": 330.0, "secondary_frequency_hz": 495.0, "duration_msec": 240, "amplitude": 0.12, "volume_db": -14.0}
 	return {}
 
 func _cleanup_audio_players() -> void:

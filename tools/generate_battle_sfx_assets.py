@@ -28,6 +28,13 @@ SPECS = {
     "audio_placeholder_turn_ready": {"kind": "ready", "freq": 640.0, "freq2": 960.0, "noise": 0.04, "amp": 0.21},
     "audio_placeholder_status_clear": {"kind": "clear", "freq": 360.0, "freq2": 540.0, "noise": 0.06, "amp": 0.22},
     "audio_placeholder_idle_soft": {"kind": "soft", "freq": 180.0, "freq2": 225.0, "noise": 0.02, "amp": 0.12},
+    "audio_spell_cinder_burst": {"kind": "burst", "freq": 220.0, "freq2": 760.0, "noise": 0.24, "amp": 0.38},
+    "audio_spell_coal_rain": {"kind": "rain", "freq": 185.0, "freq2": 520.0, "noise": 0.34, "amp": 0.34},
+    "audio_spell_sunlance_arc": {"kind": "lance", "freq": 690.0, "freq2": 1380.0, "noise": 0.06, "amp": 0.34},
+    "audio_spell_briar_bind": {"kind": "bind", "freq": 260.0, "freq2": 390.0, "noise": 0.18, "amp": 0.30},
+    "audio_spell_graft_mend": {"kind": "mend", "freq": 380.0, "freq2": 570.0, "noise": 0.08, "amp": 0.27},
+    "audio_spell_prism_bastion": {"kind": "prism", "freq": 510.0, "freq2": 1020.0, "noise": 0.05, "amp": 0.28},
+    "audio_spell_command_ward": {"kind": "ward", "freq": 330.0, "freq2": 495.0, "noise": 0.07, "amp": 0.26},
 }
 
 
@@ -35,8 +42,10 @@ def envelope(progress: float, kind: str) -> float:
     attack = min(1.0, progress / 0.08)
     if kind in {"hit", "step", "brace"}:
         release = max(0.0, 1.0 - progress) ** 2.6
-    elif kind in {"rise", "shimmer", "clear"}:
+    elif kind in {"rise", "shimmer", "clear", "mend", "prism", "ward"}:
         release = 1.0 - smoothstep(0.70, 1.0, progress)
+    elif kind in {"burst", "rain", "lance", "bind"}:
+        release = 1.0 - smoothstep(0.52, 1.0, progress)
     elif kind == "fall":
         release = 1.0 - smoothstep(0.58, 1.0, progress)
     else:
@@ -62,7 +71,7 @@ def sample_value(spec: dict[str, float | str], index: int, frame_count: int, rng
     kind = str(spec["kind"])
     freq = float(spec["freq"])
     freq2 = float(spec["freq2"])
-    if kind in {"rise", "ready"}:
+    if kind in {"rise", "ready", "lance", "prism"}:
         freq *= 1.0 + progress * 0.32
         freq2 *= 1.0 + progress * 0.18
     elif kind in {"fall", "horn_down"}:
@@ -70,11 +79,18 @@ def sample_value(spec: dict[str, float | str], index: int, frame_count: int, rng
         freq2 *= 1.0 - progress * 0.22
     elif kind == "whoosh":
         freq *= 0.72 + progress * 1.18
+    elif kind == "burst":
+        freq *= 1.0 - progress * 0.22
+        freq2 *= 1.0 + progress * 0.46
     base = math.sin(math.tau * freq * t) * 0.62 + triangle(freq2 * t) * 0.28
     if kind in {"hit", "step"}:
         base = triangle(freq * t) * 0.46 + math.sin(math.tau * freq2 * t) * 0.24
-    elif kind in {"shimmer", "clear"}:
+    elif kind in {"shimmer", "clear", "mend", "prism", "ward"}:
         base += math.sin(math.tau * (freq2 * 1.53) * t) * 0.18
+    elif kind == "rain":
+        base = triangle(freq * t) * 0.36 + math.sin(math.tau * freq2 * t) * 0.22
+    elif kind == "bind":
+        base = triangle(freq * t) * 0.42 + math.sin(math.tau * (freq2 * 0.5) * t) * 0.20
     elif kind == "soft":
         base = math.sin(math.tau * freq * t) * 0.78
     noise = (rng.random() * 2.0 - 1.0) * float(spec["noise"])

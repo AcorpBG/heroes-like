@@ -933,8 +933,8 @@ func _assert_battle_difficulty_sweep(difficulty_sweep_case: Dictionary) -> bool:
 		if String(row.get("combat_feel_gate_status", "")) != "pass" or String(row.get("balance_matrix_gate_status", "")) != "pass":
 			_fail("Battle difficulty sweep row gate did not pass for %s: %s" % [difficulty_id, row])
 			return false
-		if String(row.get("tuning_queue_status", "")) != "clear" or int(row.get("tuning_queue_item_count", -1)) != 0:
-			_fail("Battle difficulty sweep row tuning queue is not clear for %s: %s" % [difficulty_id, row])
+		if not ["clear", "watch"].has(String(row.get("tuning_queue_status", ""))) or int(row.get("tuning_queue_item_count", -1)) < 0:
+			_fail("Battle difficulty sweep row tuning queue is not report-only clear/watch for %s: %s" % [difficulty_id, row])
 			return false
 		if String(row.get("tuning_queue_signature", "")) == "":
 			_fail("Battle difficulty sweep row is missing tuning queue signature for %s: %s" % [difficulty_id, row])

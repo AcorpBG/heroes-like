@@ -4949,6 +4949,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	)
 	var message = String(resolution.get("message", ""))
 	var animation_resolution: Dictionary = resolution.duplicate(true)
+	animation_resolution["spell_id"] = spell_id
 	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
@@ -5609,6 +5610,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
 	var message = String(resolution.get("message", ""))
 	var animation_resolution: Dictionary = resolution.duplicate(true)
+	animation_resolution["spell_id"] = String(action.get("spell_id", ""))
 	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
@@ -10959,13 +10961,15 @@ static func _mark_side_animation_event(battle: Dictionary, side: String, event_i
 			continue
 		_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), event_id)
 
-static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "") -> void:
+static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "", extra_context: Dictionary = {}) -> void:
 	if battle_id == "":
 		return
 	var target := _get_stack_by_id(battle, battle_id)
 	if target.is_empty():
 		return
-	var context := {"source_battle_id": source_battle_id} if source_battle_id != "" else {}
+	var context := extra_context.duplicate(true)
+	if source_battle_id != "":
+		context["source_battle_id"] = source_battle_id
 	if _alive_count(target) <= 0:
 		_mark_stack_animation_event(battle, battle_id, "battle_unit_death", context)
 	elif had_status_effect:
@@ -10975,25 +10979,33 @@ static func _mark_damage_target_animation(battle: Dictionary, battle_id: String,
 
 static func _mark_spell_animation_states(battle: Dictionary, caster_stack: Dictionary, resolution: Dictionary) -> void:
 	var target_id := String(resolution.get("target_battle_id", "")).strip_edges()
+	var spell_context := {
+		"spell_id": String(resolution.get("spell_id", "")).strip_edges(),
+		"resolution_type": String(resolution.get("resolution_type", "")).strip_edges(),
+	}
+	if target_id != "":
+		spell_context["target_battle_id"] = target_id
 	_mark_stack_animation_event(
 		battle,
 		String(caster_stack.get("battle_id", "")),
 		"battle_unit_cast",
-		{"target_battle_id": target_id} if target_id != "" else {}
+		spell_context
 	)
 	if target_id == "":
 		return
+	var target_context := spell_context.duplicate(true)
+	target_context["source_battle_id"] = String(caster_stack.get("battle_id", ""))
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var post_damage_effect = resolution.get("post_damage_effect", {})
-			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")))
+			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")), target_context)
 		"effect", "recover_effect":
-			_mark_stack_animation_event(battle, target_id, "battle_status_applied", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
+			_mark_stack_animation_event(battle, target_id, "battle_status_applied", target_context)
 		"cleanse_effect":
 			if int(resolution.get("cleansed_effect_count", 0)) > 0:
-				_mark_stack_animation_event(battle, target_id, "battle_status_expired", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
+				_mark_stack_animation_event(battle, target_id, "battle_status_expired", target_context)
 			else:
-				_mark_stack_animation_event(battle, target_id, "battle_status_applied", {"source_battle_id": String(caster_stack.get("battle_id", ""))})
+				_mark_stack_animation_event(battle, target_id, "battle_status_applied", target_context)
 
 static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, event_id: String, context: Dictionary = {}) -> void:
 	if battle.is_empty() or battle_id == "":
@@ -11020,6 +11032,8 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		"from_r": int(context.get("from_r", -1)),
 		"to_q": int(context.get("to_q", -1)),
 		"to_r": int(context.get("to_r", -1)),
+		"spell_id": String(context.get("spell_id", "")),
+		"resolution_type": String(context.get("resolution_type", "")),
 		"priority": priority,
 		"serial": serial,
 		"round": int(battle.get("round", 1)),
@@ -11056,6 +11070,8 @@ static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
 			"from_r": int(record.get("from_r", -1)),
 			"to_q": int(record.get("to_q", -1)),
 			"to_r": int(record.get("to_r", -1)),
+			"spell_id": String(record.get("spell_id", "")),
+			"resolution_type": String(record.get("resolution_type", "")),
 			"priority": int(record.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(record.get("serial", 0))),
 			"round": max(1, int(record.get("round", 1))),
@@ -11085,6 +11101,8 @@ static func _normalize_animation_event_queue(value: Variant) -> Array:
 			"from_r": int(entry.get("from_r", -1)),
 			"to_q": int(entry.get("to_q", -1)),
 			"to_r": int(entry.get("to_r", -1)),
+			"spell_id": String(entry.get("spell_id", "")),
+			"resolution_type": String(entry.get("resolution_type", "")),
 			"priority": int(entry.get("priority", ANIMATION_STATE_PRIORITY.get(state, 1))),
 			"serial": max(0, int(entry.get("serial", 0))),
 			"round": max(1, int(entry.get("round", 1))),

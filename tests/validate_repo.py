@@ -117,6 +117,7 @@ BATTLE_SFX_MANIFEST_PATH = CONTENT_DIR / "battle_sfx_manifest.json"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
+BATTLE_SPELL_IMPACT_PRESENTATION_DOC_PATH = ROOT / "docs" / "battle-spell-impact-runtime-presentation-assets-report.md"
 HEADLESS_BALANCE_HARNESS_CLI_PATH = ROOT / "tools" / "run_headless_balance_harness.py"
 HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH = ROOT / "docs" / "headless-balance-harness-cli-report.md"
 BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
@@ -15496,6 +15497,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "audio_placeholder_turn_ready",
         "audio_placeholder_status_clear",
         "audio_placeholder_idle_soft",
+        "audio_spell_cinder_burst",
+        "audio_spell_coal_rain",
+        "audio_spell_sunlance_arc",
+        "audio_spell_briar_bind",
+        "audio_spell_graft_mend",
+        "audio_spell_prism_bastion",
+        "audio_spell_command_ward",
     )
     if BATTLE_SFX_MANIFEST_PATH.exists():
         battle_sfx_manifest = json.loads(BATTLE_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -15562,6 +15570,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_brace_outline",
         "vfx_placeholder_surrender_marker",
         "audio_placeholder_status_clear",
+        "audio_spell_cinder_burst",
+        "vfx_spell_cinder_burst",
+        "func _spell_specific_vfx_cue_ids_for_event",
+        "func _spell_specific_audio_cue_ids_for_event",
+        "func _draw_spell_cinder_burst_vfx",
+        "func _draw_spell_prism_bastion_vfx",
         "status_clear",
         "retaliation_arc",
         "func _draw_retaliation_arc_vfx",
@@ -15612,6 +15626,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "surrender_stand_down",
         "target_battle_id",
         "source_battle_id",
+        "spell_id",
+        "resolution_type",
         "battle_unit_ranged_attack",
         "battle_status_applied",
         "battle_status_expired",
@@ -15794,6 +15810,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "battle_status_expired",
         "vfx_placeholder_status_clear",
         "audio_placeholder_status_clear",
+        "vfx_spell_cinder_burst",
+        "audio_spell_cinder_burst",
+        "spell_specific_caster_cue",
+        "spell_specific_vfx",
+        "spell_specific_audio",
         "_validate_status_cleanse_state",
         "_validate_status_round_expiry_state",
         "spell_prism_bastion",
@@ -15861,6 +15882,21 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "No combat balance tuning.",
         ):
             ensure(required_text in decision_vfx_doc_text, errors, f"Battle decision VFX cue coverage doc is missing required text: {required_text}")
+    ensure(BATTLE_SPELL_IMPACT_PRESENTATION_DOC_PATH.exists(), errors, "battle-spell-impact-runtime-presentation-assets-report.md is missing")
+    if BATTLE_SPELL_IMPACT_PRESENTATION_DOC_PATH.exists():
+        spell_impact_doc_text = BATTLE_SPELL_IMPACT_PRESENTATION_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Spell Impact Runtime Presentation Assets Report",
+            "battle-spell-impact-runtime-presentation-assets-20260524-10184",
+            "`spell_id`",
+            "`resolution_type`",
+            "`vfx_spell_cinder_burst`",
+            "`audio_spell_cinder_burst`",
+            "No final sound design.",
+            "No final imported VFX art.",
+            "No combat balance tuning.",
+        ):
+            ensure(required_text in spell_impact_doc_text, errors, f"Battle spell impact presentation doc is missing required text: {required_text}")
 
 
 def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
@@ -17209,7 +17245,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_difficulty_sweep_sample_limit",
             "MAX_NORMAL_TUNING_QUEUE_ITEMS",
             "MAX_HARD_TUNING_QUEUE_ITEMS",
-            "RESOLVED_HARD_WATCH_COHORT_IDS",
+            "_assert_report_only_queue",
+            "priority_band",
             "tuning_queue_signature",
             "tuning_queue_top_contributors",
             "get_tree().quit(1)",

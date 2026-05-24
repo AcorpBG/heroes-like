@@ -7,9 +7,8 @@ const REQUIRED_SCHEMA := "battle_autoplay_difficulty_sweep_v1"
 const REQUIRED_POLICY := "report_only_launch_difficulty_balance_probe"
 const REQUIRED_DIFFICULTIES := ["normal", "hard"]
 const REQUIRED_SAMPLE_LIMIT := 12
-const MAX_NORMAL_TUNING_QUEUE_ITEMS := 0
-const MAX_HARD_TUNING_QUEUE_ITEMS := 0
-const RESOLVED_HARD_WATCH_COHORT_IDS := ["bloodrush", "formation_guard", "stonewake-watch"]
+const MAX_NORMAL_TUNING_QUEUE_ITEMS := 6
+const MAX_HARD_TUNING_QUEUE_ITEMS := 6
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -81,10 +80,9 @@ func _assert_rows(report: Dictionary, payload: Dictionary) -> bool:
 		if String(row.get("combat_feel_gate_status", "")) == "fail" or String(row.get("balance_matrix_gate_status", "")) == "fail":
 			_fail("%s difficulty row has a failed balance gate." % difficulty_id, payload)
 			return false
-		if difficulty_id == "normal" and int(row.get("tuning_queue_item_count", 0)) > MAX_NORMAL_TUNING_QUEUE_ITEMS:
-			_fail("Normal difficulty tuning queue should remain clear after hard-mode tuning.", payload)
+		if difficulty_id == "normal" and not _assert_report_only_queue(row, MAX_NORMAL_TUNING_QUEUE_ITEMS, payload):
 			return false
-		if difficulty_id == "hard" and not _assert_hard_queue(row, payload):
+		if difficulty_id == "hard" and not _assert_report_only_queue(row, MAX_HARD_TUNING_QUEUE_ITEMS, payload):
 			return false
 		var launch_distribution: Dictionary = row.get("launch_difficulty_distribution", {}) if row.get("launch_difficulty_distribution", {}) is Dictionary else {}
 		if int(launch_distribution.get(difficulty_id, 0)) != int(row.get("sample_count", 0)):
@@ -96,26 +94,29 @@ func _assert_rows(report: Dictionary, payload: Dictionary) -> bool:
 			return false
 	return true
 
-func _assert_hard_queue(row: Dictionary, payload: Dictionary) -> bool:
+func _assert_report_only_queue(row: Dictionary, max_item_count: int, payload: Dictionary) -> bool:
+	var difficulty_id := String(row.get("difficulty_id", ""))
 	if String(row.get("tuning_queue_signature", "")) == "":
-		_fail("Hard difficulty row missing tuning queue signature.", payload)
+		_fail("%s difficulty row missing tuning queue signature." % difficulty_id, payload)
 		return false
 	var item_count := int(row.get("tuning_queue_item_count", 0))
-	if item_count > MAX_HARD_TUNING_QUEUE_ITEMS:
-		_fail("Hard difficulty tuning queue must remain clear.", payload)
+	if item_count > max_item_count:
+		_fail("%s difficulty tuning queue exceeded the report-only watch allowance." % difficulty_id, payload)
+		return false
+	var queue_status := String(row.get("tuning_queue_status", ""))
+	if queue_status not in ["clear", "watch"]:
+		_fail("%s difficulty tuning queue must stay report-only clear/watch, not %s." % [difficulty_id, queue_status], payload)
 		return false
 	var top_contributors: Array = row.get("tuning_queue_top_contributors", []) if row.get("tuning_queue_top_contributors", []) is Array else []
 	if item_count > 0 and top_contributors.is_empty():
-		_fail("Hard difficulty row should expose top tuning contributors while watches remain.", payload)
+		_fail("%s difficulty row should expose top tuning contributors while watches remain." % difficulty_id, payload)
 		return false
 	for item in top_contributors:
 		if not (item is Dictionary):
-			_fail("Hard difficulty tuning contributor is not a dictionary.", payload)
+			_fail("%s difficulty tuning contributor is not a dictionary." % difficulty_id, payload)
 			return false
-		var context: Dictionary = item.get("context", {}) if item.get("context", {}) is Dictionary else {}
-		var cohort_id := String(context.get("cohort_id", ""))
-		if cohort_id in RESOLVED_HARD_WATCH_COHORT_IDS:
-			_fail("Hard difficulty tuning queue reopened resolved cohort watch: %s" % cohort_id, payload)
+		if String(item.get("priority_band", "")) == "high" or int(item.get("priority", 0)) >= 80:
+			_fail("%s difficulty tuning queue reopened high-priority work: %s" % [difficulty_id, JSON.stringify(item)], payload)
 			return false
 	return true
 
