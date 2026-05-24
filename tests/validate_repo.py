@@ -10710,6 +10710,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "CampaignRules.campaign_ids",
             "validation_select_campaign",
             "validation_select_campaign_chapter",
+            "validation_start_selected_campaign_chapter",
+            "launch_started",
+            "active_launch_mode",
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_campaign_menu_smoke.gd is missing required token: {required_token}")
 
