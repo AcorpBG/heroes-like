@@ -4918,6 +4918,54 @@ static func animation_event_states(battle: Dictionary) -> Dictionary:
 static func animation_event_queue(battle: Dictionary) -> Array:
 	return _normalize_animation_event_queue(battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
 
+static func latest_animation_event_presentation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var event := _latest_animation_event(session.battle)
+	if event.is_empty():
+		return {}
+	var battle_id := String(event.get("battle_id", ""))
+	var actor := _get_stack_by_id(session.battle, battle_id)
+	var source := _get_stack_by_id(session.battle, String(event.get("source_battle_id", "")))
+	var target := _get_stack_by_id(session.battle, String(event.get("target_battle_id", "")))
+	var actor_label := _stack_label(actor) if not actor.is_empty() else battle_id
+	var target_label := _stack_label(target) if not target.is_empty() else ""
+	var source_label := _stack_label(source) if not source.is_empty() else ""
+	var event_id := String(event.get("event_id", ""))
+	var action_text := _animation_event_action_text(event_id, actor_label, source_label, target_label, event)
+	if action_text == "":
+		action_text = "%s changes posture." % actor_label
+	var visible := "Action cue: %s" % action_text
+	var tooltip_lines := [
+		"Battle Presentation Event",
+		"- Cue: %s" % action_text,
+		"- Actor: %s" % actor_label,
+		"- Event: %s" % event_id,
+		"- State: %s" % String(event.get("state", "")),
+		"- Playback: board motion, VFX, and audio resolve from the battle animation event queue.",
+	]
+	if source_label != "":
+		tooltip_lines.append("- Source: %s" % source_label)
+	if target_label != "":
+		tooltip_lines.append("- Target: %s" % target_label)
+	return {
+		"ok": true,
+		"source": "battle_animation_events",
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"action_text": action_text,
+		"event": event.duplicate(true),
+		"event_id": event_id,
+		"state": String(event.get("state", "")),
+		"battle_id": battle_id,
+		"actor_name": actor_label,
+		"source_name": source_label,
+		"target_name": target_label,
+		"serial": int(event.get("serial", 0)),
+		"round": int(event.get("round", 1)),
+		"turn_index": int(event.get("turn_index", 0)),
+	}
+
 static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
@@ -11111,6 +11159,64 @@ static func _normalize_animation_event_queue(value: Variant) -> Array:
 	while normalized.size() > ANIMATION_EVENT_QUEUE_LIMIT:
 		normalized.pop_front()
 	return normalized
+
+static func _latest_animation_event(battle: Dictionary) -> Dictionary:
+	var events := animation_event_queue(battle)
+	var latest := {}
+	var latest_serial := -1
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		var serial := int(event.get("serial", 0))
+		if latest.is_empty() or serial >= latest_serial:
+			latest = event
+			latest_serial = serial
+	return latest.duplicate(true) if latest is Dictionary else {}
+
+static func _animation_event_action_text(
+	event_id: String,
+	actor_label: String,
+	source_label: String,
+	target_label: String,
+	event: Dictionary
+) -> String:
+	match event_id:
+		"battle_unit_move":
+			var to_q := int(event.get("to_q", -1))
+			var to_r := int(event.get("to_r", -1))
+			if to_q >= 0 and to_r >= 0:
+				return "%s moves to %d,%d." % [actor_label, to_q, to_r]
+			return "%s moves." % actor_label
+		"battle_unit_melee_attack":
+			return "%s strikes %s." % [actor_label, target_label if target_label != "" else "the target"]
+		"battle_unit_ranged_attack":
+			return "%s fires on %s." % [actor_label, target_label if target_label != "" else "the target"]
+		"battle_unit_hit":
+			if source_label != "":
+				return "%s is hit by %s." % [actor_label, source_label]
+			return "%s is hit." % actor_label
+		"battle_unit_death":
+			return "%s falls." % actor_label
+		"battle_unit_cast":
+			var spell_id := String(event.get("spell_id", "")).strip_edges()
+			if spell_id != "":
+				return "%s casts %s." % [actor_label, spell_id.capitalize()]
+			return "%s casts." % actor_label
+		"battle_status_applied":
+			if source_label != "":
+				return "%s is affected by %s." % [actor_label, source_label]
+			return "%s gains a status effect." % actor_label
+		"battle_status_expired":
+			return "%s has a status cleared." % actor_label
+		"battle_unit_defend":
+			return "%s braces." % actor_label
+		"battle_retaliation":
+			return "%s retaliates against %s." % [actor_label, target_label if target_label != "" else "the attacker"]
+		"battle_unit_retreat":
+			return "%s retreats." % actor_label
+		"battle_unit_surrender":
+			return "%s surrenders." % actor_label
+	return ""
 
 static func _normalize_recent_events(value: Variant) -> Array:
 	var events = []

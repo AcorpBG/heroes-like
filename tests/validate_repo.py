@@ -15681,6 +15681,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func animation_state_for_stack",
         "func animation_event_states",
         "func animation_event_queue",
+        "func latest_animation_event_presentation_payload",
+        "func _latest_animation_event",
+        "func _animation_event_action_text",
         "func _mark_stack_animation_event",
         "func _append_animation_event_record",
         "func _mark_damage_target_animation",
@@ -15904,8 +15907,24 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "brace_outline",
         "surrender_marker",
         "_validate_retaliation_state",
+        "_validate_shell_presentation_event_surface",
+        "battle_presentation_event",
+        "Action cue:",
+        "Battle Presentation Event",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
+    battle_event_shell_doc_path = ROOT / "docs" / "battle-event-presentation-shell-surface-report.md"
+    ensure(battle_event_shell_doc_path.exists(), errors, "battle-event-presentation-shell-surface-report.md is missing")
+    if battle_event_shell_doc_path.exists():
+        shell_doc_text = battle_event_shell_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Event Presentation Shell Surface Report",
+            "battle-event-presentation-shell-surface-20260524-10184",
+            "`latest_animation_event_presentation_payload`",
+            "`battle_presentation_event`",
+            "No combat balance tuning.",
+        ):
+            ensure(required_text in shell_doc_text, errors, f"battle-event-presentation-shell-surface-report.md is missing token {required_text}")
     ensure(BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.exists(), errors, "battle-runtime-sfx-asset-layer-report.md is missing")
     if BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.exists():
         battle_sfx_doc_text = BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH.read_text(encoding="utf-8")

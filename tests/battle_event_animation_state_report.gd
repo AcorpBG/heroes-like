@@ -33,6 +33,7 @@ func _run() -> void:
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
 	await _validate_board_playback_lifecycle()
+	await _validate_shell_presentation_event_surface()
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -656,6 +657,59 @@ func _validate_active_camera_presentation(summary: Dictionary) -> Dictionary:
 	if absf(float(camera_playback.get("offset_x", 0.0))) > max_offset + 0.01 or absf(float(camera_playback.get("offset_y", 0.0))) > max_offset + 0.01:
 		_error("Camera presentation offset exceeded its bounded max: %s" % camera_playback)
 	return camera_playback
+
+func _validate_shell_presentation_event_surface() -> void:
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
+	_set_stack_field(session.battle, "enemy_0", "retaliations_left", 0)
+	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+	var result := BattleRulesScript.perform_player_action(session, "strike")
+	_expect_ok("shell presentation strike action", result)
+	var rules_payload := BattleRulesScript.latest_animation_event_presentation_payload(session)
+	_expect_equal("shell presentation payload source", String(rules_payload.get("source", "")), "battle_animation_events")
+	if not String(rules_payload.get("visible_text", "")).begins_with("Action cue:"):
+		_error("Rules presentation payload did not expose an action cue: %s" % rules_payload)
+		return
+
+	SessionState.set_active_session(session)
+	var frame := Control.new()
+	frame.name = "BattleEventPresentationShellFrame"
+	frame.size = Vector2(1024.0, 640.0)
+	add_child(frame)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	frame.add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not shell.has_method("validation_snapshot"):
+		_error("Battle shell does not expose validation_snapshot for presentation event validation.")
+		frame.queue_free()
+		return
+	if shell.has_method("validation_set_battle_resolution_routing_enabled"):
+		shell.call("validation_set_battle_resolution_routing_enabled", false)
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var shell_payload: Dictionary = snapshot.get("battle_presentation_event", {}) if snapshot.get("battle_presentation_event", {}) is Dictionary else {}
+	_expect_equal("shell presentation source", String(shell_payload.get("source", "")), "battle_animation_events")
+	_expect_equal("shell presentation event id", String(shell_payload.get("event_id", "")), String(rules_payload.get("event_id", "")))
+	for token in ["Action cue:", "Battle Presentation Event", "River Guard", "Bog Brute"]:
+		var combined := "\n".join([
+			String(snapshot.get("event_visible_text", "")),
+			String(snapshot.get("event_tooltip_text", "")),
+			String(snapshot.get("battle_presentation_event_visible_text", "")),
+			String(snapshot.get("battle_presentation_event_tooltip_text", "")),
+		])
+		if not combined.contains(token):
+			_error("Shell presentation event surface lost %s in %s." % [token, snapshot])
+			break
+	_report["cases"]["shell_presentation_event"] = {
+		"rules_payload": rules_payload,
+		"shell_payload": shell_payload,
+		"event_visible_text": String(snapshot.get("event_visible_text", "")),
+		"event_tooltip_text": String(snapshot.get("event_tooltip_text", "")),
+	}
+	frame.queue_free()
+	await get_tree().process_frame
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
