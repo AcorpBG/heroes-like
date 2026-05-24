@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-unit-tier-runtime-surface-20260524-10184",
-  "currentSliceTitle": "Economy Town Unit Tier Runtime Surface",
+  "currentSliceId": "economy-active-scenario-development-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Development Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Live town build/recruit actions expose seven-tier unit identity across all six faction signature ladders; focused runtime report covers 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases.",
+  "currentSliceNotes": "Completed. Active authored scenarios now provide persistent common-resource development runway sources, and the focused live report completes all 18 active player-town cases within 30 turns using only scenario-authored secured economy sources.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T16:45:00Z",
+  "updatedAt": "2026-05-24T17:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -20629,6 +20629,52 @@
         "mireclaw_unit_tier_order_corrected": true,
         "save_version_bump": false
       }
+    },
+    {
+      "id": "economy-active-scenario-development-runway-20260524-10184",
+      "title": "Economy Active Scenario Development Runway",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T17:25:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "docs/economy-active-scenario-rare-access-report.md"
+      ],
+      "implementationTargets": [
+        "content/resource_sites.json",
+        "content/map_objects.json",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/active_scenario_town_development_runway_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused Godot report boots every active authored scenario with a player town and simulates live TownRules/OverworldRules construction for each player town.",
+        "The report secures only scenario-authored economy sources and proves each player-town case can complete its authored development target within 30 turns.",
+        "Report evidence includes source resources, completion day, build count, rare spend, one-build-per-town-per-turn rejection, and common-only market boundary.",
+        "Repository validation gates the new active-scenario runway report and active player-town case count."
+      ],
+      "notes": "Completed. Active authored scenarios now provide persistent common-resource development runway sources, and the focused live report completes all 18 active player-town cases within 30 turns using only scenario-authored secured economy sources.",
+      "completedAt": "2026-05-24T17:25:00Z",
+      "evidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "completed_case_count": 18,
+        "rare_spend_case_count": 18,
+        "target_turns": 30,
+        "persistent_common_sources": [
+          "site_wood_wagon",
+          "site_ore_crates"
+        ],
+        "normal_market_common_only": true,
+        "save_version_bump": false
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -25107,6 +25153,55 @@
         "Not campaign balance approval.",
         "Not broad AI economy planning."
       ]
+    },
+    {
+      "id": "economy-active-scenario-development-runway-20260524-10184",
+      "title": "Economy Active Scenario Development Runway",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T17:25:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "docs/economy-active-scenario-rare-access-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-development-runway-20260524-10184"
+      ],
+      "implementationRefs": [
+        "content/resource_sites.json",
+        "content/map_objects.json",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/active_scenario_town_development_runway_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Wood wagon and ore crate source sites now provide persistent capturable wood/ore income for active-scenario development runway coverage.",
+        "Linked map objects now carry persistent-control cadence and counter-capture metadata matching their resource sites.",
+        "Focused Godot report boots 16 active authored scenarios and validates 18 active player-town cases using scenario-authored secured economy sources.",
+        "The report completes 18/18 player-town development runways within the 30-turn target and observes high-tier rare-resource spending in every case.",
+        "Same-day second builds are rejected and normal market actions remain common-resource only.",
+        "No SAVE_VERSION bump required; wood remains canonical."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-all.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "nonClaims": [
+        "Not final route safety.",
+        "Not final encounter pacing or guard pressure.",
+        "Not campaign balance approval.",
+        "Not final town UI or art."
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -25756,6 +25851,7 @@
     }
   },
   "validationResults": [
+    "2026-05-24 economy active scenario development runway: wood wagon and ore crate sources now provide persistent common-resource income with matching map-object metadata; focused Godot report passed across 16 active authored scenarios and 18 active player-town cases, completing 18/18 within 30 turns with rare spend observed in every case, same-day second-build rejection, and common-only market boundaries; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy town unit tier runtime surface: live TownRules build/recruit actions now expose seven-tier unit identity across six faction ladders; focused Godot report passed with 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases; Mireclaw tier order/prerequisites/rare costs corrected; town development balance reports, repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 battle autoplay hard difficulty watch retune: Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418.",
     "2026-05-24 strategic AI multi-scenario recruitment delivery: Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed.",
@@ -26376,13 +26472,11 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
+    "id": "economy-active-scenario-development-runway-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T16:45:00Z",
+    "updatedAt": "2026-05-24T17:25:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-unit-tier-runtime-surface-final.log --path . --scene res://tests/town_unit_tier_runtime_surface_report.tscn",
-      "python3 tests/town_development_balance_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-unit-tier.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-all.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
@@ -26391,12 +26485,12 @@
     ]
   },
   "active_slice": {
-    "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
-    "title": "Economy Town Unit Tier Runtime Surface",
+    "id": "economy-active-scenario-development-runway-20260524-10184",
+    "title": "Economy Active Scenario Development Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T16:45:00Z"
+    "updatedAt": "2026-05-24T17:25:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T16:45:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T17:25:00Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -26904,7 +26998,20 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-development-runway-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T17:25:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-all.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
-  "currentSlice": "economy-town-unit-tier-runtime-surface-20260524-10184"
+  "currentSlice": "economy-active-scenario-development-runway-20260524-10184"
 }
