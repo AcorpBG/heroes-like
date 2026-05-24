@@ -16888,6 +16888,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     active_breadth_doc_path = ROOT / "docs/battle-autoplay-active-scenario-breadth-report.md"
     active_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-outlier-retune-report.md"
     active_second_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-second-outlier-retune-report.md"
+    active_watch_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-watch-retune-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
@@ -16926,6 +16927,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         active_breadth_doc_path,
         active_outlier_retune_doc_path,
         active_second_outlier_retune_doc_path,
+        active_watch_retune_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
@@ -17406,6 +17408,45 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in active_second_outlier_retune_doc_text, errors, f"Battle autoplay active scenario second outlier retune doc is missing required text: {required_text}")
+    if active_watch_retune_doc_path.exists():
+        active_watch_retune_doc_text = active_watch_retune_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Active Scenario Watch Retune Report",
+            "battle-autoplay-active-scenario-watch-retune-20260524-10184",
+            "army_relay_pickets",
+            "army_glasswing_sortie",
+            "army_aurora_battery",
+            "army_daybreak_matrix",
+            "army_neutral_basalt_gatehouse_watch",
+            "army_bellwake_privateers",
+            "glassfen_relay_pickets",
+            "glassfen_glasswing_sortie",
+            "glassfen_aurora_battery",
+            "daybreak_array",
+            "ninefold_basalt_gatehouse_watch",
+            "ninefold_bellwake_privateers",
+            "balance_tuning_queue.status",
+            "watch",
+            "balance_tuning_queue.item_count",
+            "23",
+            "20",
+            "balance_tuning_queue.high_priority_count",
+            "0",
+            "f7818555",
+            "6ae06abb",
+            "c76f4832",
+            "balance_matrix_gate_status",
+            "pass",
+            "completed_sample_count",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "Remaining watch contributors",
+            "No automatic tuning.",
+            "No authored content writeback.",
+            "No runtime balance changes.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in active_watch_retune_doc_text, errors, f"Battle autoplay active scenario watch retune doc is missing required text: {required_text}")
     if tuning_queue_doc_path.exists():
         tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
         for required_text in (
