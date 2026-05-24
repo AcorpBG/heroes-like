@@ -146,6 +146,9 @@ AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-as
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
+RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.gd"
+RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCENE_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.tscn"
+RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH = ROOT / "docs" / "random-map-generated-setup-pending-retry-surface-report.md"
 EXPORT_PRESETS_PATH = ROOT / "export_presets.cfg"
 PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaging_platform_readiness_report.gd"
 PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_platform_readiness_report.tscn"
@@ -16937,6 +16940,49 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
 
 
+def validate_random_map_generated_setup_pending_retry_surface(errors: list[str]) -> None:
+    for path in (
+        RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH,
+        RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCENE_PATH,
+        RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing generated-map setup pending/retry surface file: {path.relative_to(ROOT)}")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "Validate & Launch",
+        "_generated_setup_pending_launch_validation",
+        "launch_validation_status",
+        "pending_launch_validation",
+        "Launch check: setup is configured",
+        "_apply_generated_random_map_setup_surface(setup)",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing generated-map pending/retry surface token: {required_token}")
+
+    if RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH.exists():
+        report_text = RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "pending_launch_validation",
+            "Validate & Launch",
+            "RANDOM_MAP_PLAYER_RETRY_POLICY.get(\"max_attempts\"",
+            "Generated setup preview did not stay pending launch validation",
+            "Generated launch button stayed enabled after forced validation failure",
+        ):
+            ensure(required_token in report_text, errors, f"random_map_player_setup_retry_ux_report.gd is missing generated-map pending/retry token: {required_token}")
+
+    if RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH.exists():
+        doc_text = RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Random Map Generated Setup Pending Retry Surface Report",
+            "random-map-generated-setup-pending-retry-surface-20260524-10184",
+            "pending launch validation",
+            "bounded retry policy",
+            "no campaign adoption",
+            "no authored writeback",
+        ):
+            ensure(required_text in doc_text, errors, f"generated-map setup pending/retry report is missing required text: {required_text}")
+
+
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
@@ -18592,6 +18638,7 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
+    validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
     validate_packaging_linux_export_smoke(errors)

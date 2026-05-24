@@ -1155,17 +1155,21 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
 	var status_text := ""
 	var provenance_text := ""
-	_start_generated_skirmish_button.text = "Launch Generated"
+	var pending_launch_validation := _generated_setup_pending_launch_validation(setup, retry)
+	_start_generated_skirmish_button.text = "Validate & Launch" if pending_launch_validation else "Launch Generated"
 	if bool(setup.get("ok", false)):
 		var seed_source := String(setup.get("seed_source", "explicit"))
 		var seed_label := String(setup.get("normalized_seed", ""))
 		if seed_source == "auto_on_launch":
 			seed_label = "auto on launch"
-		status_text = "Generated validation %s | %d attempt(s), %d retry." % [
-			String(retry.get("validation_status", "pass")),
-			int(retry.get("attempt_count", 1)),
-			int(retry.get("retry_count", 0)),
-		]
+		if pending_launch_validation:
+			status_text = "Generated setup ready | validation pending on launch."
+		else:
+			status_text = "Generated validation %s | %d attempt(s), %d retry." % [
+				String(retry.get("validation_status", "pass")),
+				int(retry.get("attempt_count", 1)),
+				int(retry.get("retry_count", 0)),
+			]
 		provenance_text = "Seed %s | Size %s | Players %d | Water %s | Levels %s | Underground %s | Internal profile %s/%s" % [
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
@@ -1178,6 +1182,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 		]
 		_start_generated_skirmish_button.disabled = false
 		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
+			"Launch check: setup is configured; native H3MapEd validation and bounded retry run only after this command." if pending_launch_validation else "",
 			String(setup.get("launch_handoff", "")),
 			String(setup.get("failure_handoff", "")),
 			String(setup.get("setup_summary", "")),
@@ -1196,6 +1201,11 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	_set_compact_label(_generated_status_label, status_text, 2, 72)
 	_set_compact_label(_generated_provenance_label, provenance_text, 2, 118)
 	_generated_progress_bar.visible = false
+
+func _generated_setup_pending_launch_validation(setup: Dictionary, retry: Dictionary) -> bool:
+	return bool(setup.get("preview_only", false)) \
+		or String(setup.get("launch_validation_status", "")) == "pending_launch_validation" \
+		or String(retry.get("validation_status", "")) == "pending_launch_validation"
 
 func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -1440,7 +1450,9 @@ func _generated_random_map_preview_setup() -> Dictionary:
 			"failure_count": 0,
 			"warning_count": 0,
 		},
-		"setup_summary": "Generated Skirmish setup configured; launch validates the map with bounded retry before creating a session.",
+		"launch_validation_status": "pending_launch_validation",
+		"preview_only": true,
+		"setup_summary": "Generated Skirmish setup configured; native validation has not run yet. Launch validates the map with bounded retry before creating a session.",
 		"launch_handoff": "Launch handoff: validate generated Skirmish from seed/config provenance with bounded retry, then start a fresh Day 1 Skirmish expedition only if validation passes.",
 		"failure_handoff": "Validation failures stay in this setup surface; no session, save, campaign progress, or authored content changes occur when generation is blocked.",
 		"campaign_adoption": false,
@@ -2173,9 +2185,7 @@ func validation_force_generated_random_map_config(config: Dictionary) -> Diction
 			ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
 		)
 	_generated_last_setup = setup.duplicate(true)
-	_set_compact_label(_generated_status_label, String(setup.get("setup_summary", setup.get("failure_handoff", ""))), 2, 92)
-	_set_compact_label(_generated_provenance_label, String(setup.get("failure_handoff", setup.get("setup_summary", ""))), 2, 118)
-	_start_generated_skirmish_button.disabled = not bool(setup.get("ok", false))
+	_apply_generated_random_map_setup_surface(setup)
 	return setup
 
 func _validation_forced_generated_random_map_failure(config: Dictionary) -> Dictionary:
