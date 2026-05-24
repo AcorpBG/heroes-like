@@ -3,8 +3,8 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-save-resume-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Save Resume",
+  "currentSliceId": "economy-active-scenario-town-start-economy-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Town Start Economy",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed deterministic cost-curve gate for all 15 authored towns and all six faction signature ladders. Every development target costs gold, every town spends wood and ore, common-only development remains at least 2:1 over rare-cost buildings, rare costs use only the town faction rare resource, and rare costs remain tier 5+ gated.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -39,6 +39,56 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-town-start-economy-20260524-10184",
+      "title": "Economy Active Scenario Town Start Economy",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T21:05:00Z",
+      "completedAt": "2026-05-24T21:05:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-town-start-economy-report.md"
+      ],
+      "implementationTargets": [
+        "tests/active_scenario_town_start_economy_report.gd",
+        "tests/active_scenario_town_start_economy_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-start-economy-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A focused live Godot report covers all active authored scenarios and current active player-town cases.",
+        "The report uses natural active-scenario starting town, stockpile, and resource-node state without injected source capture.",
+        "Every active player-town start completes at least three first-week live construction orders.",
+        "Every active player-town start spends wood or ore through live construction before the first week ends.",
+        "Every active player-town start observes the one-build-per-day guard and blocks same-day follow-up build actions.",
+        "Every active player-town start normalizes all nine live stockpile resource ids.",
+        "Repository validation gates the report, documentation, and scene contract."
+      ],
+      "notes": "Completed: natural active-scenario starts now have first-week town economy readiness evidence before source injection or full 30-turn runway isolation.",
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "early_ready_case_count": 18,
+        "common_spend_case_count": 18,
+        "same_day_guard_case_count": 18,
+        "full_stockpile_case_count": 18,
+        "early_days": 7,
+        "min_early_builds_per_town": 3,
+        "validation": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-start-economy-final.log --path . --scene res://tests/active_scenario_town_start_economy_report.tscn (pass)",
+          "python3 tests/validate_repo.py (pass)",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py (pass)",
+          "jq empty ops/progress.json (pass)",
+          "git diff --check (pass)"
+        ]
+      }
+    },
     {
       "id": "economy-town-development-save-resume-20260524-10184",
       "title": "Economy Town Development Save Resume",
@@ -20987,6 +21037,38 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-scenario-town-start-economy-20260524-10184",
+      "title": "Economy Active Scenario Town Start Economy",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T21:05:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-town-start-economy-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-town-start-economy-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/active_scenario_town_start_economy_report.gd",
+        "tests/active_scenario_town_start_economy_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-start-economy-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-start-economy-final.log --path . --scene res://tests/active_scenario_town_start_economy_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)"
+      ],
+      "summary": "Natural active-scenario town starts now have a focused live Godot gate: 16 active authored scenarios and 18 player-town starts use natural starting stockpiles/resource-node state, complete at least three first-week builds, spend wood or ore, preserve one-build-per-day blocking, and normalize all nine live stockpile ids."
+    },
+    {
       "id": "economy-town-development-save-resume-20260524-10184",
       "title": "Economy Town Development Save Resume",
       "status": "completed",
@@ -26917,30 +26999,41 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-town-development-save-resume-20260524-10184",
+    "id": "economy-active-scenario-town-start-economy-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T20:20:00Z",
+    "updatedAt": "2026-05-24T21:05:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-save-resume-final.log --path . --scene res://tests/town_development_save_resume_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-save-resume.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
-      "python3 tests/town_development_cost_curve_report.py",
-      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-start-economy-final.log --path . --scene res://tests/active_scenario_town_start_economy_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Town development save/resume passed: 15 authored towns preserve rare-resource build checkpoints, one-build-per-day guards, town resume targets, and 30-turn completion after restore."
+    "summary": "Active scenario town start economy passed: 18/18 player-town starts across 16 active authored scenarios meet natural first-week construction, common-resource spend, one-build-per-day, and nine-resource stockpile gates."
   },
   "active_slice": {
-    "id": "economy-town-development-save-resume-20260524-10184",
-    "title": "Economy Town Development Save Resume",
+    "id": "economy-active-scenario-town-start-economy-20260524-10184",
+    "title": "Economy Active Scenario Town Start Economy",
     "status": "completed",
-    "updatedAt": "2026-05-24T20:20:00Z"
+    "updatedAt": "2026-05-24T21:05:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T20:20:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T21:05:00Z",
   "validationHistory": [
+    {
+      "id": "economy-active-scenario-town-start-economy-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T21:05:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-start-economy-final.log --path . --scene res://tests/active_scenario_town_start_economy_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Active scenario town start economy passed: 18/18 player-town starts across 16 active authored scenarios meet natural first-week construction, common-resource spend, one-build-per-day, and nine-resource stockpile gates."
+    },
     {
       "id": "economy-town-development-save-resume-20260524-10184",
       "status": "passed",

@@ -113,6 +113,9 @@ ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-sc
 ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_economy_source_route_report.gd"
 ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_economy_source_route_report.tscn"
 ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-town-economy-source-route-report.md"
+ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.gd"
+ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.tscn"
+ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-town-start-economy-report.md"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.gd"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.tscn"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-development-runway-report.md"
@@ -19313,6 +19316,48 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
     ensure(resource_route_case_count == player_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every player town")
 
 
+def validate_active_scenario_town_start_economy(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town start economy report script is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists(), errors, "Active scenario town start economy report scene is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists(), errors, "Active scenario town start economy report doc is missing")
+    if not ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists():
+        return
+    script_text = ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT",
+        "active_scenario_town_start_economy_report_v1",
+        "MIN_EARLY_BUILDS_PER_TOWN",
+        "ScenarioFactory.create_session",
+        "OverworldRules.end_turn",
+        "OverworldRules.build_in_active_town",
+        "TownRules.get_build_actions",
+        "common_spend_case_count",
+        "same_day_guard_case_count",
+        "full_stockpile_case_count",
+        "without injected source capture",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario town start economy report is missing token {required_token}")
+    ensure("res://tests/active_scenario_town_start_economy_report.gd" in scene_text, errors, "Active scenario town start economy scene must load its report script")
+    ensure("ActiveScenarioTownStartEconomyReport" in scene_text, errors, "Active scenario town start economy scene must expose a named report node")
+    for required_text in (
+        "Economy Active Scenario Town Start Economy Report",
+        "economy-active-scenario-town-start-economy-20260524-10184",
+        "active_scenario_town_start_economy_report_v1",
+        "natural active-scenario starts",
+        "16 active authored scenarios",
+        "18 player-town cases",
+        "first-week",
+        "one-build-per-day",
+        "`wood` or `ore`",
+        "All nine live stockpile ids",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario town start economy doc is missing text: {required_text}")
+
+
 def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town unit tier runtime surface report script is missing")
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town unit tier runtime surface report scene is missing")
@@ -19772,6 +19817,7 @@ def main() -> int:
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
     validate_active_scenario_town_economy_source_route(errors)
+    validate_active_scenario_town_start_economy(errors)
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_economy_resource_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
@@ -19863,6 +19909,7 @@ def main() -> int:
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
+    print("- active authored scenario starts now prove natural first-week town construction, common-resource spend, one-build-per-day guards, and nine-resource stockpile normalization")
     print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
