@@ -16887,6 +16887,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
     active_breadth_doc_path = ROOT / "docs/battle-autoplay-active-scenario-breadth-report.md"
     active_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-outlier-retune-report.md"
+    active_second_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-second-outlier-retune-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
@@ -16924,6 +16925,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         expanded_sample_doc_path,
         active_breadth_doc_path,
         active_outlier_retune_doc_path,
+        active_second_outlier_retune_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
@@ -17364,6 +17366,46 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in active_outlier_retune_doc_text, errors, f"Battle autoplay active scenario outlier retune doc is missing required text: {required_text}")
+    if active_second_outlier_retune_doc_path.exists():
+        active_second_outlier_retune_doc_text = active_second_outlier_retune_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Active Scenario Second Outlier Retune Report",
+            "battle-autoplay-active-scenario-second-outlier-retune-20260524-10184",
+            "army_nightglass_dominion",
+            "army_charter_bastion_reserve",
+            "army_orevein_exactors",
+            "army_aurora_battery",
+            "army_daybreak_matrix",
+            "army_ford_reavers",
+            "daybreak_drum_circle",
+            "surge_charter_guard",
+            "ninefold_orevein_exactors",
+            "glassfen_aurora_battery",
+            "daybreak_array",
+            "bridge_ford_reavers",
+            "balance_tuning_queue.item_count",
+            "40",
+            "23",
+            "balance_tuning_queue.high_priority_count",
+            "14",
+            "0",
+            "04bf99d5",
+            "e0c17322",
+            "f7818555",
+            "balance_matrix_gate_status",
+            "pass",
+            "balance_tuning_queue.status",
+            "watch",
+            "completed_sample_count",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "Remaining watch contributors",
+            "No automatic tuning.",
+            "No authored content writeback.",
+            "No runtime balance changes.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in active_second_outlier_retune_doc_text, errors, f"Battle autoplay active scenario second outlier retune doc is missing required text: {required_text}")
     if tuning_queue_doc_path.exists():
         tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
         for required_text in (
