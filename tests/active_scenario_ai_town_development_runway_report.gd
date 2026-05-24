@@ -23,6 +23,7 @@ const RARE_RESOURCE_IDS := [
 ]
 const DELAYED_SOURCE_ROUTE_STEPS_PER_DAY := 12
 const DELAYED_GUARDED_SOURCE_EXTRA_DAYS := 1
+const DELAYED_SOURCE_SAVE_RESUME_SLOT := 3
 
 var _errors := []
 
@@ -39,6 +40,8 @@ func _run() -> void:
 	var full_session_case_count := 0
 	var delayed_source_replay_case_count := 0
 	var delayed_source_replay_completed_count := 0
+	var delayed_source_save_resume_case_count := 0
+	var delayed_source_save_resume_completed_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -63,6 +66,10 @@ func _run() -> void:
 				delayed_source_replay_case_count += 1
 			if bool(row.get("delayed_source_replay_ok", false)):
 				delayed_source_replay_completed_count += 1
+			if bool(row.get("delayed_source_save_resume_seen", false)):
+				delayed_source_save_resume_case_count += 1
+			if bool(row.get("delayed_source_save_resume_ok", false)):
+				delayed_source_save_resume_completed_count += 1
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -81,6 +88,9 @@ func _run() -> void:
 		"full_session_case_count": full_session_case_count,
 		"delayed_source_replay_case_count": delayed_source_replay_case_count,
 		"delayed_source_replay_completed_count": delayed_source_replay_completed_count,
+		"delayed_source_save_resume_case_count": delayed_source_save_resume_case_count,
+		"delayed_source_save_resume_completed_count": delayed_source_save_resume_completed_count,
+		"delayed_source_save_resume_slot": DELAYED_SOURCE_SAVE_RESUME_SLOT,
 		"delayed_source_route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
 		"delayed_guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
@@ -90,6 +100,7 @@ func _run() -> void:
 		"caveats": [
 			"The report boots active authored scenarios and secures scenario-authored economy sources for the target enemy town faction.",
 			"A second replay now delays target-faction source ownership by route-derived acquisition days and guarded-source delay before proving the same 30-turn AI development runway.",
+			"The delayed-source AI replay saves and restores after delayed source acquisition plus rare-resource construction, then continues the development runway from the restored active scenario session.",
 			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
 			"Construction runs through EnemyTurnRules.run_enemy_town_economy_turn and EnemyTurnRules.town_governor_pressure_report for the target faction.",
 			"This is AI town-development economy runway evidence, not final strategic AI quality, route safety, encounter pacing, or campaign balance approval.",
@@ -257,6 +268,8 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 	base_row["delayed_source_replay_seen"] = true
 	base_row["delayed_source_replay_ok"] = bool(delayed_source_replay.get("ok", false))
 	base_row["delayed_source_replay"] = delayed_source_replay
+	base_row["delayed_source_save_resume_seen"] = bool(delayed_source_replay.get("save_resume_seen", false))
+	base_row["delayed_source_save_resume_ok"] = bool(delayed_source_replay.get("save_resume_ok", false))
 	base_row["full_session_used"] = String(session.scenario_id) == scenario_id
 	base_row["scenario_map_size"] = _map_size_payload(OverworldRules.derive_map_size(session))
 	base_row["scenario_resource_node_count"] = _array_size(session.overworld.get("resource_nodes", []))
@@ -298,9 +311,13 @@ func _run_delayed_source_replay(
 	var build_log := []
 	var stalled_days := []
 	var rare_spend_events := []
+	var save_resume := {}
+	var delayed_source_seen := false
 	var rare_treasury_tracked := _enemy_treasury_has_all_live_keys(session, faction_id)
 	for _turn in range(TARGET_TURNS):
 		var applied_sources := _apply_due_development_sources(session, source_schedule, int(session.day), faction_id)
+		if not applied_sources.is_empty():
+			delayed_source_seen = true
 		var before_state := _enemy_state(session, faction_id)
 		var before_treasury := _resources(before_state.get("treasury", {}))
 		var expected_income := _enemy_daily_income(session, placement_id, faction_id)
@@ -338,6 +355,24 @@ func _run_delayed_source_replay(
 				"treasury_after": after_treasury,
 				"applied_sources": applied_sources,
 			})
+			if save_resume.is_empty() and delayed_source_seen and not rare_cost.is_empty():
+				save_resume = _delayed_source_save_resume_checkpoint(
+					session,
+					placement_id,
+					faction_id,
+					String(building_id),
+					source_schedule,
+					required_resource_ids
+				)
+				if save_resume.has("session"):
+					session = save_resume.get("session")
+				if not bool(save_resume.get("ok", false)):
+					stalled_days.append({
+						"day": int(session.day),
+						"reason": "delayed_source_ai_save_resume_failed",
+						"message": String(save_resume.get("error", "")),
+					})
+					break
 		if _missing_buildings(session, placement_id, target_buildings).is_empty():
 			break
 		if built_today.is_empty():
@@ -357,6 +392,10 @@ func _run_delayed_source_replay(
 		errors.append("delayed-source AI replay did not spend a rare resource")
 	if not rare_treasury_tracked:
 		errors.append("delayed-source AI replay did not preserve full enemy treasury keys")
+	if save_resume.is_empty():
+		errors.append("delayed-source AI replay did not save/resume after source acquisition and rare construction")
+	elif not bool(save_resume.get("ok", false)):
+		errors.append("delayed-source AI save/resume failed: %s" % String(save_resume.get("error", "unknown")))
 	return {
 		"ok": errors.is_empty(),
 		"schema": "active_scenario_ai_town_delayed_source_replay_v1",
@@ -374,12 +413,183 @@ func _run_delayed_source_replay(
 		"rare_treasury_tracked": rare_treasury_tracked,
 		"rare_spend_observed": not rare_spend_events.is_empty(),
 		"rare_spend_events": rare_spend_events,
+		"save_resume_seen": not save_resume.is_empty(),
+		"save_resume_ok": bool(save_resume.get("ok", false)),
+		"save_resume": _without_session(save_resume),
 		"ending_treasury": _resources(_enemy_state(session, faction_id).get("treasury", {})),
 		"stalled_days": stalled_days.slice(0, 5),
 		"build_log": build_log,
 		"errors": errors,
 		"error": "; ".join(errors),
 	}
+
+func _delayed_source_save_resume_checkpoint(
+	session,
+	placement_id: String,
+	faction_id: String,
+	built_building_id: String,
+	source_schedule: Array,
+	required_resource_ids: Array
+) -> Dictionary:
+	session.game_state = "overworld"
+	session.scenario_status = "in_progress"
+	var before_signature := _delayed_source_resume_signature(session, placement_id, faction_id, source_schedule, required_resource_ids)
+	var save_result: Dictionary = SaveService.save_runtime_manual_session(session, DELAYED_SOURCE_SAVE_RESUME_SLOT)
+	if not bool(save_result.get("ok", false)):
+		return {"ok": false, "stage": "save", "error": String(save_result.get("message", ""))}
+	var summary: Dictionary = SaveService.inspect_manual_slot(DELAYED_SOURCE_SAVE_RESUME_SLOT)
+	var restored = SaveService.restore_manual_session(DELAYED_SOURCE_SAVE_RESUME_SLOT)
+	if restored == null:
+		return {"ok": false, "stage": "restore", "error": "restore_manual_session returned null", "summary": summary}
+	OverworldRules.normalize_overworld_state(restored)
+	EnemyTurnRules.normalize_enemy_states(restored)
+	restored.game_state = "overworld"
+	restored.scenario_status = "in_progress"
+	var after_signature := _delayed_source_resume_signature(restored, placement_id, faction_id, source_schedule, required_resource_ids)
+	var before_second_count := _town_building_ids(_town(restored, placement_id)).size()
+	var second_result: Dictionary = EnemyTurnRules.run_enemy_town_economy_turn(restored, faction_id)
+	var after_second_count := _town_building_ids(_town(restored, placement_id)).size()
+	var second_events: Array = second_result.get("events", []) if second_result.get("events", []) is Array else []
+	var same_day_guard_ok := (
+		after_second_count == before_second_count
+		and _target_town_event_count(second_events, "ai_town_built", placement_id) == 0
+	)
+	var signature_ok := JSON.stringify(before_signature) == JSON.stringify(after_signature)
+	var resume_target_overworld := String(summary.get("resume_target", "")) == "overworld"
+	var source_state_preserved := bool(after_signature.get("source_schedule_state_matches", false))
+	var treasury_state_preserved := bool(after_signature.get("enemy_treasury_has_all_live_keys", false))
+	var target_build_preserved := String(built_building_id) in _string_array(after_signature.get("target_town", {}).get("built_buildings", []))
+	var ok := (
+		signature_ok
+		and same_day_guard_ok
+		and resume_target_overworld
+		and source_state_preserved
+		and treasury_state_preserved
+		and target_build_preserved
+	)
+	return {
+		"ok": ok,
+		"session": restored,
+		"slot": DELAYED_SOURCE_SAVE_RESUME_SLOT,
+		"built_building_id": built_building_id,
+		"signature_ok": signature_ok,
+		"same_day_guard_after_restore": same_day_guard_ok,
+		"resume_target_overworld": resume_target_overworld,
+		"source_state_preserved": source_state_preserved,
+		"treasury_state_preserved": treasury_state_preserved,
+		"target_build_preserved": target_build_preserved,
+		"save_version": int(restored.save_version),
+		"summary_resume_target": String(summary.get("resume_target", "")),
+		"second_turn_event_count": _target_town_event_count(second_events, "ai_town_built", placement_id),
+		"signature_before": before_signature,
+		"signature_after": after_signature,
+		"error": "" if ok else _delayed_source_save_resume_error(signature_ok, same_day_guard_ok, resume_target_overworld, source_state_preserved, treasury_state_preserved, target_build_preserved),
+	}
+
+func _delayed_source_save_resume_error(
+	signature_ok: bool,
+	same_day_guard_ok: bool,
+	resume_target_overworld: bool,
+	source_state_preserved: bool,
+	treasury_state_preserved: bool,
+	target_build_preserved: bool
+) -> String:
+	if not signature_ok:
+		return "AI economy/town/source signature changed after restore"
+	if not same_day_guard_ok:
+		return "AI same-day build guard was not preserved after restore"
+	if not resume_target_overworld:
+		return "save summary did not resume to overworld"
+	if not source_state_preserved:
+		return "delayed source node state was not preserved"
+	if not treasury_state_preserved:
+		return "enemy treasury state did not preserve all live resources"
+	if not target_build_preserved:
+		return "target rare-resource building was not preserved"
+	return "unknown delayed-source AI save/resume failure"
+
+func _delayed_source_resume_signature(
+	session,
+	placement_id: String,
+	faction_id: String,
+	source_schedule: Array,
+	required_resource_ids: Array
+) -> Dictionary:
+	return {
+		"save_version": int(session.save_version),
+		"scenario_id": String(session.scenario_id),
+		"day": int(session.day),
+		"game_state": String(session.game_state),
+		"scenario_status": String(session.scenario_status),
+		"enemy_treasury": _resources(_enemy_state(session, faction_id).get("treasury", {})),
+		"enemy_treasury_has_all_live_keys": _enemy_treasury_has_all_live_keys(session, faction_id),
+		"target_town": _town_development_signature(_town(session, placement_id)),
+		"applied_source_nodes": _applied_source_node_signature(session, source_schedule),
+		"source_schedule_state_matches": _applied_source_nodes_match_schedule(session, source_schedule, required_resource_ids, faction_id),
+	}
+
+func _town_development_signature(town: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"owner": String(town.get("owner", "")),
+		"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+		"built_buildings": _string_array(town.get("built_buildings", [])),
+		"last_build_day": int(town.get("last_build_day", 0)),
+		"available_recruits": _int_dictionary(town.get("available_recruits", {})),
+	}
+
+func _applied_source_node_signature(session, source_schedule: Array) -> Array:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	var rows := []
+	for schedule_value in source_schedule:
+		if not (schedule_value is Dictionary):
+			continue
+		var schedule: Dictionary = schedule_value
+		if not bool(schedule.get("applied", false)):
+			continue
+		var placement_id := String(schedule.get("placement_id", ""))
+		var node := _resource_node_by_placement_id(nodes, placement_id)
+		rows.append({
+			"placement_id": placement_id,
+			"site_id": String(schedule.get("site_id", "")),
+			"collected": bool(node.get("collected", false)),
+			"collected_day": int(node.get("collected_day", 0)),
+			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+			"resource_ids": _string_array(schedule.get("resource_ids", [])),
+		})
+	return rows
+
+func _applied_source_nodes_match_schedule(session, source_schedule: Array, required_resource_ids: Array, faction_id: String) -> bool:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	var covered := {}
+	var any_applied := false
+	for schedule_value in source_schedule:
+		if not (schedule_value is Dictionary):
+			continue
+		var schedule: Dictionary = schedule_value
+		if not bool(schedule.get("applied", false)):
+			continue
+		any_applied = true
+		var node := _resource_node_by_placement_id(nodes, String(schedule.get("placement_id", "")))
+		if node.is_empty():
+			return false
+		if bool(schedule.get("persistent_control", false)) and String(node.get("collected_by_faction_id", "")) != faction_id:
+			return false
+		var claims: Dictionary = schedule.get("claim_rewards", {}) if schedule.get("claim_rewards", {}) is Dictionary else {}
+		if not claims.is_empty() and not bool(node.get("collected", false)):
+			return false
+		for resource_id in _string_array(schedule.get("resource_ids", [])):
+			covered[resource_id] = true
+	if not any_applied:
+		return false
+	for resource_id in required_resource_ids:
+		var id := String(resource_id)
+		if id == "gold":
+			continue
+		if bool(covered.get(id, false)):
+			return true
+	return false
 
 func _clone_session(session):
 	var clone = SessionStateStore.SessionData.new()
@@ -815,6 +1025,28 @@ func _resources(resources: Variant) -> Dictionary:
 
 func _blank_resources() -> Dictionary:
 	return _resources({})
+
+func _int_dictionary(value: Variant) -> Dictionary:
+	var result := {}
+	if not (value is Dictionary):
+		return result
+	for key in value.keys():
+		result[String(key)] = int(value.get(key, 0))
+	return result
+
+func _resource_node_by_placement_id(nodes: Array, placement_id: String) -> Dictionary:
+	for node_value in nodes:
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+			return node_value
+	return {}
+
+func _without_session(payload: Dictionary) -> Dictionary:
+	var result := {}
+	for key in payload.keys():
+		if String(key) == "session":
+			continue
+		result[key] = payload.get(key)
+	return result
 
 func _array_size(value: Variant) -> int:
 	return value.size() if value is Array else 0
