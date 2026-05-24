@@ -2839,10 +2839,24 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "target_building_count",
         "non_unit_building_count",
+        "TARGET_TIER_COUNT",
+        "TownRules.get_recruit_actions",
+        "OverworldRules.recruit_in_active_town",
+        "recruitment_end_to_end_town_count",
+        "seven_tier_recruitment_case_count",
+        "recruited_unit_case_count",
+        "recruitment_end_to_end_ok",
     ):
         ensure(token in script_text, errors, f"Town development runtime balance report is missing token {token}")
     ensure("res://tests/town_development_runtime_balance_report.gd" in scene_text, errors, "Town development runtime balance scene must load its report script")
-    ensure("live Godot rules" in doc_text and "same-day second build" in doc_text, errors, "Town development runtime balance doc must record live-rule and same-day-build evidence")
+    ensure(
+        "live Godot rules" in doc_text
+        and "same-day second build" in doc_text
+        and "seven-tier recruitment" in doc_text
+        and "105 recruitment cases" in doc_text,
+        errors,
+        "Town development runtime balance doc must record live-rule, same-day-build, and seven-tier recruitment evidence",
+    )
 
 
 def validate_town_development_save_resume_policy(errors: list[str]) -> None:

@@ -1,6 +1,7 @@
 extends Node
 
 const TARGET_TURNS := 30
+const TARGET_TIER_COUNT := 7
 const MIN_BUILDABLE_TARGETS := 12
 const MIN_NON_UNIT_BUILDABLE_TARGETS := 5
 const SIX_FACTION_BREADTH_PARITY_STATUS := "six_faction_town_breadth_parity"
@@ -51,6 +52,9 @@ func _run() -> void:
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"normal_market_resource_ids": COMMON_MARKET_RESOURCE_IDS,
 		"authored_town_count": 0,
+		"recruitment_end_to_end_town_count": 0,
+		"seven_tier_recruitment_case_count": 0,
+		"recruited_unit_case_count": 0,
 		"towns": {},
 		"errors": _errors,
 	}
@@ -77,6 +81,12 @@ func _run() -> void:
 			_errors.append("%s did not expose enough buildable town-development targets" % town_id)
 		if int(town_result.get("non_unit_building_count", 0)) < MIN_NON_UNIT_BUILDABLE_TARGETS:
 			_errors.append("%s did not expose enough non-unit town-development targets" % town_id)
+		if bool(town_result.get("recruitment_end_to_end_ok", false)):
+			report["recruitment_end_to_end_town_count"] = int(report.get("recruitment_end_to_end_town_count", 0)) + 1
+		else:
+			_errors.append("%s did not recruit through its full seven-tier ladder after development" % town_id)
+		report["seven_tier_recruitment_case_count"] = int(report.get("seven_tier_recruitment_case_count", 0)) + int(town_result.get("recruitment_case_count", 0))
+		report["recruited_unit_case_count"] = int(report.get("recruited_unit_case_count", 0)) + int(town_result.get("recruited_unit_case_count", 0))
 	report["ok"] = _errors.is_empty()
 	print("TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT %s" % JSON.stringify(report))
 	get_tree().quit(0 if _errors.is_empty() else 1)
@@ -152,6 +162,7 @@ func _run_town_case(town_template: Dictionary, faction: Dictionary) -> Dictionar
 			break
 
 	var missing := _missing_buildings(session, target_buildings)
+	var recruitment_report := _recruitment_end_to_end_report(session, faction)
 	return {
 		"town_id": town_id,
 		"faction_id": String(faction.get("id", "")),
@@ -168,11 +179,113 @@ func _run_town_case(town_template: Dictionary, faction: Dictionary) -> Dictionar
 		"rare_spend_observed": not rare_spend_events.is_empty(),
 		"rare_spend_events": rare_spend_events,
 		"market_common_only": market_common_only,
+		"recruitment_end_to_end_ok": bool(recruitment_report.get("ok", false)),
+		"recruitment_case_count": int(recruitment_report.get("case_count", 0)),
+		"recruited_unit_case_count": int(recruitment_report.get("recruited_unit_case_count", 0)),
+		"recruitment_report": recruitment_report,
 		"support_income_nodes": session.overworld.get("resource_nodes", []).size(),
 		"ending_resources": _resources(session),
 		"stalled_days": stalled_days.slice(0, 5),
 		"build_log": build_log,
 	}
+
+func _recruitment_end_to_end_report(session, faction: Dictionary) -> Dictionary:
+	_set_active_town(session)
+	var ladder_ids := _string_array(faction.get("unit_ladder_ids", []))
+	var rows := []
+	var errors := []
+	var recruited_count := 0
+	var before_army := _army_stack_counts(session)
+	if ladder_ids.size() != TARGET_TIER_COUNT:
+		errors.append("%s unit ladder must expose seven tiers" % String(faction.get("id", "")))
+	for index in range(ladder_ids.size()):
+		var unit_id := String(ladder_ids[index])
+		var expected_tier := index + 1
+		var action := _recruit_action_for(session, unit_id)
+		var row := {
+			"ok": false,
+			"unit_id": unit_id,
+			"expected_tier": expected_tier,
+			"action_found": not action.is_empty(),
+		}
+		if action.is_empty():
+			row["error"] = "missing recruit action"
+			errors.append("%s missing recruit action for %s" % [String(faction.get("id", "")), unit_id])
+			rows.append(row)
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		var before_count := int(_army_stack_counts(session).get(unit_id, 0))
+		var available_before := int(action.get("available_count", 0))
+		var weekly_growth := int(action.get("weekly_growth", 0))
+		var direct_affordable_count := int(action.get("direct_affordable_count", 0))
+		row["unit_name"] = String(unit.get("name", unit_id))
+		row["unit_tier"] = int(action.get("unit_tier", 0))
+		row["tier_label"] = String(action.get("tier_label", ""))
+		row["available_before"] = available_before
+		row["weekly_growth"] = weekly_growth
+		row["direct_affordable_count"] = direct_affordable_count
+		row["unit_cost"] = action.get("unit_cost", {})
+		if int(unit.get("tier", 0)) != expected_tier or int(action.get("unit_tier", 0)) != expected_tier:
+			row["error"] = "tier mismatch"
+		elif available_before <= 0:
+			row["error"] = "no recruits available"
+		elif weekly_growth <= 0:
+			row["error"] = "weekly growth missing"
+		elif direct_affordable_count <= 0:
+			row["error"] = "not directly affordable"
+		elif not String(action.get("summary", "")).contains("Tier %d" % expected_tier):
+			row["error"] = "summary missing tier label"
+		else:
+			var recruit_result: Dictionary = OverworldRules.recruit_in_active_town(session, unit_id, 1)
+			var after_count := int(_army_stack_counts(session).get(unit_id, 0))
+			row["recruit_result_ok"] = bool(recruit_result.get("ok", false))
+			row["recruit_message"] = String(recruit_result.get("message", ""))
+			row["army_count_before"] = before_count
+			row["army_count_after"] = after_count
+			if not bool(recruit_result.get("ok", false)):
+				row["error"] = "recruit action failed"
+			elif after_count != before_count + 1:
+				row["error"] = "field army did not receive recruit"
+			else:
+				row["ok"] = true
+				recruited_count += 1
+		if not bool(row.get("ok", false)):
+			errors.append("%s %s tier %d recruitment failed: %s" % [
+				String(faction.get("id", "")),
+				unit_id,
+				expected_tier,
+				String(row.get("error", "unknown")),
+			])
+		rows.append(row)
+	var after_army := _army_stack_counts(session)
+	return {
+		"ok": errors.is_empty() and ladder_ids.size() == TARGET_TIER_COUNT and recruited_count == TARGET_TIER_COUNT,
+		"faction_id": String(faction.get("id", "")),
+		"case_count": rows.size(),
+		"recruited_unit_case_count": recruited_count,
+		"army_before": before_army,
+		"army_after": after_army,
+		"tiers": rows,
+		"errors": errors,
+	}
+
+func _recruit_action_for(session, unit_id: String) -> Dictionary:
+	_set_active_town(session)
+	for action_value in TownRules.get_recruit_actions(session):
+		if action_value is Dictionary and String(action_value.get("id", "")) == "recruit:%s" % unit_id:
+			return action_value
+	return {}
+
+func _army_stack_counts(session) -> Dictionary:
+	var counts := {}
+	for stack_value in session.overworld.get("army", {}).get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		if unit_id == "":
+			continue
+		counts[unit_id] = int(counts.get(unit_id, 0)) + int(stack_value.get("count", 0))
+	return counts
 
 func _build_runtime_session(town_template: Dictionary, profile: Dictionary):
 	var hero_template := ContentService.get_hero(HERO_ID)

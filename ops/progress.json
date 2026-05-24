@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-ai-full-session-development-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario AI Full Session Development Runway",
+  "currentSliceId": "economy-town-development-seven-tier-recruitment-end-to-end-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Seven Tier Recruitment End To End",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active-scenario full-session enemy-town development runway gate. The focused report now runs target-faction AI town construction inside ScenarioFactory-created active scenario sessions, records authored map/resource-node/encounter/enemy-state evidence, completes 20/20 enemy-town cases within 30 turns, observes rare-resource spend in every case, proves all 20 same-day second AI builds are blocked, and feeds secured scenario-authored economy sources into the live enemy treasury.",
+  "currentSliceNotes": "Completed post-development seven-tier recruitment gate. The live town development runtime report now fully develops all 15 authored towns, then proves each owning faction's seven-tier ladder is exposed through live recruit actions and recruits 105/105 tier cases through OverworldRules.recruit_in_active_town.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:59:00Z",
+  "updatedAt": "2026-05-24T23:59:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-seven-tier-recruitment-end-to-end-20260524-10184",
+      "title": "Economy Town Development Seven Tier Recruitment End To End",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T23:59:30Z",
+      "completedAt": "2026-05-24T23:59:30Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md"
+      ],
+      "implementationTargets": [
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "After each authored town completes live development, the report validates the owning faction's seven-tier unit ladder through live recruit actions.",
+        "Each tier action exposes matching tier metadata, available recruits, weekly growth, direct affordability, and a tier label.",
+        "The report recruits one unit from each tier through OverworldRules.recruit_in_active_town and proves the field army receives the unit.",
+        "Repository validation gates the strengthened runtime report and documentation evidence."
+      ],
+      "notes": "Completed: post-development seven-tier recruitment now runs end to end for every authored town through live town recruit rules.",
+      "completionEvidence": {
+        "authored_town_count": 15,
+        "recruitment_end_to_end_town_count": 15,
+        "seven_tier_recruitment_case_count": 105,
+        "recruited_unit_case_count": 105,
+        "target_tier_count": 7,
+        "target_turns": 30,
+        "validated": [
+          "godot --headless --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/town_development_cost_curve_report.py",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-ai-full-session-development-runway-20260524-10184",
       "title": "Economy Active Scenario AI Full Session Development Runway",
