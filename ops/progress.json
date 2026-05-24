@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "player-facing-authored-skirmish-browser-20260523-10184",
-  "currentSliceTitle": "Player-Facing Authored Skirmish Browser",
+  "currentSliceId": "player-facing-campaign-launch-smoke-20260524-10184",
+  "currentSliceTitle": "Player-Facing Campaign Launch Smoke",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active authored skirmish scenario exposure in the player-facing skirmish browser while preserving generated-map draft/package isolation.",
+  "currentSliceNotes": "Completed focused campaign menu smoke launch coverage for an actual Campaign-mode session from campaign_reedfall / river-pass.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T00:19:00Z",
+  "updatedAt": "2026-05-24T00:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "player-facing-campaign-launch-smoke-20260524-10184",
+      "title": "Player-Facing Campaign Launch Smoke",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scenes/menus/MainMenu.gd",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "docs/player-facing-campaign-reactivation-smoke-report.md"
+      ],
+      "purpose": "Prove the reactivated campaign board can start a real Campaign-mode session from the selected chapter, not only preview it.",
+      "implementationTargets": [
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/validate_repo.py",
+        "docs/player-facing-campaign-reactivation-smoke-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focused campaign menu smoke calls validation_start_selected_campaign_chapter after selecting campaign_reedfall / river-pass.",
+        "The launch result proves active scenario id, launch mode, campaign id, campaign name, and chapter label.",
+        "Repository validation gates the launch smoke evidence tokens."
+      ],
+      "nonGoals": [
+        "No new campaign content.",
+        "No full manual playthrough proof.",
+        "No campaign balance or polish claim."
+      ],
+      "startedAt": "2026-05-24T00:28:00Z",
+      "updatedAt": "2026-05-24T00:35:00Z",
+      "notes": "Completed by extending player_facing_campaign_menu_smoke to call validation_start_selected_campaign_chapter and assert active Campaign-mode session identity.",
+      "completedAt": "2026-05-24T00:35:00Z",
+      "completionEvidence": [
+        "tests/player_facing_campaign_menu_smoke.tscn now reports launch_started=true for campaign_reedfall / river-pass.",
+        "The smoke asserts active_scenario_id river-pass, active_launch_mode campaign, active_campaign_id campaign_reedfall, active_campaign_name, and active_campaign_chapter_label.",
+        "tests/validate_repo.py gates the launch evidence tokens."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "PLAYER_FACING_CAMPAIGN_MENU_SMOKE",
+          "campaign_id": "campaign_reedfall",
+          "scenario_id": "river-pass",
+          "launch_started": true,
+          "active_launch_mode": "campaign",
+          "full_campaign_playthrough_claim": false
+        }
+      }
+    },
     {
       "id": "player-facing-authored-skirmish-browser-20260523-10184",
       "title": "Player-Facing Authored Skirmish Browser",
