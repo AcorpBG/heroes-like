@@ -1849,11 +1849,12 @@ func _session_save_resume_recap(session: SessionStateStoreScript.SessionData, su
 	return "\n".join(lines)
 
 func _session_changed_recap_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
-	var recap := _preferred_recent_action_recap(session, String(summary.get("resume_target", "overworld")))
+	var resume_target := String(summary.get("resume_target", "overworld"))
+	var recap := _preferred_recent_action_recap(session, resume_target)
 	var recap_summary := _action_recap_change_summary(recap)
 	if recap_summary != "":
 		return recap_summary
-	var battle_summary := _battle_aftermath_summary(session)
+	var battle_summary := _battle_aftermath_summary(session) if resume_target == "battle" else ""
 	if battle_summary != "":
 		return battle_summary
 	var progress_recent := _line_with_prefix(
@@ -1865,7 +1866,7 @@ func _session_changed_recap_line(session: SessionStateStoreScript.SessionData, s
 	var scenario_summary := String(summary.get("scenario_summary", "")).strip_edges()
 	if scenario_summary != "":
 		return _safe_player_text(scenario_summary, 220)
-	return "No recent action recap is stored; resume to make the next map, town, or battle order."
+	return "No recent action recap is stored; resume to make the next scene order."
 
 func _session_next_decision_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
 	var recap := _preferred_recent_action_recap(session, String(summary.get("resume_target", "overworld")))
@@ -1904,9 +1905,9 @@ func _preferred_recent_action_recap(session: SessionStateStoreScript.SessionData
 		"battle":
 			ordered_keys = ["last_battle_action_recap", "last_overworld_action_recap", "last_town_action_recap"]
 		"town":
-			ordered_keys = ["last_town_action_recap", "last_overworld_action_recap", "last_battle_action_recap"]
+			ordered_keys = ["last_town_action_recap", "last_overworld_action_recap"]
 		_:
-			ordered_keys = ["last_overworld_action_recap", "last_town_action_recap", "last_battle_action_recap"]
+			ordered_keys = ["last_overworld_action_recap", "last_town_action_recap"]
 	for key in ordered_keys:
 		var value = session.flags.get(key, {})
 		var recap := _normalize_saved_action_recap(value)

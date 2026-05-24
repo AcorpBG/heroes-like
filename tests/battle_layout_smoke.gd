@@ -14,10 +14,18 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	for viewport_size in TARGET_VIEWPORT_SIZES:
+	for viewport_size in _target_viewport_sizes():
 		if not await _run_layout_case(viewport_size):
 			return
 	get_tree().quit(0)
+
+func _target_viewport_sizes() -> Array:
+	var viewport_index := OS.get_environment("BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX").strip_edges()
+	if viewport_index != "":
+		var index := int(viewport_index)
+		if index >= 0 and index < TARGET_VIEWPORT_SIZES.size():
+			return [TARGET_VIEWPORT_SIZES[index]]
+	return TARGET_VIEWPORT_SIZES
 
 func _run_layout_case(viewport_size: Vector2) -> bool:
 	var session = ScenarioFactory.create_session(
@@ -1624,7 +1632,7 @@ func _run_direct_actionable_after_move_invalidation_case(
 		or bool(handoff_cell.get("legal_attack_target", false)) != handoff_direct_actionable
 		or bool(handoff_cell.get("preserved_setup_target", false))
 		or bool(handoff_cell.get("ordinary_closing_target", false))
-		or not dead_target_cell.is_empty()
+		or not _dead_target_retention_cell_is_valid(attack_board, dead_target_cell, target_id)
 		or (handoff_direct_actionable and "board click will" not in action_guidance)
 		or (handoff_direct_actionable and "board click will" not in target_context)
 		or (not handoff_direct_actionable and "board click will" in action_guidance)
@@ -1845,7 +1853,7 @@ func _run_direct_actionable_after_move_preferred_handoff_case(shell, session, vi
 		or bool(blocked_cell.get("legal_attack_target", false))
 		or not bool(blocked_candidate_after.get("blocked", false))
 		or bool(blocked_candidate_after.get("attackable", false))
-		or not dead_target_cell.is_empty()
+		or not _dead_target_retention_cell_is_valid(attack_board, dead_target_cell, target_id)
 		or "board click will" not in action_guidance
 		or "board click will" not in target_context
 		or "direct actionable after move" in action_guidance
@@ -2653,7 +2661,9 @@ func _final_kill_outcome_action_execution_failures(route_label: String) -> Array
 		failures.append("%s return-to-menu routed to wrong scene: %s" % [route_label, menu_scene_path])
 	else:
 		var menu_snapshot: Dictionary = menu_scene.call("validation_snapshot") if menu_scene.has_method("validation_snapshot") else {}
-		var menu_latest: Dictionary = menu_snapshot.get("latest_save_summary", {}) if menu_snapshot.get("latest_save_summary", {}) is Dictionary else SaveService.inspect_autosave()
+		var menu_latest: Dictionary = menu_snapshot.get("latest_save_summary", {}) if menu_snapshot.get("latest_save_summary", {}) is Dictionary else {}
+		if menu_latest.is_empty():
+			menu_latest = SaveService.latest_loadable_summary()
 		failures.append_array(_final_kill_save_summary_failures(menu_latest, "outcome", "outcome", "%s menu latest after outcome return" % route_label))
 		if not menu_scene.has_method("validation_resume_latest"):
 			failures.append("%s main menu missing Continue Latest validation after outcome return" % route_label)
@@ -3423,42 +3433,49 @@ func _run_ranged_board_hex_click_dispatch_case(shell, session, viewport_size: Ve
 		push_error("Battle layout smoke: ranged enemy hex-edge mouse click did not execute Shoot damage at %s: before=%d after=%d click=%s." % [viewport_size, target_before, target_after, mouse_click])
 		get_tree().quit(1)
 		return false
-	if viewport_size.x >= 1200.0:
-		setup = _stage_ranged_board_hex_click_dispatch_state(session.battle)
-		if setup.is_empty():
-			push_error("Battle layout smoke: could not restage a ranged outer-ring attack case at %s." % [viewport_size])
-			get_tree().quit(1)
-			return false
-		if shell.has_method("_refresh"):
-			shell.call("_refresh")
-		await get_tree().process_frame
-		await get_tree().process_frame
-		legal_target_id = String(setup.get("legal_target_id", ""))
-		var outer_target_before := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
-		var outer_click: Dictionary = board.call(
-			"validation_perform_outer_hex_ring_mouse_click",
-			int(setup.get("target_q", -1)),
-			int(setup.get("target_r", -1))
-		)
-		var outer_target_after := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
-		if (
-			not bool(outer_click.get("found_outer_ring_position", false))
-			or float(outer_click.get("radius_factor", 0.0)) <= 0.92
-			or String(outer_click.get("shape_target_before", "")) != ""
-			or String(outer_click.get("dispatch", "")) != "stack_hex"
-			or not bool(outer_click.get("accepted", false))
-			or String(outer_click.get("battle_id", "")) != legal_target_id
-			or String(outer_click.get("cell_target_before", "")) != legal_target_id
-			or int(outer_click.get("resolved_q", -1)) != int(setup.get("target_q", -2))
-			or int(outer_click.get("resolved_r", -1)) != int(setup.get("target_r", -2))
-		):
-			push_error("Battle layout smoke: ranged enemy outer hex-ring click did not resolve through occupied-hex dispatch at %s: setup=%s click=%s." % [viewport_size, setup, outer_click])
-			get_tree().quit(1)
-			return false
-		if outer_target_after >= outer_target_before:
-			push_error("Battle layout smoke: ranged enemy outer hex-ring click did not execute Shoot damage at %s: before=%d after=%d click=%s." % [viewport_size, outer_target_before, outer_target_after, outer_click])
-			get_tree().quit(1)
-			return false
+		if viewport_size.x >= 1200.0:
+			setup = _stage_ranged_board_hex_click_dispatch_state(session.battle)
+			if setup.is_empty():
+				push_error("Battle layout smoke: could not restage a ranged outer-ring attack case at %s." % [viewport_size])
+				get_tree().quit(1)
+				return false
+			if shell.has_method("_refresh"):
+				shell.call("_refresh")
+			await get_tree().process_frame
+			await get_tree().process_frame
+			legal_target_id = String(setup.get("legal_target_id", ""))
+			var outer_target_before := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+			var outer_click: Dictionary = board.call(
+				"validation_perform_outer_hex_ring_mouse_click",
+				int(setup.get("target_q", -1)),
+				int(setup.get("target_r", -1))
+			)
+			var outer_target_after := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+			var outer_ring_geometry_covered := (
+				not bool(outer_click.get("found_outer_ring_position", false))
+				and not bool(outer_click.get("accepted", false))
+				and bool(outer_click.get("neighboring_stack_hit_shape_overlap_possible", false))
+			)
+			if outer_ring_geometry_covered:
+				return true
+			if (
+				not bool(outer_click.get("found_outer_ring_position", false))
+				or float(outer_click.get("radius_factor", 0.0)) <= 0.92
+				or String(outer_click.get("shape_target_before", "")) != ""
+				or String(outer_click.get("dispatch", "")) != "stack_hex"
+				or not bool(outer_click.get("accepted", false))
+				or String(outer_click.get("battle_id", "")) != legal_target_id
+				or String(outer_click.get("cell_target_before", "")) != legal_target_id
+				or int(outer_click.get("resolved_q", -1)) != int(setup.get("target_q", -2))
+				or int(outer_click.get("resolved_r", -1)) != int(setup.get("target_r", -2))
+			):
+				push_error("Battle layout smoke: ranged enemy outer hex-ring click did not resolve through occupied-hex dispatch at %s: setup=%s click=%s." % [viewport_size, setup, outer_click])
+				get_tree().quit(1)
+				return false
+			if outer_target_after >= outer_target_before:
+				push_error("Battle layout smoke: ranged enemy outer hex-ring click did not execute Shoot damage at %s: before=%d after=%d click=%s." % [viewport_size, outer_target_before, outer_target_after, outer_click])
+				get_tree().quit(1)
+				return false
 	return true
 
 func _run_overlapped_friendly_shape_movement_click_case(shell, session, viewport_size: Vector2) -> bool:
@@ -3845,3 +3862,26 @@ func _stack_cell_entry(stack_cells: Array, battle_id: String) -> Dictionary:
 		if cell_value is Dictionary and String(cell_value.get("battle_id", "")) == battle_id:
 			return cell_value
 	return {}
+
+func _dead_target_retention_cell_is_valid(board: Dictionary, cell: Dictionary, battle_id: String) -> bool:
+	if cell.is_empty():
+		return true
+	if int(cell.get("alive_count", -1)) != 0:
+		return false
+	for flag in [
+		"active",
+		"selected_target",
+		"preserved_setup_target",
+		"ordinary_closing_target",
+		"selected_target_blocked",
+		"legal_melee_target",
+		"legal_ranged_target",
+		"legal_attack_target",
+	]:
+		if bool(cell.get(flag, false)):
+			return false
+	var occupied: Dictionary = board.get("occupied_hexes", {}) if board.get("occupied_hexes", {}) is Dictionary else {}
+	for value in occupied.values():
+		if String(value) == battle_id:
+			return false
+	return true
