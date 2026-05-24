@@ -105,6 +105,9 @@ TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
+ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_economy_source_route_report.gd"
+ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_economy_source_route_report.tscn"
+ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-town-economy-source-route-report.md"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.gd"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.tscn"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-development-runway-report.md"
@@ -19094,6 +19097,100 @@ def validate_active_scenario_rare_economy_access(errors: list[str]) -> None:
     ensure({"aetherglass", "embergrain", "peatwax"}.issubset(covered_rare_ids), errors, "Active scenario rare access gate must cover the live player-facing rare-resource mix")
 
 
+def validate_active_scenario_town_economy_source_route(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town economy source route report script is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH.exists(), errors, "Active scenario town economy source route report scene is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH.exists(), errors, "Active scenario town economy source route report doc is missing")
+    if not ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT",
+        "active_scenario_town_economy_source_route_report_v1",
+        "ScenarioFactory.create_session",
+        "OverworldRules.tile_is_blocked",
+        "OverworldRules.tile_is_actionable_route_destination",
+        "OverworldRules.tile_has_route_interaction",
+        "OverworldRules.tile_step_cuts_blocked_corner",
+        "MAX_COMMON_ROUTE_STEPS",
+        "MAX_RARE_ROUTE_STEPS",
+        "resource_route_case_count",
+        "reachable_route_case_count",
+        "_best_resource_route",
+        "_resource_source_has_guard",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario town economy source route report is missing token {required_token}")
+    ensure("res://tests/active_scenario_town_economy_source_route_report.gd" in scene_text, errors, "Active scenario town economy source route scene must load its report script")
+    for required_text in (
+        "Economy Active Scenario Town Economy Source Route Report",
+        "economy-active-scenario-town-economy-source-route-20260524-10184",
+        "active_scenario_town_economy_source_route_report_v1",
+        "16 active scenarios",
+        "18 player-town cases",
+        "54 resource route cases",
+        "54 reachable route cases",
+        "normal markets remain common-resource only",
+        "not final encounter pacing",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario town economy source route doc is missing required text: {required_text}")
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    active_scenario_count = 0
+    player_town_case_count = 0
+    resource_route_case_count = 0
+    for scenario_id, scenario in sorted(scenarios.items()):
+        if not isinstance(scenario, dict):
+            continue
+        selection = scenario.get("selection", {})
+        availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
+        if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
+            continue
+        active_scenario_count += 1
+        resource_nodes = scenario.get("resource_nodes", [])
+        resource_nodes = resource_nodes if isinstance(resource_nodes, list) else []
+        resource_outputs: dict[str, list[str]] = {}
+        for node in resource_nodes:
+            if not isinstance(node, dict):
+                continue
+            placement_id = str(node.get("placement_id", "")).strip()
+            site = resource_sites.get(str(node.get("site_id", "")).strip(), {})
+            if not isinstance(site, dict):
+                continue
+            for bucket in (site.get("claim_rewards", site.get("rewards", {})), site.get("control_income", {})):
+                if not isinstance(bucket, dict):
+                    continue
+                for resource_id, amount in bucket.items():
+                    try:
+                        if int(amount) > 0:
+                            resource_outputs.setdefault(str(resource_id), []).append(placement_id)
+                    except (TypeError, ValueError):
+                        pass
+        for town in scenario.get("towns", []):
+            if not isinstance(town, dict) or str(town.get("owner", "")) != "player":
+                continue
+            player_town_case_count += 1
+            town_placement_id = str(town.get("placement_id", "")).strip()
+            town_id = str(town.get("town_id", "")).strip()
+            town_template = towns.get(town_id, {})
+            profile = town_template.get("development_balance", {}) if isinstance(town_template, dict) else {}
+            profile = profile if isinstance(profile, dict) else {}
+            rare_id = str(profile.get("rare_resource_id", "")).strip()
+            for resource_id in ("wood", "ore", rare_id):
+                resource_route_case_count += 1
+                ensure(bool(resource_id), errors, f"{scenario_id}.{town_placement_id} needs a non-empty required resource id")
+                ensure(bool(resource_outputs.get(resource_id, [])), errors, f"{scenario_id}.{town_placement_id} town {town_id} needs an authored {resource_id} source route candidate")
+    ensure(active_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover the active authored scenario roster")
+    ensure(player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover every current active player-town case")
+    ensure(resource_route_case_count == player_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every player town")
+
+
 def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town unit tier runtime surface report script is missing")
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town unit tier runtime surface report scene is missing")
@@ -19550,6 +19647,7 @@ def main() -> int:
     validate_live_stockpile_resource_surface(errors)
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
+    validate_active_scenario_town_economy_source_route(errors)
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_economy_resource_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
