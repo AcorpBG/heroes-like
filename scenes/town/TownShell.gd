@@ -307,6 +307,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_header_label.text = String(view_state.get("header_text", ""))
 	_status_label.text = String(view_state.get("status_text", ""))
 	_resource_label.text = String(view_state.get("resources_text", ""))
+	_resource_label.tooltip_text = String(view_state.get("resources_tooltip_text", ""))
 	_crest_label.text = _crest_text()
 	if _crest_glyph.has_method("set_glyph"):
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
@@ -494,6 +495,7 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dictionary, minimal: bool = false) -> void:
 	var current_lanes := _current_town_tab_lanes()
 	view_state["resources_text"] = OverworldRules.describe_resources(_session)
+	view_state["resources_tooltip_text"] = _resource_ledger_tooltip_text()
 	view_state["departure"] = _cached_departure_dynamic(view_state.get("departure", {}))
 	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(String(view_state.get("dispatch_text", "")))
 	if not minimal:
@@ -646,6 +648,12 @@ func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
 	_last_departure_confirmation = departure.duplicate(true)
 	return departure
 
+func _resource_ledger_tooltip_text() -> String:
+	return "Resource Ledger\nFull stockpile: %s" % OverworldRules.describe_resource_stockpile(
+		_session.overworld.get("resources", {}),
+		true
+	)
+
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var current_lanes := _current_town_tab_lanes()
 	var defense_check := _defense_check_surface()
@@ -681,6 +689,7 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"header_text": TownRules.describe_header(_session),
 		"status_text": TownRules.describe_status(_session),
 		"resources_text": OverworldRules.describe_resources(_session),
+		"resources_tooltip_text": _resource_ledger_tooltip_text(),
 		"outlook_text": TownRules.describe_outlook_board(_session),
 		"command_ledger_text": TownRules.describe_command_ledger(_session),
 		"hero_text": OverworldRules.describe_hero(_session),
@@ -1209,6 +1218,11 @@ func validation_snapshot() -> Dictionary:
 		"built_building_count": _normalize_string_array(town.get("built_buildings", [])).size(),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"live_stockpile_resource_ids": OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS.duplicate(),
+		"resources_text": OverworldRules.describe_resources(_session),
+		"resources_visible_text": _resource_label.text,
+		"resources_tooltip_text": _resource_label.tooltip_text,
+		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
 		"hero_text": OverworldRules.describe_hero(_session),
 		"hero_visible_text": _hero_label.text,
 		"hero_tooltip_text": _hero_label.tooltip_text,
@@ -1407,6 +1421,16 @@ func validation_action_catalog() -> Dictionary:
 		"artifact": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
 		"specialty": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
 		"hero": _duplicate_action_array(TownRules.get_hero_actions(_session)),
+	}
+
+func validation_resource_ledger_snapshot() -> Dictionary:
+	return {
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"live_stockpile_resource_ids": OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS.duplicate(),
+		"resources_text": OverworldRules.describe_resources(_session),
+		"resources_visible_text": _resource_label.text,
+		"resources_tooltip_text": _resource_label.tooltip_text,
+		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
 	}
 
 func validation_unit_art_summary() -> Dictionary:

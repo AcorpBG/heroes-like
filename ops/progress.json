@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-six-faction-town-development-breadth-parity-20260524-10184",
-  "currentSliceTitle": "Economy Six-Faction Town Development Breadth Parity",
+  "currentSliceId": "economy-town-resource-ui-surface-20260524-10184",
+  "currentSliceTitle": "Economy Town Resource UI Surface",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "15/15 authored towns now have at least 12 buildable targets and at least 5 non-unit targets; 6 newer-faction towns carry explicit breadth-parity buildings.",
+  "currentSliceNotes": "TownShell now exposes a full nine-resource ledger tooltip/snapshot, and a focused live TownShell report covers six faction seed towns, rare-cost blocked readiness, common-only markets, and direct affordability after stocking rare resources.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-24T17:13:02Z",
   "statusTaxonomy": {
@@ -20779,6 +20779,56 @@
         "normal_market_common_only": true,
         "save_version_bump": false
       }
+    },
+    {
+      "id": "economy-town-resource-ui-surface-20260524-10184",
+      "title": "Economy Town Resource UI Surface",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T17:58:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-economy-resource-ui-surface-report.md"
+      ],
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "tests/town_economy_resource_ui_surface_report.gd",
+        "tests/town_economy_resource_ui_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-economy-resource-ui-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "TownShell exposes a full nine-resource live stockpile ledger without expanding the compact visible resource line.",
+        "A focused live TownShell report covers six faction seed towns and all six rare resources.",
+        "Rare-cost high-tier building actions block on missing faction rare resources and do not become market-coverable through normal wood/ore exchange.",
+        "The same rare-cost actions become directly affordable after stocking the required rare resource.",
+        "Repository validation gates the report, scene, documentation, and TownShell ledger hooks."
+      ],
+      "notes": "Completed live TownShell full-resource ledger and rare-cost readiness surface gate.",
+      "completedAt": "2026-05-24T17:58:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-economy-ui-surface.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-battle-visual-smoke.log --path . --scene res://tests/town_battle_visual_smoke.tscn",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/buildings.json content/towns.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "faction_case_count": 6,
+        "live_stockpile_resource_count": 9,
+        "rare_resource_case_count": 6,
+        "normal_market_resource_ids": [
+          "wood",
+          "ore"
+        ],
+        "notes": "TownShell report covers six faction seed towns, full nine-resource ledger tooltip/snapshot, rare-cost blocked readiness without market coverage, and direct affordability after stocking the required rare resource."
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -26622,12 +26672,12 @@
     ]
   },
   "active_slice": {
-    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
-    "title": "Economy Six-Faction Town Development Breadth Parity",
+    "id": "economy-town-resource-ui-surface-20260524-10184",
+    "title": "Economy Town Resource UI Surface",
     "status": "completed",
-    "updatedAt": "2026-05-24T17:13:02Z"
+    "updatedAt": "2026-05-24T17:58:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T17:13:02Z",
+  "currentSliceUpdatedAt": "2026-05-24T17:58:00Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -27181,9 +27231,9 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
-    "title": "Economy Six-Faction Town Development Breadth Parity",
+    "id": "economy-town-resource-ui-surface-20260524-10184",
+    "title": "Economy Town Resource UI Surface",
     "status": "completed",
-    "updatedAt": "2026-05-24T17:13:02Z"
+    "updatedAt": "2026-05-24T17:58:00Z"
   }
 }
