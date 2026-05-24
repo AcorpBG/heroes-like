@@ -241,15 +241,17 @@ func _set_active_town(session) -> void:
 
 func _select_building_id(session, target_buildings: Array, signature_order: Dictionary) -> String:
 	var actions := []
-	for action_value in TownRules.get_build_actions(session):
-		if not (action_value is Dictionary):
+	var town := _town(session)
+	var resources := _resources(session)
+	for building_id_value in OverworldRules.get_town_build_options(town, int(session.day)):
+		var building_id := String(building_id_value)
+		if building_id not in target_buildings:
 			continue
-		var action: Dictionary = action_value
-		if bool(action.get("disabled", false)):
+		var building := ContentService.get_building(building_id)
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, building.get("cost", {}), int(session.day))
+		if not bool(readiness.get("direct_affordable", false)):
 			continue
-		var building_id := String(action.get("id", "")).trim_prefix("build:")
-		if building_id in target_buildings:
-			actions.append(building_id)
+		actions.append(building_id)
 	actions.sort_custom(func(a, b): return _build_sort_key(a, target_buildings, signature_order) < _build_sort_key(b, target_buildings, signature_order))
 	return String(actions[0]) if not actions.is_empty() else ""
 
