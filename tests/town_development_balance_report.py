@@ -21,6 +21,14 @@ RARE_RESOURCES = {
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
 TARGET_TURNS = 30
+MIN_BUILDABLE_TARGETS = 12
+MIN_NON_UNIT_BUILDABLE_TARGETS = 5
+SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
+SIX_FACTION_BREADTH_PARITY_FACTIONS = {
+    "faction_thornwake",
+    "faction_brasshollow",
+    "faction_veilmourn",
+}
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -65,6 +73,16 @@ def simulate_town(
     target_turns = int(profile.get("target_complete_turns", TARGET_TURNS))
     built = {str(value) for value in town.get("starting_building_ids", [])}
     target_buildings = [str(value) for value in town.get("buildable_building_ids", [])]
+    non_unit_buildings = [
+        building_id
+        for building_id in target_buildings
+        if not str(buildings.get(building_id, {}).get("unlock_unit_id", "")).strip()
+    ]
+    breadth_parity_buildings = [
+        building_id
+        for building_id in target_buildings
+        if str(buildings.get(building_id, {}).get("content_status", "")) == SIX_FACTION_BREADTH_PARITY_STATUS
+    ]
     build_log: list[dict[str, Any]] = []
     stalled_days: list[dict[str, Any]] = []
 
@@ -116,6 +134,9 @@ def simulate_town(
         "town_id": str(town.get("id", "")),
         "faction_id": str(town.get("faction_id", "")),
         "target_turns": target_turns,
+        "target_building_count": len(target_buildings),
+        "non_unit_building_count": len(non_unit_buildings),
+        "breadth_parity_building_count": len(breadth_parity_buildings),
         "completed": not missing,
         "completion_day": build_log[-1]["day"] if not missing and build_log else 0,
         "build_count": len(build_log),
@@ -167,6 +188,7 @@ def main() -> int:
 
     town_count = 0
     full_ladder_town_count = 0
+    breadth_parity_town_count = 0
     for town_id, town in towns.items():
         town_count += 1
         faction_id = str(town.get("faction_id", ""))
@@ -199,6 +221,26 @@ def main() -> int:
             str(value)
             for value in town.get("starting_building_ids", []) + town.get("buildable_building_ids", [])
         }
+        target_building_ids = [str(value) for value in town.get("buildable_building_ids", [])]
+        non_unit_building_ids = [
+            building_id
+            for building_id in target_building_ids
+            if not str(buildings.get(building_id, {}).get("unlock_unit_id", "")).strip()
+        ]
+        if len(target_building_ids) < MIN_BUILDABLE_TARGETS:
+            errors.append(f"{town_id} must expose at least {MIN_BUILDABLE_TARGETS} buildable development targets")
+        if len(non_unit_building_ids) < MIN_NON_UNIT_BUILDABLE_TARGETS:
+            errors.append(f"{town_id} must expose at least {MIN_NON_UNIT_BUILDABLE_TARGETS} non-unit development targets")
+        breadth_parity_ids = [
+            building_id
+            for building_id in target_building_ids
+            if str(buildings.get(building_id, {}).get("content_status", "")) == SIX_FACTION_BREADTH_PARITY_STATUS
+        ]
+        if faction_id in SIX_FACTION_BREADTH_PARITY_FACTIONS:
+            if len(breadth_parity_ids) < MIN_NON_UNIT_BUILDABLE_TARGETS:
+                errors.append(f"{town_id} must include at least {MIN_NON_UNIT_BUILDABLE_TARGETS} six-faction breadth-parity buildings")
+            else:
+                breadth_parity_town_count += 1
         signature_ids = [str(value) for value in faction.get("signature_building_ids", [])]
         missing_signature = sorted(set(signature_ids) - town_buildings)
         if missing_signature:
@@ -221,6 +263,9 @@ def main() -> int:
 
     report["authored_town_count"] = town_count
     report["full_ladder_town_count"] = full_ladder_town_count
+    report["breadth_parity_town_count"] = breadth_parity_town_count
+    report["min_buildable_targets"] = MIN_BUILDABLE_TARGETS
+    report["min_non_unit_buildable_targets"] = MIN_NON_UNIT_BUILDABLE_TARGETS
 
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))

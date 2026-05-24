@@ -1479,6 +1479,102 @@
       "pressure_bonus": 1
     },
     {
+      "id": "building_thornwake_rootroad_markers",
+      "name": "Rootroad Markers",
+      "category": "support",
+      "description": "Living route stones bind nursery paths into safer Thornwake supply lines.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 80
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_loam_ledger",
+      "name": "Loam Ledger",
+      "category": "economy",
+      "description": "Seed contracts written into loam smooth wood tithes and caravan barter.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_market_square",
+        "building_thornwake_rootroad_markers"
+      ],
+      "income": {
+        "gold": 240,
+        "wood": 1
+      }
+    },
+    {
+      "id": "building_thornwake_pollen_litany",
+      "name": "Pollen Litany",
+      "category": "magic",
+      "description": "Choirs of grafted pollen turn Thornwake spell study toward recovery and bind rites.",
+      "cost": {
+        "gold": 1650,
+        "wood": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_thornwake_sporeglass_hothouse"
+      ],
+      "readiness_bonus": 4,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_thornwake_bramblewall_coppice",
+      "name": "Bramblewall Coppice",
+      "category": "support",
+      "description": "Coppiced bramble walls turn town approaches into slow, regenerating kill lanes.",
+      "cost": {
+        "gold": 2100,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_loam_ledger"
+      ],
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_old_grove_accord",
+      "name": "Old Grove Accord",
+      "category": "civic",
+      "description": "A high accord spends living grafts to bind town law, recovery rites, and root-road command.",
+      "cost": {
+        "gold": 2600,
+        "wood": 2,
+        "ore": 2,
+        "verdant_grafts": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_thornwake_graftworks",
+        "building_thornwake_bramblewall_coppice"
+      ],
+      "income": {
+        "gold": 180,
+        "wood": 1
+      },
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
       "id": "building_brasshollow_ore_tithe_office",
       "name": "Ore Tithe Office",
       "category": "economy",
@@ -1653,6 +1749,102 @@
       "pressure_bonus": 1
     },
     {
+      "id": "building_brasshollow_scalehouse",
+      "name": "Scalehouse",
+      "category": "economy",
+      "description": "Certified weigh halls turn ore claims into predictable contracts and ready coin.",
+      "cost": {
+        "gold": 950,
+        "ore": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 120,
+        "ore": 1
+      }
+    },
+    {
+      "id": "building_brasshollow_clause_court",
+      "name": "Clause Court",
+      "category": "civic",
+      "description": "Contract courts keep workers paid, deserters fined, and garrison orders enforceable.",
+      "cost": {
+        "gold": 1350,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_market_square",
+        "building_brasshollow_scalehouse"
+      ],
+      "income": {
+        "gold": 220
+      },
+      "readiness_bonus": 3
+    },
+    {
+      "id": "building_brasshollow_heatwright_vestry",
+      "name": "Heatwright Vestry",
+      "category": "magic",
+      "description": "Heatwright vestries formalize pressure rites and safe boiler miracles.",
+      "cost": {
+        "gold": 1700,
+        "wood": 1,
+        "ore": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_brasshollow_boiler_cathedral"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_brasshollow_gauge_arsenal",
+      "name": "Gauge Arsenal",
+      "category": "support",
+      "description": "Gauge-locked arsenals stock pressure shells, spare plates, and measured siege tools.",
+      "cost": {
+        "gold": 2200,
+        "wood": 2,
+        "ore": 3
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_clause_court"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_debtworks_vault",
+      "name": "Debtworks Vault",
+      "category": "economy",
+      "description": "Scrip vaults spend rare brass authority to fund late foundry pressure without flattening market limits.",
+      "cost": {
+        "gold": 2700,
+        "wood": 2,
+        "ore": 3,
+        "brass_scrip": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_gauge_arsenal"
+      ],
+      "income": {
+        "gold": 240,
+        "ore": 1
+      },
+      "readiness_bonus": 4,
+      "pressure_bonus": 1
+    },
+    {
       "id": "building_veilmourn_bell_harbor",
       "name": "Bell Harbor",
       "category": "dwelling",
@@ -1821,6 +2013,101 @@
         "unit_veilmourn_fogbound_leviathan": 4
       },
       "readiness_bonus": 10,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_fog_signal_buoys",
+      "name": "Fog Signal Buoys",
+      "category": "support",
+      "description": "Bell buoys mark false channels and give Veilmourn scouts safer harbor returns.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 90
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_salvage_ledger",
+      "name": "Salvage Ledger",
+      "category": "economy",
+      "description": "Fog-market ledgers convert wreck claims into uneven but reliable harbor income.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_market_square",
+        "building_veilmourn_fog_signal_buoys"
+      ],
+      "income": {
+        "gold": 260
+      }
+    },
+    {
+      "id": "building_veilmourn_wake_oratory",
+      "name": "Wake Oratory",
+      "category": "magic",
+      "description": "Wake speakers rehearse obituary charms, fog steps, and morale-draining bell rites.",
+      "cost": {
+        "gold": 1650,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_veilmourn_obituary_vault"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_veilmourn_black_sail_loft",
+      "name": "Black-Sail Loft",
+      "category": "support",
+      "description": "Hidden sail lofts prepare raiding crews, spare rigging, and retreat lines.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_veilmourn_mirror_drydock",
+        "building_veilmourn_salvage_ledger"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 2
+    },
+    {
+      "id": "building_veilmourn_memory_anchor",
+      "name": "Memory Anchor",
+      "category": "civic",
+      "description": "Salted anchors bind a harbor's dead routes into late-game fog command.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "memory_salt": 2
+      },
+      "content_status": "six_faction_town_breadth_parity",
+      "requires": [
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_black_sail_loft"
+      ],
+      "income": {
+        "gold": 200
+      },
+      "readiness_bonus": 6,
       "pressure_bonus": 1
     }
   ]
