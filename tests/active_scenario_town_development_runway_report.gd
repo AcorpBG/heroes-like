@@ -2,7 +2,6 @@ extends Node
 
 const REPORT_SCHEMA := "active_scenario_town_development_runway_report_v1"
 const TARGET_TURNS := 30
-const HERO_ID := "hero_lyra"
 const LIVE_STOCKPILE_RESOURCE_IDS := [
 	"gold",
 	"wood",
@@ -35,6 +34,7 @@ func _run() -> void:
 	var town_case_count := 0
 	var completed_case_count := 0
 	var rare_spend_case_count := 0
+	var full_session_case_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -51,6 +51,8 @@ func _run() -> void:
 				completed_case_count += 1
 			if bool(row.get("rare_spend_observed", false)):
 				rare_spend_case_count += 1
+			if bool(row.get("full_session_used", false)):
+				full_session_case_count += 1
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -65,6 +67,7 @@ func _run() -> void:
 		"player_town_case_count": town_case_count,
 		"completed_case_count": completed_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
+		"full_session_case_count": full_session_case_count,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"common_market_resource_ids": COMMON_MARKET_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
@@ -72,7 +75,9 @@ func _run() -> void:
 		"errors": _errors,
 		"caveats": [
 			"The report boots active authored scenarios and secures authored economy sources to isolate town development runway from route safety and encounter pacing.",
-			"Construction still runs through live OverworldRules.build_in_active_town and TownRules.get_build_actions surfaces.",
+			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
+			"Build execution still runs through live OverworldRules.build_in_active_town, and post-build TownRules.get_build_actions proves same-day build actions are blocked.",
+			"Day advancement uses a focused active-scenario economy-day step with live town and controlled resource-site income instead of the full strategic enemy turn loop.",
 			"This is active-scenario economy runway evidence, not final scenario-wide route balance or campaign pacing approval.",
 		],
 	}
@@ -127,7 +132,9 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		base_row["error"] = "runtime scenario session missing player town placement"
 		base_row["source_evidence"] = source_evidence
 		return base_row
-	var session = _build_runway_session(scenario_id, source_town, source_session.overworld.get("resources", {}), source_evidence)
+	var session = source_session
+	session.game_state = "town"
+	session.scenario_status = "in_progress"
 	var select_result := _set_active_town(session, placement_id)
 	if not bool(select_result.get("ok", false)):
 		base_row["error"] = "unable to select player town: %s" % String(select_result.get("message", ""))
@@ -141,10 +148,11 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	var same_day_reject_ok := false
 	var build_actions_after_build_blocked := false
 	var market_common_only := true
+	var economy_day_advance_count := 0
 
 	for _turn in range(target_turns):
 		_set_active_town(session, placement_id)
-		var selected_id := _select_building_id(session, target_buildings, signature_order)
+		var selected_id := _select_building_id(session, placement_id, target_buildings, signature_order)
 		if selected_id == "":
 			stalled_days.append({
 				"day": int(session.day),
@@ -186,13 +194,15 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 				market_common_only = market_common_only and _market_actions_common_only(session)
 				if _missing_buildings(session, placement_id, target_buildings).is_empty():
 					break
-		var turn_result: Dictionary = OverworldRules.end_turn(session)
+		var turn_result: Dictionary = _advance_active_scenario_economy_day(session)
 		if not bool(turn_result.get("ok", false)):
 			stalled_days.append({
 				"day": int(session.day),
-				"reason": "end_turn_failed",
+				"reason": "economy_day_advance_failed",
 				"message": String(turn_result.get("message", "")),
 			})
+		else:
+			economy_day_advance_count += 1
 
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
@@ -202,6 +212,8 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		and build_actions_after_build_blocked
 		and not rare_spend_events.is_empty()
 		and market_common_only
+		and String(session.scenario_id) == scenario_id
+		and economy_day_advance_count > 0
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
 	)
 	base_row["completed"] = completed
@@ -214,64 +226,18 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	base_row["rare_spend_events"] = rare_spend_events
 	base_row["market_common_only"] = market_common_only
 	base_row["source_evidence"] = source_evidence
+	base_row["full_session_used"] = String(session.scenario_id) == scenario_id
+	base_row["focused_economy_day_advance_count"] = economy_day_advance_count
+	base_row["scenario_map_size"] = _map_size_payload(OverworldRules.derive_map_size(session))
+	base_row["scenario_resource_node_count"] = _array_size(session.overworld.get("resource_nodes", []))
+	base_row["scenario_encounter_count"] = _array_size(session.overworld.get("encounters", []))
+	base_row["scenario_enemy_state_count"] = _array_size(session.overworld.get("enemy_states", []))
 	base_row["ending_resources"] = _resources(session)
 	base_row["stalled_days"] = stalled_days.slice(0, 5)
 	base_row["build_log"] = build_log
 	if not bool(base_row.get("ok", false)):
 		base_row["error"] = _runway_error(base_row)
 	return base_row
-
-func _build_runway_session(scenario_id: String, source_town: Dictionary, resources: Dictionary, source_evidence: Dictionary):
-	var hero_template := ContentService.get_hero(HERO_ID)
-	var hero := HeroCommandRules.build_hero_from_template(
-		hero_template,
-		{"x": int(source_town.get("x", 0)), "y": int(source_town.get("y", 0))},
-		{"id": "active_runway_army", "name": "Active Runway Army", "stacks": []},
-		"normal"
-	)
-	hero["is_primary"] = true
-	var town_state := source_town.duplicate(true)
-	town_state["owner"] = "player"
-	if not (town_state.get("built_buildings", []) is Array):
-		var town_template := ContentService.get_town(String(town_state.get("town_id", "")))
-		town_state["built_buildings"] = _string_array(town_template.get("starting_building_ids", []))
-	if not (town_state.get("available_recruits", {}) is Dictionary):
-		town_state["available_recruits"] = {}
-	town_state["last_build_day"] = 0
-	var overworld := {
-		"map": [["grass", "grass", "grass"], ["grass", "grass", "grass"], ["grass", "grass", "grass"]],
-		"map_size": {"width": 3, "height": 3},
-		"terrain_layers": {},
-		"active_hero_id": HERO_ID,
-		"player_heroes": [hero],
-		"hero_position": {"x": int(town_state.get("x", 0)), "y": int(town_state.get("y", 0))},
-		"hero": hero,
-		"movement": hero.get("movement", {"current": 10, "max": 10}),
-		"fog": {},
-		"resources": _normalized_resources(resources),
-		"army": hero.get("army", {}),
-		"encounters": [],
-		"resolved_encounters": [],
-		"towns": [town_state],
-		"resource_nodes": source_evidence.get("secured_resource_nodes", []),
-		"artifact_nodes": [],
-		"enemy_states": [],
-		"scenario_script_state": {},
-	}
-	var session = SessionStateStore.new_session_data(
-		"active_scenario_development_runway_%s_%s" % [scenario_id, String(town_state.get("placement_id", ""))],
-		"",
-		HERO_ID,
-		1,
-		overworld,
-		"normal",
-		SessionStateStore.LAUNCH_MODE_SKIRMISH
-	)
-	session.game_state = "town"
-	session.scenario_status = "in_progress"
-	session.flags = {}
-	OverworldRules.normalize_overworld_state(session)
-	return session
 
 func _secure_development_sources(session, required_resource_ids: Array) -> Dictionary:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -345,9 +311,37 @@ func _runway_error(row: Dictionary) -> String:
 		return "high-tier rare-resource spend was not observed"
 	if not bool(row.get("market_common_only", false)):
 		return "market actions included non-common resources"
+	if not bool(row.get("full_session_used", false)):
+		return "development did not run inside the active scenario session"
+	if int(row.get("focused_economy_day_advance_count", 0)) <= 0:
+		return "focused active-scenario economy day advance was not exercised"
 	if not _source_covers_required_resources(row.get("source_evidence", {}), row.get("required_resource_ids", [])):
 		return "secured scenario sources did not cover required build resources"
 	return "unknown runway failure"
+
+func _advance_active_scenario_economy_day(session) -> Dictionary:
+	if session == null:
+		return {"ok": false, "message": "missing session"}
+	session.day = int(session.day) + 1
+	var town_income := {}
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+			continue
+		town_income = _add_resource_sets(
+			town_income,
+			DifficultyRules.scale_income_resources(session, OverworldRules.town_income(town, session))
+		)
+	var site_income := DifficultyRules.scale_income_resources(session, OverworldRules.controlled_resource_site_income(session, "player"))
+	var total_income := _add_resource_sets(town_income, site_income)
+	_add_to_session_resources(session, total_income)
+	return {
+		"ok": true,
+		"message": "Focused active-scenario economy day advanced.",
+		"day": int(session.day),
+		"town_income": _normalized_resources(town_income),
+		"site_income": _normalized_resources(site_income),
+		"total_income": _normalized_resources(total_income),
+	}
 
 func _source_covers_required_resources(source_evidence: Dictionary, required_resource_ids: Array) -> bool:
 	var secured := _string_array(source_evidence.get("secured_resource_ids", []))
@@ -358,17 +352,19 @@ func _source_covers_required_resources(source_evidence: Dictionary, required_res
 			return false
 	return true
 
-func _select_building_id(session, target_buildings: Array, signature_order: Dictionary) -> String:
+func _select_building_id(session, placement_id: String, target_buildings: Array, signature_order: Dictionary) -> String:
 	var actions := []
-	for action_value in TownRules.get_build_actions(session):
-		if not (action_value is Dictionary):
+	var town := _town(session, placement_id)
+	var resources := _resources(session)
+	for building_id_value in OverworldRules.get_town_build_options(town, int(session.day)):
+		var building_id := String(building_id_value)
+		if building_id not in target_buildings:
 			continue
-		var action: Dictionary = action_value
-		if bool(action.get("disabled", false)):
+		var building := ContentService.get_building(building_id)
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, building.get("cost", {}), int(session.day))
+		if not bool(readiness.get("direct_affordable", false)):
 			continue
-		var building_id := String(action.get("id", "")).trim_prefix("build:")
-		if building_id in target_buildings:
-			actions.append(building_id)
+		actions.append(building_id)
 	actions.sort_custom(func(a, b): return _build_sort_key(a, target_buildings, signature_order) < _build_sort_key(b, target_buildings, signature_order))
 	return String(actions[0]) if not actions.is_empty() else ""
 
@@ -476,6 +472,12 @@ func _normalized_resources(resources: Dictionary) -> Dictionary:
 	for resource_id in LIVE_STOCKPILE_RESOURCE_IDS:
 		result[String(resource_id)] = int(resources.get(String(resource_id), 0))
 	return result
+
+func _array_size(value: Variant) -> int:
+	return value.size() if value is Array else 0
+
+func _map_size_payload(size: Vector2i) -> Dictionary:
+	return {"width": size.x, "height": size.y}
 
 func _is_active_authored_scenario(scenario: Dictionary) -> bool:
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
