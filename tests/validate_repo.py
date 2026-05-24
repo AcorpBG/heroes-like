@@ -19687,19 +19687,32 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT",
         "active_scenario_town_development_runway_report_v1",
         "ScenarioFactory.create_session",
+        "TARGET_TIER_COUNT",
         "TownRules.get_build_actions",
+        "TownRules.get_recruit_actions",
         "OverworldRules.build_in_active_town",
+        "OverworldRules.recruit_in_active_town",
         "_advance_active_scenario_economy_day",
+        "OverworldRules.is_weekly_growth_day",
+        "OverworldRules.town_weekly_growth",
+        "OverworldRules.town_recovery_state",
+        "OverworldRules.relieve_town_recovery_pressure",
         "OverworldRules.controlled_resource_site_income",
         "full_session_case_count",
         "full_session_used",
         "focused_economy_day_advance_count",
+        "post_completion_economy_day_count",
         "scenario_resource_node_count",
         "scenario_encounter_count",
         "scenario_enemy_state_count",
         "secured_daily_income",
         "secured_resource_ids",
         "rare_spend_observed",
+        "recruitment_end_to_end_case_count",
+        "seven_tier_recruitment_case_count",
+        "recruited_unit_case_count",
+        "recruitment_end_to_end_ok",
+        "weekly_growth",
         "same_day_reject_ok",
         "market_common_only",
         "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY",
@@ -19711,9 +19724,13 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "economy-active-scenario-development-runway-20260524-10184",
         "active_scenario_town_development_runway_report_v1",
         "18 active player-town cases",
+        "18/18 active player-town recruitment cases",
+        "126/126 tier recruitment cases",
+        "seven-tier ladder",
         "scenario-authored economy sources",
         "full scenario session state",
         "focused active-scenario economy-day step",
+        "weekly musters",
         "not final scenario-wide route balance",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
@@ -19773,6 +19790,14 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
                 ensure(resource_id in persistent_income_ids, errors, f"{scenario_id}.{town_id} must have scenario-authored persistent {resource_id} income for development runway")
     ensure(active_scenario_count >= 16, errors, "Active scenario town development runway must cover the active authored scenario roster")
     ensure(player_town_case_count >= 18, errors, "Active scenario town development runway must cover the active player-town cases")
+    for scenario_id in ("ironbridge-stand", "mireford-skirmish"):
+        scenario = scenarios.get(scenario_id, {})
+        node_ids = {
+            str(node.get("placement_id", ""))
+            for node in scenario.get("resource_nodes", [])
+            if isinstance(node, dict)
+        } if isinstance(scenario, dict) else set()
+        ensure("bridge_ore_reserve" in node_ids, errors, f"{scenario_id} must keep the Highwater bridgehead ore reserve for post-development seven-tier recruitment")
 
 
 def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> None:
