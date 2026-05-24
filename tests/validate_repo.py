@@ -172,6 +172,9 @@ UI_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ui"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
+AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
+AMBIENT_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ambient_sfx_assets.py"
+AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
 MUSIC_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "music_audio_runtime_report.gd"
 MUSIC_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "music_audio_runtime_report.tscn"
 MUSIC_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "music-audio-runtime-baseline-report.md"
@@ -17920,6 +17923,8 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
         OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH,
         OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH,
         OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH,
+        AMBIENT_SFX_MANIFEST_PATH,
+        AMBIENT_SFX_GENERATOR_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing overworld ambient audio runtime file: {path.relative_to(ROOT)}")
@@ -17936,6 +17941,10 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
         ambient_text = AMBIENT_AUDIO_PATH.read_text(encoding="utf-8")
         for required_token in (
             "class_name HeroesAmbientAudio",
+            "AMBIENT_SFX_MANIFEST_PATH",
+            "func _ambient_sfx_manifest_cue",
+            "func _play_imported_layer",
+            "AudioStreamWAV.load_from_file",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -17952,8 +17961,53 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "MAX_ACTIVE_PLAYERS",
             "audio_bus",
             "Master",
+            "imported_asset_count",
+            "generated_fallback_count",
         ):
             ensure(required_token in ambient_text, errors, f"AmbientAudio.gd is missing required token: {required_token}")
+
+    required_ambient_cue_ids = (
+        "overworld_ambient_grass",
+        "overworld_ambient_water",
+        "overworld_ambient_mire",
+        "overworld_ambient_dirt",
+        "overworld_ambient_rough",
+        "overworld_ambient_sand",
+        "overworld_ambient_snow",
+        "overworld_ambient_lava",
+        "overworld_ambient_underground",
+        "overworld_ambient_pressure",
+        "overworld_ambient_day_pulse",
+    )
+    if AMBIENT_SFX_MANIFEST_PATH.exists():
+        ambient_sfx_manifest = json.loads(AMBIENT_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(ambient_sfx_manifest.get("schema") == "overworld_ambient_runtime_sfx_manifest_v1", errors, "ambient_sfx_manifest.json has the wrong schema")
+        ensure(ambient_sfx_manifest.get("final_sound_design") is False, errors, "ambient_sfx_manifest.json must not claim final sound design")
+        ensure(ambient_sfx_manifest.get("audio_bus") == "Master", errors, "ambient_sfx_manifest.json must route ambient SFX through Master")
+        ambient_sfx_cues = ambient_sfx_manifest.get("cues", {})
+        ensure(isinstance(ambient_sfx_cues, dict), errors, "ambient_sfx_manifest.json cues must be an object")
+        for cue_id in required_ambient_cue_ids:
+            cue = ambient_sfx_cues.get(cue_id, {}) if isinstance(ambient_sfx_cues, dict) else {}
+            ensure(isinstance(cue, dict), errors, f"ambient_sfx_manifest.json is missing cue {cue_id}")
+            path_value = str(cue.get("path", ""))
+            ensure(path_value.startswith("res://art/audio/runtime/ambient/"), errors, f"ambient SFX cue {cue_id} must use the runtime ambient audio folder")
+            wav_path = ROOT / path_value.removeprefix("res://")
+            ensure(wav_path.exists(), errors, f"ambient SFX asset is missing for {cue_id}: {path_value}")
+            if wav_path.exists():
+                header = wav_path.read_bytes()[:12]
+                ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"ambient SFX asset is not a WAV file: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"ambient SFX cue {cue_id} needs duration_msec")
+            ensure("volume_db" in cue, errors, f"ambient SFX cue {cue_id} needs volume_db")
+
+    ambient_sfx_generator_text = AMBIENT_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if AMBIENT_SFX_GENERATOR_PATH.exists() else ""
+    for required_token in (
+        "ambient_sfx_manifest.json",
+        "SPECS",
+        "write_wav",
+        "wave.open",
+        "Manifest/spec cue mismatch",
+    ):
+        ensure(required_token in ambient_sfx_generator_text, errors, f"generate_ambient_sfx_assets.py is missing token {required_token}")
 
     if OVERWORLD_SCRIPT_PATH.exists():
         overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -17979,6 +18033,10 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "overworld_ambient_day_pulse",
             "pressure_layer_count",
             "Master",
+            "res://content/ambient_sfx_manifest.json",
+            "imported_asset_count",
+            "generated_fallback_count",
+            "imported_wav",
         ):
             ensure(required_token in report_text, errors, f"Overworld ambient audio runtime report is missing required token: {required_token}")
 
@@ -17988,12 +18046,14 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "Overworld Ambient Audio Runtime Report",
             "overworld-ambient-audio-runtime-baseline-20260523-10184",
             "scripts/autoload/AmbientAudio.gd",
+            "content/ambient_sfx_manifest.json",
+            "art/audio/runtime/ambient/",
             "AudioStreamGenerator",
             "overworld_ambient_pressure",
             "OverworldShell",
             "Master",
             "not final sound design",
-            "No imported final audio assets",
+            "No final ambient stems",
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"Overworld ambient audio runtime doc is missing required text: {required_text}")
