@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-active-clear-regression-gate-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Active Clear Regression Gate",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSliceId": "packaging-release-bundle-manifest-gate-20260524-10184",
+  "currentSliceTitle": "Packaging Release Bundle Manifest Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active-scenario battle breadth regression hardening: the report now fails if the cleared active tuning queue reopens, while standard headless balance validation still passes 4/4.",
+  "currentSliceNotes": "Completed post-export release-bundle manifest gate: Linux and Windows local export-smoke folders now have an exact manifest check for required executable/PCK/native sidecars and forbidden dev/import/debug artifacts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T11:25:00Z",
+  "updatedAt": "2026-05-24T12:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "packaging-release-bundle-manifest-gate-20260524-10184",
+      "title": "Packaging Release Bundle Manifest Gate",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "export_presets.cfg",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "docs/packaging-linux-export-smoke-report.md",
+        "docs/packaging-windows-export-smoke-report.md"
+      ],
+      "purpose": "Add a deterministic post-export release-bundle manifest gate that verifies Linux and Windows smoke-export folders contain exactly the expected distributable runtime artifacts and no dev/import/debug files.",
+      "implementationTargets": [
+        "tests/packaging_release_bundle_manifest_report.py",
+        "tests/validate_repo.py",
+        "docs/packaging-release-bundle-manifest-gate-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The report consumes the existing Linux and Windows export-smoke artifact folders and their JSON reports instead of claiming clean-machine or installer validation.",
+        "The Linux bundle manifest requires the release executable, external PCK, and release Linux GDExtension shared library with size floors and exact sidecar placement.",
+        "The Windows bundle manifest requires the release executable, external PCK, and release Windows GDExtension DLL with size floors and exact sidecar placement.",
+        "The gate fails on forbidden release-bundle files such as .git/.godot/.artifacts/tmp paths, *.dll.a import libraries, debug native artifacts, .import files, pdbs, and unexpected extras.",
+        "Repository validation, JSON validation, Python compilation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No installer readiness claim.",
+        "No clean-machine smoke claim.",
+        "No Windows runtime execution claim.",
+        "No code signing, package signing, or distribution-channel metadata claim.",
+        "No release readiness claim."
+      ],
+      "startedAt": "2026-05-24T11:40:00Z",
+      "updatedAt": "2026-05-24T12:05:00Z",
+      "completedAt": "2026-05-24T12:05:00Z",
+      "notes": "Completed from the owner-listed packaging/platform readiness gap after existing Linux/Windows export, packaged settings, and runtime issue-log smokes left release-bundle hygiene as an unguarded local packaging step.",
+      "completionEvidence": [
+        "tests/packaging_release_bundle_manifest_report.py now consumes .artifacts/packaging_linux_export_smoke/report.json and .artifacts/packaging_windows_export_smoke/report.json and requires both smoke reports to be ok with the expected schema ids.",
+        "The Linux manifest requires heroes-like.x86_64, heroes-like.pck, and libaurelion_map_persistence.linux.template_release.x86_64.so with size floors and no unexpected files.",
+        "The Windows manifest requires heroes-like.exe, heroes-like.pck, and aurelion_map_persistence.windows.template_release.x86_64.dll with size floors and no unexpected files.",
+        "The manifest gate rejects release-bundle content containing .git, .godot, .artifacts, tmp, *.dll.a, .import, .pdb, import-library suffixes, or template_debug native artifacts.",
+        "docs/packaging-release-bundle-manifest-gate-report.md records scope, run order, exact bundle requirements, forbidden content, and release-readiness non-claims.",
+        "tests/validate_repo.py now gates the release-bundle manifest script and documentation tokens."
+      ],
+      "validation": [
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/packaging_release_bundle_manifest_report.py",
+        "python3 -m py_compile tests/packaging_release_bundle_manifest_report.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
       "title": "Battle Autoplay Active Clear Regression Gate",
@@ -25241,22 +25300,38 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
+    "id": "packaging-release-bundle-manifest-gate-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T11:25:00Z",
+    "updatedAt": "2026-05-24T12:05:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
-      "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+      "python3 tests/packaging_linux_export_smoke.py",
+      "python3 tests/packaging_windows_export_smoke.py",
+      "python3 tests/packaging_release_bundle_manifest_report.py",
+      "python3 -m py_compile tests/packaging_release_bundle_manifest_report.py tests/validate_repo.py",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
-      "jq empty ops/progress.json content/scenarios.json",
+      "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Active clear regression gate passed: active breadth now fails if queue items reopen; current report has active_queue_clear_gate.required true, queue status clear, item_count 0, signature 829808c9, 16 active scenarios, 51/51 completed authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, and standard headless balance harness passed 4/4 with active breadth signature 3be9bc68."
+    "summary": "Release bundle manifest gate passed: Linux and Windows export smokes produced ok reports, the post-export manifest report passed for both platforms with exact executable/PCK/native release sidecars, zero unexpected files, and zero forbidden dev/import/debug artifacts."
   },
-  "active_slice": "battle-autoplay-active-clear-regression-gate-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T11:25:00Z",
+  "active_slice": "packaging-release-bundle-manifest-gate-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T12:05:00Z",
   "validationHistory": [
+    {
+      "id": "packaging-release-bundle-manifest-gate-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T12:05:00Z",
+      "commands": [
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/packaging_release_bundle_manifest_report.py",
+        "python3 -m py_compile tests/packaging_release_bundle_manifest_report.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Release bundle manifest gate passed: Linux and Windows export smokes produced ok reports, the post-export manifest report passed for both platforms with exact executable/PCK/native release sidecars, zero unexpected files, and zero forbidden dev/import/debug artifacts."
+    },
     {
       "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
       "status": "passed",

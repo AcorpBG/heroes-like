@@ -23,6 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
+Completed slice on 2026-05-24: `packaging-release-bundle-manifest-gate-20260524-10184` adds a post-export release-bundle manifest gate over the existing Linux and Windows local export-smoke artifacts. `tests/packaging_release_bundle_manifest_report.py` requires successful Linux/Windows smoke JSON reports, exact release sidecar contents for executable/PCK/native runtime library bundles, size floors, and zero unexpected or forbidden dev/import/debug files such as `.git`, `.godot`, `.artifacts`, `tmp`, `*.dll.a`, `.import`, `.pdb`, and debug native artifacts. This strengthens packaged-artifact hygiene, not installer readiness, clean-machine smoke coverage, Windows runtime execution, signing, distribution metadata, or release readiness.
+
 Completed slice on 2026-05-24: `battle-autoplay-active-clear-regression-gate-20260524-10184` hardens the active-scenario battle breadth harness after the remaining watch queue was cleared. `tests/battle_autoplay_active_scenario_breadth_report.gd` now fails if the active breadth tuning queue reopens above zero items, while preserving the report-only/no-runtime-tuning policy. Current focused evidence keeps 16 active scenarios, 51/51 authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, queue status `clear`, item_count `0`, and queue signature `829808c9`; the standard balance CLI passed 4/4 with the hardened active case signature `3be9bc68`. This is a regression gate for the current authored breadth, not final combat balance, automatic tuning, broader encounter redesign, or new scenario content.
 
 Completed slice on 2026-05-24: `battle-autoplay-remaining-watch-retune-20260524-10184` clears the remaining active-scenario combat watch queue after the prior cohort retune left 7 medium-priority items. Placement-local authored army tuning for `glassroad_archive_wardens`, `ninefold_prism_matrix`, `nightglass_drum_circle`, `bridge_silt_hunters` in `ironbridge-stand`, `bridge_silt_hunters` in `mireford-skirmish`, and `ninefold_orevein_exactors` keeps the active breadth report at 51/51 completed authored encounter samples with zero stalls, zero invalid orders, no missing scenario ids, queue status `clear`, item_count `0`, high-priority count `0`, and queue signature `829808c9`. This is not final combat balance, automatic tuning, shared unit-stat mutation, broad combat model redesign, or new scenario breadth.
@@ -6051,6 +6053,7 @@ Closed tactical slices:
 - `packaging-pack-export-smoke-20260523-10184`
 - `packaged-settings-persistence-smoke-20260523-10184`
 - `packaged-runtime-issue-log-smoke-20260523-10184`
+- `packaging-release-bundle-manifest-gate-20260524-10184`
 
 Paused tactical slices:
 
