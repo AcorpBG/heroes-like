@@ -21,6 +21,8 @@ const RARE_RESOURCE_IDS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+const DELAYED_SOURCE_ROUTE_STEPS_PER_DAY := 12
+const DELAYED_GUARDED_SOURCE_EXTRA_DAYS := 1
 
 var _errors := []
 
@@ -35,6 +37,8 @@ func _run() -> void:
 	var rare_spend_case_count := 0
 	var same_day_guard_case_count := 0
 	var full_session_case_count := 0
+	var delayed_source_replay_case_count := 0
+	var delayed_source_replay_completed_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -55,6 +59,10 @@ func _run() -> void:
 				same_day_guard_case_count += 1
 			if bool(row.get("full_session_used", false)):
 				full_session_case_count += 1
+			if bool(row.get("delayed_source_replay_seen", false)):
+				delayed_source_replay_case_count += 1
+			if bool(row.get("delayed_source_replay_ok", false)):
+				delayed_source_replay_completed_count += 1
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -71,12 +79,17 @@ func _run() -> void:
 		"rare_spend_case_count": rare_spend_case_count,
 		"same_day_guard_case_count": same_day_guard_case_count,
 		"full_session_case_count": full_session_case_count,
+		"delayed_source_replay_case_count": delayed_source_replay_case_count,
+		"delayed_source_replay_completed_count": delayed_source_replay_completed_count,
+		"delayed_source_route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
+		"delayed_guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
 		"cases": rows,
 		"errors": _errors,
 		"caveats": [
 			"The report boots active authored scenarios and secures scenario-authored economy sources for the target enemy town faction.",
+			"A second replay now delays target-faction source ownership by route-derived acquisition days and guarded-source delay before proving the same 30-turn AI development runway.",
 			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
 			"Construction runs through EnemyTurnRules.run_enemy_town_economy_turn and EnemyTurnRules.town_governor_pressure_report for the target faction.",
 			"This is AI town-development economy runway evidence, not final strategic AI quality, route safety, encounter pacing, or campaign balance approval.",
@@ -125,6 +138,7 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		base_row["error"] = "town development_balance missing live rare_resource_id"
 		return base_row
 
+	var start_tile := Vector2i(int(authored_town.get("x", 0)), int(authored_town.get("y", 0)))
 	var source_session = ScenarioFactory.create_session(
 		scenario_id,
 		"normal",
@@ -135,10 +149,19 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		return base_row
 	OverworldRules.normalize_overworld_state(source_session)
 	var source_evidence := _secure_development_sources(source_session, faction_id, required_resource_ids)
+	var delayed_source_replay := _run_delayed_source_replay(
+		scenario_id,
+		placement_id,
+		faction_id,
+		start_tile,
+		required_resource_ids,
+		target_buildings
+	)
 	var source_town := _town(source_session, placement_id)
 	if source_town.is_empty():
 		base_row["error"] = "runtime scenario session missing enemy town placement"
 		base_row["source_evidence"] = source_evidence
+		base_row["delayed_source_replay"] = delayed_source_replay
 		return base_row
 	var session = source_session
 	session.game_state = "overworld"
@@ -217,6 +240,7 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		and not rare_spend_events.is_empty()
 		and rare_treasury_tracked
 		and governor_report_seen
+		and bool(delayed_source_replay.get("ok", false))
 		and String(session.scenario_id) == scenario_id
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
 	)
@@ -230,6 +254,9 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 	base_row["rare_spend_observed"] = not rare_spend_events.is_empty()
 	base_row["rare_spend_events"] = rare_spend_events
 	base_row["source_evidence"] = source_evidence
+	base_row["delayed_source_replay_seen"] = true
+	base_row["delayed_source_replay_ok"] = bool(delayed_source_replay.get("ok", false))
+	base_row["delayed_source_replay"] = delayed_source_replay
 	base_row["full_session_used"] = String(session.scenario_id) == scenario_id
 	base_row["scenario_map_size"] = _map_size_payload(OverworldRules.derive_map_size(session))
 	base_row["scenario_resource_node_count"] = _array_size(session.overworld.get("resource_nodes", []))
@@ -241,6 +268,118 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 	if not bool(base_row.get("ok", false)):
 		base_row["error"] = _runway_error(base_row)
 	return base_row
+
+func _run_delayed_source_replay(
+	scenario_id: String,
+	placement_id: String,
+	faction_id: String,
+	start_tile: Vector2i,
+	required_resource_ids: Array,
+	target_buildings: Array
+) -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		scenario_id,
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	if session == null:
+		return {
+			"ok": false,
+			"error": "ScenarioFactory.create_session returned null",
+		}
+	OverworldRules.normalize_overworld_state(session)
+	session.game_state = "overworld"
+	session.scenario_status = "in_progress"
+	var source_schedule := _development_source_schedule(session, start_tile, required_resource_ids)
+	var errors := []
+	if not _schedule_covers_required_resources(source_schedule, required_resource_ids):
+		errors.append("delayed AI replay source schedule does not cover all required non-gold resources")
+	EnemyTurnRules.normalize_enemy_states(session)
+	var build_log := []
+	var stalled_days := []
+	var rare_spend_events := []
+	var rare_treasury_tracked := _enemy_treasury_has_all_live_keys(session, faction_id)
+	for _turn in range(TARGET_TURNS):
+		var applied_sources := _apply_due_development_sources(session, source_schedule, int(session.day), faction_id)
+		var before_state := _enemy_state(session, faction_id)
+		var before_treasury := _resources(before_state.get("treasury", {}))
+		var expected_income := _enemy_daily_income(session, placement_id, faction_id)
+		var before_built := _town_building_ids(_town(session, placement_id))
+		var turn_result: Dictionary = EnemyTurnRules.run_enemy_town_economy_turn(session, faction_id)
+		if not bool(turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "enemy_turn_failed",
+				"message": String(turn_result.get("message", "")),
+				"applied_sources": applied_sources,
+			})
+		var after_state := _enemy_state(session, faction_id)
+		var after_treasury := _resources(after_state.get("treasury", {}))
+		var after_built := _town_building_ids(_town(session, placement_id))
+		var built_today := _new_buildings(before_built, after_built)
+		for building_id in built_today:
+			var building := ContentService.get_building(String(building_id))
+			var rare_cost := _rare_cost(building.get("cost", {}))
+			if not rare_cost.is_empty():
+				rare_spend_events.append({
+					"day": int(session.day),
+					"building_id": String(building_id),
+					"spent": rare_cost,
+					"treasury_before": before_treasury,
+					"expected_income": expected_income,
+					"treasury_after": after_treasury,
+				})
+			build_log.append({
+				"day": int(session.day),
+				"building_id": String(building_id),
+				"cost": building.get("cost", {}),
+				"treasury_before": before_treasury,
+				"expected_income": expected_income,
+				"treasury_after": after_treasury,
+				"applied_sources": applied_sources,
+			})
+		if _missing_buildings(session, placement_id, target_buildings).is_empty():
+			break
+		if built_today.is_empty():
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "no_enemy_build_selected",
+				"treasury": after_treasury,
+				"open_buildings": _open_building_ids(_town(session, placement_id), target_buildings),
+				"applied_sources": applied_sources,
+			})
+		session.day += 1
+	var missing := _missing_buildings(session, placement_id, target_buildings)
+	var completed := missing.is_empty()
+	if not completed:
+		errors.append("enemy town did not complete delayed-source development replay")
+	if rare_spend_events.is_empty():
+		errors.append("delayed-source AI replay did not spend a rare resource")
+	if not rare_treasury_tracked:
+		errors.append("delayed-source AI replay did not preserve full enemy treasury keys")
+	return {
+		"ok": errors.is_empty(),
+		"schema": "active_scenario_ai_town_delayed_source_replay_v1",
+		"target_turns": TARGET_TURNS,
+		"route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
+		"guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
+		"source_schedule": _source_schedule_payload(source_schedule),
+		"source_schedule_covers_required_resources": _schedule_covers_required_resources(source_schedule, required_resource_ids),
+		"completed": completed,
+		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() and completed else 0,
+		"completion_margin_days": TARGET_TURNS - int(build_log[-1].get("day", 0)) if not build_log.is_empty() and completed else -1,
+		"build_count": build_log.size(),
+		"missing_buildings": missing,
+		"same_day_second_build_blocked": null,
+		"rare_treasury_tracked": rare_treasury_tracked,
+		"rare_spend_observed": not rare_spend_events.is_empty(),
+		"rare_spend_events": rare_spend_events,
+		"ending_treasury": _resources(_enemy_state(session, faction_id).get("treasury", {})),
+		"stalled_days": stalled_days.slice(0, 5),
+		"build_log": build_log,
+		"errors": errors,
+		"error": "; ".join(errors),
+	}
 
 func _clone_session(session):
 	var clone = SessionStateStore.SessionData.new()
@@ -432,6 +571,225 @@ func _rare_cost(cost_value: Variant) -> Dictionary:
 		if int(cost.get(resource_id, 0)) > 0:
 			result[resource_id] = int(cost.get(resource_id, 0))
 	return result
+
+func _development_source_schedule(session, start_tile: Vector2i, required_resource_ids: Array) -> Array:
+	var rows := []
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for node_value in nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if site.is_empty():
+			continue
+		var claim_rewards: Dictionary = site.get("claim_rewards", site.get("rewards", {})) if site.get("claim_rewards", site.get("rewards", {})) is Dictionary else {}
+		var control_income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
+		var relevant_income := _filter_resources(control_income, required_resource_ids)
+		if relevant_claims.is_empty() and relevant_income.is_empty():
+			continue
+		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+		var route := _find_route(session, start_tile, target_tile)
+		if route.is_empty():
+			continue
+		var route_steps: int = max(0, route.size() - 1)
+		var guarded := _resource_source_has_guard(session, node)
+		var acquisition_day: int = max(1, int(ceil(float(route_steps) / float(DELAYED_SOURCE_ROUTE_STEPS_PER_DAY))))
+		if guarded:
+			acquisition_day += DELAYED_GUARDED_SOURCE_EXTRA_DAYS
+		rows.append({
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"persistent_control": bool(site.get("persistent_control", false)),
+			"claim_rewards": relevant_claims,
+			"control_income": relevant_income,
+			"resource_ids": _source_resource_ids(relevant_claims, relevant_income),
+			"route_steps": route_steps,
+			"guarded": guarded,
+			"acquisition_day": acquisition_day,
+			"applied": false,
+		})
+	rows.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		if int(left.get("acquisition_day", 999999)) != int(right.get("acquisition_day", 999999)):
+			return int(left.get("acquisition_day", 999999)) < int(right.get("acquisition_day", 999999))
+		if int(left.get("route_steps", 999999)) != int(right.get("route_steps", 999999)):
+			return int(left.get("route_steps", 999999)) < int(right.get("route_steps", 999999))
+		return String(left.get("placement_id", "")) < String(right.get("placement_id", ""))
+	)
+	return rows
+
+func _apply_due_development_sources(session, source_schedule: Array, day: int, faction_id: String) -> Array:
+	var applied_rows := []
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var claim_total := _blank_resources()
+	for index in range(source_schedule.size()):
+		if not (source_schedule[index] is Dictionary):
+			continue
+		var row: Dictionary = source_schedule[index]
+		if bool(row.get("applied", false)) or int(row.get("acquisition_day", 999999)) > day:
+			continue
+		var node_index := _resource_node_index(nodes, String(row.get("placement_id", "")))
+		if node_index < 0:
+			continue
+		var node: Dictionary = nodes[node_index]
+		if bool(row.get("persistent_control", false)):
+			node["collected_by_faction_id"] = faction_id
+		var claims: Dictionary = row.get("claim_rewards", {}) if row.get("claim_rewards", {}) is Dictionary else {}
+		if not claims.is_empty() and not bool(node.get("collected", false)):
+			claim_total = _add_resource_sets(claim_total, claims)
+			node["collected"] = true
+			node["collected_day"] = day
+			node["collected_by_faction_id"] = faction_id
+		nodes[node_index] = node
+		row["applied"] = true
+		source_schedule[index] = row
+		applied_rows.append({
+			"placement_id": String(row.get("placement_id", "")),
+			"site_id": String(row.get("site_id", "")),
+			"acquisition_day": int(row.get("acquisition_day", 0)),
+			"resource_ids": _string_array(row.get("resource_ids", [])),
+			"claim_rewards": claims,
+			"control_income": row.get("control_income", {}),
+		})
+	session.overworld["resource_nodes"] = nodes
+	if not _resources_empty(claim_total):
+		_seed_enemy_treasury(session, faction_id, claim_total)
+	return applied_rows
+
+func _resource_node_index(nodes: Array, placement_id: String) -> int:
+	for index in range(nodes.size()):
+		if nodes[index] is Dictionary and String(nodes[index].get("placement_id", "")) == placement_id:
+			return index
+	return -1
+
+func _resources_empty(resources: Dictionary) -> bool:
+	for resource_id in resources.keys():
+		if int(resources.get(resource_id, 0)) > 0:
+			return false
+	return true
+
+func _source_resource_ids(claim_rewards: Dictionary, control_income: Dictionary) -> Array:
+	var ids := {}
+	for resources in [claim_rewards, control_income]:
+		for resource_id in resources.keys():
+			ids[String(resource_id)] = true
+	return _sorted_keys(ids)
+
+func _source_schedule_payload(source_schedule: Array) -> Array:
+	var rows := []
+	for row_value in source_schedule:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		rows.append({
+			"placement_id": String(row.get("placement_id", "")),
+			"site_id": String(row.get("site_id", "")),
+			"x": int(row.get("x", 0)),
+			"y": int(row.get("y", 0)),
+			"persistent_control": bool(row.get("persistent_control", false)),
+			"resource_ids": _string_array(row.get("resource_ids", [])),
+			"route_steps": int(row.get("route_steps", 0)),
+			"guarded": bool(row.get("guarded", false)),
+			"acquisition_day": int(row.get("acquisition_day", 0)),
+			"applied": bool(row.get("applied", false)),
+		})
+	return rows
+
+func _schedule_covers_required_resources(source_schedule: Array, required_resource_ids: Array) -> bool:
+	var covered := {}
+	for row_value in source_schedule:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		for resource_id in _string_array(row.get("resource_ids", [])):
+			covered[resource_id] = true
+	for resource_id in required_resource_ids:
+		var id := String(resource_id)
+		if id == "gold":
+			continue
+		if not bool(covered.get(id, false)):
+			return false
+	return true
+
+func _find_route(session, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var map_size := OverworldRules.derive_map_size(session)
+	if not _in_bounds(start_tile, map_size) or not _in_bounds(target_tile, map_size):
+		return []
+	var start_key := _tile_key(start_tile)
+	var queue := [start_tile]
+	var visited := {start_key: true}
+	var parent := {}
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		if current == target_tile:
+			return _reconstruct_route(parent, start_tile, target_tile)
+		for neighbor in _neighbors(current):
+			if not _in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _tile_key(neighbor)
+			if bool(visited.get(neighbor_key, false)):
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(session, current, neighbor):
+				continue
+			var is_destination: bool = neighbor == target_tile
+			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not (is_destination and OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)):
+				continue
+			if not is_destination and OverworldRules.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+				continue
+			visited[neighbor_key] = true
+			parent[neighbor_key] = current
+			queue.append(neighbor)
+	return []
+
+func _reconstruct_route(parent: Dictionary, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var route := [target_tile]
+	var current := target_tile
+	var guard := 0
+	while current != start_tile and guard < 10000:
+		guard += 1
+		var current_key := _tile_key(current)
+		if not parent.has(current_key):
+			return []
+		current = parent[current_key]
+		route.push_front(current)
+	return route
+
+func _neighbors(tile: Vector2i) -> Array:
+	return [
+		Vector2i(tile.x - 1, tile.y - 1),
+		Vector2i(tile.x, tile.y - 1),
+		Vector2i(tile.x + 1, tile.y - 1),
+		Vector2i(tile.x - 1, tile.y),
+		Vector2i(tile.x + 1, tile.y),
+		Vector2i(tile.x - 1, tile.y + 1),
+		Vector2i(tile.x, tile.y + 1),
+		Vector2i(tile.x + 1, tile.y + 1),
+	]
+
+func _in_bounds(tile: Vector2i, map_size: Vector2i) -> bool:
+	return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
+
+func _tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
+
+func _resource_source_has_guard(session, node: Dictionary) -> bool:
+	var placement_id := String(node.get("placement_id", ""))
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if OverworldRules.is_encounter_resolved(session, encounter):
+			continue
+		if String(encounter.get("target_kind", "")) == "resource" and String(encounter.get("target_placement_id", "")) == placement_id:
+			return true
+		var dx: int = abs(int(encounter.get("x", 0)) - int(node.get("x", 0)))
+		var dy: int = abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
+		if max(dx, dy) <= 1:
+			return true
+	return false
 
 func _filter_resources(resources: Dictionary, allowed: Array) -> Dictionary:
 	var result := {}
