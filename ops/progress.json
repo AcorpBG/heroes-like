@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-ai-town-start-economy-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario AI Town Start Economy",
+  "currentSliceId": "economy-town-unique-building-runtime-payoff-20260524-10184",
+  "currentSliceTitle": "Economy Town Unique Building Runtime Payoff",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed natural active-scenario enemy-town start economy gate. Enemy towns now seed starting AI development treasuries from authored town development_balance.starting_resources at ScenarioFactory session creation, and a focused EnemyTurnRules town-economy helper proves first-week AI construction, common-resource spend, one-build-per-town-per-turn guards, and full nine-resource treasury normalization for all 20 active enemy-town cases.",
+  "currentSliceNotes": "Completed six-faction unique non-unit town development payoff gate. Embercourt, Mireclaw, and Sunvault now have five faction-specific non-unit town buildings each, Thornwake/Brasshollow/Veilmourn parity buildings carry faction ownership metadata, and focused runtime evidence covers six factions, 15 authored towns, 30 unique non-unit buildings, 75 runtime payoff cases, and six rare-cost unique cases.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:05:00Z",
+  "updatedAt": "2026-05-24T22:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,57 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-unique-building-runtime-payoff-20260524-10184",
+      "title": "Economy Town Unique Building Runtime Payoff",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T22:55:00Z",
+      "completedAt": "2026-05-24T22:55:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-unique-building-runtime-payoff-report.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "tests/town_unique_building_runtime_payoff_report.gd",
+        "tests/town_unique_building_runtime_payoff_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-unique-building-runtime-payoff-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every faction exposes at least five faction-unique non-unit town buildings.",
+        "Every authored faction town includes at least five faction-unique non-unit town buildings.",
+        "Every faction has at least one rare-cost unique non-unit building using only its faction rare resource.",
+        "A focused live Godot report builds every unique non-unit town building through TownRules and OverworldRules.",
+        "Every focused report case changes a live income, readiness, pressure, reinforcement, spell, or market surface.",
+        "Repository validation gates the report, documentation, scene contract, content metadata, and authored-town coverage."
+      ],
+      "notes": "Completed: faction-unique non-unit town development now has parity, authored-town coverage, rare-resource identity, and live runtime payoff evidence.",
+      "completionEvidence": {
+        "faction_count": 6,
+        "authored_town_count": 15,
+        "unique_non_unit_building_count": 30,
+        "runtime_payoff_case_count": 75,
+        "rare_unique_case_count": 6,
+        "validated": [
+          "godot --headless --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+          "godot --headless --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/town_development_cost_curve_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json content/buildings.json content/towns.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-ai-town-start-economy-20260524-10184",
       "title": "Economy Active Scenario AI Town Start Economy",

@@ -1488,6 +1488,7 @@
         "wood": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_thornwake",
       "requires": [
         "building_town_hall"
       ],
@@ -1508,6 +1509,7 @@
         "ore": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_thornwake",
       "requires": [
         "building_market_square",
         "building_thornwake_rootroad_markers"
@@ -1527,6 +1529,7 @@
         "wood": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_thornwake",
       "requires": [
         "building_thornwake_sporeglass_hothouse"
       ],
@@ -1544,6 +1547,7 @@
         "ore": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_thornwake",
       "requires": [
         "building_thornwake_barkmantle_run",
         "building_thornwake_loam_ledger"
@@ -1563,6 +1567,7 @@
         "verdant_grafts": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_thornwake",
       "requires": [
         "building_thornwake_graftworks",
         "building_thornwake_bramblewall_coppice"
@@ -1758,6 +1763,7 @@
         "ore": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_brasshollow",
       "requires": [
         "building_town_hall"
       ],
@@ -1777,6 +1783,7 @@
         "ore": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_brasshollow",
       "requires": [
         "building_market_square",
         "building_brasshollow_scalehouse"
@@ -1797,6 +1804,7 @@
         "ore": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_brasshollow",
       "requires": [
         "building_brasshollow_boiler_cathedral"
       ],
@@ -1814,6 +1822,7 @@
         "ore": 3
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_brasshollow",
       "requires": [
         "building_brasshollow_pavis_foundry",
         "building_brasshollow_clause_court"
@@ -1833,6 +1842,7 @@
         "brass_scrip": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_brasshollow",
       "requires": [
         "building_brasshollow_pressure_rail",
         "building_brasshollow_gauge_arsenal"
@@ -2025,6 +2035,7 @@
         "wood": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_veilmourn",
       "requires": [
         "building_town_hall"
       ],
@@ -2045,6 +2056,7 @@
         "ore": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_veilmourn",
       "requires": [
         "building_market_square",
         "building_veilmourn_fog_signal_buoys"
@@ -2064,6 +2076,7 @@
         "ore": 1
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_veilmourn",
       "requires": [
         "building_veilmourn_obituary_vault"
       ],
@@ -2081,6 +2094,7 @@
         "ore": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_veilmourn",
       "requires": [
         "building_veilmourn_mirror_drydock",
         "building_veilmourn_salvage_ledger"
@@ -2100,12 +2114,313 @@
         "memory_salt": 2
       },
       "content_status": "six_faction_town_breadth_parity",
+      "faction_id": "faction_veilmourn",
       "requires": [
         "building_veilmourn_mistgate_slip",
         "building_veilmourn_black_sail_loft"
       ],
       "income": {
         "gold": 200
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_lockhouse_tally",
+      "name": "Lockhouse Tally",
+      "category": "economy",
+      "description": "River-lock clerks price timber, toll barges, and ration drafts into a steadier Embercourt build ledger.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 120,
+        "wood": 1
+      }
+    },
+    {
+      "id": "building_embercourt_beacon_writs",
+      "name": "Beacon Writs",
+      "category": "support",
+      "description": "Chartered beacon orders bind watch rotations to every legal crossing and relief lane.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_market_square",
+        "building_embercourt_lockhouse_tally"
+      ],
+      "readiness_bonus": 4,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_lantern_court",
+      "name": "Lantern Court",
+      "category": "magic",
+      "description": "Civic lantern judges rehearse warding oaths and battlefield injunctions beside the town archive.",
+      "cost": {
+        "gold": 1650,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_starseer_annex",
+        "building_embercourt_beacon_writs"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_embercourt_relief_quay",
+      "name": "Relief Quay",
+      "category": "support",
+      "description": "A chartered quay stages barges, spare bows, and flood-pike crews for disciplined counterpressure.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_river_granary_exchange",
+        "building_embercourt_lantern_court"
+      ],
+      "income": {
+        "gold": 160
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_charter_flame",
+      "name": "Charter Flame",
+      "category": "civic",
+      "description": "A rare embergrain-fed charter flame binds town law, reserve feed, and river defense into one late oath.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "embergrain": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_embercourt_charter_bastion",
+        "building_embercourt_relief_quay"
+      ],
+      "income": {
+        "gold": 180
+      },
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_reed_toll",
+      "name": "Reed Toll",
+      "category": "economy",
+      "description": "Hidden reed tolls skim passage coin and peatwax contracts from every watched marsh channel.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 100,
+        "wood": 1
+      },
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_silt_watch",
+      "name": "Silt Watch",
+      "category": "support",
+      "description": "Silt-blind lookouts keep ambush crews fed with fresh crossings and warning drums.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_market_square",
+        "building_mireclaw_reed_toll"
+      ],
+      "readiness_bonus": 3,
+      "pressure_bonus": 2
+    },
+    {
+      "id": "building_mireclaw_bog_oracle_nest",
+      "name": "Bog Oracle Nest",
+      "category": "magic",
+      "description": "Mud-sunk oracle nests teach drum signs, rot wards, and bloodwake omens to the town shamans.",
+      "cost": {
+        "gold": 1650,
+        "wood": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_starseer_annex",
+        "building_mireclaw_silt_watch"
+      ],
+      "readiness_bonus": 4,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_mireclaw_boneboom_palisade",
+      "name": "Boneboom Palisade",
+      "category": "support",
+      "description": "Hollow-bone booms and sinking palisades make every assault path louder, slower, and bloodier.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_bog_oracle_nest"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_oathmire_court",
+      "name": "Oathmire Court",
+      "category": "civic",
+      "description": "Peatwax oath marks bind raider rights, marsh tribute, and nightglass command into a late court.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "peatwax": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_boneboom_palisade"
+      ],
+      "income": {
+        "gold": 160
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 2
+    },
+    {
+      "id": "building_sunvault_lens_tithe",
+      "name": "Lens Tithe",
+      "category": "economy",
+      "description": "Prism tithes measure ore, glass, and daylight labor into exact town ledgers.",
+      "cost": {
+        "gold": 900,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 120,
+        "ore": 1
+      }
+    },
+    {
+      "id": "building_sunvault_relay_scribes",
+      "name": "Relay Scribes",
+      "category": "support",
+      "description": "Mirror scribes schedule reserve beams, courier flashes, and battery maintenance windows.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_market_square",
+        "building_sunvault_lens_tithe"
+      ],
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_sunvault_prism_oratory",
+      "name": "Prism Oratory",
+      "category": "magic",
+      "description": "Orators tune light-chants through duel mirrors and teach relay mages to hold formation under fire.",
+      "cost": {
+        "gold": 1650,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_starseer_annex",
+        "building_sunvault_relay_scribes"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_sunvault_halo_battery_yard",
+      "name": "Halo Battery Yard",
+      "category": "support",
+      "description": "Battery yards stack replacement prisms, sunshot frames, and exact firing arcs around the town.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_sunvault_harmonic_cloister",
+        "building_sunvault_prism_oratory"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_sunvault_zenith_court",
+      "name": "Zenith Court",
+      "category": "civic",
+      "description": "Aetherglass court mirrors seal the highest relay law and turn the town into a daylight command node.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "aetherglass": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_sunvault_daybreak_matrix",
+        "building_sunvault_halo_battery_yard"
+      ],
+      "income": {
+        "gold": 180
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1
