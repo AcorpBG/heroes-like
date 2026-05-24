@@ -1186,7 +1186,6 @@ func _refresh_generated_opening_surfaces() -> void:
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
 	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
-	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	var hero_pos := OverworldRules.hero_position(_session)
 	var hero_name := String(hero.get("name", "Commander"))
 	var opening_pending := _generated_initial_open_pending()
@@ -1194,11 +1193,7 @@ func _refresh_generated_opening_surfaces() -> void:
 		int(movement.get("current", 0)),
 		int(movement.get("max", movement.get("current", 0))),
 	]
-	var resource_line := "Gold %d | Wood %d | Ore %d" % [
-		int(resources.get("gold", 0)),
-		int(resources.get("wood", 0)),
-		int(resources.get("ore", 0)),
-	]
+	var resource_line := OverworldRules.describe_resources(_session)
 	_header_label.text = String(scenario.get("name", "Generated Map"))
 	_objective_brief_label.text = "Generated map opening" if opening_pending else "Generated map objective"
 	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."

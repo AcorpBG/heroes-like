@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-authored-town-development-breadth-20260524-10184",
-  "currentSliceTitle": "Economy Authored Town Development Breadth",
+  "currentSliceId": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+  "currentSliceTitle": "Economy Live Stockpile Resource Surface Breadth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. All 15 authored towns now have 30-turn development profiles, live faction rare-resource income, and access to their owning faction seven-building signature ladder. The deterministic balance report and the Godot runtime report both cover all 15 authored towns and prove full development within 30 turns through one-build-per-town-per-turn rules.",
+  "currentSliceNotes": "Completed. Full live stockpile resource summaries now flow through OverworldRules and generated-map resource text; runtime normalization, income merging, controlled site income, spending, and save/resume evidence preserve all nine live resource keys while generic costs remain sparse.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T14:45:00Z",
+  "updatedAt": "2026-05-24T15:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,60 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+      "title": "Economy Live Stockpile Resource Surface Breadth",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T15:45:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/live_stockpile_resource_surface_report.gd",
+        "tests/live_stockpile_resource_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Global resource summaries are built from the full live stockpile resource set rather than hard-coded gold, wood, and ore.",
+        "Runtime resource normalization, income merging, spending, and controlled resource-site income preserve all live stockpile keys.",
+        "Generated-map resource text uses the shared resource summary rule.",
+        "A focused Godot report proves full-stockpile summary, rare site income, end-turn mutation, and save/resume continuity.",
+        "Repository validation gates the full-stockpile surface evidence."
+      ],
+      "notes": "Completed. Global and generated-map resource summaries now use the full live stockpile set; runtime stockpile normalization, income merging, controlled site income, and save/resume preserve all nine live resource keys; generic cost dictionaries remain sparse so affordability surfaces do not treat zero-valued stockpile keys as real costs.",
+      "completedAt": "2026-05-24T15:45:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "schema": "economy_live_stockpile_resource_surface_completion_v1",
+        "live_stockpile_resource_count": 9,
+        "visible_resource_summary_uses_live_stockpile_keys": true,
+        "generated_map_resource_summary_uses_shared_rule": true,
+        "controlled_site_income_preserves_full_stockpile_keys": true,
+        "save_resume_preserves_full_stockpile_surface": true,
+        "generic_cost_dictionaries_remain_sparse": true,
+        "live_town_runtime_balance_still_passes": true
+      }
+    },
     {
       "id": "economy-authored-town-development-breadth-20260524-10184",
       "title": "Economy Authored Town Development Breadth",
@@ -20400,6 +20454,44 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+      "title": "Economy Live Stockpile Resource Surface Breadth",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T15:45:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-live-stockpile-resource-surface-breadth-20260524-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/live_stockpile_resource_surface_report.gd",
+        "tests/live_stockpile_resource_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (pass)",
+        "python3 tests/town_development_balance_report.py (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)"
+      ],
+      "summary": "Full live stockpile resource summaries now flow through shared core rules and generated-map resource text. Runtime stockpile normalization, income merging, controlled rare-resource site income, end-turn mutation, and save/resume preserve all nine live resource keys while generic costs remain sparse."
+    },
+    {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
       "title": "Battle Autoplay Hard Difficulty Watch Retune",
       "status": "completed",
@@ -25810,31 +25902,67 @@
         "git diff --check"
       ],
       "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
+    },
+    {
+      "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T15:45:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Live stockpile resource surface breadth passed: full resource summary, rare site income, end-turn mutation, save/resume continuity, existing capture-income, and all-authored-town runtime balance checks are green."
     }
   ],
   "lastValidation": {
-    "id": "economy-authored-town-development-breadth-20260524-10184",
+    "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T14:45:00Z",
+    "updatedAt": "2026-05-24T15:45:00Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/town_development_balance_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-all.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
+    "summary": "Live stockpile resource surface breadth passed: focused report proved full nine-resource summaries, zero-valued rare audit summaries, controlled rare-resource site income, live end-turn mutation, and save/resume continuity; existing capture-income and all-authored-town runtime balance reports remained green."
   },
   "active_slice": {
-    "id": "economy-authored-town-development-breadth-20260524-10184",
-    "title": "Economy Authored Town Development Breadth",
+    "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+    "title": "Economy Live Stockpile Resource Surface Breadth",
     "status": "completed",
-    "updatedAt": "2026-05-24T14:45:00Z"
+    "updatedAt": "2026-05-24T15:45:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T14:45:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T15:45:00Z",
   "validationHistory": [
+    {
+      "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T15:45:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-rerun.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-rerun.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-stockpile-rerun.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Live stockpile resource surface breadth passed: focused report proved all nine live resources in full summaries, rare-resource income through controlled sites and end-turn mutation, save/resume continuity, and generated-map resource text sharing the core resource summary. Existing capture-income and all-authored-town runtime balance reports remained green."
+    },
     {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
       "status": "passed",
@@ -26278,5 +26406,5 @@
       "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
     }
   ],
-  "currentSlice": "economy-authored-town-development-breadth-20260524-10184"
+  "currentSlice": "economy-live-stockpile-resource-surface-breadth-20260524-10184"
 }

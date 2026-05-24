@@ -92,6 +92,9 @@ ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_case
 ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.gd"
 ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.tscn"
 ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH = ROOT / "docs" / "economy-capture-income-loop-expansion-report.md"
+LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.gd"
+LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.tscn"
+LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-live-stockpile-resource-surface-report.md"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
@@ -2750,6 +2753,54 @@ def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
             payload = site.get(field_name, {})
             if isinstance(payload, dict):
                 ensure(set(payload.keys()).issubset(set(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS) | {"experience"}), errors, f"{site_id}.{field_name} must stay within current resources for the expansion proof")
+
+
+def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
+    ensure(LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Live stockpile resource surface report script is missing")
+    ensure(LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Live stockpile resource surface report scene is missing")
+    ensure(LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH.exists(), errors, "Live stockpile resource surface report doc is missing")
+    if not LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH.read_text(encoding="utf-8") if LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH.exists() else ""
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    overworld_shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+
+    for required_token in (
+        "LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT",
+        "live_stockpile_resource_surface_report_v1",
+        "OverworldRules.describe_resource_stockpile",
+        "OverworldRules.describe_resources",
+        "OverworldRules.controlled_resource_site_income",
+        "OverworldRules.end_turn",
+        "SaveService.save_runtime_manual_session",
+        "SaveService.restore_manual_session",
+        '"site_aetherglass_lens_house"',
+        '"site_embergrain_warm_granary"',
+        '"site_peatwax_reed_yard"',
+        '"site_verdant_graft_nursery"',
+        '"site_brass_scrip_mint"',
+        '"site_memory_salt_pan"',
+    ):
+        ensure(required_token in script_text, errors, f"Live stockpile resource surface report is missing token {required_token}")
+    ensure("res://tests/live_stockpile_resource_surface_report.gd" in scene_text, errors, "Live stockpile resource surface scene must load its report script")
+    for required_token in (
+        "static func describe_resource_stockpile",
+        "include_zero_rare",
+        "_normalize_live_resource_stockpile",
+        "_empty_live_resource_stockpile",
+        "_resource_display_name",
+        "LIVE_STOCKPILE_RESOURCE_KEYS",
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing live stockpile surface token {required_token}")
+    ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in scenario_factory_text, errors, "ScenarioFactory must seed the full live stockpile key set")
+    ensure("OverworldRules.describe_resources(_session)" in overworld_shell_text, errors, "Overworld shell must use the shared resource summary rule")
+    ensure("Gold %d | Wood %d | Ore %d" not in overworld_shell_text, errors, "Overworld shell must not hard-code the common-only resource line")
+    ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
+    ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
 
 
 def print_market_faction_cost_report(report: dict) -> None:
@@ -18934,6 +18985,7 @@ def main() -> int:
     validate_town_development_balance_policy(errors)
     validate_town_development_runtime_balance_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
+    validate_live_stockpile_resource_surface(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
@@ -19017,6 +19069,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
+    print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")

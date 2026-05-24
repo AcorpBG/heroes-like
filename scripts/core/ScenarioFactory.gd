@@ -2,6 +2,18 @@ class_name ScenarioFactory
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+
+const LIVE_STOCKPILE_RESOURCE_KEYS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -345,6 +357,8 @@ static func _normalize_position(value: Variant) -> Dictionary:
 
 static func _normalize_resources(value: Variant) -> Dictionary:
 	var resources := {}
+	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
+		resources[resource_key] = 0
 	if value is Dictionary:
 		for key in value.keys():
 			var resource_key := String(key)
