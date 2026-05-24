@@ -4,6 +4,7 @@ extends Node
 const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 8
 const MAX_RECORDS := 24
+const UI_SFX_MANIFEST_PATH := "res://content/ui_sfx_manifest.json"
 const CUE_SPECS := {
 	"ui_click": {"frequency": 520.0, "duration": 0.055, "gain": 0.10},
 	"ui_select": {"frequency": 660.0, "duration": 0.06, "gain": 0.09},
@@ -16,6 +17,8 @@ const CUE_SPECS := {
 var _connected_control_ids := {}
 var _records: Array[Dictionary] = []
 var _active_players: Array[AudioStreamPlayer] = []
+var _ui_sfx_manifest: Dictionary = {}
+var _ui_sfx_manifest_loaded := false
 
 func _ready() -> void:
 	if get_tree() != null:
@@ -31,6 +34,7 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 		"source": source,
 		"metadata": metadata.duplicate(true),
 		"audio_bus": "Master",
+		"sfx_manifest_path": UI_SFX_MANIFEST_PATH,
 		"frequency": float(spec.get("frequency", 440.0)),
 		"duration_sec": float(spec.get("duration", 0.05)),
 		"gain": float(spec.get("gain", 0.08)),
@@ -38,8 +42,21 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 		"played": not muted,
 		"timestamp_msec": Time.get_ticks_msec(),
 	}
+	var playback := {}
 	if not muted:
-		_play_generated_waveform(record)
+		playback = _play_imported_audio_cue(normalized)
+		if playback.is_empty():
+			playback = _play_generated_waveform(record)
+			if not playback.is_empty():
+				playback["source"] = "generated_waveform"
+	record["playback_source"] = String(playback.get("source", "muted" if muted else "none"))
+	record["asset_path"] = String(playback.get("asset_path", ""))
+	record["role"] = String(playback.get("role", ""))
+	record["volume_db"] = float(playback.get("volume_db", 0.0))
+	record["player_created"] = bool(playback.get("player_created", false))
+	record["sfx_manifest_loaded"] = _ui_sfx_manifest_loaded
+	record["imported_asset_count"] = 1 if String(playback.get("source", "")) == "imported_wav" else 0
+	record["generated_fallback_count"] = 1 if String(playback.get("source", "")) == "generated_waveform" else 0
 	record["active_player_count"] = _active_players.size()
 	_records.append(record.duplicate(true))
 	while _records.size() > MAX_RECORDS:
@@ -101,6 +118,8 @@ func validation_summary() -> Dictionary:
 		"connected_control_count": _connected_control_ids.size(),
 		"audio_bus": "Master",
 		"max_active_players": MAX_ACTIVE_PLAYERS,
+		"sfx_manifest_path": UI_SFX_MANIFEST_PATH,
+		"sfx_manifest_loaded": _ui_sfx_manifest_loaded,
 		"records": validation_records(),
 	}
 
@@ -153,7 +172,45 @@ func _control_metadata(control: Control) -> Dictionary:
 		"disabled": bool(control.get("disabled")) if control is BaseButton else false,
 	}
 
-func _play_generated_waveform(record: Dictionary) -> void:
+func _play_imported_audio_cue(cue_id: String) -> Dictionary:
+	var cue := _ui_sfx_manifest_cue(cue_id)
+	if cue.is_empty():
+		return {}
+	var path := String(cue.get("path", "")).strip_edges()
+	if path == "":
+		return {}
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is AudioStream:
+			stream = resource
+	if stream == null and FileAccess.file_exists(path):
+		var wav_stream := AudioStreamWAV.load_from_file(path)
+		if wav_stream is AudioStream:
+			stream = wav_stream
+	if stream == null:
+		return {}
+	var duration_msec := int(cue.get("duration_msec", 80))
+	var stream_length := stream.get_length()
+	if stream_length > 0.0:
+		duration_msec = maxi(1, int(ceil(stream_length * 1000.0)))
+	var player := AudioStreamPlayer.new()
+	player.bus = "Master"
+	player.stream = stream
+	player.volume_db = float(cue.get("volume_db", -18.0))
+	add_child(player)
+	_track_player(player, float(duration_msec) / 1000.0 + 0.04)
+	player.play()
+	return {
+		"source": "imported_wav",
+		"asset_path": path,
+		"role": String(cue.get("role", "")),
+		"duration_msec": duration_msec,
+		"volume_db": float(cue.get("volume_db", -18.0)),
+		"player_created": true,
+	}
+
+func _play_generated_waveform(record: Dictionary) -> Dictionary:
 	_prune_players()
 	while _active_players.size() >= MAX_ACTIVE_PLAYERS:
 		var player: AudioStreamPlayer = _active_players.pop_front()
@@ -171,8 +228,22 @@ func _play_generated_waveform(record: Dictionary) -> void:
 	var playback := player.get_stream_playback() as AudioStreamGeneratorPlayback
 	if playback != null:
 		_fill_waveform(playback, float(record.get("frequency", 440.0)), duration, float(record.get("gain", 0.08)))
+	_track_player(player, duration + 0.03)
+	return {
+		"source": "generated_waveform",
+		"duration_msec": int(ceil(duration * 1000.0)),
+		"volume_db": 0.0,
+		"player_created": true,
+	}
+
+func _track_player(player: AudioStreamPlayer, lifetime_sec: float) -> void:
+	_prune_players()
+	while _active_players.size() >= MAX_ACTIVE_PLAYERS:
+		var expired: AudioStreamPlayer = _active_players.pop_front()
+		if is_instance_valid(expired):
+			expired.queue_free()
 	_active_players.append(player)
-	var timer := get_tree().create_timer(duration + 0.03) if get_tree() != null else null
+	var timer := get_tree().create_timer(maxf(0.02, lifetime_sec)) if get_tree() != null else null
 	if timer != null:
 		timer.timeout.connect(_on_player_expired.bind(player))
 
@@ -184,7 +255,7 @@ func _fill_waveform(playback: AudioStreamGeneratorPlayback, frequency: float, du
 		var sample := sin(TAU * frequency * t) * gain * envelope
 		playback.push_frame(Vector2(sample, sample))
 
-func _on_player_expired(player: AudioStreamPlayer) -> void:
+func _on_player_expired(player) -> void:
 	if is_instance_valid(player):
 		player.queue_free()
 	_prune_players()
@@ -195,3 +266,23 @@ func _prune_players() -> void:
 		if is_instance_valid(player) and player.is_inside_tree():
 			kept.append(player)
 	_active_players = kept
+
+func _ui_sfx_manifest_cue(cue_id: String) -> Dictionary:
+	_load_ui_sfx_manifest()
+	var cues: Dictionary = _ui_sfx_manifest.get("cues", {}) if _ui_sfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_ui_sfx_manifest() -> void:
+	if _ui_sfx_manifest_loaded:
+		return
+	_ui_sfx_manifest_loaded = true
+	_ui_sfx_manifest = {}
+	if not FileAccess.file_exists(UI_SFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(UI_SFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_ui_sfx_manifest = parsed

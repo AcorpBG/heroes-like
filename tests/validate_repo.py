@@ -166,6 +166,9 @@ PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-runtime-is
 UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.gd"
 UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.tscn"
 UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-report.md"
+UI_SFX_MANIFEST_PATH = CONTENT_DIR / "ui_sfx_manifest.json"
+UI_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ui_sfx_assets.py"
+UI_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ui"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
@@ -17787,6 +17790,8 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
         UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH,
         UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH,
         UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH,
+        UI_SFX_MANIFEST_PATH,
+        UI_SFX_GENERATOR_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing UI audio cue runtime file: {path.relative_to(ROOT)}")
@@ -17803,6 +17808,11 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
         ui_audio_text = UI_AUDIO_PATH.read_text(encoding="utf-8")
         for required_token in (
             "class_name HeroesUiAudio",
+            "UI_SFX_MANIFEST_PATH",
+            "func _ui_sfx_manifest_cue",
+            "func _play_imported_audio_cue",
+            "func _play_generated_waveform",
+            "AudioStreamWAV.load_from_file",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -17821,9 +17831,42 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "MAX_ACTIVE_PLAYERS",
             "audio_bus",
             "Master",
+            "imported_asset_count",
+            "generated_fallback_count",
             "node_added",
         ):
             ensure(required_token in ui_audio_text, errors, f"UiAudio.gd is missing required token: {required_token}")
+
+    required_ui_cue_ids = ("ui_click", "ui_select", "ui_adjust", "ui_tab", "ui_confirm", "ui_invalid")
+    if UI_SFX_MANIFEST_PATH.exists():
+        ui_sfx_manifest = json.loads(UI_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(ui_sfx_manifest.get("schema") == "ui_runtime_sfx_manifest_v1", errors, "ui_sfx_manifest.json has the wrong schema")
+        ensure(ui_sfx_manifest.get("final_sound_design") is False, errors, "ui_sfx_manifest.json must not claim final sound design")
+        ensure(ui_sfx_manifest.get("audio_bus") == "Master", errors, "ui_sfx_manifest.json must route UI SFX through Master")
+        ui_sfx_cues = ui_sfx_manifest.get("cues", {})
+        ensure(isinstance(ui_sfx_cues, dict), errors, "ui_sfx_manifest.json cues must be an object")
+        for cue_id in required_ui_cue_ids:
+            cue = ui_sfx_cues.get(cue_id, {}) if isinstance(ui_sfx_cues, dict) else {}
+            ensure(isinstance(cue, dict), errors, f"ui_sfx_manifest.json is missing cue {cue_id}")
+            path_value = str(cue.get("path", ""))
+            ensure(path_value.startswith("res://art/audio/runtime/ui/"), errors, f"UI SFX cue {cue_id} must use the runtime UI audio folder")
+            wav_path = ROOT / path_value.removeprefix("res://")
+            ensure(wav_path.exists(), errors, f"UI SFX asset is missing for {cue_id}: {path_value}")
+            if wav_path.exists():
+                header = wav_path.read_bytes()[:12]
+                ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"UI SFX asset is not a WAV file: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"UI SFX cue {cue_id} needs duration_msec")
+            ensure("volume_db" in cue, errors, f"UI SFX cue {cue_id} needs volume_db")
+
+    ui_sfx_generator_text = UI_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if UI_SFX_GENERATOR_PATH.exists() else ""
+    for required_token in (
+        "ui_sfx_manifest.json",
+        "SPECS",
+        "write_wav",
+        "wave.open",
+        "Manifest/spec cue mismatch",
+    ):
+        ensure(required_token in ui_sfx_generator_text, errors, f"generate_ui_sfx_assets.py is missing token {required_token}")
 
     if UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH.exists():
         report_text = UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -17840,6 +17883,10 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "TabContainer",
             "ItemList",
             "ui_audio_runtime_v1",
+            "res://content/ui_sfx_manifest.json",
+            "imported_asset_count",
+            "generated_fallback_count",
+            "imported_wav",
         ):
             ensure(required_token in report_text, errors, f"UI audio cue runtime report is missing required token: {required_token}")
 
@@ -17849,6 +17896,8 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "UI Audio Cue Runtime Report",
             "ui-audio-cue-runtime-baseline-20260523-10184",
             "scripts/autoload/UiAudio.gd",
+            "content/ui_sfx_manifest.json",
+            "art/audio/runtime/ui/",
             "AudioStreamGenerator",
             "Master",
             "Button",
@@ -17857,7 +17906,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "TabContainer",
             "ItemList",
             "not final sound design",
-            "Final imported UI audio",
+            "Final sound design",
         ):
             ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
 

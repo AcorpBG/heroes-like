@@ -1,0 +1,45 @@
+{
+  "schema": "ui_runtime_sfx_manifest_v1",
+  "generated_by": "tools/generate_ui_sfx_assets.py",
+  "final_sound_design": false,
+  "audio_bus": "Master",
+  "sample_rate_hz": 22050,
+  "cues": {
+    "ui_click": {
+      "path": "res://art/audio/runtime/ui/click.wav",
+      "duration_msec": 70,
+      "volume_db": -18.0,
+      "role": "button_click"
+    },
+    "ui_select": {
+      "path": "res://art/audio/runtime/ui/select.wav",
+      "duration_msec": 80,
+      "volume_db": -18.0,
+      "role": "list_select"
+    },
+    "ui_adjust": {
+      "path": "res://art/audio/runtime/ui/adjust.wav",
+      "duration_msec": 60,
+      "volume_db": -20.0,
+      "role": "slider_adjust"
+    },
+    "ui_tab": {
+      "path": "res://art/audio/runtime/ui/tab.wav",
+      "duration_msec": 90,
+      "volume_db": -18.5,
+      "role": "tab_change"
+    },
+    "ui_confirm": {
+      "path": "res://art/audio/runtime/ui/confirm.wav",
+      "duration_msec": 120,
+      "volume_db": -17.0,
+      "role": "confirm_action"
+    },
+    "ui_invalid": {
+      "path": "res://art/audio/runtime/ui/invalid.wav",
+      "duration_msec": 150,
+      "volume_db": -17.5,
+      "role": "invalid_action"
+    }
+  }
+}
