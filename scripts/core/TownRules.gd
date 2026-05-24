@@ -889,7 +889,7 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 
 	var actions := []
 	var resources = session.overworld.get("resources", {})
-	for building_id in _available_building_ids(town):
+	for building_id in _available_building_ids(town, session.day):
 		var building := ContentService.get_building(building_id)
 		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
 		var cost = building.get("cost", {})
@@ -2194,8 +2194,8 @@ static func _multiply_resource_cost(cost: Variant, multiplier: int) -> Dictionar
 static func _find_active_town_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return OverworldRulesScript.active_town_visit_result(session)
 
-static func _available_building_ids(town: Dictionary) -> Array:
-	return OverworldRulesScript.get_town_build_options(town)
+static func _available_building_ids(town: Dictionary, current_day: int = -1) -> Array:
+	return OverworldRulesScript.get_town_build_options(town, current_day)
 
 static func _building_line(building_id: String, state: String, build_status: Dictionary = {}) -> String:
 	var building := ContentService.get_building(building_id)

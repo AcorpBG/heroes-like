@@ -92,6 +92,9 @@ ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_case
 ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.gd"
 ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.tscn"
 ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH = ROOT / "docs" / "economy-capture-income-loop-expansion-report.md"
+TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
+TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
+TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -2648,6 +2651,31 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     ensure("last_build_day" in overworld_rules_text and "already completed a build order today" in overworld_rules_text, errors, "OverworldRules must enforce one build per town per day")
     ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
     ensure("get_town_build_status(town, building_id, session.day)" in town_rules_text, errors, "TownRules build action surface must pass the active day into build status")
+    ensure("get_town_build_options(town, current_day)" in town_rules_text, errors, "TownRules must derive build actions with current-day build blocking")
+
+
+def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
+    ensure(TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH.exists(), errors, "Missing town development runtime balance report script")
+    ensure(TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH.exists(), errors, "Missing town development runtime balance report scene")
+    ensure(TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH.exists(), errors, "Missing town development runtime balance report doc")
+    if not TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH.exists():
+        return
+    script_text = TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH.exists() else ""
+    for token in (
+        "TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT",
+        "town_development_runtime_balance_report_v1",
+        "OverworldRules.end_turn",
+        "OverworldRules.build_in_active_town",
+        "OverworldRules.set_active_town_visit",
+        "already completed a build order today",
+        "rare_spend_events",
+        "COMMON_MARKET_RESOURCE_IDS",
+    ):
+        ensure(token in script_text, errors, f"Town development runtime balance report is missing token {token}")
+    ensure("res://tests/town_development_runtime_balance_report.gd" in scene_text, errors, "Town development runtime balance scene must load its report script")
+    ensure("live Godot rules" in doc_text and "same-day second build" in doc_text, errors, "Town development runtime balance doc must record live-rule and same-day-build evidence")
 
 
 def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
@@ -18888,6 +18916,7 @@ def main() -> int:
     validate_economy_rare_resource_activation_policy(errors)
     validate_market_faction_cost_policy(errors)
     validate_town_development_balance_policy(errors)
+    validate_town_development_runtime_balance_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []

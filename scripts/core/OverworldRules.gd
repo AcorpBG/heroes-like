@@ -4787,12 +4787,12 @@ static func choose_specialty(session: SessionStateStoreScript.SessionData, speci
 	_sync_spellbook_to_hero(session, previous_mana_max)
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
-static func get_town_build_options(town: Dictionary) -> Array:
+static func get_town_build_options(town: Dictionary, current_day: int = -1) -> Array:
 	var options := []
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	for building_id_value in town_template.get("buildable_building_ids", []):
 		var building_id := String(building_id_value)
-		if bool(get_town_build_status(town, building_id).get("buildable", false)):
+		if bool(get_town_build_status(town, building_id, current_day).get("buildable", false)):
 			options.append(building_id)
 	return options
 
