@@ -8,7 +8,17 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
-const TRACKED_RESOURCES := ["gold", "wood", "ore"]
+const TRACKED_RESOURCES := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -390,7 +400,7 @@ static func town_build_pressure_report(
 	faction_id: String
 ) -> Dictionary:
 	var candidates := []
-	for building_id in OverworldRulesScript.get_town_build_options(town):
+	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
 			continue
@@ -905,6 +915,8 @@ static func _build_in_enemy_towns(
 		var town = towns[int(entry.get("index", -1))]
 		if _town_controller_faction_id(town) != faction_id:
 			continue
+		if int(town.get("last_build_day", 0)) == int(session.day):
+			continue
 		var build_choice = _best_build_candidate(session, town, treasury, config, faction_id)
 		if build_choice.is_empty():
 			continue
@@ -918,6 +930,7 @@ static func _build_in_enemy_towns(
 			built_buildings = []
 		built_buildings.append(building_id)
 		town["built_buildings"] = built_buildings
+		town["last_build_day"] = int(session.day)
 		town["available_recruits"] = _merge_recruits(
 			town.get("available_recruits", {}),
 			_building_growth_payload(building_id)
@@ -1668,7 +1681,7 @@ static func _best_build_candidate(
 ) -> Dictionary:
 	var best = {}
 	var best_score = -1.0
-	for building_id in OverworldRulesScript.get_town_build_options(town):
+	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
 			continue
@@ -2505,6 +2518,12 @@ static func _resource_value(resources: Variant) -> int:
 	value += int(resources.get("gold", 0))
 	value += int(resources.get("wood", 0)) * 400
 	value += int(resources.get("ore", 0)) * 400
+	value += int(resources.get("aetherglass", 0)) * 800
+	value += int(resources.get("embergrain", 0)) * 800
+	value += int(resources.get("peatwax", 0)) * 800
+	value += int(resources.get("verdant_grafts", 0)) * 800
+	value += int(resources.get("brass_scrip", 0)) * 800
+	value += int(resources.get("memory_salt", 0)) * 800
 	return value
 
 static func _apply_discount(cost: Variant, discount_percent: int) -> Dictionary:

@@ -9777,6 +9777,7 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 	var required_gold_total := int(normalized_cost.get("gold", 0))
 	var liquidatable_gold := 0
 	var market_cap_blockers := []
+	var restricted_resource_blockers := []
 	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		var required_amount := int(normalized_cost.get(resource_key, 0))
 		var current_amount := int(normalized_pool.get(resource_key, 0))
@@ -9794,8 +9795,18 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 			var sell_remaining := int(_market_cap_state_for_quote(town, state, sell_quote, current_day).get("remaining", surplus))
 			var sellable_surplus: int = surplus if current_day <= 0 else min(surplus, sell_remaining)
 			liquidatable_gold += sellable_surplus * int(state.get("sell_rates", {}).get(resource_key, 0))
+	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
+		if resource_key == "gold" or resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+			continue
+		var restricted_deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(normalized_pool.get(resource_key, 0)))
+		if restricted_deficit > 0:
+			restricted_resource_blockers.append("%s %d" % [resource_key, restricted_deficit])
 	var available_gold_total := int(normalized_pool.get("gold", 0)) + liquidatable_gold
-	var market_affordable := available_gold_total >= required_gold_total and market_cap_blockers.is_empty()
+	var market_affordable := (
+		available_gold_total >= required_gold_total
+		and market_cap_blockers.is_empty()
+		and restricted_resource_blockers.is_empty()
+	)
 	return {
 		"affordable": market_affordable,
 		"direct_affordable": direct_affordable,
@@ -9808,6 +9819,7 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 		"available_gold_total": available_gold_total,
 		"required_gold_total": required_gold_total,
 		"market_cap_blockers": market_cap_blockers,
+		"restricted_resource_blockers": restricted_resource_blockers,
 	}
 
 static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
