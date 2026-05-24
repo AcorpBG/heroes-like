@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-delayed-source-save-resume-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Delayed Source Save Resume",
+  "currentSliceId": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario AI Delayed Source Save Resume",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active player-town delayed-source runway now saves/restores after route-derived source acquisition and first rare-resource construction, preserving active town state, resources, built buildings, last_build_day, recruits, applied source-node claim/control state, town resume target, save version, and same-day build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 18 player-town cases with 18/18 delayed-source save/resume checkpoints and 18/18 delayed-source replays completed.",
+  "currentSliceNotes": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:34:53Z",
+  "updatedAt": "2026-05-24T22:48:04Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,29 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
+      "title": "Economy Active Scenario AI Delayed Source Save Resume",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T22:48:04Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "summary": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-delayed-save-resume.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "economy-active-scenario-delayed-source-save-resume-20260524-10184",
       "title": "Economy Active Scenario Delayed Source Save Resume",
@@ -21531,6 +21554,38 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
+      "title": "Economy Active Scenario AI Delayed Source Save Resume",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T22:48:04Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-delayed-save-resume.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed."
+    },
+    {
       "id": "economy-active-scenario-delayed-source-save-resume-20260524-10184",
       "title": "Economy Active Scenario Delayed Source Save Resume",
       "status": "completed",
@@ -26964,6 +27019,7 @@
     }
   },
   "validationResults": [
+    "2026-05-24 economy active scenario AI delayed-source save/resume: focused Godot report passed across 16 active authored scenarios and 20 enemy-town cases, completing 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays while preserving source node state, enemy treasury, target town state, same-day AI build guard, and save version; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy active scenario delayed-source save/resume: focused Godot report passed across 16 active authored scenarios and 18 player-town cases, completing 18/18 delayed-source save/resume checkpoints and 18/18 delayed-source replays while preserving source node state, active town state, same-day build guard, and save version; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy active scenario development runway: wood wagon and ore crate sources now provide persistent common-resource income with matching map-object metadata; focused Godot report passed across 16 active authored scenarios and 18 active player-town cases, completing 18/18 within 30 turns with rare spend observed in every case, same-day second-build rejection, and common-only market boundaries; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy town unit tier runtime surface: live TownRules build/recruit actions now expose seven-tier unit identity across six faction ladders; focused Godot report passed with 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases; Mireclaw tier order/prerequisites/rare costs corrected; town development balance reports, repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
@@ -27617,24 +27673,24 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-24T22:34:53Z",
+    "updatedAt": "2026-05-24T22:48:04Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-scenario-town-delayed-save-resume.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-delayed-save-resume.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Active player-town delayed-source runway now saves/restores after route-derived source acquisition and first rare-resource construction, preserving active town state, resources, built buildings, last_build_day, recruits, applied source-node claim/control state, town resume target, save version, and same-day build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 18 player-town cases with 18/18 delayed-source save/resume checkpoints and 18/18 delayed-source replays completed."
+    "summary": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed."
   },
   "active_slice": {
-    "id": "economy-active-scenario-delayed-source-save-resume-20260524-10184",
-    "title": "Economy Active Scenario Delayed Source Save Resume",
+    "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
+    "title": "Economy Active Scenario AI Delayed Source Save Resume",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:34:53Z"
+    "updatedAt": "2026-05-24T22:48:04Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T22:34:53Z",
+  "currentSliceUpdatedAt": "2026-05-24T22:48:04Z",
   "validationHistory": [
     {
       "status": "passed",
@@ -28339,10 +28395,10 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-delayed-source-save-resume-20260524-10184",
-    "title": "Economy Active Scenario Delayed Source Save Resume",
+    "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
+    "title": "Economy Active Scenario AI Delayed Source Save Resume",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:34:53Z"
+    "updatedAt": "2026-05-24T22:48:04Z"
   },
   "validation": [
     {
