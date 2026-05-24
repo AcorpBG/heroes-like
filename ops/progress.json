@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-pacing-parity-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Pacing Parity",
+  "currentSliceId": "economy-active-scenario-delayed-source-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Delayed Source Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed town development pacing parity. All authored towns now gate at least 20 buildable targets, at least 12 non-unit targets, a day-20 production pacing floor, and the 30-turn cap; live runtime construction and unique-building payoff reports cover the expanded faction town chains.",
+  "currentSliceNotes": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T21:05:33Z",
+  "updatedAt": "2026-05-24T21:28:19Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,27 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
+      "title": "Economy Active Scenario Delayed Source Runway",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T21:28:19Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "tests/active_scenario_town_development_runway_report.gd"
+      ],
+      "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target.",
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "jq empty ops/progress.json"
+      ]
+    },
     {
       "id": "economy-town-development-pacing-parity-20260524-10184",
       "title": "Economy Town Development Pacing Parity",
@@ -21444,6 +21465,35 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
+      "title": "Economy Active Scenario Delayed Source Runway",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T21:28:19Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-delayed-source-runway-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/active_scenario_town_development_runway_report.gd",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "jq empty ops/progress.json"
+      ],
+      "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
+    },
+    {
       "id": "economy-active-scenario-town-start-economy-20260524-10184",
       "title": "Economy Active Scenario Town Start Economy",
       "status": "completed",
@@ -27406,29 +27456,37 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-town-development-pacing-parity-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T21:05:33Z",
+    "updatedAt": "2026-05-24T21:28:19Z",
     "commands": [
-      "python3 tests/town_development_balance_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-      "jq empty ops/progress.json",
-      "git diff --check"
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "jq empty ops/progress.json"
     ],
-    "summary": "Town development pacing parity passed: 15 authored towns, minimum 20 buildable targets, minimum 12 non-unit targets, deterministic completion days 23-28, live runtime completion days 20-23, and 127 unique-building runtime payoff cases."
+    "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
   },
   "active_slice": {
-    "id": "economy-town-development-pacing-parity-20260524-10184",
-    "title": "Economy Town Development Pacing Parity",
+    "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
+    "title": "Economy Active Scenario Delayed Source Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T21:05:33Z"
+    "updatedAt": "2026-05-24T21:28:19Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T21:05:33Z",
+  "currentSliceUpdatedAt": "2026-05-24T21:28:19Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-24T21:28:19Z",
+      "commands": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "jq empty ops/progress.json"
+      ],
+      "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
+    },
     {
       "id": "economy-town-development-pacing-parity-20260524-10184",
       "status": "passed",
@@ -28096,39 +28154,23 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-development-pacing-parity-20260524-10184",
-    "title": "Economy Town Development Pacing Parity",
+    "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
+    "title": "Economy Active Scenario Delayed Source Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T21:05:33Z"
+    "updatedAt": "2026-05-24T21:28:19Z"
   },
   "validation": [
     {
-      "id": "economy-town-development-pacing-parity-20260524-10184",
       "status": "passed",
-      "updatedAt": "2026-05-24T21:05:33Z",
+      "updatedAt": "2026-05-24T21:28:19Z",
       "commands": [
-        "python3 tests/town_development_balance_report.py",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-runtime-balance-pacing3.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-unique-payoff-pacing.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
         "python3 tests/validate_repo.py",
         "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
         "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-        "jq empty ops/progress.json",
-        "git diff --check"
-      ]
-    },
-    {
-      "id": "economy-town-recruitment-ui-surface-20260524-10184",
-      "status": "passed",
-      "updatedAt": "2026-05-24T23:59:55Z",
-      "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-recruitment-ui-surface.log --path . --scene res://tests/town_recruitment_ui_surface_report.tscn",
-        "python3 tests/validate_repo.py",
-        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
-        "jq empty ops/progress.json",
-        "git diff --check"
-      ]
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "jq empty ops/progress.json"
+      ],
+      "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
     }
   ]
 }

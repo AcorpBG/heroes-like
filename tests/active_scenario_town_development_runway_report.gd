@@ -23,6 +23,8 @@ const RARE_RESOURCE_IDS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+const DELAYED_SOURCE_ROUTE_STEPS_PER_DAY := 12
+const DELAYED_GUARDED_SOURCE_EXTRA_DAYS := 1
 
 var _errors := []
 
@@ -36,6 +38,8 @@ func _run() -> void:
 	var completed_case_count := 0
 	var rare_spend_case_count := 0
 	var full_session_case_count := 0
+	var delayed_source_replay_case_count := 0
+	var delayed_source_replay_completed_count := 0
 	var recruitment_end_to_end_case_count := 0
 	var seven_tier_recruitment_case_count := 0
 	var recruited_unit_case_count := 0
@@ -57,6 +61,10 @@ func _run() -> void:
 				rare_spend_case_count += 1
 			if bool(row.get("full_session_used", false)):
 				full_session_case_count += 1
+			if bool(row.get("delayed_source_replay_seen", false)):
+				delayed_source_replay_case_count += 1
+			if bool(row.get("delayed_source_replay_ok", false)):
+				delayed_source_replay_completed_count += 1
 			if bool(row.get("recruitment_end_to_end_ok", false)):
 				recruitment_end_to_end_case_count += 1
 			seven_tier_recruitment_case_count += int(row.get("recruitment_case_count", 0))
@@ -76,6 +84,10 @@ func _run() -> void:
 		"completed_case_count": completed_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
 		"full_session_case_count": full_session_case_count,
+		"delayed_source_replay_case_count": delayed_source_replay_case_count,
+		"delayed_source_replay_completed_count": delayed_source_replay_completed_count,
+		"delayed_source_route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
+		"delayed_guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
 		"recruitment_end_to_end_case_count": recruitment_end_to_end_case_count,
 		"seven_tier_recruitment_case_count": seven_tier_recruitment_case_count,
 		"recruited_unit_case_count": recruited_unit_case_count,
@@ -86,6 +98,7 @@ func _run() -> void:
 		"errors": _errors,
 		"caveats": [
 			"The report boots active authored scenarios and secures authored economy sources to isolate town development runway from route safety and encounter pacing.",
+			"A second replay now delays source ownership by route-derived acquisition days and guarded-source delay before proving the same 30-turn development runway.",
 			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
 			"Build execution still runs through live OverworldRules.build_in_active_town, and post-build TownRules.get_build_actions proves same-day build actions are blocked.",
 			"After development, each full-session player town must expose and recruit through its owning faction seven-tier ladder.",
@@ -129,6 +142,7 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		base_row["error"] = "town development_balance missing live rare_resource_id"
 		return base_row
 
+	var signature_order := _signature_order(faction)
 	var source_session = ScenarioFactory.create_session(
 		scenario_id,
 		"normal",
@@ -139,10 +153,18 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		return base_row
 	OverworldRules.normalize_overworld_state(source_session)
 	var source_evidence := _secure_development_sources(source_session, required_resource_ids)
+	var delayed_source_replay := _run_delayed_source_replay(
+		scenario_id,
+		authored_town,
+		required_resource_ids,
+		target_buildings,
+		signature_order
+	)
 	var source_town := _town(source_session, placement_id)
 	if source_town.is_empty():
 		base_row["error"] = "runtime scenario session missing player town placement"
 		base_row["source_evidence"] = source_evidence
+		base_row["delayed_source_replay"] = delayed_source_replay
 		return base_row
 	var session = source_session
 	session.game_state = "town"
@@ -153,7 +175,6 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		base_row["source_evidence"] = source_evidence
 		return base_row
 
-	var signature_order := _signature_order(faction)
 	var build_log := []
 	var stalled_days := []
 	var rare_spend_events := []
@@ -241,6 +262,7 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		and not rare_spend_events.is_empty()
 		and market_common_only
 		and bool(recruitment_report.get("ok", false))
+		and bool(delayed_source_replay.get("ok", false))
 		and String(session.scenario_id) == scenario_id
 		and economy_day_advance_count > 0
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
@@ -259,6 +281,9 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	base_row["recruited_unit_case_count"] = int(recruitment_report.get("recruited_unit_case_count", 0))
 	base_row["recruitment_report"] = recruitment_report
 	base_row["source_evidence"] = source_evidence
+	base_row["delayed_source_replay_seen"] = true
+	base_row["delayed_source_replay_ok"] = bool(delayed_source_replay.get("ok", false))
+	base_row["delayed_source_replay"] = delayed_source_replay
 	base_row["full_session_used"] = String(session.scenario_id) == scenario_id
 	base_row["focused_economy_day_advance_count"] = economy_day_advance_count
 	base_row["post_completion_economy_day_count"] = post_completion_economy_day_count
@@ -272,6 +297,118 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	if not bool(base_row.get("ok", false)):
 		base_row["error"] = _runway_error(base_row)
 	return base_row
+
+func _run_delayed_source_replay(
+	scenario_id: String,
+	authored_town: Dictionary,
+	required_resource_ids: Array,
+	target_buildings: Array,
+	signature_order: Dictionary
+) -> Dictionary:
+	var placement_id := String(authored_town.get("placement_id", ""))
+	var session = ScenarioFactory.create_session(
+		scenario_id,
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	if session == null:
+		return {
+			"ok": false,
+			"error": "ScenarioFactory.create_session returned null",
+		}
+	OverworldRules.normalize_overworld_state(session)
+	session.game_state = "town"
+	session.scenario_status = "in_progress"
+	var select_result := _set_active_town(session, placement_id)
+	if not bool(select_result.get("ok", false)):
+		return {
+			"ok": false,
+			"error": "unable to select player town: %s" % String(select_result.get("message", "")),
+		}
+	var start_tile := Vector2i(int(authored_town.get("x", 0)), int(authored_town.get("y", 0)))
+	var source_schedule := _development_source_schedule(session, start_tile, required_resource_ids)
+	var errors := []
+	if not _schedule_covers_required_resources(source_schedule, required_resource_ids):
+		errors.append("delayed replay source schedule does not cover all required non-gold resources")
+	var build_log := []
+	var stalled_days := []
+	var rare_spend_events := []
+	for _turn in range(TARGET_TURNS):
+		var applied_sources := _apply_due_development_sources(session, source_schedule, int(session.day))
+		var selected_id := _select_building_id(session, placement_id, target_buildings, signature_order)
+		if selected_id == "":
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "no_affordable_build_action",
+				"resources": _resources(session),
+				"open_buildings": _open_building_ids(_town(session, placement_id), target_buildings),
+				"applied_sources": applied_sources,
+			})
+		else:
+			var before_resources := _resources(session)
+			var selected_building := ContentService.get_building(selected_id)
+			var build_result: Dictionary = OverworldRules.build_in_active_town(session, selected_id)
+			if not bool(build_result.get("ok", false)):
+				stalled_days.append({
+					"day": int(session.day),
+					"reason": "build_failed",
+					"building_id": selected_id,
+					"message": String(build_result.get("message", "")),
+					"applied_sources": applied_sources,
+				})
+			else:
+				var after_resources := _resources(session)
+				var rare_delta := _rare_resource_spend(selected_building.get("cost", {}), before_resources, after_resources)
+				if not rare_delta.is_empty():
+					rare_spend_events.append({
+						"day": int(session.day),
+						"building_id": selected_id,
+						"spent": rare_delta,
+					})
+				build_log.append({
+					"day": int(session.day),
+					"building_id": selected_id,
+					"resources_before": before_resources,
+					"resources_after": after_resources,
+					"applied_sources": applied_sources,
+				})
+				if _missing_buildings(session, placement_id, target_buildings).is_empty():
+					break
+		var turn_result: Dictionary = _advance_active_scenario_economy_day(session)
+		if not bool(turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "economy_day_advance_failed",
+				"message": String(turn_result.get("message", "")),
+			})
+			break
+	var missing := _missing_buildings(session, placement_id, target_buildings)
+	var completed := missing.is_empty()
+	if not completed:
+		errors.append("town did not complete delayed-source development replay")
+	if rare_spend_events.is_empty():
+		errors.append("delayed-source replay did not spend a rare resource")
+	return {
+		"ok": errors.is_empty(),
+		"schema": "active_scenario_town_delayed_source_replay_v1",
+		"target_turns": TARGET_TURNS,
+		"route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
+		"guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
+		"source_schedule": _source_schedule_payload(source_schedule),
+		"source_schedule_covers_required_resources": _schedule_covers_required_resources(source_schedule, required_resource_ids),
+		"completed": completed,
+		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() and completed else 0,
+		"completion_margin_days": TARGET_TURNS - int(build_log[-1].get("day", 0)) if not build_log.is_empty() and completed else -1,
+		"build_count": build_log.size(),
+		"missing_buildings": missing,
+		"rare_spend_observed": not rare_spend_events.is_empty(),
+		"rare_spend_events": rare_spend_events,
+		"ending_resources": _resources(session),
+		"stalled_days": stalled_days.slice(0, 5),
+		"build_log": build_log,
+		"errors": errors,
+		"error": "; ".join(errors),
+	}
 
 func _recruitment_end_to_end_report(session, placement_id: String, faction: Dictionary) -> Dictionary:
 	_set_active_town(session, placement_id)
@@ -613,6 +750,215 @@ func _rare_resource_spend(cost_value: Variant, before: Dictionary, after: Dictio
 		if delta > 0:
 			spent[resource_id] = delta
 	return spent
+
+func _development_source_schedule(session, start_tile: Vector2i, required_resource_ids: Array) -> Array:
+	var rows := []
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for node_value in nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if site.is_empty():
+			continue
+		var claim_rewards: Dictionary = site.get("claim_rewards", site.get("rewards", {})) if site.get("claim_rewards", site.get("rewards", {})) is Dictionary else {}
+		var control_income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
+		var relevant_income := _filter_resources(control_income, required_resource_ids)
+		if relevant_claims.is_empty() and relevant_income.is_empty():
+			continue
+		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+		var route := _find_route(session, start_tile, target_tile)
+		if route.is_empty():
+			continue
+		var route_steps: int = max(0, route.size() - 1)
+		var guarded := _resource_source_has_guard(session, node)
+		var acquisition_day: int = max(1, int(ceil(float(route_steps) / float(DELAYED_SOURCE_ROUTE_STEPS_PER_DAY))))
+		if guarded:
+			acquisition_day += DELAYED_GUARDED_SOURCE_EXTRA_DAYS
+		rows.append({
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"persistent_control": bool(site.get("persistent_control", false)),
+			"claim_rewards": relevant_claims,
+			"control_income": relevant_income,
+			"resource_ids": _source_resource_ids(relevant_claims, relevant_income),
+			"route_steps": route_steps,
+			"guarded": guarded,
+			"acquisition_day": acquisition_day,
+			"applied": false,
+		})
+	rows.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		if int(left.get("acquisition_day", 999999)) != int(right.get("acquisition_day", 999999)):
+			return int(left.get("acquisition_day", 999999)) < int(right.get("acquisition_day", 999999))
+		if int(left.get("route_steps", 999999)) != int(right.get("route_steps", 999999)):
+			return int(left.get("route_steps", 999999)) < int(right.get("route_steps", 999999))
+		return String(left.get("placement_id", "")) < String(right.get("placement_id", ""))
+	)
+	return rows
+
+func _apply_due_development_sources(session, source_schedule: Array, day: int) -> Array:
+	var applied_rows := []
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(source_schedule.size()):
+		if not (source_schedule[index] is Dictionary):
+			continue
+		var row: Dictionary = source_schedule[index]
+		if bool(row.get("applied", false)) or int(row.get("acquisition_day", 999999)) > day:
+			continue
+		var node_index := _resource_node_index(nodes, String(row.get("placement_id", "")))
+		if node_index < 0:
+			continue
+		var node: Dictionary = nodes[node_index]
+		if bool(row.get("persistent_control", false)):
+			node["collected_by_faction_id"] = "player"
+		var claims: Dictionary = row.get("claim_rewards", {}) if row.get("claim_rewards", {}) is Dictionary else {}
+		if not claims.is_empty() and not bool(node.get("collected", false)):
+			_add_to_session_resources(session, claims)
+			node["collected"] = true
+			node["collected_day"] = day
+		nodes[node_index] = node
+		row["applied"] = true
+		source_schedule[index] = row
+		applied_rows.append({
+			"placement_id": String(row.get("placement_id", "")),
+			"site_id": String(row.get("site_id", "")),
+			"acquisition_day": int(row.get("acquisition_day", 0)),
+			"resource_ids": _string_array(row.get("resource_ids", [])),
+			"claim_rewards": claims,
+			"control_income": row.get("control_income", {}),
+		})
+	session.overworld["resource_nodes"] = nodes
+	return applied_rows
+
+func _resource_node_index(nodes: Array, placement_id: String) -> int:
+	for index in range(nodes.size()):
+		if nodes[index] is Dictionary and String(nodes[index].get("placement_id", "")) == placement_id:
+			return index
+	return -1
+
+func _source_resource_ids(claim_rewards: Dictionary, control_income: Dictionary) -> Array:
+	var ids := {}
+	for resources in [claim_rewards, control_income]:
+		for resource_id in resources.keys():
+			ids[String(resource_id)] = true
+	return _sorted_keys(ids)
+
+func _source_schedule_payload(source_schedule: Array) -> Array:
+	var rows := []
+	for row_value in source_schedule:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		rows.append({
+			"placement_id": String(row.get("placement_id", "")),
+			"site_id": String(row.get("site_id", "")),
+			"x": int(row.get("x", 0)),
+			"y": int(row.get("y", 0)),
+			"persistent_control": bool(row.get("persistent_control", false)),
+			"resource_ids": _string_array(row.get("resource_ids", [])),
+			"route_steps": int(row.get("route_steps", 0)),
+			"guarded": bool(row.get("guarded", false)),
+			"acquisition_day": int(row.get("acquisition_day", 0)),
+			"applied": bool(row.get("applied", false)),
+		})
+	return rows
+
+func _schedule_covers_required_resources(source_schedule: Array, required_resource_ids: Array) -> bool:
+	var covered := {}
+	for row_value in source_schedule:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		for resource_id in _string_array(row.get("resource_ids", [])):
+			covered[resource_id] = true
+	for resource_id in required_resource_ids:
+		var id := String(resource_id)
+		if id == "gold":
+			continue
+		if not bool(covered.get(id, false)):
+			return false
+	return true
+
+func _find_route(session, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var map_size := OverworldRules.derive_map_size(session)
+	if not _in_bounds(start_tile, map_size) or not _in_bounds(target_tile, map_size):
+		return []
+	var start_key := _tile_key(start_tile)
+	var queue := [start_tile]
+	var visited := {start_key: true}
+	var parent := {}
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		if current == target_tile:
+			return _reconstruct_route(parent, start_tile, target_tile)
+		for neighbor in _neighbors(current):
+			if not _in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _tile_key(neighbor)
+			if bool(visited.get(neighbor_key, false)):
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(session, current, neighbor):
+				continue
+			var is_destination: bool = neighbor == target_tile
+			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not (is_destination and OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)):
+				continue
+			if not is_destination and OverworldRules.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+				continue
+			visited[neighbor_key] = true
+			parent[neighbor_key] = current
+			queue.append(neighbor)
+	return []
+
+func _reconstruct_route(parent: Dictionary, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var route := [target_tile]
+	var current := target_tile
+	var guard := 0
+	while current != start_tile and guard < 10000:
+		guard += 1
+		var current_key := _tile_key(current)
+		if not parent.has(current_key):
+			return []
+		current = parent[current_key]
+		route.push_front(current)
+	return route
+
+func _neighbors(tile: Vector2i) -> Array:
+	return [
+		Vector2i(tile.x - 1, tile.y - 1),
+		Vector2i(tile.x, tile.y - 1),
+		Vector2i(tile.x + 1, tile.y - 1),
+		Vector2i(tile.x - 1, tile.y),
+		Vector2i(tile.x + 1, tile.y),
+		Vector2i(tile.x - 1, tile.y + 1),
+		Vector2i(tile.x, tile.y + 1),
+		Vector2i(tile.x + 1, tile.y + 1),
+	]
+
+func _in_bounds(tile: Vector2i, map_size: Vector2i) -> bool:
+	return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
+
+func _tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
+
+func _resource_source_has_guard(session, node: Dictionary) -> bool:
+	var placement_id := String(node.get("placement_id", ""))
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if OverworldRules.is_encounter_resolved(session, encounter):
+			continue
+		if String(encounter.get("target_kind", "")) == "resource" and String(encounter.get("target_placement_id", "")) == placement_id:
+			return true
+		var dx: int = abs(int(encounter.get("x", 0)) - int(node.get("x", 0)))
+		var dy: int = abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
+		if max(dx, dy) <= 1:
+			return true
+	return false
 
 func _filter_resources(resources: Dictionary, allowed: Array) -> Dictionary:
 	var result := {}
