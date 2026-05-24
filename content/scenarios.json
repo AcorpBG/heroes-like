@@ -949,7 +949,8 @@
         "defeat": [
           {"id": "hold_highwater", "label": "Keep Highwater Keep under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_keep"},
           {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_stonewake_pressure", "label": "Do not let Murkward pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8}
+          {"id": "contain_stonewake_pressure", "label": "Do not let Murkward pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8},
+          {"id": "hold_basin_before_daybreak", "label": "Hold the basin crossing before Day 9", "type": "day_at_least", "day": 9}
         ]
       },
       "script_hooks": [
@@ -1174,7 +1175,8 @@
         "defeat": [
           {"id": "hold_murkward_bridgehead", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_bridgehead"},
           {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_ferry_pressure", "label": "Do not let Reedbarrow pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 10}
+          {"id": "contain_ferry_pressure", "label": "Do not let Reedbarrow pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 10},
+          {"id": "break_ferry_chain_before_daybreak", "label": "Break the ferry chain before Day 11", "type": "day_at_least", "day": 11}
         ]
       },
       "script_hooks": [
@@ -1424,7 +1426,8 @@
         "defeat": [
           {"id": "hold_reedbarrow_bridgehead", "label": "Keep Reedbarrow Ferry under your banner", "type": "town_not_owned_by_player", "placement_id": "reedbarrow_bridgehead"},
           {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_nightglass_pressure", "label": "Do not let Nightglass pressure reach 12", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 12}
+          {"id": "contain_nightglass_pressure", "label": "Do not let Nightglass pressure reach 12", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 12},
+          {"id": "break_redoubt_before_daybreak", "label": "Break Nightglass Redoubt before Day 13", "type": "day_at_least", "day": 13}
         ]
       },
       "script_hooks": [
@@ -1695,7 +1698,8 @@
         "defeat": [
           {"id": "hold_duskfen", "label": "Keep Duskfen Bastion under your banner", "type": "town_not_owned_by_player", "placement_id": "duskfen_bastion"},
           {"id": "vaska_survives", "label": "Vaska must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_relief_pressure", "label": "Do not let Embercourt pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 8}
+          {"id": "contain_relief_pressure", "label": "Do not let Embercourt pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 8},
+          {"id": "break_relief_before_daybreak", "label": "Break Embercourt relief before Day 9", "type": "day_at_least", "day": 9}
         ]
       },
       "script_hooks": [
@@ -1916,7 +1920,8 @@
         "defeat": [
           {"id": "hold_riverwatch", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_bridgehead"},
           {"id": "hold_murkward", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_stockade"},
-          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10}
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10},
+          {"id": "burn_charter_road_before_daybreak", "label": "Burn the charter road before Day 11", "type": "day_at_least", "day": 11}
         ]
       },
       "script_hooks": [
@@ -2137,7 +2142,8 @@
         "defeat": [
           {"id": "hold_riverwatch_final", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_base"},
           {"id": "hold_murkward_final", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_base"},
-          {"id": "contain_final_pressure", "label": "Do not let Embercourt pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 11}
+          {"id": "contain_final_pressure", "label": "Do not let Embercourt pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 11},
+          {"id": "drown_charter_marches_before_daybreak", "label": "Drown the charter marches before Day 13", "type": "day_at_least", "day": 13}
         ]
       },
       "script_hooks": [
@@ -2392,7 +2398,8 @@
         "defeat": [
           {"id": "hold_highwater", "label": "Keep Highwater Keep under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_bridgehead"},
           {"id": "mira_survives", "label": "Mira must survive the expedition", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_ford_pressure", "label": "Do not let Mireclaw pressure reach 9", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 9}
+          {"id": "contain_ford_pressure", "label": "Do not let Mireclaw pressure reach 9", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 9},
+          {"id": "secure_ironbridge_before_daybreak", "label": "Secure the ironbridge before Day 10", "type": "day_at_least", "day": 10}
         ]
       },
       "script_hooks": [
@@ -2587,7 +2594,8 @@
         "defeat": [
           {"id": "hold_prismhearth", "label": "Keep Prismhearth under your banner", "type": "town_not_owned_by_player", "placement_id": "prismhearth_hold"},
           {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_saboteur_pressure", "label": "Do not let Mireclaw pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8}
+          {"id": "contain_saboteur_pressure", "label": "Do not let Mireclaw pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8},
+          {"id": "relight_tower_line_before_daybreak", "label": "Relight the tower line before Day 10", "type": "day_at_least", "day": 10}
         ]
       },
       "script_hooks": [
@@ -2817,7 +2825,8 @@
         "defeat": [
           {"id": "hold_halo_spire", "label": "Keep Halo Spire under your banner", "type": "town_not_owned_by_player", "placement_id": "halo_spire_bridgehead"},
           {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10}
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10},
+          {"id": "force_glassroad_crossing_before_daybreak", "label": "Force the glassroad crossing before Day 12", "type": "day_at_least", "day": 12}
         ]
       },
       "script_hooks": [
@@ -3028,7 +3037,8 @@
         "defeat": [
           {"id": "hold_riverwatch", "label": "Keep Riverwatch under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_bridgehead"},
           {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_nightglass_pressure", "label": "Do not let Mireclaw pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 11}
+          {"id": "contain_nightglass_pressure", "label": "Do not let Mireclaw pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 11},
+          {"id": "reclaim_array_before_daybreak", "label": "Reclaim the old array before Day 14", "type": "day_at_least", "day": 14}
         ]
       },
       "script_hooks": [
@@ -3267,7 +3277,8 @@
         "defeat": [
           {"id": "hold_highwater", "label": "Keep Highwater under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_bridgehead"},
           {"id": "caelen_survives", "label": "Caelen must survive the front", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_sunvault_pressure", "label": "Do not let Sunvault pressure reach 9", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 9}
+          {"id": "contain_sunvault_pressure", "label": "Do not let Sunvault pressure reach 12", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 12},
+          {"id": "break_glassfen_before_daybreak", "label": "Break the Glassfen arrays before Day 16", "type": "day_at_least", "day": 16}
         ]
       },
       "script_hooks": [

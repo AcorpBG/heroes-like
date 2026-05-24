@@ -5,13 +5,7 @@ const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const REPORT_ID := "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT"
-const REQUIRED_DEADLINE_SCENARIO_IDS := [
-	"river-pass",
-	"causeway-stand",
-	"fen-crown",
-	"mireford-skirmish",
-	"ninefold-confluence",
-]
+const MIN_ACTIVE_DEADLINE_SCENARIO_COUNT := 16
 const SKIRMISH_ONLY_SCENARIO_ID := "mireford-skirmish"
 const FINALE_SCENARIO_ID := "ninefold-confluence"
 const FORBIDDEN_CLAIM_TOKENS := [
@@ -25,8 +19,12 @@ func _ready() -> void:
 
 func _run() -> void:
 	ContentService.clear_cache()
+	var scenario_ids := _active_authored_scenario_ids()
+	if scenario_ids.size() < MIN_ACTIVE_DEADLINE_SCENARIO_COUNT:
+		_fail("Active authored scenario deadline set is too small: %s" % JSON.stringify(scenario_ids))
+		return
 	var rows := []
-	for scenario_id in REQUIRED_DEADLINE_SCENARIO_IDS:
+	for scenario_id in scenario_ids:
 		var row := _deadline_row(String(scenario_id))
 		if row.is_empty():
 			return
@@ -41,14 +39,18 @@ func _run() -> void:
 			skirmish_deadline_count += 1
 		if String(row.get("scenario_id", "")) == FINALE_SCENARIO_ID:
 			finale_deadline_count += 1
-	if campaign_deadline_count < 4 or skirmish_deadline_count < 5 or finale_deadline_count != 1:
+	var expected_counts := _active_availability_counts(scenario_ids)
+	if campaign_deadline_count != int(expected_counts.get("campaign", 0)) or skirmish_deadline_count != int(expected_counts.get("skirmish", 0)) or finale_deadline_count != 1:
 		_fail("Deadline loss objectives do not cover campaign, skirmish, and finale surfaces: %s" % JSON.stringify(rows))
 		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_id": "scenario_deadline_loss_variety_report_v1",
+		"schema_id": "scenario_deadline_loss_variety_report_v2",
 		"deadline_scenario_count": rows.size(),
+		"active_deadline_count": scenario_ids.size(),
+		"expected_campaign_deadline_count": int(expected_counts.get("campaign", 0)),
+		"expected_skirmish_deadline_count": int(expected_counts.get("skirmish", 0)),
 		"campaign_deadline_count": campaign_deadline_count,
 		"skirmish_deadline_count": skirmish_deadline_count,
 		"finale_deadline_count": finale_deadline_count,
@@ -70,6 +72,29 @@ func _run() -> void:
 			return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _active_authored_scenario_ids() -> Array:
+	var ids := []
+	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
+		var scenario := ContentService.get_authored_scenario(String(scenario_id))
+		var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+		var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
+		if bool(availability.get("campaign", false)) or bool(availability.get("skirmish", false)):
+			ids.append(String(scenario_id))
+	ids.sort()
+	return ids
+
+func _active_availability_counts(scenario_ids: Array) -> Dictionary:
+	var counts := {"campaign": 0, "skirmish": 0}
+	for scenario_id in scenario_ids:
+		var scenario := ContentService.get_authored_scenario(String(scenario_id))
+		var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+		var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
+		if bool(availability.get("campaign", false)):
+			counts["campaign"] = int(counts.get("campaign", 0)) + 1
+		if bool(availability.get("skirmish", false)):
+			counts["skirmish"] = int(counts.get("skirmish", 0)) + 1
+	return counts
 
 func _deadline_row(scenario_id: String) -> Dictionary:
 	var scenario := ContentService.get_scenario(scenario_id)
