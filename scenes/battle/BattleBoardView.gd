@@ -755,12 +755,18 @@ func validation_perform_outer_hex_ring_mouse_click(q: int, r: int) -> Dictionary
 		}
 	var probe := _validation_outer_ring_click_position_for_cell(cell)
 	if probe.is_empty():
+		var layout := _current_hex_layout()
+		var hex_radius := float(layout.get("radius", 1.0))
 		return {
 			"accepted": false,
 			"dispatch": "",
 			"battle_id": "",
 			"q": q,
 			"r": r,
+			"found_outer_ring_position": false,
+			"hex_radius": hex_radius,
+			"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
+			"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 			"message": "Validation click could not find a token-miss point in the visible outer hex ring.",
 		}
 	var position: Vector2 = probe.get("position", Vector2.ZERO)
@@ -777,6 +783,8 @@ func validation_perform_outer_hex_ring_mouse_click(q: int, r: int) -> Dictionary
 	dispatch["found_outer_ring_position"] = bool(probe.get("found_outer_ring_position", false))
 	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
 	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	dispatch["stack_hit_shape_radius"] = _stack_hit_shape_radius(float(probe.get("hex_radius", 1.0)))
+	dispatch["neighboring_stack_hit_shape_overlap_possible"] = _neighboring_stack_hit_shape_overlap_possible(float(probe.get("hex_radius", 1.0)))
 	return dispatch
 
 func validation_perform_overlapped_hex_destination_mouse_click(q: int, r: int) -> Dictionary:
@@ -3273,8 +3281,10 @@ func _validation_outer_ring_click_position_for_cell(cell: Vector2i) -> Dictionar
 	var layout := _current_hex_layout()
 	var center := _hex_center(cell, layout)
 	var radius := float(layout.get("radius", 1.0))
-	var angles := [30.0, 90.0, 150.0, 210.0, 270.0, 330.0, 0.0, 60.0, 120.0, 180.0, 240.0, 300.0]
-	for factor in [0.99, 0.97, 0.95, 0.93]:
+	var angles := []
+	for angle_index in range(24):
+		angles.append(float(angle_index) * 15.0)
+	for factor in [0.995, 0.99, 0.985, 0.98, 0.975, 0.97, 0.965, 0.96, 0.955, 0.95, 0.945, 0.94, 0.935, 0.93]:
 		for angle_degrees in angles:
 			var angle := deg_to_rad(float(angle_degrees))
 			var position := center + Vector2(cos(angle), sin(angle)) * radius * float(factor)

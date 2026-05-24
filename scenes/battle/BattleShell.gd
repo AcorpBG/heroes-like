@@ -77,6 +77,8 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	if _battle_board_view.has_signal("stack_focus_requested"):
@@ -481,6 +483,7 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 func _refresh() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
+	_apply_responsive_layout()
 	if _session.battle.is_empty():
 		return
 	var section_started := ProfileLogScript.begin_usec()
@@ -515,23 +518,22 @@ func _refresh() -> void:
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var action_context_surface := _battle_action_context_surface(presentation_dispatch_text, action_confirmation)
 	if action_context_surface.is_empty():
-		_set_compact_label(_event_label, presentation_dispatch_text, 2 if presentation_text != "" else 1)
+		_set_single_line_label(_event_label, presentation_dispatch_text)
 		if presentation_text != "":
 			_event_label.tooltip_text = _join_tooltip_sections([
 				String(presentation_event.get("tooltip_text", "")),
 				dispatch_text,
 			])
 	else:
-		_set_compact_label(
+		_set_single_line_label(
 			_event_label,
-			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text],
-			2 if presentation_text != "" else 1
+			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text]
 		)
 		_event_label.tooltip_text = _join_tooltip_sections([
 			String(action_context_surface.get("tooltip_text", _event_label.tooltip_text)),
 			String(presentation_event.get("tooltip_text", "")),
 		])
-	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
+	_set_single_line_label(_battle_context_label, BattleRules.describe_entry_context(_session))
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
 	buckets["header_context_payload"] = ProfileLogScript.elapsed_ms(section_started)
@@ -2057,6 +2059,37 @@ func _make_placeholder_label(text: String) -> Label:
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
+
+func _set_single_line_label(label: Label, full_text: String, max_chars: int = 96) -> void:
+	label.tooltip_text = full_text
+	var lines := full_text.split("\n", false)
+	for raw_line in lines:
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		if line.length() > max_chars:
+			line = "%s..." % line.left(max_chars - 3)
+		label.text = line
+		return
+	label.text = full_text.strip_edges()
+
+func _apply_responsive_layout() -> void:
+	if _sidebar_shell_panel == null:
+		return
+	var available_size := size
+	var parent_control := get_parent() as Control
+	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
+		available_size = parent_control.size
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	_sidebar_shell_panel.visible = not compact_layout
+	_battle_context_label.visible = not compact_layout
+	_event_label.visible = not compact_layout
+	_status_label.visible = not compact_layout
+	_pressure_label.visible = not compact_layout
+	_system_panel.visible = not compact_layout
+	_prev_target_button.visible = not compact_layout
+	_next_target_button.visible = not compact_layout
+	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
 
 func _record_action_recap(action_id: String, result: Dictionary, context: Dictionary = {}) -> void:
 	if not bool(result.get("ok", false)):

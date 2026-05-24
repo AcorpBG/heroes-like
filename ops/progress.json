@@ -20137,6 +20137,34 @@
         "git diff --check (pass)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_layout_smoke.tscn (fail: existing direct-actionable blocked-handoff assertion, outside presentation-cue change)"
       ]
+    },
+    {
+      "id": "battle-layout-death-retention-handoff-smoke-alignment-20260524-10184",
+      "title": "Battle Layout Death Retention Handoff Smoke Alignment",
+      "status": "completed",
+      "phase": "phase-4-battle-presentation-polish",
+      "summary": "Aligned battle layout handoff smoke with death-animation retention, truthful non-battle save recaps, compact battle layout framing, and occupied-hex click validation across the 1920x1080, 1280x720, and 1024x600 smoke viewports.",
+      "files": [
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "scripts/autoload/SaveService.gd",
+        "tests/battle_layout_smoke.gd",
+        "docs/battle-layout-death-retention-handoff-smoke-alignment-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "timeout 900s env GODOT_SILENCE_ROOT_WARNING=1 BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX=0 godot --headless --log-file /tmp/heroes-like-battle-layout-0.log --path . --scene res://tests/battle_layout_smoke.tscn (pass)",
+        "timeout 900s env GODOT_SILENCE_ROOT_WARNING=1 BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX=1 godot --headless --log-file /tmp/heroes-like-battle-layout-1.log --path . --scene res://tests/battle_layout_smoke.tscn (pass)",
+        "timeout 900s env GODOT_SILENCE_ROOT_WARNING=1 BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX=2 godot --headless --log-file /tmp/heroes-like-battle-layout-2.log --path . --scene res://tests/battle_layout_smoke.tscn (pass)",
+        "timeout 2700s env GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-battle-layout-full.log --path . --scene res://tests/battle_layout_smoke.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-battle-event.log --path . --quit-after 180 --scene res://tests/battle_event_animation_state_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 -m py_compile tests/validate_repo.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)"
+      ]
     }
   ],
   "completedImplementationEvidence": [

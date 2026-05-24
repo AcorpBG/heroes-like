@@ -82,14 +82,14 @@ text = "Pressure"
 [node name="Event" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 3
+autowrap_mode = 0
 clip_text = true
 text = "Battle dispatch."
 
 [node name="BattleContext" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 3
+autowrap_mode = 0
 clip_text = true
 text = "Battle context."
 
