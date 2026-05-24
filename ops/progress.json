@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-full-session-development-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Full Session Development Runway",
+  "currentSliceId": "economy-active-scenario-ai-full-session-development-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario AI Full Session Development Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active-scenario full-session player-town development runway gate. The focused report now runs construction inside ScenarioFactory-created active scenario sessions, records authored map/resource-node/encounter/enemy-state evidence, completes 18/18 player-town cases within 30 turns, observes rare-resource spend in every case, and uses focused economy-day advancement over live town and controlled resource-site income without invoking the full strategic enemy turn loop for every simulated build day.",
+  "currentSliceNotes": "Completed active-scenario full-session enemy-town development runway gate. The focused report now runs target-faction AI town construction inside ScenarioFactory-created active scenario sessions, records authored map/resource-node/encounter/enemy-state evidence, completes 20/20 enemy-town cases within 30 turns, observes rare-resource spend in every case, proves all 20 same-day second AI builds are blocked, and feeds secured scenario-authored economy sources into the live enemy treasury.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:35:00Z",
+  "updatedAt": "2026-05-24T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,54 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-ai-full-session-development-runway-20260524-10184",
+      "title": "Economy Active Scenario AI Full Session Development Runway",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T23:59:00Z",
+      "completedAt": "2026-05-24T23:59:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md"
+      ],
+      "implementationTargets": [
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active-scenario enemy-town development runway report no longer builds stripped local runway sessions for enemy-town cases.",
+        "Every covered enemy-town case runs target-faction construction inside the ScenarioFactory-created active scenario session.",
+        "Every covered enemy-town case records full-session map, resource-node, encounter, and enemy-state evidence.",
+        "The report feeds secured scenario-authored economy sources into the live target-faction enemy treasury.",
+        "The report still proves 30-turn completion, rare-resource spending, full live treasury tracking, governor report coverage, and one-build-per-town-per-turn rejection.",
+        "Repository validation gates the strengthened report, documentation, and scene contract."
+      ],
+      "notes": "Completed: active-scenario enemy-town development runway now proves full-session target-faction AI town economy over authored scenario state.",
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "enemy_town_case_count": 20,
+        "completed_case_count": 20,
+        "rare_spend_case_count": 20,
+        "same_day_guard_case_count": 20,
+        "full_session_case_count": 20,
+        "target_turns": 30,
+        "validated": [
+          "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=river-pass godot --headless --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "godot --headless --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-full-session-development-runway-20260524-10184",
       "title": "Economy Active Scenario Full Session Development Runway",

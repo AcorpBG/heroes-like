@@ -2,7 +2,6 @@ extends Node
 
 const REPORT_SCHEMA := "active_scenario_ai_town_development_runway_report_v1"
 const TARGET_TURNS := 30
-const HERO_ID := "hero_lyra"
 const LIVE_STOCKPILE_RESOURCE_IDS := [
 	"gold",
 	"wood",
@@ -35,6 +34,7 @@ func _run() -> void:
 	var completed_case_count := 0
 	var rare_spend_case_count := 0
 	var same_day_guard_case_count := 0
+	var full_session_case_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -53,6 +53,8 @@ func _run() -> void:
 				rare_spend_case_count += 1
 			if bool(row.get("same_day_second_build_blocked", false)):
 				same_day_guard_case_count += 1
+			if bool(row.get("full_session_used", false)):
+				full_session_case_count += 1
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -68,13 +70,15 @@ func _run() -> void:
 		"completed_case_count": completed_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
 		"same_day_guard_case_count": same_day_guard_case_count,
+		"full_session_case_count": full_session_case_count,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
 		"cases": rows,
 		"errors": _errors,
 		"caveats": [
-			"The report boots active authored scenarios and isolates each enemy town with scenario-authored economy sources for that town's faction.",
-			"Construction runs through EnemyTurnRules.run_enemy_turn and EnemyTurnRules.town_governor_pressure_report.",
+			"The report boots active authored scenarios and secures scenario-authored economy sources for the target enemy town faction.",
+			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
+			"Construction runs through EnemyTurnRules.run_enemy_town_economy_turn and EnemyTurnRules.town_governor_pressure_report for the target faction.",
 			"This is AI town-development economy runway evidence, not final strategic AI quality, route safety, encounter pacing, or campaign balance approval.",
 		],
 	}
@@ -136,19 +140,24 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		base_row["error"] = "runtime scenario session missing enemy town placement"
 		base_row["source_evidence"] = source_evidence
 		return base_row
-	var session = _build_runway_session(scenario_id, source_town, faction_id, source_evidence)
+	var session = source_session
+	session.game_state = "overworld"
+	session.scenario_status = "in_progress"
+	_seed_enemy_treasury(session, faction_id, source_evidence.get("resources_after_claims", {}))
 	var build_log := []
 	var stalled_days := []
 	var rare_spend_events := []
 	var same_day_second_build_blocked := false
 	var rare_treasury_tracked := _enemy_treasury_has_all_live_keys(session, faction_id)
+	var governor_report := EnemyTurnRules.town_governor_pressure_report(session, config, faction_id)
+	var governor_report_seen := int(governor_report.get("town_count", 0)) > 0
 
 	for _turn in range(target_turns):
 		var before_state := _enemy_state(session, faction_id)
 		var before_treasury := _resources(before_state.get("treasury", {}))
 		var expected_income := _enemy_daily_income(session, placement_id, faction_id)
 		var before_built := _town_building_ids(_town(session, placement_id))
-		var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+		var turn_result: Dictionary = EnemyTurnRules.run_enemy_town_economy_turn(session, faction_id)
 		if not bool(turn_result.get("ok", false)):
 			stalled_days.append({
 				"day": int(session.day),
@@ -182,12 +191,12 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		if not built_today.is_empty() and not same_day_second_build_blocked:
 			var second_session = _clone_session(session)
 			var built_count_before_second := _town_building_ids(_town(second_session, placement_id)).size()
-			var second_result: Dictionary = EnemyTurnRules.run_enemy_turn(second_session)
+			var second_result: Dictionary = EnemyTurnRules.run_enemy_town_economy_turn(second_session, faction_id)
 			var built_count_after_second := _town_building_ids(_town(second_session, placement_id)).size()
 			var second_events: Array = second_result.get("events", []) if second_result.get("events", []) is Array else []
 			same_day_second_build_blocked = (
 				built_count_after_second == built_count_before_second
-				and _event_count(second_events, "ai_town_built") == 0
+				and _target_town_event_count(second_events, "ai_town_built", placement_id) == 0
 			)
 		if _missing_buildings(session, placement_id, target_buildings).is_empty():
 			break
@@ -207,6 +216,8 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		and same_day_second_build_blocked
 		and not rare_spend_events.is_empty()
 		and rare_treasury_tracked
+		and governor_report_seen
+		and String(session.scenario_id) == scenario_id
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
 	)
 	base_row["completed"] = completed
@@ -215,9 +226,15 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 	base_row["missing_buildings"] = missing
 	base_row["same_day_second_build_blocked"] = same_day_second_build_blocked
 	base_row["rare_treasury_tracked"] = rare_treasury_tracked
+	base_row["governor_report_seen"] = governor_report_seen
 	base_row["rare_spend_observed"] = not rare_spend_events.is_empty()
 	base_row["rare_spend_events"] = rare_spend_events
 	base_row["source_evidence"] = source_evidence
+	base_row["full_session_used"] = String(session.scenario_id) == scenario_id
+	base_row["scenario_map_size"] = _map_size_payload(OverworldRules.derive_map_size(session))
+	base_row["scenario_resource_node_count"] = _array_size(session.overworld.get("resource_nodes", []))
+	base_row["scenario_encounter_count"] = _array_size(session.overworld.get("encounters", []))
+	base_row["scenario_enemy_state_count"] = _array_size(session.overworld.get("enemy_states", []))
 	base_row["ending_treasury"] = _resources(_enemy_state(session, faction_id).get("treasury", {}))
 	base_row["stalled_days"] = stalled_days.slice(0, 5)
 	base_row["build_log"] = build_log
@@ -225,76 +242,24 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		base_row["error"] = _runway_error(base_row)
 	return base_row
 
-func _build_runway_session(scenario_id: String, source_town: Dictionary, faction_id: String, source_evidence: Dictionary):
-	var hero_template := ContentService.get_hero(HERO_ID)
-	var hero := HeroCommandRules.build_hero_from_template(
-		hero_template,
-		{"x": 0, "y": 0},
-		{"id": "ai_development_runway_observer_army", "name": "AI Development Runway Observer", "stacks": []},
-		"normal"
-	)
-	hero["is_primary"] = true
-	var town_state := source_town.duplicate(true)
-	town_state["owner"] = "enemy"
-	town_state["controlling_faction_id"] = faction_id
-	if not (town_state.get("built_buildings", []) is Array):
-		var town_template := ContentService.get_town(String(town_state.get("town_id", "")))
-		town_state["built_buildings"] = _string_array(town_template.get("starting_building_ids", []))
-	if not (town_state.get("available_recruits", {}) is Dictionary):
-		town_state["available_recruits"] = {}
-	town_state["last_build_day"] = 0
-	var overworld := {
-		"map": [["grass", "grass", "grass"], ["grass", "grass", "grass"], ["grass", "grass", "grass"]],
-		"map_size": {"width": 3, "height": 3},
-		"terrain_layers": {},
-		"active_hero_id": HERO_ID,
-		"player_heroes": [hero],
-		"hero_position": {"x": 0, "y": 0},
-		"hero": hero,
-		"movement": hero.get("movement", {"current": 10, "max": 10}),
-		"fog": {},
-		"resources": _blank_resources(),
-		"army": hero.get("army", {}),
-		"encounters": [],
-		"resolved_encounters": [],
-		"towns": [town_state],
-		"resource_nodes": source_evidence.get("secured_resource_nodes", []),
-		"artifact_nodes": [],
-		"enemy_states": [
-			{
-				"faction_id": faction_id,
-				"pressure": 0,
-				"raid_counter": 0,
-				"commander_counter": 0,
-				"siege_progress": 0,
-				"treasury": _resources(source_evidence.get("resources_after_claims", {})),
-				"posture": "probing",
-				"captured_artifact_ids": [],
-				"commander_roster": [],
-			}
-		],
-		"scenario_script_state": {},
-	}
-	var session = SessionStateStore.new_session_data(
-		"active_scenario_ai_development_runway_%s_%s" % [scenario_id, String(town_state.get("placement_id", ""))],
-		scenario_id,
-		HERO_ID,
-		1,
-		overworld,
-		"normal",
-		SessionStateStore.LAUNCH_MODE_SKIRMISH
-	)
-	session.game_state = "overworld"
-	session.scenario_status = "in_progress"
-	session.flags = {}
-	OverworldRules.normalize_overworld_state(session)
-	EnemyTurnRules.normalize_enemy_states(session)
-	return session
-
 func _clone_session(session):
 	var clone = SessionStateStore.SessionData.new()
 	clone.from_dict(session.to_dict())
 	return clone
+
+func _seed_enemy_treasury(session, faction_id: String, resources: Dictionary) -> void:
+	EnemyTurnRules.normalize_enemy_states(session)
+	var states: Array = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		if not (states[index] is Dictionary):
+			continue
+		var state: Dictionary = states[index]
+		if String(state.get("faction_id", "")) != faction_id:
+			continue
+		state["treasury"] = _add_resource_sets(_resources(state.get("treasury", {})), _resources(resources))
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
 
 func _secure_development_sources(session, faction_id: String, required_resource_ids: Array) -> Dictionary:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -376,6 +341,10 @@ func _runway_error(row: Dictionary) -> String:
 		return "enemy high-tier rare-resource spend was not observed"
 	if not bool(row.get("rare_treasury_tracked", false)):
 		return "enemy treasury did not preserve all live stockpile resource keys"
+	if not bool(row.get("governor_report_seen", false)):
+		return "enemy town governor report did not cover the target faction"
+	if not bool(row.get("full_session_used", false)):
+		return "enemy development did not run inside the active scenario session"
 	if not _source_covers_required_resources(row.get("source_evidence", {}), row.get("required_resource_ids", [])):
 		return "secured scenario sources did not cover required enemy build resources"
 	return "unknown AI runway failure"
@@ -422,10 +391,14 @@ func _new_buildings(before: Array, after: Array) -> Array:
 func _town_building_ids(town: Dictionary) -> Array:
 	return _string_array(town.get("built_buildings", []))
 
-func _event_count(events: Array, event_type: String) -> int:
+func _target_town_event_count(events: Array, event_type: String, town_placement_id: String) -> int:
 	var count := 0
 	for event in events:
-		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+		if (
+			event is Dictionary
+			and String(event.get("event_type", "")) == event_type
+			and String(event.get("actor_id", "")) == town_placement_id
+		):
 			count += 1
 	return count
 
@@ -484,6 +457,12 @@ func _resources(resources: Variant) -> Dictionary:
 
 func _blank_resources() -> Dictionary:
 	return _resources({})
+
+func _array_size(value: Variant) -> int:
+	return value.size() if value is Array else 0
+
+func _map_size_payload(size: Vector2i) -> Dictionary:
+	return {"width": size.x, "height": size.y}
 
 func _is_active_authored_scenario(scenario: Dictionary) -> bool:
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
