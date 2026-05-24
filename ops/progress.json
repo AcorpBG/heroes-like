@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-spell-impact-runtime-presentation-assets-20260524-10184",
-  "currentSliceTitle": "Battle Spell Impact Runtime Presentation Assets",
+  "currentSliceId": "random-map-generated-setup-pending-retry-surface-20260524-10184",
+  "currentSliceTitle": "Random Map Generated Setup Pending Retry Surface",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed battle spell impact runtime presentation assets: battle spell events now preserve spell_id/resolution_type, board presentation selects spell-specific VFX/SFX cues with generic fallbacks, deterministic runtime WAV assets exist for spell families, and focused plus standard harness validation passed.",
+  "currentSliceNotes": "Completed generated-map setup pending/retry surface correction: preview is explicitly pending launch validation, the command reads Validate & Launch, forced validation failures use the normal generated setup surface, retry counts match runtime policy, and focused plus repo validation passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T07:58:00Z",
+  "updatedAt": "2026-05-24T08:22:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
+      "title": "Random Map Generated Setup Pending Retry Surface",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-final-homm3-parity-gate-audit.md",
+        "docs/native-rmg-small-h3maped-reset.md",
+        "scenes/menus/MainMenu.gd",
+        "tests/random_map_player_setup_retry_ux_report.gd"
+      ],
+      "purpose": "Correct the player-facing generated-map setup/retry surface so configured strict-Small H3MapEd generation is shown as pending launch validation, failed validation uses the normal surface formatter, and focused validation matches the current bounded retry policy.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/validate_repo.py",
+        "docs/random-map-generated-setup-pending-retry-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Generated-map setup preview clearly reports pending launch validation without claiming that zero-attempt preview already validated the map.",
+        "Forced and real validation failures route through the same generated setup surface, keep launch disabled, and preserve retry/failure boundary copy.",
+        "Focused generated-map setup UX validation passes against the current runtime retry policy and strict Small H3MapEd public scope."
+      ],
+      "nonGoals": [
+        "No broad RMG parity implementation.",
+        "No water or underground generation enablement.",
+        "No campaign adoption or authored scenario writeback.",
+        "No native map topology change."
+      ],
+      "startedAt": "2026-05-24T08:05:00Z",
+      "updatedAt": "2026-05-24T08:22:00Z",
+      "completedAt": "2026-05-24T08:22:00Z",
+      "notes": "Completed from the active production-gap list under RMG maturity and UX polish after the focused generated setup retry report failed against the current retry policy.",
+      "completionEvidence": [
+        "MainMenu generated setup preview now carries launch_validation_status=pending_launch_validation, preview_only=true, and a Validate & Launch command label.",
+        "validation_force_generated_random_map_config now routes blocked setups through _apply_generated_random_map_setup_surface, preserving the same disabled launch and retry/failure boundary copy as normal failures.",
+        "tests/random_map_player_setup_retry_ux_report.tscn passed with max_attempts=5, pending preview validation, forced failure retry_count=4, successful H3MapEd provenance, and no campaign/authored JSON writeback.",
+        "tests/random_map_generated_overworld_profile_report.tscn passed, proving staged generated launch still reaches the overworld with normal art path.",
+        "python3 tests/validate_repo.py, python3 -m py_compile tests/validate_repo.py, jq empty ops/progress.json, and git diff --check passed."
+      ]
+    },
     {
       "id": "battle-spell-impact-runtime-presentation-assets-20260524-10184",
       "title": "Battle Spell Impact Runtime Presentation Assets",
@@ -24974,22 +25020,36 @@
     }
   ],
   "lastValidation": {
-    "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+    "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T07:10:00Z",
+    "updatedAt": "2026-05-24T08:22:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
-      "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_generated_overworld_profile_report.tscn",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
-      "jq empty ops/progress.json content/scenarios.json",
+      "python3 -m py_compile tests/validate_repo.py",
+      "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Strategic AI objective targeting validation passed: headless harness required objective-targeting case reports 5 scenarios, 9 faction cases, objective_targeted_count 9, target_assignment_event_count 9, priority_reason_count 9, standard suite passed 4/4 with headless_simulation_harness signature 3d777345, and repo validation/JSON/whitespace checks passed."
+    "summary": "Generated setup pending/retry surface validation passed: player setup report proves pending launch validation, Validate & Launch labeling, runtime max_attempts=5, forced blocked retry_count=4, successful H3MapEd provenance, and no campaign/authored writeback; generated overworld profile, repo validation, Python compile, JSON validation, and whitespace checks passed."
   },
-  "active_slice": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T07:10:00Z",
+  "active_slice": "random-map-generated-setup-pending-retry-surface-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T08:22:00Z",
   "validationHistory": [
+    {
+      "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T08:22:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_generated_overworld_profile_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Generated setup pending/retry surface passed: preview is pending launch validation, launch command is Validate & Launch, forced validation failure uses the normal blocked setup surface, retry policy count is runtime-derived, and staged generated launch still reaches overworld."
+    },
     {
       "id": "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
       "status": "passed",

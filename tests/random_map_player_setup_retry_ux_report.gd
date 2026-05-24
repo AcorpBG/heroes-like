@@ -178,18 +178,28 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		_fail("Generated player-facing setup did not validate: %s" % JSON.stringify(setup))
 		return false
 	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
-	if String(retry.get("policy", "")) != "bounded_player_setup_retry_visible" or int(retry.get("max_attempts", 0)) != 2:
+	if String(retry.get("policy", "")) != "bounded_player_setup_retry_visible" \
+			or int(retry.get("max_attempts", 0)) != int(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("max_attempts", 0)):
 		_fail("Generated setup did not expose bounded retry policy: %s" % JSON.stringify(retry))
+		return false
+	if String(retry.get("validation_status", "")) != "pending_launch_validation" or int(retry.get("attempt_count", -1)) != 0:
+		_fail("Generated setup preview did not stay pending launch validation before the launch command: %s" % JSON.stringify(retry))
+		return false
+	if String(setup.get("launch_validation_status", "")) != "pending_launch_validation" or not bool(setup.get("preview_only", false)):
+		_fail("Generated setup preview did not expose explicit pending-validation state: %s" % JSON.stringify(setup))
 		return false
 	var combined_text := "\n".join([
 		String(snapshot.get("status_full", "")),
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	for token in ["Generated validation", "Seed", "Size", "Small 36x36", "Internal profile", "Players", "Water", "Underground", "Launch handoff", "campaign progress", "authored content"]:
+	for token in ["Generated setup ready", "pending on launch", "Seed", "Size", "Small 36x36", "Internal profile", "Players", "Water", "Underground", "Launch handoff", "campaign progress", "authored content"]:
 		if combined_text.find(token) < 0:
 			_fail("Generated setup visible/provenance text missed token %s: %s" % [token, combined_text])
 			return false
+	if String(snapshot.get("start_text", "")) != "Validate & Launch":
+		_fail("Generated pending setup did not label the command as validation plus launch: %s" % JSON.stringify(snapshot))
+		return false
 	if not bool(snapshot.get("start_enabled", false)):
 		_fail("Generated launch button was disabled for a valid generated setup.")
 		return false
@@ -218,12 +228,18 @@ func _assert_failure_surface(shell: Node, setup: Dictionary) -> bool:
 		_fail("Invalid generated setup unexpectedly passed validation.")
 		return false
 	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
-	if String(retry.get("status", "")) != "failed_before_launch" or int(retry.get("attempt_count", 0)) != 2 or int(retry.get("retry_count", 0)) != 1:
+	var expected_attempts := int(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("max_attempts", 0))
+	if String(retry.get("status", "")) != "failed_before_launch" \
+			or int(retry.get("attempt_count", 0)) != expected_attempts \
+			or int(retry.get("retry_count", 0)) != max(0, expected_attempts - 1):
 		_fail("Invalid generated setup did not expose bounded retry failure: %s" % JSON.stringify(retry))
 		return false
 	var snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	if bool(snapshot.get("start_enabled", true)):
 		_fail("Generated launch button stayed enabled after forced validation failure.")
+		return false
+	if String(snapshot.get("start_text", "")) != "Launch Generated":
+		_fail("Generated blocked setup did not return to the blocked launch command label: %s" % JSON.stringify(snapshot))
 		return false
 	var failure_text := "\n".join([
 		String(setup.get("failure_handoff", "")),
