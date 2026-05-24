@@ -12,11 +12,11 @@ Validation entry point:
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn
 ```
 
-Current evidence:
+Current evidence after `battle-autoplay-hard-difficulty-watch-retune-20260524-10184`:
 
-- Normal: 12/12 completed samples, `average_terminal_health_margin_pct: 43`, `average_total_damage_per_round: 41`, primary outcome `defeat` at 67%.
-- Hard: 12/12 completed samples, `average_terminal_health_margin_pct: 61`, `average_total_damage_per_round: 46`, primary outcome `defeat` at 75%.
-- `normal_vs_hard`: enemy remaining health +22, player remaining health -4, terminal margin +18, total damage per round +5.
+- Normal: 12/12 completed samples, `average_terminal_health_margin_pct: 44`, `average_total_damage_per_round: 41`, primary outcome `defeat` at 50%, and `tuning_queue_item_count: 0`.
+- Hard: 12/12 completed samples, `average_terminal_health_margin_pct: 53`, `average_total_damage_per_round: 43`, primary outcome `defeat` at 75%, and `tuning_queue_item_count: 3`.
+- `normal_vs_hard`: enemy remaining health +20, player remaining health -11, terminal margin +9, total damage per round +2.
 
 No automatic tuning or content writeback.
 
