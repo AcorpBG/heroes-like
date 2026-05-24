@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-development-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Development Runway",
+  "currentSliceId": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario AI Town Development Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active authored scenarios now provide persistent common-resource development runway sources, and the focused live report completes all 18 active player-town cases within 30 turns using only scenario-authored secured economy sources.",
+  "currentSliceNotes": "20/20 active enemy-town cases complete within 30 turns with rare-resource spend and same-day second-build rejection.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T17:25:00Z",
+  "updatedAt": "2026-05-24T16:55:56Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,57 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+      "title": "Economy Active Scenario AI Town Development Runway",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T16:55:56Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "content/scenarios.json",
+        "content/resource_sites.json",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "tests/active_scenario_ai_town_development_runway_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Enemy faction treasuries preserve every live stockpile resource, including all six rare resources.",
+        "Enemy town construction honors one build per town per turn through current-day build readiness and last_build_day stamping.",
+        "Town market affordability does not cover restricted rare-resource deficits with common-market wood/ore exchange logic.",
+        "Active enemy towns have scenario-authored economy access to their faction rare resources and complete development within 30 turns under EnemyTurnRules.run_enemy_turn.",
+        "Focused evidence covers all active authored scenarios and all active enemy-town cases with observed rare-resource spending and same-day second-build rejection."
+      ],
+      "notes": "Completed focused active-scenario enemy-town development runway implementation and validation.",
+      "completedAt": "2026-05-24T16:55:56Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-ai-town-runway-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-regression.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "enemy_town_case_count": 20,
+        "completed_case_count": 20,
+        "rare_spend_case_count": 20,
+        "same_day_guard_case_count": 20,
+        "notes": "Focused report gates enemy-town AI development through EnemyTurnRules.run_enemy_turn with full live treasuries, rare spend, and same-day second-build rejection."
+      }
+    },
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
       "title": "Economy Live Stockpile Resource Surface Breadth",
@@ -26469,28 +26520,43 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T16:55:56Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-ai-town-runway-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-regression.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-development-runway-20260524-10184",
+    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T17:25:00Z",
+    "updatedAt": "2026-05-24T16:55:56Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-all.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-ai-town-runway-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-regression.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
-      "jq empty ops/progress.json",
+      "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
       "git diff --check"
     ]
   },
   "active_slice": {
-    "id": "economy-active-scenario-development-runway-20260524-10184",
-    "title": "Economy Active Scenario Development Runway",
+    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+    "title": "Economy Active Scenario AI Town Development Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T17:25:00Z"
+    "updatedAt": "2026-05-24T16:55:56Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T17:25:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T16:55:56Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -27011,7 +27077,26 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T16:55:56Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-ai-town-runway-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-regression.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
+        "git diff --check"
+      ]
     }
   ],
-  "currentSlice": "economy-active-scenario-development-runway-20260524-10184"
+  "currentSlice": {
+    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+    "title": "Economy Active Scenario AI Town Development Runway",
+    "status": "completed",
+    "updatedAt": "2026-05-24T16:55:56Z"
+  }
 }
