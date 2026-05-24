@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-live-balance-gate-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Live Balance Gate",
+  "currentSliceId": "economy-town-development-runtime-balance-proof-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Runtime Balance Proof",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Live stockpile normalization now covers gold, wood, ore, aetherglass, embergrain, peatwax, verdant_grafts, brass_scrip, and memory_salt; rare-resource fronts are live sources; high-tier faction signature buildings use matching rare resources; town builds are limited to one per town per day; and the deterministic seed-town development report proves all six faction seed towns complete within 30 turns.",
+  "currentSliceNotes": "Completed. The focused Godot runtime report creates six seed-town sessions, drives live OverworldRules/TownRules build actions, proves same-day second builds reject and disappear from the action surface, advances income through OverworldRules.end_turn, observes high-tier rare-resource spending through live deductions, keeps normal markets common-only, and completes all seed-town development within 30 turns.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T13:42:54Z",
+  "updatedAt": "2026-05-24T14:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,77 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-runtime-balance-proof-20260524-10184",
+      "title": "Economy Town Development Runtime Balance Proof",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-live-balance-gate-report.md"
+      ],
+      "purpose": "Strengthen the owner-directed town-economy goal by proving the six seed faction towns can complete their authored development target through the live Godot town build rules, including one-build-per-town-per-day enforcement, rather than only through a Python content simulation.",
+      "implementationTargets": [
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/town_development_runtime_balance_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A focused Godot report creates runtime sessions for all six faction seed towns and drives actual OverworldRules/TownRules construction calls.",
+        "The report proves a same-day second build is rejected for every seed town.",
+        "The report advances days through live end-turn income and completes all authored buildable town development within the 30-turn target.",
+        "The report proves high-tier rare-resource spending occurs through live resource deduction and normal markets remain common-resource only.",
+        "Repository validation gates the report files and the focused Godot report passes locally."
+      ],
+      "nonGoals": [
+        "No final market cap/save-schema migration.",
+        "No broad scenario economy retune or AI economy planner completion.",
+        "No final town UI/art pass."
+      ],
+      "startedAt": "2026-05-24T13:47:21Z",
+      "updatedAt": "2026-05-24T14:05:00Z",
+      "notes": "Completed. The focused Godot runtime report creates six seed-town sessions, drives live OverworldRules/TownRules build actions, proves same-day second builds reject and disappear from the action surface, advances income through OverworldRules.end_turn, observes high-tier rare-resource spending through live deductions, keeps normal markets common-only, and completes all seed-town development within 30 turns.",
+      "completedAt": "2026-05-24T14:05:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "schema": "economy_town_development_runtime_balance_proof_completion_v1",
+        "target_turns": 30,
+        "runtime_seed_town_completion_days": {
+          "town_highwater_keep": 17,
+          "town_nightglass_redoubt": 18,
+          "town_prismhearth": 18,
+          "town_thornwake_graftroot_caravan": 7,
+          "town_brasshollow_orevein_gantry": 7,
+          "town_veilmourn_bellwake_harbor": 7
+        },
+        "live_rule_surfaces": [
+          "OverworldRules.end_turn",
+          "OverworldRules.set_active_town_visit",
+          "TownRules.get_build_actions",
+          "OverworldRules.build_in_active_town"
+        ],
+        "same_day_second_build_rejected": true,
+        "same_day_build_actions_hidden": true,
+        "rare_spend_observed": true,
+        "normal_market_resource_ids": [
+          "wood",
+          "ore"
+        ]
+      }
+    },
     {
       "id": "economy-town-development-live-balance-gate-20260524-10184",
       "title": "Economy Town Development Live Balance Gate",
@@ -25643,25 +25714,45 @@
         "git diff --check"
       ],
       "summary": "Runtime consequence matrix passed: matrix_signature cab8ca24; 12 samples; 3 difficulty, 3 terrain, 4 scenario, 2 matchup, and 8 ability-presence cohorts; 8 ability-consequence cohorts; zero zero-consequence samples; standard runtime/combat/balance/headless reports and repository validation passed."
+    },
+    {
+      "id": "economy-town-development-runtime-balance-proof-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T14:05:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
+    "id": "economy-town-development-runtime-balance-proof-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T13:25:00Z",
+    "updatedAt": "2026-05-24T14:05:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_difficulty_sweep_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "python3 tests/town_development_balance_report.py",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json content/scenarios.json content/army_groups.json",
+      "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+      "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418."
+    "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
   },
-  "active_slice": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T13:42:54Z",
+  "active_slice": {
+    "id": "economy-town-development-runtime-balance-proof-20260524-10184",
+    "title": "Economy Town Development Runtime Balance Proof",
+    "status": "completed",
+    "updatedAt": "2026-05-24T14:05:00Z"
+  },
+  "currentSliceUpdatedAt": "2026-05-24T14:05:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
@@ -26074,7 +26165,22 @@
         "git diff --check"
       ],
       "summary": "Content runtime overworld family allowlist passed: ContentService now accepts authored staged resource front, support producer, shrine, sign waypoint, scenario objective, and faction landmark resource-site families plus matching authored map-object families; focused battle autoplay report output had zero unsupported-family or warning lines."
+    },
+    {
+      "id": "economy-town-development-runtime-balance-proof-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T14:05:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
     }
   ],
-  "currentSlice": null
+  "currentSlice": "economy-town-development-runtime-balance-proof-20260524-10184"
 }
