@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-town-economy-source-route-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Town Economy Source Route",
+  "currentSliceId": "economy-town-development-cost-curve-20260524-10184",
+  "currentSliceTitle": "Economy Town Development Cost Curve",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed live route-access evidence for all active player towns: 54/54 wood, ore, and faction-rare source routes are reachable under live overworld movement rules.",
+  "currentSliceNotes": "Completed deterministic cost-curve gate for all 15 authored towns and all six faction signature ladders. Every development target costs gold, every town spends wood and ore, common-only development remains at least 2:1 over rare-cost buildings, rare costs use only the town faction rare resource, and rare costs remain tier 5+ gated.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T18:58:00Z",
+  "updatedAt": "2026-05-24T19:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,57 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-development-cost-curve-20260524-10184",
+      "title": "Economy Town Development Cost Curve",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T19:45:00Z",
+      "completedAt": "2026-05-24T19:45:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-cost-curve-report.md"
+      ],
+      "implementationTargets": [
+        "tests/town_development_cost_curve_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-cost-curve-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A deterministic report covers all authored towns and six faction signature ladders.",
+        "Every town development target costs gold, and every town curve spends wood and ore.",
+        "Common-only development remains at least 2:1 over rare-cost buildings in every town.",
+        "Rare-resource costs use only the town faction rare resource and are paired with gold, wood, and ore.",
+        "Rare-resource costs are gated behind tier 5+ signature development or a tier 5+ prerequisite chain.",
+        "Repository validation gates the report, documentation, and cost-curve invariants."
+      ],
+      "notes": "Completed: deterministic and live validation now prove the authored town development cost curve keeps gold/common resources dominant while rare costs are faction-specific high-tier pressure.",
+      "completionEvidence": {
+        "authored_town_count": 15,
+        "faction_count": 6,
+        "signature_tier_count": 7,
+        "high_tier_start": 5,
+        "min_common_only_to_rare_ratio": 2,
+        "runtime_player_town_cases": 18,
+        "runtime_enemy_town_cases": 20,
+        "validation": [
+          "python3 tests/town_development_cost_curve_report.py (pass)",
+          "python3 tests/town_development_balance_report.py (pass)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-cost-curve.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (pass)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-cost-curve.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn (pass)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-cost-curve.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (pass)",
+          "python3 tests/validate_repo.py (pass)",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py (pass)",
+          "jq empty ops/progress.json (pass)",
+          "git diff --check (pass)"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
       "title": "Economy Active Scenario Town Economy Source Route",
@@ -20885,6 +20936,41 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-town-development-cost-curve-20260524-10184",
+      "title": "Economy Town Development Cost Curve",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T19:45:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-cost-curve-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-development-cost-curve-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/town_development_cost_curve_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-cost-curve-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "python3 tests/town_development_cost_curve_report.py (pass)",
+        "python3 tests/town_development_balance_report.py (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-cost-curve.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-cost-curve.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-cost-curve.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py (pass)",
+        "jq empty ops/progress.json (pass)",
+        "git diff --check (pass)"
+      ],
+      "summary": "Authored town-development cost curves now have a deterministic production-readiness gate: 15 authored towns, six faction signature ladders, seven unit tiers, gold on every development target, wood and ore spend in every town, gold-dominant numeric cost curves, at least 2:1 common-only to rare-cost buildings, faction-specific rare resources, and rare costs gated behind tier 5+ development."
+    },
+    {
       "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
       "title": "Economy Active Scenario Town Economy Source Route",
       "status": "completed",
@@ -26745,30 +26831,48 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+    "id": "economy-town-development-cost-curve-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T18:58:00Z",
+    "updatedAt": "2026-05-24T19:45:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "python3 tests/town_development_cost_curve_report.py",
+      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-cost-curve.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-cost-curve.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-cost-curve.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-      "python3 tests/town_development_balance_report.py",
-      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
-      "jq empty ops/progress.json content/scenarios.json",
+      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+      "jq empty ops/progress.json",
       "git diff --check"
     ]
   },
   "active_slice": {
-    "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
-    "title": "Economy Active Scenario Town Economy Source Route",
+    "id": "economy-town-development-cost-curve-20260524-10184",
+    "title": "Economy Town Development Cost Curve",
     "status": "completed",
-    "updatedAt": "2026-05-24T18:58:00Z"
+    "updatedAt": "2026-05-24T19:45:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T18:58:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T19:45:00Z",
   "validationHistory": [
+    {
+      "id": "economy-town-development-cost-curve-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T19:45:00Z",
+      "commands": [
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-town-runtime-cost-curve.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-cost-curve.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-cost-curve.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Town development cost curve passed: deterministic report covers 15 authored towns, six faction signature ladders, seven unit tiers, tier 5+ rare costs, and 2:1 common-only to rare-cost building ratio. Runtime reports keep all 15 towns, 18 active player-town cases, and 20 active enemy-town cases within the 30-turn target with rare-resource spending and one-build-per-day guards intact."
+    },
     {
       "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
       "status": "passed",
