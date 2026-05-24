@@ -16,18 +16,22 @@ The latest strengthening keeps completed towns inside the active scenario sessio
 
 The delayed-source strengthening adds `active_scenario_town_delayed_source_replay_v1` inside the same report. Each player-town case now also runs a fresh full scenario session where authored economy sources are not granted up front. Source ownership is delayed by live route-derived acquisition days using 12 route steps per day, plus one extra day for guarded sources. The delayed replay then reruns live town construction against the same 30-turn target, proving 18/18 delayed-source replay cases and current completion days from day 21 to day 25 with at least five days of remaining margin.
 
+The delayed-source replay now also saves and restores each case after route-derived source acquisition has mutated the active scenario resource nodes and after the first rare-resource building has been constructed. The restored session must preserve the active town, resources, built buildings, `last_build_day`, available recruits, applied source-node claim/control state, town resume target, and `SAVE_VERSION`, then it must keep the same-day build guard active before continuing the 30-turn development runway. Current focused evidence proves 18/18 delayed-source save/resume checkpoints.
+
 ## Evidence Boundaries
 
 - The report covers active authored scenarios and active player-town cases.
 - Current focused evidence completes all 18 active player-town cases within the 30-turn target and observes high-tier rare-resource spending in every case.
 - Current focused evidence completes 18/18 active player-town recruitment cases after development and recruits 126/126 tier recruitment cases through live active-town recruitment.
 - Current focused evidence completes 18/18 delayed-source replay cases after route-derived source acquisition delays, with delayed completion days ranging from day 21 to day 25.
+- Current focused evidence completes 18/18 delayed-source save/resume checkpoints after source acquisition and rare-resource construction, then continues construction from the restored active scenario session.
 - Secured sources must come from the active scenario's authored `resource_nodes`; no synthetic resource sites are added.
 - Highwater bridgehead starts in `ironbridge-stand` and `mireford-skirmish` include the authored `bridge_ore_reserve` ore source so their full development runway can still afford sequential tier 4-7 recruitment by turn 30.
 - Construction preserves the active scenario's authored overworld state, including map, resource nodes, encounters, and enemy state data.
 - Focused economy-day advancement is intentional report scope; it proves town/resource-income runway without treating strategic AI turns as part of this gate.
 - The secured-source runway remains as an isolation proof, while the delayed-source replay adds route/guard timing pressure. This is still not final scenario-wide route balance; full encounter pacing and manual-play campaign approval remain separate scenario-balance concerns.
 - Construction still uses live town rules, build action surfaces, resource spending, daily income, and same-day build rejection.
+- Save/resume coverage uses `SaveService.save_runtime_manual_session` and `SaveService.restore_manual_session`; it does not change save schema ownership or bump `SAVE_VERSION`.
 - Rare resources remain authored-source driven; normal town markets stay common-resource only.
 - No `SAVE_VERSION` bump is required.
 - `wood` remains canonical.
