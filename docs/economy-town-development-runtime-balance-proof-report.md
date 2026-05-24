@@ -23,6 +23,9 @@ The report proves:
 - high-tier rare-resource costs are paid through live resource deduction;
 - normal market actions remain bounded to `wood` and `ore`;
 - daily balance income flows through controlled live resource-site income plus the normal town income path.
+- after each town is fully developed, the live recruit-action surface exposes and successfully recruits through the owning faction's seven-tier unit ladder.
+
+The current strengthened runtime evidence covers all 15 authored towns and 105 recruitment cases: 15 towns complete development, 15 towns pass seven-tier recruitment end to end, and all 105 tier recruitment actions add a unit to the field army through `OverworldRules.recruit_in_active_town(...)`.
 
 The seed-town completion days from the first runtime proof remain:
 
@@ -41,7 +44,7 @@ This slice also closes a live-surface gap found while implementing the report: `
 
 ## Boundaries
 
-This is not final scenario-wide economy balance, final market cap persistence, final AI economy planning, or final town UI/art. It is a focused runtime proof that the requested town-development loop is viable through live rules for every authored town.
+This is not final scenario-wide economy balance, final market cap persistence, final AI economy planning, or final town UI/art. It is a focused runtime proof that the requested town-development loop is viable through live rules for every authored town, including post-development seven-tier recruitment.
 
 ## Validation
 
