@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -34,6 +36,26 @@ RARE_RESOURCES = {
     "memory_salt",
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
+GODOT_RUNTIME_REPORTS = (
+    {
+        "scene": "res://tests/town_development_runtime_balance_report.tscn",
+        "marker": "TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-town-runtime.log",
+    },
+    {
+        "scene": "res://tests/active_scenario_town_development_runway_report.tscn",
+        "marker": "ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT",
+        "quit_after": 500,
+        "log_file": "/tmp/heroes-like-scorecard-active-player-town.log",
+    },
+    {
+        "scene": "res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "marker": "ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT",
+        "quit_after": 700,
+        "log_file": "/tmp/heroes-like-scorecard-active-ai-town.log",
+    },
+)
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -86,6 +108,41 @@ def run_json_report(script: str, *args: str) -> dict[str, Any]:
     return json.loads(result.stdout)
 
 
+def run_godot_report(scene: str, marker: str, quit_after: int, log_file: str) -> dict[str, Any]:
+    env = dict(os.environ)
+    env["GODOT_SILENCE_ROOT_WARNING"] = "1"
+    result = subprocess.run(
+        [
+            "godot",
+            "--headless",
+            "--quit-after",
+            str(quit_after),
+            "--log-file",
+            log_file,
+            "--path",
+            ".",
+            "--scene",
+            scene,
+        ],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            "%s failed with code %d\nSTDOUT tail:\n%s\nSTDERR tail:\n%s"
+            % (scene, result.returncode, result.stdout[-4000:], result.stderr[-4000:])
+        )
+    prefix = marker + " "
+    for line in result.stdout.splitlines():
+        if line.startswith(prefix):
+            return json.loads(line[len(prefix):])
+    raise RuntimeError("%s did not emit %s marker" % (scene, marker))
+
+
 def cost_payload(building: dict[str, Any]) -> dict[str, int]:
     payload = building.get("cost", {})
     if not isinstance(payload, dict):
@@ -121,7 +178,111 @@ def add_check(checks: list[dict[str, Any]], check_id: str, ok: bool, summary: st
     )
 
 
+def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
+    payloads: dict[str, dict[str, Any]] = {}
+    for config in GODOT_RUNTIME_REPORTS:
+        payloads[str(config["marker"])] = run_godot_report(
+            str(config["scene"]),
+            str(config["marker"]),
+            int(config["quit_after"]),
+            str(config["log_file"]),
+        )
+
+    town_runtime = payloads["TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT"]
+    runtime_completion_ok = (
+        town_runtime.get("ok") is True
+        and int(town_runtime.get("authored_town_count", 0)) >= MIN_AUTHORED_TOWNS
+        and int(town_runtime.get("recruitment_end_to_end_town_count", 0)) >= MIN_AUTHORED_TOWNS
+        and int(town_runtime.get("seven_tier_recruitment_case_count", 0)) >= MIN_AUTHORED_TOWNS * SIGNATURE_TIER_COUNT
+        and int(town_runtime.get("recruited_unit_case_count", 0)) >= MIN_AUTHORED_TOWNS * SIGNATURE_TIER_COUNT
+    )
+    add_check(
+        checks,
+        "live_runtime_development_and_recruitment",
+        runtime_completion_ok,
+        "Live Godot town development must complete all authored towns and recruit all seven tiers after development.",
+        {
+            "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
+            "recruitment_end_to_end_town_count": int(town_runtime.get("recruitment_end_to_end_town_count", 0)),
+            "seven_tier_recruitment_case_count": int(town_runtime.get("seven_tier_recruitment_case_count", 0)),
+            "recruited_unit_case_count": int(town_runtime.get("recruited_unit_case_count", 0)),
+        },
+    )
+
+    player_runtime = payloads["ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT"]
+    player_runtime_ok = (
+        player_runtime.get("ok") is True
+        and int(player_runtime.get("active_scenario_count", 0)) >= 16
+        and int(player_runtime.get("player_town_case_count", 0)) >= 18
+        and int(player_runtime.get("completed_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("delayed_source_replay_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("recruited_unit_case_count", 0)) >= 18 * SIGNATURE_TIER_COUNT
+    )
+    add_check(
+        checks,
+        "active_scenario_player_runway_runtime",
+        player_runtime_ok,
+        "Active player-town scenarios must complete development, delayed-source replay, save/resume, and seven-tier recruitment.",
+        {
+            "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
+            "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
+            "completed_case_count": int(player_runtime.get("completed_case_count", 0)),
+            "delayed_source_replay_completed_count": int(player_runtime.get("delayed_source_replay_completed_count", 0)),
+            "delayed_source_save_resume_completed_count": int(player_runtime.get("delayed_source_save_resume_completed_count", 0)),
+            "recruited_unit_case_count": int(player_runtime.get("recruited_unit_case_count", 0)),
+        },
+    )
+
+    ai_runtime = payloads["ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT"]
+    ai_runtime_ok = (
+        ai_runtime.get("ok") is True
+        and int(ai_runtime.get("active_scenario_count", 0)) >= 16
+        and int(ai_runtime.get("enemy_town_case_count", 0)) >= 20
+        and int(ai_runtime.get("completed_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("same_day_guard_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("delayed_source_replay_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+    )
+    add_check(
+        checks,
+        "active_scenario_ai_runway_runtime",
+        ai_runtime_ok,
+        "Active enemy-town scenarios must complete AI town development, delayed-source replay, save/resume, and same-day build guards.",
+        {
+            "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
+            "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
+            "completed_case_count": int(ai_runtime.get("completed_case_count", 0)),
+            "same_day_guard_case_count": int(ai_runtime.get("same_day_guard_case_count", 0)),
+            "delayed_source_replay_completed_count": int(ai_runtime.get("delayed_source_replay_completed_count", 0)),
+            "delayed_source_save_resume_completed_count": int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)),
+        },
+    )
+    return {
+        "town_development_runtime_balance_report_v1": {
+            "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
+            "recruitment_end_to_end_town_count": int(town_runtime.get("recruitment_end_to_end_town_count", 0)),
+        },
+        "active_scenario_town_development_runway_report_v1": {
+            "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
+            "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
+        },
+        "active_scenario_ai_town_development_runway_report_v1": {
+            "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
+            "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
+        },
+    }
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Report the economy/town objective scorecard.")
+    parser.add_argument(
+        "--include-runtime",
+        action="store_true",
+        help="Run the long Godot town-development runtime and active-scenario runway reports as additional scorecard checks.",
+    )
+    args = parser.parse_args()
+
     factions = load_items("factions.json")
     towns = load_items("towns.json")
     buildings = load_items("buildings.json")
@@ -337,6 +498,10 @@ def main() -> int:
         {"signature_tier_count": SIGNATURE_TIER_COUNT, "factions": tier_rows},
     )
 
+    runtime_reports: dict[str, Any] = {}
+    if args.include_runtime:
+        runtime_reports = add_runtime_checks(checks)
+
     passed = [check for check in checks if check["ok"]]
     failed = [check for check in checks if not check["ok"]]
     report = {
@@ -367,6 +532,8 @@ def main() -> int:
                 "unique_fingerprints": asymmetry.get("unique_fingerprints", {}),
             },
         },
+        "runtime_reports_included": bool(args.include_runtime),
+        "runtime_reports": runtime_reports,
     }
     print("ECONOMY_TOWN_GOAL_SCORECARD_REPORT " + json.dumps(report, sort_keys=True))
     return 0 if report["ok"] else 1
