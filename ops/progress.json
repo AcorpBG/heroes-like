@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-rare-pressure-balance-20260524-10184",
-  "currentSliceTitle": "Economy Town Rare Pressure Balance",
+  "currentSliceId": "economy-town-goal-scorecard-20260524-10184",
+  "currentSliceTitle": "Economy Town Goal Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "High-tier faction rare-resource pressure now uses a 2/4/6 signature tier curve plus selected late unique rare costs. Deterministic and active-scenario gates prove every authored town spends at least 14 faction rare resources, ends completion with no more than 13 unspent faction rare, preserves the 30-turn cap and day-20 pacing floor, and keeps player and AI active-scenario runways green.",
+  "currentSliceNotes": "The economy/town goal scorecard now consolidates the owner requirements into one regression gate. It passes 7/7 checks over live resources, 15 authored towns completing in 23-28 days, one build per town turn, common-resource-dominant cost shape, 2/4/6 rare pressure, six distinct faction town identities with unique buildings, seven-tier unit ladders, and active-scenario resource coverage.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:17:12Z",
+  "updatedAt": "2026-05-24T23:23:48Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,30 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-goal-scorecard-20260524-10184",
+      "title": "Economy Town Goal Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T23:23:48Z",
+      "startedAt": "2026-05-24T23:20:09Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "summary": "The economy/town goal scorecard now consolidates the owner requirements into one regression gate. It passes 7/7 checks over live resources, 15 authored towns completing in 23-28 days, one build per town turn, common-resource-dominant cost shape, 2/4/6 rare pressure, six distinct faction town identities with unique buildings, seven-tier unit ladders, and active-scenario resource coverage.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/active_scenario_resource_availability_matrix_report.py tests/faction_town_unit_asymmetry_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "jq empty ops/progress.json"
+      ],
+      "completedAt": "2026-05-24T23:23:48Z"
+    },
     {
       "id": "economy-town-rare-pressure-balance-20260524-10184",
       "title": "Economy Town Rare Pressure Balance",

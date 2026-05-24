@@ -133,6 +133,8 @@ ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / 
 ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-development-runway-report.md"
 ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_resource_availability_matrix_report.py"
 ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-resource-availability-matrix-report.md"
+ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH = ROOT / "tests" / "economy_town_goal_scorecard_report.py"
+ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-goal-scorecard-report.md"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.tscn"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-unit-tier-runtime-surface-report.md"
@@ -2883,6 +2885,99 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "`wood` remains canonical",
     ):
         ensure(required_text in doc_text, errors, f"Town development cost curve doc is missing required text: {required_text}")
+
+
+def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
+    ensure(ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.exists(), errors, "Missing economy town goal scorecard report")
+    ensure(ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.exists(), errors, "Missing economy town goal scorecard report doc")
+    if not ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.exists():
+        return
+    result = subprocess.run(
+        [sys.executable, str(ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH)],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        if result.stdout:
+            errors.append(result.stdout.strip())
+        if result.stderr:
+            errors.append(result.stderr.strip())
+        errors.append("Economy town goal scorecard report failed")
+        return
+    marker = "ECONOMY_TOWN_GOAL_SCORECARD_REPORT "
+    ensure(marker in result.stdout, errors, "Economy town goal scorecard report did not emit its report marker")
+    report_payload = {}
+    for line in result.stdout.splitlines():
+        if line.startswith(marker):
+            try:
+                report_payload = json.loads(line[len(marker):])
+            except json.JSONDecodeError as exc:
+                errors.append(f"Economy town goal scorecard report emitted invalid JSON: {exc}")
+            break
+    ensure(report_payload.get("schema") == "economy_town_goal_scorecard_report_v1", errors, "Economy town goal scorecard schema mismatch")
+    ensure(report_payload.get("slice_id") == "economy-town-goal-scorecard-20260524-10184", errors, "Economy town goal scorecard slice id mismatch")
+    ensure(report_payload.get("ok") is True, errors, "Economy town goal scorecard must pass")
+    ensure(int(report_payload.get("requirement_count", 0)) >= 7, errors, "Economy town goal scorecard must cover the owner objective requirements")
+    ensure(
+        int(report_payload.get("passed_requirement_count", 0)) == int(report_payload.get("requirement_count", -1)),
+        errors,
+        "Every economy town goal scorecard requirement must pass",
+    )
+    check_rows = report_payload.get("checks", [])
+    ensure(isinstance(check_rows, list), errors, "Economy town goal scorecard checks must be a list")
+    check_ids = {str(row.get("id", "")) for row in check_rows if isinstance(row, dict)}
+    for required_check in (
+        "all_live_resources_wired",
+        "authored_town_development_end_to_end",
+        "one_build_per_town_turn",
+        "common_resource_dominant_cost_shape",
+        "high_tier_rare_resource_pressure",
+        "faction_identity_and_unique_towns",
+        "seven_tier_unit_buildings",
+    ):
+        ensure(required_check in check_ids, errors, f"Economy town goal scorecard missing check {required_check}")
+    source_reports = report_payload.get("source_reports", {})
+    source_reports = source_reports if isinstance(source_reports, dict) else {}
+    town_balance = source_reports.get("town_development_balance_report_v1", {})
+    town_balance = town_balance if isinstance(town_balance, dict) else {}
+    matrix = source_reports.get("active_scenario_resource_availability_matrix_v1", {})
+    matrix = matrix if isinstance(matrix, dict) else {}
+    ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
+    ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
+    ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
+    script_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    doc_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.read_text(encoding="utf-8") if ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "economy_town_goal_scorecard_report_v1",
+        "all_live_resources_wired",
+        "authored_town_development_end_to_end",
+        "one_build_per_town_turn",
+        "common_resource_dominant_cost_shape",
+        "high_tier_rare_resource_pressure",
+        "faction_identity_and_unique_towns",
+        "seven_tier_unit_buildings",
+        "EXPECTED_SIGNATURE_RARE_CURVE",
+        "MIN_UNIQUE_NON_UNIT_PER_TOWN",
+    ):
+        ensure(required_token in script_text, errors, f"Economy town goal scorecard script is missing token {required_token}")
+    for required_text in (
+        "Economy Town Goal Scorecard Report",
+        "economy-town-goal-scorecard-20260524-10184",
+        "all nine live stockpile resources",
+        "30-turn target",
+        "one build per town turn",
+        "common-resource-dominant town development",
+        "2/4/6 rare-resource tier curve",
+        "MIN_RARE_DEVELOPMENT_SPEND = 14",
+        "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
+        "seven unit tiers",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Economy town goal scorecard doc is missing required text: {required_text}")
 
 
 def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
@@ -20331,6 +20426,7 @@ def main() -> int:
     validate_market_faction_cost_policy(errors)
     validate_town_development_balance_policy(errors)
     validate_town_development_cost_curve_policy(errors)
+    validate_economy_town_goal_scorecard(errors)
     validate_town_development_runtime_balance_policy(errors)
     validate_town_build_per_town_turn_limit(errors)
     validate_town_development_save_resume_policy(errors)
@@ -20431,6 +20527,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend while capping leftover rare stock after development")
+    print("- economy/town goal scorecard now consolidates live resources, town completion, build limits, cost shape, rare pressure, faction identity, unique buildings, and seven-tier ladders")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
