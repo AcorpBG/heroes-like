@@ -24,6 +24,12 @@ SUITES = {
             "timeout": 180,
         },
         {
+            "id": "battle_autoplay_active_scenario_breadth",
+            "marker": "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
+            "scene": "res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+            "timeout": 360,
+        },
+        {
             "id": "balance_regression_suite",
             "marker": "BALANCE_REGRESSION_REPORT_SUITE",
             "scene": "res://tests/balance_regression_report_suite.tscn",
@@ -42,6 +48,12 @@ SUITES = {
             "marker": "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
             "scene": "res://tests/battle_autoplay_combat_balance_report.tscn",
             "timeout": 180,
+        },
+        {
+            "id": "battle_autoplay_active_scenario_breadth",
+            "marker": "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
+            "scene": "res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+            "timeout": 360,
         },
         {
             "id": "battle_autoplay_difficulty_sweep",

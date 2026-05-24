@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/battle_autoplay_active_scenario_breadth_report.gd" id="1"]
+
+[node name="BattleAutoplayActiveScenarioBreadthReport" type="Node"]
+script = ExtResource("1")

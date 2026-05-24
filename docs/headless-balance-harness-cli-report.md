@@ -9,6 +9,7 @@ This slice adds `tools/run_headless_balance_harness.py`, a single command for ru
 The default `standard` suite runs:
 
 - `tests/battle_autoplay_combat_balance_report.tscn`
+- `tests/battle_autoplay_active_scenario_breadth_report.tscn`
 - `tests/balance_regression_report_suite.tscn`
 - `tests/headless_simulation_harness_report.tscn`
 
