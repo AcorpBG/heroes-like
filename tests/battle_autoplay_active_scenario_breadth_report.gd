@@ -6,6 +6,7 @@ const REPORT_ID := "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT"
 const SCHEMA_ID := "battle_autoplay_active_scenario_breadth_report_v1"
 const MIN_ACTIVE_SCENARIO_COUNT := 16
 const MIN_AUTHORED_ENCOUNTER_COUNT := 51
+const ACTIVE_QUEUE_CLEAR_REQUIRED := true
 const FORBIDDEN_POLICY_FLAGS := [
 	"automatic_tuning",
 	"runtime_balance_changes",
@@ -75,6 +76,13 @@ func _run() -> void:
 			"coverage": queue.get("coverage", {}),
 			"top_contributors": queue.get("top_contributors", []),
 		},
+		"active_queue_clear_gate": {
+			"required": ACTIVE_QUEUE_CLEAR_REQUIRED,
+			"status": String(queue.get("status", "")),
+			"item_count": int(queue.get("item_count", 0)),
+			"high_priority_count": int(queue.get("high_priority_count", 0)),
+			"medium_priority_count": int(queue.get("medium_priority_count", 0)),
+		},
 		"reporting_policy": {
 			"automatic_tuning": false,
 			"runtime_balance_changes": false,
@@ -116,6 +124,8 @@ func _assert_payload(payload: Dictionary, summary: Dictionary, queue: Dictionary
 	if String(queue.get("queue_signature", "")) == "" or String(queue.get("queue_signature", "")) != String(repeat_queue.get("queue_signature", "")):
 		_fail("Active-scenario combat breadth queue signature is missing or non-deterministic.", payload)
 		return false
+	if ACTIVE_QUEUE_CLEAR_REQUIRED and not _assert_active_queue_clear(queue, payload):
+		return false
 	for gate_key in ["combat_feel_gate", "balance_matrix_gate", "runtime_consequence_gate", "runtime_consequence_matrix_gate"]:
 		var gate: Dictionary = summary.get(gate_key, {}) if summary.get(gate_key, {}) is Dictionary else {}
 		if String(gate.get("status", "")) == "fail":
@@ -126,6 +136,31 @@ func _assert_payload(payload: Dictionary, summary: Dictionary, queue: Dictionary
 		if bool(policy.get(flag, true)):
 			_fail("Active-scenario combat breadth reported forbidden policy flag: %s" % flag, payload)
 			return false
+	return true
+
+func _assert_active_queue_clear(queue: Dictionary, payload: Dictionary) -> bool:
+	if String(queue.get("status", "")) != "clear":
+		_fail("Active-scenario combat breadth tuning queue must remain clear; reopened status: %s top_contributors=%s" % [String(queue.get("status", "")), JSON.stringify(queue.get("top_contributors", []))], payload)
+		return false
+	if int(queue.get("item_count", 0)) != 0:
+		_fail("Active-scenario combat breadth tuning queue reopened with item_count=%d." % int(queue.get("item_count", 0)), payload)
+		return false
+	if int(queue.get("high_priority_count", 0)) != 0 or int(queue.get("medium_priority_count", 0)) != 0:
+		_fail("Active-scenario combat breadth tuning queue reopened priority items: high=%d medium=%d." % [int(queue.get("high_priority_count", 0)), int(queue.get("medium_priority_count", 0))], payload)
+		return false
+	var top_contributors: Array = queue.get("top_contributors", []) if queue.get("top_contributors", []) is Array else []
+	if not top_contributors.is_empty():
+		_fail("Active-scenario combat breadth tuning queue clear status had top contributors: %s" % JSON.stringify(top_contributors), payload)
+		return false
+	var coverage: Dictionary = queue.get("coverage", {}) if queue.get("coverage", {}) is Dictionary else {}
+	for watch_key in ["sample_watch_count", "cohort_watch_count", "gate_item_count", "balance_matrix_failure_count", "combat_feel_failure_count"]:
+		if int(coverage.get(watch_key, 0)) != 0:
+			_fail("Active-scenario combat breadth tuning queue coverage reopened %s=%d." % [watch_key, int(coverage.get(watch_key, 0))], payload)
+			return false
+	var categories: Array = coverage.get("categories", []) if coverage.get("categories", []) is Array else []
+	if not categories.is_empty():
+		_fail("Active-scenario combat breadth tuning queue clear status had categories: %s" % JSON.stringify(categories), payload)
+		return false
 	return true
 
 func _active_authored_scenario_ids() -> Array:
