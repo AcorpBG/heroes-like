@@ -231,6 +231,16 @@
           "y": 1,
           "difficulty": "low",
           "combat_seed": 1201,
+          "enemy_army": {
+            "id": "army_river_pass_ghoul_grove_watch",
+            "name": "River Pass Ghoul Grove Watch",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {"unit_id": "unit_blackbranch_cutthroat", "count": 11},
+              {"unit_id": "unit_mire_slinger", "count": 6},
+              {"unit_id": "unit_bog_brute", "count": 2}
+            ]
+          },
           "object_id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
           "object_placement_id": "object_placement_river_pass_ghoul_grove",
           "primary_class": "neutral_encounter",
@@ -908,7 +918,7 @@
       "encounters": [
         {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201, "enemy_army": {"id": "army_fen_crown_gate_watch", "name": "Fen Crown Gate Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 3}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_blackbranch_cutthroat", "count": 4}]}},
         {"placement_id": "bone_ferry", "encounter_id": "encounter_hollow_mire", "x": 4, "y": 4, "difficulty": "medium", "combat_seed": 3202},
-        {"placement_id": "fen_crown_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 3203}
+        {"placement_id": "fen_crown_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 3203, "enemy_army": {"id": "army_fen_crown_bone_ferry_watch", "name": "Fen Crown Bone Ferry Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 7}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_bog_brute", "count": 2}]}}
       ]
     },
     {
@@ -4053,6 +4063,15 @@
         "y": 52,
         "difficulty": "high",
         "combat_seed": 16406,
+        "enemy_army": {
+          "id": "army_ninefold_basalt_gatehouse_watch",
+          "name": "Ninefold Basalt Gatehouse Watch",
+          "affiliation": "neutral",
+          "stacks": [
+            {"unit_id": "unit_neutral_basalt_wardens", "count": 13},
+            {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 5}
+          ]
+        },
         "object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
         "object_placement_id": "object_placement_ninefold_basalt_gatehouse_watch",
         "primary_class": "neutral_encounter",

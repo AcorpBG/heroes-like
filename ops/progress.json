@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "random-map-generated-setup-pending-retry-surface-20260524-10184",
-  "currentSliceTitle": "Random Map Generated Setup Pending Retry Surface",
+  "currentSliceId": "battle-autoplay-reopened-queue-retune-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Reopened Queue Retune",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed generated-map setup pending/retry surface correction: preview is explicitly pending launch validation, the command reads Validate & Launch, forced validation failures use the normal generated setup surface, retry counts match runtime policy, and focused plus repo validation passed.",
+  "currentSliceNotes": "Completed reopened deterministic battle autoplay queue retune: River Pass Ghoul Grove, Fen Crown Bone Ferry Watch, and Ninefold Basalt Gatehouse Watch now use placement-local authored army overrides; the default queue is clear, active breadth high-priority items are 0, and standard headless balance validation passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T08:22:00Z",
+  "updatedAt": "2026-05-24T09:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,61 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
+      "title": "Battle Autoplay Reopened Queue Retune",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "content/encounters.json",
+        "tests/battle_autoplay_balance_tuning_queue_report.gd",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd"
+      ],
+      "purpose": "Clear the reopened default battle autoplay tuning queue and reduce the active-scenario Basalt Gatehouse outlier through placement-local authored army tuning.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "docs/battle-autoplay-reopened-queue-retune-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The default battle autoplay tuning queue report passes with no current watch items reopened by the targeted samples.",
+        "River Pass Ghoul Grove, Fen Crown Bone Ferry Watch, and Ninefold Basalt Gatehouse Watch use placement-local authored army overrides rather than combat-rule mutation.",
+        "The active-scenario breadth report still samples all active authored encounters with zero stalls, zero invalid orders, and no missing scenario ids, and the Basalt Gatehouse high-priority outlier is reduced or documented.",
+        "Focused combat balance, repository validation, JSON validation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or runtime balance mutation.",
+        "No broad combat model rewrite.",
+        "No new scenario/campaign breadth."
+      ],
+      "startedAt": "2026-05-24T08:40:00Z",
+      "updatedAt": "2026-05-24T09:05:00Z",
+      "completedAt": "2026-05-24T09:05:00Z",
+      "notes": "Completed after battle_autoplay_balance_tuning_queue_report regressed to four medium-priority watch items and active breadth surfaced a high-priority Ninefold Basalt Gatehouse terminal-margin outlier.",
+      "completionEvidence": [
+        "content/scenarios.json now gives river_pass_ghoul_grove, fen_crown_bone_ferry_watch, and ninefold_basalt_gatehouse_watch placement-local enemy_army overrides without changing shared unit stats, shared army groups, or combat rules.",
+        "battle_autoplay_balance_tuning_queue_report.tscn passed with status clear, item_count 0, high_priority_count 0, medium_priority_count 0, and queue_signature 829808c9.",
+        "battle_autoplay_combat_balance_report.tscn passed; River Pass Ghoul Grove is a standard-paced player victory at terminal margin 61, and Fen Crown Bone Ferry Watch is a standard-paced player defeat at terminal margin 66.",
+        "battle_autoplay_active_scenario_breadth_report.tscn passed with 16 active scenarios, 51/51 completed samples, zero stalls, zero invalid orders, no missing scenario ids, queue_signature d8a427ba, and high_priority_count 0.",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going passed all 4 standard cases with no failed checks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
       "title": "Random Map Generated Setup Pending Retry Surface",
@@ -25020,22 +25075,40 @@
     }
   ],
   "lastValidation": {
-    "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
+    "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T08:22:00Z",
+    "updatedAt": "2026-05-24T09:05:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/random_map_generated_overworld_profile_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+      "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/validate_repo.py",
-      "jq empty ops/progress.json",
+      "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+      "jq empty ops/progress.json content/scenarios.json",
       "git diff --check"
     ],
-    "summary": "Generated setup pending/retry surface validation passed: player setup report proves pending launch validation, Validate & Launch labeling, runtime max_attempts=5, forced blocked retry_count=4, successful H3MapEd provenance, and no campaign/authored writeback; generated overworld profile, repo validation, Python compile, JSON validation, and whitespace checks passed."
+    "summary": "Reopened battle autoplay queue retune passed: default tuning queue is clear with item_count 0 and signature 829808c9; active breadth covers 16 active scenarios and 51 authored encounter samples with zero stalls, zero invalid orders, no missing scenario ids, high_priority_count 0, and signature d8a427ba; standard headless balance harness passed 4/4 cases."
   },
-  "active_slice": "random-map-generated-setup-pending-retry-surface-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T08:22:00Z",
+  "active_slice": "battle-autoplay-reopened-queue-retune-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T09:05:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-reopened-queue-retune-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T09:05:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "summary": "Reopened battle autoplay queue retune passed: default queue clear, River Pass Ghoul Grove standard victory margin 61, Fen Crown Bone Ferry Watch standard defeat margin 66, active breadth high_priority_count 0, and standard headless balance harness passed all four cases."
+    },
     {
       "id": "random-map-generated-setup-pending-retry-surface-20260524-10184",
       "status": "passed",
