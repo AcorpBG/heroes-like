@@ -47,33 +47,35 @@ func _run() -> void:
 		"target_turns": TARGET_TURNS,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"normal_market_resource_ids": COMMON_MARKET_RESOURCE_IDS,
+		"authored_town_count": 0,
 		"towns": {},
 		"errors": _errors,
 	}
-	for faction_id in ContentService.get_content_ids(ContentService.FACTIONS_PATH):
+	for town_id in ContentService.get_content_ids(ContentService.TOWNS_PATH):
+		var town_template := ContentService.get_town(town_id)
+		var faction_id := String(town_template.get("faction_id", ""))
 		var faction := ContentService.get_faction(faction_id)
-		var seed_town_id := String(faction.get("seed_town_id", ""))
-		if seed_town_id == "":
+		if town_template.is_empty() or faction.is_empty():
 			continue
-		var town_result := _run_town_case(faction)
-		report["towns"][seed_town_id] = town_result
+		report["authored_town_count"] = int(report.get("authored_town_count", 0)) + 1
+		var town_result := _run_town_case(town_template, faction)
+		report["towns"][town_id] = town_result
 		if not bool(town_result.get("completed", false)):
-			_errors.append("%s did not complete in %d turns" % [seed_town_id, TARGET_TURNS])
+			_errors.append("%s did not complete in %d turns" % [town_id, TARGET_TURNS])
 		if not bool(town_result.get("same_day_reject_ok", false)):
-			_errors.append("%s did not reject same-day second build" % seed_town_id)
+			_errors.append("%s did not reject same-day second build" % town_id)
 		if not bool(town_result.get("build_actions_after_build_blocked", false)):
-			_errors.append("%s build-action surface still exposed same-day build actions" % seed_town_id)
+			_errors.append("%s build-action surface still exposed same-day build actions" % town_id)
 		if not bool(town_result.get("rare_spend_observed", false)):
-			_errors.append("%s never spent its high-tier rare resource through live build rules" % seed_town_id)
+			_errors.append("%s never spent its high-tier rare resource through live build rules" % town_id)
 		if not bool(town_result.get("market_common_only", false)):
-			_errors.append("%s market actions were not bounded to wood/ore" % seed_town_id)
+			_errors.append("%s market actions were not bounded to wood/ore" % town_id)
 	report["ok"] = _errors.is_empty()
 	print("TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT %s" % JSON.stringify(report))
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
-func _run_town_case(faction: Dictionary) -> Dictionary:
-	var town_id := String(faction.get("seed_town_id", ""))
-	var town_template := ContentService.get_town(town_id)
+func _run_town_case(town_template: Dictionary, faction: Dictionary) -> Dictionary:
+	var town_id := String(town_template.get("id", ""))
 	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
 	var target_turns := int(profile.get("target_complete_turns", TARGET_TURNS))
 	var session = _build_runtime_session(town_template, profile)

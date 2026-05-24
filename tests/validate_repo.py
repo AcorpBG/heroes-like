@@ -2644,6 +2644,21 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         errors.append("Town development balance report failed")
         return
     ensure("TOWN_DEVELOPMENT_BALANCE_REPORT" in result.stdout, errors, "Town development balance report did not emit its report marker")
+    report_payload = {}
+    marker = "TOWN_DEVELOPMENT_BALANCE_REPORT "
+    for line in result.stdout.splitlines():
+        if line.startswith(marker):
+            try:
+                report_payload = json.loads(line[len(marker):])
+            except json.JSONDecodeError as exc:
+                errors.append(f"Town development balance report emitted invalid JSON: {exc}")
+            break
+    authored_town_count = int(report_payload.get("authored_town_count", 0)) if isinstance(report_payload, dict) else 0
+    full_ladder_town_count = int(report_payload.get("full_ladder_town_count", 0)) if isinstance(report_payload, dict) else 0
+    town_results = report_payload.get("towns", {}) if isinstance(report_payload, dict) else {}
+    ensure(authored_town_count >= 15, errors, "Town development balance report must cover all authored towns, not just seed towns")
+    ensure(full_ladder_town_count == authored_town_count, errors, "Every authored town must expose its faction seven-building ladder")
+    ensure(isinstance(town_results, dict) and len(town_results) == authored_town_count, errors, "Town development balance report must include one result per authored town")
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
@@ -2672,6 +2687,7 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         "already completed a build order today",
         "rare_spend_events",
         "COMMON_MARKET_RESOURCE_IDS",
+        "authored_town_count",
     ):
         ensure(token in script_text, errors, f"Town development runtime balance report is missing token {token}")
     ensure("res://tests/town_development_runtime_balance_report.gd" in scene_text, errors, "Town development runtime balance scene must load its report script")
@@ -18999,7 +19015,7 @@ def main() -> int:
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
-    print("- seed-town development balance gate proves six faction towns can fully develop within 30 turns under authored profiles and one-build-per-town-per-day enforcement")
+    print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")

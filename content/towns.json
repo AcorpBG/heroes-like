@@ -52,7 +52,14 @@
         "building_quartermasters_depot",
         "building_citadel_pikehall",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_embercourt_granary_lock_exchange",
+        "building_embercourt_tollstone_weir",
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall",
+        "building_embercourt_beacon_court",
+        "building_embercourt_drake_sluice",
+        "building_embercourt_charter_bastion"
       ],
       "spell_library": [
         {
@@ -75,7 +82,25 @@
           "unit_id": "unit_river_guard",
           "count": 4
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "embergrain": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 2,
+          "ore": 2,
+          "embergrain": 1
+        },
+        "rare_resource_id": "embergrain"
+      }
     },
     {
       "id": "town_duskfen",
@@ -129,7 +154,14 @@
         "building_war_drum_circle",
         "building_gorefen_ring",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit"
       ],
       "spell_library": [
         {
@@ -152,7 +184,25 @@
           "unit_id": "unit_bog_brute",
           "count": 5
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "peatwax": 0
+        },
+        "daily_income": {
+          "gold": 1450,
+          "wood": 2,
+          "ore": 2,
+          "peatwax": 1
+        },
+        "rare_resource_id": "peatwax"
+      }
     },
     {
       "id": "town_blackfen_gate",
@@ -196,7 +246,14 @@
         "building_floodtide_forge",
         "building_gorefen_ring",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit"
       ],
       "spell_library": [
         {
@@ -223,7 +280,25 @@
           "unit_id": "unit_mire_slinger",
           "count": 4
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "peatwax": 0
+        },
+        "daily_income": {
+          "gold": 1450,
+          "wood": 2,
+          "ore": 2,
+          "peatwax": 1
+        },
+        "rare_resource_id": "peatwax"
+      }
     },
     {
       "id": "town_highwater_keep",
@@ -332,6 +407,7 @@
         }
       ],
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -346,8 +422,7 @@
           "ore": 2,
           "embergrain": 1
         },
-        "rare_resource_id": "embergrain",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "embergrain"
       }
     },
     {
@@ -397,7 +472,14 @@
         "building_floodtide_forge",
         "building_gorefen_ring",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit"
       ],
       "spell_library": [
         {
@@ -424,7 +506,25 @@
           "unit_id": "unit_mire_slinger",
           "count": 3
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "peatwax": 0
+        },
+        "daily_income": {
+          "gold": 1450,
+          "wood": 2,
+          "ore": 2,
+          "peatwax": 1
+        },
+        "rare_resource_id": "peatwax"
+      }
     },
     {
       "id": "town_reedbarrow_ferry",
@@ -484,7 +584,14 @@
         "building_floodtide_forge",
         "building_gorefen_ring",
         "building_lantern_archive",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit"
       ],
       "spell_library": [
         {
@@ -511,7 +618,25 @@
           "unit_id": "unit_mire_slinger",
           "count": 3
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "peatwax": 0
+        },
+        "daily_income": {
+          "gold": 1450,
+          "wood": 2,
+          "ore": 2,
+          "peatwax": 1
+        },
+        "rare_resource_id": "peatwax"
+      }
     },
     {
       "id": "town_nightglass_redoubt",
@@ -622,6 +747,7 @@
         }
       ],
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -636,8 +762,7 @@
           "ore": 2,
           "peatwax": 1
         },
-        "rare_resource_id": "peatwax",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "peatwax"
       }
     },
     {
@@ -741,6 +866,7 @@
         }
       ],
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -755,8 +881,7 @@
           "ore": 2,
           "aetherglass": 1
         },
-        "rare_resource_id": "aetherglass",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "aetherglass"
       }
     },
     {
@@ -822,7 +947,14 @@
         "building_resonant_exchange",
         "building_harmonic_cloister",
         "building_aurora_spire",
-        "building_starseer_annex"
+        "building_starseer_annex",
+        "building_sunvault_shard_yard",
+        "building_sunvault_lens_gallery",
+        "building_sunvault_mirror_forge",
+        "building_sunvault_harmonic_cloister",
+        "building_sunvault_zenith_observatory",
+        "building_sunvault_aurora_spire",
+        "building_sunvault_daybreak_matrix"
       ],
       "spell_library": [
         {
@@ -854,7 +986,25 @@
           "unit_id": "unit_aurora_ballista",
           "count": 1
         }
-      ]
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "aetherglass": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 2,
+          "ore": 2,
+          "aetherglass": 1
+        },
+        "rare_resource_id": "aetherglass"
+      }
     },
     {
       "id": "town_thornwake_graftroot_caravan",
@@ -942,6 +1092,7 @@
       ],
       "content_status": "six_faction_seed_town_not_scenario_integrated",
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -956,8 +1107,7 @@
           "ore": 2,
           "verdant_grafts": 1
         },
-        "rare_resource_id": "verdant_grafts",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "verdant_grafts"
       }
     },
     {
@@ -1046,6 +1196,7 @@
       ],
       "content_status": "six_faction_seed_town_not_scenario_integrated",
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -1060,8 +1211,7 @@
           "ore": 2,
           "brass_scrip": 1
         },
-        "rare_resource_id": "brass_scrip",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "brass_scrip"
       }
     },
     {
@@ -1149,6 +1299,7 @@
       ],
       "content_status": "six_faction_seed_town_not_scenario_integrated",
       "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
@@ -1163,8 +1314,7 @@
           "ore": 2,
           "memory_salt": 1
         },
-        "rare_resource_id": "memory_salt",
-        "profile_id": "seed_town_30_turn_full_development_v1"
+        "rare_resource_id": "memory_salt"
       }
     },
     {
@@ -1254,7 +1404,25 @@
           "count": 2
         }
       ],
-      "content_status": "breadth_secondary_town_ninefold_compatible"
+      "content_status": "breadth_secondary_town_ninefold_compatible",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "verdant_grafts": 0
+        },
+        "daily_income": {
+          "gold": 1350,
+          "wood": 2,
+          "ore": 2,
+          "verdant_grafts": 1
+        },
+        "rare_resource_id": "verdant_grafts"
+      }
     },
     {
       "id": "town_brasshollow_clauseworks_depot",
@@ -1343,7 +1511,25 @@
           "count": 2
         }
       ],
-      "content_status": "breadth_secondary_town_ninefold_compatible"
+      "content_status": "breadth_secondary_town_ninefold_compatible",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "brass_scrip": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 2,
+          "ore": 2,
+          "brass_scrip": 1
+        },
+        "rare_resource_id": "brass_scrip"
+      }
     },
     {
       "id": "town_veilmourn_fogchart_mooring",
@@ -1431,7 +1617,25 @@
           "count": 2
         }
       ],
-      "content_status": "breadth_secondary_town_ninefold_compatible"
+      "content_status": "breadth_secondary_town_ninefold_compatible",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "memory_salt": 0
+        },
+        "daily_income": {
+          "gold": 1400,
+          "wood": 2,
+          "ore": 2,
+          "memory_salt": 1
+        },
+        "rare_resource_id": "memory_salt"
+      }
     }
   ]
 }
