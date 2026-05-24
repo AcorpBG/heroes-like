@@ -343,7 +343,7 @@ static func town_governor_town_report(
 	if include_projected_build and not selected_build.is_empty():
 		var building_id := String(selected_build.get("building_id", ""))
 		var cost: Dictionary = selected_build.get("cost", {})
-		OverworldRulesScript.apply_market_cost_coverage(projected_town, projected_treasury, cost)
+		OverworldRulesScript.apply_market_cost_coverage(projected_town, projected_treasury, cost, int(session.day))
 		_spend_from_pool(projected_treasury, cost)
 		var built_buildings = projected_town.get("built_buildings", [])
 		if not (built_buildings is Array):
@@ -397,7 +397,7 @@ static func town_build_pressure_report(
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
 		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
-		breakdown["affordable"] = OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost)
+		breakdown["affordable"] = OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day))
 		breakdown["building_id"] = String(building_id)
 		breakdown["building_label"] = String(building.get("name", building_id))
 		breakdown["category"] = String(building.get("category", "support"))
@@ -911,7 +911,7 @@ static func _build_in_enemy_towns(
 		var building_id = String(build_choice.get("building_id", ""))
 		var building = build_choice.get("building", {})
 		var cost = build_choice.get("cost", {})
-		OverworldRulesScript.apply_market_cost_coverage(town, treasury, cost)
+		OverworldRulesScript.apply_market_cost_coverage(town, treasury, cost, int(session.day))
 		_spend_from_pool(treasury, cost)
 		var built_buildings = town.get("built_buildings", [])
 		if not (built_buildings is Array):
@@ -1674,7 +1674,7 @@ static func _best_build_candidate(
 			continue
 		var building = status.get("building", {})
 		var cost = building.get("cost", {})
-		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost):
+		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
 			continue
 		var score = _score_build_candidate(session, town, building, cost, config, faction_id)
 		if score > best_score:

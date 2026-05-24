@@ -28,6 +28,10 @@ const LIVE_STOCKPILE_RESOURCE_KEYS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]
+const MARKET_BASE_BUY_CAP := 6
+const MARKET_BASE_SELL_CAP := 8
+const MARKET_SPECIALTY_CAP_BONUS := 2
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
@@ -240,7 +244,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	if not session.overworld.has("towns") or not (session.overworld.get("towns") is Array):
 		session.overworld["towns"] = _build_scenario_town_states(scenario.get("towns", []))
 	else:
-		session.overworld["towns"] = _normalize_towns(session.overworld.get("towns", []))
+		session.overworld["towns"] = _normalize_towns(session.overworld.get("towns", []), int(session.day))
 	_normalize_active_town_visit_context(session)
 
 	if not session.overworld.has("resource_nodes") or not (session.overworld.get("resource_nodes") is Array):
@@ -1424,7 +1428,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	var building: Dictionary = build_status.get("building", {})
 	var cost = building.get("cost", {})
 	if not _can_afford(session, cost):
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost)
+		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost, int(session.day))
 		var shortfall := _describe_cost_shortfall(readiness)
 		return {
 			"ok": false,
@@ -1493,7 +1497,7 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 	var recruit_count = available_count if requested_count <= 0 else min(requested_count, available_count)
 	recruit_count = min(recruit_count, max_affordable)
 	if recruit_count <= 0:
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), adjusted_unit_cost)
+		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), adjusted_unit_cost, int(session.day))
 		var shortfall := _describe_cost_shortfall(readiness)
 		return {
 			"ok": false,
@@ -4288,18 +4292,18 @@ static func _end_turn_resolution_summary(session: SessionStateStoreScript.Sessio
 		parts.append("enemy %s" % _short_player_text(enemy_summary, 96))
 	return " | ".join(parts)
 
-static func can_afford_cost_with_town_market(town: Dictionary, pool: Dictionary, cost: Variant) -> bool:
-	return bool(_town_market_cost_coverage(town, pool, cost).get("affordable", false))
+static func can_afford_cost_with_town_market(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> bool:
+	return bool(_town_market_cost_coverage(town, pool, cost, current_day).get("affordable", false))
 
-static func apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant) -> Array:
-	return _apply_market_cost_coverage(town, pool, cost)
+static func apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
+	return _apply_market_cost_coverage(town, pool, cost, current_day)
 
-static func town_cost_readiness(town: Dictionary, pool: Dictionary, cost: Variant) -> Dictionary:
-	var readiness := _town_market_cost_coverage(town, pool, cost)
+static func town_cost_readiness(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
+	var readiness := _town_market_cost_coverage(town, pool, cost, current_day)
 	var market_actions := []
 	if bool(readiness.get("market_affordable", false)):
 		var simulated_pool: Dictionary = readiness.get("pool", {}).duplicate(true)
-		market_actions = _apply_market_cost_coverage(town, simulated_pool, readiness.get("cost", {}))
+		market_actions = _apply_market_cost_coverage(town, simulated_pool, readiness.get("cost", {}), current_day)
 	readiness["market_actions"] = market_actions
 	return readiness
 
@@ -4826,7 +4830,7 @@ static func _normalize_army_state(army: Dictionary) -> Dictionary:
 		"stacks": normalized_stacks,
 	}
 
-static func _normalize_towns(towns: Array) -> Array:
+static func _normalize_towns(towns: Array, current_day: int = -1) -> Array:
 	var normalized := []
 	for town in towns:
 		if not (town is Dictionary):
@@ -4848,6 +4852,7 @@ static func _normalize_towns(towns: Array) -> Array:
 			"front": _normalize_town_front_state(town.get("front", {})),
 			"occupation": _normalize_town_occupation_state(town.get("occupation", {})),
 			"last_build_day": max(0, int(town.get("last_build_day", 0))),
+			"market_usage": _normalize_town_market_usage_state(town.get("market_usage", {}), current_day),
 		}
 		_copy_town_runtime_metadata(normalized_town, town)
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
@@ -9148,7 +9153,7 @@ static func _town_response_actions(session: SessionStateStoreScript.SessionData,
 	var movement_left := int(session.overworld.get("movement", {}).get("current", 0))
 	if bool(recovery.get("active", false)):
 		var stabilize_cost = stabilize_profile.get("resource_cost", {})
-		var stabilize_readiness := town_cost_readiness(town, session.overworld.get("resources", {}), stabilize_cost)
+		var stabilize_readiness := town_cost_readiness(town, session.overworld.get("resources", {}), stabilize_cost, int(session.day))
 		var stabilize_market_summary := ""
 		if bool(stabilize_readiness.get("market_affordable", false)) and not bool(stabilize_readiness.get("direct_affordable", false)):
 			stabilize_market_summary = _summarize_market_actions(stabilize_readiness.get("market_actions", []))
@@ -9189,7 +9194,7 @@ static func _town_response_actions(session: SessionStateStoreScript.SessionData,
 		if not threatened and not bool(recovery.get("active", false)) and int(logistics.get("support_gap", 0)) <= 0 and not bool(capital_project.get("vulnerable", false)):
 			continue
 		var cost = response_state.get("resource_cost", {})
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost)
+		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost, int(session.day))
 		var market_summary := ""
 		if bool(readiness.get("market_affordable", false)) and not bool(readiness.get("direct_affordable", false)):
 			market_summary = _summarize_market_actions(readiness.get("market_actions", []))
@@ -9335,6 +9340,11 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 	var specialty_summary := String(state.get("specialty_summary", ""))
 	if specialty_summary != "":
 		lines.append("- %s" % specialty_summary)
+	var usage := _normalize_town_market_usage_state(
+		town.get("market_usage", {}),
+		int(session.day) if session != null else -1
+	)
+	lines.append("- Weekly caps %s." % _market_usage_summary(state, usage))
 	var bulk_resource := String(state.get("bulk_resource", ""))
 	var bulk_amount := int(state.get("bulk_amount", 0))
 	if bulk_resource != "" and bulk_amount > 1:
@@ -9348,8 +9358,11 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 				int(bulk_sell.get("gold_value", 0)),
 			]
 		)
-	var action_count := _town_market_actions(session, town).size()
-	lines.append("- %d exchange order%s ready." % [action_count, "" if action_count == 1 else "s"])
+	var ready_count := 0
+	for action in _town_market_actions(session, town):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			ready_count += 1
+	lines.append("- %d exchange order%s ready." % [ready_count, "" if ready_count == 1 else "s"])
 	return lines
 
 static func _town_market_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
@@ -9359,7 +9372,7 @@ static func _town_market_actions(session: SessionStateStoreScript.SessionData, t
 	var state := _town_market_state(town)
 	if not bool(state.get("active", false)):
 		return actions
-	var resource_order := ["wood", "ore"]
+	var resource_order := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
 	var bulk_resource := String(state.get("bulk_resource", ""))
 	if bulk_resource != "" and bulk_resource in resource_order:
 		resource_order.erase(bulk_resource)
@@ -9369,29 +9382,45 @@ static func _town_market_actions(session: SessionStateStoreScript.SessionData, t
 			var quote := _market_quote_from_state(state, action_type, resource_key, 1)
 			if quote.is_empty():
 				continue
-			actions.append(_market_action_entry(session, state, quote))
+			actions.append(_market_action_entry(session, town, state, quote))
 	if bulk_resource != "" and int(state.get("bulk_amount", 0)) > 1:
 		for action_type in ["buy", "sell"]:
 			var bulk_quote := _market_quote_from_state(state, action_type, bulk_resource, int(state.get("bulk_amount", 0)))
 			if bulk_quote.is_empty():
 				continue
-			actions.append(_market_action_entry(session, state, bulk_quote))
+			actions.append(_market_action_entry(session, town, state, bulk_quote))
 	return actions
 
-static func _market_action_entry(session: SessionStateStoreScript.SessionData, state: Dictionary, quote: Dictionary) -> Dictionary:
+static func _market_action_entry(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	state: Dictionary,
+	quote: Dictionary
+) -> Dictionary:
 	var action_type := String(quote.get("action_type", ""))
 	var resource_key := String(quote.get("resource", ""))
 	var amount := int(quote.get("amount", 0))
-	var disabled := false
+	var cap_state := _market_cap_state_for_quote(
+		town,
+		state,
+		quote,
+		int(session.day) if session != null else -1
+	)
+	var disabled := int(cap_state.get("remaining", 0)) < amount
+	var disabled_reason := "Weekly market cap reached for %s %s." % [resource_key, action_type] if disabled else ""
 	var summary := "%s | %s | %s" % [
 		String(quote.get("summary", "")),
 		String(quote.get("rate_summary", "")),
 		String(quote.get("building_summary", "")),
 	]
-	if action_type == "buy":
-		disabled = not _can_afford(session, quote.get("cost", {}))
-	else:
-		disabled = not _can_afford(session, quote.get("cost", {}))
+	summary = "%s | Weekly cap %d/%d" % [
+		summary,
+		int(cap_state.get("used", 0)),
+		int(cap_state.get("limit", 0)),
+	]
+	if not _can_afford(session, quote.get("cost", {})):
+		disabled = true
+		disabled_reason = "Insufficient reserves for this exchange."
 	return {
 		"id": "market:%s:%s:%d" % [action_type, resource_key, amount],
 		"label": "%s %d %s" % [
@@ -9401,6 +9430,12 @@ static func _market_action_entry(session: SessionStateStoreScript.SessionData, s
 		],
 		"summary": summary,
 		"disabled": disabled,
+		"disabled_reason": disabled_reason,
+		"cap_week": int(cap_state.get("week", 1)),
+		"cap_used": int(cap_state.get("used", 0)),
+		"cap_limit": int(cap_state.get("limit", 0)),
+		"cap_remaining": int(cap_state.get("remaining", 0)),
+		"refresh_cadence": String(cap_state.get("refresh_cadence", "weekly")),
 	}
 
 static func _execute_town_market_action(
@@ -9416,15 +9451,38 @@ static func _execute_town_market_action(
 	var action_type := String(parts[1])
 	var resource_key := String(parts[2])
 	var amount = max(0, int(parts[3]))
-	var quote := _town_market_quote(town, action_type, resource_key, amount)
+	var town_result := _find_town_by_placement(session, String(town.get("placement_id", "")))
+	var live_town: Dictionary = town_result.get("town", town) if town_result.get("town", town) is Dictionary else town
+	var state := _town_market_state(live_town)
+	var quote := _market_quote_from_state(state, action_type, resource_key, amount)
 	if quote.is_empty():
-		return {"ok": false, "message": "That exchange order is not available in %s." % _town_name(town)}
+		return {"ok": false, "message": "That exchange order is not available in %s." % _town_name(live_town)}
+	var cap_state := _market_cap_state_for_quote(live_town, state, quote, int(session.day))
+	if int(cap_state.get("remaining", 0)) < amount:
+		return {
+			"ok": false,
+			"message": "Weekly market cap reached for %s %s in %s." % [
+				resource_key,
+				action_type,
+				_town_name(live_town),
+			],
+		}
 	var cost = quote.get("cost", {})
 	if not _can_afford(session, cost):
 		var verb := "buy" if action_type == "buy" else "sell"
-		return {"ok": false, "message": "Insufficient reserves to %s through %s." % [verb, _town_name(town)]}
+		return {"ok": false, "message": "Insufficient reserves to %s through %s." % [verb, _town_name(live_town)]}
 	_spend_resources(session, cost)
 	_add_resources(session, quote.get("gain", {}))
+	var usage := _normalize_town_market_usage_state(live_town.get("market_usage", {}), int(session.day))
+	var bucket: Dictionary = usage.get(action_type, {}) if usage.get(action_type, {}) is Dictionary else _empty_market_usage_bucket()
+	bucket[resource_key] = int(bucket.get(resource_key, 0)) + amount
+	usage[action_type] = bucket
+	live_town["market_usage"] = usage
+	if int(town_result.get("index", -1)) >= 0:
+		var towns = session.overworld.get("towns", [])
+		if towns is Array:
+			towns[int(town_result.get("index", -1))] = live_town
+			session.overworld["towns"] = towns
 	var amount_label := "%d %s" % [amount, resource_key]
 	if action_type == "buy":
 		return _finalize_action_result(
@@ -9432,7 +9490,7 @@ static func _execute_town_market_action(
 			true,
 			"Bought %s in %s for %d gold through %s." % [
 				amount_label,
-				_town_name(town),
+				_town_name(live_town),
 				int(quote.get("gold_value", 0)),
 				String(quote.get("building_name", "the exchange")),
 			]
@@ -9442,7 +9500,7 @@ static func _execute_town_market_action(
 		true,
 		"Sold %s in %s for %d gold through %s." % [
 			amount_label,
-			_town_name(town),
+			_town_name(live_town),
 			int(quote.get("gold_value", 0)),
 			String(quote.get("building_name", "the exchange")),
 		]
@@ -9457,6 +9515,9 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"building_name": "",
 		"buy_rates": {"wood": 0, "ore": 0},
 		"sell_rates": {"wood": 0, "ore": 0},
+		"buy_caps": {"wood": 0, "ore": 0},
+		"sell_caps": {"wood": 0, "ore": 0},
+		"refresh_cadence": "weekly",
 		"bulk_resource": "",
 		"bulk_amount": 0,
 		"specialty_summary": "",
@@ -9488,7 +9549,7 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
 	var buy_rates := {}
 	var sell_rates := {}
-	for resource_key in ["wood", "ore"]:
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		var abundance := _market_resource_abundance_score(faction.get("economy", {}), town_template.get("economy", {}), resource_key)
 		var buy_rate := 740 - (abundance * 35)
 		var sell_rate := 280 + (abundance * 30)
@@ -9523,11 +9584,12 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		bulk_resource = "ore"
 		specialty_summary = "Resonant relay brokers tighten ore rates and open double-ore lots for crystal feed and battery upkeep."
 	var exchange_value := 0
-	for resource_key in ["wood", "ore"]:
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		exchange_value += int(sell_rates.get(resource_key, 0))
 		exchange_value += max(0, 900 - int(buy_rates.get(resource_key, 0)))
 	if bulk_resource != "":
 		exchange_value += 120
+	var caps := _market_caps_for_profile(profile_id)
 	return {
 		"active": true,
 		"tier": tier,
@@ -9536,11 +9598,93 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"building_name": String(market_building.get("name", market_building_id)),
 		"buy_rates": buy_rates,
 		"sell_rates": sell_rates,
+		"buy_caps": caps.get("buy_caps", {}),
+		"sell_caps": caps.get("sell_caps", {}),
+		"refresh_cadence": String(caps.get("refresh_cadence", "weekly")),
 		"bulk_resource": bulk_resource,
 		"bulk_amount": 2 if bulk_resource != "" else 0,
 		"specialty_summary": specialty_summary,
 		"exchange_value": exchange_value,
 	}
+
+static func _market_caps_for_profile(profile_id: String) -> Dictionary:
+	var buy_caps := _empty_market_usage_bucket(MARKET_BASE_BUY_CAP)
+	var sell_caps := _empty_market_usage_bucket(MARKET_BASE_SELL_CAP)
+	match profile_id:
+		"river":
+			buy_caps["wood"] = MARKET_BASE_BUY_CAP + MARKET_SPECIALTY_CAP_BONUS
+			sell_caps["wood"] = MARKET_BASE_SELL_CAP + MARKET_SPECIALTY_CAP_BONUS
+		"resonant":
+			buy_caps["ore"] = MARKET_BASE_BUY_CAP + MARKET_SPECIALTY_CAP_BONUS
+			sell_caps["ore"] = MARKET_BASE_SELL_CAP + MARKET_SPECIALTY_CAP_BONUS
+	return {
+		"refresh_cadence": "weekly",
+		"buy_caps": buy_caps,
+		"sell_caps": sell_caps,
+	}
+
+static func _empty_market_usage_bucket(default_value: int = 0) -> Dictionary:
+	var bucket := {}
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+		bucket[resource_key] = default_value
+	return bucket
+
+static func _normalize_market_usage_bucket(value: Variant) -> Dictionary:
+	var bucket := _empty_market_usage_bucket()
+	if not (value is Dictionary):
+		return bucket
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+		bucket[resource_key] = max(0, int(value.get(resource_key, 0)))
+	return bucket
+
+static func _normalize_town_market_usage_state(value: Variant, current_day: int = -1) -> Dictionary:
+	var current_week: int = _week_of_day(current_day) if current_day > 0 else 1
+	var source: Dictionary = value if value is Dictionary else {}
+	var source_week := int(source.get("week", current_week))
+	var usage_week: int = current_week if current_day > 0 else max(1, source_week)
+	var should_reset: bool = current_day > 0 and source_week != usage_week
+	return {
+		"week": usage_week,
+		"refresh_cadence": "weekly",
+		"buy": _empty_market_usage_bucket() if should_reset else _normalize_market_usage_bucket(source.get("buy", {})),
+		"sell": _empty_market_usage_bucket() if should_reset else _normalize_market_usage_bucket(source.get("sell", {})),
+	}
+
+static func _market_cap_state_for_quote(
+	town: Dictionary,
+	state: Dictionary,
+	quote: Dictionary,
+	current_day: int = -1
+) -> Dictionary:
+	var action_type := String(quote.get("action_type", ""))
+	var resource_key := String(quote.get("resource", ""))
+	var usage := _normalize_town_market_usage_state(town.get("market_usage", {}), current_day)
+	var caps: Dictionary = state.get("%s_caps" % action_type, {}) if state.get("%s_caps" % action_type, {}) is Dictionary else {}
+	var bucket: Dictionary = usage.get(action_type, {}) if usage.get(action_type, {}) is Dictionary else {}
+	var limit: int = max(0, int(caps.get(resource_key, 0)))
+	var used := clampi(int(bucket.get(resource_key, 0)), 0, limit)
+	return {
+		"week": int(usage.get("week", 1)),
+		"refresh_cadence": String(state.get("refresh_cadence", "weekly")),
+		"limit": limit,
+		"used": used,
+		"remaining": max(0, limit - used),
+	}
+
+static func _market_usage_summary(state: Dictionary, usage: Dictionary) -> String:
+	var parts := []
+	for action_type in ["buy", "sell"]:
+		var caps: Dictionary = state.get("%s_caps" % action_type, {}) if state.get("%s_caps" % action_type, {}) is Dictionary else {}
+		var bucket: Dictionary = usage.get(action_type, {}) if usage.get(action_type, {}) is Dictionary else {}
+		var resource_parts := []
+		for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+			resource_parts.append("%s %d/%d" % [
+				resource_key,
+				int(bucket.get(resource_key, 0)),
+				int(caps.get(resource_key, 0)),
+			])
+		parts.append("%s %s" % [action_type, ", ".join(resource_parts)])
+	return "; ".join(parts)
 
 static func _market_resource_abundance_score(faction_economy: Variant, town_economy: Variant, resource_key: String) -> int:
 	var score := 0
@@ -9562,7 +9706,7 @@ static func _town_market_quote(town: Dictionary, action_type: String, resource_k
 static func _market_quote_from_state(state: Dictionary, action_type: String, resource_key: String, amount: int) -> Dictionary:
 	if not bool(state.get("active", false)):
 		return {}
-	if resource_key not in ["wood", "ore"]:
+	if resource_key not in NORMAL_MARKET_RESOURCE_KEYS:
 		return {}
 	var normalized_amount = max(0, amount)
 	if normalized_amount <= 0:
@@ -9610,7 +9754,7 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 		"rate_summary": rate_summary,
 	}
 
-static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant) -> Dictionary:
+static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
 	var state := _town_market_state(town)
 	var normalized_pool := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(pool))
 	var normalized_cost := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(cost))
@@ -9632,17 +9776,26 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 		}
 	var required_gold_total := int(normalized_cost.get("gold", 0))
 	var liquidatable_gold := 0
-	for resource_key in ["wood", "ore"]:
+	var market_cap_blockers := []
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		var required_amount := int(normalized_cost.get(resource_key, 0))
 		var current_amount := int(normalized_pool.get(resource_key, 0))
 		var deficit = max(0, required_amount - current_amount)
 		var surplus = max(0, current_amount - required_amount)
 		if deficit > 0:
-			required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
+			var buy_quote := _market_quote_from_state(state, "buy", resource_key, deficit)
+			var buy_remaining := int(_market_cap_state_for_quote(town, state, buy_quote, current_day).get("remaining", deficit))
+			if current_day > 0 and buy_remaining < deficit:
+				market_cap_blockers.append("buy %s %d/%d" % [resource_key, buy_remaining, deficit])
+			else:
+				required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
 		if surplus > 0:
-			liquidatable_gold += surplus * int(state.get("sell_rates", {}).get(resource_key, 0))
+			var sell_quote := _market_quote_from_state(state, "sell", resource_key, surplus)
+			var sell_remaining := int(_market_cap_state_for_quote(town, state, sell_quote, current_day).get("remaining", surplus))
+			var sellable_surplus: int = surplus if current_day <= 0 else min(surplus, sell_remaining)
+			liquidatable_gold += sellable_surplus * int(state.get("sell_rates", {}).get(resource_key, 0))
 	var available_gold_total := int(normalized_pool.get("gold", 0)) + liquidatable_gold
-	var market_affordable := available_gold_total >= required_gold_total
+	var market_affordable := available_gold_total >= required_gold_total and market_cap_blockers.is_empty()
 	return {
 		"affordable": market_affordable,
 		"direct_affordable": direct_affordable,
@@ -9654,10 +9807,11 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 		"liquidatable_gold": liquidatable_gold,
 		"available_gold_total": available_gold_total,
 		"required_gold_total": required_gold_total,
+		"market_cap_blockers": market_cap_blockers,
 	}
 
-static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant) -> Array:
-	var coverage := _town_market_cost_coverage(town, pool, cost)
+static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
+	var coverage := _town_market_cost_coverage(town, pool, cost, current_day)
 	if not bool(coverage.get("affordable", false)):
 		return []
 	var state := _town_market_state(town)
@@ -9666,7 +9820,8 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 	var normalized_cost: Dictionary = coverage.get("cost", {})
 	var required_gold_total := int(coverage.get("required_gold_total", 0))
 	var actions := []
-	var sell_order := ["wood", "ore"]
+	var local_usage := _normalize_town_market_usage_state(town.get("market_usage", {}), current_day)
+	var sell_order := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
 	sell_order.sort_custom(func(a: String, b: String) -> bool:
 		return int(state.get("sell_rates", {}).get(a, 0)) > int(state.get("sell_rates", {}).get(b, 0))
 	)
@@ -9676,18 +9831,34 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 			var sell_quote := _market_quote_from_state(state, "sell", resource_key, 1)
 			if sell_quote.is_empty():
 				break
+			if current_day > 0:
+				var sell_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, sell_quote, current_day)
+				if int(sell_cap.get("remaining", 0)) <= 0:
+					break
 			_apply_resource_transaction_to_pool(pool, sell_quote.get("cost", {}), sell_quote.get("gain", {}))
+			if current_day > 0:
+				var sell_bucket: Dictionary = local_usage.get("sell", {})
+				sell_bucket[resource_key] = int(sell_bucket.get(resource_key, 0)) + 1
+				local_usage["sell"] = sell_bucket
 			surplus -= 1
 			actions.append("%s sold 1 %s for %d gold" % [_town_name(town), resource_key, int(sell_quote.get("gold_value", 0))])
 		if int(pool.get("gold", 0)) >= required_gold_total:
 			break
-	for resource_key in ["wood", "ore"]:
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		var deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
 		while deficit > 0:
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, 1)
 			if buy_quote.is_empty() or int(pool.get("gold", 0)) < int(buy_quote.get("gold_value", 0)):
 				return actions
+			if current_day > 0:
+				var buy_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, buy_quote, current_day)
+				if int(buy_cap.get("remaining", 0)) <= 0:
+					return actions
 			_apply_resource_transaction_to_pool(pool, buy_quote.get("cost", {}), buy_quote.get("gain", {}))
+			if current_day > 0:
+				var buy_bucket: Dictionary = local_usage.get("buy", {})
+				buy_bucket[resource_key] = int(buy_bucket.get(resource_key, 0)) + 1
+				local_usage["buy"] = buy_bucket
 			deficit -= 1
 			actions.append("%s bought 1 %s for %d gold" % [_town_name(town), resource_key, int(buy_quote.get("gold_value", 0))])
 	return actions
