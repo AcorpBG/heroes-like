@@ -2126,6 +2126,519 @@
       "pressure_bonus": 1
     },
     {
+      "id": "building_thornwake_rootweave_tithe",
+      "name": "Rootweave Tithe",
+      "category": "economy",
+      "description": "Rootweave tithes turn cut timber, graft rights, and caravan shelter into a steadier Thornwake ledger.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 120,
+        "wood": 1
+      }
+    },
+    {
+      "id": "building_thornwake_bramble_marshal_moot",
+      "name": "Bramble Marshal Moot",
+      "category": "support",
+      "description": "Marshal moots assign bramble wardens, seed scouts, and root-road escorts to every claimed path.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_market_square",
+        "building_thornwake_rootweave_tithe"
+      ],
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_spore_oath_chantry",
+      "name": "Spore-Oath Chantry",
+      "category": "magic",
+      "description": "Chantries bind pollen vows, mender rites, and root whispers into a slower but tougher spell discipline.",
+      "cost": {
+        "gold": 1650,
+        "wood": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_pollen_litany",
+        "building_thornwake_bramble_marshal_moot"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_thornwake_thornwarden_husk_yard",
+      "name": "Thornwarden Husk Yard",
+      "category": "support",
+      "description": "Husk yards grow spare barkmantles, thorn screens, and living barricades for defensive counterpressure.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_bramblewall_coppice",
+        "building_thornwake_spore_oath_chantry"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_verdant_concord_seat",
+      "name": "Verdant Concord Seat",
+      "category": "civic",
+      "description": "A rare graft-fed concord seat binds old grove law, bastion musters, and root-road command into one town covenant.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "verdant_grafts": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_worldroot_gate",
+        "building_thornwake_thornwarden_husk_yard"
+      ],
+      "income": {
+        "gold": 170
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_ledger_mint",
+      "name": "Ledger Mint",
+      "category": "economy",
+      "description": "Stamped ledgers mint ore debt into spendable authority for Combine builds and contract crews.",
+      "cost": {
+        "gold": 900,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 140,
+        "ore": 1
+      }
+    },
+    {
+      "id": "building_brasshollow_foreman_clausehouse",
+      "name": "Foreman Clausehouse",
+      "category": "support",
+      "description": "Foreman courts bind shift rosters, rivet crews, and penalty clauses into faster garrison response.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_market_square",
+        "building_brasshollow_ledger_mint"
+      ],
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_caliper_sanctum",
+      "name": "Caliper Sanctum",
+      "category": "magic",
+      "description": "Measured sanctums teach heat rites, stone clauses, and furnace prayers with exacting contract cadence.",
+      "cost": {
+        "gold": 1650,
+        "wood": 1,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_heatwright_vestry",
+        "building_brasshollow_foreman_clausehouse"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_brasshollow_redline_assembly_yard",
+      "name": "Redline Assembly Yard",
+      "category": "support",
+      "description": "Redline yards stack spare plates, pressure shells, and contract cranes around the town wall.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 3
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_gauge_arsenal",
+        "building_brasshollow_caliper_sanctum"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_brassbound_directorate",
+      "name": "Brassbound Directorate",
+      "category": "civic",
+      "description": "A rare scrip directorate seals foundry law, titan warrants, and rail claims into a single late command office.",
+      "cost": {
+        "gold": 3650,
+        "wood": 2,
+        "ore": 3,
+        "brass_scrip": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_titan_charter_hall",
+        "building_brasshollow_redline_assembly_yard"
+      ],
+      "income": {
+        "gold": 180,
+        "ore": 1
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 2
+    },
+    {
+      "id": "building_veilmourn_salt_counting_house",
+      "name": "Salt Counting House",
+      "category": "economy",
+      "description": "Counting houses tally wreck shares, salt debts, and fog pilots into reliable harbor coin.",
+      "cost": {
+        "gold": 900,
+        "wood": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_town_hall"
+      ],
+      "income": {
+        "gold": 120
+      }
+    },
+    {
+      "id": "building_veilmourn_mourner_pilot_guild",
+      "name": "Mourner Pilot Guild",
+      "category": "support",
+      "description": "Pilot guilds assign bell routes, masked skiffs, and return signals to every fogward sortie.",
+      "cost": {
+        "gold": 1300,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_market_square",
+        "building_veilmourn_salt_counting_house"
+      ],
+      "readiness_bonus": 3,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_tideglass_chapel",
+      "name": "Tideglass Chapel",
+      "category": "magic",
+      "description": "Tideglass chapels rehearse obituary marks, fog steps, and memory bells for disciplined raiding magic.",
+      "cost": {
+        "gold": 1650,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_wake_oratory",
+        "building_veilmourn_mourner_pilot_guild"
+      ],
+      "readiness_bonus": 5,
+      "spell_tier": 2
+    },
+    {
+      "id": "building_veilmourn_drowned_map_room",
+      "name": "Drowned Map Room",
+      "category": "support",
+      "description": "Salt-warped charts preserve hidden harbors, retreat lanes, and black-sail staging marks.",
+      "cost": {
+        "gold": 2150,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_black_sail_loft",
+        "building_veilmourn_tideglass_chapel"
+      ],
+      "readiness_bonus": 7,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_memory_rite_court",
+      "name": "Memory-Rite Court",
+      "category": "civic",
+      "description": "A rare salt court binds leviathan soundings, dead-route law, and fog command into one late harbor rite.",
+      "cost": {
+        "gold": 2650,
+        "wood": 2,
+        "ore": 2,
+        "memory_salt": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_leviathan_sounding",
+        "building_veilmourn_drowned_map_room"
+      ],
+      "income": {
+        "gold": 180
+      },
+      "readiness_bonus": 6,
+      "pressure_bonus": 2
+    },
+    {
+      "id": "building_thornwake_root_cairn_watch",
+      "name": "Root-Cairn Watch",
+      "category": "support",
+      "description": "Root cairns mark hidden sentry knots and keep border wardens supplied through overgrown roads.",
+      "cost": {
+        "gold": 1150,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_rootroad_markers"
+      ],
+      "readiness_bonus": 4,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_sap_chandler_grove",
+      "name": "Sap-Chandler Grove",
+      "category": "economy",
+      "description": "Chandler groves turn resin, graft wax, and caravan shelter into slow but reliable settlement income.",
+      "cost": {
+        "gold": 1750,
+        "wood": 2,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_loam_ledger",
+        "building_thornwake_rootweave_tithe"
+      ],
+      "income": {
+        "gold": 160,
+        "wood": 1
+      }
+    },
+    {
+      "id": "building_thornwake_bastion_seed_conclave",
+      "name": "Bastion Seed Conclave",
+      "category": "civic",
+      "description": "A conclave of living bastion seeds coordinates old-grove law, late reserves, and root-wall recovery.",
+      "cost": {
+        "gold": 2400,
+        "wood": 2,
+        "ore": 2,
+        "verdant_grafts": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_old_grove_accord",
+        "building_thornwake_spore_oath_chantry"
+      ],
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_mycorrhizal_store",
+      "name": "Mycorrhizal Store",
+      "category": "economy",
+      "description": "Deep fungal stores preserve root-road feed, spare grafts, and caravan rations for prolonged town growth.",
+      "cost": {
+        "gold": 1850,
+        "wood": 2,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_sap_chandler_grove",
+        "building_thornwake_root_cairn_watch"
+      ],
+      "income": {
+        "gold": 150,
+        "wood": 1
+      }
+    },
+    {
+      "id": "building_thornwake_rootlaw_moot",
+      "name": "Rootlaw Moot",
+      "category": "civic",
+      "description": "Rootlaw moots settle grove claims and bind wardens, menders, and bastion seeds into one late command chain.",
+      "cost": {
+        "gold": 2450,
+        "wood": 2,
+        "ore": 2,
+        "verdant_grafts": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_thornwake_bastion_seed_conclave",
+        "building_thornwake_mycorrhizal_store"
+      ],
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_quenchwright_bay",
+      "name": "Quenchwright Bay",
+      "category": "support",
+      "description": "Quenchwright bays keep spare plates, cooling tanks, and rivet crews ready for rapid field repairs.",
+      "cost": {
+        "gold": 1150,
+        "wood": 1,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_scalehouse"
+      ],
+      "readiness_bonus": 4,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_rail_tax_office",
+      "name": "Rail Tax Office",
+      "category": "economy",
+      "description": "Rail tax offices weigh every furnace shipment and turn late extraction into audited gold.",
+      "cost": {
+        "gold": 1750,
+        "wood": 1,
+        "ore": 2
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_clause_court",
+        "building_brasshollow_ledger_mint"
+      ],
+      "income": {
+        "gold": 180,
+        "ore": 1
+      }
+    },
+    {
+      "id": "building_brasshollow_warrant_engine_house",
+      "name": "Warrant Engine House",
+      "category": "civic",
+      "description": "Engine houses issue rare scrip warrants that bind foundry saints, pressure rails, and town defense contracts.",
+      "cost": {
+        "gold": 2400,
+        "wood": 2,
+        "ore": 3,
+        "brass_scrip": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_brasshollow_debtworks_vault",
+        "building_brasshollow_caliper_sanctum"
+      ],
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_bell_chain_watch",
+      "name": "Bell-Chain Watch",
+      "category": "support",
+      "description": "Bell-chain watches mark safe approaches, false harbors, and retreat tolls for every fog lane.",
+      "cost": {
+        "gold": 1150,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_fog_signal_buoys"
+      ],
+      "readiness_bonus": 4,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_saltwake_factor",
+      "name": "Saltwake Factor",
+      "category": "economy",
+      "description": "Saltwake factors price salvage lots, pilot debts, and memory-salt stores into steady harbor income.",
+      "cost": {
+        "gold": 1750,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_salvage_ledger",
+        "building_veilmourn_salt_counting_house"
+      ],
+      "income": {
+        "gold": 170
+      }
+    },
+    {
+      "id": "building_veilmourn_drowned_admiralty",
+      "name": "Drowned Admiralty",
+      "category": "civic",
+      "description": "A drowned admiralty spends rare memory salt to coordinate black-sail law, leviathan signs, and harbor counterraids.",
+      "cost": {
+        "gold": 2400,
+        "wood": 2,
+        "ore": 2,
+        "memory_salt": 1
+      },
+      "content_status": "six_faction_unique_town_parity",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_veilmourn_memory_anchor",
+        "building_veilmourn_tideglass_chapel"
+      ],
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
       "id": "building_embercourt_lockhouse_tally",
       "name": "Lockhouse Tally",
       "category": "economy",
