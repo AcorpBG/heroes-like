@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
-  "currentSliceTitle": "Overworld Ambient Runtime SFX Asset Layer",
+  "currentSliceId": "music-runtime-track-asset-layer-20260524-10184",
+  "currentSliceTitle": "Music Runtime Track Asset Layer",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed overworld ambient runtime SFX asset layer with manifest-backed WAV playback and generated fallback.",
+  "currentSliceNotes": "Completed music runtime track asset layer with manifest-backed WAV playback and generated fallback.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T03:02:00Z",
+  "updatedAt": "2026-05-24T03:32:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "music-runtime-track-asset-layer-20260524-10184",
+      "title": "Music Runtime Track Asset Layer",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/MusicAudio.gd",
+        "tests/music_audio_runtime_report.gd",
+        "docs/music-audio-runtime-baseline-report.md"
+      ],
+      "purpose": "Replace generated-only music playback with a manifest-backed runtime music asset layer while preserving generated waveform fallback.",
+      "implementationTargets": [
+        "content/music_runtime_manifest.json",
+        "tools/generate_music_runtime_assets.py",
+        "art/audio/runtime/music/",
+        "scripts/autoload/MusicAudio.gd",
+        "tests/music_audio_runtime_report.gd",
+        "tests/validate_repo.py",
+        "docs/music-audio-runtime-baseline-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Music runtime manifest maps menu, overworld, battle, and outcome cue layers to committed runtime WAV assets.",
+        "The generator reproducibly writes all runtime music WAV assets from the manifest.",
+        "MusicAudio prefers manifest-backed WAV streams and keeps generated waveform fallback when assets are unavailable.",
+        "Focused music report proves direct context routes and the MainMenu shell route load the manifest and use imported runtime music assets.",
+        "Repository validation gates the music manifest, assets, generator, runtime hooks, and focused report evidence."
+      ],
+      "nonGoals": [
+        "No final composition approval.",
+        "No licensed or third-party music.",
+        "No final stems, adaptive soundtrack system, or mixer mastering.",
+        "No gameplay behavior changes."
+      ],
+      "startedAt": "2026-05-24T03:18:00Z",
+      "updatedAt": "2026-05-24T03:32:00Z",
+      "notes": "Completed by adding a music runtime manifest, reproducible WAV generator, committed runtime music WAV assets, MusicAudio manifest loading with generated fallback, and focused report/repo gates.",
+      "completedAt": "2026-05-24T03:32:00Z",
+      "completionEvidence": [
+        "content/music_runtime_manifest.json maps menu, overworld, battle, and outcome root/harmony/motion cue layers to runtime WAV assets under art/audio/runtime/music/.",
+        "tools/generate_music_runtime_assets.py regenerated all 12 original runtime music WAV assets from the manifest.",
+        "MusicAudio now prefers manifest-backed AudioStream WAV playback and preserves generated AudioStreamGenerator fallback.",
+        "MUSIC_AUDIO_RUNTIME_REPORT passed with record_count 4, shell_record_count 1, music_manifest_loaded true, and all direct route layers using imported_wav playback.",
+        "tests/validate_repo.py gates the manifest, WAV headers, generator, runtime hooks, and focused report tokens."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "python3 tools/generate_music_runtime_assets.py",
+          "jq empty content/music_runtime_manifest.json ops/progress.json",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/music_audio_runtime_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_music_runtime_assets.py",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "MUSIC_AUDIO_RUNTIME_REPORT",
+          "record_count": 4,
+          "shell_record_count": 1,
+          "music_manifest_loaded": true,
+          "cue_count": 12,
+          "runtime_asset_root": "art/audio/runtime/music",
+          "final_composition_claim": false
+        }
+      }
+    },
     {
       "id": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
       "title": "Overworld Ambient Runtime SFX Asset Layer",
@@ -24426,7 +24496,7 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
+  "active_slice": "music-runtime-track-asset-layer-20260524-10184",
   "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {

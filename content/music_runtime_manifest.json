@@ -1,0 +1,19 @@
+{
+  "schema": "music_runtime_asset_manifest_v1",
+  "audio_bus": "Music",
+  "final_composition": false,
+  "cues": {
+    "music_menu_theme": {"path": "res://art/audio/runtime/music/menu_root.wav", "role": "menu root", "duration_msec": 1350, "volume_db": -23.0},
+    "music_menu_theme_harmony": {"path": "res://art/audio/runtime/music/menu_harmony.wav", "role": "menu harmony", "duration_msec": 1350, "volume_db": -26.0},
+    "music_menu_theme_motion": {"path": "res://art/audio/runtime/music/menu_motion.wav", "role": "menu motion", "duration_msec": 1350, "volume_db": -28.0},
+    "music_overworld_theme": {"path": "res://art/audio/runtime/music/overworld_root.wav", "role": "overworld root", "duration_msec": 1350, "volume_db": -23.5},
+    "music_overworld_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_harmony.wav", "role": "overworld harmony", "duration_msec": 1350, "volume_db": -26.5},
+    "music_overworld_theme_motion": {"path": "res://art/audio/runtime/music/overworld_motion.wav", "role": "overworld motion", "duration_msec": 1350, "volume_db": -28.5},
+    "music_battle_theme": {"path": "res://art/audio/runtime/music/battle_root.wav", "role": "battle root", "duration_msec": 1350, "volume_db": -22.5},
+    "music_battle_theme_harmony": {"path": "res://art/audio/runtime/music/battle_harmony.wav", "role": "battle harmony", "duration_msec": 1350, "volume_db": -25.5},
+    "music_battle_theme_motion": {"path": "res://art/audio/runtime/music/battle_motion.wav", "role": "battle motion", "duration_msec": 1350, "volume_db": -27.5},
+    "music_outcome_theme": {"path": "res://art/audio/runtime/music/outcome_root.wav", "role": "outcome root", "duration_msec": 1350, "volume_db": -24.0},
+    "music_outcome_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_harmony.wav", "role": "outcome harmony", "duration_msec": 1350, "volume_db": -27.0},
+    "music_outcome_theme_motion": {"path": "res://art/audio/runtime/music/outcome_motion.wav", "role": "outcome motion", "duration_msec": 1350, "volume_db": -29.0}
+  }
+}
