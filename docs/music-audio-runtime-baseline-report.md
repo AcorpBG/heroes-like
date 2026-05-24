@@ -4,15 +4,16 @@ Slice: `music-audio-runtime-baseline-20260523-10184`
 
 ## Scope
 
-This slice adds `scripts/autoload/MusicAudio.gd`, a generated music runtime layer for menu, overworld, battle, and scenario outcome contexts.
+This slice adds `scripts/autoload/MusicAudio.gd`, a music runtime layer for menu, overworld, battle, and scenario outcome contexts.
 
-The service uses `AudioStreamGenerator` layers instead of imported music stems. It records cue ids, context ids, generated layer metadata, route source, bus, mute state, active player count, and stable signatures for validation.
+The service now prefers committed original WAV cue layers from `content/music_runtime_manifest.json` under `art/audio/runtime/music/`, with bounded `AudioStreamGenerator` fallback when an asset is unavailable. It records cue ids, context ids, layer metadata, route source, bus, mute state, active player count, manifest state, asset paths, and stable signatures for validation.
 
 ## Runtime Contract
 
 - `MusicAudio.sync_context(...)` is the single public routing call.
 - Context cues are `music_menu_theme`, `music_overworld_theme`, `music_battle_theme`, and `music_outcome_theme`.
 - Contexts generate root, harmony, and motion layers with deterministic frequencies.
+- `tools/generate_music_runtime_assets.py` reproducibly writes the current runtime music WAV cue layers from `content/music_runtime_manifest.json`.
 - Unchanged context signatures do not restart active music.
 - The service respects `SettingsService.master_volume_percent()` and `SettingsService.music_volume_percent()`.
 - Audio routes to `Music` when that bus exists, otherwise `Master`.
@@ -27,11 +28,11 @@ The service uses `AudioStreamGenerator` layers instead of imported music stems. 
 
 ## Validation
 
-`tests/music_audio_runtime_report.tscn` proves direct routing for all four contexts, stable non-restart behavior on a repeated menu signature, generated layer metadata, bus selection, player cap exposure, and at least one live shell route through `MainMenu`.
+`tests/music_audio_runtime_report.tscn` proves direct routing for all four contexts, stable non-restart behavior on a repeated menu signature, imported runtime music asset use, bus selection, player cap exposure, manifest loading, and at least one live shell route through `MainMenu`.
 
 ## Non-Goals
 
 - Not final music composition.
-- No imported final audio assets.
+- No final music stems, licensed tracks, adaptive soundtrack approval, or mixer mastering.
 - No mixer/bus-layout migration.
 - No save migration.

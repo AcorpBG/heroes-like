@@ -6,6 +6,7 @@ const MAX_ACTIVE_PLAYERS := 3
 const MAX_RECORDS := 24
 const DEFAULT_SEGMENT_DURATION := 1.35
 const REPORT_SCHEMA := "music_audio_runtime_v1"
+const MUSIC_RUNTIME_MANIFEST_PATH := "res://content/music_runtime_manifest.json"
 const CONTEXT_SPECS := {
 	"menu": {
 		"cue_id": "music_menu_theme",
@@ -46,6 +47,8 @@ var _active_players: Array[AudioStreamPlayer] = []
 var _current_signature := ""
 var _current_context_id := ""
 var _current_layers: Array[Dictionary] = []
+var _music_runtime_manifest: Dictionary = {}
+var _music_runtime_manifest_loaded := false
 
 func sync_context(context_id: String, source: String = "runtime", metadata: Dictionary = {}) -> Dictionary:
 	var normalized := _normalize_context_id(context_id)
@@ -63,6 +66,8 @@ func sync_context(context_id: String, source: String = "runtime", metadata: Dict
 			"layer_count": _current_layers.size(),
 			"layers": _current_layers.duplicate(true),
 			"audio_bus": _music_bus(),
+			"music_manifest_path": MUSIC_RUNTIME_MANIFEST_PATH,
+			"music_manifest_loaded": _music_runtime_manifest_loaded,
 			"active_player_count": _active_players.size(),
 			"muted": _is_muted(),
 			"played": not _is_muted(),
@@ -86,6 +91,8 @@ func sync_context(context_id: String, source: String = "runtime", metadata: Dict
 		"layer_count": _current_layers.size(),
 		"layers": _current_layers.duplicate(true),
 		"audio_bus": _music_bus(),
+		"music_manifest_path": MUSIC_RUNTIME_MANIFEST_PATH,
+		"music_manifest_loaded": _music_runtime_manifest_loaded,
 		"active_player_count": _active_players.size(),
 		"muted": muted,
 		"played": not muted,
@@ -127,6 +134,8 @@ func validation_summary() -> Dictionary:
 		"current_layers": _current_layers.duplicate(true),
 		"audio_bus": _music_bus(),
 		"max_active_players": MAX_ACTIVE_PLAYERS,
+		"music_manifest_path": MUSIC_RUNTIME_MANIFEST_PATH,
+		"music_manifest_loaded": _music_runtime_manifest_loaded,
 		"records": validation_records(),
 	}
 
@@ -151,6 +160,7 @@ func _layers_for_context(context_id: String, metadata: Dictionary) -> Array[Dict
 	return layers
 
 func _layer_payload(layer_id: String, cue_id: String, frequency: float, gain: float, phase_offset: float, pulse_rate: float, label: String) -> Dictionary:
+	var manifest_cue := _music_runtime_manifest_cue(cue_id)
 	return {
 		"layer_id": layer_id,
 		"cue_id": cue_id,
@@ -161,13 +171,24 @@ func _layer_payload(layer_id: String, cue_id: String, frequency: float, gain: fl
 		"phase_offset": phase_offset,
 		"pulse_rate": pulse_rate,
 		"audio_bus": _music_bus(),
+		"music_manifest_path": MUSIC_RUNTIME_MANIFEST_PATH,
+		"music_manifest_loaded": _music_runtime_manifest_loaded,
+		"asset_path": String(manifest_cue.get("path", "")),
+		"role": String(manifest_cue.get("role", "")),
+		"playback_source": "pending",
+		"imported_asset_count": 0,
+		"generated_fallback_count": 0,
 	}
 
 func _play_layers(layers: Array[Dictionary]) -> void:
 	_prune_players()
-	for layer in layers:
+	for index in range(layers.size()):
 		if _active_players.size() >= MAX_ACTIVE_PLAYERS:
 			break
+		var layer: Dictionary = layers[index]
+		if _play_imported_layer(layer):
+			layers[index] = layer
+			continue
 		var stream := AudioStreamGenerator.new()
 		stream.mix_rate = SAMPLE_RATE
 		stream.buffer_length = maxf(0.1, float(layer.get("duration_sec", DEFAULT_SEGMENT_DURATION)))
@@ -180,9 +201,46 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 		if playback != null:
 			_fill_music_waveform(playback, layer)
 		_active_players.append(player)
+		layer["playback_source"] = "generated_waveform"
+		layer["generated_fallback_count"] = 1
+		layers[index] = layer
 	var timer := get_tree().create_timer(DEFAULT_SEGMENT_DURATION + 0.1) if get_tree() != null and not layers.is_empty() else null
 	if timer != null:
 		timer.timeout.connect(_prune_players)
+
+func _play_imported_layer(layer: Dictionary) -> bool:
+	var cue := _music_runtime_manifest_cue(String(layer.get("cue_id", "")))
+	if cue.is_empty():
+		return false
+	var path := String(cue.get("path", "")).strip_edges()
+	if path == "":
+		return false
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is AudioStream:
+			stream = resource
+	if stream == null and FileAccess.file_exists(path):
+		var wav_stream := AudioStreamWAV.load_from_file(path)
+		if wav_stream is AudioStream:
+			stream = wav_stream
+	if stream == null:
+		return false
+	var player := AudioStreamPlayer.new()
+	player.bus = _music_bus()
+	player.stream = stream
+	player.volume_db = float(cue.get("volume_db", -25.0))
+	add_child(player)
+	_active_players.append(player)
+	player.play()
+	layer["playback_source"] = "imported_wav"
+	layer["asset_path"] = path
+	layer["role"] = String(cue.get("role", ""))
+	layer["duration_sec"] = maxf(0.01, float(cue.get("duration_msec", 1350)) / 1000.0)
+	layer["volume_db"] = float(cue.get("volume_db", -25.0))
+	layer["imported_asset_count"] = 1
+	layer["generated_fallback_count"] = 0
+	return true
 
 func _fill_music_waveform(playback: AudioStreamGeneratorPlayback, layer: Dictionary) -> void:
 	var duration := float(layer.get("duration_sec", DEFAULT_SEGMENT_DURATION))
@@ -238,3 +296,23 @@ func _prune_players() -> void:
 		elif is_instance_valid(player):
 			player.queue_free()
 	_active_players = kept
+
+func _music_runtime_manifest_cue(cue_id: String) -> Dictionary:
+	_load_music_runtime_manifest()
+	var cues: Dictionary = _music_runtime_manifest.get("cues", {}) if _music_runtime_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_music_runtime_manifest() -> void:
+	if _music_runtime_manifest_loaded:
+		return
+	_music_runtime_manifest_loaded = true
+	_music_runtime_manifest = {}
+	if not FileAccess.file_exists(MUSIC_RUNTIME_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(MUSIC_RUNTIME_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_music_runtime_manifest = parsed

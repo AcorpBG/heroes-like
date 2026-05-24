@@ -178,6 +178,9 @@ AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
 MUSIC_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "music_audio_runtime_report.gd"
 MUSIC_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "music_audio_runtime_report.tscn"
 MUSIC_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "music-audio-runtime-baseline-report.md"
+MUSIC_RUNTIME_MANIFEST_PATH = CONTENT_DIR / "music_runtime_manifest.json"
+MUSIC_RUNTIME_GENERATOR_PATH = ROOT / "tools" / "generate_music_runtime_assets.py"
+MUSIC_RUNTIME_ROOT = ROOT / "art" / "audio" / "runtime" / "music"
 GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdextension"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
@@ -18071,6 +18074,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         MUSIC_AUDIO_REPORT_SCRIPT_PATH,
         MUSIC_AUDIO_REPORT_SCENE_PATH,
         MUSIC_AUDIO_REPORT_DOC_PATH,
+        MUSIC_RUNTIME_MANIFEST_PATH,
+        MUSIC_RUNTIME_GENERATOR_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing music audio runtime file: {path.relative_to(ROOT)}")
@@ -18087,6 +18092,10 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         music_text = MUSIC_AUDIO_PATH.read_text(encoding="utf-8")
         for required_token in (
             "class_name HeroesMusicAudio",
+            "MUSIC_RUNTIME_MANIFEST_PATH",
+            "func _music_runtime_manifest_cue",
+            "func _play_imported_layer",
+            "AudioStreamWAV.load_from_file",
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
@@ -18105,8 +18114,54 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "Music",
             "Master",
             "signature == _current_signature",
+            "imported_asset_count",
+            "generated_fallback_count",
         ):
             ensure(required_token in music_text, errors, f"MusicAudio.gd is missing required token: {required_token}")
+
+    required_music_cue_ids = (
+        "music_menu_theme",
+        "music_menu_theme_harmony",
+        "music_menu_theme_motion",
+        "music_overworld_theme",
+        "music_overworld_theme_harmony",
+        "music_overworld_theme_motion",
+        "music_battle_theme",
+        "music_battle_theme_harmony",
+        "music_battle_theme_motion",
+        "music_outcome_theme",
+        "music_outcome_theme_harmony",
+        "music_outcome_theme_motion",
+    )
+    if MUSIC_RUNTIME_MANIFEST_PATH.exists():
+        music_manifest = json.loads(MUSIC_RUNTIME_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(music_manifest.get("schema") == "music_runtime_asset_manifest_v1", errors, "music_runtime_manifest.json has the wrong schema")
+        ensure(music_manifest.get("final_composition") is False, errors, "music_runtime_manifest.json must not claim final composition")
+        ensure(music_manifest.get("audio_bus") == "Music", errors, "music_runtime_manifest.json must target the Music bus")
+        music_cues = music_manifest.get("cues", {})
+        ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
+        for cue_id in required_music_cue_ids:
+            cue = music_cues.get(cue_id, {}) if isinstance(music_cues, dict) else {}
+            ensure(isinstance(cue, dict), errors, f"music_runtime_manifest.json is missing cue {cue_id}")
+            path_value = str(cue.get("path", ""))
+            ensure(path_value.startswith("res://art/audio/runtime/music/"), errors, f"music cue {cue_id} must use the runtime music audio folder")
+            wav_path = ROOT / path_value.removeprefix("res://")
+            ensure(wav_path.exists(), errors, f"runtime music asset is missing for {cue_id}: {path_value}")
+            if wav_path.exists():
+                header = wav_path.read_bytes()[:12]
+                ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"runtime music asset is not a WAV file: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"music cue {cue_id} needs duration_msec")
+            ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
+
+    music_generator_text = MUSIC_RUNTIME_GENERATOR_PATH.read_text(encoding="utf-8") if MUSIC_RUNTIME_GENERATOR_PATH.exists() else ""
+    for required_token in (
+        "music_runtime_manifest.json",
+        "SPECS",
+        "write_wav",
+        "wave.open",
+        "Manifest/spec cue mismatch",
+    ):
+        ensure(required_token in music_generator_text, errors, f"generate_music_runtime_assets.py is missing token {required_token}")
 
     shell_requirements = (
         (MAIN_MENU_SCRIPT_PATH, ("MusicAudio.sync_context", '"menu"', '"music_audio"')),
@@ -18134,6 +18189,10 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "validation_snapshot",
             "MainMenu.tscn",
             "MAX_ACTIVE_PLAYERS",
+            "res://content/music_runtime_manifest.json",
+            "imported_asset_count",
+            "generated_fallback_count",
+            "imported_wav",
         ):
             ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
 
@@ -18144,6 +18203,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music-audio-runtime-baseline-20260523-10184",
             "scripts/autoload/MusicAudio.gd",
             "AudioStreamGenerator",
+            "content/music_runtime_manifest.json",
+            "art/audio/runtime/music/",
             "music_menu_theme",
             "music_overworld_theme",
             "music_battle_theme",
@@ -18153,7 +18214,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "BattleShell",
             "ScenarioOutcomeShell",
             "Not final music composition",
-            "No imported final audio assets",
+            "No final music stems",
         ):
             ensure(required_text in doc_text, errors, f"Music audio runtime doc is missing required text: {required_text}")
 

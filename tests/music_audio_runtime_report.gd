@@ -76,19 +76,27 @@ func _validate_record(label: String, record: Dictionary, expected_cue: String, e
 	_expect_equal("%s cue" % label, String(record.get("cue_id", "")), expected_cue)
 	_expect_equal("%s context" % label, String(record.get("context_id", "")), expected_context)
 	_expect_equal("%s changed" % label, bool(record.get("changed", false)), expected_changed)
-	_expect(int(record.get("layer_count", 0)) == 3, "%s record must expose three generated music layers: %s" % [label, record])
+	_expect(int(record.get("layer_count", 0)) == 3, "%s record must expose three music layers: %s" % [label, record])
 	_expect(["Master", "Music"].has(String(record.get("audio_bus", ""))), "%s record must route through Master or Music: %s" % [label, record])
+	_expect(String(record.get("music_manifest_path", "")) == "res://content/music_runtime_manifest.json", "%s record must expose music manifest path: %s" % [label, record])
+	_expect(bool(record.get("music_manifest_loaded", false)), "%s record must load music manifest: %s" % [label, record])
 	for layer in record.get("layers", []):
 		var layer_record: Dictionary = layer
 		_expect(String(layer_record.get("cue_id", "")).begins_with(expected_cue), "%s layer has unexpected cue id: %s" % [label, layer_record])
 		_expect(float(layer_record.get("duration_sec", 0.0)) > 0.0, "%s layer must expose duration: %s" % [label, layer_record])
 		_expect(float(layer_record.get("frequency", 0.0)) > 0.0, "%s layer must expose frequency: %s" % [label, layer_record])
+		_expect(String(layer_record.get("playback_source", "")) == "imported_wav", "%s layer should prefer imported runtime music WAV assets: %s" % [label, layer_record])
+		_expect(String(layer_record.get("asset_path", "")).begins_with("res://art/audio/runtime/music/"), "%s layer must expose runtime music asset path: %s" % [label, layer_record])
+		_expect(int(layer_record.get("imported_asset_count", 0)) == 1, "%s layer should count imported music playback: %s" % [label, layer_record])
+		_expect(int(layer_record.get("generated_fallback_count", 0)) == 0, "%s layer should not use generated fallback when asset is present: %s" % [label, layer_record])
 
 func _validate_direct_summary(summary: Dictionary) -> void:
 	_expect_equal("direct schema", String(summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 4, "Music direct summary must keep changed context records: %s" % summary)
 	_expect(["Master", "Music"].has(String(summary.get("audio_bus", ""))), "Music direct summary must expose a valid bus: %s" % summary)
 	_expect(int(summary.get("max_active_players", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "Music direct summary must expose player cap: %s" % summary)
+	_expect(String(summary.get("music_manifest_path", "")) == "res://content/music_runtime_manifest.json", "Music direct summary must expose the music manifest path: %s" % summary)
+	_expect(bool(summary.get("music_manifest_loaded", false)), "Music direct summary must load the music manifest: %s" % summary)
 	var cue_counts: Dictionary = summary.get("cue_counts", {}) if summary.get("cue_counts", {}) is Dictionary else {}
 	var context_counts: Dictionary = summary.get("context_counts", {}) if summary.get("context_counts", {}) is Dictionary else {}
 	for cue in EXPECTED_CUES:
@@ -102,6 +110,8 @@ func _validate_direct_summary(summary: Dictionary) -> void:
 func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	_expect_equal("shell schema", String(summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 1, "MainMenu must sync MusicAudio at runtime: %s" % summary)
+	_expect(String(summary.get("music_manifest_path", "")) == "res://content/music_runtime_manifest.json", "MainMenu music summary must expose the music manifest path: %s" % summary)
+	_expect(bool(summary.get("music_manifest_loaded", false)), "MainMenu music summary must load the music manifest: %s" % summary)
 	var cue_counts: Dictionary = summary.get("cue_counts", {}) if summary.get("cue_counts", {}) is Dictionary else {}
 	_expect(int(cue_counts.get("music_menu_theme", 0)) >= 1, "MainMenu shell route must play menu music cue: %s" % summary)
 	var snapshot_summary: Dictionary = snapshot.get("music_audio", {}) if snapshot.get("music_audio", {}) is Dictionary else {}
@@ -125,6 +135,7 @@ func _summary_payload() -> Dictionary:
 		"shell_record_count": int(shell_summary.get("record_count", 0)),
 		"audio_bus": String(summary.get("audio_bus", "")),
 		"max_active_players": int(summary.get("max_active_players", 0)),
+		"music_manifest_loaded": bool(summary.get("music_manifest_loaded", false)),
 	}
 
 func _expect(condition: bool, message: String) -> void:
