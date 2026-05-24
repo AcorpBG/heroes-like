@@ -101,6 +101,9 @@ RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
+ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
+ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
+ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -18935,6 +18938,114 @@ def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
         ensure(required_text in doc_text, errors, f"Runtime market cap doc is missing required text: {required_text}")
 
 
+def validate_active_scenario_rare_economy_access(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario rare economy access report script is missing")
+    ensure(ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH.exists(), errors, "Active scenario rare economy access report scene is missing")
+    ensure(ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH.exists(), errors, "Active scenario rare economy access report doc is missing")
+    if not ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "ACTIVE_SCENARIO_RARE_ECONOMY_ACCESS_REPORT",
+        "active_scenario_rare_economy_access_report_v1",
+        "ScenarioFactory.create_session",
+        "OverworldRules.collect_active_resource",
+        "OverworldRules.controlled_resource_site_income",
+        "OverworldRules.end_turn",
+        "development_balance",
+        "rare_resource_id",
+        "SessionState.LAUNCH_MODE_SKIRMISH",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario rare economy access report is missing token {required_token}")
+    ensure("res://tests/active_scenario_rare_economy_access_report.gd" in scene_text, errors, "Active scenario rare economy access scene must load its report script")
+    for required_text in (
+        "Economy Active Scenario Rare Access Report",
+        "economy-active-scenario-rare-access-20260524-10184",
+        "active_scenario_rare_economy_access_report_v1",
+        "active authored-scenario rare-resource access gap",
+        "Rare resources remain authored-source driven",
+        "not final scenario-wide economy tuning",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario rare economy access doc is missing required text: {required_text}")
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    active_scenario_count = 0
+    active_player_town_count = 0
+    covered_player_town_count = 0
+    covered_rare_ids: set[str] = set()
+    for scenario_id, scenario in sorted(scenarios.items()):
+        if not isinstance(scenario, dict):
+            continue
+        selection = scenario.get("selection", {})
+        availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
+        if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
+            continue
+        active_scenario_count += 1
+        resource_nodes = scenario.get("resource_nodes", [])
+        ensure(isinstance(resource_nodes, list), errors, f"{scenario_id} resource_nodes must be a list")
+        resource_nodes = resource_nodes if isinstance(resource_nodes, list) else []
+        placement_ids: set[str] = set()
+        for node in resource_nodes:
+            if not isinstance(node, dict):
+                fail(errors, f"{scenario_id} resource node must be an object")
+                continue
+            placement_id = str(node.get("placement_id", "")).strip()
+            site_id = str(node.get("site_id", "")).strip()
+            ensure(bool(placement_id), errors, f"{scenario_id} resource node is missing placement_id")
+            ensure(placement_id not in placement_ids, errors, f"{scenario_id} duplicate resource placement id {placement_id}")
+            placement_ids.add(placement_id)
+            ensure(site_id in resource_sites, errors, f"{scenario_id}.{placement_id} references unknown resource site {site_id}")
+            site = resource_sites.get(site_id, {})
+            for field_name in ("rewards", "claim_rewards", "control_income"):
+                payload = site.get(field_name, {}) if isinstance(site, dict) else {}
+                if not isinstance(payload, dict):
+                    continue
+                rare_payload_ids = set(payload.keys()) & set(ECONOMY_STAGED_RARE_RESOURCE_IDS)
+                ensure(rare_payload_ids.issubset(set(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS)), errors, f"{site_id}.{field_name} rare ids must be live stockpile resources")
+        for town in scenario.get("towns", []):
+            if not isinstance(town, dict) or str(town.get("owner", "")) != "player":
+                continue
+            active_player_town_count += 1
+            town_placement_id = str(town.get("placement_id", "")).strip()
+            town_id = str(town.get("town_id", "")).strip()
+            town_template = towns.get(town_id, {})
+            profile = town_template.get("development_balance", {}) if isinstance(town_template, dict) else {}
+            profile = profile if isinstance(profile, dict) else {}
+            rare_id = str(profile.get("rare_resource_id", "")).strip()
+            ensure(rare_id in ECONOMY_STAGED_RARE_RESOURCE_IDS, errors, f"{scenario_id}.{town_placement_id} town {town_id} must declare a live rare_resource_id in development_balance")
+            if rare_id not in ECONOMY_STAGED_RARE_RESOURCE_IDS:
+                continue
+            matching_sources = []
+            for node in resource_nodes:
+                if not isinstance(node, dict):
+                    continue
+                site_id = str(node.get("site_id", "")).strip()
+                site = resource_sites.get(site_id, {})
+                if not isinstance(site, dict):
+                    continue
+                claim_rewards = site.get("claim_rewards", site.get("rewards", {}))
+                claim_rewards = claim_rewards if isinstance(claim_rewards, dict) else {}
+                control_income = site.get("control_income", {})
+                control_income = control_income if isinstance(control_income, dict) else {}
+                if positive_resource_amount(claim_rewards, rare_id) or positive_resource_amount(control_income, rare_id):
+                    matching_sources.append(str(node.get("placement_id", "")).strip())
+            ensure(bool(matching_sources), errors, f"{scenario_id}.{town_placement_id} town {town_id} needs an authored rare source for {rare_id}")
+            if matching_sources:
+                covered_player_town_count += 1
+                covered_rare_ids.add(rare_id)
+    ensure(active_scenario_count >= 16, errors, "Active scenario rare access gate must cover the current active authored scenario roster")
+    ensure(active_player_town_count >= 18, errors, "Active scenario rare access gate must cover every current active player-town case")
+    ensure(covered_player_town_count == active_player_town_count, errors, "Every active player town must have a matching authored rare-resource source")
+    ensure({"aetherglass", "embergrain", "peatwax"}.issubset(covered_rare_ids), errors, "Active scenario rare access gate must cover the live player-facing rare-resource mix")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -19045,6 +19156,7 @@ def main() -> int:
     validate_economy_capture_income_loop_expansion(errors)
     validate_live_stockpile_resource_surface(errors)
     validate_runtime_market_cap_persistence(errors)
+    validate_active_scenario_rare_economy_access(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
@@ -19129,6 +19241,7 @@ def main() -> int:
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
+    print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")

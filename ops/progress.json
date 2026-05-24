@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-runtime-market-cap-persistence-20260524-10184",
-  "currentSliceTitle": "Economy Runtime Market Cap Persistence",
+  "currentSliceId": "economy-active-scenario-rare-access-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Rare Access",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Weekly runtime market caps are enforced and persisted via town.market_usage; save/resume and next-week reset are covered by a focused Godot report.",
+  "currentSliceNotes": "Completed. Active authored scenarios now provide live rare-source access for player-town high-tier development resources, with runtime claim/control/income evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T15:55:00Z",
+  "updatedAt": "2026-05-24T16:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -20527,6 +20527,66 @@
         "save_version_bump": false,
         "runtime_town_balance_still_passes": true
       }
+    },
+    {
+      "id": "economy-active-scenario-rare-access-20260524-10184",
+      "title": "Economy Active Scenario Rare Access",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T16:20:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-rare-access-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/active_scenario_rare_economy_access_report.gd",
+        "tests/active_scenario_rare_economy_access_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-rare-access-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every active authored scenario with a player-owned town exposes at least one matching rare-resource source for that town development profile.",
+        "The focused Godot report boots every active authored scenario and collects the matching rare source through live OverworldRules.",
+        "Captured rare sites provide immediate claim rewards and next-day controlled-site income through the runtime economy path.",
+        "Repository validation gates the active-scenario rare-access report and content coverage.",
+        "This does not claim final scenario-wide economy tuning, route/path balance, or campaign balance approval."
+      ],
+      "notes": "Completed. Active campaign/skirmish scenarios now contain matching rare-resource sources for every player-owned town development profile, and the focused live Godot report proves claim, control, and next-day rare income through runtime OverworldRules.",
+      "completedAt": "2026-05-24T16:20:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "schema": "economy_active_scenario_rare_access_completion_v1",
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "rare_resource_case_counts": {
+          "aetherglass": 2,
+          "embergrain": 9,
+          "peatwax": 7
+        },
+        "active_player_towns_with_matching_rare_source": 18,
+        "live_collection_report_passed": true,
+        "claim_delta_proved": true,
+        "controlled_income_proved": true,
+        "next_day_income_proved": true,
+        "normal_market_rare_buying_enabled": false,
+        "save_version_bump": false
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -24896,6 +24956,64 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-rare-access-20260524-10184",
+      "title": "Economy Active Scenario Rare Access",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T16:20:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-rare-access-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-rare-access-20260524-10184"
+      ],
+      "implementationRefs": [
+        "content/scenarios.json",
+        "tests/active_scenario_rare_economy_access_report.gd",
+        "tests/active_scenario_rare_economy_access_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-rare-access-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Every active campaign/skirmish authored scenario with a player-owned town now has at least one matching rare-resource source for that town development profile.",
+        "The focused Godot report boots 16 active scenarios and verifies 18 player-town cases through live ScenarioFactory, resource collection, controlled-site income, and end-turn income rules.",
+        "Runtime evidence proves claim deltas and next-day income for the current active player-facing rare mix: aetherglass, embergrain, and peatwax.",
+        "Repository validation now gates the report files, doc boundary, content coverage, duplicate placement ids, and active player-town rare-source coverage.",
+        "Normal markets remain common-resource only and no save-version bump is required."
+      ],
+      "completionEvidence": {
+        "schema": "economy_active_scenario_rare_access_completion_v1",
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "rare_resource_case_counts": {
+          "aetherglass": 2,
+          "embergrain": 9,
+          "peatwax": 7
+        },
+        "active_player_towns_with_matching_rare_source": 18,
+        "live_collection_report_passed": true,
+        "claim_delta_proved": true,
+        "controlled_income_proved": true,
+        "next_day_income_proved": true,
+        "normal_market_rare_buying_enabled": false,
+        "save_version_bump": false
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -25449,6 +25567,64 @@
           "godot --headless --path . tests/random_map_skirmish_ui_save_replay_report.tscn",
           "godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn",
           "godot --headless --path . tests/random_map_scenario_load_smoke.tscn"
+        ]
+      },
+      {
+        "id": "economy-active-scenario-rare-access-20260524-10184",
+        "title": "Economy Active Scenario Rare Access",
+        "status": "completed",
+        "phase": "phase-5-playable-alpha-baseline",
+        "completedAt": "2026-05-24T16:20:00Z",
+        "sourceRefs": [
+          "project.md",
+          "PLAN.md",
+          "docs/economy-active-scenario-rare-access-report.md"
+        ],
+        "mappedPlannedSliceIds": [
+          "economy-active-scenario-rare-access-20260524-10184"
+        ],
+        "implementationRefs": [
+          "content/scenarios.json",
+          "tests/active_scenario_rare_economy_access_report.gd",
+          "tests/active_scenario_rare_economy_access_report.tscn",
+          "tests/validate_repo.py",
+          "docs/economy-active-scenario-rare-access-report.md",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "evidence": [
+          "Every active campaign/skirmish authored scenario with a player-owned town now has at least one matching rare-resource source for that town development profile.",
+          "The focused Godot report boots 16 active scenarios and verifies 18 player-town cases through live ScenarioFactory, resource collection, controlled-site income, and end-turn income rules.",
+          "Runtime evidence proves claim deltas and next-day income for the current active player-facing rare mix: aetherglass, embergrain, and peatwax.",
+          "Repository validation now gates the report files, doc boundary, content coverage, duplicate placement ids, and active player-town rare-source coverage.",
+          "Normal markets remain common-resource only and no save-version bump is required."
+        ],
+        "completionEvidence": {
+          "schema": "economy_active_scenario_rare_access_completion_v1",
+          "active_scenario_count": 16,
+          "player_town_case_count": 18,
+          "rare_resource_case_counts": {
+            "aetherglass": 2,
+            "embergrain": 9,
+            "peatwax": 7
+          },
+          "active_player_towns_with_matching_rare_source": 18,
+          "live_collection_report_passed": true,
+          "claim_delta_proved": true,
+          "controlled_income_proved": true,
+          "next_day_income_proved": true,
+          "normal_market_rare_buying_enabled": false,
+          "save_version_bump": false
+        },
+        "validation": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
         ]
       }
     ],
@@ -26088,19 +26264,31 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-rare-access-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T16:20:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
-    "id": "economy-runtime-market-cap-persistence-20260524-10184",
+    "id": "economy-active-scenario-rare-access-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T15:55:00Z",
+    "updatedAt": "2026-05-24T16:20:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-runtime-market-caps-rerun.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-economy-capture-income-marketcaps.log --path . --scene res://tests/economy_capture_income_expansion_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-live-stockpile-surface-marketcaps.log --path . --scene res://tests/live_stockpile_resource_surface_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-marketcaps.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/town_development_balance_report.py",
-      "python3 tests/validate_repo.py --market-faction-cost-report",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
@@ -26109,12 +26297,12 @@
     ]
   },
   "active_slice": {
-    "id": "economy-runtime-market-cap-persistence-20260524-10184",
-    "title": "Economy Runtime Market Cap Persistence",
+    "id": "economy-active-scenario-rare-access-20260524-10184",
+    "title": "Economy Active Scenario Rare Access",
     "status": "completed",
-    "updatedAt": "2026-05-24T15:55:00Z"
+    "updatedAt": "2026-05-24T16:20:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T15:55:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T16:20:00Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -26592,7 +26780,22 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-active-scenario-rare-access-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T16:20:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
-  "currentSlice": "economy-runtime-market-cap-persistence-20260524-10184"
+  "currentSlice": "economy-active-scenario-rare-access-20260524-10184"
 }
