@@ -7,6 +7,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var tree := get_tree()
 	ContentService.clear_cache()
 	ContentService.clear_generated_scenario_drafts()
 
@@ -53,6 +54,22 @@ func _run() -> void:
 	if String(selected_setup.get("scenario_id", "")) != AUTHORED_SCENARIO_ID:
 		_fail("Main menu selected setup did not resolve authored skirmish: %s." % JSON.stringify(selected_setup))
 		return
+	if not shell.has_method("validation_start_selected_skirmish"):
+		_fail("Main menu is missing selected skirmish launch validation hook.")
+		return
+	var launch_result: Dictionary = shell.call("validation_start_selected_skirmish")
+	if not bool(launch_result.get("started", false)):
+		_fail("Selected authored skirmish did not start a Skirmish-mode session: %s." % JSON.stringify(launch_result))
+		return
+	if String(launch_result.get("active_scenario_id", "")) != AUTHORED_SCENARIO_ID:
+		_fail("Started skirmish session scenario is wrong: %s." % JSON.stringify(launch_result))
+		return
+	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
+		_fail("Started skirmish session did not use Skirmish launch mode: %s." % JSON.stringify(launch_result))
+		return
+	if String(launch_result.get("active_difficulty", "")) != ScenarioSelectRules.default_difficulty_id():
+		_fail("Started skirmish session difficulty is wrong: %s." % JSON.stringify(launch_result))
+		return
 
 	var generated_config := ScenarioSelectRules.build_random_map_player_config(
 		"authored-skirmish-browser-boundary-10184",
@@ -77,8 +94,11 @@ func _run() -> void:
 		"generated_package_entry_count": generated_package_entries.size(),
 		"selected_scenario_id": AUTHORED_SCENARIO_ID,
 		"generated_transient_browser_leak": false,
+		"launch_started": bool(launch_result.get("started", false)),
+		"active_launch_mode": String(launch_result.get("active_launch_mode", "")),
+		"active_difficulty": String(launch_result.get("active_difficulty", "")),
 	})])
-	get_tree().quit(0)
+	tree.quit(0)
 
 func _has_browser_entry(entries: Array, scenario_id: String) -> bool:
 	for entry in entries:

@@ -13,7 +13,7 @@ Active authored scenarios already have skirmish availability metadata and `build
 - Rows carry `source_kind: authored_scenario`, scenario id, label, summary, availability, and recommended difficulty.
 - Maps-folder package rows remain appended to the same browser list.
 - Generated-map transient draft scenario ids remain excluded from authored skirmish rows and campaign content.
-- `PLAYER_FACING_SKIRMISH_BROWSER_SMOKE` validates direct browser exposure, setup generation, main-menu selection, and generated-map transient draft isolation.
+- `PLAYER_FACING_SKIRMISH_BROWSER_SMOKE` validates direct browser exposure, setup generation, main-menu selection, `validation_start_selected_skirmish` Skirmish-mode launch, and generated-map transient draft isolation.
 
 ## Non-Goals
 

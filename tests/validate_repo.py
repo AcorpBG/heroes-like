@@ -10525,7 +10525,10 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             "authored_entry_count",
             "generated_transient_browser_leak",
             "validation_select_skirmish",
+            "validation_start_selected_skirmish",
             "build_random_map_skirmish_setup",
+            "launch_started",
+            "active_launch_mode",
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_skirmish_browser_smoke.gd is missing required token: {required_token}")
 
