@@ -10,17 +10,25 @@
     {
       "id": "site_wood_wagon",
       "name": "Wood Wagon",
+      "persistent_control": true,
       "rewards": {
         "wood": 2,
         "gold": 150
+      },
+      "control_income": {
+        "wood": 1
       }
     },
     {
       "id": "site_ore_crates",
       "name": "Ore Crates",
+      "persistent_control": true,
       "rewards": {
         "ore": 2,
         "gold": 100
+      },
+      "control_income": {
+        "ore": 1
       }
     },
     {

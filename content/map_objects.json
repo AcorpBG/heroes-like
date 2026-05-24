@@ -49,7 +49,8 @@
       "secondary_tags": [
         "build_resource",
         "small_reward",
-        "route_pacing"
+        "route_pacing",
+        "counter_capture_target"
       ],
       "resource_site_id": "site_wood_wagon",
       "biome_ids": [
@@ -67,18 +68,19 @@
       "visitable": true,
       "map_roles": [
         "small_reward",
-        "build_resource"
+        "build_resource",
+        "counter_capture_target"
       ],
       "passability_class": "passable_visit_on_enter",
       "interaction": {
-        "cadence": "one_time",
-        "remains_after_visit": false,
-        "state_after_visit": "collected",
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
         "requires_ownership": false,
         "requires_guard_clear": false,
-        "supports_revisit": false,
+        "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "none"
+        "refresh_rule": "daily_income"
       }
     },
     {
@@ -147,7 +149,7 @@
       "interaction": {
         "cadence": "persistent_control",
         "remains_after_visit": true,
-        "state_after_visit": "controlled",
+        "state_after_visit": "claimed",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -6780,7 +6782,8 @@
       "secondary_tags": [
         "small_reward",
         "route_pacing",
-        "build_resource"
+        "build_resource",
+        "counter_capture_target"
       ],
       "resource_site_id": "site_ore_crates",
       "content_batch_id": "overworld-object-content-batch-001-core-density-pickups-10184",
@@ -6820,18 +6823,19 @@
       "map_roles": [
         "small_reward",
         "route_pacing",
-        "build_resource"
+        "build_resource",
+        "counter_capture_target"
       ],
       "passability_class": "passable_visit_on_enter",
       "interaction": {
-        "cadence": "one_time",
-        "remains_after_visit": false,
-        "state_after_visit": "collected",
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "controlled",
         "requires_ownership": false,
         "requires_guard_clear": false,
-        "supports_revisit": false,
+        "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "none"
+        "refresh_rule": "daily_income"
       },
       "animation_cues": [
         "object_pickup_glint_placeholder"

@@ -104,6 +104,9 @@ TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
+ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.gd"
+ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.tscn"
+ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-development-runway-report.md"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.tscn"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-unit-tier-runtime-surface-report.md"
@@ -19147,6 +19150,99 @@ def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
     ensure(high_tier_rare_cases == covered_factions * 3, errors, "Every faction tier 5-7 unit building must cost that faction's rare resource")
 
 
+def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town development runway report script is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists(), errors, "Active scenario town development runway report scene is missing")
+    ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.exists(), errors, "Active scenario town development runway report doc is missing")
+    if not ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT",
+        "active_scenario_town_development_runway_report_v1",
+        "ScenarioFactory.create_session",
+        "TownRules.get_build_actions",
+        "OverworldRules.build_in_active_town",
+        "OverworldRules.end_turn",
+        "secured_daily_income",
+        "secured_resource_ids",
+        "rare_spend_observed",
+        "same_day_reject_ok",
+        "market_common_only",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario town development runway report is missing token {required_token}")
+    ensure("res://tests/active_scenario_town_development_runway_report.gd" in scene_text, errors, "Active scenario town development runway scene must load its report script")
+    for required_text in (
+        "Economy Active Scenario Development Runway Report",
+        "economy-active-scenario-development-runway-20260524-10184",
+        "active_scenario_town_development_runway_report_v1",
+        "18 active player-town cases",
+        "scenario-authored economy sources",
+        "not final scenario-wide route balance",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario town development runway doc is missing required text: {required_text}")
+
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    for site_id, resource_id in (("site_wood_wagon", "wood"), ("site_ore_crates", "ore")):
+        site = resource_sites.get(site_id, {})
+        ensure(bool(site.get("persistent_control", False)), errors, f"{site_id} must be a persistent common-resource source")
+        income = site.get("control_income", {}) if isinstance(site, dict) else {}
+        ensure(isinstance(income, dict) and int(income.get(resource_id, 0)) > 0, errors, f"{site_id} must provide persistent {resource_id} income")
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    active_scenario_count = 0
+    player_town_case_count = 0
+    for scenario_id, scenario in sorted(scenarios.items()):
+        selection = scenario.get("selection", {}) if isinstance(scenario, dict) else {}
+        availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
+        if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
+            continue
+        active_scenario_count += 1
+        scenario_nodes = scenario.get("resource_nodes", [])
+        scenario_nodes = scenario_nodes if isinstance(scenario_nodes, list) else []
+        persistent_income_ids: set[str] = set()
+        for node in scenario_nodes:
+            if not isinstance(node, dict):
+                continue
+            site = resource_sites.get(str(node.get("site_id", "")), {})
+            if not isinstance(site, dict) or not bool(site.get("persistent_control", False)):
+                continue
+            income = site.get("control_income", {})
+            if not isinstance(income, dict):
+                continue
+            for resource_id, amount in income.items():
+                try:
+                    if int(amount) > 0:
+                        persistent_income_ids.add(str(resource_id))
+                except (TypeError, ValueError):
+                    pass
+        for town in scenario.get("towns", []):
+            if not isinstance(town, dict) or str(town.get("owner", "")) != "player":
+                continue
+            player_town_case_count += 1
+            town_id = str(town.get("town_id", "")).strip()
+            town_template = towns.get(town_id, {})
+            required_ids: set[str] = set()
+            if isinstance(town_template, dict):
+                for building_id in town_template.get("buildable_building_ids", []):
+                    building = buildings.get(str(building_id), {})
+                    cost = building.get("cost", {}) if isinstance(building, dict) else {}
+                    if isinstance(cost, dict):
+                        required_ids.update(str(resource_id) for resource_id in cost.keys())
+            for resource_id in sorted(required_ids - {"gold"}):
+                ensure(resource_id in persistent_income_ids, errors, f"{scenario_id}.{town_id} must have scenario-authored persistent {resource_id} income for development runway")
+    ensure(active_scenario_count >= 16, errors, "Active scenario town development runway must cover the active authored scenario roster")
+    ensure(player_town_case_count >= 18, errors, "Active scenario town development runway must cover the active player-town cases")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -19259,6 +19355,7 @@ def main() -> int:
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
     validate_town_unit_tier_runtime_surface(errors)
+    validate_active_scenario_town_development_runway(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
@@ -19345,6 +19442,7 @@ def main() -> int:
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
     print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")
+    print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
