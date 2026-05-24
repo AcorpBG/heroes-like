@@ -112,6 +112,7 @@ TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH = ROOT / "tests" / "town_developm
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-save-resume-report.md"
 TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-town-development-breadth-parity-report.md"
 TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH = ROOT / "docs" / "economy-town-development-pacing-parity-report.md"
+TOWN_DEVELOPMENT_RARE_PRESSURE_DOC_PATH = ROOT / "docs" / "economy-town-rare-pressure-balance-report.md"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
@@ -2689,6 +2690,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     ensure(script_path.exists(), errors, "Missing town development balance report")
     ensure(TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists(), errors, "Missing town development breadth parity report doc")
     ensure(TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.exists(), errors, "Missing town development pacing parity report doc")
+    ensure(TOWN_DEVELOPMENT_RARE_PRESSURE_DOC_PATH.exists(), errors, "Missing town development rare pressure report doc")
     if not script_path.exists():
         return
     result = subprocess.run(
@@ -2720,9 +2722,13 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     full_ladder_town_count = int(report_payload.get("full_ladder_town_count", 0)) if isinstance(report_payload, dict) else 0
     breadth_parity_town_count = int(report_payload.get("breadth_parity_town_count", 0)) if isinstance(report_payload, dict) else 0
     town_results = report_payload.get("towns", {}) if isinstance(report_payload, dict) else {}
+    min_rare_development_spend = int(report_payload.get("min_rare_development_spend", 0)) if isinstance(report_payload, dict) else 0
+    max_ending_rare_after_completion = int(report_payload.get("max_ending_rare_after_completion", 999)) if isinstance(report_payload, dict) else 999
     ensure(authored_town_count >= 15, errors, "Town development balance report must cover all authored towns, not just seed towns")
     ensure(full_ladder_town_count == authored_town_count, errors, "Every authored town must expose its faction seven-building ladder")
     ensure(breadth_parity_town_count >= 6, errors, "Six-faction town development breadth parity must cover Thornwake, Brasshollow, and Veilmourn towns")
+    ensure(min_rare_development_spend >= 14, errors, "Town development balance report must require meaningful rare-resource spend")
+    ensure(max_ending_rare_after_completion <= 13, errors, "Town development balance report must cap leftover rare resources after completion")
     ensure(isinstance(town_results, dict) and len(town_results) == authored_town_count, errors, "Town development balance report must include one result per authored town")
     for town_id, result in town_results.items():
         if not isinstance(result, dict):
@@ -2732,20 +2738,27 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         ensure(int(result.get("non_unit_building_count", 0)) >= 12, errors, f"{town_id} must expose at least twelve non-unit development targets")
         ensure(int(result.get("completion_day", 0)) >= 20, errors, f"{town_id} must not finish before the day-20 production pacing floor")
         ensure(int(result.get("build_count", 0)) == int(result.get("target_building_count", -1)), errors, f"{town_id} must build every target development building")
+        ensure(int(result.get("rare_development_spend", 0)) >= min_rare_development_spend, errors, f"{town_id} must spend enough faction rare resource")
+        ensure(int(result.get("ending_rare_resource", 999)) <= max_ending_rare_after_completion, errors, f"{town_id} must not end with excessive unspent rare resource")
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     balance_report_text = script_path.read_text(encoding="utf-8")
     breadth_doc_text = TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists() else ""
     pacing_doc_text = TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_PACING_PARITY_DOC_PATH.exists() else ""
+    rare_pressure_doc_text = TOWN_DEVELOPMENT_RARE_PRESSURE_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_RARE_PRESSURE_DOC_PATH.exists() else ""
     for token in (
         "MIN_BUILDABLE_TARGETS = 20",
         "MIN_NON_UNIT_BUILDABLE_TARGETS = 12",
         "MIN_BREADTH_PARITY_BUILDINGS = 5",
         "MIN_COMPLETION_DAY = 20",
+        "MIN_RARE_DEVELOPMENT_SPEND = 14",
+        "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "breadth_parity_town_count",
         "non_unit_building_count",
+        "rare_development_spend",
+        "ending_rare_resource",
     ):
         ensure(token in balance_report_text, errors, f"Town development balance report must gate breadth token {token}")
     for required_text in (
@@ -2773,6 +2786,17 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "`wood` remains canonical",
     ):
         ensure(required_text in pacing_doc_text, errors, f"Town development pacing parity doc is missing required text: {required_text}")
+    for required_text in (
+        "Economy Town Rare Pressure Balance Report",
+        "economy-town-rare-pressure-balance-20260524-10184",
+        "MIN_RARE_DEVELOPMENT_SPEND = 14",
+        "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
+        "2/4/6 rare-resource tier curve",
+        "15 authored towns",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in rare_pressure_doc_text, errors, f"Town rare pressure balance doc is missing required text: {required_text}")
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in overworld_rules_text, errors, "OverworldRules must declare the full live stockpile resource set")
     ensure("last_build_day" in overworld_rules_text and "already completed a build order today" in overworld_rules_text, errors, "OverworldRules must enforce one build per town per day")
     ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
@@ -2816,6 +2840,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
     ensure(int(report_payload.get("signature_tier_count", 0)) == 7, errors, "Town development cost curve report must enforce seven signature tiers")
     ensure(int(report_payload.get("high_tier_start", 0)) == 5, errors, "Town development cost curve report must keep rare costs at tier 5+")
     ensure(int(report_payload.get("min_common_only_to_rare_ratio", 0)) >= 2, errors, "Town development cost curve report must keep common-only buildings dominant")
+    ensure(int(report_payload.get("min_rare_development_spend", 0)) >= 14, errors, "Town development cost curve report must require meaningful rare-resource spend")
     town_rows = report_payload.get("towns", {})
     ensure(isinstance(town_rows, dict) and len(town_rows) >= 15, errors, "Town development cost curve report must emit every town row")
     if isinstance(town_rows, dict):
@@ -2826,17 +2851,23 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
             ensure(int(row.get("gold_cost_building_count", 0)) == int(row.get("target_building_count", -1)), errors, f"{town_id} must cost gold on every development target")
             ensure(float(row.get("common_only_to_rare_ratio", 0.0)) >= 2.0, errors, f"{town_id} must keep at least 2:1 common-only to rare-cost buildings")
             ensure(int(row.get("rare_cost_building_count", 0)) >= 3, errors, f"{town_id} must retain high-tier rare-resource pressure")
+            rare_id = str(row.get("rare_resource_id", ""))
+            total_costs = row.get("total_costs", {})
+            total_costs = total_costs if isinstance(total_costs, dict) else {}
+            ensure(int(total_costs.get(rare_id, 0)) >= 14, errors, f"{town_id} must spend at least fourteen faction rare resources")
     script_text = TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     doc_text = TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH.exists() else ""
     for required_token in (
         "TOWN_DEVELOPMENT_COST_CURVE_REPORT",
         "town_development_cost_curve_report_v1",
         "MIN_COMMON_ONLY_TO_RARE_RATIO",
+        "MIN_RARE_DEVELOPMENT_SPEND",
         "HIGH_TIER_START",
         "SIGNATURE_TIER_COUNT",
         "prerequisite_closure",
         "common_only_to_rare_ratio",
         "rare cost must be gated behind tier",
+        "must spend at least",
         "gold must remain the dominant numeric development cost",
     ):
         ensure(required_token in script_text, errors, f"Town development cost curve report is missing token {required_token}")
@@ -20399,6 +20430,7 @@ def main() -> int:
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
+    print("- authored-town rare pressure now requires meaningful high-tier rare spend while capping leftover rare stock after development")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")

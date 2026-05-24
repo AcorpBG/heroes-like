@@ -25,6 +25,8 @@ MIN_BUILDABLE_TARGETS = 20
 MIN_NON_UNIT_BUILDABLE_TARGETS = 12
 MIN_BREADTH_PARITY_BUILDINGS = 5
 MIN_COMPLETION_DAY = 20
+MIN_RARE_DEVELOPMENT_SPEND = 14
+MAX_ENDING_RARE_AFTER_COMPLETION = 13
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
     "faction_thornwake",
@@ -75,6 +77,14 @@ def simulate_town(
     target_turns = int(profile.get("target_complete_turns", TARGET_TURNS))
     built = {str(value) for value in town.get("starting_building_ids", [])}
     target_buildings = [str(value) for value in town.get("buildable_building_ids", [])]
+    rare_id = str(profile.get("rare_resource_id", ""))
+    total_development_costs: dict[str, int] = {}
+    for building_id in target_buildings:
+        cost = buildings.get(building_id, {}).get("cost", {})
+        if not isinstance(cost, dict):
+            continue
+        for resource_id, amount in cost.items():
+            total_development_costs[str(resource_id)] = int(total_development_costs.get(str(resource_id), 0)) + int(amount)
     non_unit_buildings = [
         building_id
         for building_id in target_buildings
@@ -144,6 +154,9 @@ def simulate_town(
         "build_count": len(build_log),
         "missing_buildings": missing,
         "ending_resources": dict(sorted(resources.items())),
+        "total_development_costs": dict(sorted(total_development_costs.items())),
+        "rare_development_spend": int(total_development_costs.get(rare_id, 0)),
+        "ending_rare_resource": int(resources.get(rare_id, 0)),
         "stalled_days": stalled_days[:5],
         "build_log": build_log,
     }
@@ -265,6 +278,10 @@ def main() -> int:
             errors.append(f"{town_id} completed on day {result['completion_day']}, below production pacing floor {MIN_COMPLETION_DAY}")
         if int(result["build_count"]) > TARGET_TURNS:
             errors.append(f"{town_id} violates one-build-per-turn count")
+        if int(result.get("rare_development_spend", 0)) < MIN_RARE_DEVELOPMENT_SPEND:
+            errors.append(f"{town_id} must spend at least {MIN_RARE_DEVELOPMENT_SPEND} faction rare resources across development")
+        if int(result.get("ending_rare_resource", 0)) > MAX_ENDING_RARE_AFTER_COMPLETION:
+            errors.append(f"{town_id} ends development with too much unspent faction rare resource")
 
     report["authored_town_count"] = town_count
     report["full_ladder_town_count"] = full_ladder_town_count
@@ -272,6 +289,8 @@ def main() -> int:
     report["min_buildable_targets"] = MIN_BUILDABLE_TARGETS
     report["min_non_unit_buildable_targets"] = MIN_NON_UNIT_BUILDABLE_TARGETS
     report["min_breadth_parity_buildings"] = MIN_BREADTH_PARITY_BUILDINGS
+    report["min_rare_development_spend"] = MIN_RARE_DEVELOPMENT_SPEND
+    report["max_ending_rare_after_completion"] = MAX_ENDING_RARE_AFTER_COMPLETION
 
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))

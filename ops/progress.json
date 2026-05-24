@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-resource-availability-matrix-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Resource Availability Matrix",
+  "currentSliceId": "economy-town-rare-pressure-balance-20260524-10184",
+  "currentSliceTitle": "Economy Town Rare Pressure Balance",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active authored scenarios now have a deterministic all-nine-resource source matrix covering 16 active scenarios, 18 player-town cases, and 20 enemy-town cases. The gate proves every live stockpile resource has active scenario source observations, common resources appear in every active scenario source ecology, rare resources have persistent source coverage and active town-development use, every active player/enemy town case has persistent source coverage for non-gold required development resources, and rare-resource normal market buying remains disabled.",
+  "currentSliceNotes": "High-tier faction rare-resource pressure now uses a 2/4/6 signature tier curve plus selected late unique rare costs. Deterministic and active-scenario gates prove every authored town spends at least 14 faction rare resources, ends completion with no more than 13 unspent faction rare, preserves the 30-turn cap and day-20 pacing floor, and keeps player and AI active-scenario runways green.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:55:42Z",
+  "updatedAt": "2026-05-24T23:17:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,37 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-rare-pressure-balance-20260524-10184",
+      "title": "Economy Town Rare Pressure Balance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T23:17:12Z",
+      "startedAt": "2026-05-24T23:01:25Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-rare-pressure-balance-report.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/validate_repo.py"
+      ],
+      "summary": "High-tier faction rare-resource pressure now uses a 2/4/6 signature tier curve plus selected late unique rare costs. Deterministic and active-scenario gates prove every authored town spends at least 14 faction rare resources, ends completion with no more than 13 unspent faction rare, preserves the 30-turn cap and day-20 pacing floor, and keeps player and AI active-scenario runways green.",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/active_scenario_resource_availability_matrix_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-rare-pressure.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 500 --log-file /tmp/heroes-like-active-scenario-town-rare-pressure.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-rare-pressure.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/active_scenario_resource_availability_matrix_report.py",
+        "jq empty content/buildings.json && jq empty ops/progress.json"
+      ],
+      "completedAt": "2026-05-24T23:17:12Z"
+    },
     {
       "id": "economy-active-scenario-resource-availability-matrix-20260524-10184",
       "title": "Economy Active Scenario Resource Availability Matrix",
