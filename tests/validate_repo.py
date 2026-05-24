@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import importlib.util
 import re
 import struct
 import subprocess
@@ -129,6 +130,8 @@ ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "econo
 ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_ai_town_development_runway_report.gd"
 ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_ai_town_development_runway_report.tscn"
 ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-development-runway-report.md"
+ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_resource_availability_matrix_report.py"
+ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-resource-availability-matrix-report.md"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.tscn"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-unit-tier-runtime-surface-report.md"
@@ -1425,6 +1428,15 @@ OVERWORLD_OBJECT_SAFE_REFRESH_RULES = {"none", "daily_income", "weekly_growth", 
 def load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def load_python_module(path: Path, module_name: str):
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load module from {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def res_path_to_disk(path: str) -> Path:
@@ -19308,6 +19320,82 @@ def validate_active_scenario_rare_economy_access(errors: list[str]) -> None:
     ensure({"aetherglass", "embergrain", "peatwax"}.issubset(covered_rare_ids), errors, "Active scenario rare access gate must cover the live player-facing rare-resource mix")
 
 
+def validate_active_scenario_resource_availability_matrix(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario resource availability matrix report script is missing")
+    ensure(ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH.exists(), errors, "Active scenario resource availability matrix report doc is missing")
+    if not ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    doc_text = ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH.exists() else ""
+    for required_token in (
+        "active_scenario_resource_availability_matrix_v1",
+        "LIVE_STOCKPILE_RESOURCE_IDS",
+        "RARE_RESOURCE_IDS",
+        "COMMON_SOURCE_REQUIRED_IDS",
+        "MIN_ACTIVE_SCENARIO_COUNT",
+        "MIN_PLAYER_TOWN_CASE_COUNT",
+        "MIN_ENEMY_TOWN_CASE_COUNT",
+        "persistent active-scenario sources",
+        "rare_resource_buying_enabled",
+        "matching_rare_source_placement_ids",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario resource availability matrix report is missing token {required_token}")
+    for required_text in (
+        "Economy Active Scenario Resource Availability Matrix Report",
+        "economy-active-scenario-resource-availability-matrix-20260524-10184",
+        "active_scenario_resource_availability_matrix_v1",
+        "all nine live stockpile resources",
+        "16 active scenarios",
+        "18 player-town cases",
+        "20 enemy-town cases",
+        "persistent source coverage",
+        "normal markets remain common-resource only",
+        "not final campaign balance",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario resource availability matrix doc is missing required text: {required_text}")
+
+    try:
+        module = load_python_module(ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH, "active_scenario_resource_availability_matrix_report")
+        report = module.build_report(ROOT)
+    except Exception as exc:  # pragma: no cover - validation should surface import/report failures.
+        fail(errors, f"Active scenario resource availability matrix report failed to run: {exc}")
+        return
+
+    ensure(report.get("schema") == "active_scenario_resource_availability_matrix_v1", errors, "Active scenario resource availability matrix report schema mismatch")
+    ensure(report.get("live_stockpile_resource_ids") == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Resource availability matrix must cover all live stockpile resources in canonical order")
+    ensure(report.get("rare_resource_ids") == list(ECONOMY_STAGED_RARE_RESOURCE_IDS), errors, "Resource availability matrix must cover all rare resources in canonical order")
+    ensure(int(report.get("active_scenario_count", 0)) >= 16, errors, "Resource availability matrix must cover the active authored scenario roster")
+    ensure(int(report.get("player_town_case_count", 0)) >= 18, errors, "Resource availability matrix must cover active player-town cases")
+    ensure(int(report.get("enemy_town_case_count", 0)) >= 20, errors, "Resource availability matrix must cover active enemy-town cases")
+    ensure(report.get("normal_market_policy", {}).get("rare_resource_buying_enabled", True) is False, errors, "Resource availability matrix must keep rare-resource normal market buying disabled")
+    ensure(not report.get("errors", []), errors, "Active scenario resource availability matrix report must have zero errors")
+
+    resource_rows = {
+        str(row.get("resource_id", "")): row
+        for row in report.get("resource_rows", [])
+        if isinstance(row, dict)
+    }
+    ensure(set(resource_rows.keys()) == set(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Resource availability matrix must emit one row per live stockpile resource")
+    for resource_id in ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS:
+        row = resource_rows.get(resource_id, {})
+        ensure(int(row.get("source_observation_count", 0)) > 0, errors, f"{resource_id} must have active scenario source observations")
+        ensure(len(row.get("development_cost_town_ids", [])) > 0, errors, f"{resource_id} must appear in town development costs")
+        if resource_id in ("gold", "wood", "ore"):
+            ensure(int(row.get("active_scenario_count", 0)) == int(report.get("active_scenario_count", 0)), errors, f"{resource_id} must be sourced in every active scenario")
+        if resource_id in ECONOMY_STAGED_RARE_RESOURCE_IDS:
+            ensure(int(row.get("persistent_source_count", 0)) > 0, errors, f"{resource_id} must have persistent active-scenario source coverage")
+            ensure(len(row.get("development_rare_town_ids", [])) > 0, errors, f"{resource_id} must be assigned to at least one town development profile")
+    for case in report.get("town_cases", []):
+        if not isinstance(case, dict):
+            continue
+        ensure(not case.get("missing_persistent_required_resource_ids", []), errors, f"{case.get('scenario_id', '')}.{case.get('town_id', '')} has missing persistent source coverage")
+        for resource_id in ("wood", "ore", str(case.get("rare_resource_id", ""))):
+            ensure(resource_id in case.get("required_resource_ids", []), errors, f"{case.get('scenario_id', '')}.{case.get('town_id', '')} must require {resource_id} in town development")
+
+
 def validate_active_scenario_town_economy_source_route(errors: list[str]) -> None:
     ensure(ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town economy source route report script is missing")
     ensure(ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_SCENE_PATH.exists(), errors, "Active scenario town economy source route report scene is missing")
@@ -20219,6 +20307,7 @@ def main() -> int:
     validate_live_stockpile_resource_surface(errors)
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
+    validate_active_scenario_resource_availability_matrix(errors)
     validate_active_scenario_town_economy_source_route(errors)
     validate_active_scenario_town_start_economy(errors)
     validate_active_scenario_ai_town_start_economy(errors)
@@ -20315,6 +20404,7 @@ def main() -> int:
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
+    print("- active authored scenarios now expose an all-nine-resource source matrix for player and enemy town development coverage")
     print("- active authored scenario starts now prove natural first-week town construction, common-resource spend, one-build-per-day guards, and nine-resource stockpile normalization")
     print("- active enemy-town starts now seed natural AI development treasuries and prove first-week AI construction, common-resource spend, one-build-per-town-per-turn guards, and nine-resource treasury normalization")
     print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")

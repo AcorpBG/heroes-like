@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario AI Delayed Source Save Resume",
+  "currentSliceId": "economy-active-scenario-resource-availability-matrix-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Resource Availability Matrix",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed.",
+  "currentSliceNotes": "Active authored scenarios now have a deterministic all-nine-resource source matrix covering 16 active scenarios, 18 player-town cases, and 20 enemy-town cases. The gate proves every live stockpile resource has active scenario source observations, common resources appear in every active scenario source ecology, rare resources have persistent source coverage and active town-development use, every active player/enemy town case has persistent source coverage for non-gold required development resources, and rare-resource normal market buying remains disabled.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:48:04Z",
+  "updatedAt": "2026-05-24T22:55:42Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,31 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-resource-availability-matrix-20260524-10184",
+      "title": "Economy Active Scenario Resource Availability Matrix",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T22:55:42Z",
+      "startedAt": "2026-05-24T22:52:07Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-resource-availability-matrix-report.md",
+        "tests/active_scenario_resource_availability_matrix_report.py",
+        "tests/validate_repo.py"
+      ],
+      "summary": "Active authored scenarios now have a deterministic all-nine-resource source matrix covering 16 active scenarios, 18 player-town cases, and 20 enemy-town cases. The gate proves every live stockpile resource has active scenario source observations, common resources appear in every active scenario source ecology, rare resources have persistent source coverage and active town-development use, every active player/enemy town case has persistent source coverage for non-gold required development resources, and rare-resource normal market buying remains disabled.",
+      "validation": [
+        "python3 tests/active_scenario_resource_availability_matrix_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/active_scenario_resource_availability_matrix_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-24T22:55:42Z"
+    },
     {
       "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
       "title": "Economy Active Scenario AI Delayed Source Save Resume",
