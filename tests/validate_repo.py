@@ -13573,6 +13573,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             '"standard"',
             '"full"',
             "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT",
+            "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
             "BALANCE_REGRESSION_REPORT_SUITE",
             "HEADLESS_SIMULATION_HARNESS_REPORT",
             "extract_marker_payload",
@@ -13596,6 +13597,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "tools/run_headless_balance_harness.py",
             "headless_balance_harness_cli_v1",
             "tests/battle_autoplay_combat_balance_report.tscn",
+            "tests/battle_autoplay_active_scenario_breadth_report.tscn",
             "tests/balance_regression_report_suite.tscn",
             "tests/headless_simulation_harness_report.tscn",
             "python3 tools/run_headless_balance_harness.py --suite standard",
@@ -16865,6 +16867,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
     combat_balance_report_path = ROOT / "tests/battle_autoplay_combat_balance_report.gd"
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
+    active_breadth_report_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.gd"
+    active_breadth_scene_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -16881,6 +16885,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
     balance_matrix_doc_path = ROOT / "docs/battle-autoplay-balance-matrix-diagnostics-report.md"
     expanded_sample_doc_path = ROOT / "docs/battle-autoplay-expanded-sample-breadth-report.md"
+    active_breadth_doc_path = ROOT / "docs/battle-autoplay-active-scenario-breadth-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
@@ -16898,6 +16903,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         headless_report_path,
         combat_balance_report_path,
         combat_balance_scene_path,
+        active_breadth_report_path,
+        active_breadth_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
@@ -16914,6 +16921,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         calibration_doc_path,
         balance_matrix_doc_path,
         expanded_sample_doc_path,
+        active_breadth_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
@@ -16984,6 +16992,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "BALANCE_MATRIX_TERMINAL_MARGIN_OUTLIER_PCT",
             "DEFAULT_SCENARIO_IDS",
             "DEFAULT_SAMPLE_LIMIT := 12",
+            "build_sampling_report",
             "DEFAULT_MINIMUM_SAMPLE_COUNT := 6",
             "scenario_distribution",
             "damage_totals",
@@ -17084,6 +17093,35 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if combat_balance_scene_path.exists():
         combat_balance_scene_text = combat_balance_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_combat_balance_report.gd" in combat_balance_scene_text, errors, "Battle autoplay combat balance scene is not wired to its script.")
+    if active_breadth_report_path.exists():
+        active_breadth_text = active_breadth_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
+            "battle_autoplay_active_scenario_breadth_report_v1",
+            "report_only_active_scenario_combat_breadth_probe",
+            "MIN_ACTIVE_SCENARIO_COUNT := 16",
+            "MIN_AUTHORED_ENCOUNTER_COUNT := 51",
+            "_active_authored_scenario_ids",
+            "_encounter_count_for_scenarios",
+            "battle_sample_limit",
+            "expected_encounter_count",
+            "completed_sample_count",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "missing_scenario_ids",
+            "scenario_distribution",
+            "balance_tuning_queue",
+            "repeat_queue_signature",
+            "report_only_no_runtime_tuning",
+            "automatic_tuning",
+            "authored_content_writeback",
+            "final_combat_balance_approval",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in active_breadth_text, errors, f"Battle autoplay active scenario breadth report is missing token: {required_token}")
+    if active_breadth_scene_path.exists():
+        active_breadth_scene_text = active_breadth_scene_path.read_text(encoding="utf-8")
+        ensure("battle_autoplay_active_scenario_breadth_report.gd" in active_breadth_scene_text, errors, "Battle autoplay active scenario breadth scene is not wired to its script.")
     if tuning_queue_report_path.exists():
         tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -17257,6 +17295,32 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "not final combat balance approval",
         ):
             ensure(required_text in expanded_sample_text, errors, f"Battle autoplay expanded sample doc is missing required text: {required_text}")
+    if active_breadth_doc_path.exists():
+        active_breadth_doc_text = active_breadth_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Active Scenario Breadth Report",
+            "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
+            "battle_autoplay_active_scenario_breadth_report_v1",
+            "report_only_active_scenario_combat_breadth_probe",
+            "active_scenario_count",
+            "16",
+            "expected_encounter_count",
+            "51",
+            "sample_count",
+            "completed_sample_count",
+            "stalled_sample_count",
+            "invalid_order_count",
+            "balance_tuning_queue.status",
+            "action_required",
+            "balance_tuning_queue.item_count",
+            "54",
+            "balance_tuning_queue.high_priority_count",
+            "28",
+            "e4d8c04a",
+            "No automatic tuning.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in active_breadth_doc_text, errors, f"Battle autoplay active scenario breadth doc is missing required text: {required_text}")
     if tuning_queue_doc_path.exists():
         tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
         for required_text in (

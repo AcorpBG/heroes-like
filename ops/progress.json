@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
-  "currentSliceTitle": "Strategic AI Multi-Scenario Town Defense Retask",
+  "currentSliceId": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Active Scenario Breadth Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Expanded the shared headless strategic AI harness from one River Pass town-defense fixture to five-scenario/9-faction town-defense retask coverage; all faction cases retask to same-faction stabilizing towns with no hero_task_state writes or public-event leaks.",
+  "currentSliceNotes": "Extended deterministic battle autoplay balance evidence from the four-scenario default to all 16 active authored scenarios and all 51 current encounter placements; the broader report passes coverage/no-stall/no-invalid-order gates and surfaces a report-only action-required tuning queue.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T04:30:00Z",
+  "updatedAt": "2026-05-24T05:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,53 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
+      "title": "Battle Autoplay Active Scenario Breadth Harness",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_combat_balance_report.gd",
+        "docs/battle-autoplay-expanded-sample-breadth-report.md"
+      ],
+      "purpose": "Broaden deterministic battle autoplay balance evidence from the four-scenario default to every active authored scenario and encounter placement.",
+      "implementationTargets": [
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-active-scenario-breadth-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A focused report derives every active authored campaign/skirmish scenario from content and counts its encounter placements.",
+        "The report runs BattleAutoplayBalanceHarnessRules across the full active scenario set with a sample limit matching current encounter placement count.",
+        "The report proves all active scenarios contribute samples, current authored encounter placement count is covered, no sampled battle stalls, no invalid orders occur, and queue signatures are deterministic.",
+        "The report exposes combat-feel, balance-matrix, runtime-consequence, and tuning-queue evidence as report-only diagnostics without automatic tuning or authored content writeback.",
+        "Repository validation, JSON validation, and diff whitespace checks gate the new report."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or authored content writeback.",
+        "No manual-play replacement.",
+        "No new encounter authoring or retuning in this slice."
+      ],
+      "startedAt": "2026-05-24T04:45:00Z",
+      "completedAt": "2026-05-24T05:05:00Z",
+      "updatedAt": "2026-05-24T05:05:00Z",
+      "completionEvidence": [
+        "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT passed with active_scenario_count = 16, expected_encounter_count = 51, sample_count = 51, completed_sample_count = 51, stalled_sample_count = 0, invalid_order_count = 0, and missing_scenario_ids = [].",
+        "The broader active-content report exposed combat_feel_gate_status = pass, balance_matrix_gate_status = warning, runtime_consequence_gate_status = pass, runtime_consequence_matrix_gate_status = warning.",
+        "The active-content tuning queue is report-only/action-required with item_count = 54, high_priority_count = 28, and deterministic queue_signature = e4d8c04a.",
+        "tools/run_headless_balance_harness.py --suite standard now includes battle_autoplay_active_scenario_breadth and passed all four standard cases.",
+        "Validation passed: focused active-scenario breadth report, standard headless balance CLI, python3 tests/validate_repo.py, python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py, jq empty ops/progress.json, and git diff --check."
+      ],
+      "notes": "Completed because the existing default combat-feel sampler covers 12 samples across four scenarios while active authored player-facing content now spans 16 scenarios and 51 encounter placements."
+    },
     {
       "id": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
       "title": "Strategic AI Multi-Scenario Town Defense Retask",
@@ -24545,8 +24592,8 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "strategic-ai-multi-scenario-town-defense-retask-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T04:30:00Z",
+  "active_slice": "battle-autoplay-active-scenario-breadth-harness-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T05:05:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
