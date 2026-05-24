@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-autoplay-remaining-watch-retune-20260524-10184",
-  "currentSliceTitle": "Battle Autoplay Remaining Watch Retune",
+  "currentSliceId": "battle-autoplay-active-clear-regression-gate-20260524-10184",
+  "currentSliceTitle": "Battle Autoplay Active Clear Regression Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed placement-local authored army tuning for the remaining active-scenario combat watch queue: active breadth queue pressure dropped from 7 to 0 items, high_priority_count stayed 0, the active report completed 51/51 samples with zero stalls/invalid orders/missing scenario ids, and the default battle tuning queue remained clear.",
+  "currentSliceNotes": "Completed active-scenario battle breadth regression hardening: the report now fails if the cleared active tuning queue reopens, while standard headless balance validation still passes 4/4.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T10:45:00Z",
+  "updatedAt": "2026-05-24T11:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,60 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
+      "title": "Battle Autoplay Active Clear Regression Gate",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "tools/run_headless_balance_harness.py",
+        "docs/battle-autoplay-remaining-watch-retune-report.md"
+      ],
+      "purpose": "Turn the cleared active-scenario battle tuning queue into a hard regression gate in the active breadth report and standard balance CLI.",
+      "implementationTargets": [
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "tests/validate_repo.py",
+        "docs/battle-autoplay-active-clear-regression-gate-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active-scenario breadth report fails if balance_tuning_queue.status is not clear or any high, medium, sample, cohort, gate, or top-contributor queue item reappears.",
+        "The report still proves 16 active scenarios, 51 authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, deterministic queue signatures, and report-only/no-runtime-tuning policy.",
+        "The standard headless balance harness includes and passes the hardened active breadth gate.",
+        "Repository validation, JSON validation, Python compilation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final combat balance approval.",
+        "No automatic tuning or runtime balance mutation.",
+        "No content retune in this slice.",
+        "No shared unit-stat changes.",
+        "No new scenario/campaign breadth."
+      ],
+      "startedAt": "2026-05-24T11:00:00Z",
+      "updatedAt": "2026-05-24T11:25:00Z",
+      "completedAt": "2026-05-24T11:25:00Z",
+      "notes": "Completed immediately after active breadth queue signature 829808c9 reached clear status with item_count 0 so future drift becomes a failing regression instead of report-only watch evidence.",
+      "completionEvidence": [
+        "tests/battle_autoplay_active_scenario_breadth_report.gd now enables ACTIVE_QUEUE_CLEAR_REQUIRED and emits active_queue_clear_gate in the report payload.",
+        "_assert_active_queue_clear fails the active breadth scene if balance_tuning_queue.status is not clear or if item_count, high_priority_count, medium_priority_count, sample_watch_count, cohort_watch_count, gate_item_count, categories, or top contributors reopen.",
+        "battle_autoplay_active_scenario_breadth_report.tscn passed with 16 active scenarios, 51/51 completed samples, zero stalls, zero invalid orders, no missing scenario ids, queue_signature 829808c9, item_count 0, and active_queue_clear_gate.required true.",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going passed all 4 standard cases with active breadth report_signature 3be9bc68.",
+        "tests/validate_repo.py now gates the active queue clear regression tokens and the slice evidence report."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "battle-autoplay-remaining-watch-retune-20260524-10184",
       "title": "Battle Autoplay Remaining Watch Retune",
@@ -25187,24 +25241,36 @@
     }
   ],
   "lastValidation": {
-    "id": "battle-autoplay-remaining-watch-retune-20260524-10184",
+    "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T10:45:00Z",
+    "updatedAt": "2026-05-24T11:25:00Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
       "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
       "python3 tests/validate_repo.py",
       "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
       "jq empty ops/progress.json content/scenarios.json",
       "git diff --check"
     ],
-    "summary": "Remaining active watch retune passed: active breadth queue pressure dropped from 7 to 0 items with high_priority_count 0, queue_signature 829808c9, 16 active scenarios, 51/51 completed authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, default tuning queue still clear with signature 829808c9, and the standard headless balance harness passed 4/4 cases."
+    "summary": "Active clear regression gate passed: active breadth now fails if queue items reopen; current report has active_queue_clear_gate.required true, queue status clear, item_count 0, signature 829808c9, 16 active scenarios, 51/51 completed authored encounter samples, zero stalls, zero invalid orders, no missing scenario ids, and standard headless balance harness passed 4/4 with active breadth signature 3be9bc68."
   },
-  "active_slice": "battle-autoplay-remaining-watch-retune-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T10:45:00Z",
+  "active_slice": "battle-autoplay-active-clear-regression-gate-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T11:25:00Z",
   "validationHistory": [
+    {
+      "id": "battle-autoplay-active-clear-regression-gate-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T11:25:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tools/run_headless_balance_harness.py --suite standard --keep-going",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tools/run_headless_balance_harness.py",
+        "jq empty ops/progress.json content/scenarios.json",
+        "git diff --check"
+      ],
+      "summary": "Active clear regression gate validation passed: the active breadth report now requires clear queue status and zero reopened items; the standard headless balance harness passed all four cases with active breadth report_signature 3be9bc68."
+    },
     {
       "id": "battle-autoplay-remaining-watch-retune-20260524-10184",
       "status": "passed",

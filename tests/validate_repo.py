@@ -17012,6 +17012,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     active_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-outlier-retune-report.md"
     active_second_outlier_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-second-outlier-retune-report.md"
     active_watch_retune_doc_path = ROOT / "docs/battle-autoplay-active-scenario-watch-retune-report.md"
+    active_clear_gate_doc_path = ROOT / "docs/battle-autoplay-active-clear-regression-gate-report.md"
     tuning_queue_doc_path = ROOT / "docs/battle-autoplay-balance-tuning-queue-report.md"
     queue_balance_doc_path = ROOT / "docs/battle-autoplay-queue-driven-combat-balance-pass-report.md"
     cohort_balance_doc_path = ROOT / "docs/battle-autoplay-cohort-balance-pass-report.md"
@@ -17051,6 +17052,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         active_outlier_retune_doc_path,
         active_second_outlier_retune_doc_path,
         active_watch_retune_doc_path,
+        active_clear_gate_doc_path,
         tuning_queue_doc_path,
         queue_balance_doc_path,
         cohort_balance_doc_path,
@@ -17230,8 +17232,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "report_only_active_scenario_combat_breadth_probe",
             "MIN_ACTIVE_SCENARIO_COUNT := 16",
             "MIN_AUTHORED_ENCOUNTER_COUNT := 51",
+            "ACTIVE_QUEUE_CLEAR_REQUIRED",
             "_active_authored_scenario_ids",
             "_encounter_count_for_scenarios",
+            "_assert_active_queue_clear",
             "battle_sample_limit",
             "expected_encounter_count",
             "completed_sample_count",
@@ -17240,8 +17244,13 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "missing_scenario_ids",
             "scenario_distribution",
             "balance_tuning_queue",
+            "active_queue_clear_gate",
             "repeat_queue_signature",
             "report_only_no_runtime_tuning",
+            "must remain clear",
+            "sample_watch_count",
+            "cohort_watch_count",
+            "gate_item_count",
             "automatic_tuning",
             "authored_content_writeback",
             "final_combat_balance_approval",
@@ -17571,6 +17580,30 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "No final combat balance approval.",
         ):
             ensure(required_text in active_watch_retune_doc_text, errors, f"Battle autoplay active scenario watch retune doc is missing required text: {required_text}")
+    if active_clear_gate_doc_path.exists():
+        active_clear_gate_doc_text = active_clear_gate_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Battle Autoplay Active Clear Regression Gate Report",
+            "battle-autoplay-active-clear-regression-gate-20260524-10184",
+            "tests/battle_autoplay_active_scenario_breadth_report.gd",
+            "ACTIVE_QUEUE_CLEAR_REQUIRED",
+            "active_queue_clear_gate",
+            "_assert_active_queue_clear",
+            "balance_tuning_queue.status",
+            "clear",
+            "balance_tuning_queue.item_count",
+            "0",
+            "sample_watch_count",
+            "cohort_watch_count",
+            "gate_item_count",
+            "queue_signature",
+            "829808c9",
+            "standard headless balance harness",
+            "No automatic tuning.",
+            "No runtime balance mutation.",
+            "No final combat balance approval.",
+        ):
+            ensure(required_text in active_clear_gate_doc_text, errors, f"Battle autoplay active clear regression gate doc is missing required text: {required_text}")
     if tuning_queue_doc_path.exists():
         tuning_queue_doc_text = tuning_queue_doc_path.read_text(encoding="utf-8")
         for required_text in (
