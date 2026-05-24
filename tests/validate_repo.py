@@ -116,6 +116,9 @@ ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH = ROOT / "docs" / "eco
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.gd"
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.tscn"
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-town-start-economy-report.md"
+ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_ai_town_start_economy_report.gd"
+ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_ai_town_start_economy_report.tscn"
+ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-start-economy-report.md"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.gd"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.tscn"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-development-runway-report.md"
@@ -19358,6 +19361,63 @@ def validate_active_scenario_town_start_economy(errors: list[str]) -> None:
         ensure(required_text in doc_text, errors, f"Active scenario town start economy doc is missing text: {required_text}")
 
 
+def validate_active_scenario_ai_town_start_economy(errors: list[str]) -> None:
+    ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario AI town start economy report script is missing")
+    ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists(), errors, "Active scenario AI town start economy report scene is missing")
+    ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists(), errors, "Active scenario AI town start economy report doc is missing")
+    if not ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists():
+        return
+    script_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT",
+        "active_scenario_ai_town_start_economy_report_v1",
+        "MIN_EARLY_BUILDS_PER_TOWN",
+        "ScenarioFactory.create_session",
+        "EnemyTurnRules.run_enemy_town_economy_turn",
+        "OverworldRules.get_town_build_status",
+        "common_spend_case_count",
+        "same_day_guard_case_count",
+        "full_treasury_case_count",
+        "without injected source capture",
+    ):
+        ensure(required_token in script_text, errors, f"Active scenario AI town start economy report is missing token {required_token}")
+    ensure("res://tests/active_scenario_ai_town_start_economy_report.gd" in scene_text, errors, "Active scenario AI town start economy scene must load its report script")
+    ensure("ActiveScenarioAiTownStartEconomyReport" in scene_text, errors, "Active scenario AI town start economy scene must expose a named report node")
+    for required_token in (
+        "static func run_enemy_town_economy_turn",
+        "_apply_empire_income(session, town_entries, treasury, state)",
+        "_build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)",
+        'town["last_build_day"] = int(session.day)',
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules AI town start economy support is missing token {required_token}")
+    for required_token in (
+        "_seed_enemy_town_starting_treasuries",
+        "development_balance",
+        "starting_resources",
+        "_add_resource_sets(treasury, starting_resources)",
+    ):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory enemy town start treasury support is missing token {required_token}")
+    for required_text in (
+        "Economy Active Scenario AI Town Start Economy Report",
+        "economy-active-scenario-ai-town-start-economy-20260524-10184",
+        "active_scenario_ai_town_start_economy_report_v1",
+        "natural active-scenario enemy town starts",
+        "16 active authored scenarios",
+        "20 enemy-town cases",
+        "first-week",
+        "one-build-per-town-per-turn",
+        "`wood` or `ore`",
+        "All nine live treasury ids",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Active scenario AI town start economy doc is missing text: {required_text}")
+
+
 def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town unit tier runtime surface report script is missing")
     ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town unit tier runtime surface report scene is missing")
@@ -19818,6 +19878,7 @@ def main() -> int:
     validate_active_scenario_rare_economy_access(errors)
     validate_active_scenario_town_economy_source_route(errors)
     validate_active_scenario_town_start_economy(errors)
+    validate_active_scenario_ai_town_start_economy(errors)
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_economy_resource_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
@@ -19910,6 +19971,7 @@ def main() -> int:
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
     print("- active authored scenario starts now prove natural first-week town construction, common-resource spend, one-build-per-day guards, and nine-resource stockpile normalization")
+    print("- active enemy-town starts now seed natural AI development treasuries and prove first-week AI construction, common-resource spend, one-build-per-town-per-turn guards, and nine-resource treasury normalization")
     print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
