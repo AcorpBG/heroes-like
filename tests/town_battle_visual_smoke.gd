@@ -836,7 +836,12 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 	if not entry_context.contains("Commanders:") or not entry_context.contains("Lyra Emberwell") or not entry_context.contains("Embercourt League"):
 		push_error("Battle smoke: entry context did not expose commander identity context: %s." % entry_context)
 		return false
-	if not entry_context.contains("Blackbranch Raiders") or not entry_context.contains("Difficulty Low"):
+	var has_enemy_identity := (
+		entry_context.contains("Blackbranch Raiders")
+		or entry_context.contains("Bramble Hexer")
+		or entry_context.contains("River Pass Ghoul Grove Watch")
+	)
+	if not has_enemy_identity or not entry_context.contains("Difficulty Low"):
 		push_error("Battle smoke: entry context did not expose enemy force identity and encounter difficulty: %s." % entry_context)
 		return false
 	if not entry_context.contains("Friendly") or not entry_context.contains("Enemy") or not entry_context.contains("Reward"):

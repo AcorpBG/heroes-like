@@ -5021,7 +5021,7 @@ static func _resource_scarcity_value(session: SessionStateStoreScript.SessionDat
 		return 0
 	var player_resources: Dictionary = session.overworld.get("resources", {})
 	var value := 0
-	for resource_key in ["wood", "ore"]:
+	for resource_key in ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
 		var amount: int = max(0, int(rewards.get(resource_key, 0)))
 		if amount <= 0:
 			continue

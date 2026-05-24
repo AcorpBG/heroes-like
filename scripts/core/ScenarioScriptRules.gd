@@ -550,7 +550,7 @@ static func _normalize_resources(value: Variant) -> Dictionary:
 		for key in value.keys():
 			var resource_key = String(key)
 			var amount = max(0, int(value[key]))
-			if amount > 0 and resource_key in ["gold", "wood", "ore"]:
+			if amount > 0 and resource_key != "experience" and resource_key != "":
 				resources[resource_key] = amount
 	return resources
 
@@ -558,7 +558,9 @@ static func _describe_resources(resources: Variant) -> String:
 	if not (resources is Dictionary):
 		return ""
 	var parts = []
-	for key in ["gold", "wood", "ore"]:
+	var keys = resources.keys()
+	keys.sort()
+	for key in keys:
 		var amount = int(resources.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])

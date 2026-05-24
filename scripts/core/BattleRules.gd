@@ -3576,7 +3576,8 @@ static func _casualty_units_from_ratio(total_units: int, ratio: float) -> int:
 static func _clamped_resource_loss(session: SessionStateStoreScript.SessionData, desired_loss: Dictionary) -> Dictionary:
 	var available = session.overworld.get("resources", {})
 	var loss := {}
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key_value in desired_loss.keys():
+		var resource_key := String(resource_key_value)
 		var amount = min(max(0, int(desired_loss.get(resource_key, 0))), max(0, int(available.get(resource_key, 0))))
 		if amount > 0:
 			loss[resource_key] = amount
@@ -6640,7 +6641,8 @@ static func _add_enemy_treasury_resources(
 		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
 			continue
 		var treasury = state.get("treasury", {}).duplicate(true) if state.get("treasury", {}) is Dictionary else {}
-		for resource_key in ["gold", "wood", "ore"]:
+		for resource_key_value in delta.keys():
+			var resource_key := String(resource_key_value)
 			treasury[resource_key] = max(0, int(treasury.get(resource_key, 0)) + int(delta.get(resource_key, 0)))
 		state["treasury"] = treasury
 		states[index] = state

@@ -17,6 +17,17 @@ const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
 const WEEKLY_GROWTH_INTERVAL := 7
 const BUILDING_CATEGORIES := ["civic", "dwelling", "economy", "support", "magic"]
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
+const LIVE_STOCKPILE_RESOURCE_KEYS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
@@ -1405,6 +1416,8 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 		return {"ok": false, "message": "Capture the town before issuing orders there."}
 
 	var build_status := get_town_build_status(town, building_id)
+	if int(town.get("last_build_day", 0)) == int(session.day):
+		return {"ok": false, "message": "This town has already completed a build order today."}
 	if not bool(build_status.get("buildable", false)):
 		return {"ok": false, "message": String(build_status.get("blocked_message", "That building is not available in this town."))}
 
@@ -1427,6 +1440,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	var built_buildings = _normalize_built_buildings_for_town_state(town)
 	built_buildings.append(building_id)
 	town["built_buildings"] = built_buildings
+	town["last_build_day"] = int(session.day)
 	town["available_recruits"] = _add_recruit_growth(
 		town.get("available_recruits", {}),
 		HeroProgressionRulesScript.scale_recruit_growth(
@@ -4615,7 +4629,7 @@ static func town_recruit_cost(session: SessionStateStoreScript.SessionData, town
 	var adjusted_cost := HeroProgressionRulesScript.scale_recruit_cost(session.overworld.get("hero", {}), unit.get("cost", {}))
 	return _apply_percent_discount(adjusted_cost, _recruitment_discount_percent(town, unit_id))
 
-static func get_town_build_status(town: Dictionary, building_id: String) -> Dictionary:
+static func get_town_build_status(town: Dictionary, building_id: String, current_day: int = -1) -> Dictionary:
 	var building := ContentService.get_building(building_id)
 	if building.is_empty():
 		return {
@@ -4634,6 +4648,8 @@ static func get_town_build_status(town: Dictionary, building_id: String) -> Dict
 		blockers.append("Not authored for this town.")
 	if building_id in built_buildings:
 		blockers.append("Already built.")
+	if current_day > 0 and int(town.get("last_build_day", 0)) == current_day:
+		blockers.append("Already built in this town today.")
 	var missing_requirements := _missing_build_requirements(building, built_buildings)
 	for requirement_id in missing_requirements:
 		var requirement := ContentService.get_building(String(requirement_id))
@@ -4826,6 +4842,7 @@ static func _normalize_towns(towns: Array) -> Array:
 			"recovery": _normalize_town_recovery_state(town.get("recovery", {})),
 			"front": _normalize_town_front_state(town.get("front", {})),
 			"occupation": _normalize_town_occupation_state(town.get("occupation", {})),
+			"last_build_day": max(0, int(town.get("last_build_day", 0))),
 		}
 		_copy_town_runtime_metadata(normalized_town, town)
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
@@ -9986,14 +10003,14 @@ static func _max_affordable_count(session: SessionStateStoreScript.SessionData, 
 	return max_affordable
 
 static func _resource_pool_meets_cost(pool: Dictionary, cost: Dictionary) -> bool:
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key in _resource_keys_for_payload(cost):
 		if int(pool.get(resource_key, 0)) < int(cost.get(resource_key, 0)):
 			return false
 	return true
 
 static func _resource_pool_shortfall(pool: Dictionary, cost: Dictionary) -> Dictionary:
 	var shortfall := {}
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key in _resource_keys_for_payload(cost):
 		var missing = max(0, int(cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
 		if missing > 0:
 			shortfall[resource_key] = missing
@@ -10088,6 +10105,20 @@ static func _normalize_resource_dict(value: Variant) -> Dictionary:
 			normalized[String(key)] = max(0, int(value[key]))
 	return normalized
 
+static func _resource_keys_for_payload(value: Variant) -> Array:
+	var keys := []
+	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
+		if resource_key not in keys:
+			keys.append(resource_key)
+	if value is Dictionary:
+		for key in value.keys():
+			var resource_key := String(key)
+			if resource_key == "experience" or resource_key == "":
+				continue
+			if resource_key not in keys:
+				keys.append(resource_key)
+	return keys
+
 static func _normalize_recruit_payload(value: Variant) -> Dictionary:
 	var normalized := {}
 	if value is Dictionary:
@@ -10110,7 +10141,7 @@ static func _describe_resource_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
 	var parts := []
-	for key in ["gold", "wood", "ore"]:
+	for key in _resource_keys_for_payload(delta):
 		var amount := int(delta.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
@@ -10120,7 +10151,7 @@ static func _describe_resource_change(before: Variant, after: Variant) -> String
 	if not (after is Dictionary):
 		return ""
 	var parts := []
-	for key in ["gold", "wood", "ore"]:
+	for key in _resource_keys_for_payload(after):
 		var previous := int(before.get(key, 0)) if before is Dictionary else 0
 		var current := int(after.get(key, 0))
 		var delta := current - previous

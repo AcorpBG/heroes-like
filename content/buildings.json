@@ -897,7 +897,8 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "embergrain": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -922,7 +923,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "embergrain": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -946,7 +948,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "embergrain": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1066,7 +1069,8 @@
       "description": "Flood-quenched forges plate the maulers for wet frontal assaults.",
       "cost": {
         "gold": 1610,
-        "wood": 1
+        "wood": 1,
+        "peatwax": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1091,7 +1095,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "peatwax": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1116,7 +1121,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "peatwax": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1227,7 +1233,8 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "aetherglass": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1252,7 +1259,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "aetherglass": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1276,7 +1284,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "aetherglass": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1395,7 +1404,8 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "verdant_grafts": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1424,7 +1434,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "verdant_grafts": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1449,7 +1460,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "verdant_grafts": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1567,7 +1579,8 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "brass_scrip": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1596,7 +1609,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "brass_scrip": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1620,7 +1634,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "brass_scrip": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1738,7 +1753,8 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "memory_salt": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1763,7 +1779,8 @@
       "cost": {
         "gold": 2570,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "memory_salt": 2
       },
       "content_status": "six_faction_scaffold",
       "requires": [
@@ -1788,7 +1805,8 @@
       "cost": {
         "gold": 2890,
         "wood": 2,
-        "ore": 2
+        "ore": 2,
+        "memory_salt": 3
       },
       "content_status": "six_faction_scaffold",
       "requires": [

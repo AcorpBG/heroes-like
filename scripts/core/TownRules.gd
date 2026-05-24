@@ -697,7 +697,7 @@ static func describe_buildings(session: SessionStateStoreScript.SessionData) -> 
 		var building_id := String(building_id_value)
 		if building_id == "" or building_id in built_buildings:
 			continue
-		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id, session.day)
 		if bool(build_status.get("buildable", false)):
 			continue
 		locked_lines.append("- %s" % _building_line(building_id, "locked", build_status))
@@ -2034,7 +2034,7 @@ static func _signed_resource_delta_summary(before_value: Variant, after_value: V
 	var before := _duplicate_dictionary(before_value)
 	var after := _duplicate_dictionary(after_value)
 	var parts := []
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key in _resource_keys_for_payload(after):
 		var delta := int(after.get(resource_key, 0)) - int(before.get(resource_key, 0))
 		if delta == 0:
 			continue
@@ -2136,7 +2136,7 @@ static func _stock_against_cost_line(resources: Dictionary, cost: Variant) -> St
 	if not (cost is Dictionary) or cost.is_empty():
 		return "no cost"
 	var parts := []
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key in _resource_keys_for_payload(cost):
 		var required := int(cost.get(resource_key, 0))
 		if required <= 0:
 			continue
@@ -2147,7 +2147,7 @@ static func _stores_after_cost_line(resources: Dictionary, cost: Variant) -> Str
 	if not (cost is Dictionary):
 		return ""
 	var after := {}
-	for resource_key in ["gold", "wood", "ore"]:
+	for resource_key in _resource_keys_for_payload(cost):
 		after[resource_key] = max(0, int(resources.get(resource_key, 0)) - int(cost.get(resource_key, 0)))
 	return _describe_resources(after, "none")
 
@@ -2944,11 +2944,25 @@ static func _describe_resources(resources: Variant, empty_label: String = "none"
 	if not (resources is Dictionary):
 		return empty_label
 	var parts := []
-	for key in ["gold", "wood", "ore"]:
+	for key in _resource_keys_for_payload(resources):
 		var amount := int(resources.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
 	return ", ".join(parts) if not parts.is_empty() else empty_label
+
+static func _resource_keys_for_payload(value: Variant) -> Array:
+	var keys := []
+	for resource_key in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+		if resource_key not in keys:
+			keys.append(resource_key)
+	if value is Dictionary:
+		for key in value.keys():
+			var resource_key := String(key)
+			if resource_key == "experience" or resource_key == "":
+				continue
+			if resource_key not in keys:
+				keys.append(resource_key)
+	return keys
 
 static func _describe_recruit_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):

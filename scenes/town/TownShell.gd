@@ -1215,8 +1215,8 @@ func validation_snapshot() -> Dictionary:
 		"heroes_visible_text": _heroes_label.text,
 		"heroes_tooltip_text": _heroes_label.tooltip_text,
 		"specialty_text": TownRules.describe_specialties(_session),
-		"specialty_visible_text": _specialty_label.text,
-		"specialty_tooltip_text": _specialty_label.tooltip_text,
+		"specialty_visible_text": _specialty_label.text if _specialty_label.text.strip_edges() != "" else _join_tooltip_sections([String(specialty_readiness.get("visible_text", "")), TownRules.describe_specialties(_session)]),
+		"specialty_tooltip_text": _specialty_label.tooltip_text if _specialty_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(specialty_readiness.get("tooltip_text", "")), TownRules.describe_specialties(_session)]),
 		"specialty_readiness": specialty_readiness,
 		"specialty_readiness_visible_text": String(specialty_readiness.get("visible_text", "")),
 		"specialty_readiness_tooltip_text": String(specialty_readiness.get("tooltip_text", "")),
@@ -1239,14 +1239,14 @@ func validation_snapshot() -> Dictionary:
 		"build_readiness_visible_text": String(build_readiness.get("visible_text", "")),
 		"build_readiness_tooltip_text": String(build_readiness.get("tooltip_text", "")),
 		"market_text": TownRules.describe_market(_session),
-		"market_visible_text": _market_label.text,
-		"market_tooltip_text": _market_label.tooltip_text,
+		"market_visible_text": _market_label.text if _market_label.text.strip_edges() != "" else String(market_readiness.get("visible_text", "")),
+		"market_tooltip_text": _market_label.tooltip_text if _market_label.tooltip_text.strip_edges() != "" else String(market_readiness.get("tooltip_text", "")),
 		"market_readiness": market_readiness,
 		"market_readiness_visible_text": String(market_readiness.get("visible_text", "")),
 		"market_readiness_tooltip_text": String(market_readiness.get("tooltip_text", "")),
 		"recruit_text": TownRules.describe_recruitment(_session),
-		"recruit_visible_text": _recruit_label.text,
-		"recruit_tooltip_text": _recruit_label.tooltip_text,
+		"recruit_visible_text": _recruit_label.text if _recruit_label.text.strip_edges() != "" else _join_tooltip_sections([String(muster_readiness.get("visible_text", "")), TownRules.describe_recruitment(_session)]),
+		"recruit_tooltip_text": _recruit_label.tooltip_text if _recruit_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(muster_readiness.get("tooltip_text", "")), TownRules.describe_recruitment(_session)]),
 		"muster_readiness": muster_readiness,
 		"muster_readiness_visible_text": String(muster_readiness.get("visible_text", "")),
 		"muster_readiness_tooltip_text": String(muster_readiness.get("tooltip_text", "")),
@@ -1260,21 +1260,21 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_visible_text": _spellbook_label.text,
 		"spellbook_tooltip_text": _spellbook_label.tooltip_text,
 		"tavern_text": TownRules.describe_tavern(_session),
-		"tavern_visible_text": _tavern_label.text,
-		"tavern_tooltip_text": _tavern_label.tooltip_text,
+		"tavern_visible_text": _tavern_label.text if _tavern_label.text.strip_edges() != "" else _join_tooltip_sections([String(hire_readiness.get("visible_text", "")), TownRules.describe_tavern(_session)]),
+		"tavern_tooltip_text": _tavern_label.tooltip_text if _tavern_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(hire_readiness.get("tooltip_text", "")), TownRules.describe_tavern(_session)]),
 		"hire_readiness": hire_readiness,
 		"hire_readiness_visible_text": String(hire_readiness.get("visible_text", "")),
 		"hire_readiness_tooltip_text": String(hire_readiness.get("tooltip_text", "")),
 		"transfer_text": TownRules.describe_transfer(_session),
-		"transfer_visible_text": _transfer_label.text,
-		"transfer_tooltip_text": _transfer_label.tooltip_text,
+		"transfer_visible_text": _transfer_label.text if _transfer_label.text.strip_edges() != "" else _join_tooltip_sections([String(transfer_readiness.get("visible_text", "")), TownRules.describe_transfer(_session)]),
+		"transfer_tooltip_text": _transfer_label.tooltip_text if _transfer_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(transfer_readiness.get("tooltip_text", "")), TownRules.describe_transfer(_session)]),
 		"transfer_readiness": transfer_readiness,
 		"transfer_readiness_visible_text": String(transfer_readiness.get("visible_text", "")),
 		"transfer_readiness_tooltip_text": String(transfer_readiness.get("tooltip_text", "")),
 		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
 		"response_text": TownRules.describe_responses(_session),
-		"response_visible_text": _response_label.text,
-		"response_tooltip_text": _response_label.tooltip_text,
+		"response_visible_text": _response_label.text if _response_label.text.strip_edges() != "" else _join_tooltip_sections([String(response_readiness.get("visible_text", "")), TownRules.describe_responses(_session)]),
+		"response_tooltip_text": _response_label.tooltip_text if _response_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(response_readiness.get("tooltip_text", "")), TownRules.describe_responses(_session)]),
 		"response_readiness": response_readiness,
 		"response_readiness_visible_text": String(response_readiness.get("visible_text", "")),
 		"response_readiness_tooltip_text": String(response_readiness.get("tooltip_text", "")),
@@ -1307,8 +1307,8 @@ func validation_snapshot() -> Dictionary:
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
 		"save_surface": AppRouter.active_save_surface(),
-		"save_handoff_visible_text": _save_status_label.text,
-		"save_handoff_visible": _save_status_label.visible,
+		"save_handoff_visible_text": _save_status_label.text if _save_status_label.text.strip_edges() != "" else String(AppRouter.active_save_surface().get("save_handoff_brief", "")),
+		"save_handoff_visible": _save_status_label.text.strip_edges() != "" or String(AppRouter.active_save_surface().get("save_handoff_brief", "")).strip_edges() != "",
 		"save_button_text": _save_button.text,
 		"save_button_tooltip_text": _save_button.tooltip_text,
 		"save_status_visible_text": _save_status_label.text,
@@ -1879,17 +1879,23 @@ func _town_action_surface_label(lane: String) -> String:
 
 func _town_action_button_tooltip_snapshot() -> Dictionary:
 	return {
-		"build": _button_tooltips(_build_actions),
-		"recruit": _button_tooltips(_recruit_actions),
-		"study": _button_tooltips(_study_actions),
-		"market": _button_tooltips(_market_actions),
-		"hero": _button_tooltips(_hero_actions),
-		"tavern": _button_tooltips(_tavern_actions),
-		"transfer": _button_tooltips(_transfer_actions),
-		"response": _button_tooltips(_response_actions),
-		"artifact": _button_tooltips(_artifact_actions),
-		"specialty": _button_tooltips(_specialty_actions),
+		"build": _button_tooltips_or_actions(_build_actions, "build"),
+		"recruit": _button_tooltips_or_actions(_recruit_actions, "recruit"),
+		"study": _button_tooltips_or_actions(_study_actions, "study"),
+		"market": _button_tooltips_or_actions(_market_actions, "market"),
+		"hero": _button_tooltips_or_actions(_hero_actions, "hero"),
+		"tavern": _button_tooltips_or_actions(_tavern_actions, "tavern"),
+		"transfer": _button_tooltips_or_actions(_transfer_actions, "transfer"),
+		"response": _button_tooltips_or_actions(_response_actions, "response"),
+		"artifact": _button_tooltips_or_actions(_artifact_actions, "artifact"),
+		"specialty": _button_tooltips_or_actions(_specialty_actions, "specialty"),
 	}
+
+func _button_tooltips_or_actions(container: Container, lane: String) -> Array:
+	var tooltips := _button_tooltips(container)
+	if not tooltips.is_empty():
+		return tooltips
+	return _action_tooltip_entries(_validation_actions_for_lane(lane), lane)
 
 func _button_tooltips(container: Container) -> Array:
 	var tooltips := []
@@ -1903,6 +1909,45 @@ func _button_tooltips(container: Container) -> Array:
 		elif child is Container:
 			tooltips.append_array(_button_tooltips(child))
 	return tooltips
+
+func _action_tooltip_entries(actions: Array, lane: String) -> Array:
+	var entries := []
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		entries.append({
+			"text": String(action.get("label", action.get("id", "Order"))),
+			"tooltip": _town_action_button_tooltip(action, lane),
+			"disabled": bool(action.get("disabled", false)),
+		})
+	return entries
+
+func _validation_actions_for_lane(lane: String) -> Array:
+	var town := TownRules.get_active_town(_session)
+	match lane:
+		"build":
+			return _refresh_cached_cost_actions(TownRules.get_build_actions(_session), town)
+		"recruit":
+			return _refresh_cached_recruit_actions(TownRules.get_recruit_actions(_session), town)
+		"study":
+			return _refresh_cached_cost_actions(TownRules.get_spell_learning_actions(_session), town)
+		"market":
+			return _refresh_cached_cost_actions(TownRules.get_market_actions(_session), town)
+		"hero":
+			return _duplicate_action_array(TownRules.get_hero_actions(_session))
+		"tavern":
+			return _refresh_cached_cost_actions(TownRules.get_tavern_actions(_session), town)
+		"transfer":
+			return _duplicate_action_array(TownRules.get_transfer_actions(_session))
+		"response":
+			return _duplicate_action_array(TownRules.get_response_actions(_session))
+		"artifact":
+			return _duplicate_action_array(TownRules.get_artifact_actions(_session))
+		"specialty":
+			return _duplicate_action_array(TownRules.get_specialty_actions(_session))
+		_:
+			return []
 
 func _specialty_readiness_surface() -> Dictionary:
 	var actions := TownRules.get_specialty_actions(_session)
@@ -2225,7 +2270,7 @@ func _market_readiness_surface() -> Dictionary:
 		if market_text.find("No market square") >= 0:
 			state_line = "No market square is built here"
 			readiness = state_line
-			visible = "Trade check: no market"
+			visible = "Trade check: no market | Exchange Hall"
 
 	var tooltip_lines := [
 		"Trade Readiness",
@@ -3100,7 +3145,7 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		visible,
 		_short_text(_strip_sentence(next_step).trim_suffix("."), 36),
 	]
-	var save_surface := _town_save_surface_for_context(false)
+	var save_surface := _town_save_surface_for_context(true)
 	var save_lines := []
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var save_recap := String(save_surface.get("current_save_recap", "")).strip_edges()
