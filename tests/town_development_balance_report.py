@@ -165,6 +165,63 @@ def main() -> int:
             if resource_id not in rare_source_ids:
                 errors.append(f"{resource_id} must have at least one live source")
 
+    town_count = 0
+    full_ladder_town_count = 0
+    for town_id, town in towns.items():
+        town_count += 1
+        faction_id = str(town.get("faction_id", ""))
+        faction = factions.get(faction_id, {})
+        if not faction:
+            errors.append(f"{town_id} references missing faction {faction_id}")
+            continue
+        profile = town.get("development_balance", {})
+        if not isinstance(profile, dict) or not profile:
+            errors.append(f"{town_id} must declare development_balance for authored-town breadth")
+            continue
+        if int(profile.get("target_complete_turns", TARGET_TURNS)) > TARGET_TURNS:
+            errors.append(f"{town_id} target_complete_turns must stay within {TARGET_TURNS}")
+        if profile.get("one_build_per_turn") is not True:
+            errors.append(f"{town_id} development_balance must require one_build_per_turn")
+        rare_id = str(profile.get("rare_resource_id", ""))
+        if rare_id not in RARE_RESOURCES:
+            errors.append(f"{town_id} must declare a live rare_resource_id")
+        for profile_key in ("starting_resources", "daily_income"):
+            payload = profile.get(profile_key, {})
+            if not isinstance(payload, dict) or not payload:
+                errors.append(f"{town_id} development_balance.{profile_key} must be non-empty")
+                continue
+            unsupported = {str(key) for key in payload.keys()} - LIVE_RESOURCES
+            if unsupported:
+                errors.append(f"{town_id} development_balance.{profile_key} uses unsupported resources {sorted(unsupported)}")
+            if profile_key == "daily_income" and rare_id not in payload:
+                errors.append(f"{town_id} daily_income must include faction rare resource {rare_id}")
+        town_buildings = {
+            str(value)
+            for value in town.get("starting_building_ids", []) + town.get("buildable_building_ids", [])
+        }
+        signature_ids = [str(value) for value in faction.get("signature_building_ids", [])]
+        missing_signature = sorted(set(signature_ids) - town_buildings)
+        if missing_signature:
+            errors.append(f"{town_id} must expose all seven faction signature buildings: {missing_signature}")
+        else:
+            full_ladder_town_count += 1
+        for building_id in town.get("buildable_building_ids", []):
+            building = buildings.get(str(building_id), {})
+            cost_ids = {str(key) for key in building.get("cost", {}).keys()}
+            if not cost_ids.issubset(LIVE_RESOURCES):
+                errors.append(f"{town_id}/{building_id} uses unsupported resources {sorted(cost_ids - LIVE_RESOURCES)}")
+        result = simulate_town(town, faction, buildings)
+        report["towns"][town_id] = result
+        if not result["completed"]:
+            errors.append(f"{town_id} did not fully develop: {result['missing_buildings']}")
+        if int(result["completion_day"]) > TARGET_TURNS:
+            errors.append(f"{town_id} completed on day {result['completion_day']}, above target {TARGET_TURNS}")
+        if int(result["build_count"]) > TARGET_TURNS:
+            errors.append(f"{town_id} violates one-build-per-turn count")
+
+    report["authored_town_count"] = town_count
+    report["full_ladder_town_count"] = full_ladder_town_count
+
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))
         town = towns.get(seed_town_id, {})
@@ -193,14 +250,6 @@ def main() -> int:
                 errors.append(f"{building_id} tier {tier} must remain common-resource only")
             if tier >= 5 and rare_id not in cost_ids:
                 errors.append(f"{building_id} tier {tier} must cost faction rare resource {rare_id}")
-        result = simulate_town(town, faction, buildings)
-        report["towns"][seed_town_id] = result
-        if not result["completed"]:
-            errors.append(f"{seed_town_id} did not fully develop: {result['missing_buildings']}")
-        if int(result["completion_day"]) > TARGET_TURNS:
-            errors.append(f"{seed_town_id} completed on day {result['completion_day']}, above target {TARGET_TURNS}")
-        if int(result["build_count"]) > TARGET_TURNS:
-            errors.append(f"{seed_town_id} violates one-build-per-turn count")
 
     report["ok"] = not errors
     print("TOWN_DEVELOPMENT_BALANCE_REPORT " + json.dumps(report, sort_keys=True))

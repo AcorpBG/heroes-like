@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-runtime-balance-proof-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Runtime Balance Proof",
+  "currentSliceId": "economy-authored-town-development-breadth-20260524-10184",
+  "currentSliceTitle": "Economy Authored Town Development Breadth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. The focused Godot runtime report creates six seed-town sessions, drives live OverworldRules/TownRules build actions, proves same-day second builds reject and disappear from the action surface, advances income through OverworldRules.end_turn, observes high-tier rare-resource spending through live deductions, keeps normal markets common-only, and completes all seed-town development within 30 turns.",
+  "currentSliceNotes": "Completed. All 15 authored towns now have 30-turn development profiles, live faction rare-resource income, and access to their owning faction seven-building signature ladder. The deterministic balance report and the Godot runtime report both cover all 15 authored towns and prove full development within 30 turns through one-build-per-town-per-turn rules.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T14:05:00Z",
+  "updatedAt": "2026-05-24T14:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,72 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-authored-town-development-breadth-20260524-10184",
+      "title": "Economy Authored Town Development Breadth",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T14:45:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-authored-town-development-breadth-report.md"
+      ],
+      "implementationTargets": [
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-authored-town-development-breadth-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored town has a 30-turn development_balance profile using live stockpile resources and faction rare-resource income.",
+        "Every authored town exposes the owning faction seven-building signature unit ladder.",
+        "The deterministic town-development balance report covers all authored towns and proves full development within 30 turns.",
+        "The Godot runtime town-development report covers all authored towns through live OverworldRules/TownRules construction calls.",
+        "Repository validation gates the all-town breadth evidence."
+      ],
+      "notes": "Completed. All 15 authored towns now have 30-turn development profiles, live faction rare-resource income, and access to their owning faction seven-building signature ladder. The deterministic balance report and the Godot runtime report both cover all 15 authored towns and prove full development within 30 turns through one-build-per-town-per-turn rules.",
+      "completedAt": "2026-05-24T14:45:00Z",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-all.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "schema": "economy_authored_town_development_breadth_completion_v1",
+        "authored_town_count": 15,
+        "full_ladder_town_count": 15,
+        "target_turns": 30,
+        "all_authored_towns_have_development_balance": true,
+        "all_authored_towns_runtime_complete_within_target": true,
+        "all_authored_towns_have_faction_signature_ladder": true,
+        "one_build_per_town_per_turn_gate": true,
+        "normal_market_resource_ids": [
+          "wood",
+          "ore"
+        ],
+        "live_stockpile_resources": [
+          "gold",
+          "wood",
+          "ore",
+          "aetherglass",
+          "embergrain",
+          "peatwax",
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ]
+      }
+    },
     {
       "id": "economy-town-development-runtime-balance-proof-20260524-10184",
       "title": "Economy Town Development Runtime Balance Proof",
@@ -25729,30 +25795,45 @@
         "git diff --check"
       ],
       "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
+    },
+    {
+      "id": "economy-authored-town-development-breadth-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T14:45:00Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-all.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
     }
   ],
   "lastValidation": {
-    "id": "economy-town-development-runtime-balance-proof-20260524-10184",
+    "id": "economy-authored-town-development-breadth-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T14:05:00Z",
+    "updatedAt": "2026-05-24T14:45:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-all.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
+    "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
   },
   "active_slice": {
-    "id": "economy-town-development-runtime-balance-proof-20260524-10184",
-    "title": "Economy Town Development Runtime Balance Proof",
+    "id": "economy-authored-town-development-breadth-20260524-10184",
+    "title": "Economy Authored Town Development Breadth",
     "status": "completed",
-    "updatedAt": "2026-05-24T14:05:00Z"
+    "updatedAt": "2026-05-24T14:45:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T14:05:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T14:45:00Z",
   "validationHistory": [
     {
       "id": "battle-autoplay-hard-difficulty-watch-retune-20260524-10184",
@@ -26180,7 +26261,22 @@
         "git diff --check"
       ],
       "summary": "Town development runtime balance proof passed: all six faction seed towns complete within 30 live-rule turns, same-day second builds reject and disappear from the action list, high-tier rare resources are spent by live build deductions, normal market actions remain wood/ore only, and repository validation plus strict economy-resource fixtures passed."
+    },
+    {
+      "id": "economy-authored-town-development-breadth-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T14:45:00Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-all.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Authored-town development breadth passed: 15/15 authored towns have development profiles, expose faction seven-building ladders, complete within 30 turns in the deterministic report, and pass the live Godot runtime town-development report with same-day build rejection and rare-resource spending."
     }
   ],
-  "currentSlice": "economy-town-development-runtime-balance-proof-20260524-10184"
+  "currentSlice": "economy-authored-town-development-breadth-20260524-10184"
 }
