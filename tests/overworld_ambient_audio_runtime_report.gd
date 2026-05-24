@@ -70,16 +70,24 @@ func _validate_record(label: String, record: Dictionary, expected_changed: bool,
 	_expect(String(record.get("terrain_id", "")) != "", "%s record must expose terrain id: %s" % [label, record])
 	_expect(int(record.get("layer_count", 0)) >= 1, "%s record must expose at least one ambient layer: %s" % [label, record])
 	_expect(String(record.get("audio_bus", "")) == "Master", "%s record must route through Master: %s" % [label, record])
+	_expect(String(record.get("sfx_manifest_path", "")) == "res://content/ambient_sfx_manifest.json", "%s record must expose ambient SFX manifest path: %s" % [label, record])
+	_expect(bool(record.get("sfx_manifest_loaded", false)), "%s record must load ambient SFX manifest: %s" % [label, record])
 	for layer in record.get("layers", []):
 		var layer_record: Dictionary = layer
 		_expect(String(layer_record.get("cue_id", "")).begins_with("overworld_ambient_"), "%s layer has unexpected cue id: %s" % [label, layer_record])
 		_expect(float(layer_record.get("duration_sec", 0.0)) > 0.0, "%s layer must expose duration: %s" % [label, layer_record])
 		_expect(float(layer_record.get("frequency", 0.0)) > 0.0, "%s layer must expose frequency: %s" % [label, layer_record])
+		_expect(String(layer_record.get("playback_source", "")) == "imported_wav", "%s layer should prefer imported ambient WAV assets: %s" % [label, layer_record])
+		_expect(String(layer_record.get("asset_path", "")).begins_with("res://art/audio/runtime/ambient/"), "%s layer must expose ambient asset path: %s" % [label, layer_record])
+		_expect(int(layer_record.get("imported_asset_count", 0)) == 1, "%s layer should count imported asset playback: %s" % [label, layer_record])
+		_expect(int(layer_record.get("generated_fallback_count", 0)) == 0, "%s layer should not use generated fallback when asset is present: %s" % [label, layer_record])
 
 func _validate_direct_summary(summary: Dictionary) -> void:
 	_expect_equal("direct schema", String(summary.get("schema", "")), "overworld_ambient_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 3, "Ambient direct summary must keep changed records: %s" % summary)
 	_expect(String(summary.get("audio_bus", "")) == "Master", "Ambient direct summary must route through Master: %s" % summary)
+	_expect(String(summary.get("sfx_manifest_path", "")) == "res://content/ambient_sfx_manifest.json", "Ambient direct summary must expose the ambient SFX manifest path: %s" % summary)
+	_expect(bool(summary.get("sfx_manifest_loaded", false)), "Ambient direct summary must load the ambient SFX manifest: %s" % summary)
 	_expect(int(summary.get("max_active_players", 0)) == AmbientAudio.MAX_ACTIVE_PLAYERS, "Ambient direct summary must expose player cap: %s" % summary)
 	_expect(int(summary.get("pressure_layer_count", 0)) >= 1, "Ambient direct summary must include pressure layer evidence: %s" % summary)
 	var current_layers: Array = summary.get("current_layers", []) if summary.get("current_layers", []) is Array else []
@@ -127,6 +135,7 @@ func _summary_payload() -> Dictionary:
 		"pressure_layer_count": int(summary.get("pressure_layer_count", 0)),
 		"shell_record_count": int(shell_summary.get("record_count", 0)),
 		"audio_bus": String(summary.get("audio_bus", "")),
+		"sfx_manifest_loaded": bool(summary.get("sfx_manifest_loaded", false)),
 	}
 
 func _expect(condition: bool, message: String) -> void:

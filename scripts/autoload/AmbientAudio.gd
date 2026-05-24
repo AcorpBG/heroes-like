@@ -6,6 +6,7 @@ const MAX_ACTIVE_PLAYERS := 4
 const MAX_RECORDS := 24
 const DEFAULT_SEGMENT_DURATION := 0.85
 const REPORT_SCHEMA := "overworld_ambient_audio_runtime_v1"
+const AMBIENT_SFX_MANIFEST_PATH := "res://content/ambient_sfx_manifest.json"
 const TERRAIN_SPECS := {
 	"grass": {"frequency": 176.0, "gain": 0.035, "label": "grassland air"},
 	"water": {"frequency": 132.0, "gain": 0.032, "label": "river wash"},
@@ -24,6 +25,8 @@ var _records: Array[Dictionary] = []
 var _active_players: Array[AudioStreamPlayer] = []
 var _current_signature := ""
 var _current_layers: Array[Dictionary] = []
+var _ambient_sfx_manifest: Dictionary = {}
+var _ambient_sfx_manifest_loaded := false
 
 func sync_overworld_session(session: Variant, source: String = "overworld") -> Dictionary:
 	if session == null:
@@ -39,6 +42,8 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"layer_count": 0,
 			"layers": [],
 			"audio_bus": "Master",
+			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
+			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
 			"timestamp_msec": Time.get_ticks_msec(),
 		})
@@ -59,6 +64,8 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"layer_count": _current_layers.size(),
 			"layers": _current_layers.duplicate(true),
 			"audio_bus": "Master",
+			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
+			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
 			"muted": SettingsService.master_volume_percent() <= 0,
 			"played": SettingsService.master_volume_percent() > 0,
@@ -84,6 +91,8 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		"layer_count": _current_layers.size(),
 		"layers": _current_layers.duplicate(true),
 		"audio_bus": "Master",
+		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
+		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"active_player_count": _active_players.size(),
 		"muted": muted,
 		"played": not muted,
@@ -129,6 +138,8 @@ func validation_summary() -> Dictionary:
 		"current_layers": _current_layers.duplicate(true),
 		"audio_bus": "Master",
 		"max_active_players": MAX_ACTIVE_PLAYERS,
+		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
+		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"records": validation_records(),
 	}
 
@@ -164,6 +175,7 @@ func _ambient_layers_for_context(context: Dictionary) -> Array[Dictionary]:
 	return layers
 
 func _layer_payload(layer_id: String, cue_id: String, spec: Dictionary, phase_offset: float) -> Dictionary:
+	var manifest_cue := _ambient_sfx_manifest_cue(cue_id)
 	return {
 		"layer_id": layer_id,
 		"cue_id": cue_id,
@@ -173,13 +185,24 @@ func _layer_payload(layer_id: String, cue_id: String, spec: Dictionary, phase_of
 		"duration_sec": DEFAULT_SEGMENT_DURATION,
 		"phase_offset": phase_offset,
 		"audio_bus": "Master",
+		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
+		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
+		"asset_path": String(manifest_cue.get("path", "")),
+		"role": String(manifest_cue.get("role", "")),
+		"playback_source": "pending",
+		"imported_asset_count": 0,
+		"generated_fallback_count": 0,
 	}
 
 func _play_layers(layers: Array[Dictionary]) -> void:
 	_prune_players()
-	for layer in layers:
+	for index in range(layers.size()):
 		if _active_players.size() >= MAX_ACTIVE_PLAYERS:
 			break
+		var layer: Dictionary = layers[index]
+		if _play_imported_layer(layer):
+			layers[index] = layer
+			continue
 		var stream := AudioStreamGenerator.new()
 		stream.mix_rate = SAMPLE_RATE
 		stream.buffer_length = maxf(0.08, float(layer.get("duration_sec", DEFAULT_SEGMENT_DURATION)))
@@ -192,9 +215,46 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 		if playback != null:
 			_fill_ambient_waveform(playback, layer)
 		_active_players.append(player)
+		layer["playback_source"] = "generated_waveform"
+		layer["generated_fallback_count"] = 1
+		layers[index] = layer
 	var timer := get_tree().create_timer(DEFAULT_SEGMENT_DURATION + 0.08) if get_tree() != null and not layers.is_empty() else null
 	if timer != null:
 		timer.timeout.connect(_prune_players)
+
+func _play_imported_layer(layer: Dictionary) -> bool:
+	var cue := _ambient_sfx_manifest_cue(String(layer.get("cue_id", "")))
+	if cue.is_empty():
+		return false
+	var path := String(cue.get("path", "")).strip_edges()
+	if path == "":
+		return false
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is AudioStream:
+			stream = resource
+	if stream == null and FileAccess.file_exists(path):
+		var wav_stream := AudioStreamWAV.load_from_file(path)
+		if wav_stream is AudioStream:
+			stream = wav_stream
+	if stream == null:
+		return false
+	var player := AudioStreamPlayer.new()
+	player.bus = "Master"
+	player.stream = stream
+	player.volume_db = float(cue.get("volume_db", -27.0))
+	add_child(player)
+	_active_players.append(player)
+	player.play()
+	layer["playback_source"] = "imported_wav"
+	layer["asset_path"] = path
+	layer["role"] = String(cue.get("role", ""))
+	layer["duration_sec"] = maxf(0.01, float(cue.get("duration_msec", 850)) / 1000.0)
+	layer["volume_db"] = float(cue.get("volume_db", -27.0))
+	layer["imported_asset_count"] = 1
+	layer["generated_fallback_count"] = 0
+	return true
 
 func _fill_ambient_waveform(playback: AudioStreamGeneratorPlayback, layer: Dictionary) -> void:
 	var duration := float(layer.get("duration_sec", DEFAULT_SEGMENT_DURATION))
@@ -291,3 +351,23 @@ func _prune_players() -> void:
 		elif is_instance_valid(player):
 			player.queue_free()
 	_active_players = kept
+
+func _ambient_sfx_manifest_cue(cue_id: String) -> Dictionary:
+	_load_ambient_sfx_manifest()
+	var cues: Dictionary = _ambient_sfx_manifest.get("cues", {}) if _ambient_sfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_ambient_sfx_manifest() -> void:
+	if _ambient_sfx_manifest_loaded:
+		return
+	_ambient_sfx_manifest_loaded = true
+	_ambient_sfx_manifest = {}
+	if not FileAccess.file_exists(AMBIENT_SFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(AMBIENT_SFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_ambient_sfx_manifest = parsed

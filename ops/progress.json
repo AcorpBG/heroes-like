@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "ui-runtime-sfx-asset-layer-20260524-10184",
-  "currentSliceTitle": "UI Runtime SFX Asset Layer",
+  "currentSliceId": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
+  "currentSliceTitle": "Overworld Ambient Runtime SFX Asset Layer",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed manifest-backed runtime UI SFX asset layer with generated waveform fallback and focused control-cue validation.",
+  "currentSliceNotes": "Completed overworld ambient runtime SFX asset layer with manifest-backed WAV playback and generated fallback.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T02:34:00Z",
+  "updatedAt": "2026-05-24T03:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,77 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
+      "title": "Overworld Ambient Runtime SFX Asset Layer",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/autoload/AmbientAudio.gd",
+        "tests/overworld_ambient_audio_runtime_report.gd",
+        "docs/overworld-ambient-audio-runtime-report.md"
+      ],
+      "purpose": "Replace generated-only overworld ambient playback with a manifest-backed runtime ambient SFX asset layer while preserving generated waveform fallback.",
+      "implementationTargets": [
+        "content/ambient_sfx_manifest.json",
+        "tools/generate_ambient_sfx_assets.py",
+        "art/audio/runtime/ambient/",
+        "scripts/autoload/AmbientAudio.gd",
+        "tests/overworld_ambient_audio_runtime_report.gd",
+        "tests/validate_repo.py",
+        "docs/overworld-ambient-audio-runtime-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Ambient SFX manifest maps terrain, pressure, and day-pulse cues to committed runtime WAV assets.",
+        "The generator reproducibly writes all ambient runtime WAV assets from the manifest.",
+        "AmbientAudio prefers manifest-backed WAV streams and keeps generated waveform fallback when assets are unavailable.",
+        "Focused ambient report proves direct session sync and OverworldShell sync load the manifest and use imported runtime ambient assets.",
+        "Repository validation gates the ambient SFX manifest, assets, generator, runtime hooks, and focused report evidence."
+      ],
+      "nonGoals": [
+        "No final sound design approval.",
+        "No final ambient stems, music, or mixer mastering.",
+        "No gameplay behavior changes.",
+        "No imported third-party audio."
+      ],
+      "startedAt": "2026-05-24T02:48:00Z",
+      "updatedAt": "2026-05-24T03:02:00Z",
+      "notes": "Completed by adding an ambient SFX manifest, reproducible WAV generator, committed runtime ambient WAV assets, AmbientAudio manifest loading with generated fallback, and focused report/repo gates.",
+      "completedAt": "2026-05-24T03:02:00Z",
+      "completionEvidence": [
+        "content/ambient_sfx_manifest.json maps terrain, pressure, and day-pulse cue ids to runtime WAV assets under art/audio/runtime/ambient/.",
+        "tools/generate_ambient_sfx_assets.py regenerated all 11 original ambient WAV assets from the manifest.",
+        "AmbientAudio now prefers manifest-backed AudioStream WAV playback and preserves generated AudioStreamGenerator fallback.",
+        "OVERWORLD_AMBIENT_AUDIO_RUNTIME_REPORT passed with record_count 3, pressure_layer_count 2, shell_record_count 1, sfx_manifest_loaded true, and all layers using imported_wav playback.",
+        "tests/validate_repo.py gates the manifest, WAV headers, generator, runtime hooks, and focused report tokens."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "python3 tools/generate_ambient_sfx_assets.py",
+          "jq empty content/ambient_sfx_manifest.json ops/progress.json",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/overworld_ambient_audio_runtime_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tools/generate_ambient_sfx_assets.py",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "OVERWORLD_AMBIENT_AUDIO_RUNTIME_REPORT",
+          "record_count": 3,
+          "pressure_layer_count": 2,
+          "shell_record_count": 1,
+          "sfx_manifest_loaded": true,
+          "cue_count": 11,
+          "runtime_asset_root": "art/audio/runtime/ambient",
+          "final_sound_design_claim": false
+        }
+      }
+    },
     {
       "id": "ui-runtime-sfx-asset-layer-20260524-10184",
       "title": "UI Runtime SFX Asset Layer",
@@ -24355,7 +24426,7 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "ui-runtime-sfx-asset-layer-20260524-10184",
+  "active_slice": "overworld-ambient-runtime-sfx-asset-layer-20260524-10184",
   "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {
