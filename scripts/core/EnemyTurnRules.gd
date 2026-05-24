@@ -172,6 +172,52 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	return {"ok": true, "message": " ".join(messages), "events": events}
 
+static func run_enemy_town_economy_turn(
+	session: SessionStateStoreScript.SessionData,
+	faction_id_filter: String = ""
+) -> Dictionary:
+	DifficultyRulesScript.normalize_session(session)
+	normalize_enemy_states(session)
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var configs = scenario.get("enemy_factions", [])
+	if not (configs is Array) or configs.is_empty():
+		return {"ok": true, "message": "", "events": []}
+
+	var states = session.overworld.get("enemy_states", [])
+	var towns = session.overworld.get("towns", [])
+	var messages := []
+	var events := []
+	var should_apply_weekly_growth: bool = OverworldRulesScript.is_weekly_growth_day(session.day)
+	for config in configs:
+		if not (config is Dictionary):
+			continue
+		var faction_id := String(config.get("faction_id", ""))
+		if faction_id_filter != "" and faction_id != faction_id_filter:
+			continue
+		var state_index := _find_state_index(states, faction_id)
+		if state_index < 0:
+			continue
+		var state: Dictionary = states[state_index]
+		var town_entries := _owned_town_entries(session, faction_id)
+		var treasury := _normalize_resource_pool(state.get("treasury", {}))
+		_apply_empire_income(session, town_entries, treasury, state)
+		if should_apply_weekly_growth:
+			var muster_message := _apply_weekly_musters(session, town_entries, towns, faction_id, config)
+			if muster_message != "":
+				messages.append(muster_message)
+			session.overworld["towns"] = towns
+		var build_result := _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
+		var build_messages: Array = build_result.get("messages", [])
+		if not build_messages.is_empty():
+			messages.append_array(build_messages)
+		_append_event_records(events, build_result.get("events", []))
+		session.overworld["towns"] = towns
+		state["treasury"] = treasury
+		states[state_index] = state
+	session.overworld["enemy_states"] = states
+	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
+	return {"ok": true, "message": " ".join(messages), "events": events}
+
 static func _append_event_records(output: Array, events_value: Variant) -> void:
 	if not (events_value is Array):
 		return

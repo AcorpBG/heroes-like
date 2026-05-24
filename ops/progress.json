@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-town-start-economy-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Town Start Economy",
+  "currentSliceId": "economy-active-scenario-ai-town-start-economy-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario AI Town Start Economy",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed deterministic cost-curve gate for all 15 authored towns and all six faction signature ladders. Every development target costs gold, every town spends wood and ore, common-only development remains at least 2:1 over rare-cost buildings, rare costs use only the town faction rare resource, and rare costs remain tier 5+ gated.",
+  "currentSliceNotes": "Completed natural active-scenario enemy-town start economy gate. Enemy towns now seed starting AI development treasuries from authored town development_balance.starting_resources at ScenarioFactory session creation, and a focused EnemyTurnRules town-economy helper proves first-week AI construction, common-resource spend, one-build-per-town-per-turn guards, and full nine-resource treasury normalization for all 20 active enemy-town cases.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T19:45:00Z",
+  "updatedAt": "2026-05-24T22:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,59 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-ai-town-start-economy-20260524-10184",
+      "title": "Economy Active Scenario AI Town Start Economy",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T22:05:00Z",
+      "completedAt": "2026-05-24T22:05:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-start-economy-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/active_scenario_ai_town_start_economy_report.gd",
+        "tests/active_scenario_ai_town_start_economy_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-ai-town-start-economy-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Enemy town starts seed natural faction development treasury from authored town development_balance.starting_resources at scenario creation.",
+        "A focused live Godot report covers all active authored scenarios and current active enemy-town cases.",
+        "The report uses natural active-scenario enemy town, treasury, and resource-node state without injected source capture.",
+        "Every active enemy-town start completes at least three first-week AI construction orders.",
+        "Every active enemy-town start spends wood or ore through live AI construction before the first week ends.",
+        "Every active enemy-town start observes the one-build-per-town-per-turn guard.",
+        "Every active enemy-town start normalizes all nine live treasury resource ids.",
+        "Repository validation gates the report, documentation, scene contract, ScenarioFactory treasury seeding, and EnemyTurnRules town-economy helper."
+      ],
+      "notes": "Completed: natural active-scenario enemy town starts now have first-week AI town economy readiness evidence before source injection or full strategic pressure routing.",
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "enemy_town_case_count": 20,
+        "early_ready_case_count": 20,
+        "common_spend_case_count": 20,
+        "same_day_guard_case_count": 20,
+        "full_treasury_case_count": 20,
+        "early_days": 7,
+        "min_early_builds_per_town": 3,
+        "validation": [
+          "godot --headless --path . --scene res://tests/active_scenario_ai_town_start_economy_report.tscn (pass)",
+          "python3 tests/validate_repo.py (pass)",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures (pass)",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py (pass)",
+          "jq empty ops/progress.json (pass)",
+          "git diff --check (pass)"
+        ]
+      }
+    },
     {
       "id": "economy-active-scenario-town-start-economy-20260524-10184",
       "title": "Economy Active Scenario Town Start Economy",

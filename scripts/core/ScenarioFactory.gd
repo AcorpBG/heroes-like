@@ -47,6 +47,10 @@ static func create_session(
 	var hero_state: Dictionary = HeroCommandRulesScript.build_hero_from_template(hero_template, start, player_army_state, normalized_difficulty)
 	hero_state["is_primary"] = true
 
+	var town_states := _build_town_states(scenario.get("towns", []))
+	var enemy_states := EnemyTurnRulesScript.build_enemy_states(scenario.get("enemy_factions", []))
+	_seed_enemy_town_starting_treasuries(enemy_states, town_states)
+
 	var overworld_state := {
 		"map": _duplicate_array(scenario.get("map", [])),
 		"map_size": _duplicate_dict(scenario.get("map_size", {})),
@@ -61,10 +65,10 @@ static func create_session(
 		"army": hero_state.get("army", player_army_state),
 		"encounters": _duplicate_array(scenario.get("encounters", [])),
 		"resolved_encounters": [],
-		"towns": _build_town_states(scenario.get("towns", [])),
+		"towns": town_states,
 		"resource_nodes": _build_resource_states(scenario.get("resource_nodes", [])),
 		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", [])),
-		"enemy_states": EnemyTurnRulesScript.build_enemy_states(scenario.get("enemy_factions", [])),
+		"enemy_states": enemy_states,
 		"scenario_script_state": ScenarioScriptRulesScript.build_script_state(),
 	}
 
@@ -241,6 +245,46 @@ static func _build_town_states(placements: Variant) -> Array:
 			town_state
 		)
 	return towns
+
+static func _seed_enemy_town_starting_treasuries(enemy_states: Array, town_states: Array) -> void:
+	for town_value in town_states:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "")) != "enemy":
+			continue
+		var town_template := ContentService.get_town(String(town.get("town_id", "")))
+		var development_balance: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+		var starting_resources: Dictionary = development_balance.get("starting_resources", {}) if development_balance.get("starting_resources", {}) is Dictionary else {}
+		if starting_resources.is_empty():
+			continue
+		var faction_id := String(town.get("controlling_faction_id", ""))
+		if faction_id == "":
+			faction_id = String(town_template.get("faction_id", ""))
+		var state_index := _find_enemy_state_index(enemy_states, faction_id)
+		if state_index < 0:
+			continue
+		var state: Dictionary = enemy_states[state_index]
+		var treasury := _normalize_resources(state.get("treasury", {}))
+		treasury = _add_resource_sets(treasury, starting_resources)
+		state["treasury"] = treasury
+		enemy_states[state_index] = state
+
+static func _find_enemy_state_index(enemy_states: Array, faction_id: String) -> int:
+	for index in range(enemy_states.size()):
+		var state = enemy_states[index]
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return index
+	return -1
+
+static func _add_resource_sets(left: Dictionary, right: Dictionary) -> Dictionary:
+	var result := _normalize_resources(left)
+	for key in right.keys():
+		var resource_key := String(key)
+		if resource_key == "" or resource_key == "experience":
+			continue
+		result[resource_key] = max(0, int(result.get(resource_key, 0)) + int(right.get(key, 0)))
+	return result
 
 static func _build_resource_states(placements: Variant) -> Array:
 	var nodes := []
