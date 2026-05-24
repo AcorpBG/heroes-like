@@ -2,7 +2,7 @@
 
 Status: implementation evidence.
 
-This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_multi_scenario_town_defense_retask`, `strategic_ai_live_resource_site_defense`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, `strategic_ai_multi_scenario_pressure_coverage`, and `strategic_ai_multi_scenario_objective_targeting` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
+This slice promotes the live commander resource-front execution proof into the shared headless simulation harness. The harness now has required `strategic_ai_live_turn_execution`, `strategic_ai_live_route_progression`, `strategic_ai_live_town_governor_build_execution`, `strategic_ai_live_town_defense_retask`, `strategic_ai_multi_scenario_town_defense_retask`, `strategic_ai_live_resource_site_defense`, `strategic_ai_live_town_retake_assault`, `strategic_ai_live_raid_assault_grouping`, `strategic_ai_live_regroup_retreat`, `strategic_ai_live_recruitment_delivery`, `strategic_ai_multi_scenario_recruitment_delivery`, `strategic_ai_multi_scenario_pressure_coverage`, and `strategic_ai_multi_scenario_objective_targeting` subsystems, so strategic AI quality work can be checked alongside economy, save/replay, random-map boundary, and battle balance evidence.
 
 Implemented behavior:
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_live_turn_execution`.
@@ -42,6 +42,10 @@ Implemented behavior:
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_town_recruits_feed_active_raid_host` through `EnemyTurnRules.run_enemy_turn(...)`.
 - The recruitment case seeds Duskfen Bastion with spare `unit_bog_brute` recruits and a stable garrison, starts an underfilled Vaska raid aimed at `river_free_company`, and requires normal town recruitment to consume those recruits into the active raid host.
 - Recruitment and delivery events must surface as `ai_town_recruited` and `ai_raid_reinforced` while preserving the active raid target.
+- `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_multi_scenario_recruitment_delivery`.
+- `HeadlessSimulationHarnessRules.build_report(...)` runs `live_town_recruits_feed_active_raid_hosts_across_scenario_breadth` through `EnemyTurnRules.run_enemy_turn(...)` for `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `bogbound-oath`.
+- The multi-scenario recruitment case seeds owned controller towns with affordable recruits, starts understrength active raid hosts, requires recruit pools to decrease, and requires raid host strength/unit counts to increase.
+- The case requires `delivered_faction_count = 5`, public `ai_town_recruited` and `ai_raid_reinforced` evidence, no `hero_task_state` save writes, and no internal public-event leak tokens.
 - `HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS` includes `strategic_ai_multi_scenario_pressure_coverage`.
 - `HeadlessSimulationHarnessRules.build_report(...)` runs `live_enemy_pressure_launches_across_scenario_breadth` through `EnemyTurnRules.run_enemy_turn(...)` for `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `ninefold-confluence`.
 - The pressure coverage case primes each enemy state with raid pressure and treasury, then requires every enemy faction case to have an owned controller town, launch a live pressure raid, and emit `ai_target_assigned`.
@@ -73,6 +77,7 @@ Validation evidence:
 - `strategic_ai_live_raid_assault_grouping`
 - `strategic_ai_live_regroup_retreat`
 - `strategic_ai_live_recruitment_delivery`
+- `strategic_ai_multi_scenario_recruitment_delivery`
 - `strategic_ai_multi_scenario_pressure_coverage`
 - `strategic_ai_multi_scenario_objective_targeting`
 - `resource_fronts_seized = 2`
@@ -119,6 +124,9 @@ Validation evidence:
 - `ai_town_recruited`
 - `ai_raid_reinforced`
 - `raid_unit_after = 5`
+- `live_town_recruits_feed_active_raid_hosts_across_scenario_breadth`
+- `delivered_faction_count = 5`
+- `bogbound-oath`
 - `live_enemy_pressure_launches_across_scenario_breadth`
 - `live_enemy_objective_priority_targets_across_scenario_breadth`
 - `scenario_count = 5`
@@ -146,6 +154,7 @@ Remaining gaps:
 - This raid-grouping case proves one adjacent support-column consolidation fixture, not a broad multi-hero army board or general grouping planner.
 - This regroup case proves one retreat/rebuild fixture, not broad defense rotation or difficulty tuning.
 - This recruitment case proves one town-to-active-raid delivery fixture, not broad recruiting, army grouping, or economy planning.
+- This multi-scenario recruitment case proves live town-to-raid delivery across five authored scenario/faction cases, not broad recruiting economy, final grouping strategy, or full strategic AI quality.
 - This multi-scenario pressure case proves launch/base coverage across five authored scenarios and 9 enemy faction cases, not broad campaign quality or final objective planning.
 - This multi-scenario objective-targeting case proves priority/siege/objective target selection across five authored scenarios and 9 enemy faction cases, not final objective sequencing or full strategic AI quality.
 - Town assault priorities, defense rotation, longer objective sequencing, and difficulty tuning still need broader harness cases.

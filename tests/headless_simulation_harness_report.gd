@@ -115,6 +115,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_recruitment_delivery(live_recruitment_case):
 		return false
+	var multi_recruitment_case := _find_case(first, "strategic_ai_multi_scenario_recruitment_delivery")
+	if multi_recruitment_case.is_empty():
+		_fail("Headless simulation harness is missing multi-scenario strategic AI recruitment delivery evidence.")
+		return false
+	if not _assert_live_ai_multi_scenario_recruitment_delivery(multi_recruitment_case):
+		return false
 	var multi_scenario_case := _find_case(first, "strategic_ai_multi_scenario_pressure_coverage")
 	if multi_scenario_case.is_empty():
 		_fail("Headless simulation harness is missing multi-scenario strategic AI pressure coverage evidence.")
@@ -270,6 +276,71 @@ func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> 
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
 		_fail("Live strategic AI recruitment delivery leaked internal public-event tokens: %s" % leak_tokens)
+		return false
+	return true
+
+func _assert_live_ai_multi_scenario_recruitment_delivery(multi_recruitment_case: Dictionary) -> bool:
+	if String(multi_recruitment_case.get("status", "")) != "pass":
+		_fail("Multi-scenario strategic AI recruitment delivery did not pass: %s" % JSON.stringify(multi_recruitment_case))
+		return false
+	var summary: Dictionary = multi_recruitment_case.get("summary", {}) if multi_recruitment_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = multi_recruitment_case.get("evidence", {}) if multi_recruitment_case.get("evidence", {}) is Dictionary else {}
+	if int(summary.get("scenario_count", 0)) < 5 or int(summary.get("faction_case_count", 0)) < 5:
+		_fail("Multi-scenario strategic AI recruitment delivery is too narrow: %s" % summary)
+		return false
+	if int(summary.get("delivered_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
+		_fail("Multi-scenario strategic AI recruitment delivery missed a faction case: %s" % summary)
+		return false
+	if int(summary.get("town_recruit_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI recruitment delivery is missing town recruitment events: %s" % summary)
+		return false
+	if int(summary.get("raid_reinforcement_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI recruitment delivery is missing raid reinforcement events: %s" % summary)
+		return false
+	var scenario_ids := []
+	for row in evidence.get("scenarios", []):
+		if row is Dictionary:
+			scenario_ids.append(String(row.get("scenario_id", "")))
+	for required_id in ["river-pass", "prismhearth-watch", "glassroad-sundering", "glassfen-breakers", "bogbound-oath"]:
+		if required_id not in scenario_ids:
+			_fail("Multi-scenario strategic AI recruitment delivery missed scenario: %s" % required_id)
+			return false
+	var faction_cases: Array = evidence.get("faction_cases", []) if evidence.get("faction_cases", []) is Array else []
+	for row in faction_cases:
+		if not (row is Dictionary):
+			continue
+		if not bool(row.get("delivered", false)):
+			_fail("Multi-scenario strategic AI recruitment delivery has an undelivered row: %s" % row)
+			return false
+		if int(row.get("desired_before", 0)) <= int(row.get("before_strength", 0)):
+			_fail("Multi-scenario strategic AI recruitment fixture had no raid strength need: %s" % row)
+			return false
+		if int(row.get("after_strength", 0)) <= int(row.get("before_strength", 0)):
+			_fail("Multi-scenario strategic AI recruitment did not strengthen raid host: %s" % row)
+			return false
+		if int(row.get("town_recruits_after", 9999)) >= int(row.get("town_recruits_before", 0)):
+			_fail("Multi-scenario strategic AI recruitment did not consume town recruits: %s" % row)
+			return false
+		if int(row.get("town_recruit_event_count", 0)) < 1 or int(row.get("raid_reinforcement_event_count", 0)) < 1:
+			_fail("Multi-scenario strategic AI recruitment row is missing event evidence: %s" % row)
+			return false
+		var raid: Dictionary = row.get("raid", {}) if row.get("raid", {}) is Dictionary else {}
+		if String(row.get("raid_target_id_after", "")) == "":
+			_fail("Multi-scenario strategic AI recruitment did not report the post-delivery raid target id: %s" % row)
+			return false
+		if String(raid.get("target_kind", "")) == "" or String(raid.get("target_placement_id", "")) == "":
+			_fail("Multi-scenario strategic AI recruitment lost the active raid target: %s" % row)
+			return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
+		_fail("Multi-scenario strategic AI recruitment delivery missing event type evidence: %s" % event_types)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Multi-scenario strategic AI recruitment delivery save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Multi-scenario strategic AI recruitment delivery leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
 

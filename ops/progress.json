@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "active",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSliceId": "packaging-release-bundle-manifest-gate-20260524-10184",
-  "currentSliceTitle": "Packaging Release Bundle Manifest Gate",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSliceId": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+  "currentSliceTitle": "Strategic AI Multi-Scenario Recruitment Delivery",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed post-export release-bundle manifest gate: Linux and Windows local export-smoke folders now have an exact manifest check for required executable/PCK/native sidecars and forbidden dev/import/debug artifacts.",
+  "currentSliceNotes": "Completed strategic-AI breadth slice: recruitment delivery now runs as a required shared-harness and focused-report case across five authored scenario/faction cases, proving live town recruits are consumed into understrength active raid hosts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T12:05:00Z",
+  "updatedAt": "2026-05-24T12:50:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+      "title": "Strategic AI Multi-Scenario Recruitment Delivery",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "purpose": "Require live enemy recruitment delivery to reinforce active raid hosts across the current multi-scenario enemy-faction coverage set, instead of proving the behavior only in the River Pass fixture.",
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-multi-scenario-recruitment-delivery-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The shared headless harness includes a required strategic_ai_multi_scenario_recruitment_delivery subsystem.",
+        "The new subsystem covers at least five authored scenario/faction cases across river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and bogbound-oath.",
+        "Each faction case seeds an owned controller town with affordable recruits, an understrength active raid host, and a live target, then runs the live enemy turn and proves recruitment is consumed into the raid host.",
+        "The report proves ai_town_recruited and ai_raid_reinforced public event evidence, no public-event internal leaks, and no hero_task_state save writes.",
+        "Focused headless harness validation, shared headless harness validation, repository validation, JSON validation, Python compilation, and diff whitespace checks pass."
+      ],
+      "nonGoals": [
+        "No final strategic AI quality claim.",
+        "No broad AI rewrite.",
+        "No save-version bump or persistent hero_task_state adoption.",
+        "No new scenario content.",
+        "No recruitment economy rebalance."
+      ],
+      "startedAt": "2026-05-24T12:20:00Z",
+      "updatedAt": "2026-05-24T12:50:00Z",
+      "notes": "Completed from the owner-listed strategic AI quality gap. This is a recruitment-delivery breadth increment over the prior River Pass-only fixture, not final strategic AI quality or broad economy/grouping completion.",
+      "completedAt": "2026-05-24T12:50:00Z",
+      "completionEvidence": [
+        "HeadlessSimulationHarnessRules.REQUIRED_SUBSYSTEM_IDS includes strategic_ai_multi_scenario_recruitment_delivery and build_report runs it before the existing pressure/objective breadth cases.",
+        "tests/ai_multi_scenario_recruitment_delivery_report.tscn passed with scenario_count 5, faction_case_count 5, delivered_faction_count 5, town_recruit_event_count 6, and raid_reinforcement_event_count 6.",
+        "tests/headless_simulation_harness_report.tscn passed with strategic_ai_multi_scenario_recruitment_delivery status pass, case signature d8432517, and overall status_counts pass 18, warning 1, deferred 1, fail 0.",
+        "EnemyTurnRules now uses controller faction checks for enemy town build/reinforcement ownership, so occupied controller towns can support the appropriate AI faction.",
+        "Repository validation gates the focused report, docs, shared harness case, public event boundary, and no-save-migration policy."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
     {
       "id": "packaging-release-bundle-manifest-gate-20260524-10184",
       "title": "Packaging Release Bundle Manifest Gate",
@@ -20006,6 +20062,49 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+      "title": "Strategic AI Multi-Scenario Recruitment Delivery",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T12:50:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-multi-scenario-recruitment-delivery-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/ai_multi_scenario_recruitment_delivery_report.gd",
+        "tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+        "tests/validate_repo.py",
+        "docs/headless-strategic-ai-live-turn-harness-report.md",
+        "docs/strategic-ai-multi-scenario-recruitment-delivery-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Required shared harness subsystem strategic_ai_multi_scenario_recruitment_delivery added and exposed through a focused callable report case.",
+        "Coverage spans river-pass, prismhearth-watch, glassroad-sundering, glassfen-breakers, and bogbound-oath with five delivered scenario/faction cases.",
+        "Each delivered case consumes town recruits into an understrength active raid host, increases host strength, preserves active target metadata, and emits ai_town_recruited plus ai_raid_reinforced public events.",
+        "Controller-faction town ownership now applies to enemy town build/reinforcement filtering, allowing occupied controller towns to support the controlling AI faction.",
+        "No hero_task_state save writes, no save migration, no public-event internal leaks, and no final AI-quality claim."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
+    },
+    {
       "id": "battle-autoplay-hard-difficulty-queue-clear-pass-20260523-10184",
       "title": "Battle Autoplay Hard Difficulty Queue Clear Pass",
       "phase": "phase-5-playable-alpha-baseline",
@@ -24763,6 +24862,7 @@
     }
   },
   "validationResults": [
+    "2026-05-24 strategic AI multi-scenario recruitment delivery: Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-20 town scheduling/input alignment: tools/rmg_h3m_native_phase_snapshot_export.gd now drives native snapshots from controlled-reference manifests, including observed human/computer split. src/gdextension/src/h3maped_small_rmg.cpp now follows the recovered 0x4a8d2c first-success town/castle scheduling shape, routes remaining minimum/density work through 0x4a8db2/0x4a901a including player-owned categories, and preserves full closest-candidate tie vectors. Five controlled audits were refreshed: 2p seeds 28/73 keep reference_alignment_pass; 3p/4p cases now expose real template-selection drift instead of stale input drift (seed 11 h3maped template 018 vs native 046, seed 3 template 000 vs native 024, seed 10 template 012 vs native 048). 2p blocker deltas remain explicit, with object-blocked tiles low by 201/115 and movement-blocked tiles low by 447/383. Validation passed Linux debug/release native builds, Windows debug/release native builds, controlled snapshot/audit for five seeds, strict Small boundary report, package surface topology report, public template matrix, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
     "2026-05-19 guards/rewards/blocker convergence: src/gdextension/src/h3maped_small_rmg.cpp now materializes reward guard records from the reward commit path, records score-gate recovery for reward coordinates without treating it as exact parity, seeds decorative occupancy from full mine/reward footprints plus reward guards, and adopts decorative objects with recovered H3M source body footprints while keeping movement block masks separate. tools/rmg_phase_drift_audit.py now includes reward guard and recovery evidence in private/package counts and earliest-divergence reporting. Fresh controlled seed-11 audit keeps reference_alignment_pass; same-seed diagnostic drift is explicit: rewards 45 vs h3maped 52, guards 24 vs 29, objects 250 vs 299, object-blocked tiles 659 vs 816, guarded-blocked tiles 749 vs 903, movement-blocked tiles 364 vs 816, guarded-movement-blocked tiles 490 vs 903, decorations 163 vs 158, and road cells 84 vs 81. Refreshed broad Small-land audit has 37/37 green native cases; averages are 253.62 package objects, 4.89 towns, 23.54 mines, 35.49 rewards, 36.92 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Validation passed Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, refreshed broad divergence export/audit, Python compilation, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
     "2026-05-19 executable-first h3maped convergence: src/gdextension/src/h3maped_small_rmg.cpp records 0x4a9c7c density mine attempts without treating density weights as guaranteed coordinate records, while preserving template/placement RNG calls and reporting deferred density materialization. tools/rmg_phase_drift_audit.py now emits earliest_divergence with phase-ordered checks and RNG checkpoints. Fresh controlled seed-11 audit keeps reference_alignment_pass; mine-like count matches h3maped 18/18; road type byte matches h3maped type 1; and first divergent phase is town_castle_endpoint_vector with h3maped endpoints 0:10,26 0:20,12 0:25,5 0:28,20 vs native 0:15,6 0:17,21 0:26,13 0:6,15. Remaining same-seed drift is explicit: rewards 36 vs 52, guards 19 vs 29, road cells 84 vs 81 with 9-cell overlap, objects 245 vs 299, object-blocked tiles 387 vs 816, and movement-blocked tiles 362 vs 816. Refreshed broad Small-land audit still has 37/37 green native cases; averages are 249.73 package objects, 4.89 towns, 23.54 mines, 23.57 rewards, 28.51 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Validation passed Python compilation, Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, refreshed broad divergence audit, jq empty ops/progress.json, and git diff --check.",
@@ -25300,23 +25400,36 @@
     }
   ],
   "lastValidation": {
-    "id": "packaging-release-bundle-manifest-gate-20260524-10184",
+    "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T12:05:00Z",
+    "updatedAt": "2026-05-24T12:50:00Z",
     "commands": [
-      "python3 tests/packaging_linux_export_smoke.py",
-      "python3 tests/packaging_windows_export_smoke.py",
-      "python3 tests/packaging_release_bundle_manifest_report.py",
-      "python3 -m py_compile tests/packaging_release_bundle_manifest_report.py tests/validate_repo.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
       "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Release bundle manifest gate passed: Linux and Windows export smokes produced ok reports, the post-export manifest report passed for both platforms with exact executable/PCK/native release sidecars, zero unexpected files, and zero forbidden dev/import/debug artifacts."
+    "summary": "Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "packaging-release-bundle-manifest-gate-20260524-10184",
-  "currentSliceUpdatedAt": "2026-05-24T12:05:00Z",
+  "active_slice": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+  "currentSliceUpdatedAt": "2026-05-24T12:50:00Z",
   "validationHistory": [
+    {
+      "id": "strategic-ai-multi-scenario-recruitment-delivery-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T12:50:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed."
+    },
     {
       "id": "packaging-release-bundle-manifest-gate-20260524-10184",
       "status": "passed",

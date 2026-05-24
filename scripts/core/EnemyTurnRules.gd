@@ -903,7 +903,7 @@ static func _build_in_enemy_towns(
 	var events = []
 	for entry in town_entries:
 		var town = towns[int(entry.get("index", -1))]
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var build_choice = _best_build_candidate(session, town, treasury, config, faction_id)
 		if build_choice.is_empty():
@@ -950,7 +950,7 @@ static func _reinforce_enemy_forces(
 		var town = towns[index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var recruit_result = _recruit_town_forces(session, config, town, treasury, faction_id)
 		town = recruit_result.get("town", town)
