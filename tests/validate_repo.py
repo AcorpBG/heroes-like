@@ -103,6 +103,9 @@ TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_deve
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
 TOWN_DEVELOPMENT_COST_CURVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_cost_curve_report.py"
 TOWN_DEVELOPMENT_COST_CURVE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-cost-curve-report.md"
+TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_build_per_town_turn_limit_report.gd"
+TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCENE_PATH = ROOT / "tests" / "town_build_per_town_turn_limit_report.tscn"
+TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-build-per-town-turn-limit-report.md"
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_save_resume_report.gd"
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_save_resume_report.tscn"
 TOWN_DEVELOPMENT_SAVE_RESUME_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-save-resume-report.md"
@@ -2882,6 +2885,44 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         errors,
         "Town development runtime balance doc must record live-rule, same-day-build, and seven-tier recruitment evidence",
     )
+
+
+def validate_town_build_per_town_turn_limit(errors: list[str]) -> None:
+    ensure(TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCRIPT_PATH.exists(), errors, "Missing town build per-town turn-limit report script")
+    ensure(TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCENE_PATH.exists(), errors, "Missing town build per-town turn-limit report scene")
+    ensure(TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_DOC_PATH.exists(), errors, "Missing town build per-town turn-limit report doc")
+    if not TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCRIPT_PATH.exists():
+        return
+    script_text = TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT_DOC_PATH.exists() else ""
+    for token in (
+        "TOWN_BUILD_PER_TOWN_TURN_LIMIT_REPORT",
+        "town_build_per_town_turn_limit_report_v1",
+        "OverworldRules.set_active_town_visit",
+        "OverworldRules.build_in_active_town",
+        "TownRules.get_build_actions",
+        "same_town_a_second_build_blocked",
+        "same_town_b_second_build_blocked",
+        "town_b_same_day_build_ok",
+        "town_a_next_day_build_action_count",
+        "town_b_next_day_build_action_count",
+        "last_build_day",
+        "already completed a build order today",
+    ):
+        ensure(token in script_text, errors, f"Town build per-town turn-limit report is missing token {token}")
+    ensure("res://tests/town_build_per_town_turn_limit_report.gd" in scene_text, errors, "Town build per-town turn-limit scene must load its report script")
+    for required_text in (
+        "Economy Town Build Per-Town Turn Limit Report",
+        "economy-town-build-per-town-turn-limit-20260524-10184",
+        "town_build_per_town_turn_limit_report_v1",
+        "per town rather than a hidden global player construction lock",
+        "town B same-day construction still succeeds",
+        "both towns stamp their own `last_build_day`",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Town build per-town turn-limit doc is missing required text: {required_text}")
 
 
 def validate_town_development_save_resume_policy(errors: list[str]) -> None:
@@ -20148,6 +20189,7 @@ def main() -> int:
     validate_town_development_balance_policy(errors)
     validate_town_development_cost_curve_policy(errors)
     validate_town_development_runtime_balance_policy(errors)
+    validate_town_build_per_town_turn_limit(errors)
     validate_town_development_save_resume_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
     validate_live_stockpile_resource_surface(errors)

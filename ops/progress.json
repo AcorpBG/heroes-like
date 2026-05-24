@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario AI Delayed Source Runway",
+  "currentSliceId": "economy-town-build-per-town-turn-limit-20260524-10184",
+  "currentSliceTitle": "Economy Town Build Per-Town Turn Limit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile.",
+  "currentSliceNotes": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T22:17:44Z",
+  "updatedAt": "2026-05-24T22:23:08Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,27 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-build-per-town-turn-limit-20260524-10184",
+      "title": "Economy Town Build Per-Town Turn Limit",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T22:23:08Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-build-per-town-turn-limit-report.md",
+        "tests/town_build_per_town_turn_limit_report.gd"
+      ],
+      "summary": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 120 --log-file /tmp/heroes-like-town-build-per-town-limit-final.log --path . --scene res://tests/town_build_per_town_turn_limit_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json"
+      ]
+    },
     {
       "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
       "title": "Economy Active Scenario AI Delayed Source Runway",
@@ -21487,6 +21508,36 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-town-build-per-town-turn-limit-20260524-10184",
+      "title": "Economy Town Build Per-Town Turn Limit",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T22:23:08Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-build-per-town-turn-limit-report.md",
+        "tests/town_build_per_town_turn_limit_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-build-per-town-turn-limit-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/town_build_per_town_turn_limit_report.gd",
+        "tests/town_build_per_town_turn_limit_report.tscn",
+        "docs/economy-town-build-per-town-turn-limit-report.md",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 120 --log-file /tmp/heroes-like-town-build-per-town-limit-final.log --path . --scene res://tests/town_build_per_town_turn_limit_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json"
+      ],
+      "summary": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions."
+    },
+    {
       "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
       "title": "Economy Active Scenario AI Delayed Source Runway",
       "status": "completed",
@@ -27510,24 +27561,36 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-24T22:17:44Z",
+    "updatedAt": "2026-05-24T22:23:08Z",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 120 --log-file /tmp/heroes-like-town-build-per-town-limit-final.log --path . --scene res://tests/town_build_per_town_turn_limit_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
-      "jq empty ops/progress.json content/scenarios.json"
+      "jq empty ops/progress.json"
     ],
-    "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
+    "summary": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions."
   },
   "active_slice": {
-    "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
-    "title": "Economy Active Scenario AI Delayed Source Runway",
+    "id": "economy-town-build-per-town-turn-limit-20260524-10184",
+    "title": "Economy Town Build Per-Town Turn Limit",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:17:44Z"
+    "updatedAt": "2026-05-24T22:23:08Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T22:17:44Z",
+  "currentSliceUpdatedAt": "2026-05-24T22:23:08Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-24T22:23:08Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 120 --log-file /tmp/heroes-like-town-build-per-town-limit-final.log --path . --scene res://tests/town_build_per_town_turn_limit_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "jq empty ops/progress.json"
+      ],
+      "summary": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-24T22:17:44Z",
@@ -28219,23 +28282,23 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
-    "title": "Economy Active Scenario AI Delayed Source Runway",
+    "id": "economy-town-build-per-town-turn-limit-20260524-10184",
+    "title": "Economy Town Build Per-Town Turn Limit",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:17:44Z"
+    "updatedAt": "2026-05-24T22:23:08Z"
   },
   "validation": [
     {
       "status": "passed",
-      "updatedAt": "2026-05-24T22:17:44Z",
+      "updatedAt": "2026-05-24T22:23:08Z",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 120 --log-file /tmp/heroes-like-town-build-per-town-limit-final.log --path . --scene res://tests/town_build_per_town_turn_limit_report.tscn",
         "python3 tests/validate_repo.py",
         "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
         "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
-        "jq empty ops/progress.json content/scenarios.json"
+        "jq empty ops/progress.json"
       ],
-      "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
+      "summary": "Focused live report proves one-build-per-turn is per town, not a hidden global player build lock. Riverwatch builds and rejects a second same-day build, Duskfen still builds on that same day, Duskfen rejects its own second same-day build, and both towns expose next-day build actions."
     }
   ]
 }
