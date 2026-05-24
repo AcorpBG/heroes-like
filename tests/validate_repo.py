@@ -19910,12 +19910,25 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "ScenarioFactory.create_session",
         "EnemyTurnRules.run_enemy_town_economy_turn",
         "EnemyTurnRules.town_governor_pressure_report",
+        "OverworldRules.tile_is_blocked",
+        "OverworldRules.tile_is_actionable_route_destination",
+        "OverworldRules.tile_has_route_interaction",
+        "OverworldRules.tile_step_cuts_blocked_corner",
+        "DELAYED_SOURCE_ROUTE_STEPS_PER_DAY",
+        "DELAYED_GUARDED_SOURCE_EXTRA_DAYS",
+        "_run_delayed_source_replay",
+        "_development_source_schedule",
+        "_apply_due_development_sources",
+        "active_scenario_ai_town_delayed_source_replay_v1",
         "same_day_second_build_blocked",
         "rare_treasury_tracked",
         "governor_report_seen",
         "rare_spend_observed",
         "full_session_case_count",
         "full_session_used",
+        "delayed_source_replay_case_count",
+        "delayed_source_replay_completed_count",
+        "delayed_source_replay_ok",
         "scenario_resource_node_count",
         "scenario_encounter_count",
         "scenario_enemy_state_count",
@@ -19929,6 +19942,10 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "economy-active-scenario-ai-town-development-runway-20260524-10184",
         "active_scenario_ai_town_development_runway_report_v1",
         "20 active enemy-town cases",
+        "20/20 delayed-source replay cases",
+        "route-derived source acquisition delays",
+        "day 20 to day 23",
+        "Bellwake Harbor local authored wood and ore reserve nodes",
         "scenario-authored economy sources",
         "full scenario session state",
         "EnemyTurnRules.run_enemy_town_economy_turn",
@@ -20001,8 +20018,24 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
             development_balance = town_template.get("development_balance", {}) if isinstance(town_template, dict) else {}
             rare_id = str(development_balance.get("rare_resource_id", "")).strip() if isinstance(development_balance, dict) else ""
             ensure(rare_id in ECONOMY_STAGED_RARE_RESOURCE_IDS, errors, f"{scenario_id}.{town_id} enemy town must declare a live rare_resource_id")
-            if rare_id:
-                ensure(rare_id in scenario_resource_ids, errors, f"{scenario_id}.{town_id} enemy town must have scenario-authored {rare_id} economy access for AI development runway")
+        if rare_id:
+            ensure(rare_id in scenario_resource_ids, errors, f"{scenario_id}.{town_id} enemy town must have scenario-authored {rare_id} economy access for AI development runway")
+    ninefold = scenarios.get("ninefold-confluence", {})
+    ninefold_nodes = ninefold.get("resource_nodes", []) if isinstance(ninefold, dict) else []
+    ninefold_resource_nodes = {
+        str(node.get("placement_id", "")): node
+        for node in ninefold_nodes
+        if isinstance(node, dict)
+    }
+    for placement_id, site_id in (
+        ("ninefold_bellwake_harbor_wood_reserve", "site_wood_wagon"),
+        ("ninefold_bellwake_harbor_ore_reserve", "site_ore_crates"),
+    ):
+        node = ninefold_resource_nodes.get(placement_id, {})
+        ensure(bool(node), errors, f"ninefold-confluence must keep {placement_id} for Bellwake Harbor AI delayed-source common-resource runway")
+        ensure(str(node.get("site_id", "")) == site_id, errors, f"{placement_id} must use {site_id}")
+        ensure(int(node.get("x", -1)) == 52 and int(node.get("y", -1)) == 51, errors, f"{placement_id} must stay on Bellwake Harbor's reachable economy front tile")
+        ensure(str(node.get("collected_by_faction_id", "")) == "faction_veilmourn", errors, f"{placement_id} must be authored for faction_veilmourn")
     ensure(active_scenario_count >= 16, errors, "Active scenario AI town development runway must cover the active authored scenario roster")
     ensure(enemy_town_case_count >= 20, errors, "Active scenario AI town development runway must cover the active enemy-town cases")
 

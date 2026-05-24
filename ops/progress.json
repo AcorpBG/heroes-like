@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-delayed-source-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Delayed Source Runway",
+  "currentSliceId": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario AI Delayed Source Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target.",
+  "currentSliceNotes": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T21:28:19Z",
+  "updatedAt": "2026-05-24T22:17:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,28 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
+      "title": "Economy Active Scenario AI Delayed Source Runway",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-24T22:17:44Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "content/scenarios.json"
+      ],
+      "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile.",
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "jq empty ops/progress.json content/scenarios.json"
+      ]
+    },
     {
       "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
       "title": "Economy Active Scenario Delayed Source Runway",
@@ -21465,6 +21487,37 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
+      "title": "Economy Active Scenario AI Delayed Source Runway",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T22:17:44Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "content/scenarios.json",
+        "tests/validate_repo.py"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-scenario-ai-delayed-source-runway-20260524-10184"
+      ],
+      "implementationRefs": [
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "content/scenarios.json",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "jq empty ops/progress.json content/scenarios.json"
+      ],
+      "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
+    },
+    {
       "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
       "title": "Economy Active Scenario Delayed Source Runway",
       "status": "completed",
@@ -27457,24 +27510,36 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-24T21:28:19Z",
+    "updatedAt": "2026-05-24T22:17:44Z",
     "commands": [
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "jq empty ops/progress.json"
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "jq empty ops/progress.json content/scenarios.json"
     ],
-    "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
+    "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
   },
   "active_slice": {
-    "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
-    "title": "Economy Active Scenario Delayed Source Runway",
+    "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
+    "title": "Economy Active Scenario AI Delayed Source Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T21:28:19Z"
+    "updatedAt": "2026-05-24T22:17:44Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T21:28:19Z",
+  "currentSliceUpdatedAt": "2026-05-24T22:17:44Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-24T22:17:44Z",
+      "commands": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "jq empty ops/progress.json content/scenarios.json"
+      ],
+      "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-24T21:28:19Z",
@@ -28154,23 +28219,23 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-delayed-source-runway-20260524-10184",
-    "title": "Economy Active Scenario Delayed Source Runway",
+    "id": "economy-active-scenario-ai-delayed-source-runway-20260524-10184",
+    "title": "Economy Active Scenario AI Delayed Source Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T21:28:19Z"
+    "updatedAt": "2026-05-24T22:17:44Z"
   },
   "validation": [
     {
       "status": "passed",
-      "updatedAt": "2026-05-24T21:28:19Z",
+      "updatedAt": "2026-05-24T22:17:44Z",
       "commands": [
         "python3 tests/validate_repo.py",
         "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
         "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-town-runway-delayed2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-        "jq empty ops/progress.json"
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-runway-delayed-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "jq empty ops/progress.json content/scenarios.json"
       ],
-      "summary": "Active player-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 18 player-town cases, completes 18/18 delayed-source replays, and finishes delayed development between days 21 and 25 with 5-9 days of margin inside the 30-turn target."
+      "summary": "Active enemy-town development runway now includes delayed route-derived source acquisition replay. Current evidence covers 16 active scenarios and 20 enemy-town cases, completes 20/20 delayed-source AI replays, and finishes delayed AI development between days 20 and 23 with 7-10 days of margin inside the 30-turn target. Ninefold Bellwake Harbor now has local authored wood and ore reserves on its reachable harbor-front economy tile."
     }
   ]
 }
