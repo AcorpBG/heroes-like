@@ -2582,6 +2582,7 @@
         {"placement_id": "bridge_wood", "site_id": "site_wood_wagon", "x": 2, "y": 0},
         {"placement_id": "bridge_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
         {"placement_id": "bridge_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "bridge_ore_reserve", "site_id": "site_ore_crates", "x": 7, "y": 5},
         {"placement_id": "ford_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
         {"placement_id": "highwater_embergrain_granary", "site_id": "site_embergrain_warm_granary", "x": 0, "y": 2}
       ,
@@ -3964,6 +3965,12 @@
           "placement_id": "bridge_ore",
           "site_id": "site_ore_crates",
           "x": 6,
+          "y": 5
+        },
+        {
+          "placement_id": "bridge_ore_reserve",
+          "site_id": "site_ore_crates",
+          "x": 7,
           "y": 5
         },
         {

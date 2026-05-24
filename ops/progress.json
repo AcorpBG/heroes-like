@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-seven-tier-recruitment-end-to-end-20260524-10184",
-  "currentSliceTitle": "Economy Town Development Seven Tier Recruitment End To End",
+  "currentSliceId": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+  "currentSliceTitle": "Economy Active Scenario Seven Tier Recruitment Runway",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed post-development seven-tier recruitment gate. The live town development runtime report now fully develops all 15 authored towns, then proves each owning faction's seven-tier ladder is exposed through live recruit actions and recruits 105/105 tier cases through OverworldRules.recruit_in_active_town.",
+  "currentSliceNotes": "Completed active-scenario post-development seven-tier recruitment gate. The active scenario development runway report now keeps completed player towns in full authored sessions through the remaining 30-turn economy window, applies recovery relief and weekly musters, then recruits 126/126 tier cases through OverworldRules.recruit_in_active_town.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:59:30Z",
+  "updatedAt": "2026-05-24T23:59:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,61 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+      "title": "Economy Active Scenario Seven Tier Recruitment Runway",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T23:59:45Z",
+      "completedAt": "2026-05-24T23:59:45Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-development-runway-report.md"
+      ],
+      "implementationTargets": [
+        "tests/active_scenario_town_development_runway_report.gd",
+        "content/scenarios.json",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "After each active-scenario player town completes live development, the report advances the full scenario session through the remaining 30-turn economy window.",
+        "Focused economy-day advancement applies live town income, controlled resource-site income, recovery relief, and weekly growth before recruitment is checked.",
+        "Every covered player-town case validates the owning faction's seven-tier recruit actions after development.",
+        "The report recruits one unit from each tier through OverworldRules.recruit_in_active_town and proves the field army receives the unit.",
+        "Highwater bridgehead scenarios provide authored ore reserve income for post-development tier 4-7 recruitment rather than relying on test-only resource injection.",
+        "Repository validation gates the strengthened active-scenario report, documentation, and scenario content."
+      ],
+      "notes": "Completed: active-scenario player-town development runway now proves post-development seven-tier recruitment end to end over full authored scenario sessions.",
+      "completionEvidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "completed_case_count": 18,
+        "rare_spend_case_count": 18,
+        "full_session_case_count": 18,
+        "recruitment_end_to_end_case_count": 18,
+        "seven_tier_recruitment_case_count": 126,
+        "recruited_unit_case_count": 126,
+        "target_turns": 30,
+        "target_tier_count": 7,
+        "validated": [
+          "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand godot --headless --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+          "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish godot --headless --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+          "godot --headless --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/town_development_cost_curve_report.py",
+          "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
     {
       "id": "economy-town-development-seven-tier-recruitment-end-to-end-20260524-10184",
       "title": "Economy Town Development Seven Tier Recruitment End To End",
@@ -27244,27 +27299,49 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-town-start-economy-20260524-10184",
+    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T21:05:00Z",
+    "updatedAt": "2026-05-24T23:59:45Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 180 --log-file /tmp/heroes-like-town-start-economy-final.log --path . --scene res://tests/active_scenario_town_start_economy_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-scenario-seven-tier-runway.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-ironbridge.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-mireford.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+      "python3 tests/town_development_balance_report.py",
+      "python3 tests/town_development_cost_curve_report.py",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "summary": "Active scenario town start economy passed: 18/18 player-town starts across 16 active authored scenarios meet natural first-week construction, common-resource spend, one-build-per-day, and nine-resource stockpile gates."
+    "summary": "Active scenario seven-tier recruitment runway passed: 16 active scenarios, 18/18 player-town development cases, 18/18 post-development recruitment cases, and 126/126 tier recruitments through live OverworldRules.recruit_in_active_town; Highwater bridgehead ore reserve probes passed for ironbridge-stand and mireford-skirmish."
   },
   "active_slice": {
-    "id": "economy-active-scenario-town-start-economy-20260524-10184",
-    "title": "Economy Active Scenario Town Start Economy",
+    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+    "title": "Economy Active Scenario Seven Tier Recruitment Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T21:05:00Z"
+    "updatedAt": "2026-05-24T23:59:45Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T21:05:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T23:59:45Z",
   "validationHistory": [
+    {
+      "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T23:59:45Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-scenario-seven-tier-runway.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-ironbridge.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-mireford.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Active scenario seven-tier recruitment runway passed: 16 active scenarios, 18/18 player-town development cases, 18/18 post-development recruitment cases, and 126/126 tier recruitments through live OverworldRules.recruit_in_active_town; Highwater bridgehead ore reserve probes passed for ironbridge-stand and mireford-skirmish."
+    },
     {
       "id": "economy-active-scenario-town-start-economy-20260524-10184",
       "status": "passed",
@@ -27884,26 +27961,26 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-resource-ui-surface-20260524-10184",
-    "title": "Economy Town Resource UI Surface",
+    "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
+    "title": "Economy Active Scenario Seven Tier Recruitment Runway",
     "status": "completed",
-    "updatedAt": "2026-05-24T17:58:00Z"
+    "updatedAt": "2026-05-24T23:59:45Z"
   },
   "validation": [
     {
-      "id": "economy-active-scenario-town-economy-source-route-20260524-10184",
+      "id": "economy-active-scenario-seven-tier-recruitment-runway-20260524-10184",
       "status": "passed",
-      "updatedAt": "2026-05-24T18:58:00Z",
+      "updatedAt": "2026-05-24T23:59:45Z",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-economy-source-route-final2.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-player-runway-route-final2.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-rare-access-route-final2.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-ai-runway-route-final2.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-active-scenario-seven-tier-runway.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=ironbridge-stand GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-ironbridge.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=mireford-skirmish GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 240 --log-file /tmp/heroes-like-active-scenario-seven-tier-mireford.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
         "python3 tests/validate_repo.py",
         "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
         "python3 tests/town_development_balance_report.py",
-        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
-        "jq empty ops/progress.json content/scenarios.json",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_cost_curve_report.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
         "git diff --check"
       ]
     }
