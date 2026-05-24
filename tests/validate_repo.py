@@ -104,6 +104,9 @@ TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
+TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
+TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.tscn"
+TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-unit-tier-runtime-surface-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -19046,6 +19049,104 @@ def validate_active_scenario_rare_economy_access(errors: list[str]) -> None:
     ensure({"aetherglass", "embergrain", "peatwax"}.issubset(covered_rare_ids), errors, "Active scenario rare access gate must cover the live player-facing rare-resource mix")
 
 
+def validate_town_unit_tier_runtime_surface(errors: list[str]) -> None:
+    ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town unit tier runtime surface report script is missing")
+    ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town unit tier runtime surface report scene is missing")
+    ensure(TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH.exists(), errors, "Town unit tier runtime surface report doc is missing")
+    if not TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_DOC_PATH.exists() else ""
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+
+    for required_token in (
+        "TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT",
+        "town_unit_tier_runtime_surface_report_v1",
+        "TownRules.get_build_actions",
+        "TownRules.get_recruit_actions",
+        "unit_tier",
+        "tier_label",
+        "unlocked_unit_id",
+        "signature_building_ids",
+        "unit_ladder_ids",
+        "rare_resource_id",
+        "build_action_case_count",
+        "starting_signature_case_count",
+    ):
+        ensure(required_token in script_text, errors, f"Town unit tier runtime surface report is missing token {required_token}")
+    ensure("res://tests/town_unit_tier_runtime_surface_report.gd" in scene_text, errors, "Town unit tier runtime surface scene must load its report script")
+    for required_token in (
+        '"unit_tier": unit_tier',
+        '"tier_label": tier_label',
+        '"unlocked_unit_id": unlock_unit_id',
+        "Unlocks %s %s.",
+        "_unit_tier_label",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules unit tier action surface is missing token {required_token}")
+    for required_text in (
+        "Economy Town Unit Tier Runtime Surface Report",
+        "economy-town-unit-tier-runtime-surface-20260524-10184",
+        "town_unit_tier_runtime_surface_report_v1",
+        "42 live tier cases",
+        "39 build-action cases",
+        "3 seed-town starting signature cases",
+        "tier 5-7 signature unit buildings cost the faction rare resource",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Town unit tier runtime surface doc is missing required text: {required_text}")
+
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    units = items_index(load_json(CONTENT_DIR / "units.json"))
+    covered_factions = 0
+    high_tier_rare_cases = 0
+    for faction_id, faction in sorted(factions.items()):
+        signature_ids = [str(value) for value in faction.get("signature_building_ids", [])] if isinstance(faction.get("signature_building_ids", []), list) else []
+        ladder_ids = [str(value) for value in faction.get("unit_ladder_ids", [])] if isinstance(faction.get("unit_ladder_ids", []), list) else []
+        ensure(len(signature_ids) == 7, errors, f"{faction_id} must expose seven signature unit buildings")
+        ensure(len(ladder_ids) == 7, errors, f"{faction_id} must expose seven unit ladder ids")
+        ensure(len(set(signature_ids)) == len(signature_ids), errors, f"{faction_id} signature unit buildings must be unique")
+        ensure(len(set(ladder_ids)) == len(ladder_ids), errors, f"{faction_id} unit ladder ids must be unique")
+        seed_town_id = str(faction.get("seed_town_id", "")).strip()
+        seed_town = towns.get(seed_town_id, {})
+        ensure(isinstance(seed_town, dict) and bool(seed_town), errors, f"{faction_id} seed town {seed_town_id} must exist")
+        development_balance = seed_town.get("development_balance", {}) if isinstance(seed_town, dict) else {}
+        development_balance = development_balance if isinstance(development_balance, dict) else {}
+        rare_id = str(development_balance.get("rare_resource_id", "")).strip()
+        ensure(rare_id in ECONOMY_STAGED_RARE_RESOURCE_IDS, errors, f"{faction_id} seed town must declare a live rare_resource_id")
+        if len(signature_ids) == 7 and len(ladder_ids) == 7:
+            covered_factions += 1
+        for index, building_id in enumerate(signature_ids[:7]):
+            expected_tier = index + 1
+            expected_unit_id = ladder_ids[index] if index < len(ladder_ids) else ""
+            building = buildings.get(building_id, {})
+            ensure(isinstance(building, dict) and bool(building), errors, f"{faction_id} signature building {building_id} must exist")
+            if not isinstance(building, dict):
+                continue
+            unlocked_unit_id = str(building.get("unlock_unit_id", "")).strip()
+            ensure(unlocked_unit_id == expected_unit_id, errors, f"{faction_id} tier {expected_tier} building {building_id} must unlock {expected_unit_id}")
+            unit = units.get(unlocked_unit_id, {})
+            ensure(isinstance(unit, dict) and bool(unit), errors, f"{faction_id} tier {expected_tier} unit {unlocked_unit_id} must exist")
+            ensure(int(unit.get("tier", 0)) == expected_tier if isinstance(unit, dict) else False, errors, f"{faction_id} unit {unlocked_unit_id} must be tier {expected_tier}")
+            cost = building.get("cost", {})
+            cost = cost if isinstance(cost, dict) else {}
+            cost_ids = {str(resource_id) for resource_id in cost.keys()}
+            ensure(cost_ids.issubset(set(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS)), errors, f"{faction_id}/{building_id} cost must use only live stockpile resources")
+            rare_cost_ids = cost_ids & set(ECONOMY_STAGED_RARE_RESOURCE_IDS)
+            if expected_tier <= 4:
+                ensure(not rare_cost_ids, errors, f"{faction_id}/{building_id} tier {expected_tier} must remain common-resource only")
+            else:
+                ensure(rare_id in rare_cost_ids, errors, f"{faction_id}/{building_id} tier {expected_tier} must cost faction rare {rare_id}")
+                if rare_id in rare_cost_ids:
+                    high_tier_rare_cases += 1
+    ensure(covered_factions >= 6, errors, "Town unit tier runtime surface gate must cover the six faction ladders")
+    ensure(high_tier_rare_cases == covered_factions * 3, errors, "Every faction tier 5-7 unit building must cost that faction's rare resource")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -19157,6 +19258,7 @@ def main() -> int:
     validate_live_stockpile_resource_surface(errors)
     validate_runtime_market_cap_persistence(errors)
     validate_active_scenario_rare_economy_access(errors)
+    validate_town_unit_tier_runtime_surface(errors)
     validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
@@ -19242,6 +19344,7 @@ def main() -> int:
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
+    print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")

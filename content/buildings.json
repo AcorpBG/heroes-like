@@ -998,7 +998,8 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_blackbranch_den"
+        "building_mireclaw_floodtide_forge",
+        "building_market_square"
       ],
       "unlock_unit_id": "unit_mireclaw_ferrychain_lashers",
       "growth_bonus": {
@@ -1024,8 +1025,7 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_chainboom_ferry",
-        "building_market_square"
+        "building_mireclaw_blackbranch_den"
       ],
       "unlock_unit_id": "unit_mireclaw_mudglass_slingers",
       "growth_bonus": {
@@ -1045,11 +1045,12 @@
       "cost": {
         "gold": 2250,
         "wood": 1,
-        "ore": 1
+        "ore": 1,
+        "peatwax": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_chainboom_ferry",
         "building_market_square"
       ],
       "unlock_unit_id": "unit_mireclaw_sporewake_chanters",
@@ -1069,12 +1070,11 @@
       "description": "Flood-quenched forges plate the maulers for wet frontal assaults.",
       "cost": {
         "gold": 1610,
-        "wood": 1,
-        "peatwax": 1
+        "wood": 1
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_war_drum_circle",
         "building_market_square"
       ],
       "unlock_unit_id": "unit_mireclaw_bogplate_maulers",
@@ -1100,7 +1100,7 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_sporewake_shrine",
         "building_market_square"
       ],
       "unlock_unit_id": "unit_mireclaw_gorefen_rippers",

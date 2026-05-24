@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-rare-access-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario Rare Access",
+  "currentSliceId": "economy-town-unit-tier-runtime-surface-20260524-10184",
+  "currentSliceTitle": "Economy Town Unit Tier Runtime Surface",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active authored scenarios now provide live rare-source access for player-town high-tier development resources, with runtime claim/control/income evidence.",
+  "currentSliceNotes": "Completed. Live town build/recruit actions expose seven-tier unit identity across all six faction signature ladders; focused runtime report covers 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T16:20:00Z",
+  "updatedAt": "2026-05-24T16:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -20587,6 +20587,48 @@
         "normal_market_rare_buying_enabled": false,
         "save_version_bump": false
       }
+    },
+    {
+      "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
+      "title": "Economy Town Unit Tier Runtime Surface",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T16:45:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-unit-tier-runtime-surface-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/TownRules.gd",
+        "tests/town_unit_tier_runtime_surface_report.gd",
+        "tests/town_unit_tier_runtime_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-unit-tier-runtime-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live town build actions expose unlocked unit id and unit tier metadata for all faction signature unit buildings.",
+        "Live town recruit actions expose unit tier metadata for recruitable units.",
+        "Focused Godot report proves all six faction signature ladders expose tiers 1-7 through TownRules action surfaces.",
+        "High-tier signature actions remain tied to faction rare resources while low tiers remain common-resource only.",
+        "Repository validation gates the new report and runtime action metadata."
+      ],
+      "notes": "Completed. Live town build/recruit actions expose seven-tier unit identity across all six faction signature ladders; focused runtime report covers 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases.",
+      "completedAt": "2026-05-24T16:45:00Z",
+      "evidence": {
+        "faction_count": 6,
+        "tier_case_count": 42,
+        "build_action_case_count": 39,
+        "starting_signature_case_count": 3,
+        "high_tier_rare_case_count": 18,
+        "runtime_action_tier_metadata": true,
+        "mireclaw_unit_tier_order_corrected": true,
+        "save_version_bump": false
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -25014,6 +25056,57 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
+      "title": "Economy Town Unit Tier Runtime Surface",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-24T16:45:00Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-unit-tier-runtime-surface-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-unit-tier-runtime-surface-20260524-10184"
+      ],
+      "implementationRefs": [
+        "scripts/core/TownRules.gd",
+        "content/factions.json",
+        "content/buildings.json",
+        "tests/town_unit_tier_runtime_surface_report.gd",
+        "tests/town_unit_tier_runtime_surface_report.tscn",
+        "tests/validate_repo.py",
+        "docs/economy-town-unit-tier-runtime-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "TownRules build actions now expose unlocked_unit_id, unit_tier, and tier_label for unit-unlocking buildings.",
+        "TownRules recruit actions now expose unit_tier and tier_label for recruitable units.",
+        "Focused Godot report validates 6 faction ladders, 42 tier cases, 39 build-action cases, and 3 seed-town starting signature recruit-surface cases.",
+        "Focused report and repository validator prove tiers 1-4 remain common-resource only while tiers 5-7 cost the faction rare resource, covering 18 high-tier rare-resource cases.",
+        "Mireclaw signature unit-building order, prerequisites, and rare-resource cost placement now align to the seven-tier unit ladder.",
+        "No SAVE_VERSION bump required; wood remains canonical."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-unit-tier-runtime-surface-final.log --path . --scene res://tests/town_unit_tier_runtime_surface_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-unit-tier.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "nonClaims": [
+        "Not final scenario-wide economy tuning.",
+        "Not final town UI layout or art.",
+        "Not campaign balance approval.",
+        "Not broad AI economy planning."
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -25663,6 +25756,7 @@
     }
   },
   "validationResults": [
+    "2026-05-24 economy town unit tier runtime surface: live TownRules build/recruit actions now expose seven-tier unit identity across six faction ladders; focused Godot report passed with 42 tier cases, 39 build-action cases, 3 starting signature recruit-surface cases, and 18 high-tier rare-resource cases; Mireclaw tier order/prerequisites/rare costs corrected; town development balance reports, repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 battle autoplay hard difficulty watch retune: Hard difficulty watch retune passed: focused difficulty sweep keeps normal clear with tuning_queue_item_count 0/signature 829808c9, reduces hard from 6 to 3 watch items/signature c286b819, clears hard terminal-margin/sample watches, and preserves normal-vs-hard effect; active scenario breadth remains clear with 51/51 completed samples and queue_signature 829808c9; shared headless harness passed with status_counts pass 18, warning 1, deferred 1, fail 0 and difficulty sweep case signature 6e40b418.",
     "2026-05-24 strategic AI multi-scenario recruitment delivery: Strategic AI multi-scenario recruitment delivery passed: focused report covered 5 scenario/faction cases with delivered_faction_count 5, town_recruit_event_count 6, raid_reinforcement_event_count 6; shared headless harness reported the required strategic_ai_multi_scenario_recruitment_delivery case pass with signature d8432517 and overall status warning only for the known generated-map boundary, status_counts pass 18, warning 1, deferred 1, fail 0; repo validation, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-20 town scheduling/input alignment: tools/rmg_h3m_native_phase_snapshot_export.gd now drives native snapshots from controlled-reference manifests, including observed human/computer split. src/gdextension/src/h3maped_small_rmg.cpp now follows the recovered 0x4a8d2c first-success town/castle scheduling shape, routes remaining minimum/density work through 0x4a8db2/0x4a901a including player-owned categories, and preserves full closest-candidate tie vectors. Five controlled audits were refreshed: 2p seeds 28/73 keep reference_alignment_pass; 3p/4p cases now expose real template-selection drift instead of stale input drift (seed 11 h3maped template 018 vs native 046, seed 3 template 000 vs native 024, seed 10 template 012 vs native 048). 2p blocker deltas remain explicit, with object-blocked tiles low by 201/115 and movement-blocked tiles low by 447/383. Validation passed Linux debug/release native builds, Windows debug/release native builds, controlled snapshot/audit for five seeds, strict Small boundary report, package surface topology report, public template matrix, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
@@ -26282,13 +26376,13 @@
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-rare-access-20260524-10184",
+    "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T16:20:00Z",
+    "updatedAt": "2026-05-24T16:45:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-rare-access-rerun.log --path . --scene res://tests/active_scenario_rare_economy_access_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-rare-access.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-unit-tier-runtime-surface-final.log --path . --scene res://tests/town_unit_tier_runtime_surface_report.tscn",
       "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-unit-tier.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
@@ -26297,12 +26391,12 @@
     ]
   },
   "active_slice": {
-    "id": "economy-active-scenario-rare-access-20260524-10184",
-    "title": "Economy Active Scenario Rare Access",
+    "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
+    "title": "Economy Town Unit Tier Runtime Surface",
     "status": "completed",
-    "updatedAt": "2026-05-24T16:20:00Z"
+    "updatedAt": "2026-05-24T16:45:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T16:20:00Z",
+  "currentSliceUpdatedAt": "2026-05-24T16:45:00Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -26795,7 +26889,22 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-town-unit-tier-runtime-surface-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T16:45:00Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-unit-tier-runtime-surface-final.log --path . --scene res://tests/town_unit_tier_runtime_surface_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-balance-unit-tier.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
-  "currentSlice": "economy-active-scenario-rare-access-20260524-10184"
+  "currentSlice": "economy-town-unit-tier-runtime-surface-20260524-10184"
 }

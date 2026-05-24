@@ -891,7 +891,11 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 	var resources = session.overworld.get("resources", {})
 	for building_id in _available_building_ids(town, session.day):
 		var building := ContentService.get_building(building_id)
-		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
+		var unlock_unit_id := String(building.get("unlock_unit_id", ""))
+		var unlocked_unit := ContentService.get_unit(unlock_unit_id) if unlock_unit_id != "" else {}
+		var unit_tier := int(unlocked_unit.get("tier", 0)) if not unlocked_unit.is_empty() else 0
+		var tier_label := _unit_tier_label(unit_tier)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id, session.day)
 		var cost = building.get("cost", {})
 		var projection: String = OverworldRulesScript.describe_town_build_projection(session, town, building_id)
 		var readiness: Dictionary = OverworldRulesScript.town_cost_readiness(town, resources, cost, int(session.day))
@@ -911,6 +915,8 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 			impact_line,
 			affordability_line,
 		]
+		if unit_tier > 0:
+			summary_lines.insert(1, "Unlocks %s %s." % [tier_label, String(unlocked_unit.get("name", unlock_unit_id))])
 		if direct_affordable:
 			if after_spend_line != "":
 				summary_lines.append("After build stores: %s." % after_spend_line)
@@ -942,6 +948,9 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 					impact_line
 				),
 				"cost": cost,
+				"unlocked_unit_id": unlock_unit_id,
+				"unit_tier": unit_tier,
+				"tier_label": tier_label,
 				"affordability_label": String(affordability_line).trim_suffix("."),
 				"direct_affordable": direct_affordable,
 				"market_coverable": market_coverable,
@@ -967,6 +976,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 	var resources = session.overworld.get("resources", {})
 	for unit_id in OverworldRulesScript.get_town_recruit_options(town):
 		var unit := ContentService.get_unit(unit_id)
+		var unit_tier := int(unit.get("tier", 0))
+		var tier_label := _unit_tier_label(unit_tier)
 		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
 		var weekly_growth := int(OverworldRulesScript.town_weekly_growth(town, session).get(unit_id, 0))
 		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
@@ -987,7 +998,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		if market_affordable_count <= 0:
 			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost, int(session.day)))
 		var summary_lines := [
-			"%s x%d | %s | Weekly +%d | Cost %s" % [
+			"%s %s x%d | %s | Weekly +%d | Cost %s" % [
+				tier_label,
 				String(unit.get("name", unit_id)),
 				available,
 				OverworldRulesScript.describe_unit_recruit_brief(unit_id, available),
@@ -1031,6 +1043,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 					recruit_impact_line
 				),
 				"unit_cost": unit_cost,
+				"unit_tier": unit_tier,
+				"tier_label": tier_label,
 				"available_count": available,
 				"weekly_growth": weekly_growth,
 				"affordability_label": _recruit_affordability_label(direct_affordable_count, market_affordable_count, shortfall_summary),
@@ -1738,6 +1752,11 @@ static func _recruit_action_badge(ready_count: int, market_count: int) -> String
 	if market_count > 0:
 		return "Trade x%d" % market_count
 	return "Blocked"
+
+static func _unit_tier_label(unit_tier: int) -> String:
+	if unit_tier <= 0:
+		return "Tier ?"
+	return "Tier %d" % unit_tier
 
 static func _signed_int(value: int) -> String:
 	return "%+d" % value
