@@ -1,6 +1,9 @@
 extends Node
 
 const TARGET_TURNS := 30
+const MIN_BUILDABLE_TARGETS := 12
+const MIN_NON_UNIT_BUILDABLE_TARGETS := 5
+const SIX_FACTION_BREADTH_PARITY_STATUS := "six_faction_town_breadth_parity"
 const REPORT_SCHEMA := "town_development_runtime_balance_report_v1"
 const HERO_ID := "hero_lyra"
 const PLAYER_TOWN_PLACEMENT_ID := "runtime_balance_town"
@@ -70,6 +73,10 @@ func _run() -> void:
 			_errors.append("%s never spent its high-tier rare resource through live build rules" % town_id)
 		if not bool(town_result.get("market_common_only", false)):
 			_errors.append("%s market actions were not bounded to wood/ore" % town_id)
+		if int(town_result.get("target_building_count", 0)) < MIN_BUILDABLE_TARGETS:
+			_errors.append("%s did not expose enough buildable town-development targets" % town_id)
+		if int(town_result.get("non_unit_building_count", 0)) < MIN_NON_UNIT_BUILDABLE_TARGETS:
+			_errors.append("%s did not expose enough non-unit town-development targets" % town_id)
 	report["ok"] = _errors.is_empty()
 	print("TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT %s" % JSON.stringify(report))
 	get_tree().quit(0 if _errors.is_empty() else 1)
@@ -80,6 +87,8 @@ func _run_town_case(town_template: Dictionary, faction: Dictionary) -> Dictionar
 	var target_turns := int(profile.get("target_complete_turns", TARGET_TURNS))
 	var session = _build_runtime_session(town_template, profile)
 	var target_buildings := _string_array(town_template.get("buildable_building_ids", []))
+	var non_unit_buildings := _non_unit_building_ids(target_buildings)
+	var breadth_parity_buildings := _breadth_parity_building_ids(target_buildings)
 	var signature_order := _signature_order(faction)
 	var build_log := []
 	var stalled_days := []
@@ -147,6 +156,9 @@ func _run_town_case(town_template: Dictionary, faction: Dictionary) -> Dictionar
 		"town_id": town_id,
 		"faction_id": String(faction.get("id", "")),
 		"target_turns": target_turns,
+		"target_building_count": target_buildings.size(),
+		"non_unit_building_count": non_unit_buildings.size(),
+		"breadth_parity_building_count": breadth_parity_buildings.size(),
 		"completed": missing.is_empty(),
 		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0,
 		"build_count": build_log.size(),
@@ -254,6 +266,22 @@ func _signature_order(faction: Dictionary) -> Dictionary:
 	for index in range(signature_ids.size()):
 		order[signature_ids[index]] = index + 1
 	return order
+
+func _non_unit_building_ids(building_ids: Array) -> Array:
+	var result := []
+	for building_id in building_ids:
+		var building := ContentService.get_building(String(building_id))
+		if String(building.get("unlock_unit_id", "")).is_empty():
+			result.append(String(building_id))
+	return result
+
+func _breadth_parity_building_ids(building_ids: Array) -> Array:
+	var result := []
+	for building_id in building_ids:
+		var building := ContentService.get_building(String(building_id))
+		if String(building.get("content_status", "")) == SIX_FACTION_BREADTH_PARITY_STATUS:
+			result.append(String(building_id))
+	return result
 
 func _resource_nodes_for_income(income_value: Variant) -> Array:
 	var income: Dictionary = income_value if income_value is Dictionary else {}

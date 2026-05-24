@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-scenario-ai-town-development-runway-20260524-10184",
-  "currentSliceTitle": "Economy Active Scenario AI Town Development Runway",
+  "currentSliceId": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+  "currentSliceTitle": "Economy Six-Faction Town Development Breadth Parity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "20/20 active enemy-town cases complete within 30 turns with rare-resource spend and same-day second-build rejection.",
+  "currentSliceNotes": "15/15 authored towns now have at least 12 buildable targets and at least 5 non-unit targets; 6 newer-faction towns carry explicit breadth-parity buildings.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T16:55:56Z",
+  "updatedAt": "2026-05-24T17:13:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,59 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+      "title": "Economy Six-Faction Town Development Breadth Parity",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "updatedAt": "2026-05-24T17:13:02Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-six-faction-town-development-breadth-parity-report.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-six-faction-town-development-breadth-parity-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every authored town has a real development arc of at least twelve buildable buildings, not only a seven-tier unit ladder.",
+        "Every authored town has at least five non-unit development buildings in its buildable target list.",
+        "Thornwake, Brasshollow, and Veilmourn receive faction-flavored non-unit economy/support/magic/civic buildings while keeping seven-tier unit ladders intact.",
+        "Deterministic and live Godot town-development reports still complete every authored town within 30 turns with one-build-per-turn enforcement and rare-resource spend.",
+        "Repository validation gates the breadth parity invariants."
+      ],
+      "notes": "Completed six-faction town-development breadth parity implementation and validation.",
+      "completedAt": "2026-05-24T17:13:02Z",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-breadth-parity.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-player-runway-breadth-parity.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-ai-runway-breadth-parity.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/buildings.json content/towns.json",
+        "git diff --check"
+      ],
+      "completionEvidence": {
+        "authored_town_count": 15,
+        "full_ladder_town_count": 15,
+        "breadth_parity_town_count": 6,
+        "min_buildable_targets": 12,
+        "min_non_unit_buildable_targets": 5,
+        "active_player_town_cases": 18,
+        "active_enemy_town_cases": 20,
+        "notes": "Thornwake, Brasshollow, and Veilmourn towns now have faction-flavored non-unit development arcs in addition to seven-tier unit ladders; deterministic and live reports gate breadth shape and 30-turn completion."
+      }
+    },
     {
       "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
       "title": "Economy Active Scenario AI Town Development Runway",
@@ -26534,29 +26587,47 @@
         "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T17:13:02Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-breadth-parity.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-player-runway-breadth-parity.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-ai-runway-breadth-parity.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/buildings.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
-    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
+    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
     "status": "passed",
-    "updatedAt": "2026-05-24T16:55:56Z",
+    "updatedAt": "2026-05-24T17:13:02Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-ai-town-runway-final.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-scenario-town-runway-regression.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-breadth-parity.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-player-runway-breadth-parity.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-ai-runway-breadth-parity.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
       "python3 tests/validate_repo.py",
       "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
       "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
-      "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
+      "jq empty ops/progress.json content/buildings.json content/towns.json",
       "git diff --check"
     ]
   },
   "active_slice": {
-    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
-    "title": "Economy Active Scenario AI Town Development Runway",
+    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+    "title": "Economy Six-Faction Town Development Breadth Parity",
     "status": "completed",
-    "updatedAt": "2026-05-24T16:55:56Z"
+    "updatedAt": "2026-05-24T17:13:02Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T16:55:56Z",
+  "currentSliceUpdatedAt": "2026-05-24T17:13:02Z",
   "validationHistory": [
     {
       "id": "economy-live-stockpile-resource-surface-breadth-20260524-10184",
@@ -27091,12 +27162,28 @@
         "jq empty ops/progress.json content/scenarios.json content/resource_sites.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-24T17:13:02Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-town-runtime-breadth-parity.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-player-runway-breadth-parity.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --log-file /tmp/heroes-like-active-ai-runway-breadth-parity.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
+        "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py",
+        "jq empty ops/progress.json content/buildings.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-ai-town-development-runway-20260524-10184",
-    "title": "Economy Active Scenario AI Town Development Runway",
+    "id": "economy-six-faction-town-development-breadth-parity-20260524-10184",
+    "title": "Economy Six-Faction Town Development Breadth Parity",
     "status": "completed",
-    "updatedAt": "2026-05-24T16:55:56Z"
+    "updatedAt": "2026-05-24T17:13:02Z"
   }
 }

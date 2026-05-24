@@ -101,6 +101,7 @@ RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_development_runtime_balance_report.gd"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_SCENE_PATH = ROOT / "tests" / "town_development_runtime_balance_report.tscn"
 TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-development-runtime-balance-proof-report.md"
+TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH = ROOT / "docs" / "economy-six-faction-town-development-breadth-parity-report.md"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.gd"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_rare_economy_access_report.tscn"
 ACTIVE_SCENARIO_RARE_ACCESS_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-rare-access-report.md"
@@ -2647,6 +2648,7 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
 def validate_town_development_balance_policy(errors: list[str]) -> None:
     script_path = ROOT / "tests" / "town_development_balance_report.py"
     ensure(script_path.exists(), errors, "Missing town development balance report")
+    ensure(TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists(), errors, "Missing town development breadth parity report doc")
     if not script_path.exists():
         return
     result = subprocess.run(
@@ -2676,13 +2678,42 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
             break
     authored_town_count = int(report_payload.get("authored_town_count", 0)) if isinstance(report_payload, dict) else 0
     full_ladder_town_count = int(report_payload.get("full_ladder_town_count", 0)) if isinstance(report_payload, dict) else 0
+    breadth_parity_town_count = int(report_payload.get("breadth_parity_town_count", 0)) if isinstance(report_payload, dict) else 0
     town_results = report_payload.get("towns", {}) if isinstance(report_payload, dict) else {}
     ensure(authored_town_count >= 15, errors, "Town development balance report must cover all authored towns, not just seed towns")
     ensure(full_ladder_town_count == authored_town_count, errors, "Every authored town must expose its faction seven-building ladder")
+    ensure(breadth_parity_town_count >= 6, errors, "Six-faction town development breadth parity must cover Thornwake, Brasshollow, and Veilmourn towns")
     ensure(isinstance(town_results, dict) and len(town_results) == authored_town_count, errors, "Town development balance report must include one result per authored town")
+    for town_id, result in town_results.items():
+        if not isinstance(result, dict):
+            errors.append(f"{town_id} town development result must be a dictionary")
+            continue
+        ensure(int(result.get("target_building_count", 0)) >= 12, errors, f"{town_id} must expose at least twelve buildable development targets")
+        ensure(int(result.get("non_unit_building_count", 0)) >= 5, errors, f"{town_id} must expose at least five non-unit development targets")
+        ensure(int(result.get("build_count", 0)) == int(result.get("target_building_count", -1)), errors, f"{town_id} must build every target development building")
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    balance_report_text = script_path.read_text(encoding="utf-8")
+    breadth_doc_text = TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.read_text(encoding="utf-8") if TOWN_DEVELOPMENT_BREADTH_PARITY_DOC_PATH.exists() else ""
+    for token in (
+        "MIN_BUILDABLE_TARGETS = 12",
+        "MIN_NON_UNIT_BUILDABLE_TARGETS = 5",
+        "SIX_FACTION_BREADTH_PARITY_STATUS",
+        "breadth_parity_town_count",
+        "non_unit_building_count",
+    ):
+        ensure(token in balance_report_text, errors, f"Town development balance report must gate breadth token {token}")
+    for required_text in (
+        "Economy Six-Faction Town Development Breadth Parity Report",
+        "economy-six-faction-town-development-breadth-parity-20260524-10184",
+        "at least 12 buildable development targets",
+        "at least 5 non-unit development targets",
+        "six_faction_town_breadth_parity",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in breadth_doc_text, errors, f"Town development breadth parity doc is missing required text: {required_text}")
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in overworld_rules_text, errors, "OverworldRules must declare the full live stockpile resource set")
     ensure("last_build_day" in overworld_rules_text and "already completed a build order today" in overworld_rules_text, errors, "OverworldRules must enforce one build per town per day")
     ensure("last_build_day" in scenario_factory_text, errors, "ScenarioFactory must initialize town build-day state")
@@ -2709,6 +2740,11 @@ def validate_town_development_runtime_balance_policy(errors: list[str]) -> None:
         "rare_spend_events",
         "COMMON_MARKET_RESOURCE_IDS",
         "authored_town_count",
+        "MIN_BUILDABLE_TARGETS",
+        "MIN_NON_UNIT_BUILDABLE_TARGETS",
+        "SIX_FACTION_BREADTH_PARITY_STATUS",
+        "target_building_count",
+        "non_unit_building_count",
     ):
         ensure(token in script_text, errors, f"Town development runtime balance report is missing token {token}")
     ensure("res://tests/town_development_runtime_balance_report.gd" in scene_text, errors, "Town development runtime balance scene must load its report script")
@@ -19550,6 +19586,7 @@ def main() -> int:
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
+    print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- live stockpile resource surfaces now preserve and display all nine resources through normalization, income, generated-map resource text, and save/resume")
     print("- active authored scenarios now expose matching rare-resource sources for player-town development and a live collection/income report gates that access")
