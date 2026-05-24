@@ -25,6 +25,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_regroup_retreat",
 	"strategic_ai_live_recruitment_delivery",
 	"strategic_ai_multi_scenario_pressure_coverage",
+	"strategic_ai_multi_scenario_objective_targeting",
 	"economy_resource_delta",
 	"battle_resolver_sampling",
 	"battle_difficulty_sweep_sampling",
@@ -49,6 +50,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_regroup_retreat(input_config),
 		_strategic_ai_live_recruitment_delivery(input_config),
 		_strategic_ai_multi_scenario_pressure_coverage(input_config),
+		_strategic_ai_multi_scenario_objective_targeting(input_config),
 		_economy_resource_delta(input_config),
 		_battle_resolver_sampling(input_config),
 		_battle_difficulty_sweep_sampling(input_config),
@@ -1765,6 +1767,169 @@ static func _strategic_ai_multi_scenario_pressure_coverage(input_config: Diction
 		deferred
 	)
 
+static func _strategic_ai_multi_scenario_objective_targeting(input_config: Dictionary) -> Dictionary:
+	var scenario_ids: Array = input_config.get("strategic_ai_objective_targeting_scenario_ids", [
+		"river-pass",
+		"prismhearth-watch",
+		"glassroad-sundering",
+		"glassfen-breakers",
+		"ninefold-confluence",
+	])
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario_rows := []
+	var faction_rows := []
+	var all_events := []
+	var event_type_map := {}
+	var objective_targeted_count := 0
+	var assignment_event_count := 0
+	var priority_reason_count := 0
+	for scenario_id_value in scenario_ids:
+		var scenario_id := String(scenario_id_value)
+		var scenario := ContentService.get_scenario(scenario_id)
+		if scenario.is_empty():
+			deferred.append("Missing strategic AI objective targeting scenario %s." % scenario_id)
+			continue
+		var enemy_configs: Array = scenario.get("enemy_factions", []) if scenario.get("enemy_factions", []) is Array else []
+		if enemy_configs.is_empty():
+			deferred.append("%s has no enemy_factions for objective targeting." % scenario_id)
+			continue
+		var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+			scenario_id,
+			"normal",
+			SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+		)
+		OverworldRules.normalize_overworld_state(session)
+		EnemyTurnRules.normalize_enemy_states(session)
+		EnemyAdventureRules.normalize_all_commander_rosters(session)
+		var scenario_targeted_count := 0
+		for config in enemy_configs:
+			if not (config is Dictionary):
+				continue
+			var faction_id := String(config.get("faction_id", ""))
+			if faction_id == "":
+				continue
+			var state := _enemy_state_for_faction(session, faction_id)
+			if state.is_empty():
+				failures.append("%s has no enemy state for %s." % [scenario_id, faction_id])
+				continue
+			state["pressure"] = 0
+			_update_enemy_state(session, state)
+			var priority_ids := _string_array(config.get("priority_target_placement_ids", []))
+			_prime_objective_priority_targets_for_harness(session, priority_ids, faction_id)
+			var accepted_target_ids := priority_ids.duplicate()
+			var siege_target_id := String(config.get("siege_target_placement_id", ""))
+			if siege_target_id != "" and siege_target_id not in accepted_target_ids:
+				accepted_target_ids.append(siege_target_id)
+			if accepted_target_ids.is_empty():
+				failures.append("%s/%s has no priority or siege target ids for objective targeting." % [scenario_id, faction_id])
+				continue
+			var origin := _enemy_origin(config)
+			var planned := EnemyAdventureRules.choose_target(session, config, origin, {})
+			var raid_id := "headless_objective_target_%s_%s" % [
+				scenario_id.replace("-", "_"),
+				faction_id.replace("faction_", ""),
+			]
+			var raid := _objective_targeting_raid_seed(
+				session,
+				faction_id,
+				_first_commander_hero_id_for_faction(session, faction_id),
+				raid_id,
+				origin
+			)
+			raid = EnemyAdventureRules.assign_target(session, config, raid)
+			var event := EnemyAdventureRules.ai_target_assignment_event(session, config, raid, {})
+			var event_count := 0
+			if not event.is_empty():
+				all_events.append(event)
+				event_count = 1
+				assignment_event_count += 1
+				event_type_map[String(event.get("event_type", ""))] = true
+			var target_id := String(raid.get("target_placement_id", ""))
+			var target_kind := String(raid.get("target_kind", ""))
+			var reason_codes := _string_array(raid.get("target_reason_codes", []))
+			var target_signal := _placement_target_signal_for_harness(session, target_kind, target_id)
+			var priority_hit := target_id in priority_ids
+			var siege_hit := target_id != "" and target_id == siege_target_id
+			var objective_reason := "objective_front" in reason_codes or "town_siege" in reason_codes
+			var objective_targeted := priority_hit or siege_hit or objective_reason
+			if objective_targeted:
+				objective_targeted_count += 1
+				scenario_targeted_count += 1
+			if priority_hit or siege_hit or objective_reason or not reason_codes.is_empty():
+				priority_reason_count += 1
+			if target_id == "" or target_kind == "":
+				failures.append("%s/%s did not assign a concrete objective target." % [scenario_id, faction_id])
+			if not objective_targeted:
+				failures.append("%s/%s selected %s:%s outside priority/objective fronts." % [scenario_id, faction_id, target_kind, target_id])
+			if event_count < 1:
+				failures.append("%s/%s objective targeting emitted no ai_target_assigned event." % [scenario_id, faction_id])
+			if reason_codes.is_empty():
+				failures.append("%s/%s objective targeting emitted no compact reason codes." % [scenario_id, faction_id])
+			if _has_saved_hero_task_state(session):
+				failures.append("%s/%s objective targeting wrote forbidden hero_task_state." % [scenario_id, faction_id])
+			faction_rows.append({
+				"scenario_id": scenario_id,
+				"faction_id": faction_id,
+				"raid_id": raid_id,
+				"origin": origin,
+				"planned_target": _target_signal(planned),
+				"target_kind": target_kind,
+				"target_placement_id": target_id,
+				"target_signal": target_signal,
+				"priority_target_ids": accepted_target_ids,
+				"priority_hit": priority_hit,
+				"siege_hit": siege_hit,
+				"objective_reason": objective_reason,
+				"objective_targeted": objective_targeted,
+				"target_reason_codes": reason_codes,
+				"target_public_importance": String(raid.get("target_public_importance", "")),
+				"target_assignment_event_count": event_count,
+			})
+		scenario_rows.append({
+			"scenario_id": scenario_id,
+			"faction_count": enemy_configs.size(),
+			"objective_targeted_count": scenario_targeted_count,
+		})
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(all_events, 20)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	if not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected multi-scenario objective targeting events.")
+	if not public_event_leak_tokens.is_empty():
+		failures.append("Public multi-scenario objective targeting events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var event_types := event_type_map.keys()
+	event_types.sort()
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_multi_scenario_objective_targeting",
+		"live_enemy_objective_priority_targets_across_scenario_breadth",
+		status,
+		{
+			"scenario_count": scenario_rows.size(),
+			"faction_case_count": faction_rows.size(),
+			"objective_targeted_count": objective_targeted_count,
+			"target_assignment_event_count": assignment_event_count,
+			"priority_reason_count": priority_reason_count,
+			"warning_count": warnings.size(),
+			"deferred_count": deferred.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"scenarios": scenario_rows,
+			"faction_cases": faction_rows,
+			"event_types": event_types,
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"warnings": warnings,
+			"deferred": deferred,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
 static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("economy_scenario_id", "river-pass"))
 	var bounded_turns: int = max(1, int(input_config.get("economy_turns", 3)))
@@ -2392,6 +2557,32 @@ static func _set_player_position(session: SessionStateStoreScript.SessionData, p
 			session.overworld["heroes"] = heroes
 			return
 
+static func _prime_objective_priority_targets_for_harness(
+	session: SessionStateStoreScript.SessionData,
+	priority_ids: Array,
+	faction_id: String
+) -> void:
+	if priority_ids.is_empty():
+		return
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		var placement_id := String(node.get("placement_id", ""))
+		if placement_id == "" or placement_id not in priority_ids:
+			continue
+		if String(node.get("collected_by_faction_id", "")) == faction_id:
+			node["collected_by_faction_id"] = "player"
+			node["collected"] = true
+		elif String(node.get("collected_by_faction_id", "")) == "":
+			node["collected_by_faction_id"] = "player"
+			node["collected"] = true
+		node["response_until_day"] = max(int(node.get("response_until_day", 0)), int(session.day) + 2)
+		node["response_security_rating"] = max(2, int(node.get("response_security_rating", 0)))
+		nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+
 static func _prepare_recruitment_delivery_town(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
@@ -2445,6 +2636,36 @@ static func _live_turn_raid_seed(
 		{},
 		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
 	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _objective_targeting_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	origin: Dictionary
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": int(origin.get("x", 0)),
+		"y": int(origin.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	if roster_hero_id != "":
+		raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+			raid,
+			roster_hero_id,
+			faction_id,
+			session,
+			{},
+			EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+		)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
 static func _recruitment_delivery_raid_seed(
@@ -2971,6 +3192,61 @@ static func _target_signal(target: Dictionary) -> Dictionary:
 		"target_placement_id": String(target.get("target_placement_id", "")),
 		"target_id": String(target.get("target_id", "")),
 	}
+
+static func _placement_target_signal_for_harness(
+	session: SessionStateStoreScript.SessionData,
+	target_kind: String,
+	placement_id: String
+) -> Dictionary:
+	if placement_id == "":
+		return {}
+	match target_kind:
+		"town":
+			var town := _town_by_placement(session, placement_id)
+			if town.is_empty():
+				return {}
+			return {
+				"target_kind": "town",
+				"placement_id": placement_id,
+				"owner": String(town.get("owner", "")),
+				"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+				"x": int(town.get("x", 0)),
+				"y": int(town.get("y", 0)),
+			}
+		"resource":
+			var node := _resource_node_by_placement(session, placement_id)
+			if node.is_empty():
+				return {}
+			return {
+				"target_kind": "resource",
+				"placement_id": placement_id,
+				"site_id": String(node.get("site_id", "")),
+				"controller": String(node.get("collected_by_faction_id", "")),
+				"x": int(node.get("x", 0)),
+				"y": int(node.get("y", 0)),
+			}
+		"artifact":
+			for artifact in session.overworld.get("artifact_nodes", []):
+				if artifact is Dictionary and String(artifact.get("placement_id", "")) == placement_id:
+					return {
+						"target_kind": "artifact",
+						"placement_id": placement_id,
+						"artifact_id": String(artifact.get("artifact_id", "")),
+						"collected": bool(artifact.get("collected", false)),
+						"x": int(artifact.get("x", 0)),
+						"y": int(artifact.get("y", 0)),
+					}
+		"encounter":
+			for encounter in session.overworld.get("encounters", []):
+				if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+					return {
+						"target_kind": "encounter",
+						"placement_id": placement_id,
+						"encounter_id": String(encounter.get("encounter_id", encounter.get("id", ""))),
+						"x": int(encounter.get("x", 0)),
+						"y": int(encounter.get("y", 0)),
+					}
+	return {}
 
 static func _resource_pool(value: Variant) -> Dictionary:
 	var pool := {}

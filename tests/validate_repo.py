@@ -13555,12 +13555,14 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
     difficulty_sweep_doc_path = ROOT / "docs" / "headless-battle-difficulty-sweep-harness-report.md"
+    objective_targeting_doc_path = ROOT / "docs" / "strategic-ai-multi-scenario-objective-targeting-report.md"
     for path in (
         ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd",
         ROOT / "tests" / "headless_simulation_harness_report.gd",
         ROOT / "tests" / "headless_simulation_harness_report.tscn",
         doc_path,
         difficulty_sweep_doc_path,
+        objective_targeting_doc_path,
         HEADLESS_BALANCE_HARNESS_CLI_PATH,
         HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH,
     ):
@@ -13618,6 +13620,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         '"strategic_ai_live_regroup_retreat"',
         '"strategic_ai_live_recruitment_delivery"',
         '"strategic_ai_multi_scenario_pressure_coverage"',
+        '"strategic_ai_multi_scenario_objective_targeting"',
         '"battle_difficulty_sweep_sampling"',
         "func _strategic_ai_live_turn_execution",
         "func _strategic_ai_live_route_progression",
@@ -13630,6 +13633,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "func _strategic_ai_live_regroup_retreat",
         "func _strategic_ai_live_recruitment_delivery",
         "func _strategic_ai_multi_scenario_pressure_coverage",
+        "func _strategic_ai_multi_scenario_objective_targeting",
         "func _battle_difficulty_sweep_sampling",
         "live_commander_resource_front_turn_execution",
         "live_commander_resource_front_route_progression",
@@ -13642,6 +13646,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "live_understrength_raid_regroups_at_town",
         "live_town_recruits_feed_active_raid_host",
         "live_enemy_pressure_launches_across_scenario_breadth",
+        "live_enemy_objective_priority_targets_across_scenario_breadth",
         "resource_fronts_seized",
         "reserved_unique_targets",
         "route_records",
@@ -13688,6 +13693,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "_owned_controller_town_count_for_faction",
         "_active_raid_signals_for_faction",
         "_town_controller_faction_id_for_harness",
+        "_objective_targeting_raid_seed",
+        "_prime_objective_priority_targets_for_harness",
+        "_placement_target_signal_for_harness",
         "prismhearth-watch",
         "glassroad-sundering",
         "glassfen-breakers",
@@ -13698,6 +13706,11 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "faction_case_count",
         "retasked_faction_count",
         "launched_faction_count",
+        "objective_targeted_count",
+        "priority_reason_count",
+        "priority_target_ids",
+        "objective_targeted",
+        "objective_reason",
         "initial_goal_distance",
         "final_goal_distance",
         "target_assignment_event_count",
@@ -13723,6 +13736,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "strategic_ai_live_regroup_retreat",
         "strategic_ai_live_recruitment_delivery",
         "strategic_ai_multi_scenario_pressure_coverage",
+        "strategic_ai_multi_scenario_objective_targeting",
         "battle_difficulty_sweep_sampling",
         "_assert_live_ai_turn_execution",
         "_assert_live_ai_route_progression",
@@ -13735,6 +13749,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "_assert_live_ai_regroup_retreat",
         "_assert_live_ai_recruitment_delivery",
         "_assert_live_ai_multi_scenario_pressure_coverage",
+        "_assert_live_ai_multi_scenario_objective_targeting",
         "_assert_battle_difficulty_sweep",
         "river_free_company",
         "river_signal_post",
@@ -13749,6 +13764,11 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "faction_case_count",
         "retasked_faction_count",
         "launched_faction_count",
+        "objective_targeted_count",
+        "priority_reason_count",
+        "priority_target_ids",
+        "objective_targeted",
+        "objective_reason",
         "resource_fronts_seized",
         "route_records",
         "turns_simulated",
@@ -13809,6 +13829,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "`strategic_ai_live_regroup_retreat`",
             "`strategic_ai_live_recruitment_delivery`",
             "`strategic_ai_multi_scenario_pressure_coverage`",
+            "`strategic_ai_multi_scenario_objective_targeting`",
             "EnemyTurnRules.run_enemy_turn",
             "OverworldRules.end_turn",
             "resource_fronts_seized = 2",
@@ -13842,10 +13863,13 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "raid_reinforcement_event_count >= 1",
             "raid_unit_after = 5",
             "live_enemy_pressure_launches_across_scenario_breadth",
+            "live_enemy_objective_priority_targets_across_scenario_breadth",
             "scenario_count = 5",
             "faction_case_count = 9",
             "retasked_faction_count = 9",
             "launched_faction_count = 9",
+            "objective_targeted_count = 9",
+            "priority_reason_count = 9",
             "prismhearth_controller_town_id = halo_spire",
             "prismhearth_controlling_faction_id = faction_mireclaw",
             "initial_goal_distance = 9",
@@ -13854,6 +13878,23 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "not a full AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"Headless strategic AI live turn harness doc is missing required text: {required_text}")
+    if objective_targeting_doc_path.exists():
+        objective_doc_text = objective_targeting_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Multi-Scenario Objective Targeting Report",
+            "strategic-ai-multi-scenario-objective-targeting-20260524-10184",
+            "`strategic_ai_multi_scenario_objective_targeting`",
+            "`live_enemy_objective_priority_targets_across_scenario_breadth`",
+            "objective_targeted_count = 9",
+            "target_assignment_event_count = 9",
+            "priority_reason_count = 9",
+            "priority_target_ids",
+            "public event boundary",
+            "No persistent task board",
+            "No save migration",
+            "not a full AI quality claim",
+        ):
+            ensure(required_text in objective_doc_text, errors, f"Strategic AI objective targeting doc is missing required text: {required_text}")
     if difficulty_sweep_doc_path.exists():
         difficulty_sweep_doc_text = difficulty_sweep_doc_path.read_text(encoding="utf-8")
         for required_text in (

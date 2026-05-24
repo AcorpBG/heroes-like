@@ -121,6 +121,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case):
 		return false
+	var objective_targeting_case := _find_case(first, "strategic_ai_multi_scenario_objective_targeting")
+	if objective_targeting_case.is_empty():
+		_fail("Headless simulation harness is missing multi-scenario strategic AI objective targeting evidence.")
+		return false
+	if not _assert_live_ai_multi_scenario_objective_targeting(objective_targeting_case):
+		return false
 	var battle_summary: Dictionary = battle_case.get("summary", {})
 	var battle_evidence: Dictionary = battle_case.get("evidence", {})
 	if int(battle_summary.get("sample_count", 0)) <= 0:
@@ -370,6 +376,70 @@ func _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case: Dicti
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
 		_fail("Multi-scenario strategic AI pressure coverage leaked internal public-event tokens: %s" % leak_tokens)
+		return false
+	return true
+
+func _assert_live_ai_multi_scenario_objective_targeting(objective_targeting_case: Dictionary) -> bool:
+	if String(objective_targeting_case.get("status", "")) != "pass":
+		_fail("Multi-scenario strategic AI objective targeting did not pass: %s" % JSON.stringify(objective_targeting_case))
+		return false
+	var summary: Dictionary = objective_targeting_case.get("summary", {}) if objective_targeting_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = objective_targeting_case.get("evidence", {}) if objective_targeting_case.get("evidence", {}) is Dictionary else {}
+	if int(summary.get("scenario_count", 0)) < 5 or int(summary.get("faction_case_count", 0)) < 9:
+		_fail("Multi-scenario strategic AI objective targeting is too narrow: %s" % summary)
+		return false
+	if int(summary.get("objective_targeted_count", 0)) != int(summary.get("faction_case_count", -1)):
+		_fail("Multi-scenario strategic AI objective targeting missed an objective/priority front: %s" % summary)
+		return false
+	if int(summary.get("target_assignment_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI objective targeting is missing assignment events: %s" % summary)
+		return false
+	if int(summary.get("priority_reason_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI objective targeting lacks compact reason coverage: %s" % summary)
+		return false
+	var scenario_ids := []
+	for row in evidence.get("scenarios", []):
+		if row is Dictionary:
+			scenario_ids.append(String(row.get("scenario_id", "")))
+	for required_id in ["river-pass", "prismhearth-watch", "glassroad-sundering", "glassfen-breakers", "ninefold-confluence"]:
+		if required_id not in scenario_ids:
+			_fail("Multi-scenario strategic AI objective targeting missed scenario: %s" % required_id)
+			return false
+	var faction_cases: Array = evidence.get("faction_cases", []) if evidence.get("faction_cases", []) is Array else []
+	for row in faction_cases:
+		if not (row is Dictionary):
+			continue
+		if not bool(row.get("objective_targeted", false)):
+			_fail("Multi-scenario strategic AI objective targeting has a non-objective row: %s" % row)
+			return false
+		if int(row.get("target_assignment_event_count", 0)) < 1:
+			_fail("Multi-scenario strategic AI objective targeting row missed assignment event: %s" % row)
+			return false
+		var target_id := String(row.get("target_placement_id", ""))
+		var accepted_ids: Array = row.get("priority_target_ids", []) if row.get("priority_target_ids", []) is Array else []
+		var reason_codes: Array = row.get("target_reason_codes", []) if row.get("target_reason_codes", []) is Array else []
+		if target_id == "":
+			_fail("Multi-scenario strategic AI objective targeting row has no target id: %s" % row)
+			return false
+		if not bool(row.get("priority_hit", false)) and not bool(row.get("siege_hit", false)) and not bool(row.get("objective_reason", false)):
+			_fail("Multi-scenario strategic AI objective targeting row lacks priority/siege/objective evidence: %s" % row)
+			return false
+		if reason_codes.is_empty():
+			_fail("Multi-scenario strategic AI objective targeting row lacks reason codes: %s" % row)
+			return false
+		if target_id not in accepted_ids and not bool(row.get("objective_reason", false)):
+			_fail("Multi-scenario strategic AI objective targeting selected outside accepted targets without objective reason: %s" % row)
+			return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_target_assigned" not in event_types:
+		_fail("Multi-scenario strategic AI objective targeting missing ai_target_assigned event evidence: %s" % event_types)
+		return false
+	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+		_fail("Multi-scenario strategic AI objective targeting save policy changed: %s" % evidence)
+		return false
+	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
+	if not leak_tokens.is_empty():
+		_fail("Multi-scenario strategic AI objective targeting leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
 
