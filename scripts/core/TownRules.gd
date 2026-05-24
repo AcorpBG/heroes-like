@@ -736,13 +736,15 @@ static func describe_recruitment(session: SessionStateStoreScript.SessionData) -
 	var occupation: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
 	for unit_id in _town_unit_ids(town):
 		var unit := ContentService.get_unit(unit_id)
+		var unit_tier := int(unit.get("tier", 0))
 		var available := int(recruits.get(unit_id, 0))
 		var growth := int(weekly_growth.get(unit_id, 0))
 		if _unit_is_unlocked_in_town(town, unit_id):
 			var growth_sources := _growth_source_summary(town, unit_id)
 			var reserve_label := "x%d" % available if available > 0 else "reserve empty"
 			lines.append(
-				"- %s %s | %s | Weekly +%d%s | Cost %s" % [
+				"- %s %s %s | %s | Weekly +%d%s | Cost %s" % [
+					_unit_tier_label(unit_tier),
 					String(unit.get("name", unit_id)),
 					reserve_label,
 					OverworldRulesScript.describe_unit_recruit_brief(unit_id, available),
@@ -756,7 +758,8 @@ static func describe_recruitment(session: SessionStateStoreScript.SessionData) -
 		var unlock_building := ContentService.get_building(unlock_building_id)
 		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, unlock_building_id)
 		lines.append(
-			"- %s locked | %s" % [
+			"- %s %s locked | %s" % [
+				_unit_tier_label(unit_tier),
 				String(unit.get("name", unit_id)),
 				String(
 					build_status.get(
@@ -1028,7 +1031,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 			{
 				"id": "recruit:%s" % unit_id,
 				"label": "Recruit %s" % String(unit.get("name", unit_id)),
-				"button_label": "Recruit %s | %s" % [
+				"button_label": "Recruit %s %s | %s" % [
+					tier_label,
 					String(unit.get("name", unit_id)),
 					_recruit_action_badge(direct_affordable_count, market_affordable_count),
 				],

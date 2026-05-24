@@ -134,6 +134,9 @@ TOWN_UNIQUE_BUILDING_RUNTIME_PAYOFF_REPORT_DOC_PATH = ROOT / "docs" / "economy-t
 TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_economy_resource_ui_surface_report.gd"
 TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_economy_resource_ui_surface_report.tscn"
 TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-economy-resource-ui-surface-report.md"
+TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_recruitment_ui_surface_report.gd"
+TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "town_recruitment_ui_surface_report.tscn"
+TOWN_RECRUITMENT_UI_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-town-recruitment-ui-surface-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -19673,6 +19676,57 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         ensure(required_text in doc_text, errors, f"Town economy resource UI surface doc is missing text: {required_text}")
 
 
+def validate_town_recruitment_ui_surface(errors: list[str]) -> None:
+    ensure(TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town recruitment UI surface report script is missing")
+    ensure(TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town recruitment UI surface report scene is missing")
+    ensure(TOWN_RECRUITMENT_UI_SURFACE_REPORT_DOC_PATH.exists(), errors, "Town recruitment UI surface report doc is missing")
+    if not TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCENE_PATH.read_text(encoding="utf-8") if TOWN_RECRUITMENT_UI_SURFACE_REPORT_SCENE_PATH.exists() else ""
+    doc_text = TOWN_RECRUITMENT_UI_SURFACE_REPORT_DOC_PATH.read_text(encoding="utf-8") if TOWN_RECRUITMENT_UI_SURFACE_REPORT_DOC_PATH.exists() else ""
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    town_shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
+        "town_recruitment_ui_surface_report_v1",
+        "TownShellScene",
+        "validation_snapshot",
+        "validation_action_catalog",
+        "validation_unit_art_summary",
+        "TARGET_TIER_COUNT",
+        "tier_button_case_count",
+        "portrait_loaded_count",
+        "unit_tier",
+        "tier_label",
+        "direct_affordable_count",
+    ):
+        ensure(required_token in script_text, errors, f"Town recruitment UI surface report is missing token {required_token}")
+    ensure("res://tests/town_recruitment_ui_surface_report.gd" in scene_text, errors, "Town recruitment UI surface scene must load its report script")
+    ensure("TownRecruitmentUiSurfaceReport" in scene_text, errors, "Town recruitment UI surface scene must expose a named report node")
+    for required_token in (
+        '"button_label": "Recruit %s %s | %s"',
+        "_unit_tier_label(unit_tier)",
+        "func validation_unit_art_summary",
+        "town_action_button_tooltips",
+        "recruit_action_count",
+    ):
+        source_text = town_rules_text if "button_label" in required_token or "_unit_tier_label" in required_token else town_shell_text
+        ensure(required_token in source_text, errors, f"Town recruitment UI surface source is missing token {required_token}")
+    for required_text in (
+        "Economy Town Recruitment UI Surface Report",
+        "economy-town-recruitment-ui-surface-20260524-10184",
+        "town_recruitment_ui_surface_report_v1",
+        "six faction seed towns",
+        "42/42 recruitment UI tier cases",
+        "player-facing recruitment-readiness gate",
+        "No `SAVE_VERSION` bump",
+        "`wood` remains canonical",
+    ):
+        ensure(required_text in doc_text, errors, f"Town recruitment UI surface doc is missing text: {required_text}")
+
+
 def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
     ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario town development runway report script is missing")
     ensure(ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists(), errors, "Active scenario town development runway report scene is missing")
@@ -20034,6 +20088,7 @@ def main() -> int:
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_unique_building_runtime_payoff(errors)
     validate_town_economy_resource_ui_surface(errors)
+    validate_town_recruitment_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
     validate_active_scenario_ai_town_development_runway(errors)
     validate_animation_event_cue_catalog(errors)
