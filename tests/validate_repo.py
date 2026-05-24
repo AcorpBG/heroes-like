@@ -10103,9 +10103,9 @@ def validate_content(errors: list[str]) -> None:
     ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
     ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")
     ensure(bool(skirmish_only_scenario_ids), errors, "Scenario roster should include at least one authored skirmish-only front")
-    required_deadline_loss_scenarios = {"river-pass", "causeway-stand", "fen-crown", "mireford-skirmish", "ninefold-confluence"}
-    ensure(required_deadline_loss_scenarios.issubset(deadline_loss_scenario_ids), errors, "Scenario deadline-loss variety slice must keep deadline defeat objectives on the Reedfall chain, skirmish-only front, and Ninefold finale")
-    ensure(len(deadline_loss_skirmish_scenario_ids) >= 5, errors, "Scenario deadline-loss variety slice must cover at least five skirmish-launchable scenarios")
+    required_deadline_loss_scenarios = set(skirmish_scenario_ids)
+    ensure(required_deadline_loss_scenarios.issubset(deadline_loss_scenario_ids), errors, "Scenario deadline-loss breadth slice must keep deadline defeat objectives on every active skirmish-launchable scenario")
+    ensure(len(deadline_loss_skirmish_scenario_ids) == len(skirmish_scenario_ids), errors, "Scenario deadline-loss breadth slice must cover the full active skirmish scenario set")
     for report_path in (
         ROOT / "tests/scenario_deadline_loss_variety_report.gd",
         ROOT / "tests/scenario_deadline_loss_variety_report.tscn",
@@ -10116,8 +10116,11 @@ def validate_content(errors: list[str]) -> None:
         report_text = report_text_path.read_text(encoding="utf-8")
         for required_text in (
             "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT",
-            "REQUIRED_DEADLINE_SCENARIO_IDS",
+            "MIN_ACTIVE_DEADLINE_SCENARIO_COUNT",
             "day_at_least",
+            "active_deadline_count",
+            "expected_campaign_deadline_count",
+            "expected_skirmish_deadline_count",
             "campaign_deadline_count",
             "skirmish_deadline_count",
             "finale_deadline_count",

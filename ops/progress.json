@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
-  "currentSliceTitle": "Player-Facing Authored Launch Save Summary Smoke",
+  "currentSliceId": "active-scenario-deadline-loss-breadth-20260524-10184",
+  "currentSliceTitle": "Active Scenario Deadline Loss Breadth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused campaign and authored skirmish launch save-summary coverage for resumable autosave metadata after real player-facing menu launches.",
+  "currentSliceNotes": "Completed authored timed-loss pressure and focused deadline report coverage for every active authored scenario.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T01:28:00Z",
+  "updatedAt": "2026-05-24T02:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,71 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "active-scenario-deadline-loss-breadth-20260524-10184",
+      "title": "Active Scenario Deadline Loss Breadth",
+      "phase": "phase-5-playable-alpha-baseline",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/scenarios.json",
+        "tests/scenario_deadline_loss_variety_report.gd"
+      ],
+      "purpose": "Expand timed defeat pressure from the prior five-scenario sample to every active authored scenario and gate each deadline through live skirmish session evaluation.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/scenario_deadline_loss_variety_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every active authored scenario has a player-facing day_at_least defeat objective.",
+        "The deadline-loss variety report derives active scenarios from content rather than a fixed five-scenario list.",
+        "The report boots every active scenario as a live skirmish session and proves each deadline remains in progress one day early.",
+        "The report proves each deadline resolves as defeat on the authored day.",
+        "Repository validation gates full active skirmish-scenario deadline coverage."
+      ],
+      "nonGoals": [
+        "No new campaign arcs.",
+        "No final scenario balance approval.",
+        "No playable-alpha completion claim.",
+        "No random-map campaign adoption."
+      ],
+      "startedAt": "2026-05-24T01:45:00Z",
+      "updatedAt": "2026-05-24T02:02:00Z",
+      "notes": "Completed by adding day_at_least defeat pressure to the remaining active authored scenarios, tuning Glassfen's pressure ceiling so the authored deadline is reachable, and regating the report around the full active set.",
+      "completedAt": "2026-05-24T02:02:00Z",
+      "completionEvidence": [
+        "content/scenarios.json now gives every active authored scenario a player-facing day_at_least defeat objective.",
+        "tests/scenario_deadline_loss_variety_report.gd derives active scenario ids from content instead of a fixed five-scenario list.",
+        "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT passed with active_deadline_count 16, campaign_deadline_count 15, skirmish_deadline_count 16, finale_deadline_count 1, and every row pre_deadline_status=in_progress / deadline_status=defeat.",
+        "tests/validate_repo.py now requires deadline coverage for the full active skirmish scenario set."
+      ],
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "jq empty content/scenarios.json ops/progress.json",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "git diff --check"
+        ],
+        "evidence": {
+          "focused_report": "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT",
+          "schema_id": "scenario_deadline_loss_variety_report_v2",
+          "active_deadline_count": 16,
+          "campaign_deadline_count": 15,
+          "skirmish_deadline_count": 16,
+          "finale_deadline_count": 1,
+          "full_scenario_balance_claim": false,
+          "playable_alpha_completion_claim": false
+        }
+      }
+    },
     {
       "id": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
       "title": "Player-Facing Authored Launch Save Summary Smoke",
@@ -24221,7 +24286,7 @@
     ],
     "summary": "Skirmish launch briefing UX passed: focused menu smoke gates visible Opening briefing and First decision handoff; repo validation, Python compile, JSON validation, and diff whitespace checks passed."
   },
-  "active_slice": "player-facing-authored-launch-save-summary-smoke-20260524-10184",
+  "active_slice": "active-scenario-deadline-loss-breadth-20260524-10184",
   "currentSliceUpdatedAt": "2026-05-23T23:31:47Z",
   "validationHistory": [
     {
