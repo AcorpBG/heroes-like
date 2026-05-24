@@ -70,6 +70,9 @@ func _run() -> void:
 	if String(launch_result.get("active_difficulty", "")) != ScenarioSelectRules.default_difficulty_id():
 		_fail("Started skirmish session difficulty is wrong: %s." % JSON.stringify(launch_result))
 		return
+	var save_summary := _autosave_started_skirmish_session()
+	if save_summary.is_empty():
+		return
 
 	var generated_config := ScenarioSelectRules.build_random_map_player_config(
 		"authored-skirmish-browser-boundary-10184",
@@ -97,8 +100,37 @@ func _run() -> void:
 		"launch_started": bool(launch_result.get("started", false)),
 		"active_launch_mode": String(launch_result.get("active_launch_mode", "")),
 		"active_difficulty": String(launch_result.get("active_difficulty", "")),
+		"latest_save_resume_target": String(save_summary.get("resume_target", "")),
+		"latest_save_launch_mode": String(save_summary.get("launch_mode", "")),
 	})])
 	tree.quit(0)
+
+func _autosave_started_skirmish_session() -> Dictionary:
+	var save_result: Dictionary = SaveService.save_runtime_autosave_session(SessionState.ensure_active_session())
+	if not bool(save_result.get("ok", false)):
+		_fail("Started skirmish session could not write a resumable autosave: %s." % JSON.stringify(save_result))
+		return {}
+	var summary: Dictionary = save_result.get("summary", {}) if save_result.get("summary", {}) is Dictionary else {}
+	if summary.is_empty():
+		_fail("Started skirmish session autosave did not expose a save summary: %s." % JSON.stringify(save_result))
+		return {}
+	var latest_summary: Dictionary = SaveService.latest_loadable_summary()
+	if String(latest_summary.get("scenario_id", "")) != AUTHORED_SCENARIO_ID:
+		_fail("Latest loadable summary did not point at the started skirmish: %s." % JSON.stringify(latest_summary))
+		return {}
+	if String(summary.get("scenario_id", "")) != AUTHORED_SCENARIO_ID:
+		_fail("Skirmish autosave summary scenario id is wrong: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH or String(summary.get("saved_from_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
+		_fail("Skirmish autosave summary did not preserve Skirmish launch mode: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("resume_target", "")) != "overworld" or String(summary.get("scenario_status", "")) != "in_progress":
+		_fail("Skirmish autosave summary did not advertise in-progress overworld resume: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("campaign_id", "")) != "" or String(summary.get("campaign_name", "")) != "":
+		_fail("Skirmish autosave summary leaked campaign metadata: %s." % JSON.stringify(summary))
+		return {}
+	return summary
 
 func _has_browser_entry(entries: Array, scenario_id: String) -> bool:
 	for entry in entries:

@@ -10529,6 +10529,10 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             "build_random_map_skirmish_setup",
             "launch_started",
             "active_launch_mode",
+            "SaveService.save_runtime_autosave_session",
+            "latest_loadable_summary",
+            "latest_save_resume_target",
+            "saved_from_launch_mode",
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_skirmish_browser_smoke.gd is missing required token: {required_token}")
 
@@ -10542,6 +10546,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             "build_skirmish_browser_entries",
             "PLAYER_FACING_SKIRMISH_BROWSER_SMOKE",
             "generated-map transient draft",
+            "resumable autosave",
         ):
             ensure(required_text in authored_skirmish_doc_text, errors, f"player-facing authored skirmish browser report is missing token: {required_text}")
 
@@ -10716,6 +10721,10 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "validation_start_selected_campaign_chapter",
             "launch_started",
             "active_launch_mode",
+            "SaveService.save_runtime_autosave_session",
+            "latest_loadable_summary",
+            "latest_save_resume_target",
+            "saved_from_launch_mode",
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_campaign_menu_smoke.gd is missing required token: {required_token}")
 
@@ -10730,6 +10739,7 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "CampaignRules",
             "menu_outcome_visual_smoke",
             "map_campaign_replayability_breadth_report",
+            "resumable autosave",
         ):
             ensure(required_token in report_text, errors, f"player-facing campaign reactivation report is missing token: {required_token}")
 
