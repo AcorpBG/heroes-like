@@ -497,6 +497,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_source_routes = generated_package_runtime.get("generated_town_economy_source_routes", {})
     generated_breadth = generated_package_runtime.get("generated_town_economy_breadth", {})
     generated_runway = generated_package_runtime.get("generated_player_town_development_runway", {})
+    generated_neutral_capture_runway = generated_package_runtime.get("generated_neutral_town_capture_development_runway", {})
     generated_enemy_runway = generated_package_runtime.get("generated_enemy_town_development_runway", {})
     generated_resource_source_ids = {str(value) for value in generated_surface.get("generated_resource_source_ids", [])}
     generated_player_required_ids = {str(value) for value in generated_surface.get("player_required_resource_ids", [])}
@@ -767,6 +768,57 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             )
             if isinstance(generated_runway.get("source_evidence", {}), dict)
             else [],
+        },
+    )
+    generated_neutral_capture_case_count = int(generated_neutral_capture_runway.get("neutral_town_case_count", 0))
+    generated_package_neutral_capture_runway_ok = (
+        generated_package_runtime.get("ok") is True
+        and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
+        and generated_package_runtime.get("active_disk_package_startup_ok") is True
+        and generated_neutral_capture_runway.get("schema") == "generated_package_neutral_town_capture_development_runway_v1"
+        and generated_neutral_capture_runway.get("status") == "pass"
+        and generated_neutral_capture_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
+        and generated_neutral_capture_case_count == int(generated_source_routes.get("neutral_town_case_count", -1))
+        and generated_neutral_capture_case_count > 0
+        and int(generated_neutral_capture_runway.get("captured_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("completed_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_neutral_capture_runway.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_neutral_capture_runway.get("completion_day_max", 999)) <= TARGET_TURNS
+        and int(generated_neutral_capture_runway.get("pacing_floor_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("rare_spend_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("same_day_guard_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("source_covered_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("source_adoption_policy_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("recruitment_end_to_end_case_count", 0)) == generated_neutral_capture_case_count
+        and int(generated_neutral_capture_runway.get("build_count_total", 0)) >= generated_neutral_capture_case_count * 20
+    )
+    add_check(
+        checks,
+        "generated_package_neutral_town_capture_runway_runtime",
+        generated_package_neutral_capture_runway_ok,
+        "Generated/native package neutral towns must become usable expansion towns after capture, then complete live 30-turn development with rare spend, one-build-per-day guards, source coverage, and seven-tier recruitment.",
+        {
+            "schema": str(generated_neutral_capture_runway.get("schema", "")),
+            "package_session_scope": str(generated_neutral_capture_runway.get("package_session_scope", "")),
+            "neutral_town_case_count": generated_neutral_capture_case_count,
+            "captured_case_count": int(generated_neutral_capture_runway.get("captured_case_count", 0)),
+            "completed_case_count": int(generated_neutral_capture_runway.get("completed_case_count", 0)),
+            "min_completion_day": int(generated_neutral_capture_runway.get("min_completion_day", 0)),
+            "completion_day_min": int(generated_neutral_capture_runway.get("completion_day_min", 0)),
+            "completion_day_max": int(generated_neutral_capture_runway.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(generated_neutral_capture_runway.get("pacing_floor_case_count", 0)),
+            "rare_spend_case_count": int(generated_neutral_capture_runway.get("rare_spend_case_count", 0)),
+            "same_day_guard_case_count": int(generated_neutral_capture_runway.get("same_day_guard_case_count", 0)),
+            "source_covered_case_count": int(generated_neutral_capture_runway.get("source_covered_case_count", 0)),
+            "source_adoption_policy_case_count": int(
+                generated_neutral_capture_runway.get("source_adoption_policy_case_count", 0)
+            ),
+            "recruitment_end_to_end_case_count": int(
+                generated_neutral_capture_runway.get("recruitment_end_to_end_case_count", 0)
+            ),
+            "build_count_total": int(generated_neutral_capture_runway.get("build_count_total", 0)),
+            "secured_source_count_total": int(generated_neutral_capture_runway.get("secured_source_count_total", 0)),
         },
     )
     generated_enemy_case_count = int(generated_enemy_runway.get("enemy_town_case_count", 0))
@@ -1278,6 +1330,26 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "secured_source_count": int(generated_runway.get("source_evidence", {}).get("secured_source_count", 0))
             if isinstance(generated_runway.get("source_evidence", {}), dict)
             else 0,
+        },
+        "generated_package_neutral_town_capture_development_runway_v1": {
+            "neutral_town_case_count": generated_neutral_capture_case_count,
+            "captured_case_count": int(generated_neutral_capture_runway.get("captured_case_count", 0)),
+            "completed_case_count": int(generated_neutral_capture_runway.get("completed_case_count", 0)),
+            "min_completion_day": int(generated_neutral_capture_runway.get("min_completion_day", 0)),
+            "completion_day_min": int(generated_neutral_capture_runway.get("completion_day_min", 0)),
+            "completion_day_max": int(generated_neutral_capture_runway.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(generated_neutral_capture_runway.get("pacing_floor_case_count", 0)),
+            "rare_spend_case_count": int(generated_neutral_capture_runway.get("rare_spend_case_count", 0)),
+            "same_day_guard_case_count": int(generated_neutral_capture_runway.get("same_day_guard_case_count", 0)),
+            "source_covered_case_count": int(generated_neutral_capture_runway.get("source_covered_case_count", 0)),
+            "source_adoption_policy_case_count": int(
+                generated_neutral_capture_runway.get("source_adoption_policy_case_count", 0)
+            ),
+            "recruitment_end_to_end_case_count": int(
+                generated_neutral_capture_runway.get("recruitment_end_to_end_case_count", 0)
+            ),
+            "build_count_total": int(generated_neutral_capture_runway.get("build_count_total", 0)),
+            "secured_source_count_total": int(generated_neutral_capture_runway.get("secured_source_count_total", 0)),
         },
         "generated_package_enemy_town_development_runway_v1": {
             "enemy_town_case_count": generated_enemy_case_count,
