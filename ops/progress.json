@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-ai-town-pacing-floor-20260525-10184",
-  "currentSliceTitle": "Economy Active AI Town Pacing Floor",
+  "currentSliceId": "economy-thin-faction-town-identity-metadata-20260525-10184",
+  "currentSliceTitle": "Economy Thin Faction Town Identity Metadata",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Player-balance audit found active AI town development could overrun the intended town pacing floor when authored scenarios provided abundant secured sources, making enemy town economy read as source abundance rather than paced development. The existing enemy town governor now reports and enforces development pacing eligibility, idling when a target-development build would make full town completion land before day 24 while preserving one-build-per-town-per-turn and 30-turn completion. The existing runtime-inclusive economy/town scorecard now passes 35/35 without adding a new gate: active AI town evidence covers 20 enemy towns, completion day 24-28, 20/20 pacing-floor cases, rare spend, same-day build blocking, delayed-source save/resume, and six-faction seven-tier recruitment. A stale scorecard coupling was corrected so recruitment-market coverage requires real wood/ore market purchases while the existing market-cap persistence runtime report owns weekly reset evidence. This is runtime balance tuning, not campaign production work, final strategic AI quality, or broad generated-map economy approval.",
+  "currentSliceNotes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T20:43:39Z",
+  "updatedAt": "2026-05-25T21:13:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24134,6 +24134,90 @@
       "summary": "Completed. Player-balance audit found active AI town development could overrun the intended town pacing floor when authored scenarios provided abundant secured sources, making enemy town economy read as source abundance rather than paced development. The existing enemy town governor now reports and enforces development pacing eligibility, idling when a target-development build would make full town completion land before day 24 while preserving one-build-per-town-per-turn and 30-turn completion. The existing runtime-inclusive economy/town scorecard now passes 35/35 without adding a new gate: active AI town evidence covers 20 enemy towns, completion day 24-28, 20/20 pacing-floor cases, rare spend, same-day build blocking, delayed-source save/resume, and six-faction seven-tier recruitment. A stale scorecard coupling was corrected so recruitment-market coverage requires real wood/ore market purchases while the existing market-cap persistence runtime report owns weekly reset evidence. This is runtime balance tuning, not campaign production work, final strategic AI quality, or broad generated-map economy approval.",
       "updatedAt": "2026-05-25T20:43:39Z",
       "completedAt": "2026-05-25T20:43:39Z"
+    },
+    {
+      "id": "economy-thin-faction-town-identity-metadata-20260525-10184",
+      "title": "Economy Thin Faction Town Identity Metadata",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T21:13:07Z",
+        "sliceId": "economy-thin-faction-town-identity-metadata-20260525-10184",
+        "commands": [
+          "godot --headless --quit-after 360 --log-file /tmp/heroes-like-unique-payoff-identity2.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn > /tmp/heroes-like-unique-payoff-identity2.out (passed; 165/165 runtime unique-building payoff cases)",
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-identity2.json (passed; authored town completion day 27-30)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-identity.json (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-identity2.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-identity.json (passed; 15/15 deterministic checks)",
+          "python3 tests/economy_town_goal_scorecard_report.py --include-runtime > /tmp/heroes-like-scorecard-runtime-identity.json (passed; 35/35 runtime-inclusive checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "annotated_existing_faction_flavored_non_unit_buildings": {
+              "faction_embercourt": [
+                "building_watch_barracks",
+                "building_beacon_range",
+                "building_river_granary_exchange",
+                "building_quartermasters_depot",
+                "building_signal_citadel",
+                "building_charter_bastion"
+              ],
+              "faction_mireclaw": [
+                "building_reed_warren",
+                "building_fenscale_pens",
+                "building_rot_warren",
+                "building_smugglers_flotilla",
+                "building_floodtide_forge",
+                "building_nightglass_dominion"
+              ],
+              "faction_sunvault": [
+                "building_mirror_forge",
+                "building_lens_gallery",
+                "building_harmonic_cloister",
+                "building_resonant_exchange",
+                "building_daybreak_matrix"
+              ]
+            }
+          },
+          "unique_non_unit_building_counts_after": {
+            "faction_embercourt": 11,
+            "faction_mireclaw": 11,
+            "faction_sunvault": 10,
+            "faction_brasshollow": 13,
+            "faction_thornwake": 15,
+            "faction_veilmourn": 13
+          },
+          "runtime_unique_building_payoff": {
+            "building_case_count": 165,
+            "runtime_payoff_case_count": 165,
+            "rare_unique_case_count": 13,
+            "town_case_count": 15,
+            "observed_town_payoff_domain_min": 5
+          },
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "runtime_scorecard_passed_requirement_count": 35,
+          "runtime_scorecard_requirement_count": 35,
+          "new_gate_created": false,
+          "policy": "player-balance town identity metadata alignment using existing reports; no cost, target-count, or unit-tier changes"
+        }
+      },
+      "summary": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval.",
+      "updatedAt": "2026-05-25T21:13:07Z",
+      "completedAt": "2026-05-25T21:13:07Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -33266,14 +33350,14 @@
     }
   },
   "active_slice": {
-    "id": "economy-active-ai-town-pacing-floor-20260525-10184",
-    "title": "Economy Active AI Town Pacing Floor",
+    "id": "economy-thin-faction-town-identity-metadata-20260525-10184",
+    "title": "Economy Thin Faction Town Identity Metadata",
     "status": "completed",
-    "updatedAt": "2026-05-25T20:43:39Z",
-    "completedAt": "2026-05-25T20:43:39Z",
-    "notes": "Completed. Player-balance audit found active AI town development could overrun the intended town pacing floor when authored scenarios provided abundant secured sources, making enemy town economy read as source abundance rather than paced development. The existing enemy town governor now reports and enforces development pacing eligibility, idling when a target-development build would make full town completion land before day 24 while preserving one-build-per-town-per-turn and 30-turn completion. The existing runtime-inclusive economy/town scorecard now passes 35/35 without adding a new gate: active AI town evidence covers 20 enemy towns, completion day 24-28, 20/20 pacing-floor cases, rare spend, same-day build blocking, delayed-source save/resume, and six-faction seven-tier recruitment. A stale scorecard coupling was corrected so recruitment-market coverage requires real wood/ore market purchases while the existing market-cap persistence runtime report owns weekly reset evidence. This is runtime balance tuning, not campaign production work, final strategic AI quality, or broad generated-map economy approval."
+    "updatedAt": "2026-05-25T21:13:07Z",
+    "completedAt": "2026-05-25T21:13:07Z",
+    "notes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval."
   },
-  "currentSliceUpdatedAt": "2026-05-25T20:43:39Z",
+  "currentSliceUpdatedAt": "2026-05-25T21:13:07Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -35185,80 +35269,80 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-ai-town-pacing-floor-20260525-10184",
-    "title": "Economy Active AI Town Pacing Floor",
+    "id": "economy-thin-faction-town-identity-metadata-20260525-10184",
+    "title": "Economy Thin Faction Town Identity Metadata",
     "status": "completed",
-    "updatedAt": "2026-05-25T20:43:39Z",
-    "completedAt": "2026-05-25T20:43:39Z",
-    "notes": "Completed. Player-balance audit found active AI town development could overrun the intended town pacing floor when authored scenarios provided abundant secured sources, making enemy town economy read as source abundance rather than paced development. The existing enemy town governor now reports and enforces development pacing eligibility, idling when a target-development build would make full town completion land before day 24 while preserving one-build-per-town-per-turn and 30-turn completion. The existing runtime-inclusive economy/town scorecard now passes 35/35 without adding a new gate: active AI town evidence covers 20 enemy towns, completion day 24-28, 20/20 pacing-floor cases, rare spend, same-day build blocking, delayed-source save/resume, and six-faction seven-tier recruitment. A stale scorecard coupling was corrected so recruitment-market coverage requires real wood/ore market purchases while the existing market-cap persistence runtime report owns weekly reset evidence. This is runtime balance tuning, not campaign production work, final strategic AI quality, or broad generated-map economy approval."
+    "updatedAt": "2026-05-25T21:13:07Z",
+    "completedAt": "2026-05-25T21:13:07Z",
+    "notes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T20:43:39Z",
-    "sliceId": "economy-active-ai-town-pacing-floor-20260525-10184",
+    "updatedAt": "2026-05-25T21:13:07Z",
+    "sliceId": "economy-thin-faction-town-identity-metadata-20260525-10184",
     "commands": [
-      "godot --headless --quit-after 700 --log-file /tmp/heroes-like-ai-town-after.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn > /tmp/heroes-like-ai-town-after.out (passed; active AI towns 20/20, completion day 24-28, pacing floor 20/20)",
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-ai-pacing.json (passed; authored town completion day 27-30)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-ai-pacing.json (passed; 15 authored towns, 6 factions)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-ai-pacing.json (passed; 6 unique faction fingerprints)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-ai-pacing2.json (passed; 15/15 deterministic checks)",
-      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime > /tmp/heroes-like-scorecard-runtime-ai-pacing2.json (passed; 35/35 runtime-inclusive checks)",
+      "godot --headless --quit-after 360 --log-file /tmp/heroes-like-unique-payoff-identity2.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn > /tmp/heroes-like-unique-payoff-identity2.out (passed; 165/165 runtime unique-building payoff cases)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-identity2.json (passed; authored town completion day 27-30)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-identity.json (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-identity2.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-identity.json (passed; 15/15 deterministic checks)",
+      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime > /tmp/heroes-like-scorecard-runtime-identity.json (passed; 35/35 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
-      "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+      "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "ai_town_governor_pacing_floor": {
-        "min_completion_day": 24,
-        "target_turns": 30,
-        "policy": "enemy town governor idles when a target-development build would make completion land before the pacing floor"
-      },
-      "active_ai_town_runtime": {
-        "enemy_town_case_count": 20,
-        "completed_case_count": 20,
-        "completion_day_min": 24,
-        "completion_day_max": 28,
-        "pacing_floor_case_count": 20,
-        "rare_spend_case_count": 20,
-        "same_day_guard_case_count": 20,
-        "delayed_source_replay_completed_count": 20,
-        "delayed_source_save_resume_completed_count": 20,
-        "seven_tier_recruitment_case_count": 20,
-        "seven_tier_recruitment_candidate_count": 140,
-        "unique_faction_count": 6,
-        "unique_ladder_faction_count": 6
-      },
-      "runtime_scorecard": {
-        "passed_requirement_count": 35,
-        "requirement_count": 35,
-        "runtime_reports_included": true,
-        "runtime_recruitment_market_coverage": {
-          "town_runtime_market_covered_town_count": 5,
-          "town_runtime_market_purchase_count": 13,
-          "active_player_market_covered_case_count": 2,
-          "active_player_market_purchase_count": 2,
-          "normal_market_resource_ids": [
-            "wood",
-            "ore"
-          ]
-        },
-        "runtime_market_cap_persistence": {
-          "normal_market_resource_ids": [
-            "ore",
-            "wood"
+      "content_changes": {
+        "annotated_existing_faction_flavored_non_unit_buildings": {
+          "faction_embercourt": [
+            "building_watch_barracks",
+            "building_beacon_range",
+            "building_river_granary_exchange",
+            "building_quartermasters_depot",
+            "building_signal_citadel",
+            "building_charter_bastion"
           ],
-          "initial_buy_remaining": 6,
-          "initial_sell_remaining": 8,
-          "next_week_buy_remaining": 6,
-          "next_week_sell_remaining": 8,
-          "save_resume_ok": true
+          "faction_mireclaw": [
+            "building_reed_warren",
+            "building_fenscale_pens",
+            "building_rot_warren",
+            "building_smugglers_flotilla",
+            "building_floodtide_forge",
+            "building_nightglass_dominion"
+          ],
+          "faction_sunvault": [
+            "building_mirror_forge",
+            "building_lens_gallery",
+            "building_harmonic_cloister",
+            "building_resonant_exchange",
+            "building_daybreak_matrix"
+          ]
         }
       },
+      "unique_non_unit_building_counts_after": {
+        "faction_embercourt": 11,
+        "faction_mireclaw": 11,
+        "faction_sunvault": 10,
+        "faction_brasshollow": 13,
+        "faction_thornwake": 15,
+        "faction_veilmourn": 13
+      },
+      "runtime_unique_building_payoff": {
+        "building_case_count": 165,
+        "runtime_payoff_case_count": 165,
+        "rare_unique_case_count": 13,
+        "town_case_count": 15,
+        "observed_town_payoff_domain_min": 5
+      },
+      "town_development_completion_day_min": 27,
+      "town_development_completion_day_max": 30,
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
+      "runtime_scorecard_passed_requirement_count": 35,
+      "runtime_scorecard_requirement_count": 35,
       "new_gate_created": false,
-      "policy": "player-balance/runtime tuning using existing reports; not campaign production work"
+      "policy": "player-balance town identity metadata alignment using existing reports; no cost, target-count, or unit-tier changes"
     }
   }
 }
