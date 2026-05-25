@@ -573,8 +573,18 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 	var passed_case_count := 0
 	var all_common_source_case_count := 0
 	var player_required_source_case_count := 0
+	var route_pressure_case_count := 0
+	var guarded_rare_source_route_breadth_case_count := 0
 	var total_town_count := 0
 	var total_resource_node_count := 0
+	var total_route_town_case_count := 0
+	var total_resource_route_case_count := 0
+	var total_reachable_route_case_count := 0
+	var total_guarded_source_route_case_count := 0
+	var total_guarded_rare_source_route_case_count := 0
+	var max_common_route_steps := 0
+	var max_rare_route_steps := 0
+	var max_source_acquisition_day := 0
 	for case_record in GENERATED_TOWN_ECONOMY_BREADTH_CASES:
 		var case_id := String(case_record.get("id", ""))
 		var config := ScenarioSelectRulesScript.build_random_map_player_config(
@@ -603,6 +613,9 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 		var surface := _assert_generated_town_economy_surface(case_session, case_id, false)
 		if surface.is_empty():
 			return {}
+		var route_surface := _assert_generated_town_economy_source_routes(case_session)
+		if route_surface.is_empty():
+			return {}
 		var map_hash := String(adoption.get("map_package_record", {}).get("package_hash", ""))
 		var scenario_hash := String(adoption.get("scenario_package_record", {}).get("package_hash", ""))
 		if map_hash != "":
@@ -613,6 +626,21 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 			passed_case_count += 1
 		total_town_count += int(surface.get("town_count", 0))
 		total_resource_node_count += int(surface.get("generated_resource_node_count", 0))
+		total_route_town_case_count += int(route_surface.get("town_case_count", 0))
+		total_resource_route_case_count += int(route_surface.get("resource_route_case_count", 0))
+		total_reachable_route_case_count += int(route_surface.get("reachable_route_case_count", 0))
+		total_guarded_source_route_case_count += int(route_surface.get("guarded_source_route_case_count", 0))
+		total_guarded_rare_source_route_case_count += int(route_surface.get("guarded_rare_source_route_case_count", 0))
+		max_common_route_steps = max(max_common_route_steps, int(route_surface.get("max_common_route_steps", 0)))
+		max_rare_route_steps = max(max_rare_route_steps, int(route_surface.get("max_rare_route_steps", 0)))
+		max_source_acquisition_day = max(max_source_acquisition_day, int(route_surface.get("max_source_acquisition_day", 0)))
+		if String(route_surface.get("status", "")) == "pass" \
+				and int(route_surface.get("reachable_route_case_count", 0)) == int(route_surface.get("resource_route_case_count", -1)) \
+				and int(route_surface.get("guarded_source_route_case_count", 0)) >= int(route_surface.get("town_case_count", 0)):
+			route_pressure_case_count += 1
+		if String(route_surface.get("status", "")) == "pass" \
+				and int(route_surface.get("guarded_rare_source_route_case_count", 0)) == int(route_surface.get("town_case_count", -1)):
+			guarded_rare_source_route_breadth_case_count += 1
 		var case_resource_ids := {}
 		for resource_id_value in surface.get("generated_resource_source_ids", []):
 			var resource_id := String(resource_id_value)
@@ -646,6 +674,7 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 			"map_package_hash": map_hash,
 			"scenario_package_hash": scenario_hash,
 			"surface": surface,
+			"source_routes": route_surface,
 		})
 	var case_count := rows.size()
 	var status := "pass"
@@ -655,7 +684,17 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 			or scenario_package_hashes.size() != case_count \
 			or all_common_source_case_count != case_count \
 			or player_required_source_case_count != case_count \
+			or route_pressure_case_count != case_count \
+			or guarded_rare_source_route_breadth_case_count != case_count \
 			or total_town_count < case_count * 3 \
+			or total_route_town_case_count < case_count * 3 \
+			or total_resource_route_case_count != total_route_town_case_count * 3 \
+			or total_reachable_route_case_count != total_resource_route_case_count \
+			or total_guarded_source_route_case_count < total_route_town_case_count \
+			or total_guarded_rare_source_route_case_count != total_route_town_case_count \
+			or max_common_route_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
+			or max_rare_route_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS \
+			or max_source_acquisition_day > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY \
 			or generated_faction_ids.size() < 3 \
 			or generated_town_ids.size() < 3:
 		status = "fail"
@@ -669,8 +708,21 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 		"distinct_scenario_package_hash_count": scenario_package_hashes.size(),
 		"all_common_source_case_count": all_common_source_case_count,
 		"player_required_source_case_count": player_required_source_case_count,
+		"route_pressure_case_count": route_pressure_case_count,
+		"guarded_rare_source_route_breadth_case_count": guarded_rare_source_route_breadth_case_count,
 		"total_town_count": total_town_count,
 		"total_resource_node_count": total_resource_node_count,
+		"total_route_town_case_count": total_route_town_case_count,
+		"total_resource_route_case_count": total_resource_route_case_count,
+		"total_reachable_route_case_count": total_reachable_route_case_count,
+		"total_guarded_source_route_case_count": total_guarded_source_route_case_count,
+		"total_guarded_rare_source_route_case_count": total_guarded_rare_source_route_case_count,
+		"max_common_route_steps": max_common_route_steps,
+		"max_rare_route_steps": max_rare_route_steps,
+		"max_source_acquisition_day": max_source_acquisition_day,
+		"common_route_step_limit": MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS,
+		"rare_route_step_limit": MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS,
+		"source_acquisition_day_limit": MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY,
 		"unique_faction_count": generated_faction_ids.size(),
 		"unique_town_template_count": generated_town_ids.size(),
 		"generated_faction_ids": _sorted_string_keys(generated_faction_ids),

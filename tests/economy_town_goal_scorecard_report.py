@@ -649,8 +649,22 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_breadth.get("distinct_scenario_package_hash_count", 0)) == int(generated_breadth.get("case_count", -1))
         and int(generated_breadth.get("all_common_source_case_count", 0)) == int(generated_breadth.get("case_count", -1))
         and int(generated_breadth.get("player_required_source_case_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("route_pressure_case_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("guarded_rare_source_route_breadth_case_count", 0)) == int(generated_breadth.get("case_count", -1))
         and int(generated_breadth.get("total_town_count", 0)) >= int(generated_breadth.get("case_count", 0)) * 3
         and int(generated_breadth.get("total_resource_node_count", 0)) > 0
+        and int(generated_breadth.get("total_route_town_case_count", 0)) >= int(generated_breadth.get("case_count", 0)) * 3
+        and int(generated_breadth.get("total_resource_route_case_count", 0))
+        == int(generated_breadth.get("total_route_town_case_count", -1)) * 3
+        and int(generated_breadth.get("total_reachable_route_case_count", 0))
+        == int(generated_breadth.get("total_resource_route_case_count", -1))
+        and int(generated_breadth.get("total_guarded_source_route_case_count", 0))
+        >= int(generated_breadth.get("total_route_town_case_count", 0))
+        and int(generated_breadth.get("total_guarded_rare_source_route_case_count", 0))
+        == int(generated_breadth.get("total_route_town_case_count", -1))
+        and int(generated_breadth.get("max_common_route_steps", 999)) <= MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS
+        and int(generated_breadth.get("max_rare_route_steps", 999)) <= MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
+        and int(generated_breadth.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
         and int(generated_breadth.get("unique_faction_count", 0)) >= 3
         and int(generated_breadth.get("unique_town_template_count", 0)) >= 3
         and COMMON_RESOURCES.issubset(generated_breadth_resource_source_ids)
@@ -670,8 +684,24 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "distinct_scenario_package_hash_count": int(generated_breadth.get("distinct_scenario_package_hash_count", 0)),
             "all_common_source_case_count": int(generated_breadth.get("all_common_source_case_count", 0)),
             "player_required_source_case_count": int(generated_breadth.get("player_required_source_case_count", 0)),
+            "route_pressure_case_count": int(generated_breadth.get("route_pressure_case_count", 0)),
+            "guarded_rare_source_route_breadth_case_count": int(
+                generated_breadth.get("guarded_rare_source_route_breadth_case_count", 0)
+            ),
             "total_town_count": int(generated_breadth.get("total_town_count", 0)),
             "total_resource_node_count": int(generated_breadth.get("total_resource_node_count", 0)),
+            "total_route_town_case_count": int(generated_breadth.get("total_route_town_case_count", 0)),
+            "total_resource_route_case_count": int(generated_breadth.get("total_resource_route_case_count", 0)),
+            "total_reachable_route_case_count": int(generated_breadth.get("total_reachable_route_case_count", 0)),
+            "total_guarded_source_route_case_count": int(
+                generated_breadth.get("total_guarded_source_route_case_count", 0)
+            ),
+            "total_guarded_rare_source_route_case_count": int(
+                generated_breadth.get("total_guarded_rare_source_route_case_count", 0)
+            ),
+            "max_common_route_steps": int(generated_breadth.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(generated_breadth.get("max_rare_route_steps", 0)),
+            "max_source_acquisition_day": int(generated_breadth.get("max_source_acquisition_day", 0)),
             "unique_faction_count": int(generated_breadth.get("unique_faction_count", 0)),
             "unique_town_template_count": int(generated_breadth.get("unique_town_template_count", 0)),
             "generated_faction_ids": sorted(generated_breadth_faction_ids),
@@ -1186,8 +1216,24 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "distinct_scenario_package_hash_count": int(generated_breadth.get("distinct_scenario_package_hash_count", 0)),
             "all_common_source_case_count": int(generated_breadth.get("all_common_source_case_count", 0)),
             "player_required_source_case_count": int(generated_breadth.get("player_required_source_case_count", 0)),
+            "route_pressure_case_count": int(generated_breadth.get("route_pressure_case_count", 0)),
+            "guarded_rare_source_route_breadth_case_count": int(
+                generated_breadth.get("guarded_rare_source_route_breadth_case_count", 0)
+            ),
             "total_town_count": int(generated_breadth.get("total_town_count", 0)),
             "total_resource_node_count": int(generated_breadth.get("total_resource_node_count", 0)),
+            "total_route_town_case_count": int(generated_breadth.get("total_route_town_case_count", 0)),
+            "total_resource_route_case_count": int(generated_breadth.get("total_resource_route_case_count", 0)),
+            "total_reachable_route_case_count": int(generated_breadth.get("total_reachable_route_case_count", 0)),
+            "total_guarded_source_route_case_count": int(
+                generated_breadth.get("total_guarded_source_route_case_count", 0)
+            ),
+            "total_guarded_rare_source_route_case_count": int(
+                generated_breadth.get("total_guarded_rare_source_route_case_count", 0)
+            ),
+            "max_common_route_steps": int(generated_breadth.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(generated_breadth.get("max_rare_route_steps", 0)),
+            "max_source_acquisition_day": int(generated_breadth.get("max_source_acquisition_day", 0)),
             "unique_faction_count": int(generated_breadth.get("unique_faction_count", 0)),
             "unique_town_template_count": int(generated_breadth.get("unique_town_template_count", 0)),
             "generated_faction_ids": sorted(generated_breadth_faction_ids),
