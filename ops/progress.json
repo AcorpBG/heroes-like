@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-neutral-town-capture-runway-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Neutral Town Capture Runway Scorecard",
+  "currentSliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Player Readability Surface Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Strict Small generated/native package town-development evidence now extends from owned player/enemy towns to capturable neutral expansion towns. The native package adoption report and runtime-inclusive economy/town scorecard prove generated neutral towns transition to player ownership, then complete live town development inside the day-24-to-day-30 pacing window with rare spend, one-build-per-day guards, minimal required-resource source adoption, and seven-tier recruitment. Current evidence passes 4/4 generated neutral town capture/development cases, completion days 24-28, 85 total neutral-capture builds, 12 secured generated sources, focused native package report, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production and player-facing economy readability remain out of scope for this slice.",
+  "currentSliceNotes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T17:38:03Z",
+  "updatedAt": "2026-05-25T18:07:28Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23019,6 +23019,58 @@
       "startedAt": "2026-05-25T17:14:29Z",
       "notes": "Completed. Strict Small generated/native package town-development evidence now extends from owned player/enemy towns to capturable neutral expansion towns. The native package adoption report and runtime-inclusive economy/town scorecard prove generated neutral towns transition to player ownership, then complete live town development inside the day-24-to-day-30 pacing window with rare spend, one-build-per-day guards, minimal required-resource source adoption, and seven-tier recruitment. Current evidence passes 4/4 generated neutral town capture/development cases, completion days 24-28, 85 total neutral-capture builds, 12 secured generated sources, focused native package report, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production and player-facing economy readability remain out of scope for this slice.",
       "completedAt": "2026-05-25T17:38:03Z"
+    },
+    {
+      "id": "economy-town-player-readability-surface-scorecard-20260525-10184",
+      "title": "Economy Town Player Readability Surface Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "openclaw_review_feedback_economy_readability",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "tests/town_economy_resource_ui_surface_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-economy-resource-ui-surface-report.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 player-readable economy plans, 6/6 rare bottleneck surfaces, 6/6 ready build plan surfaces)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 35/35 runtime-inclusive checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "focused_town_economy_resource_ui_surface_report": "passed",
+          "town_resource_ui_schema": "town_economy_resource_ui_surface_report_v1",
+          "town_shell_economy_plan_schema": "town_shell_player_economy_readability_surface_v1",
+          "faction_case_count": 6,
+          "player_readable_economy_plan_case_count": 6,
+          "rare_bottleneck_surface_case_count": 6,
+          "ready_build_plan_surface_case_count": 6,
+          "same_day_build_lockout_case_count": 6,
+          "common_only_market_case_count": 6,
+          "blocked_rare_action_case_count": 6,
+          "ready_rare_action_case_count": 6,
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "runtime_scorecard_passed_requirement_count": 35,
+          "runtime_scorecard_requirement_count": 35,
+          "policy": "player-facing TownShell economy readability; not campaign production work"
+        }
+      },
+      "updatedAt": "2026-05-25T18:07:28Z",
+      "startedAt": "2026-05-25T17:45:27Z",
+      "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope.",
+      "completedAt": "2026-05-25T18:07:28Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -28731,6 +28783,29 @@
         "runtime_scorecard_requirement_count": 35,
         "policy": "strict Small generated neutral town capture/development runway through live town rules; not campaign production or player-facing economy readability work"
       }
+    },
+    {
+      "sliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
+      "completedAt": "2026-05-25T18:07:28Z",
+      "summary": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope.",
+      "evidence": {
+        "focused_town_economy_resource_ui_surface_report": "passed",
+        "town_resource_ui_schema": "town_economy_resource_ui_surface_report_v1",
+        "town_shell_economy_plan_schema": "town_shell_player_economy_readability_surface_v1",
+        "faction_case_count": 6,
+        "player_readable_economy_plan_case_count": 6,
+        "rare_bottleneck_surface_case_count": 6,
+        "ready_build_plan_surface_case_count": 6,
+        "same_day_build_lockout_case_count": 6,
+        "common_only_market_case_count": 6,
+        "blocked_rare_action_case_count": 6,
+        "ready_rare_action_case_count": 6,
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "runtime_scorecard_passed_requirement_count": 35,
+        "runtime_scorecard_requirement_count": 35,
+        "policy": "player-facing TownShell economy readability; not campaign production work"
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -30338,9 +30413,9 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-25T17:38:03Z",
+    "updatedAt": "2026-05-25T18:07:28Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_package_session_adoption_report.tscn (passed; 4/4 generated neutral towns captured and developed, completion days 24-28)",
+      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 player-readable economy plans, 6/6 rare bottleneck surfaces, 6/6 ready build plan surfaces)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 35/35 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
@@ -30350,14 +30425,14 @@
     ]
   },
   "active_slice": {
-    "id": "economy-generated-package-neutral-town-capture-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Neutral Town Capture Runway Scorecard",
+    "id": "economy-town-player-readability-surface-scorecard-20260525-10184",
+    "title": "Economy Town Player Readability Surface Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T17:38:03Z",
-    "completedAt": "2026-05-25T17:38:03Z",
-    "notes": "Completed. Strict Small generated/native package town-development evidence now extends from owned player/enemy towns to capturable neutral expansion towns. The native package adoption report and runtime-inclusive economy/town scorecard prove generated neutral towns transition to player ownership, then complete live town development inside the day-24-to-day-30 pacing window with rare spend, one-build-per-day guards, minimal required-resource source adoption, and seven-tier recruitment. Current evidence passes 4/4 generated neutral town capture/development cases, completion days 24-28, 85 total neutral-capture builds, 12 secured generated sources, focused native package report, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production and player-facing economy readability remain out of scope for this slice."
+    "updatedAt": "2026-05-25T18:07:28Z",
+    "completedAt": "2026-05-25T18:07:28Z",
+    "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope."
   },
-  "currentSliceUpdatedAt": "2026-05-25T17:38:03Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:07:28Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -31502,19 +31577,19 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-generated-package-neutral-town-capture-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Neutral Town Capture Runway Scorecard",
+    "id": "economy-town-player-readability-surface-scorecard-20260525-10184",
+    "title": "Economy Town Player Readability Surface Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T17:38:03Z",
-    "completedAt": "2026-05-25T17:38:03Z",
-    "notes": "Completed. Strict Small generated/native package town-development evidence now extends from owned player/enemy towns to capturable neutral expansion towns. The native package adoption report and runtime-inclusive economy/town scorecard prove generated neutral towns transition to player ownership, then complete live town development inside the day-24-to-day-30 pacing window with rare spend, one-build-per-day guards, minimal required-resource source adoption, and seven-tier recruitment. Current evidence passes 4/4 generated neutral town capture/development cases, completion days 24-28, 85 total neutral-capture builds, 12 secured generated sources, focused native package report, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production and player-facing economy readability remain out of scope for this slice."
+    "updatedAt": "2026-05-25T18:07:28Z",
+    "completedAt": "2026-05-25T18:07:28Z",
+    "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T17:38:03Z",
-    "sliceId": "economy-generated-package-neutral-town-capture-runway-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T18:07:28Z",
+    "sliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_package_session_adoption_report.tscn (passed; 4/4 generated neutral towns captured and developed, completion days 24-28)",
+      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 player-readable economy plans, 6/6 rare bottleneck surfaces, 6/6 ready build plan surfaces)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 35/35 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
@@ -31523,27 +31598,22 @@
       "git diff --check (passed)"
     ],
     "evidence": {
-      "focused_native_package_report": "passed",
-      "generated_neutral_capture_schema": "generated_package_neutral_town_capture_development_runway_v1",
-      "generated_neutral_capture_status": "pass",
-      "generated_neutral_town_case_count": 4,
-      "generated_neutral_captured_case_count": 4,
-      "generated_neutral_completed_case_count": 4,
-      "generated_neutral_completion_day_min": 24,
-      "generated_neutral_completion_day_max": 28,
-      "generated_neutral_pacing_floor_case_count": 4,
-      "generated_neutral_rare_spend_case_count": 4,
-      "generated_neutral_same_day_guard_case_count": 4,
-      "generated_neutral_source_covered_case_count": 4,
-      "generated_neutral_source_adoption_policy_case_count": 4,
-      "generated_neutral_recruitment_end_to_end_case_count": 4,
-      "generated_neutral_build_count_total": 85,
-      "generated_neutral_secured_source_count_total": 12,
+      "focused_town_economy_resource_ui_surface_report": "passed",
+      "town_resource_ui_schema": "town_economy_resource_ui_surface_report_v1",
+      "town_shell_economy_plan_schema": "town_shell_player_economy_readability_surface_v1",
+      "faction_case_count": 6,
+      "player_readable_economy_plan_case_count": 6,
+      "rare_bottleneck_surface_case_count": 6,
+      "ready_build_plan_surface_case_count": 6,
+      "same_day_build_lockout_case_count": 6,
+      "common_only_market_case_count": 6,
+      "blocked_rare_action_case_count": 6,
+      "ready_rare_action_case_count": 6,
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "runtime_scorecard_passed_requirement_count": 35,
       "runtime_scorecard_requirement_count": 35,
-      "policy": "strict Small generated neutral town capture/development runway through live town rules; not campaign production or player-facing economy readability work"
+      "policy": "player-facing TownShell economy readability; not campaign production work"
     }
   }
 }

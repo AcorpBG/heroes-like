@@ -1047,6 +1047,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     ready_rare_action_case_count = 0
     common_only_market_case_count = 0
     same_day_build_lockout_case_count = 0
+    player_readable_economy_plan_case_count = 0
+    rare_bottleneck_surface_case_count = 0
+    ready_build_plan_surface_case_count = 0
     for row in resource_ui_cases:
         if not isinstance(row, dict):
             continue
@@ -1077,6 +1080,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             ready_rare_action_case_count += 1
         if int(row.get("market_action_count", 0)) > 0:
             common_only_market_case_count += 1
+        if bool(row.get("player_readable_economy_plan_ok", False)):
+            player_readable_economy_plan_case_count += 1
+        if bool(row.get("rare_bottleneck_surface_ok", False)):
+            rare_bottleneck_surface_case_count += 1
+        if bool(row.get("ready_build_plan_surface_ok", False)):
+            ready_build_plan_surface_case_count += 1
         if (
             bool(row.get("same_day_build_lockout_ok", False))
             and int(row.get("post_build_action_count", 999)) == 0
@@ -1093,6 +1102,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and blocked_rare_action_case_count >= MIN_FACTIONS
         and ready_rare_action_case_count >= MIN_FACTIONS
         and common_only_market_case_count >= MIN_FACTIONS
+        and player_readable_economy_plan_case_count >= MIN_FACTIONS
+        and rare_bottleneck_surface_case_count >= MIN_FACTIONS
+        and ready_build_plan_surface_case_count >= MIN_FACTIONS
+        and int(resource_ui_runtime.get("player_readable_economy_plan_case_count", 0)) >= MIN_FACTIONS
+        and int(resource_ui_runtime.get("rare_bottleneck_surface_case_count", 0)) >= MIN_FACTIONS
+        and int(resource_ui_runtime.get("ready_build_plan_surface_case_count", 0)) >= MIN_FACTIONS
     )
     add_check(
         checks,
@@ -1105,6 +1120,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "ready_rare_action_case_count": ready_rare_action_case_count,
             "common_only_market_case_count": common_only_market_case_count,
             "same_day_build_lockout_case_count": same_day_build_lockout_case_count,
+            "player_readable_economy_plan_case_count": player_readable_economy_plan_case_count,
+            "rare_bottleneck_surface_case_count": rare_bottleneck_surface_case_count,
+            "ready_build_plan_surface_case_count": ready_build_plan_surface_case_count,
             "live_stockpile_resource_ids": sorted(str(value) for value in resource_ui_runtime.get("live_stockpile_resource_ids", [])),
         },
     )
@@ -1402,6 +1420,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "ready_rare_action_case_count": ready_rare_action_case_count,
             "common_only_market_case_count": common_only_market_case_count,
             "same_day_build_lockout_case_count": same_day_build_lockout_case_count,
+            "player_readable_economy_plan_case_count": player_readable_economy_plan_case_count,
+            "rare_bottleneck_surface_case_count": rare_bottleneck_surface_case_count,
+            "ready_build_plan_surface_case_count": ready_build_plan_surface_case_count,
         },
         "town_recruitment_ui_surface_report_v1": {
             "faction_case_count": int(recruitment_ui_runtime.get("faction_case_count", 0)),

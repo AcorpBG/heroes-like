@@ -20517,6 +20517,10 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         "TownRules.build_active_town",
         "resources_full_ledger_text",
         "resources_tooltip_text",
+        "economy_readability_surface",
+        "player_readable_economy_plan_case_count",
+        "rare_bottleneck_surface_case_count",
+        "ready_build_plan_surface_case_count",
     ):
         ensure(required_token in script_text, errors, f"Town economy resource UI surface report is missing token {required_token}")
     ensure("res://tests/town_economy_resource_ui_surface_report.gd" in scene_text, errors, "Town economy resource UI surface scene must load its report script")
@@ -20527,6 +20531,10 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         "resources_full_ledger_text",
         "resources_tooltip_text",
         "LIVE_STOCKPILE_RESOURCE_KEYS",
+        "town_shell_player_economy_readability_surface_v1",
+        "func _economy_readability_surface",
+        "Build bottleneck",
+        "Next muster",
     ):
         ensure(required_token in town_shell_text, errors, f"TownShell resource ledger surface is missing token {required_token}")
     for required_text in (
@@ -20536,6 +20544,9 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         "six faction seed towns",
         "normal markets remain common-resource only",
         "6/6 same-day build lockout cases",
+        "player-readable `Economy Plan`",
+        "6/6 player-readable economy plan cases",
+        "6/6 rare bottleneck surface cases",
     ):
         ensure(required_text in doc_text, errors, f"Town economy resource UI surface doc is missing text: {required_text}")
 
