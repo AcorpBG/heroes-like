@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-market-cap-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Market Cap Scorecard",
+  "currentSliceId": "economy-town-common-material-pressure-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Common Material Pressure Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included.",
+  "currentSliceNotes": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T04:00:52Z",
+  "updatedAt": "2026-05-25T04:37:37Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,39 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-common-material-pressure-scorecard-20260525-10184",
+      "title": "Economy Town Common Material Pressure Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T04:37:37Z",
+      "startedAt": "2026-05-25T04:03:56Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-town-development-runtime-balance-proof-report.md",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/active_scenario_town_development_runway_report.gd"
+      ],
+      "summary": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks.",
+      "validation": [
+        "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete by 30 and expose at least one wood/ore bottleneck day)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-debug.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (passed; 15/15 live runtime towns and 105/105 tier recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 20/20 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed by retuning authored common-material development pressure, adding deterministic/report scorecard gates, and preserving live recruitment through explicit common-market coverage when material pressure exhausts ore.",
+      "completedAt": "2026-05-25T04:37:37Z"
+    },
     {
       "id": "economy-town-market-cap-scorecard-20260525-10184",
       "title": "Economy Town Market Cap Scorecard",
@@ -21996,6 +22029,48 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-town-common-material-pressure-scorecard-20260525-10184",
+      "title": "Economy Town Common Material Pressure Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T04:37:37Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-common-material-pressure-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/town_development_runtime_balance_report.gd",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete by 30 and expose at least one wood/ore bottleneck day)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-debug.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (passed; 15/15 live runtime towns and 105/105 tier recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 20/20 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks."
+    },
+    {
       "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
       "title": "Economy Active Scenario AI Delayed Source Save Resume",
       "status": "completed",
@@ -27461,6 +27536,7 @@
     }
   },
   "validationResults": [
+    "2026-05-25 economy town common-material pressure scorecard: Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks. Validation passed deterministic balance, deterministic scorecard, live runtime town report, runtime-inclusive scorecard, repo validation, Python compilation, JSON validation, and diff whitespace checks.",
     "2026-05-24 economy active scenario AI delayed-source save/resume: focused Godot report passed across 16 active authored scenarios and 20 enemy-town cases, completing 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays while preserving source node state, enemy treasury, target town state, same-day AI build guard, and save version; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy active scenario delayed-source save/resume: focused Godot report passed across 16 active authored scenarios and 18 player-town cases, completing 18/18 delayed-source save/resume checkpoints and 18/18 delayed-source replays while preserving source node state, active town state, same-day build guard, and save version; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
     "2026-05-24 economy active scenario development runway: wood wagon and ore crate sources now provide persistent common-resource income with matching map-object metadata; focused Godot report passed across 16 active authored scenarios and 18 active player-town cases, completing 18/18 within 30 turns with rare spend observed in every case, same-day second-build rejection, and common-only market boundaries; repo validation, strict economy fixtures, Python compilation, JSON validation, and diff whitespace checks passed.",
@@ -28115,26 +28191,43 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-25T04:00:52Z",
+    "updatedAt": "2026-05-25T04:37:37Z",
     "commands": [
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-market-cap-scorecard-focused.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn (passed; buy/sell caps exhaust, save/resume preserves usage, next week resets, rare market buying disabled)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 19/19 runtime-inclusive checks with runtime market-cap persistence evidence)",
+      "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete by 30 and expose at least one wood/ore bottleneck day)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-debug.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (passed; 15/15 live runtime towns and 105/105 tier recruitment cases)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 20/20 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
+      "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json content/towns.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included."
+    "summary": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks."
   },
   "active_slice": {
-    "id": "economy-town-market-cap-scorecard-20260525-10184",
-    "title": "Economy Town Market Cap Scorecard",
+    "id": "economy-town-common-material-pressure-scorecard-20260525-10184",
+    "title": "Economy Town Common Material Pressure Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T04:00:52Z"
+    "updatedAt": "2026-05-25T04:37:37Z",
+    "completedAt": "2026-05-25T04:37:37Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T04:00:52Z",
+  "currentSliceUpdatedAt": "2026-05-25T04:37:37Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T04:37:37Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete by 30 and expose at least one wood/ore bottleneck day)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-debug.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (passed; 15/15 live runtime towns and 105/105 tier recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 20/20 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-25T04:00:52Z",
@@ -28867,12 +28960,28 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-market-cap-scorecard-20260525-10184",
-    "title": "Economy Town Market Cap Scorecard",
+    "id": "economy-town-common-material-pressure-scorecard-20260525-10184",
+    "title": "Economy Town Common Material Pressure Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T04:00:52Z"
+    "updatedAt": "2026-05-25T04:37:37Z",
+    "completedAt": "2026-05-25T04:37:37Z"
   },
   "validation": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T04:37:37Z",
+      "commands": [
+        "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete by 30 and expose at least one wood/ore bottleneck day)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-runtime-debug.log --path . --scene res://tests/town_development_runtime_balance_report.tscn (passed; 15/15 live runtime towns and 105/105 tier recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 20/20 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-25T04:00:52Z",

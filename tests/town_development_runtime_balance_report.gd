@@ -222,13 +222,24 @@ func _recruitment_end_to_end_report(session, faction: Dictionary) -> Dictionary:
 		var available_before := int(action.get("available_count", 0))
 		var weekly_growth := int(action.get("weekly_growth", 0))
 		var direct_affordable_count := int(action.get("direct_affordable_count", 0))
+		var market_affordable_count := int(action.get("market_affordable_count", 0))
 		row["unit_name"] = String(unit.get("name", unit_id))
 		row["unit_tier"] = int(action.get("unit_tier", 0))
 		row["tier_label"] = String(action.get("tier_label", ""))
 		row["available_before"] = available_before
 		row["weekly_growth"] = weekly_growth
 		row["direct_affordable_count"] = direct_affordable_count
+		row["market_affordable_count"] = market_affordable_count
+		row["market_coverable"] = bool(action.get("market_coverable", false))
 		row["unit_cost"] = action.get("unit_cost", {})
+		if direct_affordable_count <= 0 and _has_common_recruitment_shortfall(session, action.get("unit_cost", {})):
+			row["market_purchases"] = _apply_recruitment_market_coverage(session, action.get("unit_cost", {}))
+			action = _recruit_action_for(session, unit_id)
+			direct_affordable_count = int(action.get("direct_affordable_count", 0))
+			market_affordable_count = int(action.get("market_affordable_count", 0))
+			row["direct_affordable_count"] = direct_affordable_count
+			row["market_affordable_count"] = market_affordable_count
+			row["market_coverable"] = bool(action.get("market_coverable", false))
 		if int(unit.get("tier", 0)) != expected_tier or int(action.get("unit_tier", 0)) != expected_tier:
 			row["error"] = "tier mismatch"
 		elif available_before <= 0:
@@ -272,6 +283,47 @@ func _recruitment_end_to_end_report(session, faction: Dictionary) -> Dictionary:
 		"tiers": rows,
 		"errors": errors,
 	}
+
+func _has_common_recruitment_shortfall(session, unit_cost_value: Variant) -> bool:
+	var unit_cost: Dictionary = unit_cost_value if unit_cost_value is Dictionary else {}
+	for resource_id in COMMON_MARKET_RESOURCE_IDS:
+		if int(unit_cost.get(resource_id, 0)) > int(_resources(session).get(resource_id, 0)):
+			return true
+	return false
+
+func _apply_recruitment_market_coverage(session, unit_cost_value: Variant) -> Array:
+	var unit_cost: Dictionary = unit_cost_value if unit_cost_value is Dictionary else {}
+	var rows := []
+	for resource_id in COMMON_MARKET_RESOURCE_IDS:
+		var needed = max(0, int(unit_cost.get(resource_id, 0)) - int(_resources(session).get(resource_id, 0)))
+		var wait_days := 0
+		while needed > 0:
+			var result: Dictionary = TownRules.perform_market_action(session, "market:buy:%s:1" % resource_id)
+			rows.append({
+				"resource_id": resource_id,
+				"ok": bool(result.get("ok", false)),
+				"message": String(result.get("message", "")),
+				"day": int(session.day),
+			})
+			if bool(result.get("ok", false)):
+				needed -= 1
+				wait_days = 0
+				continue
+			if wait_days >= 7:
+				return rows
+			var end_turn_result: Dictionary = OverworldRules.end_turn(session)
+			rows.append({
+				"resource_id": resource_id,
+				"ok": bool(end_turn_result.get("ok", false)),
+				"message": String(end_turn_result.get("message", "")),
+				"day": int(session.day),
+				"waited_for_market_reset": true,
+			})
+			_set_active_town(session)
+			if not bool(end_turn_result.get("ok", false)):
+				return rows
+			wait_days += 1
+	return rows
 
 func _recruit_action_for(session, unit_id: String) -> Dictionary:
 	_set_active_town(session)

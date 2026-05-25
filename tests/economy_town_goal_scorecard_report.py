@@ -25,6 +25,7 @@ MIN_UNIQUE_NON_UNIT_PER_TOWN = 5
 MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2.0
+MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
@@ -869,6 +870,43 @@ def main() -> int:
         },
     )
 
+    common_material_pressure_ok = (
+        balance.get("ok") is True
+        and int(balance.get("min_common_material_bottleneck_days_per_town", 0)) >= MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN
+    )
+    common_material_rows: dict[str, int] = {}
+    common_material_ids_by_town: dict[str, list[str]] = {}
+    for town_id, row in town_rows.items():
+        if not isinstance(row, dict):
+            common_material_pressure_ok = False
+            continue
+        bottleneck_days = row.get("common_material_bottleneck_days", [])
+        bottleneck_days = bottleneck_days if isinstance(bottleneck_days, list) else []
+        material_ids = {
+            str(resource_id)
+            for day_row in bottleneck_days
+            if isinstance(day_row, dict)
+            for resource_id in day_row.get("missing_material_ids", [])
+        }
+        count = int(row.get("common_material_bottleneck_day_count", 0))
+        common_material_rows[town_id] = count
+        common_material_ids_by_town[town_id] = sorted(material_ids)
+        if count < MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN or not material_ids.intersection({"wood", "ore"}):
+            common_material_pressure_ok = False
+    add_check(
+        checks,
+        "common_material_development_pressure",
+        common_material_pressure_ok,
+        "Every authored town must hit at least one development bottleneck caused by wood or ore, not only gold or rare resources.",
+        {
+            "min_common_material_bottleneck_days_per_town": int(balance.get("min_common_material_bottleneck_days_per_town", 0)),
+            "common_material_bottleneck_day_count_min": min(common_material_rows.values(), default=0),
+            "common_material_bottleneck_day_count_max": max(common_material_rows.values(), default=0),
+            "town_common_material_bottleneck_day_counts": common_material_rows,
+            "town_common_material_bottleneck_ids": common_material_ids_by_town,
+        },
+    )
+
     high_tier_pacing_ok = balance.get("min_high_tier_unit_build_days", {}) == {
         str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()
     }
@@ -1008,6 +1046,7 @@ def main() -> int:
                 "completion_day_max": max(completion_days) if completion_days else 0,
                 "min_late_rare_bottleneck_day": int(balance.get("min_late_rare_bottleneck_day", 0)),
                 "min_late_rare_bottleneck_days_per_town": int(balance.get("min_late_rare_bottleneck_days_per_town", 0)),
+                "min_common_material_bottleneck_days_per_town": int(balance.get("min_common_material_bottleneck_days_per_town", 0)),
             },
             "town_development_cost_curve_report_v1": {
                 "authored_town_count": int(cost_curve.get("authored_town_count", 0)),
