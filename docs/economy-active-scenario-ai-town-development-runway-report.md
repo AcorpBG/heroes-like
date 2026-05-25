@@ -18,6 +18,8 @@ The delayed-source AI replay now also saves and restores each case after route-d
 
 The post-development recruitment strengthening now requires every completed enemy town to expose the native town line's seven-tier unit ladder through `EnemyTurnRules.town_recruitment_pressure_report`, even when a town is controlled by a different enemy faction than the town's authored faction. Current focused evidence proves 20/20 active AI town cases expose seven-tier recruitment, 140/140 expected tier candidates are present, and every case has an affordable selected recruitment after development. The mixed-control Halo Spire case now proves a Mireclaw-controlled Sunvault town still exposes the native Sunvault ladder while using the controller faction for enemy treasury and recruitment priorities.
 
+The six-faction coverage strengthening now reports `unique_faction_count`, `covered_faction_ids`, `unique_ladder_faction_count`, and `covered_ladder_faction_ids`. The report fails unless all six active AI controller factions and all six native town-ladder factions are represented in the active enemy-town runway evidence.
+
 ## Evidence
 
 - Current focused evidence completes all 20 active enemy-town cases within the 30-turn target.
@@ -27,6 +29,7 @@ The post-development recruitment strengthening now requires every completed enem
 - Current focused evidence completes 20/20 delayed-source replay cases after route-derived source acquisition delays, with delayed completion days ranging from day 20 to day 23.
 - Current focused evidence completes 20/20 delayed-source AI save/resume checkpoints after source acquisition and rare-resource construction, then continues construction from the restored active scenario session.
 - Current focused evidence proves 20/20 completed enemy town cases expose seven-tier AI recruitment candidates, 140/140 expected tier candidates, and 20/20 affordable selected recruitment cases after development.
+- Current focused evidence covers all six active AI controller factions and all six native town-ladder factions in the active enemy-town runway.
 - Ninefold Confluence now gives Bellwake Harbor local authored wood and ore reserve nodes on its reachable harbor-front economy tile, matching its memory-salt front so Veilmourn AI development has common-plus-rare runway access.
 - Enemy treasuries now preserve all nine live stockpile resources: `gold`, `wood`, `ore`, `aetherglass`, `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`.
 - Enemy town build selection now passes the current day into build readiness, and successful AI construction stamps `last_build_day`.

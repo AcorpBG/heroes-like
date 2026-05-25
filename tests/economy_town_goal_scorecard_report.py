@@ -18,6 +18,14 @@ SLICE_ID = "economy-town-goal-scorecard-20260524-10184"
 TARGET_TURNS = 30
 MIN_AUTHORED_TOWNS = 15
 MIN_FACTIONS = 6
+EXPECTED_FACTION_IDS = {
+    "faction_brasshollow",
+    "faction_embercourt",
+    "faction_mireclaw",
+    "faction_sunvault",
+    "faction_thornwake",
+    "faction_veilmourn",
+}
 SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
 MIN_UNIQUE_NON_UNIT_PER_FACTION = 5
@@ -418,6 +426,28 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
         },
     )
+    covered_ai_factions = {str(value) for value in ai_runtime.get("covered_faction_ids", [])}
+    covered_ai_ladder_factions = {str(value) for value in ai_runtime.get("covered_ladder_faction_ids", [])}
+    ai_six_faction_coverage_ok = (
+        ai_runtime.get("ok") is True
+        and int(ai_runtime.get("unique_faction_count", 0)) >= MIN_FACTIONS
+        and int(ai_runtime.get("unique_ladder_faction_count", 0)) >= MIN_FACTIONS
+        and EXPECTED_FACTION_IDS.issubset(covered_ai_factions)
+        and EXPECTED_FACTION_IDS.issubset(covered_ai_ladder_factions)
+    )
+    add_check(
+        checks,
+        "active_ai_six_faction_town_coverage",
+        ai_six_faction_coverage_ok,
+        "Active enemy-town runtime evidence must cover all six controller and native town-ladder factions.",
+        {
+            "unique_faction_count": int(ai_runtime.get("unique_faction_count", 0)),
+            "covered_faction_ids": sorted(covered_ai_factions),
+            "unique_ladder_faction_count": int(ai_runtime.get("unique_ladder_faction_count", 0)),
+            "covered_ladder_faction_ids": sorted(covered_ai_ladder_factions),
+            "expected_faction_ids": sorted(EXPECTED_FACTION_IDS),
+        },
+    )
 
     unique_payoff_runtime = payloads["TOWN_UNIQUE_BUILDING_RUNTIME_PAYOFF_REPORT"]
     unique_faction_rows = unique_payoff_runtime.get("factions", [])
@@ -639,6 +669,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),
             "seven_tier_recruitment_candidate_count": int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)),
             "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
+            "unique_faction_count": int(ai_runtime.get("unique_faction_count", 0)),
+            "unique_ladder_faction_count": int(ai_runtime.get("unique_ladder_faction_count", 0)),
         },
         "town_unique_building_runtime_payoff_report_v1": {
             "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),
