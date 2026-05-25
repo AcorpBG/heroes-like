@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
-  "currentSliceTitle": "Economy Ninefold Rare Source Breadth Tuning",
+  "currentSliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+  "currentSliceTitle": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization.",
+  "currentSliceNotes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:28:03Z",
+  "updatedAt": "2026-05-25T18:33:46Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23145,6 +23145,104 @@
       },
       "completedAt": "2026-05-25T18:28:03Z",
       "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
+    },
+    {
+      "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+      "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "openclaw_review_feedback_player_balance_audit",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:33:46Z",
+        "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "audit_findings": {
+            "stronger_economic_identity_factions": [
+              "faction_brasshollow",
+              "faction_thornwake",
+              "faction_veilmourn",
+              "faction_sunvault"
+            ],
+            "weaker_economic_identity_factions": [
+              "faction_embercourt",
+              "faction_mireclaw"
+            ],
+            "boring_or_forced_curve_examples": [
+              "town_riverwatch",
+              "town_highwater_keep",
+              "town_blackfen_gate",
+              "town_murkward_ford",
+              "town_reedbarrow_ferry",
+              "town_halo_spire"
+            ],
+            "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+            "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
+          },
+          "content_changes": {
+            "building_embercourt_tollstone_weir_requires": [
+              "building_embercourt_granary_lock_exchange",
+              "building_embercourt_lockhouse_tally"
+            ],
+            "building_mireclaw_war_drum_circle_requires": [
+              "building_mireclaw_blackbranch_den",
+              "building_mireclaw_reed_toll"
+            ]
+          },
+          "affected_town_completion_days": {
+            "town_highwater_keep": 26,
+            "town_riverwatch": 24,
+            "town_blackfen_gate": 26,
+            "town_duskfen": 27,
+            "town_murkward_ford": 26,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 26
+          },
+          "affected_early_identity_steps": {
+            "town_highwater_keep": [
+              "day 8 building_embercourt_lockhouse_tally",
+              "day 9 building_embercourt_tollstone_weir"
+            ],
+            "town_riverwatch": [
+              "day 11 building_embercourt_lockhouse_tally",
+              "day 12 building_embercourt_tollstone_weir"
+            ],
+            "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30
+        }
+      },
+      "summary": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate.",
+      "updatedAt": "2026-05-25T18:33:46Z",
+      "startedAt": "2026-05-25T18:33:46Z",
+      "completedAt": "2026-05-25T18:33:46Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -28931,6 +29029,94 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+      "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
+      "completedAt": "2026-05-25T18:33:46Z",
+      "summary": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:33:46Z",
+        "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "audit_findings": {
+            "stronger_economic_identity_factions": [
+              "faction_brasshollow",
+              "faction_thornwake",
+              "faction_veilmourn",
+              "faction_sunvault"
+            ],
+            "weaker_economic_identity_factions": [
+              "faction_embercourt",
+              "faction_mireclaw"
+            ],
+            "boring_or_forced_curve_examples": [
+              "town_riverwatch",
+              "town_highwater_keep",
+              "town_blackfen_gate",
+              "town_murkward_ford",
+              "town_reedbarrow_ferry",
+              "town_halo_spire"
+            ],
+            "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+            "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
+          },
+          "content_changes": {
+            "building_embercourt_tollstone_weir_requires": [
+              "building_embercourt_granary_lock_exchange",
+              "building_embercourt_lockhouse_tally"
+            ],
+            "building_mireclaw_war_drum_circle_requires": [
+              "building_mireclaw_blackbranch_den",
+              "building_mireclaw_reed_toll"
+            ]
+          },
+          "affected_town_completion_days": {
+            "town_highwater_keep": 26,
+            "town_riverwatch": 24,
+            "town_blackfen_gate": 26,
+            "town_duskfen": 27,
+            "town_murkward_ford": 26,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 26
+          },
+          "affected_early_identity_steps": {
+            "town_highwater_keep": [
+              "day 8 building_embercourt_lockhouse_tally",
+              "day 9 building_embercourt_tollstone_weir"
+            ],
+            "town_riverwatch": [
+              "day 11 building_embercourt_lockhouse_tally",
+              "day 12 building_embercourt_tollstone_weir"
+            ],
+            "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -30594,19 +30780,93 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:33:46Z",
+      "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "audit_findings": {
+          "stronger_economic_identity_factions": [
+            "faction_brasshollow",
+            "faction_thornwake",
+            "faction_veilmourn",
+            "faction_sunvault"
+          ],
+          "weaker_economic_identity_factions": [
+            "faction_embercourt",
+            "faction_mireclaw"
+          ],
+          "boring_or_forced_curve_examples": [
+            "town_riverwatch",
+            "town_highwater_keep",
+            "town_blackfen_gate",
+            "town_murkward_ford",
+            "town_reedbarrow_ferry",
+            "town_halo_spire"
+          ],
+          "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+          "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
+        },
+        "content_changes": {
+          "building_embercourt_tollstone_weir_requires": [
+            "building_embercourt_granary_lock_exchange",
+            "building_embercourt_lockhouse_tally"
+          ],
+          "building_mireclaw_war_drum_circle_requires": [
+            "building_mireclaw_blackbranch_den",
+            "building_mireclaw_reed_toll"
+          ]
+        },
+        "affected_town_completion_days": {
+          "town_highwater_keep": 26,
+          "town_riverwatch": 24,
+          "town_blackfen_gate": 26,
+          "town_duskfen": 27,
+          "town_murkward_ford": 26,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 26
+        },
+        "affected_early_identity_steps": {
+          "town_highwater_keep": [
+            "day 8 building_embercourt_lockhouse_tally",
+            "day 9 building_embercourt_tollstone_weir"
+          ],
+          "town_riverwatch": [
+            "day 11 building_embercourt_lockhouse_tally",
+            "day 12 building_embercourt_tollstone_weir"
+          ],
+          "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:28:03Z",
-    "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:33:46Z",
+    "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+      "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
@@ -30629,42 +30889,54 @@
           "town_reedbarrow_ferry",
           "town_halo_spire"
         ],
-        "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
-        "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+        "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+        "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
       },
-      "affected_scenario_id": "ninefold-confluence",
-      "added_resource_nodes": [
-        "ninefold_graftroot_caravan_verdant_grafts_fallback",
-        "ninefold_orevein_gantry_brass_scrip_fallback",
-        "ninefold_bellwake_harbor_memory_salt_fallback"
-      ],
-      "affected_rare_resource_ids": [
-        "verdant_grafts",
-        "brass_scrip",
-        "memory_salt"
-      ],
-      "affected_town_ids": [
-        "town_thornwake_graftroot_caravan",
-        "town_brasshollow_orevein_gantry",
-        "town_veilmourn_bellwake_harbor"
-      ],
-      "matching_rare_source_candidates_per_affected_town": 2,
-      "reachable_rare_source_candidates_per_affected_town": 2,
+      "content_changes": {
+        "building_embercourt_tollstone_weir_requires": [
+          "building_embercourt_granary_lock_exchange",
+          "building_embercourt_lockhouse_tally"
+        ],
+        "building_mireclaw_war_drum_circle_requires": [
+          "building_mireclaw_blackbranch_den",
+          "building_mireclaw_reed_toll"
+        ]
+      },
+      "affected_town_completion_days": {
+        "town_highwater_keep": 26,
+        "town_riverwatch": 24,
+        "town_blackfen_gate": 26,
+        "town_duskfen": 27,
+        "town_murkward_ford": 26,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 26
+      },
+      "affected_early_identity_steps": {
+        "town_highwater_keep": [
+          "day 8 building_embercourt_lockhouse_tally",
+          "day 9 building_embercourt_tollstone_weir"
+        ],
+        "town_riverwatch": [
+          "day 11 building_embercourt_lockhouse_tally",
+          "day 12 building_embercourt_tollstone_weir"
+        ],
+        "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+      },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "new_gate_created": false,
-      "policy": "player-balance content tuning using existing reports; not campaign production work"
+      "town_development_completion_day_min": 24,
+      "town_development_completion_day_max": 30
     }
   },
   "active_slice": {
-    "id": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
-    "title": "Economy Ninefold Rare Source Breadth Tuning",
+    "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+    "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:28:03Z",
-    "completedAt": "2026-05-25T18:28:03Z",
-    "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
+    "updatedAt": "2026-05-25T18:33:46Z",
+    "completedAt": "2026-05-25T18:33:46Z",
+    "notes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:28:03Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:33:46Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -31866,27 +32138,101 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:33:46Z",
+      "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "audit_findings": {
+          "stronger_economic_identity_factions": [
+            "faction_brasshollow",
+            "faction_thornwake",
+            "faction_veilmourn",
+            "faction_sunvault"
+          ],
+          "weaker_economic_identity_factions": [
+            "faction_embercourt",
+            "faction_mireclaw"
+          ],
+          "boring_or_forced_curve_examples": [
+            "town_riverwatch",
+            "town_highwater_keep",
+            "town_blackfen_gate",
+            "town_murkward_ford",
+            "town_reedbarrow_ferry",
+            "town_halo_spire"
+          ],
+          "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+          "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
+        },
+        "content_changes": {
+          "building_embercourt_tollstone_weir_requires": [
+            "building_embercourt_granary_lock_exchange",
+            "building_embercourt_lockhouse_tally"
+          ],
+          "building_mireclaw_war_drum_circle_requires": [
+            "building_mireclaw_blackbranch_den",
+            "building_mireclaw_reed_toll"
+          ]
+        },
+        "affected_town_completion_days": {
+          "town_highwater_keep": 26,
+          "town_riverwatch": 24,
+          "town_blackfen_gate": 26,
+          "town_duskfen": 27,
+          "town_murkward_ford": 26,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 26
+        },
+        "affected_early_identity_steps": {
+          "town_highwater_keep": [
+            "day 8 building_embercourt_lockhouse_tally",
+            "day 9 building_embercourt_tollstone_weir"
+          ],
+          "town_riverwatch": [
+            "day 11 building_embercourt_lockhouse_tally",
+            "day 12 building_embercourt_tollstone_weir"
+          ],
+          "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
-    "title": "Economy Ninefold Rare Source Breadth Tuning",
+    "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+    "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:28:03Z",
-    "completedAt": "2026-05-25T18:28:03Z",
-    "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
+    "updatedAt": "2026-05-25T18:33:46Z",
+    "completedAt": "2026-05-25T18:33:46Z",
+    "notes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:28:03Z",
-    "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:33:46Z",
+    "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+      "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
@@ -31909,31 +32255,43 @@
           "town_reedbarrow_ferry",
           "town_halo_spire"
         ],
-        "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
-        "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+        "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
+        "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
       },
-      "affected_scenario_id": "ninefold-confluence",
-      "added_resource_nodes": [
-        "ninefold_graftroot_caravan_verdant_grafts_fallback",
-        "ninefold_orevein_gantry_brass_scrip_fallback",
-        "ninefold_bellwake_harbor_memory_salt_fallback"
-      ],
-      "affected_rare_resource_ids": [
-        "verdant_grafts",
-        "brass_scrip",
-        "memory_salt"
-      ],
-      "affected_town_ids": [
-        "town_thornwake_graftroot_caravan",
-        "town_brasshollow_orevein_gantry",
-        "town_veilmourn_bellwake_harbor"
-      ],
-      "matching_rare_source_candidates_per_affected_town": 2,
-      "reachable_rare_source_candidates_per_affected_town": 2,
+      "content_changes": {
+        "building_embercourt_tollstone_weir_requires": [
+          "building_embercourt_granary_lock_exchange",
+          "building_embercourt_lockhouse_tally"
+        ],
+        "building_mireclaw_war_drum_circle_requires": [
+          "building_mireclaw_blackbranch_den",
+          "building_mireclaw_reed_toll"
+        ]
+      },
+      "affected_town_completion_days": {
+        "town_highwater_keep": 26,
+        "town_riverwatch": 24,
+        "town_blackfen_gate": 26,
+        "town_duskfen": 27,
+        "town_murkward_ford": 26,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 26
+      },
+      "affected_early_identity_steps": {
+        "town_highwater_keep": [
+          "day 8 building_embercourt_lockhouse_tally",
+          "day 9 building_embercourt_tollstone_weir"
+        ],
+        "town_riverwatch": [
+          "day 11 building_embercourt_lockhouse_tally",
+          "day 12 building_embercourt_tollstone_weir"
+        ],
+        "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+      },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "new_gate_created": false,
-      "policy": "player-balance content tuning using existing reports; not campaign production work"
+      "town_development_completion_day_min": 24,
+      "town_development_completion_day_max": 30
     }
   }
 }
