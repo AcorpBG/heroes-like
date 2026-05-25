@@ -10,6 +10,7 @@ const REPORT_ID := "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_package_session_adoption_smoke_v1"
 const FEATURE_GATE := "native_rmg_package_session_adoption_report"
 const TARGET_TURNS := 30
+const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
 const COMMON_MARKET_RESOURCE_IDS := ["wood", "ore"]
 const RARE_RESOURCE_IDS := [
@@ -635,6 +636,7 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
+	var completion_day := int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0
 	while completed and int(session.day) < TARGET_TURNS:
 		var completion_turn_result: Dictionary = _advance_generated_package_economy_day(session)
 		if not bool(completion_turn_result.get("ok", false)):
@@ -662,7 +664,9 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 		"initial_missing_building_count": initial_missing_buildings.size(),
 		"initial_missing_buildings": initial_missing_buildings,
 		"completed": completed,
-		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0,
+		"completion_day": completion_day,
+		"min_completion_day": MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY,
+		"pacing_floor_ok": completion_day >= MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY,
 		"build_count": build_log.size(),
 		"missing_buildings": missing,
 		"same_day_reject_ok": same_day_reject_ok,
@@ -685,6 +689,7 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 	}
 	var ok := (
 		completed
+		and int(surface.get("completion_day", 0)) >= MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY
 		and int(surface.get("completion_day", 0)) <= TARGET_TURNS
 		and int(surface.get("build_count", 0)) == initial_missing_buildings.size()
 		and same_day_reject_ok
@@ -976,9 +981,12 @@ func _secure_development_sources(session: SessionStateStoreScript.SessionData, r
 	var secured_resource_ids := {}
 	var secured_income := {}
 	var secured_claims := {}
+	var covered_resource_ids := {}
 	for index in range(nodes.size()):
 		if not (nodes[index] is Dictionary):
 			continue
+		if _source_covers_required_resources({"secured_resource_ids": _sorted_string_keys(covered_resource_ids)}, required_resource_ids):
+			break
 		var node: Dictionary = nodes[index]
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty():
@@ -988,6 +996,18 @@ func _secure_development_sources(session: SessionStateStoreScript.SessionData, r
 		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
 		var relevant_income := _filter_resources(control_income, required_resource_ids)
 		if relevant_claims.is_empty() and relevant_income.is_empty():
+			continue
+		var source_resource_ids := {}
+		for resource_id in relevant_claims.keys():
+			source_resource_ids[String(resource_id)] = true
+		for resource_id in relevant_income.keys():
+			source_resource_ids[String(resource_id)] = true
+		var adds_uncovered_required_resource := false
+		for resource_id in source_resource_ids.keys():
+			if not bool(covered_resource_ids.get(String(resource_id), false)):
+				adds_uncovered_required_resource = true
+				break
+		if not adds_uncovered_required_resource:
 			continue
 		if bool(site.get("persistent_control", false)):
 			node["collected_by_faction_id"] = "player"
@@ -1000,8 +1020,10 @@ func _secure_development_sources(session: SessionStateStoreScript.SessionData, r
 			secured_income = _add_resource_sets(secured_income, relevant_income)
 		for resource_id in relevant_claims.keys():
 			secured_resource_ids[String(resource_id)] = true
+			covered_resource_ids[String(resource_id)] = true
 		for resource_id in relevant_income.keys():
 			secured_resource_ids[String(resource_id)] = true
+			covered_resource_ids[String(resource_id)] = true
 		source_rows.append({
 			"placement_id": String(node.get("placement_id", "")),
 			"site_id": String(node.get("site_id", "")),
@@ -1021,6 +1043,7 @@ func _secure_development_sources(session: SessionStateStoreScript.SessionData, r
 		nodes[index] = node
 	session.overworld["resource_nodes"] = nodes
 	return {
+		"source_adoption_policy": "minimal_required_resource_coverage",
 		"secured_source_count": source_rows.size(),
 		"secured_resource_ids": _sorted_string_keys(secured_resource_ids),
 		"secured_claims": secured_claims,

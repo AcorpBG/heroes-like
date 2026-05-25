@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Common Surplus Pressure Scorecard",
+  "currentSliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Player Town Pacing Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks.",
+  "currentSliceNotes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage, the native package report gates the day-24 pacing floor, and the runtime-inclusive economy/town scorecard passes 30/30 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T10:22:08Z",
+  "updatedAt": "2026-05-25T10:54:38Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22431,9 +22431,100 @@
           }
         }
       }
+    },
+    {
+      "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+      "title": "Economy Generated Package Player Town Pacing Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Apply the authored day-24-to-day-30 town pacing expectation to strict Small generated/native package player-town runway evidence instead of only proving completion by day 30.",
+      "notes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage; the native package report and runtime-inclusive scorecard gate completion day 24 inside the day-24-to-day-30 pacing window.",
+      "startedAt": "2026-05-25T10:27:13Z",
+      "completedAt": "2026-05-25T10:54:38Z",
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "generated_package_player_town_id": "town_highwater_keep",
+          "generated_package_player_faction_id": "faction_embercourt",
+          "generated_package_player_build_count": 22,
+          "generated_package_player_initial_missing_building_count": 22,
+          "generated_package_player_target_building_count": 23,
+          "generated_package_player_completion_day": 24,
+          "generated_package_player_min_completion_day": 24,
+          "generated_package_player_pacing_floor_ok": true,
+          "generated_package_player_target_turns": 30,
+          "generated_package_player_same_day_reject_ok": true,
+          "generated_package_player_build_actions_after_build_blocked": true,
+          "generated_package_player_rare_spend_observed": true,
+          "generated_package_player_recruited_unit_case_count": 7,
+          "generated_package_player_secured_source_count": 3,
+          "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage",
+          "runtime_scorecard_passed_requirement_count": 30,
+          "runtime_scorecard_requirement_count": 30,
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+      "title": "Economy Generated Package Player Town Pacing Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T10:54:38Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-generated-package-player-town-pacing-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Generated package player-town source adoption now uses minimal required-resource coverage instead of securing every matching generated source.",
+        "Native package report emits min_completion_day, pacing_floor_ok, source_adoption_policy, and secured_source_count for generated_package_player_town_development_runway_v1.",
+        "Focused strict Small generated package evidence passes with town_highwater_keep completing 22 initially missing targets on day 24, using 3 secured sources for embergrain, gold, ore, and wood.",
+        "The player town still proves rare spend, same-day second-build blocking, generated economy day advancement, common-only market boundaries, and seven-tier recruitment.",
+        "Runtime-inclusive economy/town scorecard gates the generated player-town pacing floor and passes 30/30 checks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; completion_day 24, pacing_floor_ok true, secured_source_count 3)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 runtime-inclusive checks)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not broad generated-map economy balance across sizes or templates.",
+        "Not final route safety.",
+        "Not final strategic AI quality.",
+        "Not campaign or skirmish balance approval.",
+        "Not final encounter pacing approval."
+      ],
+      "updatedAt": "2026-05-25T10:54:38Z"
+    },
     {
       "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
       "title": "Economy Town Common Surplus Pressure Scorecard",
@@ -27744,6 +27835,47 @@
         "runtime_scorecard_passed_requirement_count": 25,
         "runtime_scorecard_requirement_count": 25
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T10:54:38Z",
+      "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ],
+      "evidence": {
+        "generated_package_player_town_id": "town_highwater_keep",
+        "generated_package_player_faction_id": "faction_embercourt",
+        "generated_package_player_build_count": 22,
+        "generated_package_player_initial_missing_building_count": 22,
+        "generated_package_player_target_building_count": 23,
+        "generated_package_player_completion_day": 24,
+        "generated_package_player_min_completion_day": 24,
+        "generated_package_player_pacing_floor_ok": true,
+        "generated_package_player_target_turns": 30,
+        "generated_package_player_same_day_reject_ok": true,
+        "generated_package_player_build_actions_after_build_blocked": true,
+        "generated_package_player_rare_spend_observed": true,
+        "generated_package_player_recruited_unit_case_count": 7,
+        "generated_package_player_secured_resource_ids": [
+          "embergrain",
+          "gold",
+          "ore",
+          "wood"
+        ],
+        "generated_package_player_secured_source_count": 3,
+        "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage",
+        "runtime_scorecard_passed_requirement_count": 30,
+        "runtime_scorecard_requirement_count": 30,
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -29255,13 +29387,13 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "sliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+    "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
       "jq empty ops/progress.json content/towns.json",
       "git diff --check"
     ],
@@ -29270,36 +29402,31 @@
       "deterministic_scorecard_requirement_count": 15,
       "runtime_scorecard_passed_requirement_count": 30,
       "runtime_scorecard_requirement_count": 30,
-      "max_ending_common_after_completion": {
-        "gold": 10000,
-        "wood": 12,
-        "ore": 12
-      },
-      "max_ending_common_surplus_ratio_after_completion": {
-        "gold": 0.3,
-        "wood": 0.5,
-        "ore": 0.5
-      },
-      "observed_common_surplus_max": {
-        "gold": 9600,
-        "wood": 10,
-        "ore": 11
-      },
-      "observed_common_surplus_ratio_max": {
-        "gold": 0.2602,
-        "wood": 0.4348,
-        "ore": 0.4783
-      }
+      "generated_package_player_town_id": "town_highwater_keep",
+      "generated_package_player_faction_id": "faction_embercourt",
+      "generated_package_player_build_count": 22,
+      "generated_package_player_initial_missing_building_count": 22,
+      "generated_package_player_target_building_count": 23,
+      "generated_package_player_completion_day": 24,
+      "generated_package_player_min_completion_day": 24,
+      "generated_package_player_pacing_floor_ok": true,
+      "generated_package_player_target_turns": 30,
+      "generated_package_player_same_day_reject_ok": true,
+      "generated_package_player_build_actions_after_build_blocked": true,
+      "generated_package_player_rare_spend_observed": true,
+      "generated_package_player_recruited_unit_case_count": 7,
+      "generated_package_player_secured_source_count": 3,
+      "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage"
     }
   },
   "active_slice": {
-    "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
-    "title": "Economy Town Common Surplus Pressure Scorecard",
+    "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+    "title": "Economy Generated Package Player Town Pacing Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T10:22:08Z",
-    "notes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks."
+    "updatedAt": "2026-05-25T10:54:38Z",
+    "notes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage; completion day 24 satisfies the generated player-town pacing floor and runtime-inclusive economy/town scorecard passes 30/30."
   },
-  "currentSliceUpdatedAt": "2026-05-25T10:22:08Z",
+  "currentSliceUpdatedAt": "2026-05-25T10:54:38Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -30204,22 +30331,22 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
-    "title": "Economy Town Common Surplus Pressure Scorecard",
+    "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+    "title": "Economy Generated Package Player Town Pacing Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T10:22:08Z",
-    "notes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks."
+    "updatedAt": "2026-05-25T10:54:38Z",
+    "notes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage; completion day 24 satisfies the generated player-town pacing floor and runtime-inclusive economy/town scorecard passes 30/30."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T10:22:08Z",
-    "sliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T10:54:38Z",
+    "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
       "jq empty ops/progress.json content/towns.json",
       "git diff --check"
     ],
@@ -30228,26 +30355,21 @@
       "deterministic_scorecard_requirement_count": 15,
       "runtime_scorecard_passed_requirement_count": 30,
       "runtime_scorecard_requirement_count": 30,
-      "max_ending_common_after_completion": {
-        "gold": 10000,
-        "wood": 12,
-        "ore": 12
-      },
-      "max_ending_common_surplus_ratio_after_completion": {
-        "gold": 0.3,
-        "wood": 0.5,
-        "ore": 0.5
-      },
-      "observed_common_surplus_max": {
-        "gold": 9600,
-        "wood": 10,
-        "ore": 11
-      },
-      "observed_common_surplus_ratio_max": {
-        "gold": 0.2602,
-        "wood": 0.4348,
-        "ore": 0.4783
-      }
+      "generated_package_player_town_id": "town_highwater_keep",
+      "generated_package_player_faction_id": "faction_embercourt",
+      "generated_package_player_build_count": 22,
+      "generated_package_player_initial_missing_building_count": 22,
+      "generated_package_player_target_building_count": 23,
+      "generated_package_player_completion_day": 24,
+      "generated_package_player_min_completion_day": 24,
+      "generated_package_player_pacing_floor_ok": true,
+      "generated_package_player_target_turns": 30,
+      "generated_package_player_same_day_reject_ok": true,
+      "generated_package_player_build_actions_after_build_blocked": true,
+      "generated_package_player_rare_spend_observed": true,
+      "generated_package_player_recruited_unit_case_count": 7,
+      "generated_package_player_secured_source_count": 3,
+      "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage"
     }
   }
 }
