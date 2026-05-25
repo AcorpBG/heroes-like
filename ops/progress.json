@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-thin-faction-town-identity-metadata-20260525-10184",
-  "currentSliceTitle": "Economy Thin Faction Town Identity Metadata",
+  "currentSliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+  "currentSliceTitle": "Economy Fastest Capstone Rare Pacing Followup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval.",
+  "currentSliceNotes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T21:13:07Z",
+  "updatedAt": "2026-05-25T21:45:24Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24218,6 +24218,72 @@
       "summary": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval.",
       "updatedAt": "2026-05-25T21:13:07Z",
       "completedAt": "2026-05-25T21:13:07Z"
+    },
+    {
+      "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+      "title": "Economy Fastest Capstone Rare Pacing Followup",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T21:45:24Z",
+        "sliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/town_development_cost_curve_report.py",
+          "python3 tests/faction_town_unit_asymmetry_report.py",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "godot --headless --quit-after 300 --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+          "godot --headless --quit-after 300 --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+          "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py",
+          "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json",
+          "git diff --check",
+          "duplicate authored town buildable display-name audit"
+        ],
+        "evidence": {
+          "new_gate_created": false,
+          "authored_completion_day_min": 28,
+          "authored_completion_day_max": 30,
+          "deterministic_scorecard": "15/15",
+          "runtime_inclusive_scorecard": "35/35",
+          "player_source_routes_reachable": "54/54",
+          "enemy_source_routes_reachable": "60/60",
+          "duplicate_display_names_per_authored_town": false,
+          "validate_repo": "pass",
+          "json_empty": "pass",
+          "git_diff_check": "pass",
+          "audit_findings": {
+            "strongest_current_economy_identity": [
+              "faction_brasshollow",
+              "faction_thornwake",
+              "faction_veilmourn"
+            ],
+            "identity_still_too_close_to_renamed_rare_pressure": [
+              "faction_embercourt",
+              "faction_mireclaw",
+              "faction_sunvault"
+            ],
+            "narrow_active_authored_rare_sources": [
+              "verdant_grafts",
+              "brass_scrip",
+              "memory_salt"
+            ],
+            "generated_small_generalization": "strict Small 36x36 one-level land evidence only; useful but not broad RMG economy approval"
+          }
+        }
+      },
+      "summary": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+      "updatedAt": "2026-05-25T21:45:24Z",
+      "completedAt": "2026-05-25T21:23:25Z",
+      "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false."
     }
   ],
   "completedImplementationEvidence": [
@@ -33350,14 +33416,14 @@
     }
   },
   "active_slice": {
-    "id": "economy-thin-faction-town-identity-metadata-20260525-10184",
-    "title": "Economy Thin Faction Town Identity Metadata",
+    "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+    "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-25T21:13:07Z",
-    "completedAt": "2026-05-25T21:13:07Z",
-    "notes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval."
+    "updatedAt": "2026-05-25T21:45:24Z",
+    "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+    "completedAt": "2026-05-25T21:23:25Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T21:13:07Z",
+  "currentSliceUpdatedAt": "2026-05-25T21:45:24Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -35269,80 +35335,61 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-thin-faction-town-identity-metadata-20260525-10184",
-    "title": "Economy Thin Faction Town Identity Metadata",
+    "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+    "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-25T21:13:07Z",
-    "completedAt": "2026-05-25T21:13:07Z",
-    "notes": "Completed. Player-balance audit found Embercourt, Mireclaw, and Sunvault had real town economy hooks but thinner faction-unique non-unit identity evidence than Brasshollow, Thornwake, and Veilmourn. Existing faction-flavored, already-authored non-unit buildings now carry faction ownership, so live town payoff evidence reads those towns as faction-specific without changing build costs, target counts, unit tiers, or the 30-turn development pacing contract. Existing reports remain green without adding new gates: authored town completion stays day 27-30, Embercourt unique non-unit coverage rises to 11, Mireclaw to 11, Sunvault to 10, all 165 runtime unique-building payoff cases pass, deterministic scorecard passes 15/15, and runtime-inclusive scorecard passes 35/35. This is town identity/evidence alignment, not campaign production work, final art direction, or broad generated-map economy approval."
+    "updatedAt": "2026-05-25T21:45:24Z",
+    "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+    "completedAt": "2026-05-25T21:23:25Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T21:13:07Z",
-    "sliceId": "economy-thin-faction-town-identity-metadata-20260525-10184",
+    "updatedAt": "2026-05-25T21:45:24Z",
+    "sliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
     "commands": [
-      "godot --headless --quit-after 360 --log-file /tmp/heroes-like-unique-payoff-identity2.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn > /tmp/heroes-like-unique-payoff-identity2.out (passed; 165/165 runtime unique-building payoff cases)",
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-identity2.json (passed; authored town completion day 27-30)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-identity.json (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-identity2.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-identity.json (passed; 15/15 deterministic checks)",
-      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime > /tmp/heroes-like-scorecard-runtime-identity.json (passed; 35/35 runtime-inclusive checks)",
-      "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
-      "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json (passed)",
-      "git diff --check (passed)"
+      "python3 tests/town_development_balance_report.py",
+      "python3 tests/town_development_cost_curve_report.py",
+      "python3 tests/faction_town_unit_asymmetry_report.py",
+      "python3 tests/economy_town_goal_scorecard_report.py",
+      "godot --headless --quit-after 300 --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+      "godot --headless --quit-after 300 --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+      "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py",
+      "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json",
+      "git diff --check",
+      "duplicate authored town buildable display-name audit"
     ],
     "evidence": {
-      "content_changes": {
-        "annotated_existing_faction_flavored_non_unit_buildings": {
-          "faction_embercourt": [
-            "building_watch_barracks",
-            "building_beacon_range",
-            "building_river_granary_exchange",
-            "building_quartermasters_depot",
-            "building_signal_citadel",
-            "building_charter_bastion"
-          ],
-          "faction_mireclaw": [
-            "building_reed_warren",
-            "building_fenscale_pens",
-            "building_rot_warren",
-            "building_smugglers_flotilla",
-            "building_floodtide_forge",
-            "building_nightglass_dominion"
-          ],
-          "faction_sunvault": [
-            "building_mirror_forge",
-            "building_lens_gallery",
-            "building_harmonic_cloister",
-            "building_resonant_exchange",
-            "building_daybreak_matrix"
-          ]
-        }
-      },
-      "unique_non_unit_building_counts_after": {
-        "faction_embercourt": 11,
-        "faction_mireclaw": 11,
-        "faction_sunvault": 10,
-        "faction_brasshollow": 13,
-        "faction_thornwake": 15,
-        "faction_veilmourn": 13
-      },
-      "runtime_unique_building_payoff": {
-        "building_case_count": 165,
-        "runtime_payoff_case_count": 165,
-        "rare_unique_case_count": 13,
-        "town_case_count": 15,
-        "observed_town_payoff_domain_min": 5
-      },
-      "town_development_completion_day_min": 27,
-      "town_development_completion_day_max": 30,
-      "deterministic_scorecard_passed_requirement_count": 15,
-      "deterministic_scorecard_requirement_count": 15,
-      "runtime_scorecard_passed_requirement_count": 35,
-      "runtime_scorecard_requirement_count": 35,
       "new_gate_created": false,
-      "policy": "player-balance town identity metadata alignment using existing reports; no cost, target-count, or unit-tier changes"
+      "authored_completion_day_min": 28,
+      "authored_completion_day_max": 30,
+      "deterministic_scorecard": "15/15",
+      "runtime_inclusive_scorecard": "35/35",
+      "player_source_routes_reachable": "54/54",
+      "enemy_source_routes_reachable": "60/60",
+      "duplicate_display_names_per_authored_town": false,
+      "validate_repo": "pass",
+      "json_empty": "pass",
+      "git_diff_check": "pass",
+      "audit_findings": {
+        "strongest_current_economy_identity": [
+          "faction_brasshollow",
+          "faction_thornwake",
+          "faction_veilmourn"
+        ],
+        "identity_still_too_close_to_renamed_rare_pressure": [
+          "faction_embercourt",
+          "faction_mireclaw",
+          "faction_sunvault"
+        ],
+        "narrow_active_authored_rare_sources": [
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "generated_small_generalization": "strict Small 36x36 one-level land evidence only; useful but not broad RMG economy approval"
+      }
     }
   }
 }
