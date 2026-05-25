@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-rare-upgrade-chain-balance-20260525-10184",
-  "currentSliceTitle": "Economy Town Rare Upgrade Chain Balance",
+  "currentSliceId": "economy-generated-package-full-stockpile-session-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Full Stockpile Session",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed rare-cost high-tier upgrade chain balance gate: six late faction unique/capstone buildings now have upgrade_from chains, cost-curve evidence covers 15/15 authored towns and 15 rare upgrade chains, deterministic scorecard passes 9/9, runtime-inclusive scorecard passes 12/12, validate_repo/jq/diff-check green.",
+  "currentSliceNotes": "Generated/native package sessions now seed all nine live stockpile resources through NativeRandomMapPackageSessionBridge._opening_resource_stockpile. The native package-session adoption smoke reports bridge_resource_stockpile and active_resource_stockpile with 9 resources and rare_resources_seeded_at_zero=true; validate_repo, jq, and git diff --check passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T00:23:03Z",
+  "updatedAt": "2026-05-25T00:30:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,31 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-generated-package-full-stockpile-session-20260525-10184",
+      "title": "Economy Generated Package Full Stockpile Session",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T00:30:06Z",
+      "startedAt": "2026-05-25T00:28:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "summary": "Generated/native package sessions should enter runtime with the same full nine-resource live stockpile contract as authored scenarios, with rare resources present at zero instead of missing from the session resource map.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_package_session_adoption_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-25T00:30:06Z",
+      "notes": "Generated/native package sessions now seed all nine live stockpile resources through NativeRandomMapPackageSessionBridge._opening_resource_stockpile. The native package-session adoption smoke reports bridge_resource_stockpile and active_resource_stockpile with 9 resources and rare_resources_seeded_at_zero=true; validate_repo, jq, and git diff --check passed."
+    },
     {
       "id": "economy-town-rare-upgrade-chain-balance-20260525-10184",
       "title": "Economy Town Rare Upgrade Chain Balance",

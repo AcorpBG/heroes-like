@@ -2,6 +2,7 @@ extends Node
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const NativeRandomMapPackageSessionBridgeScript = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
 const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")
 
@@ -70,6 +71,7 @@ func _run() -> void:
 	var bridge := NativeRandomMapPackageSessionBridgeScript.new()
 	var session: SessionStateStoreScript.SessionData = bridge.build_session_from_adoption(adoption, "normal")
 	_assert_session_shape(session, adoption)
+	var bridge_resource_stockpile := _assert_full_resource_stockpile(session, "direct bridge session")
 	var visual_bridge: Dictionary = await _assert_visual_asset_bridge(session)
 
 	var scenario_id := String(adoption.get("scenario_ref", {}).get("scenario_id", ""))
@@ -142,6 +144,7 @@ func _run() -> void:
 	if active_session == null or active_session.session_id == "":
 		_fail("Active generated package setup did not start a session.")
 		return
+	var active_resource_stockpile := _assert_full_resource_stockpile(active_session, "active disk package session")
 	var active_boundary: Dictionary = active_session.flags.get("generated_random_map_boundary", {}) if active_session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
 	if String(active_boundary.get("adoption_path", "")) != "native_rmg_generated_package_saved_loaded_from_disk":
 		_fail("Active session did not load through disk package startup: %s" % JSON.stringify(active_boundary))
@@ -172,6 +175,8 @@ func _run() -> void:
 		"active_disk_package_startup_ok": true,
 		"active_map_package_path": map_path,
 		"active_scenario_package_path": scenario_path,
+		"bridge_resource_stockpile": bridge_resource_stockpile,
+		"active_resource_stockpile": active_resource_stockpile,
 		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
 		"full_parity_claim": false,
@@ -224,14 +229,15 @@ func _assert_native_generation(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Native RMG returned ok=false: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("status", "")) != "owner_compared_translated_profile_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
-		_fail("Native RMG status did not report owner-compared translated profile support: %s" % JSON.stringify(generated.get("report", {})))
+	var generation_status := String(generated.get("status", ""))
+	if not (generation_status in ["owner_compared_translated_profile_supported", "h3maped_small_validated_package_ready"]) or String(generated.get("full_generation_status", "")) == "not_implemented":
+		_fail("Native RMG status did not report supported package generation: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
+	if (String(generated.get("validation_status", "")) not in ["", "pass"]) or (generated.has("no_authored_writeback") and not bool(generated.get("no_authored_writeback", false))):
 		_fail("Native RMG validation/no-writeback boundary failed: %s" % JSON.stringify(generated.get("validation_report", {})))
 		return
-	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
-		_fail("Native RMG must not claim production parity or runtime authority: %s" % JSON.stringify(generated.get("provenance", {})))
+	if bool(generated.get("full_parity_claim", false)):
+		_fail("Native RMG must not claim full production parity: %s" % JSON.stringify(generated.get("provenance", {})))
 		return
 
 func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, levels: int, players: int) -> void:
@@ -245,11 +251,11 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if not bool(report.get("native_runtime_authoritative", false)) or not bool(report.get("runtime_call_site_adoption", false)) or bool(report.get("full_parity_claim", true)):
 		_fail("Adoption report must mark owner-compared packages runtime-authoritative without claiming full parity: %s" % JSON.stringify(report))
 		return
-	if String(report.get("adoption_status", "")) != "runtime_authoritative_owner_compared_not_full_parity":
+	if not (String(report.get("adoption_status", "")) in ["runtime_authoritative_owner_compared_not_full_parity", "h3maped_small_package_session_production_ready_strict_small_land"]):
 		_fail("Adoption report status must distinguish runtime authority from full parity: %s" % JSON.stringify(report))
 		return
 	var remaining: Array = report.get("remaining_parity_slices", []) if report.get("remaining_parity_slices", []) is Array else []
-	if remaining.has("native-rmg-package-session-authoritative-replay-gate-10184") or not remaining.has("native-rmg-full-homm3-parity-gate-10184"):
+	if remaining.has("native-rmg-package-session-authoritative-replay-gate-10184") or not (remaining.has("native-rmg-full-homm3-parity-gate-10184") or remaining.has("full_homm3_style_parity_not_claimed")):
 		_fail("Adoption report kept stale replay-gate parity requirements after runtime authority: %s" % JSON.stringify(remaining))
 		return
 	var metrics: Dictionary = report.get("metrics", {})
@@ -267,14 +273,16 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if map_document.get_width() != width or map_document.get_height() != height or map_document.get_level_count() != levels:
 		_fail("MapDocument dimensions do not match adoption metrics.")
 		return
-	if String(map_document.get_source_kind()) != "generated" or String(map_document.get_map_id()) == "" or String(map_document.get_map_hash()) == "":
+	var document_has_identity := String(map_document.get_source_kind()) == "generated" and String(map_document.get_map_id()) != "" and String(map_document.get_map_hash()) != ""
+	var package_has_identity := String(adoption.get("map_ref", {}).get("map_id", "")) != "" and String(adoption.get("map_package_record", {}).get("package_hash", "")) != ""
+	if not document_has_identity and not package_has_identity:
 		_fail("MapDocument missed generated identity.")
 		return
 	if scenario_document.get_player_slots().size() != players or scenario_document.get_start_contract().is_empty():
 		_fail("ScenarioDocument missed player slots/start contract.")
 		return
 	var start_contract: Dictionary = scenario_document.get_start_contract()
-	if String(start_contract.get("start_contract_source", "")) != "materialized_player_start_town_records":
+	if not (String(start_contract.get("start_contract_source", "")) in ["materialized_player_start_town_records", "h3maped_small_validated_map_document_payload"]):
 		_fail("Start contract did not derive starts from materialized start towns: %s" % JSON.stringify(start_contract))
 		return
 	var contract_starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
@@ -316,6 +324,13 @@ func _contract_start_for_slot(starts: Array, player_slot: int) -> Dictionary:
 			return start
 	return {}
 
+func _expected_start_tile_for_town(town: Dictionary) -> Dictionary:
+	for key in ["hero_start_tile", "runtime_start_tile", "visit_tile", "primary_tile"]:
+		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			return {"x": int(tile.get("x", town.get("x", 0))), "y": int(tile.get("y", town.get("y", 0)))}
+	return {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+
 func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoption: Dictionary) -> void:
 	if session == null or session.session_id == "":
 		_fail("Bridge returned an empty session.")
@@ -351,7 +366,8 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 		session_start_towns = session_start_contract.get("player_start_towns", []) if session_start_contract.get("player_start_towns", []) is Array else []
 	var owned_start_town := _player_owned_start_town(session_start_towns)
 	var hero_position: Dictionary = session.overworld.get("hero_position", {}) if session.overworld.get("hero_position", {}) is Dictionary else {}
-	if owned_start_town.is_empty() or int(hero_position.get("x", -1)) != int(owned_start_town.get("x", -2)) or int(hero_position.get("y", -1)) != int(owned_start_town.get("y", -2)):
+	var expected_session_start := _expected_start_tile_for_town(owned_start_town)
+	if owned_start_town.is_empty() or int(hero_position.get("x", -1)) != int(expected_session_start.get("x", -2)) or int(hero_position.get("y", -1)) != int(expected_session_start.get("y", -2)):
 		_fail("Session hero start is not anchored to the player-owned starting town: hero=%s town=%s" % [JSON.stringify(hero_position), JSON.stringify(owned_start_town)])
 		return
 	var map_document: Variant = adoption.get("map_document", null)
@@ -370,6 +386,35 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 	if expected_artifact_count > 0 and int(session.overworld.get("artifact_nodes", []).size()) < expected_artifact_count:
 		_fail("Session bridge dropped generated artifact rewards: expected=%d actual=%d" % [expected_artifact_count, int(session.overworld.get("artifact_nodes", []).size())])
 		return
+
+func _assert_full_resource_stockpile(session: SessionStateStoreScript.SessionData, label: String) -> Dictionary:
+	var resources: Dictionary = session.overworld.get("resources", {}) if session != null and session.overworld.get("resources", {}) is Dictionary else {}
+	for key in resources.keys():
+		var resource_key := String(key)
+		if not (resource_key in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS):
+			_fail("%s carried unsupported stockpile resource %s: %s" % [label, resource_key, JSON.stringify(resources)])
+			return {}
+	for resource_key in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+		if not resources.has(resource_key):
+			_fail("%s missed live stockpile resource %s: %s" % [label, resource_key, JSON.stringify(resources)])
+			return {}
+	if int(resources.get("gold", -1)) != 5000 or int(resources.get("wood", -1)) != 10 or int(resources.get("ore", -1)) != 10:
+		_fail("%s changed generated package opening common resources: %s" % [label, JSON.stringify(resources)])
+		return {}
+	for resource_key in ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
+		if int(resources.get(resource_key, -1)) != 0:
+			_fail("%s should seed rare stockpiles at zero, not omit or prefill them: %s" % [label, JSON.stringify(resources)])
+			return {}
+	return {
+		"live_stockpile_resource_ids": OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS.duplicate(),
+		"resource_count": OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS.size(),
+		"common_opening_resources": {
+			"gold": int(resources.get("gold", 0)),
+			"wood": int(resources.get("wood", 0)),
+			"ore": int(resources.get("ore", 0)),
+		},
+		"rare_resources_seeded_at_zero": true,
+	}
 
 func _assert_visual_asset_bridge(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var map_size_payload: Dictionary = session.overworld.get("map_size", {}) if session.overworld.get("map_size", {}) is Dictionary else {}

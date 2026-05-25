@@ -96,6 +96,8 @@ ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH = ROOT / "docs" / "economy-capture-income
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.gd"
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.tscn"
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-live-stockpile-resource-surface-report.md"
+NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH = ROOT / "scripts" / "persistence" / "NativeRandomMapPackageSessionBridge.gd"
+NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_package_session_adoption_report.gd"
 RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.gd"
 RUNTIME_MARKET_CAP_REPORT_SCENE_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.tscn"
 RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap-persistence-report.md"
@@ -3212,6 +3214,8 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     overworld_shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    native_package_bridge_text = NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.read_text(encoding="utf-8") if NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.exists() else ""
+    native_package_report_text = NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH.exists() else ""
 
     for required_token in (
         "LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT",
@@ -3241,9 +3245,27 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ):
         ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing live stockpile surface token {required_token}")
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in scenario_factory_text, errors, "ScenarioFactory must seed the full live stockpile key set")
+    for required_token in (
+        "_opening_resource_stockpile",
+        "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
+        '"gold"] = 5000',
+        '"wood"] = 10',
+        '"ore"] = 10',
+    ):
+        ensure(required_token in native_package_bridge_text, errors, f"NativeRandomMapPackageSessionBridge.gd is missing generated-package full stockpile token {required_token}")
+    ensure('"resources": {"gold": 5000, "wood": 10, "ore": 10}' not in native_package_bridge_text, errors, "Native generated package sessions must not seed a common-only resource map")
+    for required_token in (
+        "_assert_full_resource_stockpile",
+        "bridge_resource_stockpile",
+        "active_resource_stockpile",
+        "rare_resources_seeded_at_zero",
+        "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
+    ):
+        ensure(required_token in native_package_report_text, errors, f"Native package session adoption report is missing full-stockpile token {required_token}")
     ensure("OverworldRules.describe_resources(_session)" in overworld_shell_text, errors, "Overworld shell must use the shared resource summary rule")
     ensure("Gold %d | Wood %d | Ore %d" not in overworld_shell_text, errors, "Overworld shell must not hard-code the common-only resource line")
     ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
+    ensure("generated/native package sessions" in doc_text, errors, "Live stockpile resource surface doc must record generated/native package session coverage")
     ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
 
 

@@ -45,7 +45,7 @@ static func build_session_from_adoption(
 		"hero_position": start,
 		"hero": hero_state,
 		"movement": hero_state.get("movement", {"current": 0, "max": 0}) if not hero_state.is_empty() else {"current": 0, "max": 0},
-		"resources": {"gold": 5000, "wood": 10, "ore": 10},
+		"resources": _opening_resource_stockpile(),
 		"army": hero_state.get("army", {}) if not hero_state.is_empty() else {},
 		"encounters": encounters,
 		"resolved_encounters": [],
@@ -193,6 +193,15 @@ static func _army_state(army_template: Dictionary) -> Dictionary:
 		if stack is Dictionary:
 			stacks.append({"unit_id": String(stack.get("unit_id", "")), "count": max(0, int(stack.get("count", 0)))})
 	return {"id": String(army_template.get("id", "")), "name": String(army_template.get("name", "Field Army")), "stacks": stacks}
+
+static func _opening_resource_stockpile() -> Dictionary:
+	var resources := {}
+	for resource_key in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+		resources[resource_key] = 0
+	resources["gold"] = 5000
+	resources["wood"] = 10
+	resources["ore"] = 10
+	return resources
 
 static func _map_size_from_document(map_document: Variant, metrics: Dictionary) -> Dictionary:
 	var width := int(metrics.get("width", 0))
