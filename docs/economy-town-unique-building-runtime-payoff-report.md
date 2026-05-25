@@ -7,11 +7,11 @@ Report schema: `town_unique_building_runtime_payoff_report_v1`
 
 This slice closes the six-faction unique non-unit town building payoff gap in the economy and town-development goal. It now covers six factions, 15 authored towns, at least 56 faction-unique non-unit buildings, and 127 runtime payoff cases.
 
-Every faction now exposes at least five unique non-unit buildings per faction, and every authored faction town includes at least five unique non-unit buildings per authored town. Embercourt, Mireclaw, and Sunvault retain their faction-specific economy, support, magic, defense, and civic buildings; Thornwake, Brasshollow, and Veilmourn now carry deeper late unique non-unit chains so their full town arcs no longer finish as shallow 12-build paths.
+Every faction now exposes at least five unique non-unit buildings per faction, and every authored faction town includes at least five unique non-unit buildings per authored town. The report also gates payoff-domain diversity: each faction and authored town must expose at least four payoff domains across live income, readiness, pressure, reinforcement, spell, or market surface changes. Embercourt, Mireclaw, and Sunvault retain their faction-specific economy, support, magic, defense, and civic buildings; Thornwake, Brasshollow, and Veilmourn now carry deeper late unique non-unit chains so their full town arcs no longer finish as shallow 12-build paths.
 
 ## Runtime Evidence
 
-`tests/town_unique_building_runtime_payoff_report.tscn` builds every unique non-unit town building through live `TownRules` and `OverworldRules` surfaces in a fully funded fixture. Each case must expose a build action, spend authored resources, build successfully, report player-facing impact text, and change a live income, readiness, pressure, reinforcement, spell, or market surface.
+`tests/town_unique_building_runtime_payoff_report.tscn` builds every unique non-unit town building through live `TownRules` and `OverworldRules` surfaces in a fully funded fixture. Each case must expose a build action, spend authored resources, build successfully, report player-facing impact text, and change a live income, readiness, pressure, reinforcement, spell, or market surface. The report emits per-building `payoff_domains`, per-town/faction domain totals, and profile counts so a faction cannot satisfy the unique-building requirement with several differently named buildings that all produce the same practical payoff.
 
 The report also proves at least one rare-cost unique building per faction, with rare costs restricted to the owning faction's rare resource. No `SAVE_VERSION` bump was needed, and `wood` remains canonical.
 

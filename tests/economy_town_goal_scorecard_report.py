@@ -61,6 +61,12 @@ GODOT_RUNTIME_REPORTS = (
         "quit_after": 700,
         "log_file": "/tmp/heroes-like-scorecard-active-ai-town.log",
     },
+    {
+        "scene": "res://tests/town_unique_building_runtime_payoff_report.tscn",
+        "marker": "TOWN_UNIQUE_BUILDING_RUNTIME_PAYOFF_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-unique-town-payoff.log",
+    },
 )
 
 
@@ -335,6 +341,59 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "delayed_source_save_resume_completed_count": int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)),
         },
     )
+
+    unique_payoff_runtime = payloads["TOWN_UNIQUE_BUILDING_RUNTIME_PAYOFF_REPORT"]
+    unique_faction_rows = unique_payoff_runtime.get("factions", [])
+    unique_faction_rows = unique_faction_rows if isinstance(unique_faction_rows, list) else []
+    min_payoff_domains_per_faction = int(unique_payoff_runtime.get("min_payoff_domains_per_faction", 0))
+    min_payoff_domains_per_town = int(unique_payoff_runtime.get("min_payoff_domains_per_town", 0))
+    unique_payoff_runtime_ok = (
+        unique_payoff_runtime.get("ok") is True
+        and int(unique_payoff_runtime.get("faction_count", 0)) >= MIN_FACTIONS
+        and int(unique_payoff_runtime.get("town_case_count", 0)) >= MIN_AUTHORED_TOWNS
+        and int(unique_payoff_runtime.get("building_case_count", 0)) >= MIN_AUTHORED_TOWNS * MIN_UNIQUE_NON_UNIT_PER_TOWN
+        and int(unique_payoff_runtime.get("runtime_payoff_case_count", 0)) == int(unique_payoff_runtime.get("building_case_count", -1))
+        and int(unique_payoff_runtime.get("rare_unique_case_count", 0)) >= MIN_FACTIONS
+        and all(
+            isinstance(row, dict)
+            and bool(row.get("ok", False))
+            and int(row.get("payoff_domain_count", 0)) >= min_payoff_domains_per_faction
+            for row in unique_faction_rows
+        )
+    )
+    town_payoff_domain_min = 999
+    for faction_row in unique_faction_rows:
+        if not isinstance(faction_row, dict):
+            town_payoff_domain_min = 0
+            continue
+        town_rows = faction_row.get("towns", [])
+        town_rows = town_rows if isinstance(town_rows, list) else []
+        for town_row in town_rows:
+            if not isinstance(town_row, dict):
+                town_payoff_domain_min = 0
+                continue
+            town_payoff_domain_min = min(town_payoff_domain_min, int(town_row.get("payoff_domain_count", 0)))
+            if int(town_row.get("payoff_domain_count", 0)) < min_payoff_domains_per_town:
+                unique_payoff_runtime_ok = False
+    if town_payoff_domain_min == 999:
+        town_payoff_domain_min = 0
+        unique_payoff_runtime_ok = False
+    add_check(
+        checks,
+        "live_unique_town_payoff_runtime",
+        unique_payoff_runtime_ok,
+        "Faction-unique non-unit town buildings must build through live rules and cover diverse payoff domains per faction and authored town.",
+        {
+            "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),
+            "town_case_count": int(unique_payoff_runtime.get("town_case_count", 0)),
+            "building_case_count": int(unique_payoff_runtime.get("building_case_count", 0)),
+            "runtime_payoff_case_count": int(unique_payoff_runtime.get("runtime_payoff_case_count", 0)),
+            "rare_unique_case_count": int(unique_payoff_runtime.get("rare_unique_case_count", 0)),
+            "min_payoff_domains_per_faction": min_payoff_domains_per_faction,
+            "min_payoff_domains_per_town": min_payoff_domains_per_town,
+            "observed_town_payoff_domain_min": town_payoff_domain_min,
+        },
+    )
     return {
         "town_development_runtime_balance_report_v1": {
             "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
@@ -347,6 +406,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
             "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
+        },
+        "town_unique_building_runtime_payoff_report_v1": {
+            "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),
+            "town_case_count": int(unique_payoff_runtime.get("town_case_count", 0)),
+            "runtime_payoff_case_count": int(unique_payoff_runtime.get("runtime_payoff_case_count", 0)),
+            "observed_town_payoff_domain_min": town_payoff_domain_min,
         },
     }
 

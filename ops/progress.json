@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-price-band-sanity-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Price Band Sanity Scorecard",
+  "currentSliceId": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Unique Payoff Diversity Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed deterministic price-band sanity coverage. Cost-curve report and economy/town scorecard now reject extreme total development cost regressions; scorecard passes 11/11 default and 14/14 runtime-inclusive checks.",
+  "currentSliceNotes": "Completed unique non-unit town building payoff-domain diversity coverage. Focused live report covers 6 factions, 15 authored towns, 127/127 runtime payoff cases, and at least 5 payoff domains per authored town; runtime-inclusive economy/town scorecard passes 15/15 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T01:23:58Z",
+  "updatedAt": "2026-05-25T01:48:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
+      "title": "Economy Town Unique Payoff Diversity Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T01:48:16Z",
+      "startedAt": "2026-05-25T01:32:15Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/town_unique_building_runtime_payoff_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-unique-building-runtime-payoff-report.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "summary": "Faction-unique non-unit town buildings should prove diverse live payoff domains per faction and authored town, not only unique ids and any runtime delta.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 11/11 default checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-unique-payoff-diversity.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn (passed; 6 factions, 15 towns, 127/127 payoff cases, min authored-town payoff domains=5)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 15/15 runtime-inclusive checks, live_unique_town_payoff_runtime evidence included)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed unique non-unit town building payoff-domain diversity coverage. Focused live report covers 6 factions, 15 authored towns, 127/127 runtime payoff cases, and at least 5 payoff domains per authored town; runtime-inclusive economy/town scorecard passes 15/15 checks.",
+      "completedAt": "2026-05-25T01:48:16Z"
+    },
     {
       "id": "economy-town-price-band-sanity-scorecard-20260525-10184",
       "title": "Economy Town Price Band Sanity Scorecard",
@@ -27959,7 +27987,7 @@
     "status": "completed",
     "updatedAt": "2026-05-24T22:48:04Z"
   },
-  "currentSliceUpdatedAt": "2026-05-24T22:48:04Z",
+  "currentSliceUpdatedAt": "2026-05-25T01:48:16Z",
   "validationHistory": [
     {
       "status": "passed",
@@ -28664,10 +28692,10 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
-    "title": "Economy Active Scenario AI Delayed Source Save Resume",
+    "id": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
+    "title": "Economy Town Unique Payoff Diversity Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:48:04Z"
+    "updatedAt": "2026-05-25T01:48:16Z"
   },
   "validation": [
     {
