@@ -30,6 +30,12 @@ func _assert_report(first: Dictionary) -> bool:
 		if not section_signatures.has(String(section_id)) or String(section_signatures.get(String(section_id), "")) == "":
 			_fail("Balance regression report missing required section signature: %s" % section_id)
 			return false
+	var economy_section := _find_section(first, "economy_pressure_resource_viability")
+	if economy_section.is_empty():
+		_fail("Balance regression report is missing economy pressure resource viability evidence.")
+		return false
+	if not _assert_balance_economy_resource_coverage(economy_section):
+		return false
 	var statuses := {}
 	for section in first.get("sections", []):
 		if not (section is Dictionary):
@@ -270,6 +276,25 @@ func _find_section(report: Dictionary, section_id: String) -> Dictionary:
 		if section is Dictionary and String(section.get("section_id", "")) == section_id:
 			return section
 	return {}
+
+func _assert_balance_economy_resource_coverage(economy_section: Dictionary) -> bool:
+	var summary: Dictionary = economy_section.get("summary", {}) if economy_section.get("summary", {}) is Dictionary else {}
+	var live_resource_ids: Array = summary.get("live_resource_ids", []) if summary.get("live_resource_ids", []) is Array else []
+	if live_resource_ids != BalanceRegressionReportRulesScript.LIVE_RESOURCE_IDS or int(summary.get("live_resource_count", 0)) != BalanceRegressionReportRulesScript.LIVE_RESOURCE_IDS.size():
+		_fail("Balance economy section did not use the full live stockpile resource set: %s" % JSON.stringify(summary))
+		return false
+	var evidence: Dictionary = economy_section.get("evidence", {}) if economy_section.get("evidence", {}) is Dictionary else {}
+	var scenarios: Array = evidence.get("scenarios", []) if evidence.get("scenarios", []) is Array else []
+	if scenarios.is_empty():
+		_fail("Balance economy section did not emit scenario resource rows.")
+		return false
+	var first_row: Dictionary = scenarios[0] if scenarios[0] is Dictionary else {}
+	var visible_support: Dictionary = first_row.get("visible_live_resource_support", {}) if first_row.get("visible_live_resource_support", {}) is Dictionary else {}
+	for resource_id in BalanceRegressionReportRulesScript.LIVE_RESOURCE_IDS:
+		if not visible_support.has(resource_id):
+			_fail("Balance economy scenario rows missed live stockpile resource %s: %s" % [resource_id, JSON.stringify(first_row)])
+			return false
+	return true
 
 func _fail(message: String) -> void:
 	push_error(message)

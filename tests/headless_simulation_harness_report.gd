@@ -47,6 +47,12 @@ func _assert_report(first: Dictionary) -> bool:
 		if status not in ["pass", "warning", "deferred"]:
 			_fail("Headless simulation harness returned unsupported case status: %s / %s" % [simulation_case.get("subsystem_id", ""), status])
 			return false
+	var economy_case := _find_case(first, "economy_resource_delta")
+	if economy_case.is_empty():
+		_fail("Headless simulation harness is missing economy resource delta evidence.")
+		return false
+	if not _assert_economy_resource_delta(economy_case):
+		return false
 	var battle_case := _find_case(first, "battle_resolver_sampling")
 	if battle_case.is_empty():
 		_fail("Headless simulation harness is missing battle resolver sampling evidence.")
@@ -1026,6 +1032,21 @@ func _find_case(report: Dictionary, subsystem_id: String) -> Dictionary:
 		if simulation_case is Dictionary and String(simulation_case.get("subsystem_id", "")) == subsystem_id:
 			return simulation_case
 	return {}
+
+func _assert_economy_resource_delta(economy_case: Dictionary) -> bool:
+	var summary: Dictionary = economy_case.get("summary", {}) if economy_case.get("summary", {}) is Dictionary else {}
+	var live_resource_ids: Array = summary.get("live_resource_ids", []) if summary.get("live_resource_ids", []) is Array else []
+	if live_resource_ids != HeadlessSimulationHarnessRulesScript.LIVE_RESOURCE_IDS or int(summary.get("live_resource_count", 0)) != HeadlessSimulationHarnessRulesScript.LIVE_RESOURCE_IDS.size():
+		_fail("Headless economy delta did not use the full live stockpile resource set: %s" % JSON.stringify(summary))
+		return false
+	var evidence: Dictionary = economy_case.get("evidence", {}) if economy_case.get("evidence", {}) is Dictionary else {}
+	for field in ["before_resources", "after_resources"]:
+		var resources: Dictionary = evidence.get(field, {}) if evidence.get(field, {}) is Dictionary else {}
+		for resource_id in HeadlessSimulationHarnessRulesScript.LIVE_RESOURCE_IDS:
+			if not resources.has(resource_id):
+				_fail("Headless economy %s missed live stockpile resource %s: %s" % [field, resource_id, JSON.stringify(resources)])
+				return false
+	return true
 
 func _fail(message: String) -> void:
 	push_error(message)
