@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Active AI Six Faction Runtime Scorecard",
+  "currentSliceId": "economy-town-active-source-route-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Active Source Route Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active AI town-development runtime evidence now reports and gates all six controller factions and all six native town-ladder factions, and the runtime-inclusive economy/town scorecard includes active_ai_six_faction_town_coverage with 22/22 checks passing.",
+  "currentSliceNotes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T05:47:17Z",
+  "updatedAt": "2026-05-25T06:10:39Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22089,6 +22089,50 @@
         }
       },
       "completedAt": "2026-05-25T05:47:17Z"
+    },
+    {
+      "id": "economy-town-active-source-route-scorecard-20260525-10184",
+      "title": "Economy Town Active Source Route Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Require the runtime-inclusive economy/town scorecard to include active-scenario player-town wood, ore, and faction-rare source route reachability through live route rules.",
+      "notes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing.",
+      "startedAt": "2026-05-25T05:49:11Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "active_scenario_count": 16,
+          "player_town_case_count": 18,
+          "resource_route_case_count": 54,
+          "reachable_route_case_count": 54,
+          "max_common_route_steps": 24,
+          "max_rare_route_steps": 40,
+          "required_common_resource_ids": [
+            "wood",
+            "ore"
+          ],
+          "rare_resource_ids": [
+            "aetherglass",
+            "brass_scrip",
+            "embergrain",
+            "memory_salt",
+            "peatwax",
+            "verdant_grafts"
+          ],
+          "runtime_scorecard_passed_requirement_count": 23,
+          "runtime_scorecard_requirement_count": 23
+        }
+      },
+      "completedAt": "2026-05-25T06:10:39Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -27036,6 +27080,52 @@
         "Not campaign balance approval.",
         "Not final town UI or art."
       ]
+    },
+    {
+      "id": "economy-town-active-source-route-scorecard-20260525-10184",
+      "title": "Economy Town Active Source Route Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T06:10:39Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-active-source-route-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Runtime-inclusive economy/town scorecard now runs active_scenario_town_economy_source_route_report_v1.",
+        "Scorecard gates active_scenario_source_route_runtime for active player-town wood, ore, and faction-rare source route reachability through live overworld route rules.",
+        "Focused source-route evidence covers 16 active scenarios, 18 player-town cases, and 54/54 reachable resource routes.",
+        "Common source routes remain capped at 24 steps and rare source routes remain capped at 40 steps.",
+        "Full runtime-inclusive economy/town scorecard passes 23/23 checks.",
+        "No SAVE_VERSION bump required; wood remains canonical."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ],
+      "nonClaims": [
+        "Not final encounter pacing or guard pressure.",
+        "Not final route safety approval.",
+        "Not campaign balance approval.",
+        "Not combat or reward tuning approval.",
+        "Not broad generated-map economy approval."
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -28337,14 +28427,28 @@
         "jq empty ops/progress.json content/buildings.json content/towns.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-town-active-source-route-scorecard-20260525-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-25T06:10:39Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T05:47:17Z",
-    "sliceId": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T06:10:39Z",
+    "sliceId": "economy-town-active-source-route-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-active-ai-six-faction-town-runway.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "python3 tests/validate_repo.py",
@@ -28354,25 +28458,35 @@
     ],
     "evidence": {
       "active_scenario_count": 16,
-      "enemy_town_case_count": 20,
-      "completed_case_count": 20,
-      "rare_spend_case_count": 20,
-      "full_session_case_count": 20,
-      "unique_faction_count": 6,
-      "unique_ladder_faction_count": 6,
-      "seven_tier_recruitment_candidate_count": 140,
-      "runtime_scorecard_passed_requirement_count": 22,
-      "runtime_scorecard_requirement_count": 22
+      "player_town_case_count": 18,
+      "resource_route_case_count": 54,
+      "reachable_route_case_count": 54,
+      "max_common_route_steps": 24,
+      "max_rare_route_steps": 40,
+      "required_common_resource_ids": [
+        "wood",
+        "ore"
+      ],
+      "rare_resource_ids": [
+        "aetherglass",
+        "brass_scrip",
+        "embergrain",
+        "memory_salt",
+        "peatwax",
+        "verdant_grafts"
+      ],
+      "runtime_scorecard_passed_requirement_count": 23,
+      "runtime_scorecard_requirement_count": 23
     }
   },
   "active_slice": {
-    "id": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
-    "title": "Economy Town Active AI Six Faction Runtime Scorecard",
+    "id": "economy-town-active-source-route-scorecard-20260525-10184",
+    "title": "Economy Town Active Source Route Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T05:47:17Z",
-    "notes": "Completed. Active AI town-development runtime evidence now reports and gates all six controller factions and all six native town-ladder factions, and the runtime-inclusive economy/town scorecard includes active_ai_six_faction_town_coverage with 22/22 checks passing."
+    "updatedAt": "2026-05-25T06:10:39Z",
+    "notes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing."
   },
-  "currentSliceUpdatedAt": "2026-05-25T05:47:17Z",
+  "currentSliceUpdatedAt": "2026-05-25T06:10:39Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -29159,21 +29273,35 @@
         "jq empty ops/progress.json content/buildings.json content/towns.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-town-active-source-route-scorecard-20260525-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-25T06:10:39Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "currentSlice": {
-    "id": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
-    "title": "Economy Town Active AI Six Faction Runtime Scorecard",
+    "id": "economy-town-active-source-route-scorecard-20260525-10184",
+    "title": "Economy Town Active Source Route Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T05:47:17Z",
-    "notes": "Completed. Active AI town-development runtime evidence now reports and gates all six controller factions and all six native town-ladder factions, and the runtime-inclusive economy/town scorecard includes active_ai_six_faction_town_coverage with 22/22 checks passing."
+    "updatedAt": "2026-05-25T06:10:39Z",
+    "notes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T05:47:17Z",
-    "sliceId": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T06:10:39Z",
+    "sliceId": "economy-town-active-source-route-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-active-ai-six-faction-town-runway.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "python3 tests/validate_repo.py",
@@ -29183,15 +29311,25 @@
     ],
     "evidence": {
       "active_scenario_count": 16,
-      "enemy_town_case_count": 20,
-      "completed_case_count": 20,
-      "rare_spend_case_count": 20,
-      "full_session_case_count": 20,
-      "unique_faction_count": 6,
-      "unique_ladder_faction_count": 6,
-      "seven_tier_recruitment_candidate_count": 140,
-      "runtime_scorecard_passed_requirement_count": 22,
-      "runtime_scorecard_requirement_count": 22
+      "player_town_case_count": 18,
+      "resource_route_case_count": 54,
+      "reachable_route_case_count": 54,
+      "max_common_route_steps": 24,
+      "max_rare_route_steps": 40,
+      "required_common_resource_ids": [
+        "wood",
+        "ore"
+      ],
+      "rare_resource_ids": [
+        "aetherglass",
+        "brass_scrip",
+        "embergrain",
+        "memory_salt",
+        "peatwax",
+        "verdant_grafts"
+      ],
+      "runtime_scorecard_passed_requirement_count": 23,
+      "runtime_scorecard_requirement_count": 23
     }
   }
 }
