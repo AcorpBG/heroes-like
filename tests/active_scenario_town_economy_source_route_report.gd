@@ -12,6 +12,8 @@ const RARE_RESOURCE_IDS := [
 ]
 const MAX_COMMON_ROUTE_STEPS := 24
 const MAX_RARE_ROUTE_STEPS := 40
+const MIN_CAMPAIGN_SCENARIO_COUNT := 15
+const MIN_SKIRMISH_SCENARIO_COUNT := 16
 
 var _errors := []
 
@@ -20,10 +22,16 @@ func _ready() -> void:
 
 func _run() -> void:
 	var scenario_count := 0
+	var campaign_scenario_count := 0
+	var skirmish_scenario_count := 0
 	var player_town_case_count := 0
+	var campaign_player_town_case_count := 0
+	var skirmish_player_town_case_count := 0
 	var player_resource_route_case_count := 0
 	var player_reachable_route_case_count := 0
 	var enemy_town_case_count := 0
+	var campaign_enemy_town_case_count := 0
+	var skirmish_enemy_town_case_count := 0
 	var enemy_resource_route_case_count := 0
 	var enemy_reachable_route_case_count := 0
 	var rows := []
@@ -32,7 +40,12 @@ func _run() -> void:
 		var scenario := ContentService.get_scenario(scenario_id)
 		if not _is_active_authored_scenario(scenario):
 			continue
+		var launch_surfaces := _launch_surfaces(scenario)
 		scenario_count += 1
+		if "campaign" in launch_surfaces:
+			campaign_scenario_count += 1
+		if "skirmish" in launch_surfaces:
+			skirmish_scenario_count += 1
 		var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 		if session == null:
 			_errors.append("%s failed: ScenarioFactory.create_session returned null" % scenario_id)
@@ -40,8 +53,13 @@ func _run() -> void:
 		OverworldRules.normalize_overworld_state(session)
 		for authored_town in _player_towns(scenario):
 			var row := _run_town_case(session, scenario_id, authored_town, "player")
+			row["launch_surfaces"] = launch_surfaces
 			rows.append(row)
 			player_town_case_count += 1
+			if "campaign" in launch_surfaces:
+				campaign_player_town_case_count += 1
+			if "skirmish" in launch_surfaces:
+				skirmish_player_town_case_count += 1
 			player_resource_route_case_count += int(row.get("resource_route_case_count", 0))
 			player_reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
 			if not bool(row.get("ok", false)):
@@ -52,8 +70,13 @@ func _run() -> void:
 				])
 		for authored_town in _enemy_towns(scenario):
 			var row := _run_town_case(session, scenario_id, authored_town, "enemy")
+			row["launch_surfaces"] = launch_surfaces
 			rows.append(row)
 			enemy_town_case_count += 1
+			if "campaign" in launch_surfaces:
+				campaign_enemy_town_case_count += 1
+			if "skirmish" in launch_surfaces:
+				skirmish_enemy_town_case_count += 1
 			enemy_resource_route_case_count += int(row.get("resource_route_case_count", 0))
 			enemy_reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
 			if not bool(row.get("ok", false)):
@@ -62,15 +85,25 @@ func _run() -> void:
 					String(authored_town.get("placement_id", "")),
 					String(row.get("error", "unknown route failure")),
 				])
+	if campaign_scenario_count < MIN_CAMPAIGN_SCENARIO_COUNT:
+		_errors.append("source route report covered only %d campaign scenarios" % campaign_scenario_count)
+	if skirmish_scenario_count < MIN_SKIRMISH_SCENARIO_COUNT:
+		_errors.append("source route report covered only %d skirmish scenarios" % skirmish_scenario_count)
 
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"active_scenario_count": scenario_count,
+		"campaign_scenario_count": campaign_scenario_count,
+		"skirmish_scenario_count": skirmish_scenario_count,
 		"player_town_case_count": player_town_case_count,
+		"campaign_player_town_case_count": campaign_player_town_case_count,
+		"skirmish_player_town_case_count": skirmish_player_town_case_count,
 		"resource_route_case_count": player_resource_route_case_count,
 		"reachable_route_case_count": player_reachable_route_case_count,
 		"enemy_town_case_count": enemy_town_case_count,
+		"campaign_enemy_town_case_count": campaign_enemy_town_case_count,
+		"skirmish_enemy_town_case_count": skirmish_enemy_town_case_count,
 		"enemy_resource_route_case_count": enemy_resource_route_case_count,
 		"enemy_reachable_route_case_count": enemy_reachable_route_case_count,
 		"required_common_resource_ids": REQUIRED_COMMON_RESOURCE_IDS,
@@ -255,9 +288,20 @@ func _resource_source_has_guard(session, node: Dictionary) -> bool:
 	return false
 
 func _is_active_authored_scenario(scenario: Dictionary) -> bool:
+	return _is_launch_surface_available(scenario, "campaign") or _is_launch_surface_available(scenario, "skirmish")
+
+func _launch_surfaces(scenario: Dictionary) -> Array:
+	var surfaces := []
+	if _is_launch_surface_available(scenario, "campaign"):
+		surfaces.append("campaign")
+	if _is_launch_surface_available(scenario, "skirmish"):
+		surfaces.append("skirmish")
+	return surfaces
+
+func _is_launch_surface_available(scenario: Dictionary, surface_id: String) -> bool:
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
 	var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
-	return bool(availability.get("campaign", false)) or bool(availability.get("skirmish", false))
+	return bool(availability.get(surface_id, false))
 
 func _player_towns(scenario: Dictionary) -> Array:
 	var result := []

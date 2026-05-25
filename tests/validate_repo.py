@@ -3077,6 +3077,12 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
     ensure(isinstance(cost_curve.get("price_band_limits", {}), dict) and bool(cost_curve.get("price_band_limits", {})), errors, "Economy town goal scorecard must include town development price-band sanity limits")
     ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
+    ensure(int(matrix.get("campaign_scenario_count", 0)) >= 15, errors, "Economy town goal scorecard must include campaign-scenario economy coverage")
+    ensure(int(matrix.get("skirmish_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include skirmish-scenario economy coverage")
+    ensure(int(matrix.get("campaign_player_town_case_count", 0)) >= 17, errors, "Economy town goal scorecard must include campaign player-town economy coverage")
+    ensure(int(matrix.get("skirmish_player_town_case_count", 0)) >= 18, errors, "Economy town goal scorecard must include skirmish player-town economy coverage")
+    ensure(int(matrix.get("campaign_enemy_town_case_count", 0)) >= 19, errors, "Economy town goal scorecard must include campaign enemy-town economy coverage")
+    ensure(int(matrix.get("skirmish_enemy_town_case_count", 0)) >= 20, errors, "Economy town goal scorecard must include skirmish enemy-town economy coverage")
     ensure(int(harness_accounting.get("passing_file_count", 0)) >= 4, errors, "Economy town goal scorecard must include full-resource balance/headless harness accounting coverage")
     script_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     doc_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.read_text(encoding="utf-8") if ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.exists() else ""
@@ -3118,6 +3124,18 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "active_scenario_player_runway_runtime",
         "active_scenario_source_route_runtime",
         "active_scenario_enemy_source_route_runtime",
+        "MIN_CAMPAIGN_SCENARIOS",
+        "MIN_SKIRMISH_SCENARIOS",
+        "MIN_CAMPAIGN_PLAYER_TOWN_CASES",
+        "MIN_SKIRMISH_PLAYER_TOWN_CASES",
+        "MIN_CAMPAIGN_ENEMY_TOWN_CASES",
+        "MIN_SKIRMISH_ENEMY_TOWN_CASES",
+        "campaign_scenario_count",
+        "skirmish_scenario_count",
+        "campaign_player_town_case_count",
+        "skirmish_player_town_case_count",
+        "campaign_enemy_town_case_count",
+        "skirmish_enemy_town_case_count",
         "ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT",
         "active_scenario_town_economy_source_route_report_v1",
         "reachable_route_case_count",
@@ -19852,8 +19870,16 @@ def validate_active_scenario_resource_availability_matrix(errors: list[str]) -> 
         "RARE_RESOURCE_IDS",
         "COMMON_SOURCE_REQUIRED_IDS",
         "MIN_ACTIVE_SCENARIO_COUNT",
+        "MIN_CAMPAIGN_SCENARIO_COUNT",
+        "MIN_SKIRMISH_SCENARIO_COUNT",
         "MIN_PLAYER_TOWN_CASE_COUNT",
         "MIN_ENEMY_TOWN_CASE_COUNT",
+        "MIN_CAMPAIGN_PLAYER_TOWN_CASE_COUNT",
+        "MIN_SKIRMISH_PLAYER_TOWN_CASE_COUNT",
+        "MIN_CAMPAIGN_ENEMY_TOWN_CASE_COUNT",
+        "MIN_SKIRMISH_ENEMY_TOWN_CASE_COUNT",
+        "campaign_source_scenario_count",
+        "skirmish_source_scenario_count",
         "persistent active-scenario sources",
         "rare_resource_buying_enabled",
         "matching_rare_source_placement_ids",
@@ -19865,6 +19891,8 @@ def validate_active_scenario_resource_availability_matrix(errors: list[str]) -> 
         "active_scenario_resource_availability_matrix_v1",
         "all nine live stockpile resources",
         "16 active scenarios",
+        "15 campaign scenarios",
+        "16 skirmish scenarios",
         "18 player-town cases",
         "20 enemy-town cases",
         "persistent source coverage",
@@ -19886,8 +19914,14 @@ def validate_active_scenario_resource_availability_matrix(errors: list[str]) -> 
     ensure(report.get("live_stockpile_resource_ids") == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Resource availability matrix must cover all live stockpile resources in canonical order")
     ensure(report.get("rare_resource_ids") == list(ECONOMY_STAGED_RARE_RESOURCE_IDS), errors, "Resource availability matrix must cover all rare resources in canonical order")
     ensure(int(report.get("active_scenario_count", 0)) >= 16, errors, "Resource availability matrix must cover the active authored scenario roster")
+    ensure(int(report.get("campaign_scenario_count", 0)) >= 15, errors, "Resource availability matrix must cover campaign scenarios")
+    ensure(int(report.get("skirmish_scenario_count", 0)) >= 16, errors, "Resource availability matrix must cover skirmish scenarios")
     ensure(int(report.get("player_town_case_count", 0)) >= 18, errors, "Resource availability matrix must cover active player-town cases")
     ensure(int(report.get("enemy_town_case_count", 0)) >= 20, errors, "Resource availability matrix must cover active enemy-town cases")
+    ensure(int(report.get("campaign_player_town_case_count", 0)) >= 17, errors, "Resource availability matrix must cover campaign player-town cases")
+    ensure(int(report.get("skirmish_player_town_case_count", 0)) >= 18, errors, "Resource availability matrix must cover skirmish player-town cases")
+    ensure(int(report.get("campaign_enemy_town_case_count", 0)) >= 19, errors, "Resource availability matrix must cover campaign enemy-town cases")
+    ensure(int(report.get("skirmish_enemy_town_case_count", 0)) >= 20, errors, "Resource availability matrix must cover skirmish enemy-town cases")
     ensure(report.get("normal_market_policy", {}).get("rare_resource_buying_enabled", True) is False, errors, "Resource availability matrix must keep rare-resource normal market buying disabled")
     ensure(not report.get("errors", []), errors, "Active scenario resource availability matrix report must have zero errors")
 
@@ -19900,6 +19934,8 @@ def validate_active_scenario_resource_availability_matrix(errors: list[str]) -> 
     for resource_id in ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS:
         row = resource_rows.get(resource_id, {})
         ensure(int(row.get("source_observation_count", 0)) > 0, errors, f"{resource_id} must have active scenario source observations")
+        ensure(int(row.get("campaign_source_scenario_count", 0)) > 0, errors, f"{resource_id} must have campaign scenario source observations")
+        ensure(int(row.get("skirmish_source_scenario_count", 0)) > 0, errors, f"{resource_id} must have skirmish scenario source observations")
         ensure(len(row.get("development_cost_town_ids", [])) > 0, errors, f"{resource_id} must appear in town development costs")
         if resource_id in ("gold", "wood", "ore"):
             ensure(int(row.get("active_scenario_count", 0)) == int(report.get("active_scenario_count", 0)), errors, f"{resource_id} must be sourced in every active scenario")
@@ -19939,6 +19975,12 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "enemy_town_case_count",
         "enemy_resource_route_case_count",
         "enemy_reachable_route_case_count",
+        "campaign_scenario_count",
+        "skirmish_scenario_count",
+        "campaign_player_town_case_count",
+        "skirmish_player_town_case_count",
+        "campaign_enemy_town_case_count",
+        "skirmish_enemy_town_case_count",
         "_enemy_towns",
         "_best_resource_route",
         "_resource_source_has_guard",
@@ -19950,6 +19992,8 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "economy-active-scenario-town-economy-source-route-20260524-10184",
         "active_scenario_town_economy_source_route_report_v1",
         "16 active scenarios",
+        "15 campaign scenarios",
+        "16 skirmish scenarios",
         "18 player-town cases",
         "54 player resource route cases",
         "54 reachable player route cases",
@@ -19967,9 +20011,15 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
     towns = items_index(load_json(CONTENT_DIR / "towns.json"))
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     active_scenario_count = 0
+    campaign_scenario_count = 0
+    skirmish_scenario_count = 0
     player_town_case_count = 0
+    campaign_player_town_case_count = 0
+    skirmish_player_town_case_count = 0
     resource_route_case_count = 0
     enemy_town_case_count = 0
+    campaign_enemy_town_case_count = 0
+    skirmish_enemy_town_case_count = 0
     enemy_resource_route_case_count = 0
     for scenario_id, scenario in sorted(scenarios.items()):
         if not isinstance(scenario, dict):
@@ -19978,7 +20028,13 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
         if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
             continue
+        is_campaign = bool(availability.get("campaign", False))
+        is_skirmish = bool(availability.get("skirmish", False))
         active_scenario_count += 1
+        if is_campaign:
+            campaign_scenario_count += 1
+        if is_skirmish:
+            skirmish_scenario_count += 1
         resource_nodes = scenario.get("resource_nodes", [])
         resource_nodes = resource_nodes if isinstance(resource_nodes, list) else []
         resource_outputs: dict[str, list[str]] = {}
@@ -20004,8 +20060,16 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
             is_enemy_town = str(town.get("owner", "")) == "enemy"
             if is_enemy_town:
                 enemy_town_case_count += 1
+                if is_campaign:
+                    campaign_enemy_town_case_count += 1
+                if is_skirmish:
+                    skirmish_enemy_town_case_count += 1
             else:
                 player_town_case_count += 1
+                if is_campaign:
+                    campaign_player_town_case_count += 1
+                if is_skirmish:
+                    skirmish_player_town_case_count += 1
             town_placement_id = str(town.get("placement_id", "")).strip()
             town_id = str(town.get("town_id", "")).strip()
             town_template = towns.get(town_id, {})
@@ -20020,9 +20084,15 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
                 ensure(bool(resource_id), errors, f"{scenario_id}.{town_placement_id} needs a non-empty required resource id")
                 ensure(bool(resource_outputs.get(resource_id, [])), errors, f"{scenario_id}.{town_placement_id} town {town_id} needs an authored {resource_id} source route candidate")
     ensure(active_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover the active authored scenario roster")
+    ensure(campaign_scenario_count >= 15, errors, "Active scenario town economy source route gate must cover campaign scenarios")
+    ensure(skirmish_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover skirmish scenarios")
     ensure(player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover every current active player-town case")
+    ensure(campaign_player_town_case_count >= 17, errors, "Active scenario town economy source route gate must cover campaign player-town cases")
+    ensure(skirmish_player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover skirmish player-town cases")
     ensure(resource_route_case_count == player_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every player town")
     ensure(enemy_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover every current active enemy-town case")
+    ensure(campaign_enemy_town_case_count >= 19, errors, "Active scenario town economy source route gate must cover campaign enemy-town cases")
+    ensure(skirmish_enemy_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover skirmish enemy-town cases")
     ensure(enemy_resource_route_case_count == enemy_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every enemy town")
 
 
@@ -20510,6 +20580,12 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "same_day_reject_ok",
         "market_common_only",
         "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY",
+        "campaign_scenario_count",
+        "skirmish_scenario_count",
+        "campaign_player_town_case_count",
+        "skirmish_player_town_case_count",
+        "campaign_completed_case_count",
+        "skirmish_completed_case_count",
     ):
         ensure(required_token in script_text, errors, f"Active scenario town development runway report is missing token {required_token}")
     ensure("res://tests/active_scenario_town_development_runway_report.gd" in scene_text, errors, "Active scenario town development runway scene must load its report script")
@@ -20518,6 +20594,8 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "economy-active-scenario-development-runway-20260524-10184",
         "active_scenario_town_development_runway_report_v1",
         "18 active player-town cases",
+        "17 campaign player-town cases",
+        "18 skirmish player-town cases",
         "18/18 active player-town recruitment cases",
         "126/126 tier recruitment cases",
         "18/18 delayed-source replay cases",
@@ -20548,13 +20626,23 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
     towns = items_index(load_json(CONTENT_DIR / "towns.json"))
     buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
     active_scenario_count = 0
+    campaign_scenario_count = 0
+    skirmish_scenario_count = 0
     player_town_case_count = 0
+    campaign_player_town_case_count = 0
+    skirmish_player_town_case_count = 0
     for scenario_id, scenario in sorted(scenarios.items()):
         selection = scenario.get("selection", {}) if isinstance(scenario, dict) else {}
         availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
         if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
             continue
+        is_campaign = bool(availability.get("campaign", False))
+        is_skirmish = bool(availability.get("skirmish", False))
         active_scenario_count += 1
+        if is_campaign:
+            campaign_scenario_count += 1
+        if is_skirmish:
+            skirmish_scenario_count += 1
         scenario_nodes = scenario.get("resource_nodes", [])
         scenario_nodes = scenario_nodes if isinstance(scenario_nodes, list) else []
         persistent_income_ids: set[str] = set()
@@ -20577,6 +20665,10 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
             if not isinstance(town, dict) or str(town.get("owner", "")) != "player":
                 continue
             player_town_case_count += 1
+            if is_campaign:
+                campaign_player_town_case_count += 1
+            if is_skirmish:
+                skirmish_player_town_case_count += 1
             town_id = str(town.get("town_id", "")).strip()
             town_template = towns.get(town_id, {})
             required_ids: set[str] = set()
@@ -20589,7 +20681,11 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
             for resource_id in sorted(required_ids - {"gold"}):
                 ensure(resource_id in persistent_income_ids, errors, f"{scenario_id}.{town_id} must have scenario-authored persistent {resource_id} income for development runway")
     ensure(active_scenario_count >= 16, errors, "Active scenario town development runway must cover the active authored scenario roster")
+    ensure(campaign_scenario_count >= 15, errors, "Active scenario town development runway must cover campaign scenarios")
+    ensure(skirmish_scenario_count >= 16, errors, "Active scenario town development runway must cover skirmish scenarios")
     ensure(player_town_case_count >= 18, errors, "Active scenario town development runway must cover the active player-town cases")
+    ensure(campaign_player_town_case_count >= 17, errors, "Active scenario town development runway must cover campaign player-town cases")
+    ensure(skirmish_player_town_case_count >= 18, errors, "Active scenario town development runway must cover skirmish player-town cases")
     for scenario_id in ("ironbridge-stand", "mireford-skirmish"):
         scenario = scenarios.get(scenario_id, {})
         node_ids = {
@@ -20665,6 +20761,12 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "scenario_enemy_state_count",
         "secured_daily_income",
         "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY",
+        "campaign_scenario_count",
+        "skirmish_scenario_count",
+        "campaign_enemy_town_case_count",
+        "skirmish_enemy_town_case_count",
+        "campaign_completed_case_count",
+        "skirmish_completed_case_count",
     ):
         ensure(required_token in script_text, errors, f"Active scenario AI town development runway report is missing token {required_token}")
     ensure("res://tests/active_scenario_ai_town_development_runway_report.gd" in scene_text, errors, "Active scenario AI town development runway scene must load its report script")
@@ -20673,6 +20775,8 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "economy-active-scenario-ai-town-development-runway-20260524-10184",
         "active_scenario_ai_town_development_runway_report_v1",
         "20 active enemy-town cases",
+        "19 campaign enemy-town cases",
+        "20 skirmish enemy-town cases",
         "20/20 delayed-source replay cases",
         "20/20 delayed-source AI save/resume checkpoints",
         "seven-tier AI recruitment candidates",
@@ -20731,13 +20835,23 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     towns = items_index(load_json(CONTENT_DIR / "towns.json"))
     active_scenario_count = 0
+    campaign_scenario_count = 0
+    skirmish_scenario_count = 0
     enemy_town_case_count = 0
+    campaign_enemy_town_case_count = 0
+    skirmish_enemy_town_case_count = 0
     for scenario_id, scenario in sorted(scenarios.items()):
         selection = scenario.get("selection", {}) if isinstance(scenario, dict) else {}
         availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
         if not (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
             continue
+        is_campaign = bool(availability.get("campaign", False))
+        is_skirmish = bool(availability.get("skirmish", False))
         active_scenario_count += 1
+        if is_campaign:
+            campaign_scenario_count += 1
+        if is_skirmish:
+            skirmish_scenario_count += 1
         scenario_nodes = scenario.get("resource_nodes", [])
         scenario_nodes = scenario_nodes if isinstance(scenario_nodes, list) else []
         scenario_resource_ids: set[str] = set()
@@ -20755,6 +20869,10 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
             if not isinstance(town, dict) or str(town.get("owner", "")) != "enemy":
                 continue
             enemy_town_case_count += 1
+            if is_campaign:
+                campaign_enemy_town_case_count += 1
+            if is_skirmish:
+                skirmish_enemy_town_case_count += 1
             town_id = str(town.get("town_id", "")).strip()
             town_template = towns.get(town_id, {})
             development_balance = town_template.get("development_balance", {}) if isinstance(town_template, dict) else {}
@@ -20779,7 +20897,11 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         ensure(int(node.get("x", -1)) == 52 and int(node.get("y", -1)) == 51, errors, f"{placement_id} must stay on Bellwake Harbor's reachable economy front tile")
         ensure(str(node.get("collected_by_faction_id", "")) == "faction_veilmourn", errors, f"{placement_id} must be authored for faction_veilmourn")
     ensure(active_scenario_count >= 16, errors, "Active scenario AI town development runway must cover the active authored scenario roster")
+    ensure(campaign_scenario_count >= 15, errors, "Active scenario AI town development runway must cover campaign scenarios")
+    ensure(skirmish_scenario_count >= 16, errors, "Active scenario AI town development runway must cover skirmish scenarios")
     ensure(enemy_town_case_count >= 20, errors, "Active scenario AI town development runway must cover the active enemy-town cases")
+    ensure(campaign_enemy_town_case_count >= 19, errors, "Active scenario AI town development runway must cover campaign enemy-town cases")
+    ensure(skirmish_enemy_town_case_count >= 20, errors, "Active scenario AI town development runway must cover skirmish enemy-town cases")
 
 
 def main() -> int:

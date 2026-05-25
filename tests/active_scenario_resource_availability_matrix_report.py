@@ -22,8 +22,14 @@ LIVE_STOCKPILE_RESOURCE_IDS = (
 RARE_RESOURCE_IDS = LIVE_STOCKPILE_RESOURCE_IDS[3:]
 COMMON_SOURCE_REQUIRED_IDS = ("wood", "ore")
 MIN_ACTIVE_SCENARIO_COUNT = 16
+MIN_CAMPAIGN_SCENARIO_COUNT = 15
+MIN_SKIRMISH_SCENARIO_COUNT = 16
 MIN_PLAYER_TOWN_CASE_COUNT = 18
 MIN_ENEMY_TOWN_CASE_COUNT = 20
+MIN_CAMPAIGN_PLAYER_TOWN_CASE_COUNT = 17
+MIN_SKIRMISH_PLAYER_TOWN_CASE_COUNT = 18
+MIN_CAMPAIGN_ENEMY_TOWN_CASE_COUNT = 19
+MIN_SKIRMISH_ENEMY_TOWN_CASE_COUNT = 20
 
 
 def load_items(root: Path, path: str) -> dict[str, dict[str, Any]]:
@@ -47,6 +53,17 @@ def is_active_scenario(scenario: dict[str, Any]) -> bool:
     selection = scenario.get("selection", {})
     availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
     return bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))
+
+
+def launch_surfaces(scenario: dict[str, Any]) -> list[str]:
+    selection = scenario.get("selection", {})
+    availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
+    surfaces: list[str] = []
+    if bool(availability.get("campaign", False)):
+        surfaces.append("campaign")
+    if bool(availability.get("skirmish", False)):
+        surfaces.append("skirmish")
+    return surfaces
 
 
 def resource_payload(site: dict[str, Any], field: str) -> dict[str, int]:
@@ -112,13 +129,19 @@ def build_report(root: Path) -> dict[str, Any]:
             "source_observation_count": 0,
             "claim_source_count": 0,
             "persistent_source_count": 0,
+            "campaign_source_scenario_count": 0,
+            "skirmish_source_scenario_count": 0,
             "source_scenario_ids": [],
+            "campaign_source_scenario_ids": [],
+            "skirmish_source_scenario_ids": [],
             "development_cost_town_ids": [],
             "development_rare_town_ids": [],
         }
         for resource_id in LIVE_STOCKPILE_RESOURCE_IDS
     }
     active_scenario_ids: list[str] = []
+    campaign_scenario_ids: list[str] = []
+    skirmish_scenario_ids: list[str] = []
     town_cases: list[dict[str, Any]] = []
     errors: list[str] = []
 
@@ -137,6 +160,11 @@ def build_report(root: Path) -> dict[str, Any]:
         if not isinstance(scenario, dict) or not is_active_scenario(scenario):
             continue
         active_scenario_ids.append(scenario_id)
+        surfaces = launch_surfaces(scenario)
+        if "campaign" in surfaces:
+            campaign_scenario_ids.append(scenario_id)
+        if "skirmish" in surfaces:
+            skirmish_scenario_ids.append(scenario_id)
         scenario_resource_ids: set[str] = set()
         scenario_persistent_resource_ids: set[str] = set()
         scenario_matching_sources: dict[str, list[str]] = {resource_id: [] for resource_id in LIVE_STOCKPILE_RESOURCE_IDS}
@@ -164,6 +192,12 @@ def build_report(root: Path) -> dict[str, Any]:
                 if scenario_id not in row["source_scenario_ids"]:
                     row["source_scenario_ids"].append(scenario_id)
                     row["active_scenario_count"] += 1
+                if "campaign" in surfaces and scenario_id not in row["campaign_source_scenario_ids"]:
+                    row["campaign_source_scenario_ids"].append(scenario_id)
+                    row["campaign_source_scenario_count"] += 1
+                if "skirmish" in surfaces and scenario_id not in row["skirmish_source_scenario_ids"]:
+                    row["skirmish_source_scenario_ids"].append(scenario_id)
+                    row["skirmish_source_scenario_count"] += 1
                 if bool(output.get("persistent", False)):
                     row["persistent_source_count"] += 1
                     scenario_persistent_resource_ids.add(resource_id)
@@ -204,6 +238,7 @@ def build_report(root: Path) -> dict[str, Any]:
                     "scenario_id": scenario_id,
                     "placement_id": str(town_node.get("placement_id", "")).strip(),
                     "owner": str(town_node.get("owner", "")),
+                    "launch_surfaces": surfaces,
                     "town_id": town_id,
                     "faction_id": str(town_template.get("faction_id", "")),
                     "rare_resource_id": rare_id,
@@ -216,20 +251,62 @@ def build_report(root: Path) -> dict[str, Any]:
             )
 
     active_scenario_count = len(active_scenario_ids)
+    campaign_scenario_count = len(campaign_scenario_ids)
+    skirmish_scenario_count = len(skirmish_scenario_ids)
     player_town_case_count = sum(1 for case in town_cases if case["owner"] == "player")
     enemy_town_case_count = sum(1 for case in town_cases if case["owner"] == "enemy")
+    campaign_player_town_case_count = sum(
+        1 for case in town_cases if case["owner"] == "player" and "campaign" in case["launch_surfaces"]
+    )
+    skirmish_player_town_case_count = sum(
+        1 for case in town_cases if case["owner"] == "player" and "skirmish" in case["launch_surfaces"]
+    )
+    campaign_enemy_town_case_count = sum(
+        1 for case in town_cases if case["owner"] == "enemy" and "campaign" in case["launch_surfaces"]
+    )
+    skirmish_enemy_town_case_count = sum(
+        1 for case in town_cases if case["owner"] == "enemy" and "skirmish" in case["launch_surfaces"]
+    )
 
     if active_scenario_count < MIN_ACTIVE_SCENARIO_COUNT:
         errors.append(f"expected at least {MIN_ACTIVE_SCENARIO_COUNT} active scenarios, found {active_scenario_count}")
+    if campaign_scenario_count < MIN_CAMPAIGN_SCENARIO_COUNT:
+        errors.append(f"expected at least {MIN_CAMPAIGN_SCENARIO_COUNT} campaign scenarios, found {campaign_scenario_count}")
+    if skirmish_scenario_count < MIN_SKIRMISH_SCENARIO_COUNT:
+        errors.append(f"expected at least {MIN_SKIRMISH_SCENARIO_COUNT} skirmish scenarios, found {skirmish_scenario_count}")
     if player_town_case_count < MIN_PLAYER_TOWN_CASE_COUNT:
         errors.append(f"expected at least {MIN_PLAYER_TOWN_CASE_COUNT} player town cases, found {player_town_case_count}")
     if enemy_town_case_count < MIN_ENEMY_TOWN_CASE_COUNT:
         errors.append(f"expected at least {MIN_ENEMY_TOWN_CASE_COUNT} enemy town cases, found {enemy_town_case_count}")
+    if campaign_player_town_case_count < MIN_CAMPAIGN_PLAYER_TOWN_CASE_COUNT:
+        errors.append(
+            f"expected at least {MIN_CAMPAIGN_PLAYER_TOWN_CASE_COUNT} campaign player town cases, "
+            f"found {campaign_player_town_case_count}"
+        )
+    if skirmish_player_town_case_count < MIN_SKIRMISH_PLAYER_TOWN_CASE_COUNT:
+        errors.append(
+            f"expected at least {MIN_SKIRMISH_PLAYER_TOWN_CASE_COUNT} skirmish player town cases, "
+            f"found {skirmish_player_town_case_count}"
+        )
+    if campaign_enemy_town_case_count < MIN_CAMPAIGN_ENEMY_TOWN_CASE_COUNT:
+        errors.append(
+            f"expected at least {MIN_CAMPAIGN_ENEMY_TOWN_CASE_COUNT} campaign enemy town cases, "
+            f"found {campaign_enemy_town_case_count}"
+        )
+    if skirmish_enemy_town_case_count < MIN_SKIRMISH_ENEMY_TOWN_CASE_COUNT:
+        errors.append(
+            f"expected at least {MIN_SKIRMISH_ENEMY_TOWN_CASE_COUNT} skirmish enemy town cases, "
+            f"found {skirmish_enemy_town_case_count}"
+        )
     for resource_id, row in resource_rows.items():
         if row["source_observation_count"] <= 0:
             errors.append(f"{resource_id} has no active-scenario source observations")
         if resource_id in {"gold", "wood", "ore"} and row["active_scenario_count"] < active_scenario_count:
             errors.append(f"{resource_id} must appear in every active scenario source ecology")
+        if row["campaign_source_scenario_count"] <= 0:
+            errors.append(f"{resource_id} has no campaign scenario source observations")
+        if row["skirmish_source_scenario_count"] <= 0:
+            errors.append(f"{resource_id} has no skirmish scenario source observations")
         if resource_id in RARE_RESOURCE_IDS:
             if row["persistent_source_count"] <= 0:
                 errors.append(f"{resource_id} has no persistent active-scenario source")
@@ -238,11 +315,15 @@ def build_report(root: Path) -> dict[str, Any]:
 
     matrix_basis = {
         "active_scenario_ids": active_scenario_ids,
+        "campaign_scenario_ids": campaign_scenario_ids,
+        "skirmish_scenario_ids": skirmish_scenario_ids,
         "resources": {
             resource_id: {
                 "source_observation_count": row["source_observation_count"],
                 "persistent_source_count": row["persistent_source_count"],
                 "active_scenario_count": row["active_scenario_count"],
+                "campaign_source_scenario_count": row["campaign_source_scenario_count"],
+                "skirmish_source_scenario_count": row["skirmish_source_scenario_count"],
                 "development_rare_town_count": len(row["development_rare_town_ids"]),
             }
             for resource_id, row in resource_rows.items()
@@ -257,9 +338,17 @@ def build_report(root: Path) -> dict[str, Any]:
         "rare_resource_ids": list(RARE_RESOURCE_IDS),
         "active_scenario_count": active_scenario_count,
         "active_scenario_ids": active_scenario_ids,
+        "campaign_scenario_count": campaign_scenario_count,
+        "campaign_scenario_ids": campaign_scenario_ids,
+        "skirmish_scenario_count": skirmish_scenario_count,
+        "skirmish_scenario_ids": skirmish_scenario_ids,
         "town_case_count": len(town_cases),
         "player_town_case_count": player_town_case_count,
         "enemy_town_case_count": enemy_town_case_count,
+        "campaign_player_town_case_count": campaign_player_town_case_count,
+        "skirmish_player_town_case_count": skirmish_player_town_case_count,
+        "campaign_enemy_town_case_count": campaign_enemy_town_case_count,
+        "skirmish_enemy_town_case_count": skirmish_enemy_town_case_count,
         "resource_rows": [resource_rows[resource_id] for resource_id in LIVE_STOCKPILE_RESOURCE_IDS],
         "town_cases": town_cases,
         "normal_market_policy": {
@@ -277,6 +366,8 @@ def print_report(report: dict[str, Any]) -> None:
     print(
         "- coverage: "
         f"{report['active_scenario_count']} active scenarios, "
+        f"{report['campaign_scenario_count']} campaign scenarios, "
+        f"{report['skirmish_scenario_count']} skirmish scenarios, "
         f"{report['player_town_case_count']} player-town cases, "
         f"{report['enemy_town_case_count']} enemy-town cases"
     )
