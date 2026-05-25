@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Player Readability Surface Scorecard",
+  "currentSliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+  "currentSliceTitle": "Economy Ninefold Rare Source Breadth Tuning",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope.",
+  "currentSliceNotes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:07:28Z",
+  "updatedAt": "2026-05-25T18:28:03Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23071,6 +23071,80 @@
       "startedAt": "2026-05-25T17:45:27Z",
       "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope.",
       "completedAt": "2026-05-25T18:07:28Z"
+    },
+    {
+      "id": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+      "title": "Economy Ninefold Rare Source Breadth Tuning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "openclaw_review_feedback_player_balance_audit",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/scenarios.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:28:03Z",
+        "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
+          "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "audit_findings": {
+            "stronger_economic_identity_factions": [
+              "faction_brasshollow",
+              "faction_thornwake",
+              "faction_veilmourn",
+              "faction_sunvault"
+            ],
+            "weaker_economic_identity_factions": [
+              "faction_embercourt",
+              "faction_mireclaw"
+            ],
+            "boring_or_forced_curve_examples": [
+              "town_riverwatch",
+              "town_highwater_keep",
+              "town_blackfen_gate",
+              "town_murkward_ford",
+              "town_reedbarrow_ferry",
+              "town_halo_spire"
+            ],
+            "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+            "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+          },
+          "affected_scenario_id": "ninefold-confluence",
+          "added_resource_nodes": [
+            "ninefold_graftroot_caravan_verdant_grafts_fallback",
+            "ninefold_orevein_gantry_brass_scrip_fallback",
+            "ninefold_bellwake_harbor_memory_salt_fallback"
+          ],
+          "affected_rare_resource_ids": [
+            "verdant_grafts",
+            "brass_scrip",
+            "memory_salt"
+          ],
+          "affected_town_ids": [
+            "town_thornwake_graftroot_caravan",
+            "town_brasshollow_orevein_gantry",
+            "town_veilmourn_bellwake_harbor"
+          ],
+          "matching_rare_source_candidates_per_affected_town": 2,
+          "reachable_rare_source_candidates_per_affected_town": 2,
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "completedAt": "2026-05-25T18:28:03Z",
+      "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
     }
   ],
   "completedImplementationEvidence": [
@@ -28806,6 +28880,57 @@
         "runtime_scorecard_requirement_count": 35,
         "policy": "player-facing TownShell economy readability; not campaign production work"
       }
+    },
+    {
+      "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+      "completedAt": "2026-05-25T18:28:03Z",
+      "summary": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization.",
+      "evidence": {
+        "audit_findings": {
+          "stronger_economic_identity_factions": [
+            "faction_brasshollow",
+            "faction_thornwake",
+            "faction_veilmourn",
+            "faction_sunvault"
+          ],
+          "weaker_economic_identity_factions": [
+            "faction_embercourt",
+            "faction_mireclaw"
+          ],
+          "boring_or_forced_curve_examples": [
+            "town_riverwatch",
+            "town_highwater_keep",
+            "town_blackfen_gate",
+            "town_murkward_ford",
+            "town_reedbarrow_ferry",
+            "town_halo_spire"
+          ],
+          "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+          "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+        },
+        "affected_scenario_id": "ninefold-confluence",
+        "added_resource_nodes": [
+          "ninefold_graftroot_caravan_verdant_grafts_fallback",
+          "ninefold_orevein_gantry_brass_scrip_fallback",
+          "ninefold_bellwake_harbor_memory_salt_fallback"
+        ],
+        "affected_rare_resource_ids": [
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "affected_town_ids": [
+          "town_thornwake_graftroot_caravan",
+          "town_brasshollow_orevein_gantry",
+          "town_veilmourn_bellwake_harbor"
+        ],
+        "matching_rare_source_candidates_per_affected_town": 2,
+        "reachable_rare_source_candidates_per_affected_town": 2,
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -30409,30 +30534,137 @@
         "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
       }
     },
-    "2026-05-25 generated package town-economy breadth scorecard: 3/3 deterministic strict Small generated package economy breadth cases pass with distinct map/scenario package hashes, 15 generated towns, 211 resource nodes, common sources and player-required rare sources in every case, 3 project factions, and 6 town templates. Runtime-inclusive economy/town scorecard passes 31/31 checks."
+    "2026-05-25 generated package town-economy breadth scorecard: 3/3 deterministic strict Small generated package economy breadth cases pass with distinct map/scenario package hashes, 15 generated towns, 211 resource nodes, common sources and player-required rare sources in every case, 3 project factions, and 6 town templates. Runtime-inclusive economy/town scorecard passes 31/31 checks.",
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:28:03Z",
+      "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "audit_findings": {
+          "stronger_economic_identity_factions": [
+            "faction_brasshollow",
+            "faction_thornwake",
+            "faction_veilmourn",
+            "faction_sunvault"
+          ],
+          "weaker_economic_identity_factions": [
+            "faction_embercourt",
+            "faction_mireclaw"
+          ],
+          "boring_or_forced_curve_examples": [
+            "town_riverwatch",
+            "town_highwater_keep",
+            "town_blackfen_gate",
+            "town_murkward_ford",
+            "town_reedbarrow_ferry",
+            "town_halo_spire"
+          ],
+          "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+          "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+        },
+        "affected_scenario_id": "ninefold-confluence",
+        "added_resource_nodes": [
+          "ninefold_graftroot_caravan_verdant_grafts_fallback",
+          "ninefold_orevein_gantry_brass_scrip_fallback",
+          "ninefold_bellwake_harbor_memory_salt_fallback"
+        ],
+        "affected_rare_resource_ids": [
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "affected_town_ids": [
+          "town_thornwake_graftroot_caravan",
+          "town_brasshollow_orevein_gantry",
+          "town_veilmourn_bellwake_harbor"
+        ],
+        "matching_rare_source_candidates_per_affected_town": 2,
+        "reachable_rare_source_candidates_per_affected_town": 2,
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
+    }
   ],
   "lastValidation": {
-    "status": "passed",
-    "updatedAt": "2026-05-25T18:07:28Z",
+    "status": "pass",
+    "updatedAt": "2026-05-25T18:28:03Z",
+    "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 player-readable economy plans, 6/6 rare bottleneck surfaces, 6/6 ready build plan surfaces)",
+      "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
+      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 35/35 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
       "git diff --check (passed)"
-    ]
+    ],
+    "evidence": {
+      "audit_findings": {
+        "stronger_economic_identity_factions": [
+          "faction_brasshollow",
+          "faction_thornwake",
+          "faction_veilmourn",
+          "faction_sunvault"
+        ],
+        "weaker_economic_identity_factions": [
+          "faction_embercourt",
+          "faction_mireclaw"
+        ],
+        "boring_or_forced_curve_examples": [
+          "town_riverwatch",
+          "town_highwater_keep",
+          "town_blackfen_gate",
+          "town_murkward_ford",
+          "town_reedbarrow_ferry",
+          "town_halo_spire"
+        ],
+        "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+        "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+      },
+      "affected_scenario_id": "ninefold-confluence",
+      "added_resource_nodes": [
+        "ninefold_graftroot_caravan_verdant_grafts_fallback",
+        "ninefold_orevein_gantry_brass_scrip_fallback",
+        "ninefold_bellwake_harbor_memory_salt_fallback"
+      ],
+      "affected_rare_resource_ids": [
+        "verdant_grafts",
+        "brass_scrip",
+        "memory_salt"
+      ],
+      "affected_town_ids": [
+        "town_thornwake_graftroot_caravan",
+        "town_brasshollow_orevein_gantry",
+        "town_veilmourn_bellwake_harbor"
+      ],
+      "matching_rare_source_candidates_per_affected_town": 2,
+      "reachable_rare_source_candidates_per_affected_town": 2,
+      "deterministic_scorecard_passed_requirement_count": 15,
+      "deterministic_scorecard_requirement_count": 15,
+      "new_gate_created": false,
+      "policy": "player-balance content tuning using existing reports; not campaign production work"
+    }
   },
   "active_slice": {
-    "id": "economy-town-player-readability-surface-scorecard-20260525-10184",
-    "title": "Economy Town Player Readability Surface Scorecard",
+    "id": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+    "title": "Economy Ninefold Rare Source Breadth Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:07:28Z",
-    "completedAt": "2026-05-25T18:07:28Z",
-    "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope."
+    "updatedAt": "2026-05-25T18:28:03Z",
+    "completedAt": "2026-05-25T18:28:03Z",
+    "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:07:28Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:28:03Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -31574,46 +31806,134 @@
         "generated_source_route_guarded_extra_days": 1,
         "policy": "strict Small generated package source-route guard pressure through live route rules; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:28:03Z",
+      "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "audit_findings": {
+          "stronger_economic_identity_factions": [
+            "faction_brasshollow",
+            "faction_thornwake",
+            "faction_veilmourn",
+            "faction_sunvault"
+          ],
+          "weaker_economic_identity_factions": [
+            "faction_embercourt",
+            "faction_mireclaw"
+          ],
+          "boring_or_forced_curve_examples": [
+            "town_riverwatch",
+            "town_highwater_keep",
+            "town_blackfen_gate",
+            "town_murkward_ford",
+            "town_reedbarrow_ferry",
+            "town_halo_spire"
+          ],
+          "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+          "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+        },
+        "affected_scenario_id": "ninefold-confluence",
+        "added_resource_nodes": [
+          "ninefold_graftroot_caravan_verdant_grafts_fallback",
+          "ninefold_orevein_gantry_brass_scrip_fallback",
+          "ninefold_bellwake_harbor_memory_salt_fallback"
+        ],
+        "affected_rare_resource_ids": [
+          "verdant_grafts",
+          "brass_scrip",
+          "memory_salt"
+        ],
+        "affected_town_ids": [
+          "town_thornwake_graftroot_caravan",
+          "town_brasshollow_orevein_gantry",
+          "town_veilmourn_bellwake_harbor"
+        ],
+        "matching_rare_source_candidates_per_affected_town": 2,
+        "reachable_rare_source_candidates_per_affected_town": 2,
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-town-player-readability-surface-scorecard-20260525-10184",
-    "title": "Economy Town Player Readability Surface Scorecard",
+    "id": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
+    "title": "Economy Ninefold Rare Source Breadth Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:07:28Z",
-    "completedAt": "2026-05-25T18:07:28Z",
-    "notes": "Completed. Responds to OpenClaw review feedback that recent economy work was too validation-led and not enough about reading the economy as a player. TownShell resource/build UI now exposes a compact player-readable Economy Plan in the live resource tooltip and validation snapshot: daily income, next build, build bottleneck, next muster, field-site value, and rare-resource bottleneck identity. The focused TownShell economy resource UI report and runtime-inclusive economy/town scorecard now fail unless all six faction seed towns expose that player-readable economy plan, surface missing rare resources as build bottlenecks, and still preserve common-only market and one-build-per-day guards. Current evidence passes 6/6 player-readable economy plan cases, 6/6 rare bottleneck surface cases, 6/6 ready build plan surface cases, 6/6 same-day build lockout cases, deterministic 15/15 scorecard, runtime-inclusive 35/35 scorecard, validate_repo, py_compile, jq, and git diff --check. Campaign production remains out of scope."
+    "updatedAt": "2026-05-25T18:28:03Z",
+    "completedAt": "2026-05-25T18:28:03Z",
+    "notes": "Completed. Player-balance audit found rare-source placement too narrow: every active town case had one unique matching rare source, and verdant_grafts, brass_scrip, and memory_salt appeared only in Ninefold Confluence. Ninefold now adds fallback rare fronts for Thornwake Graftroot Caravan, Brasshollow Orevein Gantry, and Veilmourn Bellwake Harbor so each affected town has two matching rare-source candidates. Existing reports, without adding new gates, show the three affected Ninefold rare routes have 2 candidates and 2 reachable candidates, active source-route report passes 54/54 player and 60/60 enemy resource routes, deterministic economy/town scorecard passes 15/15, and this remains authored breadth-map tuning rather than campaign production or generated-map generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:07:28Z",
-    "sliceId": "economy-town-player-readability-surface-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T18:28:03Z",
+    "sliceId": "economy-ninefold-rare-source-breadth-tuning-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 player-readable economy plans, 6/6 rare bottleneck surfaces, 6/6 ready build plan surfaces)",
+      "python3 tests/active_scenario_resource_availability_matrix_report.py --json (passed; verdant_grafts/brass_scrip/memory_salt source observations 2 -> 4, persistent sources 1 -> 2)",
+      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/active_scenario_town_economy_source_route_report.tscn (passed; affected Ninefold rare routes each 2/2 reachable candidates, 54/54 player and 60/60 enemy routes reachable)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 35/35 runtime-inclusive checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "focused_town_economy_resource_ui_surface_report": "passed",
-      "town_resource_ui_schema": "town_economy_resource_ui_surface_report_v1",
-      "town_shell_economy_plan_schema": "town_shell_player_economy_readability_surface_v1",
-      "faction_case_count": 6,
-      "player_readable_economy_plan_case_count": 6,
-      "rare_bottleneck_surface_case_count": 6,
-      "ready_build_plan_surface_case_count": 6,
-      "same_day_build_lockout_case_count": 6,
-      "common_only_market_case_count": 6,
-      "blocked_rare_action_case_count": 6,
-      "ready_rare_action_case_count": 6,
+      "audit_findings": {
+        "stronger_economic_identity_factions": [
+          "faction_brasshollow",
+          "faction_thornwake",
+          "faction_veilmourn",
+          "faction_sunvault"
+        ],
+        "weaker_economic_identity_factions": [
+          "faction_embercourt",
+          "faction_mireclaw"
+        ],
+        "boring_or_forced_curve_examples": [
+          "town_riverwatch",
+          "town_highwater_keep",
+          "town_blackfen_gate",
+          "town_murkward_ford",
+          "town_reedbarrow_ferry",
+          "town_halo_spire"
+        ],
+        "rare_source_placement_issue": "all active town cases had one unique matching rare-source placement before tuning",
+        "generated_small_generalization_issue": "strict Small 36x36 one-level land-only evidence is useful but not broad RMG generalization"
+      },
+      "affected_scenario_id": "ninefold-confluence",
+      "added_resource_nodes": [
+        "ninefold_graftroot_caravan_verdant_grafts_fallback",
+        "ninefold_orevein_gantry_brass_scrip_fallback",
+        "ninefold_bellwake_harbor_memory_salt_fallback"
+      ],
+      "affected_rare_resource_ids": [
+        "verdant_grafts",
+        "brass_scrip",
+        "memory_salt"
+      ],
+      "affected_town_ids": [
+        "town_thornwake_graftroot_caravan",
+        "town_brasshollow_orevein_gantry",
+        "town_veilmourn_bellwake_harbor"
+      ],
+      "matching_rare_source_candidates_per_affected_town": 2,
+      "reachable_rare_source_candidates_per_affected_town": 2,
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "runtime_scorecard_passed_requirement_count": 35,
-      "runtime_scorecard_requirement_count": 35,
-      "policy": "player-facing TownShell economy readability; not campaign production work"
+      "new_gate_created": false,
+      "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   }
 }
