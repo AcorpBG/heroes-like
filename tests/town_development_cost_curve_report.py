@@ -23,6 +23,7 @@ RARE_RESOURCES = {
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2
 MIN_RARE_DEVELOPMENT_SPEND = 24
+MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
 
@@ -148,15 +149,18 @@ def main() -> int:
         target_ids = [str(value) for value in town.get("buildable_building_ids", [])]
         common_only_count = 0
         rare_cost_count = 0
+        rare_upgrade_count = 0
         gold_cost_count = 0
         total_costs: dict[str, int] = {resource_id: 0 for resource_id in sorted(LIVE_RESOURCES)}
         rare_buildings: list[dict[str, Any]] = []
+        rare_upgrade_buildings: list[dict[str, Any]] = []
         common_only_buildings: list[str] = []
         for building_id in target_ids:
             building = buildings.get(building_id, {})
             cost = cost_payload(building)
             cost_ids = set(cost)
             rare_ids = sorted(cost_ids & RARE_RESOURCES)
+            upgrade_from = str(building.get("upgrade_from", "")).strip()
             if not cost:
                 errors.append(f"{town_id}/{building_id} must have a non-empty cost")
             if "gold" in cost_ids:
@@ -178,6 +182,19 @@ def main() -> int:
                 if not (allowed_by_signature or allowed_by_late_gate):
                     errors.append(f"{town_id}/{building_id} rare cost must be gated behind tier {HIGH_TIER_START}+ development")
                 rare_buildings.append({"building_id": building_id, "rare_ids": rare_ids, "cost": cost})
+                if upgrade_from:
+                    rare_upgrade_count += 1
+                    upgrade_from_closure = prerequisite_closure(upgrade_from, buildings)
+                    if upgrade_from not in high_tier_signature_ids and not (upgrade_from_closure & high_tier_signature_ids):
+                        errors.append(f"{town_id}/{building_id} rare-cost upgrade must upgrade from tier {HIGH_TIER_START}+ development")
+                    rare_upgrade_buildings.append(
+                        {
+                            "building_id": building_id,
+                            "upgrade_from": upgrade_from,
+                            "rare_ids": rare_ids,
+                            "cost": cost,
+                        }
+                    )
             else:
                 common_only_count += 1
                 common_only_buildings.append(building_id)
@@ -188,6 +205,8 @@ def main() -> int:
             )
         if rare_cost_count < 3:
             errors.append(f"{town_id} must include rare-resource pressure in at least three high-tier buildings")
+        if rare_upgrade_count < MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN:
+            errors.append(f"{town_id} must include at least {MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN} rare-cost high-tier upgrade building")
         if gold_cost_count != len(target_ids):
             errors.append(f"{town_id} must keep gold as a cost on every development target")
         if int(total_costs.get(town_rare_id, 0)) <= 0:
@@ -206,9 +225,11 @@ def main() -> int:
             "gold_cost_building_count": gold_cost_count,
             "common_only_building_count": common_only_count,
             "rare_cost_building_count": rare_cost_count,
+            "rare_upgrade_building_count": rare_upgrade_count,
             "common_only_to_rare_ratio": round(common_only_count / max(1, rare_cost_count), 2),
             "total_costs": {key: value for key, value in sorted(total_costs.items()) if value},
             "rare_buildings": rare_buildings,
+            "rare_upgrade_buildings": rare_upgrade_buildings,
             "common_only_buildings": common_only_buildings,
         }
 
@@ -223,6 +244,7 @@ def main() -> int:
         "rare_resources": sorted(RARE_RESOURCES),
         "min_common_only_to_rare_ratio": MIN_COMMON_ONLY_TO_RARE_RATIO,
         "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
+        "min_rare_upgrade_buildings_per_town": MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN,
         "faction_curves": faction_curves,
         "towns": town_rows,
         "errors": errors,

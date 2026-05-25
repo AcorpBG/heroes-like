@@ -21,6 +21,7 @@ The deterministic report `town_development_cost_curve_report_v1` parses authored
 - Rare costs are gated behind tier 5+ development through the seven-tier faction signature ladder or a prerequisite chain that depends on tier 5+ construction.
 - Six faction signature ladders keep seven unit-building tiers, with tiers 1-4 common-resource only and tiers 5-7 costing the faction rare resource on the 4/8/10 curve.
 - Every authored town now spends at least 24 faction rare resources across full development, so high-tier rare costs are meaningful rather than token blockers.
+- Every authored town includes at least one rare-cost high-tier upgrade building with explicit `upgrade_from` metadata behind tier 5+ development. Current deterministic coverage is 15/15 towns with 15 total rare-cost upgrade chains.
 
 ## Evidence Boundaries
 

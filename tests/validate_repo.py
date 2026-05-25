@@ -2851,6 +2851,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
     ensure(int(report_payload.get("high_tier_start", 0)) == 5, errors, "Town development cost curve report must keep rare costs at tier 5+")
     ensure(int(report_payload.get("min_common_only_to_rare_ratio", 0)) >= 2, errors, "Town development cost curve report must keep common-only buildings dominant")
     ensure(int(report_payload.get("min_rare_development_spend", 0)) >= 24, errors, "Town development cost curve report must require meaningful rare-resource spend")
+    ensure(int(report_payload.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Town development cost curve report must require rare-cost upgrade chains")
     town_rows = report_payload.get("towns", {})
     ensure(isinstance(town_rows, dict) and len(town_rows) >= 15, errors, "Town development cost curve report must emit every town row")
     if isinstance(town_rows, dict):
@@ -2861,6 +2862,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
             ensure(int(row.get("gold_cost_building_count", 0)) == int(row.get("target_building_count", -1)), errors, f"{town_id} must cost gold on every development target")
             ensure(float(row.get("common_only_to_rare_ratio", 0.0)) >= 2.0, errors, f"{town_id} must keep at least 2:1 common-only to rare-cost buildings")
             ensure(int(row.get("rare_cost_building_count", 0)) >= 3, errors, f"{town_id} must retain high-tier rare-resource pressure")
+            ensure(int(row.get("rare_upgrade_building_count", 0)) >= 1, errors, f"{town_id} must retain at least one rare-cost high-tier upgrade chain")
             rare_id = str(row.get("rare_resource_id", ""))
             total_costs = row.get("total_costs", {})
             total_costs = total_costs if isinstance(total_costs, dict) else {}
@@ -2872,10 +2874,13 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "town_development_cost_curve_report_v1",
         "MIN_COMMON_ONLY_TO_RARE_RATIO",
         "MIN_RARE_DEVELOPMENT_SPEND",
+        "MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN",
         "HIGH_TIER_START",
         "SIGNATURE_TIER_COUNT",
         "prerequisite_closure",
         "common_only_to_rare_ratio",
+        "rare_upgrade_buildings",
+        "rare-cost upgrade must upgrade from tier",
         "rare cost must be gated behind tier",
         "must spend at least",
         "gold must remain the dominant numeric development cost",
@@ -2891,6 +2896,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "2:1 common-only",
         "4/8/10 curve",
         "at least 24 faction rare resources",
+        "rare-cost high-tier upgrade",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
@@ -2930,7 +2936,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(report_payload.get("schema") == "economy_town_goal_scorecard_report_v1", errors, "Economy town goal scorecard schema mismatch")
     ensure(report_payload.get("slice_id") == "economy-town-goal-scorecard-20260524-10184", errors, "Economy town goal scorecard slice id mismatch")
     ensure(report_payload.get("ok") is True, errors, "Economy town goal scorecard must pass")
-    ensure(int(report_payload.get("requirement_count", 0)) >= 7, errors, "Economy town goal scorecard must cover the owner objective requirements")
+    ensure(int(report_payload.get("requirement_count", 0)) >= 9, errors, "Economy town goal scorecard must cover the owner objective requirements")
     ensure(
         int(report_payload.get("passed_requirement_count", 0)) == int(report_payload.get("requirement_count", -1)),
         errors,
@@ -2946,6 +2952,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "common_resource_dominant_cost_shape",
         "high_tier_rare_resource_pressure",
         "high_tier_unit_build_pacing",
+        "rare_upgrade_chain_pressure",
         "faction_identity_and_unique_towns",
         "seven_tier_unit_buildings",
     ):
@@ -2954,10 +2961,13 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     source_reports = source_reports if isinstance(source_reports, dict) else {}
     town_balance = source_reports.get("town_development_balance_report_v1", {})
     town_balance = town_balance if isinstance(town_balance, dict) else {}
+    cost_curve = source_reports.get("town_development_cost_curve_report_v1", {})
+    cost_curve = cost_curve if isinstance(cost_curve, dict) else {}
     matrix = source_reports.get("active_scenario_resource_availability_matrix_v1", {})
     matrix = matrix if isinstance(matrix, dict) else {}
     ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
     ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
+    ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
     ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
     script_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     doc_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.read_text(encoding="utf-8") if ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.exists() else ""
@@ -2970,6 +2980,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "high_tier_rare_resource_pressure",
         "faction_identity_and_unique_towns",
         "seven_tier_unit_buildings",
+        "rare_upgrade_chain_pressure",
         "live_runtime_development_and_recruitment",
         "active_scenario_player_runway_runtime",
         "active_scenario_ai_runway_runtime",
@@ -2978,6 +2989,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "EXPECTED_SIGNATURE_RARE_CURVE",
         "MIN_HIGH_TIER_UNIT_BUILD_DAYS",
         "MIN_UNIQUE_NON_UNIT_PER_TOWN",
+        "MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN",
     ):
         ensure(required_token in script_text, errors, f"Economy town goal scorecard script is missing token {required_token}")
     for required_text in (
@@ -2991,6 +3003,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "MIN_RARE_DEVELOPMENT_SPEND = 24",
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "tier 5-7 signature unit-building pacing floors",
+        "rare-cost upgrade chain",
         "seven unit tiers",
         "`--include-runtime` mode",
         "15/15 live runtime town-development and recruitment cases",
@@ -20549,7 +20562,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, town completion, build limits, cost shape, rare pressure, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
+    print("- economy/town goal scorecard now consolidates live resources, town completion, build limits, cost shape, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")

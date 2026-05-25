@@ -25,6 +25,7 @@ MIN_UNIQUE_NON_UNIT_PER_TOWN = 5
 MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2.0
+MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 COMMON_RESOURCES = {"gold", "wood", "ore"}
@@ -463,6 +464,31 @@ def main() -> int:
         },
     )
 
+    rare_upgrade_ok = int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN
+    rare_upgrade_counts: dict[str, int] = {}
+    rare_upgrade_total = 0
+    for town_id, row in cost_rows.items():
+        if not isinstance(row, dict):
+            rare_upgrade_ok = False
+            continue
+        rare_upgrade_count = int(row.get("rare_upgrade_building_count", 0))
+        rare_upgrade_counts[town_id] = rare_upgrade_count
+        rare_upgrade_total += rare_upgrade_count
+        if rare_upgrade_count < MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN:
+            rare_upgrade_ok = False
+    add_check(
+        checks,
+        "rare_upgrade_chain_pressure",
+        rare_upgrade_ok,
+        "Every authored town must include at least one rare-cost upgrade chain behind high-tier development.",
+        {
+            "min_rare_upgrade_buildings_per_town": MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN,
+            "town_count": len(rare_upgrade_counts),
+            "rare_upgrade_building_total": rare_upgrade_total,
+            "rare_upgrade_count_min": min(rare_upgrade_counts.values(), default=0),
+        },
+    )
+
     unique_ok = True
     unique_rows: dict[str, dict[str, Any]] = {}
     rare_ids_by_faction: dict[str, str] = {}
@@ -551,6 +577,7 @@ def main() -> int:
             "town_development_cost_curve_report_v1": {
                 "authored_town_count": int(cost_curve.get("authored_town_count", 0)),
                 "faction_count": int(cost_curve.get("faction_count", 0)),
+                "min_rare_upgrade_buildings_per_town": int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)),
             },
             "active_scenario_resource_availability_matrix_v1": {
                 "active_scenario_count": int(source_matrix.get("active_scenario_count", 0)),
