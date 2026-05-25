@@ -298,7 +298,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(player_runtime.get("active_scenario_count", 0)) >= 16
         and int(player_runtime.get("player_town_case_count", 0)) >= 18
         and int(player_runtime.get("completed_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("rare_spend_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("full_session_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("delayed_source_replay_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("delayed_source_replay_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("delayed_source_save_resume_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("recruited_unit_case_count", 0)) >= 18 * SIGNATURE_TIER_COUNT
     )
@@ -311,7 +315,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
             "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
             "completed_case_count": int(player_runtime.get("completed_case_count", 0)),
+            "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
+            "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
+            "delayed_source_replay_case_count": int(player_runtime.get("delayed_source_replay_case_count", 0)),
             "delayed_source_replay_completed_count": int(player_runtime.get("delayed_source_replay_completed_count", 0)),
+            "delayed_source_save_resume_case_count": int(player_runtime.get("delayed_source_save_resume_case_count", 0)),
             "delayed_source_save_resume_completed_count": int(player_runtime.get("delayed_source_save_resume_completed_count", 0)),
             "recruited_unit_case_count": int(player_runtime.get("recruited_unit_case_count", 0)),
         },
@@ -323,8 +331,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(ai_runtime.get("active_scenario_count", 0)) >= 16
         and int(ai_runtime.get("enemy_town_case_count", 0)) >= 20
         and int(ai_runtime.get("completed_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("rare_spend_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("same_day_guard_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("full_session_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("delayed_source_replay_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("delayed_source_replay_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("delayed_source_save_resume_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
     )
     add_check(
@@ -336,8 +348,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
             "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
             "completed_case_count": int(ai_runtime.get("completed_case_count", 0)),
+            "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
             "same_day_guard_case_count": int(ai_runtime.get("same_day_guard_case_count", 0)),
+            "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
+            "delayed_source_replay_case_count": int(ai_runtime.get("delayed_source_replay_case_count", 0)),
             "delayed_source_replay_completed_count": int(ai_runtime.get("delayed_source_replay_completed_count", 0)),
+            "delayed_source_save_resume_case_count": int(ai_runtime.get("delayed_source_save_resume_case_count", 0)),
             "delayed_source_save_resume_completed_count": int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)),
         },
     )
@@ -402,10 +418,14 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         "active_scenario_town_development_runway_report_v1": {
             "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
             "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
+            "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
+            "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
             "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
+            "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
+            "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
         },
         "town_unique_building_runtime_payoff_report_v1": {
             "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),
