@@ -491,12 +491,17 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
 
     generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
     generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
+    generated_breadth = generated_package_runtime.get("generated_town_economy_breadth", {})
     generated_runway = generated_package_runtime.get("generated_player_town_development_runway", {})
     generated_enemy_runway = generated_package_runtime.get("generated_enemy_town_development_runway", {})
     generated_resource_source_ids = {str(value) for value in generated_surface.get("generated_resource_source_ids", [])}
     generated_player_required_ids = {str(value) for value in generated_surface.get("player_required_resource_ids", [])}
     generated_faction_ids = {str(value) for value in generated_surface.get("generated_faction_ids", [])}
     generated_town_ids = {str(value) for value in generated_surface.get("generated_town_ids", [])}
+    generated_breadth_resource_source_ids = {str(value) for value in generated_breadth.get("generated_resource_source_ids", [])}
+    generated_breadth_player_required_ids = {str(value) for value in generated_breadth.get("player_required_resource_ids", [])}
+    generated_breadth_faction_ids = {str(value) for value in generated_breadth.get("generated_faction_ids", [])}
+    generated_breadth_town_ids = {str(value) for value in generated_breadth.get("generated_town_ids", [])}
     generated_package_town_economy_ok = (
         generated_package_runtime.get("ok") is True
         and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
@@ -538,6 +543,48 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
             "missing_player_resource_sources": [str(value) for value in generated_surface.get("missing_player_resource_sources", [])],
+        },
+    )
+    generated_package_town_economy_breadth_ok = (
+        generated_package_runtime.get("ok") is True
+        and generated_breadth.get("schema") == "generated_package_town_economy_breadth_v1"
+        and generated_breadth.get("status") == "pass"
+        and generated_breadth.get("package_session_scope") == "strict_small_36x36_one_level_land_multi_seed"
+        and int(generated_breadth.get("case_count", 0)) >= 3
+        and int(generated_breadth.get("passed_case_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("distinct_map_package_hash_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("distinct_scenario_package_hash_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("all_common_source_case_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("player_required_source_case_count", 0)) == int(generated_breadth.get("case_count", -1))
+        and int(generated_breadth.get("total_town_count", 0)) >= int(generated_breadth.get("case_count", 0)) * 3
+        and int(generated_breadth.get("total_resource_node_count", 0)) > 0
+        and int(generated_breadth.get("unique_faction_count", 0)) >= 3
+        and int(generated_breadth.get("unique_town_template_count", 0)) >= 3
+        and COMMON_RESOURCES.issubset(generated_breadth_resource_source_ids)
+        and generated_breadth_player_required_ids.issubset(generated_breadth_resource_source_ids)
+    )
+    add_check(
+        checks,
+        "generated_package_town_economy_breadth_runtime",
+        generated_package_town_economy_breadth_ok,
+        "Generated/native package town economy surface must hold across multiple deterministic strict Small package seeds, not only the active startup package.",
+        {
+            "schema": str(generated_breadth.get("schema", "")),
+            "package_session_scope": str(generated_breadth.get("package_session_scope", "")),
+            "case_count": int(generated_breadth.get("case_count", 0)),
+            "passed_case_count": int(generated_breadth.get("passed_case_count", 0)),
+            "distinct_map_package_hash_count": int(generated_breadth.get("distinct_map_package_hash_count", 0)),
+            "distinct_scenario_package_hash_count": int(generated_breadth.get("distinct_scenario_package_hash_count", 0)),
+            "all_common_source_case_count": int(generated_breadth.get("all_common_source_case_count", 0)),
+            "player_required_source_case_count": int(generated_breadth.get("player_required_source_case_count", 0)),
+            "total_town_count": int(generated_breadth.get("total_town_count", 0)),
+            "total_resource_node_count": int(generated_breadth.get("total_resource_node_count", 0)),
+            "unique_faction_count": int(generated_breadth.get("unique_faction_count", 0)),
+            "unique_town_template_count": int(generated_breadth.get("unique_town_template_count", 0)),
+            "generated_faction_ids": sorted(generated_breadth_faction_ids),
+            "generated_town_ids": sorted(generated_breadth_town_ids),
+            "generated_resource_source_ids": sorted(generated_breadth_resource_source_ids),
+            "player_required_resource_ids": sorted(generated_breadth_player_required_ids),
         },
     )
     generated_package_player_runway_ok = (
@@ -1038,6 +1085,22 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
+        },
+        "generated_package_town_economy_breadth_v1": {
+            "case_count": int(generated_breadth.get("case_count", 0)),
+            "passed_case_count": int(generated_breadth.get("passed_case_count", 0)),
+            "distinct_map_package_hash_count": int(generated_breadth.get("distinct_map_package_hash_count", 0)),
+            "distinct_scenario_package_hash_count": int(generated_breadth.get("distinct_scenario_package_hash_count", 0)),
+            "all_common_source_case_count": int(generated_breadth.get("all_common_source_case_count", 0)),
+            "player_required_source_case_count": int(generated_breadth.get("player_required_source_case_count", 0)),
+            "total_town_count": int(generated_breadth.get("total_town_count", 0)),
+            "total_resource_node_count": int(generated_breadth.get("total_resource_node_count", 0)),
+            "unique_faction_count": int(generated_breadth.get("unique_faction_count", 0)),
+            "unique_town_template_count": int(generated_breadth.get("unique_town_template_count", 0)),
+            "generated_faction_ids": sorted(generated_breadth_faction_ids),
+            "generated_town_ids": sorted(generated_breadth_town_ids),
+            "generated_resource_source_ids": sorted(generated_breadth_resource_source_ids),
+            "player_required_resource_ids": sorted(generated_breadth_player_required_ids),
         },
         "generated_package_player_town_development_runway_v1": {
             "town_id": str(generated_runway.get("town_id", "")),

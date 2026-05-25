@@ -22,6 +22,11 @@ const RARE_RESOURCE_IDS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+const GENERATED_TOWN_ECONOMY_BREADTH_CASES := [
+	{"id": "small_land_seed_a", "seed": "native-rmg-economy-breadth-small-land-a-10184", "template_id": "translated_rmg_template_049_v1", "profile_id": "translated_rmg_profile_049_v1", "player_count": 3, "water_mode": "land", "underground": false, "size_class_id": "homm3_small"},
+	{"id": "small_land_seed_b", "seed": "native-rmg-economy-breadth-small-land-b-10184", "template_id": "translated_rmg_template_049_v1", "profile_id": "translated_rmg_profile_049_v1", "player_count": 3, "water_mode": "land", "underground": false, "size_class_id": "homm3_small"},
+	{"id": "small_land_seed_c", "seed": "native-rmg-economy-breadth-small-land-c-10184", "template_id": "translated_rmg_template_049_v1", "profile_id": "translated_rmg_profile_049_v1", "player_count": 3, "water_mode": "land", "underground": false, "size_class_id": "homm3_small"},
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -161,6 +166,9 @@ func _run() -> void:
 	var generated_town_economy_surface := _assert_generated_town_economy_surface(active_session)
 	if generated_town_economy_surface.is_empty():
 		return
+	var generated_town_economy_breadth := _assert_generated_town_economy_breadth(service, bridge)
+	if generated_town_economy_breadth.is_empty():
+		return
 	var generated_player_town_development_runway := _assert_generated_player_town_development_runway(active_session)
 	if generated_player_town_development_runway.is_empty():
 		return
@@ -200,6 +208,7 @@ func _run() -> void:
 		"bridge_resource_stockpile": bridge_resource_stockpile,
 		"active_resource_stockpile": active_resource_stockpile,
 		"generated_town_economy_surface": generated_town_economy_surface,
+		"generated_town_economy_breadth": generated_town_economy_breadth,
 		"generated_player_town_development_runway": generated_player_town_development_runway,
 		"generated_enemy_town_development_runway": generated_enemy_town_development_runway,
 		"visual_bridge": visual_bridge,
@@ -441,7 +450,7 @@ func _assert_full_resource_stockpile(session: SessionStateStoreScript.SessionDat
 		"rare_resources_seeded_at_zero": true,
 	}
 
-func _assert_generated_town_economy_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+func _assert_generated_town_economy_surface(session: SessionStateStoreScript.SessionData, case_id: String = "", require_identity_diversity: bool = true) -> Dictionary:
 	var towns: Array = session.overworld.get("towns", []) if session != null and session.overworld.get("towns", []) is Array else []
 	var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session != null and session.overworld.get("resource_nodes", []) is Array else []
 	var resource_source_ids := _generated_resource_source_ids(resource_nodes)
@@ -512,14 +521,15 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 			or authored_town_template_count != town_count \
 			or seven_tier_town_count != town_count \
 			or rare_development_town_count != town_count \
-			or generated_faction_ids.size() < 3 \
-			or generated_town_ids.size() < 3 \
+			or (require_identity_diversity and generated_faction_ids.size() < 3) \
+			or (require_identity_diversity and generated_town_ids.size() < 3) \
 			or resource_nodes.is_empty() \
 			or not missing_player_resource_sources.is_empty():
 		status = "fail"
 	var surface := {
 		"schema": "generated_package_town_economy_surface_v1",
 		"status": status,
+		"case_id": case_id,
 		"package_session_scope": "strict_small_36x36_one_level_land_only",
 		"town_count": town_count,
 		"player_town_count": player_town_count,
@@ -541,6 +551,130 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 		_fail("Generated package town economy surface failed: %s" % JSON.stringify(surface))
 		return {}
 	return surface
+
+func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -> Dictionary:
+	var rows := []
+	var map_package_hashes := {}
+	var scenario_package_hashes := {}
+	var generated_faction_ids := {}
+	var generated_town_ids := {}
+	var generated_resource_source_ids := {}
+	var player_required_resource_ids := {}
+	var source_h3maped_faction_ids := {}
+	var passed_case_count := 0
+	var all_common_source_case_count := 0
+	var player_required_source_case_count := 0
+	var total_town_count := 0
+	var total_resource_node_count := 0
+	for case_record in GENERATED_TOWN_ECONOMY_BREADTH_CASES:
+		var case_id := String(case_record.get("id", ""))
+		var config := ScenarioSelectRulesScript.build_random_map_player_config(
+			String(case_record.get("seed", "")),
+			String(case_record.get("template_id", "")),
+			String(case_record.get("profile_id", "")),
+			int(case_record.get("player_count", 3)),
+			String(case_record.get("water_mode", "land")),
+			bool(case_record.get("underground", false)),
+			String(case_record.get("size_class_id", "homm3_small"))
+		)
+		var generated: Dictionary = service.generate_random_map(config, {
+			"startup_path": "generated_town_economy_breadth_%s" % case_id,
+		})
+		_assert_native_generation(generated)
+		var adoption: Dictionary = service.convert_generated_payload(generated, {
+			"feature_gate": FEATURE_GATE,
+			"session_save_version": SessionStateStoreScript.SAVE_VERSION,
+			"scenario_id": "native_generated_town_economy_breadth_%s" % case_id,
+		})
+		_assert_adoption_shape(adoption, 36, 36, 1, int(case_record.get("player_count", 3)))
+		var case_session: SessionStateStoreScript.SessionData = bridge.build_session_from_adoption(adoption, "normal")
+		if case_session == null or case_session.session_id == "":
+			_fail("Generated package town economy breadth case %s did not build a session." % case_id)
+			return {}
+		var surface := _assert_generated_town_economy_surface(case_session, case_id, false)
+		if surface.is_empty():
+			return {}
+		var map_hash := String(adoption.get("map_package_record", {}).get("package_hash", ""))
+		var scenario_hash := String(adoption.get("scenario_package_record", {}).get("package_hash", ""))
+		if map_hash != "":
+			map_package_hashes[map_hash] = true
+		if scenario_hash != "":
+			scenario_package_hashes[scenario_hash] = true
+		if String(surface.get("status", "")) == "pass":
+			passed_case_count += 1
+		total_town_count += int(surface.get("town_count", 0))
+		total_resource_node_count += int(surface.get("generated_resource_node_count", 0))
+		var case_resource_ids := {}
+		for resource_id_value in surface.get("generated_resource_source_ids", []):
+			var resource_id := String(resource_id_value)
+			generated_resource_source_ids[resource_id] = true
+			case_resource_ids[resource_id] = true
+		var common_covered := true
+		for resource_id in ["gold", "wood", "ore"]:
+			if not bool(case_resource_ids.get(resource_id, false)):
+				common_covered = false
+		if common_covered:
+			all_common_source_case_count += 1
+		var player_required_covered := true
+		for resource_id_value in surface.get("player_required_resource_ids", []):
+			var resource_id := String(resource_id_value)
+			player_required_resource_ids[resource_id] = true
+			if not bool(case_resource_ids.get(resource_id, false)):
+				player_required_covered = false
+		if player_required_covered and surface.get("missing_player_resource_sources", []).is_empty():
+			player_required_source_case_count += 1
+		for faction_id_value in surface.get("generated_faction_ids", []):
+			generated_faction_ids[String(faction_id_value)] = true
+		for town_id_value in surface.get("generated_town_ids", []):
+			generated_town_ids[String(town_id_value)] = true
+		for source_id_value in surface.get("source_h3maped_faction_ids", []):
+			source_h3maped_faction_ids[String(source_id_value)] = true
+		rows.append({
+			"case_id": case_id,
+			"seed": String(case_record.get("seed", "")),
+			"template_id": String(case_record.get("template_id", "")),
+			"profile_id": String(case_record.get("profile_id", "")),
+			"map_package_hash": map_hash,
+			"scenario_package_hash": scenario_hash,
+			"surface": surface,
+		})
+	var case_count := rows.size()
+	var status := "pass"
+	if case_count < 3 \
+			or passed_case_count != case_count \
+			or map_package_hashes.size() != case_count \
+			or scenario_package_hashes.size() != case_count \
+			or all_common_source_case_count != case_count \
+			or player_required_source_case_count != case_count \
+			or total_town_count < case_count * 3 \
+			or generated_faction_ids.size() < 3 \
+			or generated_town_ids.size() < 3:
+		status = "fail"
+	var breadth := {
+		"schema": "generated_package_town_economy_breadth_v1",
+		"status": status,
+		"package_session_scope": "strict_small_36x36_one_level_land_multi_seed",
+		"case_count": case_count,
+		"passed_case_count": passed_case_count,
+		"distinct_map_package_hash_count": map_package_hashes.size(),
+		"distinct_scenario_package_hash_count": scenario_package_hashes.size(),
+		"all_common_source_case_count": all_common_source_case_count,
+		"player_required_source_case_count": player_required_source_case_count,
+		"total_town_count": total_town_count,
+		"total_resource_node_count": total_resource_node_count,
+		"unique_faction_count": generated_faction_ids.size(),
+		"unique_town_template_count": generated_town_ids.size(),
+		"generated_faction_ids": _sorted_string_keys(generated_faction_ids),
+		"generated_town_ids": _sorted_string_keys(generated_town_ids),
+		"source_h3maped_faction_ids": _sorted_string_keys(source_h3maped_faction_ids),
+		"generated_resource_source_ids": _sorted_string_keys(generated_resource_source_ids),
+		"player_required_resource_ids": _sorted_string_keys(player_required_resource_ids),
+		"cases": rows,
+	}
+	if status != "pass":
+		_fail("Generated package town economy breadth failed: %s" % JSON.stringify(breadth))
+		return {}
+	return breadth
 
 func _assert_generated_player_town_development_runway(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var player_town := _player_town(session)
