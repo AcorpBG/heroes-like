@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Late Rare Bottleneck Scorecard",
+  "currentSliceId": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Active Runtime Rare Session Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed late rare-resource bottleneck coverage. Deterministic balance now proves 15/15 authored towns have at least one day 18+ faction-rare bottleneck, scorecard passes 12/12 default and 16/16 runtime-inclusive checks.",
+  "currentSliceNotes": "Completed runtime-inclusive economy/town scorecard gate now requires active player and AI town runways to prove rare spend and full-session execution in every case.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T02:10:32Z",
+  "updatedAt": "2026-05-25T02:30:46Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,32 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
+      "title": "Economy Town Active Runtime Rare Session Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T02:30:46Z",
+      "startedAt": "2026-05-25T02:13:41Z",
+      "completedAt": "2026-05-25T02:30:46Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "summary": "Runtime-inclusive scorecard requires active player and AI town runways to prove rare-resource spend and full active-session execution in every case.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 16/16 runtime-inclusive checks, player 18/18 and AI 20/20 rare/full-session cases)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed scorecard slice tightens runtime-inclusive active scenario evidence so player and AI town runway cases must all prove rare spend and full-session execution."
+    },
     {
       "id": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
       "title": "Economy Town Late Rare Bottleneck Scorecard",
@@ -28019,7 +28045,7 @@
     "status": "completed",
     "updatedAt": "2026-05-24T22:48:04Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T02:10:32Z",
+  "currentSliceUpdatedAt": "2026-05-25T02:30:46Z",
   "validationHistory": [
     {
       "status": "passed",
@@ -28724,10 +28750,10 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
-    "title": "Economy Town Late Rare Bottleneck Scorecard",
+    "id": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
+    "title": "Economy Town Active Runtime Rare Session Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T02:10:32Z"
+    "updatedAt": "2026-05-25T02:30:46Z"
   },
   "validation": [
     {
