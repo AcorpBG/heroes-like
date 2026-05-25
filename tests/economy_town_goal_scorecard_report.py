@@ -618,6 +618,33 @@ def main() -> int:
         },
     )
 
+    late_rare_bottleneck_ok = balance.get("ok") is True
+    min_late_rare_bottleneck_day = int(balance.get("min_late_rare_bottleneck_day", 0))
+    min_late_rare_bottleneck_days_per_town = int(balance.get("min_late_rare_bottleneck_days_per_town", 0))
+    late_rare_bottleneck_rows: dict[str, int] = {}
+    for town_id, row in town_rows.items():
+        if not isinstance(row, dict):
+            late_rare_bottleneck_ok = False
+            continue
+        count = int(row.get("late_rare_bottleneck_day_count", 0))
+        late_rare_bottleneck_rows[town_id] = count
+        if count < min_late_rare_bottleneck_days_per_town:
+            late_rare_bottleneck_ok = False
+    add_check(
+        checks,
+        "late_rare_resource_bottleneck",
+        late_rare_bottleneck_ok,
+        "Every authored town must hit at least one late-development bottleneck where an available high-tier/upgrade building is blocked by its faction rare resource.",
+        {
+            "min_late_rare_bottleneck_day": min_late_rare_bottleneck_day,
+            "min_late_rare_bottleneck_days_per_town": min_late_rare_bottleneck_days_per_town,
+            "town_count": len(late_rare_bottleneck_rows),
+            "late_rare_bottleneck_day_count_min": min(late_rare_bottleneck_rows.values(), default=0),
+            "late_rare_bottleneck_day_count_max": max(late_rare_bottleneck_rows.values(), default=0),
+            "town_late_rare_bottleneck_day_counts": late_rare_bottleneck_rows,
+        },
+    )
+
     high_tier_pacing_ok = balance.get("min_high_tier_unit_build_days", {}) == {
         str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()
     }
@@ -755,6 +782,8 @@ def main() -> int:
                 "authored_town_count": int(balance.get("authored_town_count", 0)),
                 "completion_day_min": min(completion_days) if completion_days else 0,
                 "completion_day_max": max(completion_days) if completion_days else 0,
+                "min_late_rare_bottleneck_day": int(balance.get("min_late_rare_bottleneck_day", 0)),
+                "min_late_rare_bottleneck_days_per_town": int(balance.get("min_late_rare_bottleneck_days_per_town", 0)),
             },
             "town_development_cost_curve_report_v1": {
                 "authored_town_count": int(cost_curve.get("authored_town_count", 0)),

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Unique Payoff Diversity Scorecard",
+  "currentSliceId": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Late Rare Bottleneck Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed unique non-unit town building payoff-domain diversity coverage. Focused live report covers 6 factions, 15 authored towns, 127/127 runtime payoff cases, and at least 5 payoff domains per authored town; runtime-inclusive economy/town scorecard passes 15/15 checks.",
+  "currentSliceNotes": "Completed late rare-resource bottleneck coverage. Deterministic balance now proves 15/15 authored towns have at least one day 18+ faction-rare bottleneck, scorecard passes 12/12 default and 16/16 runtime-inclusive checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T01:48:16Z",
+  "updatedAt": "2026-05-25T02:10:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,38 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
+      "title": "Economy Town Late Rare Bottleneck Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T02:10:32Z",
+      "startedAt": "2026-05-25T01:55:27Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-town-development-live-balance-gate-report.md"
+      ],
+      "summary": "High-tier rare-resource pressure should create actual late-development bottleneck days in every authored town, not only total rare spend.",
+      "validation": [
+        "python3 tests/town_development_balance_report.py (passed; 15 authored towns, completion day 24-30, min late rare bottleneck day count=1)",
+        "python3 tests/town_development_cost_curve_report.py (passed; 15 authored towns inside price-band limits)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 default checks, late_rare_resource_bottleneck included)",
+        "python3 tests/validate_repo.py (passed)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 16/16 runtime-inclusive checks)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed late rare-resource bottleneck coverage. Deterministic balance now proves 15/15 authored towns have at least one day 18+ faction-rare bottleneck, scorecard passes 12/12 default and 16/16 runtime-inclusive checks.",
+      "completedAt": "2026-05-25T02:10:32Z"
+    },
     {
       "id": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
       "title": "Economy Town Unique Payoff Diversity Scorecard",
@@ -27987,7 +28019,7 @@
     "status": "completed",
     "updatedAt": "2026-05-24T22:48:04Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T01:48:16Z",
+  "currentSliceUpdatedAt": "2026-05-25T02:10:32Z",
   "validationHistory": [
     {
       "status": "passed",
@@ -28692,10 +28724,10 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-unique-payoff-diversity-scorecard-20260525-10184",
-    "title": "Economy Town Unique Payoff Diversity Scorecard",
+    "id": "economy-town-late-rare-bottleneck-scorecard-20260525-10184",
+    "title": "Economy Town Late Rare Bottleneck Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T01:48:16Z"
+    "updatedAt": "2026-05-25T02:10:32Z"
   },
   "validation": [
     {
