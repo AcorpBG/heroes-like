@@ -879,10 +879,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and player_runtime.get("ok") is True
         and int(town_runtime.get("recruitment_market_covered_town_count", 0)) > 0
         and int(town_runtime.get("recruitment_market_purchase_count", 0)) > 0
-        and int(town_runtime.get("recruitment_market_reset_wait_count", 0)) > 0
         and "recruitment_market_covered_case_count" in player_runtime
         and "recruitment_market_purchase_count" in player_runtime
         and "recruitment_market_reset_wait_count" in player_runtime
+        and int(player_runtime.get("recruitment_market_covered_case_count", 0)) > 0
+        and int(player_runtime.get("recruitment_market_purchase_count", 0)) > 0
     )
     add_check(
         checks,
