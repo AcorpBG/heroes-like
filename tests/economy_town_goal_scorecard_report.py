@@ -406,6 +406,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
 
     generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
     generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
+    generated_runway = generated_package_runtime.get("generated_player_town_development_runway", {})
     generated_resource_source_ids = {str(value) for value in generated_surface.get("generated_resource_source_ids", [])}
     generated_player_required_ids = {str(value) for value in generated_surface.get("player_required_resource_ids", [])}
     generated_package_town_economy_ok = (
@@ -442,6 +443,50 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
             "missing_player_resource_sources": [str(value) for value in generated_surface.get("missing_player_resource_sources", [])],
+        },
+    )
+    generated_package_player_runway_ok = (
+        generated_package_runtime.get("ok") is True
+        and generated_runway.get("schema") == "generated_package_player_town_development_runway_v1"
+        and generated_runway.get("status") == "pass"
+        and generated_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
+        and generated_runway.get("completed") is True
+        and int(generated_runway.get("completion_day", 999)) <= TARGET_TURNS
+        and int(generated_runway.get("build_count", 0)) == int(generated_runway.get("target_building_count", -1))
+        and generated_runway.get("same_day_reject_ok") is True
+        and generated_runway.get("build_actions_after_build_blocked") is True
+        and generated_runway.get("rare_spend_observed") is True
+        and generated_runway.get("market_common_only") is True
+        and int(generated_runway.get("focused_economy_day_advance_count", 0)) > 0
+        and generated_runway.get("recruitment_end_to_end_ok") is True
+        and int(generated_runway.get("recruited_unit_case_count", 0)) == SIGNATURE_TIER_COUNT
+        and not generated_runway.get("missing_buildings", [])
+    )
+    add_check(
+        checks,
+        "generated_package_player_town_runway_runtime",
+        generated_package_player_runway_ok,
+        "Generated/native package sessions must run the player town through live 30-turn development, rare spend, one-build-per-day guard, and seven-tier recruitment.",
+        {
+            "schema": str(generated_runway.get("schema", "")),
+            "package_session_scope": str(generated_runway.get("package_session_scope", "")),
+            "town_id": str(generated_runway.get("town_id", "")),
+            "faction_id": str(generated_runway.get("faction_id", "")),
+            "completed": generated_runway.get("completed") is True,
+            "completion_day": int(generated_runway.get("completion_day", 0)),
+            "build_count": int(generated_runway.get("build_count", 0)),
+            "target_building_count": int(generated_runway.get("target_building_count", 0)),
+            "same_day_reject_ok": generated_runway.get("same_day_reject_ok") is True,
+            "build_actions_after_build_blocked": generated_runway.get("build_actions_after_build_blocked") is True,
+            "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
+            "recruitment_end_to_end_ok": generated_runway.get("recruitment_end_to_end_ok") is True,
+            "recruited_unit_case_count": int(generated_runway.get("recruited_unit_case_count", 0)),
+            "secured_resource_ids": sorted(
+                str(value)
+                for value in generated_runway.get("source_evidence", {}).get("secured_resource_ids", [])
+            )
+            if isinstance(generated_runway.get("source_evidence", {}), dict)
+            else [],
         },
     )
 
@@ -761,6 +806,16 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
+        },
+        "generated_package_player_town_development_runway_v1": {
+            "town_id": str(generated_runway.get("town_id", "")),
+            "faction_id": str(generated_runway.get("faction_id", "")),
+            "completed": generated_runway.get("completed") is True,
+            "completion_day": int(generated_runway.get("completion_day", 0)),
+            "build_count": int(generated_runway.get("build_count", 0)),
+            "target_building_count": int(generated_runway.get("target_building_count", 0)),
+            "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
+            "recruited_unit_case_count": int(generated_runway.get("recruited_unit_case_count", 0)),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
