@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Active Runtime Rare Session Scorecard",
+  "currentSliceId": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Runtime UI Surface Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime-inclusive economy/town scorecard gate now requires active player and AI town runways to prove rare spend and full-session execution in every case.",
+  "currentSliceNotes": "Completed runtime-inclusive economy/town scorecard gate now requires live TownShell resource/build and seven-tier recruitment UI surfaces.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T02:30:46Z",
+  "updatedAt": "2026-05-25T02:51:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
+      "title": "Economy Town Runtime UI Surface Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T02:51:51Z",
+      "startedAt": "2026-05-25T02:33:32Z",
+      "completedAt": "2026-05-25T02:51:51Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "tests/town_economy_resource_ui_surface_report.gd",
+        "tests/town_recruitment_ui_surface_report.gd"
+      ],
+      "summary": "Runtime-inclusive scorecard requires live TownShell resource/build and seven-tier recruitment UI surfaces to stay wired to the production economy/town model.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks, 6/6 resource/build UI cases and 42/42 seven-tier recruitment UI cases)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed scorecard slice closes a gap where player-facing TownShell resource and recruitment UI reports existed but were not part of the top-level economy/town runtime gate."
+    },
     {
       "id": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
       "title": "Economy Town Active Runtime Rare Session Scorecard",
@@ -28045,7 +28073,7 @@
     "status": "completed",
     "updatedAt": "2026-05-24T22:48:04Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T02:30:46Z",
+  "currentSliceUpdatedAt": "2026-05-25T02:51:51Z",
   "validationHistory": [
     {
       "status": "passed",
@@ -28750,10 +28778,10 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-active-runtime-rare-session-scorecard-20260525-10184",
-    "title": "Economy Town Active Runtime Rare Session Scorecard",
+    "id": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
+    "title": "Economy Town Runtime UI Surface Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T02:30:46Z"
+    "updatedAt": "2026-05-25T02:51:51Z"
   },
   "validation": [
     {
