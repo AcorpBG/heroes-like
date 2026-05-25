@@ -717,6 +717,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     blocked_rare_action_case_count = 0
     ready_rare_action_case_count = 0
     common_only_market_case_count = 0
+    same_day_build_lockout_case_count = 0
     for row in resource_ui_cases:
         if not isinstance(row, dict):
             continue
@@ -747,6 +748,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             ready_rare_action_case_count += 1
         if int(row.get("market_action_count", 0)) > 0:
             common_only_market_case_count += 1
+        if (
+            bool(row.get("same_day_build_lockout_ok", False))
+            and int(row.get("post_build_action_count", 999)) == 0
+            and int(row.get("post_build_enabled_action_count", 999)) == 0
+            and int(row.get("same_day_guarded_unbuilt_count", 0)) > 0
+        ):
+            same_day_build_lockout_case_count += 1
     resource_ui_runtime_ok = (
         resource_ui_runtime.get("ok") is True
         and int(resource_ui_runtime.get("faction_case_count", 0)) >= MIN_FACTIONS
@@ -767,7 +775,23 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "blocked_rare_action_case_count": blocked_rare_action_case_count,
             "ready_rare_action_case_count": ready_rare_action_case_count,
             "common_only_market_case_count": common_only_market_case_count,
+            "same_day_build_lockout_case_count": same_day_build_lockout_case_count,
             "live_stockpile_resource_ids": sorted(str(value) for value in resource_ui_runtime.get("live_stockpile_resource_ids", [])),
+        },
+    )
+    add_check(
+        checks,
+        "town_resource_ui_same_day_build_lockout_runtime",
+        (
+            resource_ui_runtime.get("ok") is True
+            and same_day_build_lockout_case_count >= MIN_FACTIONS
+            and int(resource_ui_runtime.get("same_day_build_lockout_case_count", 0)) >= MIN_FACTIONS
+        ),
+        "Live TownShell build UI must stop offering construction after one build order has completed for the current town day.",
+        {
+            "faction_case_count": int(resource_ui_runtime.get("faction_case_count", 0)),
+            "same_day_build_lockout_case_count": same_day_build_lockout_case_count,
+            "reported_same_day_build_lockout_case_count": int(resource_ui_runtime.get("same_day_build_lockout_case_count", 0)),
         },
     )
 
@@ -941,6 +965,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "blocked_rare_action_case_count": blocked_rare_action_case_count,
             "ready_rare_action_case_count": ready_rare_action_case_count,
             "common_only_market_case_count": common_only_market_case_count,
+            "same_day_build_lockout_case_count": same_day_build_lockout_case_count,
         },
         "town_recruitment_ui_surface_report_v1": {
             "faction_case_count": int(recruitment_ui_runtime.get("faction_case_count", 0)),
