@@ -29,7 +29,9 @@ MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_LATE_RARE_BOTTLENECK_DAY = 18
 MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN = 1
+MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
+COMMON_MATERIAL_RESOURCES = {"wood", "ore"}
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
     "faction_thornwake",
@@ -111,6 +113,7 @@ def simulate_town(
     build_log: list[dict[str, Any]] = []
     stalled_days: list[dict[str, Any]] = []
     late_rare_bottleneck_days: list[dict[str, Any]] = []
+    common_material_bottleneck_days: list[dict[str, Any]] = []
 
     signature_order = {
         str(building_id): index
@@ -158,6 +161,17 @@ def simulate_town(
                                 "available_rare": int(resources.get(rare_id, 0)),
                                 "required_rare": int(cost.get(rare_id, 0)),
                                 "missing_rare": int(missing.get(rare_id, 0)),
+                            }
+                        )
+                    missing_material_ids = sorted(COMMON_MATERIAL_RESOURCES.intersection(missing.keys()))
+                    if missing_material_ids:
+                        common_material_bottleneck_days.append(
+                            {
+                                "day": day,
+                                "building_id": building_id,
+                                "missing_material_ids": missing_material_ids,
+                                "missing": {resource_id: int(missing.get(resource_id, 0)) for resource_id in missing_material_ids},
+                                "available": {resource_id: int(resources.get(resource_id, 0)) for resource_id in sorted(COMMON_MATERIAL_RESOURCES)},
                             }
                         )
                 stalled_days.append(
@@ -209,6 +223,9 @@ def simulate_town(
         "late_rare_bottleneck_day_count": len({int(row["day"]) for row in late_rare_bottleneck_days}),
         "min_late_rare_bottleneck_day": MIN_LATE_RARE_BOTTLENECK_DAY,
         "min_late_rare_bottleneck_days_per_town": MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN,
+        "common_material_bottleneck_days": common_material_bottleneck_days,
+        "common_material_bottleneck_day_count": len({int(row["day"]) for row in common_material_bottleneck_days}),
+        "min_common_material_bottleneck_days_per_town": MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN,
         "signature_tier_build_days": signature_tier_build_days,
         "min_high_tier_unit_build_days": {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()},
         "stalled_days": stalled_days[:5],
@@ -340,6 +357,10 @@ def main() -> int:
             errors.append(
                 f"{town_id} must have at least {MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN} late rare-resource bottleneck days"
             )
+        if int(result.get("common_material_bottleneck_day_count", 0)) < MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN:
+            errors.append(
+                f"{town_id} must have at least {MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN} wood/ore bottleneck days"
+            )
         signature_tier_days = result.get("signature_tier_build_days", {})
         for tier, minimum_day in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items():
             build_day = int(signature_tier_days.get(str(tier), 0))
@@ -358,6 +379,7 @@ def main() -> int:
     report["max_ending_rare_after_completion"] = MAX_ENDING_RARE_AFTER_COMPLETION
     report["min_late_rare_bottleneck_day"] = MIN_LATE_RARE_BOTTLENECK_DAY
     report["min_late_rare_bottleneck_days_per_town"] = MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN
+    report["min_common_material_bottleneck_days_per_town"] = MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN
     report["min_high_tier_unit_build_days"] = {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()}
 
     for faction_id, faction in factions.items():

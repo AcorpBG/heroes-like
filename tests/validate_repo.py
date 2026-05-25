@@ -2730,6 +2730,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     max_ending_rare_after_completion = int(report_payload.get("max_ending_rare_after_completion", 999)) if isinstance(report_payload, dict) else 999
     min_late_rare_bottleneck_day = int(report_payload.get("min_late_rare_bottleneck_day", 0)) if isinstance(report_payload, dict) else 0
     min_late_rare_bottleneck_days_per_town = int(report_payload.get("min_late_rare_bottleneck_days_per_town", 0)) if isinstance(report_payload, dict) else 0
+    min_common_material_bottleneck_days_per_town = int(report_payload.get("min_common_material_bottleneck_days_per_town", 0)) if isinstance(report_payload, dict) else 0
     min_high_tier_unit_build_days = report_payload.get("min_high_tier_unit_build_days", {}) if isinstance(report_payload, dict) else {}
     ensure(authored_town_count >= 15, errors, "Town development balance report must cover all authored towns, not just seed towns")
     ensure(full_ladder_town_count == authored_town_count, errors, "Every authored town must expose its faction seven-building ladder")
@@ -2738,6 +2739,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     ensure(max_ending_rare_after_completion <= 13, errors, "Town development balance report must cap leftover rare resources after completion")
     ensure(min_late_rare_bottleneck_day >= 18, errors, "Town development balance report must define late rare-resource bottleneck timing")
     ensure(min_late_rare_bottleneck_days_per_town >= 1, errors, "Town development balance report must require late rare-resource bottleneck evidence")
+    ensure(min_common_material_bottleneck_days_per_town >= 1, errors, "Town development balance report must require wood/ore bottleneck evidence")
     ensure(min_high_tier_unit_build_days == {"5": 4, "6": 12, "7": 22}, errors, "Town development balance report must gate high-tier unit build pacing days")
     ensure(isinstance(town_results, dict) and len(town_results) == authored_town_count, errors, "Town development balance report must include one result per authored town")
     for town_id, result in town_results.items():
@@ -2754,6 +2756,11 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
             int(result.get("late_rare_bottleneck_day_count", 0)) >= min_late_rare_bottleneck_days_per_town,
             errors,
             f"{town_id} must have late rare-resource bottleneck evidence",
+        )
+        ensure(
+            int(result.get("common_material_bottleneck_day_count", 0)) >= min_common_material_bottleneck_days_per_town,
+            errors,
+            f"{town_id} must have wood/ore bottleneck evidence",
         )
         tier_build_days = result.get("signature_tier_build_days", {})
         tier_build_days = tier_build_days if isinstance(tier_build_days, dict) else {}
@@ -2775,6 +2782,8 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "MIN_LATE_RARE_BOTTLENECK_DAY = 18",
         "MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN = 1",
+        "MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1",
+        "COMMON_MATERIAL_RESOURCES",
         "MIN_HIGH_TIER_UNIT_BUILD_DAYS",
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "breadth_parity_town_count",
@@ -2783,6 +2792,8 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "ending_rare_resource",
         "late_rare_bottleneck_days",
         "late_rare_bottleneck_day_count",
+        "common_material_bottleneck_days",
+        "common_material_bottleneck_day_count",
         "signature_tier_build_days",
     ):
         ensure(token in balance_report_text, errors, f"Town development balance report must gate breadth token {token}")
@@ -2978,6 +2989,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "town_development_price_band_sanity",
         "high_tier_rare_resource_pressure",
         "late_rare_resource_bottleneck",
+        "common_material_development_pressure",
         "high_tier_unit_build_pacing",
         "rare_upgrade_chain_pressure",
         "faction_identity_and_unique_towns",
@@ -2997,6 +3009,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
     ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
     ensure(int(town_balance.get("min_late_rare_bottleneck_days_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include late rare-resource bottleneck evidence")
+    ensure(int(town_balance.get("min_common_material_bottleneck_days_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include wood/ore bottleneck evidence")
     ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
     ensure(isinstance(cost_curve.get("price_band_limits", {}), dict) and bool(cost_curve.get("price_band_limits", {})), errors, "Economy town goal scorecard must include town development price-band sanity limits")
     ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
@@ -3019,6 +3032,10 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "high_tier_rare_resource_pressure",
         "late_rare_resource_bottleneck",
         "min_late_rare_bottleneck_days_per_town",
+        "common_material_development_pressure",
+        "MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN",
+        "common_material_bottleneck_days",
+        "common_material_bottleneck_day_count",
         "faction_identity_and_unique_towns",
         "seven_tier_unit_buildings",
         "rare_upgrade_chain_pressure",
@@ -3059,6 +3076,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "price-band sanity",
         "4/8/10 rare-resource tier curve",
         "late rare-resource bottleneck",
+        "wood/ore bottleneck",
         "MIN_RARE_DEVELOPMENT_SPEND = 24",
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "tier 5-7 signature unit-building pacing floors",
@@ -3073,7 +3091,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "TownShell resource/build UI surface report",
         "TownShell recruitment UI surface report",
         "runtime market-cap persistence report",
-        "19/19 checks",
+        "20/20 checks",
         "6/6 TownShell resource/build UI cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
@@ -20739,7 +20757,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, AI recruitment exposure, town UI surfaces, and persisted market caps")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, AI recruitment exposure, town UI surfaces, and persisted market caps")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
