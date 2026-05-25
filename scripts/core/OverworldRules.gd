@@ -2135,10 +2135,6 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 				var visit_tile = town.get("visit_tile", {})
 				if visit_tile is Dictionary and not visit_tile.is_empty():
 					town_by_tile[_tile_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1))))] = town_index
-				var package_visit_tiles: Array = town.get("package_visit_tiles", []) if town.get("package_visit_tiles", []) is Array else []
-				for tile_value in package_visit_tiles:
-					if tile_value is Dictionary:
-						town_by_tile[_tile_key(Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1))))] = town_index
 				var placement_id := String(town.get("placement_id", ""))
 				if placement_id != "":
 					index["town_by_placement"][placement_id] = town_index

@@ -3150,6 +3150,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "max_common_route_steps",
         "max_rare_route_steps",
         "generated_package_town_economy_runtime",
+        "generated_package_town_source_route_runtime",
         "generated_package_town_economy_breadth_runtime",
         "generated_package_player_town_runway_runtime",
         "MIN_DETERMINISTIC_COMPLETION_DAY",
@@ -3166,6 +3167,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "secured_source_count_total",
         "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT",
         "generated_package_town_economy_surface_v1",
+        "generated_package_town_economy_source_routes_v1",
+        "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
+        "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
         "generated_package_town_economy_breadth_v1",
         "strict_small_36x36_one_level_land_multi_seed",
         "generated_package_player_town_development_runway_v1",
@@ -3176,6 +3180,8 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "generated_package_enemy_town_development_runway_v1",
         "generated_enemy_town_development_runway",
         "generated_resource_source_ids",
+        "generated_town_economy_source_routes",
+        "reachable_route_case_count",
         "player_required_resource_ids",
         "missing_player_resource_sources",
         "unique_faction_count",
@@ -3259,12 +3265,15 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "54/54 active player-town source routes reachable",
         "60/60 active enemy-town source routes reachable",
         "generated package town-economy runtime surface",
+        "generated package town-source route runtime",
         "generated package town-economy breadth runtime",
         "7/7 generated package towns backed by authored templates and seven-tier ladders",
         "3/3 generated package economy breadth cases",
         "15 total generated package breadth towns",
         "4 generated project factions and 5 generated town templates",
         "player required common and rare resource sources present",
+        "9/9 generated package town source routes reachable",
+        "generated package source routes stay within 40 common steps and 56 rare steps",
         "generated package player-town development runway",
         "22 initially missing generated player-town targets built by day 24",
         "minimal required-resource source adoption",
@@ -3285,7 +3294,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "31/31 checks",
+        "32/32 checks",
         "6/6 TownShell resource/build UI cases",
         "6/6 TownShell same-day build lockout cases",
         "42/42 TownShell seven-tier recruitment UI cases",
@@ -3549,6 +3558,12 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "rare_resources_seeded_at_zero",
         "generated_town_economy_surface",
         "generated_package_town_economy_surface_v1",
+        "generated_town_economy_source_routes",
+        "generated_package_town_economy_source_routes_v1",
+        "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
+        "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
+        "_assert_generated_town_economy_source_routes",
+        "_best_generated_resource_route",
         "generated_town_economy_breadth",
         "generated_package_town_economy_breadth_v1",
         "GENERATED_TOWN_ECONOMY_BREADTH_CASES",
@@ -3586,6 +3601,8 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
     ensure("generated/native package sessions" in doc_text, errors, "Live stockpile resource surface doc must record generated/native package session coverage")
     ensure("generated_package_enemy_town_development_runway_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package enemy-town runway coverage")
+    ensure("generated_package_town_economy_source_routes_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package town source-route coverage")
+    ensure("9/9 generated package town source routes reachable" in doc_text, errors, "Live stockpile resource surface doc must record generated source-route evidence")
     ensure("2/2 generated package enemy-town runway cases" in doc_text, errors, "Live stockpile resource surface doc must record generated enemy-town case evidence")
     ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
 

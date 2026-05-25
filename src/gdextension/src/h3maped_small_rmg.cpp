@@ -10881,6 +10881,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 
 	Array package_objects;
 	Dictionary package_guard_occupied_flats;
+	Dictionary package_town_guard_clearance_keys;
+	Array package_town_guard_clearance_cells;
 	Dictionary package_connection_guard_object_index_by_flat;
 	int32_t owned_player_town_count = 0;
 	int32_t neutral_town_count = 0;
@@ -10911,6 +10913,23 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["visit_tile"] = primary_tile;
 		object["package_town_action_tile_policy"] = "h3maped_action_tiles_preserved_as_metadata_runtime_visit_surface_uses_town_anchor_and_runtime_start";
 		h3maped_apply_package_pathing_surface(object, body_tiles, visit_tiles, true, "blocking_visitable");
+		Array town_guard_clearance_tiles = h3maped_guard_control_zone_tiles(
+				int32_t(primary_tile.get("x", -1)),
+				int32_t(primary_tile.get("y", -1)),
+				int32_t(primary_tile.get("level", 0)),
+				map_width,
+				map_height);
+		for (int64_t clearance_index = 0; clearance_index < town_guard_clearance_tiles.size(); ++clearance_index) {
+			if (Variant(town_guard_clearance_tiles[clearance_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary clearance_cell = town_guard_clearance_tiles[clearance_index];
+			const String clearance_key = h3maped_package_cell_key(clearance_cell);
+			if (!package_town_guard_clearance_keys.has(clearance_key)) {
+				package_town_guard_clearance_keys[clearance_key] = true;
+				package_town_guard_clearance_cells.append(clearance_cell);
+			}
+		}
 		if (int32_t(object.get("owner_slot", -1)) > 0) {
 			owned_player_town_count += 1;
 		} else {
@@ -10962,7 +10981,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Dictionary source = mine_guard_records[index];
 		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
 		const String flat_key = String::num_int64(flat);
-		if (flat < 0 || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+		const bool overlaps_town_guard_clearance = package_town_guard_clearance_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(source)));
+		if (flat < 0 || overlaps_town_guard_clearance || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
 			mine_guard_skipped_duplicate_count += 1;
 			continue;
 		}
@@ -10986,16 +11006,16 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["blocking_body"] = true;
 		object["passability_class"] = "neutral_stack_blocking";
 		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "neutral_stack_blocking");
-			Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
-			object["package_guard_control_zone_tiles"] = control_tiles;
-			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_engagement_tiles"] = control_tiles;
-			object["package_guard_engagement_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
-			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
-			object["package_adoption_source"] = "h3maped_private_0x4a9911_mine_guard_0x4a960a_0x4a65a5";
-			object["public_runtime_authoritative"] = false;
-			package_guard_occupied_flats[flat_key] = true;
+		Array control_tiles = h3maped_package_cells_excluding(h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height), package_town_guard_clearance_cells);
+		object["package_guard_control_zone_tiles"] = control_tiles;
+		object["package_guard_control_zone_tile_count"] = control_tiles.size();
+		object["package_guard_engagement_tiles"] = control_tiles;
+		object["package_guard_engagement_tile_count"] = control_tiles.size();
+		object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+		object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
+		object["package_adoption_source"] = "h3maped_private_0x4a9911_mine_guard_0x4a960a_0x4a65a5";
+		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
 		package_objects.append(object);
 		mine_guard_package_object_count += 1;
 	}
@@ -11108,7 +11128,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		const int32_t level = int32_t(source.get("level", 0));
 		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
 		const String flat_key = String::num_int64(flat);
-		if (flat < 0 || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+		const bool overlaps_town_guard_clearance = package_town_guard_clearance_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(source)));
+		if (flat < 0 || overlaps_town_guard_clearance || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
 			primary_category_guard_skipped_duplicate_count += 1;
 			continue;
 		}
@@ -11132,16 +11153,16 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["blocking_body"] = true;
 		object["passability_class"] = "neutral_stack_blocking";
 		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "neutral_stack_blocking");
-			Array control_tiles = h3maped_guard_control_zone_tiles(x, y, level, map_width, map_height);
-			object["package_guard_control_zone_tiles"] = control_tiles;
-			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_engagement_tiles"] = control_tiles;
-			object["package_guard_engagement_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
-			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
-			object["package_adoption_source"] = "h3maped_private_0x4a901a_primary_category_guard_0x4a65a5";
-			object["public_runtime_authoritative"] = false;
-			package_guard_occupied_flats[flat_key] = true;
+		Array control_tiles = h3maped_package_cells_excluding(h3maped_guard_control_zone_tiles(x, y, level, map_width, map_height), package_town_guard_clearance_cells);
+		object["package_guard_control_zone_tiles"] = control_tiles;
+		object["package_guard_control_zone_tile_count"] = control_tiles.size();
+		object["package_guard_engagement_tiles"] = control_tiles;
+		object["package_guard_engagement_tile_count"] = control_tiles.size();
+		object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+		object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
+		object["package_adoption_source"] = "h3maped_private_0x4a901a_primary_category_guard_0x4a65a5";
+		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
 		package_objects.append(object);
 		primary_category_guard_package_object_count += 1;
 	}
@@ -11207,7 +11228,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Dictionary source = reward_guard_records[index];
 		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
 		const String flat_key = String::num_int64(flat);
-		if (flat < 0 || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+		const bool overlaps_town_guard_clearance = package_town_guard_clearance_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(source)));
+		if (flat < 0 || overlaps_town_guard_clearance || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
 			reward_guard_skipped_duplicate_count += 1;
 			continue;
 		}
@@ -11231,7 +11253,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["blocking_body"] = true;
 		object["passability_class"] = "neutral_stack_blocking";
 		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "neutral_stack_blocking");
-		Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
+		Array control_tiles = h3maped_package_cells_excluding(h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height), package_town_guard_clearance_cells);
 		object["package_guard_control_zone_tiles"] = control_tiles;
 		object["package_guard_control_zone_tile_count"] = control_tiles.size();
 		object["package_guard_engagement_tiles"] = control_tiles;
@@ -11343,16 +11365,16 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["blocking_body"] = true;
 		object["passability_class"] = "neutral_stack_blocking";
 		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "neutral_stack_blocking");
-			Array control_tiles = h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height);
-			object["package_guard_control_zone_tiles"] = control_tiles;
-			object["package_guard_control_zone_tile_count"] = control_tiles.size();
-			object["package_guard_engagement_tiles"] = control_tiles;
-			object["package_guard_engagement_tile_count"] = control_tiles.size();
-			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
-			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
-			object["package_adoption_source"] = "h3maped_private_0x4a5e03_connection_guard_record";
-			object["public_runtime_authoritative"] = false;
-			package_guard_occupied_flats[flat_key] = true;
+		Array control_tiles = h3maped_package_cells_excluding(h3maped_guard_control_zone_tiles(int32_t(object.get("x", -1)), int32_t(object.get("y", -1)), int32_t(object.get("level", 0)), map_width, map_height), package_town_guard_clearance_cells);
+		object["package_guard_control_zone_tiles"] = control_tiles;
+		object["package_guard_control_zone_tile_count"] = control_tiles.size();
+		object["package_guard_engagement_tiles"] = control_tiles;
+		object["package_guard_engagement_tile_count"] = control_tiles.size();
+		object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+		object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
+		object["package_adoption_source"] = "h3maped_private_0x4a5e03_connection_guard_record";
+		object["public_runtime_authoritative"] = false;
+		package_guard_occupied_flats[flat_key] = true;
 		package_connection_guard_object_index_by_flat[flat_key] = package_objects.size();
 		package_objects.append(object);
 		connection_guard_package_object_count += 1;

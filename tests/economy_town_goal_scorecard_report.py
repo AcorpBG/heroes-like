@@ -46,6 +46,8 @@ MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION = {"gold": 0.30, "wood": 0.50, 
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
+MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS = 40
+MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS = 56
 PHASE_WINDOWS = {
     "early": {"start": 1, "end": 10, "min_builds": 8},
     "mid": {"start": 11, "end": 20, "min_builds": 6},
@@ -491,6 +493,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
 
     generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
     generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
+    generated_source_routes = generated_package_runtime.get("generated_town_economy_source_routes", {})
     generated_breadth = generated_package_runtime.get("generated_town_economy_breadth", {})
     generated_runway = generated_package_runtime.get("generated_player_town_development_runway", {})
     generated_enemy_runway = generated_package_runtime.get("generated_enemy_town_development_runway", {})
@@ -502,6 +505,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_breadth_player_required_ids = {str(value) for value in generated_breadth.get("player_required_resource_ids", [])}
     generated_breadth_faction_ids = {str(value) for value in generated_breadth.get("generated_faction_ids", [])}
     generated_breadth_town_ids = {str(value) for value in generated_breadth.get("generated_town_ids", [])}
+    generated_source_route_common_ids = {str(value) for value in generated_source_routes.get("required_common_resource_ids", [])}
+    generated_source_route_rare_ids = {str(value) for value in generated_source_routes.get("required_rare_resource_ids", [])}
     generated_package_town_economy_ok = (
         generated_package_runtime.get("ok") is True
         and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
@@ -543,6 +548,42 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
             "missing_player_resource_sources": [str(value) for value in generated_surface.get("missing_player_resource_sources", [])],
+        },
+    )
+    generated_package_town_source_route_ok = (
+        generated_package_runtime.get("ok") is True
+        and generated_source_routes.get("schema") == "generated_package_town_economy_source_routes_v1"
+        and generated_source_routes.get("status") == "pass"
+        and generated_source_routes.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
+        and int(generated_source_routes.get("town_case_count", 0)) >= 3
+        and int(generated_source_routes.get("player_town_case_count", 0)) >= 1
+        and int(generated_source_routes.get("enemy_town_case_count", 0)) >= 2
+        and int(generated_source_routes.get("resource_route_case_count", 0)) == int(generated_source_routes.get("town_case_count", -1)) * 3
+        and int(generated_source_routes.get("reachable_route_case_count", 0)) == int(generated_source_routes.get("resource_route_case_count", -1))
+        and generated_source_route_common_ids == {"wood", "ore"}
+        and len(generated_source_route_rare_ids) >= 3
+        and int(generated_source_routes.get("max_common_route_steps", 999)) <= MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS
+        and int(generated_source_routes.get("max_rare_route_steps", 999)) <= MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
+    )
+    add_check(
+        checks,
+        "generated_package_town_source_route_runtime",
+        generated_package_town_source_route_ok,
+        "Generated/native package player and enemy towns must have reachable generated wood, ore, and faction-rare source routes after exact guard/block masks are applied.",
+        {
+            "schema": str(generated_source_routes.get("schema", "")),
+            "package_session_scope": str(generated_source_routes.get("package_session_scope", "")),
+            "town_case_count": int(generated_source_routes.get("town_case_count", 0)),
+            "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
+            "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
+            "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
+            "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
+            "required_common_resource_ids": sorted(generated_source_route_common_ids),
+            "required_rare_resource_ids": sorted(generated_source_route_rare_ids),
+            "max_common_route_steps": int(generated_source_routes.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(generated_source_routes.get("max_rare_route_steps", 0)),
+            "common_route_step_limit": int(generated_source_routes.get("common_route_step_limit", 0)),
+            "rare_route_step_limit": int(generated_source_routes.get("rare_route_step_limit", 0)),
         },
     )
     generated_package_town_economy_breadth_ok = (
@@ -1101,6 +1142,17 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "generated_town_ids": sorted(generated_breadth_town_ids),
             "generated_resource_source_ids": sorted(generated_breadth_resource_source_ids),
             "player_required_resource_ids": sorted(generated_breadth_player_required_ids),
+        },
+        "generated_package_town_economy_source_routes_v1": {
+            "town_case_count": int(generated_source_routes.get("town_case_count", 0)),
+            "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
+            "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
+            "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
+            "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
+            "required_common_resource_ids": sorted(generated_source_route_common_ids),
+            "required_rare_resource_ids": sorted(generated_source_route_rare_ids),
+            "max_common_route_steps": int(generated_source_routes.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(generated_source_routes.get("max_rare_route_steps", 0)),
         },
         "generated_package_player_town_development_runway_v1": {
             "town_id": str(generated_runway.get("town_id", "")),
