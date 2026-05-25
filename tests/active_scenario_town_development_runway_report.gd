@@ -2,6 +2,7 @@ extends Node
 
 const REPORT_SCHEMA := "active_scenario_town_development_runway_report_v1"
 const TARGET_TURNS := 30
+const MIN_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
 const MIN_CAMPAIGN_SCENARIO_COUNT := 15
 const MIN_SKIRMISH_SCENARIO_COUNT := 16
@@ -45,6 +46,12 @@ func _run() -> void:
 	var completed_case_count := 0
 	var campaign_completed_case_count := 0
 	var skirmish_completed_case_count := 0
+	var pacing_floor_case_count := 0
+	var campaign_pacing_floor_case_count := 0
+	var skirmish_pacing_floor_case_count := 0
+	var completion_day_min := 0
+	var completion_day_max := 0
+	var source_adoption_policy_case_count := 0
 	var rare_spend_case_count := 0
 	var full_session_case_count := 0
 	var delayed_source_replay_case_count := 0
@@ -85,8 +92,21 @@ func _run() -> void:
 					campaign_completed_case_count += 1
 				if "skirmish" in launch_surfaces:
 					skirmish_completed_case_count += 1
+				var completion_day := int(row.get("completion_day", 0))
+				if completion_day_min == 0 or completion_day < completion_day_min:
+					completion_day_min = completion_day
+				completion_day_max = max(completion_day_max, completion_day)
+				if bool(row.get("pacing_floor_ok", false)):
+					pacing_floor_case_count += 1
+					if "campaign" in launch_surfaces:
+						campaign_pacing_floor_case_count += 1
+					if "skirmish" in launch_surfaces:
+						skirmish_pacing_floor_case_count += 1
 			if bool(row.get("rare_spend_observed", false)):
 				rare_spend_case_count += 1
+			var source_evidence: Dictionary = row.get("source_evidence", {}) if row.get("source_evidence", {}) is Dictionary else {}
+			if String(source_evidence.get("source_adoption_policy", "")) == "minimal_required_resource_coverage":
+				source_adoption_policy_case_count += 1
 			if bool(row.get("full_session_used", false)):
 				full_session_case_count += 1
 			if bool(row.get("delayed_source_replay_seen", false)):
@@ -119,6 +139,7 @@ func _run() -> void:
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"target_turns": TARGET_TURNS,
+		"min_completion_day": MIN_COMPLETION_DAY,
 		"active_scenario_count": scenario_count,
 		"campaign_scenario_count": campaign_scenario_count,
 		"skirmish_scenario_count": skirmish_scenario_count,
@@ -128,6 +149,12 @@ func _run() -> void:
 		"completed_case_count": completed_case_count,
 		"campaign_completed_case_count": campaign_completed_case_count,
 		"skirmish_completed_case_count": skirmish_completed_case_count,
+		"pacing_floor_case_count": pacing_floor_case_count,
+		"campaign_pacing_floor_case_count": campaign_pacing_floor_case_count,
+		"skirmish_pacing_floor_case_count": skirmish_pacing_floor_case_count,
+		"completion_day_min": completion_day_min,
+		"completion_day_max": completion_day_max,
+		"source_adoption_policy_case_count": source_adoption_policy_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
 		"full_session_case_count": full_session_case_count,
 		"delayed_source_replay_case_count": delayed_source_replay_case_count,
@@ -293,6 +320,8 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
+	var completion_day := int(build_log[-1].get("day", 0)) if not build_log.is_empty() and completed else 0
+	var pacing_floor_ok := completed and completion_day >= MIN_COMPLETION_DAY and completion_day <= TARGET_TURNS
 	while completed and int(session.day) < TARGET_TURNS:
 		var completion_turn_result: Dictionary = _advance_active_scenario_economy_day(session)
 		if not bool(completion_turn_result.get("ok", false)):
@@ -310,6 +339,7 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	}
 	base_row["ok"] = (
 		completed
+		and pacing_floor_ok
 		and same_day_reject_ok
 		and build_actions_after_build_blocked
 		and not rare_spend_events.is_empty()
@@ -321,7 +351,9 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
 	)
 	base_row["completed"] = completed
-	base_row["completion_day"] = int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0
+	base_row["completion_day"] = completion_day
+	base_row["min_completion_day"] = MIN_COMPLETION_DAY
+	base_row["pacing_floor_ok"] = pacing_floor_ok
 	base_row["build_count"] = build_log.size()
 	base_row["missing_buildings"] = missing
 	base_row["same_day_reject_ok"] = same_day_reject_ok
@@ -831,9 +863,12 @@ func _secure_development_sources(session, required_resource_ids: Array) -> Dicti
 	var secured_resource_ids := {}
 	var secured_income := {}
 	var secured_claims := {}
+	var covered_resource_ids := {}
 	for index in range(nodes.size()):
 		if not (nodes[index] is Dictionary):
 			continue
+		if _source_covers_required_resources({"secured_resource_ids": _sorted_keys(covered_resource_ids)}, required_resource_ids):
+			break
 		var node: Dictionary = nodes[index]
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty():
@@ -843,6 +878,18 @@ func _secure_development_sources(session, required_resource_ids: Array) -> Dicti
 		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
 		var relevant_income := _filter_resources(control_income, required_resource_ids)
 		if relevant_claims.is_empty() and relevant_income.is_empty():
+			continue
+		var source_resource_ids := {}
+		for resource_id in relevant_claims.keys():
+			source_resource_ids[String(resource_id)] = true
+		for resource_id in relevant_income.keys():
+			source_resource_ids[String(resource_id)] = true
+		var adds_uncovered_required_resource := false
+		for resource_id in source_resource_ids.keys():
+			if not bool(covered_resource_ids.get(String(resource_id), false)):
+				adds_uncovered_required_resource = true
+				break
+		if not adds_uncovered_required_resource:
 			continue
 		if bool(site.get("persistent_control", false)):
 			node["collected_by_faction_id"] = "player"
@@ -855,8 +902,10 @@ func _secure_development_sources(session, required_resource_ids: Array) -> Dicti
 			secured_income = _add_resource_sets(secured_income, relevant_income)
 		for resource_id in relevant_claims.keys():
 			secured_resource_ids[String(resource_id)] = true
+			covered_resource_ids[String(resource_id)] = true
 		for resource_id in relevant_income.keys():
 			secured_resource_ids[String(resource_id)] = true
+			covered_resource_ids[String(resource_id)] = true
 		source_rows.append({
 			"placement_id": String(node.get("placement_id", "")),
 			"site_id": String(node.get("site_id", "")),
@@ -876,6 +925,7 @@ func _secure_development_sources(session, required_resource_ids: Array) -> Dicti
 		nodes[index] = node
 	session.overworld["resource_nodes"] = nodes
 	return {
+		"source_adoption_policy": "minimal_required_resource_coverage",
 		"secured_source_count": source_rows.size(),
 		"secured_resource_ids": _sorted_keys(secured_resource_ids),
 		"secured_claims": secured_claims,
@@ -888,6 +938,8 @@ func _secure_development_sources(session, required_resource_ids: Array) -> Dicti
 func _runway_error(row: Dictionary) -> String:
 	if not bool(row.get("completed", false)):
 		return "town did not complete its active-scenario development runway"
+	if not bool(row.get("pacing_floor_ok", false)):
+		return "town completed outside day-%d-to-day-%d pacing window" % [MIN_COMPLETION_DAY, TARGET_TURNS]
 	if not bool(row.get("same_day_reject_ok", false)):
 		return "same-day second build was not rejected"
 	if not bool(row.get("build_actions_after_build_blocked", false)):

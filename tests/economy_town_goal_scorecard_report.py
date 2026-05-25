@@ -367,6 +367,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(player_runtime.get("completed_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("campaign_completed_case_count", 0)) == int(player_runtime.get("campaign_player_town_case_count", -1))
         and int(player_runtime.get("skirmish_completed_case_count", 0)) == int(player_runtime.get("skirmish_player_town_case_count", -1))
+        and int(player_runtime.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(player_runtime.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(player_runtime.get("completion_day_max", 999)) <= TARGET_TURNS
+        and int(player_runtime.get("pacing_floor_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
+        and int(player_runtime.get("campaign_pacing_floor_case_count", 0)) == int(player_runtime.get("campaign_player_town_case_count", -1))
+        and int(player_runtime.get("skirmish_pacing_floor_case_count", 0)) == int(player_runtime.get("skirmish_player_town_case_count", -1))
+        and int(player_runtime.get("source_adoption_policy_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("rare_spend_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("full_session_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
         and int(player_runtime.get("delayed_source_replay_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
@@ -390,6 +397,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "completed_case_count": int(player_runtime.get("completed_case_count", 0)),
             "campaign_completed_case_count": int(player_runtime.get("campaign_completed_case_count", 0)),
             "skirmish_completed_case_count": int(player_runtime.get("skirmish_completed_case_count", 0)),
+            "min_completion_day": int(player_runtime.get("min_completion_day", 0)),
+            "completion_day_min": int(player_runtime.get("completion_day_min", 0)),
+            "completion_day_max": int(player_runtime.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(player_runtime.get("pacing_floor_case_count", 0)),
+            "campaign_pacing_floor_case_count": int(player_runtime.get("campaign_pacing_floor_case_count", 0)),
+            "skirmish_pacing_floor_case_count": int(player_runtime.get("skirmish_pacing_floor_case_count", 0)),
+            "source_adoption_policy_case_count": int(player_runtime.get("source_adoption_policy_case_count", 0)),
             "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
             "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
             "delayed_source_replay_case_count": int(player_runtime.get("delayed_source_replay_case_count", 0)),
@@ -674,6 +688,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(ai_runtime.get("completed_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("campaign_completed_case_count", 0)) == int(ai_runtime.get("campaign_enemy_town_case_count", -1))
         and int(ai_runtime.get("skirmish_completed_case_count", 0)) == int(ai_runtime.get("skirmish_enemy_town_case_count", -1))
+        and int(ai_runtime.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(ai_runtime.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(ai_runtime.get("completion_day_max", 999)) <= TARGET_TURNS
+        and int(ai_runtime.get("pacing_floor_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("campaign_pacing_floor_case_count", 0)) == int(ai_runtime.get("campaign_enemy_town_case_count", -1))
+        and int(ai_runtime.get("skirmish_pacing_floor_case_count", 0)) == int(ai_runtime.get("skirmish_enemy_town_case_count", -1))
+        and int(ai_runtime.get("source_adoption_policy_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("rare_spend_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("same_day_guard_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("full_session_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
@@ -700,6 +721,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "completed_case_count": int(ai_runtime.get("completed_case_count", 0)),
             "campaign_completed_case_count": int(ai_runtime.get("campaign_completed_case_count", 0)),
             "skirmish_completed_case_count": int(ai_runtime.get("skirmish_completed_case_count", 0)),
+            "min_completion_day": int(ai_runtime.get("min_completion_day", 0)),
+            "completion_day_min": int(ai_runtime.get("completion_day_min", 0)),
+            "completion_day_max": int(ai_runtime.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(ai_runtime.get("pacing_floor_case_count", 0)),
+            "campaign_pacing_floor_case_count": int(ai_runtime.get("campaign_pacing_floor_case_count", 0)),
+            "skirmish_pacing_floor_case_count": int(ai_runtime.get("skirmish_pacing_floor_case_count", 0)),
+            "source_adoption_policy_case_count": int(ai_runtime.get("source_adoption_policy_case_count", 0)),
             "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
             "same_day_guard_case_count": int(ai_runtime.get("same_day_guard_case_count", 0)),
             "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
@@ -969,6 +997,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
             "campaign_player_town_case_count": int(player_runtime.get("campaign_player_town_case_count", 0)),
             "skirmish_player_town_case_count": int(player_runtime.get("skirmish_player_town_case_count", 0)),
+            "min_completion_day": int(player_runtime.get("min_completion_day", 0)),
+            "completion_day_min": int(player_runtime.get("completion_day_min", 0)),
+            "completion_day_max": int(player_runtime.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(player_runtime.get("pacing_floor_case_count", 0)),
+            "source_adoption_policy_case_count": int(player_runtime.get("source_adoption_policy_case_count", 0)),
             "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
             "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
             "recruitment_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
@@ -1051,6 +1084,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
             "campaign_enemy_town_case_count": int(ai_runtime.get("campaign_enemy_town_case_count", 0)),
             "skirmish_enemy_town_case_count": int(ai_runtime.get("skirmish_enemy_town_case_count", 0)),
+            "min_completion_day": int(ai_runtime.get("min_completion_day", 0)),
+            "completion_day_min": int(ai_runtime.get("completion_day_min", 0)),
+            "completion_day_max": int(ai_runtime.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(ai_runtime.get("pacing_floor_case_count", 0)),
+            "source_adoption_policy_case_count": int(ai_runtime.get("source_adoption_policy_case_count", 0)),
             "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
             "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
             "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),

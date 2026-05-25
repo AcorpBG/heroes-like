@@ -8,7 +8,7 @@ Slice: `economy-active-scenario-ai-town-development-runway-20260524-10184`
 
 This slice adds `active_scenario_ai_town_development_runway_report_v1`, a focused Godot report that boots every active authored campaign/skirmish scenario with an enemy-owned town and simulates live AI town construction for each enemy-town case. Current evidence covers 16 active authored scenarios, including 15 campaign scenarios and 16 skirmish scenarios, plus 20 active enemy-town cases.
 
-The report secures scenario-authored economy sources that provide resources required by that town's authored build list, then drives `EnemyTurnRules.run_enemy_town_economy_turn` until the enemy town completes its development target or the 30-turn limit is reached. Each case records completion day, build count, secured daily income, rare-resource spend, full live treasury tracking, and whether a same-day second AI build is blocked.
+The report secures a minimal set of scenario-authored economy sources that provide the required non-gold resources for that town's authored build list, then drives `EnemyTurnRules.run_enemy_town_economy_turn` until the enemy town completes its development target or the 30-turn limit is reached. Persistent economy sources grant control income for the target AI faction without dumping their one-time claim rewards into the AI treasury setup. Each case records completion day, build count, `source_adoption_policy`, secured daily income, rare-resource spend, full live treasury tracking, and whether a same-day second AI build is blocked.
 
 The strengthened gate now runs construction inside the full scenario session state instead of replacing the scenario with a stripped local runway. Each row records authored map size plus scenario resource-node, encounter, and enemy-state counts, and `full_session_case_count` must match the covered enemy-town cases. The report keeps scope on target-faction town economy and `EnemyTurnRules.town_governor_pressure_report`; it does not claim full strategic AI routing quality.
 
@@ -22,8 +22,9 @@ The six-faction coverage strengthening now reports `unique_faction_count`, `cove
 
 ## Evidence
 
-- Current focused evidence completes all 20 active enemy-town cases within the 30-turn target.
+- Current focused evidence completes all 20 active enemy-town cases inside the day-24-to-day-30 pacing window, with main runway completion days ranging from day 24 to day 30.
 - Current focused evidence covers 19 campaign enemy-town cases and 20 skirmish enemy-town cases.
+- Current focused evidence proves 20/20 active enemy-town source adoption cases use `minimal_required_resource_coverage` instead of granting every matching authored economy source up front.
 - Current focused evidence observes high-tier rare-resource spending in all 20 active enemy-town cases.
 - Current focused evidence proves same-day second AI builds are blocked in all 20 active enemy-town cases.
 - Current focused evidence proves all active enemy-town cases run inside full active scenario sessions with authored map, resource nodes, encounters, and enemy state data preserved.
