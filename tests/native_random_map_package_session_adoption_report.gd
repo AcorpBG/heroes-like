@@ -742,6 +742,7 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 			or reachable_route_case_count != resource_route_case_count \
 			or guarded_town_case_count != town_case_count \
 			or guarded_source_route_case_count < town_case_count \
+			or guarded_rare_source_route_case_count != town_case_count \
 			or max_common_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
 			or max_rare_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS \
 			or max_acquisition_day > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY:
@@ -807,6 +808,8 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 				guarded_common_source_route_count += 1
 			else:
 				guarded_rare_source_route_count += 1
+				if not bool(route_row.get("guard_blocks_claim", false)):
+					errors.append("%s guarded rare source does not block claiming before guard clear" % resource_id)
 		var route_steps := int(route_row.get("route_steps", 999999))
 		var max_steps := MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS if resource_id in COMMON_MARKET_RESOURCE_IDS else MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
 		if route_steps > max_steps:
@@ -815,6 +818,8 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 			errors.append("%s source acquisition day too late: %d > %d" % [resource_id, int(route_row.get("source_acquisition_day", 999999)), MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY])
 	if guarded_source_route_count < 1:
 		errors.append("town has no guarded generated economy source route")
+	if guarded_rare_source_route_count < 1:
+		errors.append("town has no guarded generated rare economy source route")
 	return {
 		"ok": errors.is_empty() and route_rows.size() == 3,
 		"owner": String(town.get("owner", "")),
@@ -847,6 +852,7 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 		var route := _find_generated_route(session, start_tile, target_tile)
 		var route_steps: int = max(0, route.size() - 1) if not route.is_empty() else 999999
 		var guarded := _generated_resource_source_has_guard(session, node)
+		var guard_blocks_claim := _generated_resource_source_guard_blocks_claim(session, node) if guarded else false
 		var acquisition_day: int = _generated_source_acquisition_day(route_steps, guarded) if not route.is_empty() else 999999
 		var row := {
 			"resource_id": resource_id,
@@ -859,6 +865,7 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 			"route_steps": route_steps,
 			"route_tiles": _generated_route_payload(route),
 			"guarded": guarded,
+			"guard_blocks_claim": guard_blocks_claim,
 			"source_acquisition_day": acquisition_day,
 			"route_steps_per_day": GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY,
 			"guarded_source_extra_days": GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS if guarded else 0,
@@ -985,6 +992,29 @@ func _generated_resource_source_has_guard(session: SessionStateStoreScript.Sessi
 		if max(dx, dy) <= 1:
 			return true
 	return false
+
+func _generated_resource_source_guard_blocks_claim(session: SessionStateStoreScript.SessionData, node: Dictionary) -> bool:
+	var copy := SessionStateStoreScript.SessionData.new()
+	copy.from_dict(session.to_dict())
+	var target_tile := _generated_resource_route_target_tile(node)
+	copy.overworld["hero_position"] = {"x": target_tile.x, "y": target_tile.y}
+	var hero: Dictionary = copy.overworld.get("hero", {}) if copy.overworld.get("hero", {}) is Dictionary else {}
+	hero["position"] = {"x": target_tile.x, "y": target_tile.y}
+	copy.overworld["hero"] = hero
+	var player_heroes: Array = copy.overworld.get("player_heroes", []) if copy.overworld.get("player_heroes", []) is Array else []
+	for index in range(player_heroes.size()):
+		if not (player_heroes[index] is Dictionary):
+			continue
+		var player_hero: Dictionary = player_heroes[index]
+		if String(player_hero.get("id", "")) == String(copy.hero_id) or bool(player_hero.get("is_primary", false)):
+			player_hero["position"] = {"x": target_tile.x, "y": target_tile.y}
+			player_hero["is_active"] = true
+			player_heroes[index] = player_hero
+			break
+	copy.overworld["player_heroes"] = player_heroes
+	OverworldRules.normalize_overworld_state_for_runtime(copy)
+	var result := OverworldRules.collect_active_resource(copy)
+	return not bool(result.get("ok", false)) and String(result.get("message", "")).contains("Clear")
 
 func _player_and_enemy_towns(session: SessionStateStoreScript.SessionData) -> Array:
 	var result := []

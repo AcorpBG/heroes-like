@@ -856,6 +856,13 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
+	var guard_encounter := _resource_site_guard_encounter(session, node, site)
+	if not guard_encounter.is_empty():
+		var guard_link := _resource_site_guard_link_for_encounter(guard_encounter)
+		if bool(guard_link.get("clear_required_for_target", false)):
+			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+			return {"ok": false, "message": "Clear %s before claiming this site." % encounter_display_name(guard_encounter)}
 	if not _resource_node_claimable_by_player(node, site, session):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -5136,6 +5143,12 @@ static func _resource_node_claimable_by_player(
 	site: Dictionary,
 	session: SessionStateStoreScript.SessionData = null
 ) -> bool:
+	if session != null:
+		var guard_encounter := _resource_site_guard_encounter(session, node, site)
+		if not guard_encounter.is_empty():
+			var guard_link := _resource_site_guard_link_for_encounter(guard_encounter)
+			if bool(guard_link.get("clear_required_for_target", false)):
+				return false
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
