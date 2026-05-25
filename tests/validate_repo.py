@@ -3048,6 +3048,12 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "resource_route_case_count",
         "max_common_route_steps",
         "max_rare_route_steps",
+        "generated_package_town_economy_runtime",
+        "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT",
+        "generated_package_town_economy_surface_v1",
+        "generated_resource_source_ids",
+        "player_required_resource_ids",
+        "missing_player_resource_sources",
         "active_scenario_ai_runway_runtime",
         "active_ai_six_faction_town_coverage",
         "unique_faction_count",
@@ -3105,6 +3111,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "18/18 active player-town runway cases with rare spend, full-session execution",
         "active source-route report",
         "54/54 active player-town source routes reachable",
+        "generated package town-economy runtime surface",
+        "7/7 generated package towns backed by authored templates and seven-tier ladders",
+        "player required common and rare resource sources present",
         "20/20 active AI-town runway cases with rare spend, full-session execution",
         "140/140 seven-tier AI recruitment candidates",
         "active AI six-faction town coverage",
@@ -3115,7 +3124,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "23/23 checks",
+        "24/24 checks",
         "6/6 TownShell resource/build UI cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
@@ -3356,6 +3365,12 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in scenario_factory_text, errors, "ScenarioFactory must seed the full live stockpile key set")
     for required_token in (
         "_opening_resource_stockpile",
+        "H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY",
+        "site_embergrain_warm_granary",
+        "site_peatwax_reed_yard",
+        "site_aetherglass_lens_house",
+        "site_memory_salt_pan",
+        "_live_rare_site_id_for_h3m_mine_proxy",
         "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
         '"gold"] = 5000',
         '"wood"] = 10',
@@ -3368,6 +3383,9 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "bridge_resource_stockpile",
         "active_resource_stockpile",
         "rare_resources_seeded_at_zero",
+        "generated_town_economy_surface",
+        "generated_package_town_economy_surface_v1",
+        "missing_player_resource_sources",
         "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
     ):
         ensure(required_token in native_package_report_text, errors, f"Native package session adoption report is missing full-stockpile token {required_token}")
@@ -20790,7 +20808,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, source-route reachability, recruitment market coverage, six-faction AI recruitment exposure, town UI surfaces, and persisted market caps")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, source-route reachability, generated package town economy, recruitment market coverage, six-faction AI recruitment exposure, town UI surfaces, and persisted market caps")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")

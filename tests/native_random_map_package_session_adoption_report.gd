@@ -145,6 +145,9 @@ func _run() -> void:
 		_fail("Active generated package setup did not start a session.")
 		return
 	var active_resource_stockpile := _assert_full_resource_stockpile(active_session, "active disk package session")
+	var generated_town_economy_surface := _assert_generated_town_economy_surface(active_session)
+	if generated_town_economy_surface.is_empty():
+		return
 	var active_boundary: Dictionary = active_session.flags.get("generated_random_map_boundary", {}) if active_session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
 	if String(active_boundary.get("adoption_path", "")) != "native_rmg_generated_package_saved_loaded_from_disk":
 		_fail("Active session did not load through disk package startup: %s" % JSON.stringify(active_boundary))
@@ -177,6 +180,7 @@ func _run() -> void:
 		"active_scenario_package_path": scenario_path,
 		"bridge_resource_stockpile": bridge_resource_stockpile,
 		"active_resource_stockpile": active_resource_stockpile,
+		"generated_town_economy_surface": generated_town_economy_surface,
 		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
 		"full_parity_claim": false,
@@ -415,6 +419,157 @@ func _assert_full_resource_stockpile(session: SessionStateStoreScript.SessionDat
 		},
 		"rare_resources_seeded_at_zero": true,
 	}
+
+func _assert_generated_town_economy_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var towns: Array = session.overworld.get("towns", []) if session != null and session.overworld.get("towns", []) is Array else []
+	var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session != null and session.overworld.get("resource_nodes", []) is Array else []
+	var resource_source_ids := _generated_resource_source_ids(resource_nodes)
+	var rows := []
+	var town_count := 0
+	var player_town_count := 0
+	var authored_town_template_count := 0
+	var seven_tier_town_count := 0
+	var rare_development_town_count := 0
+	var player_rare_resource_ids := {}
+	for town_value in towns:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		town_count += 1
+		var town_id := String(town.get("town_id", ""))
+		var town_template := ContentService.get_town(town_id)
+		var faction_id := String(town.get("faction_id", town_template.get("faction_id", "")))
+		var faction := ContentService.get_faction(faction_id)
+		var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+		var buildable_ids := _string_array(town_template.get("buildable_building_ids", []))
+		var unit_tiers := _unit_tiers_for_buildings(buildable_ids)
+		var rare_resource_id := String(profile.get("rare_resource_id", ""))
+		var owner := String(town.get("owner", ""))
+		if not town_template.is_empty():
+			authored_town_template_count += 1
+		if unit_tiers.size() == 7:
+			seven_tier_town_count += 1
+		if rare_resource_id != "" and rare_resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS and not (rare_resource_id in ["gold", "wood", "ore"]):
+			rare_development_town_count += 1
+			if owner == "player":
+				player_rare_resource_ids[rare_resource_id] = true
+		if owner == "player":
+			player_town_count += 1
+		rows.append({
+			"placement_id": String(town.get("placement_id", "")),
+			"town_id": town_id,
+			"owner": owner,
+			"faction_id": faction_id,
+			"faction_found": not faction.is_empty(),
+			"authored_town_template": not town_template.is_empty(),
+			"target_building_count": buildable_ids.size(),
+			"unit_tier_count": unit_tiers.size(),
+			"unit_tiers": _sorted_int_keys(unit_tiers),
+			"rare_resource_id": rare_resource_id,
+		})
+	var required_player_resource_ids := ["gold", "wood", "ore"]
+	for rare_id in _sorted_string_keys(player_rare_resource_ids):
+		required_player_resource_ids.append(rare_id)
+	var missing_player_resource_sources := []
+	for resource_id in required_player_resource_ids:
+		if not resource_source_ids.has(resource_id):
+			missing_player_resource_sources.append(resource_id)
+	var status := "pass"
+	if town_count < 3 or player_town_count < 1 \
+			or authored_town_template_count != town_count \
+			or seven_tier_town_count != town_count \
+			or rare_development_town_count != town_count \
+			or resource_nodes.is_empty() \
+			or not missing_player_resource_sources.is_empty():
+		status = "fail"
+	var surface := {
+		"schema": "generated_package_town_economy_surface_v1",
+		"status": status,
+		"package_session_scope": "strict_small_36x36_one_level_land_only",
+		"town_count": town_count,
+		"player_town_count": player_town_count,
+		"authored_town_template_count": authored_town_template_count,
+		"seven_tier_town_count": seven_tier_town_count,
+		"rare_development_town_count": rare_development_town_count,
+		"generated_resource_node_count": resource_nodes.size(),
+		"generated_resource_source_ids": _sorted_string_keys(resource_source_ids),
+		"player_required_resource_ids": required_player_resource_ids,
+		"missing_player_resource_sources": missing_player_resource_sources,
+		"town_rows": rows,
+	}
+	if status != "pass":
+		_fail("Generated package town economy surface failed: %s" % JSON.stringify(surface))
+		return {}
+	return surface
+
+func _generated_resource_source_ids(resource_nodes: Array) -> Dictionary:
+	var resource_ids := {}
+	for node_value in resource_nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		for key in ["resource_id", "original_resource_id"]:
+			var direct_id := String(node.get(key, ""))
+			if direct_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+				resource_ids[direct_id] = true
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		for resource_id in _resource_outputs_for_site(site):
+			resource_ids[resource_id] = true
+	return resource_ids
+
+func _resource_outputs_for_site(site: Dictionary) -> Array:
+	var resource_ids := {}
+	for key in ["rewards", "claim_rewards", "control_income"]:
+		var payload: Dictionary = site.get(key, {}) if site.get(key, {}) is Dictionary else {}
+		for resource_id_value in payload.keys():
+			var resource_id := String(resource_id_value)
+			if resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+				resource_ids[resource_id] = true
+	var staged_outputs: Array = site.get("staged_resource_outputs", []) if site.get("staged_resource_outputs", []) is Array else []
+	for output_value in staged_outputs:
+		if not (output_value is Dictionary):
+			continue
+		var resource_id := String(output_value.get("resource_id", ""))
+		if resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+			resource_ids[resource_id] = true
+	return _sorted_string_keys(resource_ids)
+
+func _unit_tiers_for_buildings(building_ids: Array) -> Dictionary:
+	var tiers := {}
+	for building_id in building_ids:
+		var building := ContentService.get_building(String(building_id))
+		var unit_id := String(building.get("unlock_unit_id", ""))
+		if unit_id == "":
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		var tier := int(unit.get("tier", 0))
+		if tier > 0:
+			tiers[str(tier)] = true
+	return tiers
+
+func _string_array(value: Variant) -> Array:
+	var result := []
+	if not (value is Array):
+		return result
+	for item in value:
+		var text := String(item)
+		if text != "":
+			result.append(text)
+	return result
+
+func _sorted_string_keys(dict: Dictionary) -> Array:
+	var keys := []
+	for key in dict.keys():
+		keys.append(String(key))
+	keys.sort()
+	return keys
+
+func _sorted_int_keys(dict: Dictionary) -> Array:
+	var keys := []
+	for key in dict.keys():
+		keys.append(int(String(key)))
+	keys.sort()
+	return keys
 
 func _assert_visual_asset_bridge(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var map_size_payload: Dictionary = session.overworld.get("map_size", {}) if session.overworld.get("map_size", {}) is Dictionary else {}

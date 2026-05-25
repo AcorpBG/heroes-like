@@ -71,6 +71,12 @@ GODOT_RUNTIME_REPORTS = (
         "log_file": "/tmp/heroes-like-scorecard-active-source-route.log",
     },
     {
+        "scene": "res://tests/native_random_map_package_session_adoption_report.tscn",
+        "marker": "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-generated-package-town-economy.log",
+    },
+    {
         "scene": "res://tests/active_scenario_ai_town_development_runway_report.tscn",
         "marker": "ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT",
         "quit_after": 700,
@@ -398,6 +404,47 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         },
     )
 
+    generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
+    generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
+    generated_resource_source_ids = {str(value) for value in generated_surface.get("generated_resource_source_ids", [])}
+    generated_player_required_ids = {str(value) for value in generated_surface.get("player_required_resource_ids", [])}
+    generated_package_town_economy_ok = (
+        generated_package_runtime.get("ok") is True
+        and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
+        and generated_package_runtime.get("active_disk_package_startup_ok") is True
+        and generated_surface.get("schema") == "generated_package_town_economy_surface_v1"
+        and generated_surface.get("status") == "pass"
+        and generated_surface.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
+        and int(generated_surface.get("town_count", 0)) >= 3
+        and int(generated_surface.get("player_town_count", 0)) >= 1
+        and int(generated_surface.get("authored_town_template_count", 0)) == int(generated_surface.get("town_count", -1))
+        and int(generated_surface.get("seven_tier_town_count", 0)) == int(generated_surface.get("town_count", -1))
+        and int(generated_surface.get("rare_development_town_count", 0)) == int(generated_surface.get("town_count", -1))
+        and int(generated_surface.get("generated_resource_node_count", 0)) > 0
+        and COMMON_RESOURCES.issubset(generated_resource_source_ids)
+        and generated_player_required_ids.issubset(generated_resource_source_ids)
+        and not generated_surface.get("missing_player_resource_sources", [])
+    )
+    add_check(
+        checks,
+        "generated_package_town_economy_runtime",
+        generated_package_town_economy_ok,
+        "Generated/native package sessions must expose authored town templates, seven-tier town ladders, rare-resource development identity, and live common plus player-faction rare resource sources.",
+        {
+            "schema": str(generated_surface.get("schema", "")),
+            "package_session_scope": str(generated_surface.get("package_session_scope", "")),
+            "town_count": int(generated_surface.get("town_count", 0)),
+            "player_town_count": int(generated_surface.get("player_town_count", 0)),
+            "authored_town_template_count": int(generated_surface.get("authored_town_template_count", 0)),
+            "seven_tier_town_count": int(generated_surface.get("seven_tier_town_count", 0)),
+            "rare_development_town_count": int(generated_surface.get("rare_development_town_count", 0)),
+            "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
+            "generated_resource_source_ids": sorted(generated_resource_source_ids),
+            "player_required_resource_ids": sorted(generated_player_required_ids),
+            "missing_player_resource_sources": [str(value) for value in generated_surface.get("missing_player_resource_sources", [])],
+        },
+    )
+
     runtime_recruitment_market_coverage_ok = (
         town_runtime.get("ok") is True
         and player_runtime.get("ok") is True
@@ -704,6 +751,16 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
             "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
             "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
+        },
+        "generated_package_town_economy_surface_v1": {
+            "town_count": int(generated_surface.get("town_count", 0)),
+            "player_town_count": int(generated_surface.get("player_town_count", 0)),
+            "authored_town_template_count": int(generated_surface.get("authored_town_template_count", 0)),
+            "seven_tier_town_count": int(generated_surface.get("seven_tier_town_count", 0)),
+            "rare_development_town_count": int(generated_surface.get("rare_development_town_count", 0)),
+            "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
+            "generated_resource_source_ids": sorted(generated_resource_source_ids),
+            "player_required_resource_ids": sorted(generated_player_required_ids),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
