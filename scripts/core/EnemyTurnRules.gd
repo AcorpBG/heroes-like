@@ -19,6 +19,7 @@ const TRACKED_RESOURCES := [
 	"brass_scrip",
 	"memory_salt",
 ]
+const ENEMY_TOWN_DEVELOPMENT_MIN_COMPLETION_DAY := 24
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -448,7 +449,12 @@ static func town_build_pressure_report(
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
 		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+		var pacing_report := _enemy_town_development_pacing_report(session, town, String(building_id))
 		breakdown["affordable"] = OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day))
+		breakdown["pacing_eligible"] = bool(pacing_report.get("pacing_eligible", true))
+		breakdown["pacing_reason"] = String(pacing_report.get("pacing_reason", "on_pace"))
+		breakdown["earliest_completion_day_if_built"] = int(pacing_report.get("earliest_completion_day_if_built", 0))
+		breakdown["min_completion_day"] = int(pacing_report.get("min_completion_day", 0))
 		breakdown["building_id"] = String(building_id)
 		breakdown["building_label"] = String(building.get("name", building_id))
 		breakdown["category"] = String(building.get("category", "support"))
@@ -467,7 +473,7 @@ static func town_build_pressure_report(
 	)
 	var selected := {}
 	for candidate in candidates:
-		if bool(candidate.get("affordable", false)):
+		if bool(candidate.get("affordable", false)) and bool(candidate.get("pacing_eligible", true)):
 			selected = candidate
 			break
 	return {
@@ -962,6 +968,8 @@ static func _build_in_enemy_towns(
 		if build_choice.is_empty():
 			continue
 		var building_id = String(build_choice.get("building_id", ""))
+		if not _enemy_town_development_pacing_allows_build(session, town, building_id):
+			continue
 		var building = build_choice.get("building", {})
 		var cost = build_choice.get("cost", {})
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, cost, int(session.day))
@@ -988,6 +996,54 @@ static func _build_in_enemy_towns(
 		if not build_event.is_empty():
 			events.append(build_event)
 	return {"messages": messages, "events": events}
+
+static func _enemy_town_development_pacing_allows_build(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	building_id: String
+) -> bool:
+	return bool(_enemy_town_development_pacing_report(session, town, building_id).get("pacing_eligible", true))
+
+static func _enemy_town_development_pacing_report(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	building_id: String
+) -> Dictionary:
+	if session == null or building_id == "":
+		return {"pacing_eligible": true, "pacing_reason": "no_active_session"}
+	var town_template = ContentService.get_town(String(town.get("town_id", "")))
+	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+	if town_template.is_empty() or profile.is_empty() or not bool(profile.get("one_build_per_turn", false)):
+		return {"pacing_eligible": true, "pacing_reason": "no_development_pacing_profile"}
+	var target_buildings := _normalize_string_array(town_template.get("buildable_building_ids", []))
+	if target_buildings.is_empty() or building_id not in target_buildings:
+		return {"pacing_eligible": true, "pacing_reason": "non_target_build"}
+	var target_turns = max(1, int(profile.get("target_complete_turns", 30)))
+	var min_completion_day = clamp(
+		int(profile.get("min_completion_day", min(ENEMY_TOWN_DEVELOPMENT_MIN_COMPLETION_DAY, target_turns))),
+		1,
+		target_turns
+	)
+	var built_target_count := 0
+	var built_buildings := _normalize_string_array(town.get("built_buildings", []))
+	for target_id in target_buildings:
+		if String(target_id) in built_buildings:
+			built_target_count += 1
+	var missing_before = max(0, target_buildings.size() - built_target_count)
+	var remaining_after_build = max(0, missing_before - 1)
+	var earliest_completion_day_if_built = int(session.day) + remaining_after_build
+	var pacing_eligible = earliest_completion_day_if_built >= min_completion_day
+	return {
+		"pacing_eligible": pacing_eligible,
+		"pacing_reason": "on_pace" if pacing_eligible else "ahead_of_development_floor",
+		"min_completion_day": min_completion_day,
+		"target_complete_turns": target_turns,
+		"target_building_count": target_buildings.size(),
+		"built_target_count": built_target_count,
+		"missing_target_count_before": missing_before,
+		"remaining_target_count_after_build": remaining_after_build,
+		"earliest_completion_day_if_built": earliest_completion_day_if_built,
+	}
 
 static func _reinforce_enemy_forces(
 	session: SessionStateStoreScript.SessionData,
@@ -1729,6 +1785,8 @@ static func _best_build_candidate(
 		var building = status.get("building", {})
 		var cost = building.get("cost", {})
 		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
+			continue
+		if not _enemy_town_development_pacing_allows_build(session, town, String(building_id)):
 			continue
 		var score = _score_build_candidate(session, town, building, cost, config, faction_id)
 		if score > best_score:
