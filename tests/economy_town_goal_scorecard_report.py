@@ -22,10 +22,11 @@ SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
 MIN_UNIQUE_NON_UNIT_PER_FACTION = 5
 MIN_UNIQUE_NON_UNIT_PER_TOWN = 5
-MIN_RARE_DEVELOPMENT_SPEND = 14
+MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2.0
-EXPECTED_SIGNATURE_RARE_CURVE = {5: 2, 6: 4, 7: 6}
+EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
+MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 COMMON_RESOURCES = {"gold", "wood", "ore"}
 RARE_RESOURCES = {
     "aetherglass",
@@ -425,12 +426,40 @@ def main() -> int:
         checks,
         "high_tier_rare_resource_pressure",
         rare_pressure_ok,
-        "High-tier unit buildings must use the faction rare resource on the 2/4/6 tier curve.",
+        "High-tier unit buildings must use the faction rare resource on the 4/8/10 tier curve.",
         {
             "high_tier_start": HIGH_TIER_START,
             "expected_signature_rare_curve": EXPECTED_SIGNATURE_RARE_CURVE,
             "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
             "max_ending_rare_after_completion": MAX_ENDING_RARE_AFTER_COMPLETION,
+        },
+    )
+
+    high_tier_pacing_ok = balance.get("min_high_tier_unit_build_days", {}) == {
+        str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()
+    }
+    high_tier_days_by_town: dict[str, dict[str, int]] = {}
+    for town_id, row in town_rows.items():
+        if not isinstance(row, dict):
+            high_tier_pacing_ok = False
+            continue
+        days = row.get("signature_tier_build_days", {})
+        days = days if isinstance(days, dict) else {}
+        high_tier_days_by_town[town_id] = {str(tier): int(days.get(str(tier), 0)) for tier in MIN_HIGH_TIER_UNIT_BUILD_DAYS}
+        for tier, minimum_day in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items():
+            build_day = int(days.get(str(tier), 0))
+            if build_day < minimum_day:
+                high_tier_pacing_ok = False
+    add_check(
+        checks,
+        "high_tier_unit_build_pacing",
+        high_tier_pacing_ok,
+        "Tier 5-7 unit buildings must arrive late enough to preserve the 30-turn development pacing curve.",
+        {
+            "min_high_tier_unit_build_days": MIN_HIGH_TIER_UNIT_BUILD_DAYS,
+            "town_count": len(high_tier_days_by_town),
+            "tier_7_day_min": min((row.get("7", 0) for row in high_tier_days_by_town.values()), default=0),
+            "tier_7_day_max": max((row.get("7", 0) for row in high_tier_days_by_town.values()), default=0),
         },
     )
 

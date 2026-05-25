@@ -25,8 +25,9 @@ MIN_BUILDABLE_TARGETS = 20
 MIN_NON_UNIT_BUILDABLE_TARGETS = 12
 MIN_BREADTH_PARITY_BUILDINGS = 5
 MIN_COMPLETION_DAY = 20
-MIN_RARE_DEVELOPMENT_SPEND = 14
+MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
+MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
     "faction_thornwake",
@@ -142,6 +143,12 @@ def simulate_town(
             break
 
     missing = sorted(set(target_buildings) - built)
+    build_days_by_id = {str(entry["building_id"]): int(entry["day"]) for entry in build_log}
+    signature_tier_build_days = {
+        str(tier): build_days_by_id.get(building_id, 0)
+        for building_id, tier in signature_order.items()
+        if int(tier) >= 5
+    }
     return {
         "town_id": str(town.get("id", "")),
         "faction_id": str(town.get("faction_id", "")),
@@ -157,6 +164,8 @@ def simulate_town(
         "total_development_costs": dict(sorted(total_development_costs.items())),
         "rare_development_spend": int(total_development_costs.get(rare_id, 0)),
         "ending_rare_resource": int(resources.get(rare_id, 0)),
+        "signature_tier_build_days": signature_tier_build_days,
+        "min_high_tier_unit_build_days": {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()},
         "stalled_days": stalled_days[:5],
         "build_log": build_log,
     }
@@ -282,6 +291,13 @@ def main() -> int:
             errors.append(f"{town_id} must spend at least {MIN_RARE_DEVELOPMENT_SPEND} faction rare resources across development")
         if int(result.get("ending_rare_resource", 0)) > MAX_ENDING_RARE_AFTER_COMPLETION:
             errors.append(f"{town_id} ends development with too much unspent faction rare resource")
+        signature_tier_days = result.get("signature_tier_build_days", {})
+        for tier, minimum_day in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items():
+            build_day = int(signature_tier_days.get(str(tier), 0))
+            if build_day <= 0:
+                errors.append(f"{town_id} must build tier {tier} signature unit building during development")
+            elif build_day < minimum_day:
+                errors.append(f"{town_id} builds tier {tier} signature unit building on day {build_day}, before pacing floor {minimum_day}")
 
     report["authored_town_count"] = town_count
     report["full_ladder_town_count"] = full_ladder_town_count
@@ -291,6 +307,7 @@ def main() -> int:
     report["min_breadth_parity_buildings"] = MIN_BREADTH_PARITY_BUILDINGS
     report["min_rare_development_spend"] = MIN_RARE_DEVELOPMENT_SPEND
     report["max_ending_rare_after_completion"] = MAX_ENDING_RARE_AFTER_COMPLETION
+    report["min_high_tier_unit_build_days"] = {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()}
 
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))

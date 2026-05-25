@@ -19,8 +19,8 @@ The deterministic report `town_development_cost_curve_report_v1` parses authored
 - Rare-cost buildings must use only the town faction rare resource.
 - Rare-cost buildings must pair rare resources with gold, wood, and ore.
 - Rare costs are gated behind tier 5+ development through the seven-tier faction signature ladder or a prerequisite chain that depends on tier 5+ construction.
-- Six faction signature ladders keep seven unit-building tiers, with tiers 1-4 common-resource only and tiers 5-7 costing the faction rare resource.
-- Every authored town now spends at least 14 faction rare resources across full development, so high-tier rare costs are meaningful rather than token blockers.
+- Six faction signature ladders keep seven unit-building tiers, with tiers 1-4 common-resource only and tiers 5-7 costing the faction rare resource on the 4/8/10 curve.
+- Every authored town now spends at least 24 faction rare resources across full development, so high-tier rare costs are meaningful rather than token blockers.
 
 ## Evidence Boundaries
 
