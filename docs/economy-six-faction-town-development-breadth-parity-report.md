@@ -8,7 +8,7 @@ Slice: `economy-six-faction-town-development-breadth-parity-20260524-10184`
 
 This slice closes the town-development breadth gap where Thornwake, Brasshollow, and Veilmourn towns could satisfy the previous 30-turn gate with only seven unit-ladder buildings. Those towns now have faction-flavored non-unit economy, support, magic, and civic development targets in addition to the seven-tier unit ladder.
 
-The deterministic and live Godot town-development reports now require every authored town to expose at least 20 buildable development targets and at least 12 non-unit development targets, and both gates require a day-20 production pacing floor so a town cannot satisfy the 30-turn target by finishing as a shallow rush arc. The newer six-faction scaffold towns additionally carry `six_faction_town_breadth_parity` building records so their expanded arcs are explicit content, not accidental generic filler.
+The deterministic and live Godot town-development reports now require every authored town to expose at least 20 buildable development targets and at least 12 non-unit development targets. The deterministic gate requires a day-24 production pacing floor plus early/mid/late phase distribution, while the live secured-income fixture keeps its day-20 runtime pacing floor so a town cannot satisfy the 30-turn target by finishing as a shallow rush arc. The newer six-faction scaffold towns additionally carry `six_faction_town_breadth_parity` building records so their expanded arcs are explicit content, not accidental generic filler.
 
 ## Evidence
 

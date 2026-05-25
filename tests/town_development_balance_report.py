@@ -24,13 +24,18 @@ TARGET_TURNS = 30
 MIN_BUILDABLE_TARGETS = 20
 MIN_NON_UNIT_BUILDABLE_TARGETS = 12
 MIN_BREADTH_PARITY_BUILDINGS = 5
-MIN_COMPLETION_DAY = 20
+MIN_COMPLETION_DAY = 24
 MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_LATE_RARE_BOTTLENECK_DAY = 18
 MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
+PHASE_WINDOWS = {
+    "early": {"start": 1, "end": 10, "min_builds": 8},
+    "mid": {"start": 11, "end": 20, "min_builds": 6},
+    "late": {"start": 21, "end": 30, "min_builds": 2},
+}
 COMMON_MATERIAL_RESOURCES = {"wood", "ore"}
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
@@ -204,6 +209,14 @@ def simulate_town(
         for building_id, tier in signature_order.items()
         if int(tier) >= 5
     }
+    phase_build_counts = {
+        phase_id: sum(
+            1
+            for entry in build_log
+            if int(window["start"]) <= int(entry["day"]) <= int(window["end"])
+        )
+        for phase_id, window in PHASE_WINDOWS.items()
+    }
     return {
         "town_id": str(town.get("id", "")),
         "faction_id": str(town.get("faction_id", "")),
@@ -228,6 +241,8 @@ def simulate_town(
         "min_common_material_bottleneck_days_per_town": MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN,
         "signature_tier_build_days": signature_tier_build_days,
         "min_high_tier_unit_build_days": {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()},
+        "phase_build_counts": phase_build_counts,
+        "phase_windows": PHASE_WINDOWS,
         "stalled_days": stalled_days[:5],
         "build_log": build_log,
     }
@@ -347,6 +362,14 @@ def main() -> int:
             errors.append(f"{town_id} completed on day {result['completion_day']}, above target {TARGET_TURNS}")
         if int(result["completion_day"]) < MIN_COMPLETION_DAY:
             errors.append(f"{town_id} completed on day {result['completion_day']}, below production pacing floor {MIN_COMPLETION_DAY}")
+        phase_build_counts = result.get("phase_build_counts", {})
+        phase_build_counts = phase_build_counts if isinstance(phase_build_counts, dict) else {}
+        for phase_id, window in PHASE_WINDOWS.items():
+            if int(phase_build_counts.get(phase_id, 0)) < int(window["min_builds"]):
+                errors.append(
+                    f"{town_id} must build at least {window['min_builds']} {phase_id}-phase targets "
+                    f"between days {window['start']}-{window['end']}"
+                )
         if int(result["build_count"]) > TARGET_TURNS:
             errors.append(f"{town_id} violates one-build-per-turn count")
         if int(result.get("rare_development_spend", 0)) < MIN_RARE_DEVELOPMENT_SPEND:
@@ -381,6 +404,7 @@ def main() -> int:
     report["min_late_rare_bottleneck_days_per_town"] = MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN
     report["min_common_material_bottleneck_days_per_town"] = MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN
     report["min_high_tier_unit_build_days"] = {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()}
+    report["phase_windows"] = PHASE_WINDOWS
 
     for faction_id, faction in factions.items():
         seed_town_id = str(faction.get("seed_town_id", ""))
