@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Development Phase Curve Scorecard",
+  "currentSliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Common Surplus Pressure Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks.",
+  "currentSliceNotes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T09:54:09Z",
+  "updatedAt": "2026-05-25T10:22:08Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22382,9 +22382,107 @@
           }
         }
       }
+    },
+    {
+      "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+      "title": "Economy Town Common Surplus Pressure Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Tighten deterministic town-development balance so authored towns cannot pass the 30-turn curve while ending with excessive unspent common-resource reserves.",
+      "notes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks.",
+      "startedAt": "2026-05-25T09:58:09Z",
+      "completedAt": "2026-05-25T10:22:08Z",
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "runtime_scorecard_passed_requirement_count": 30,
+          "runtime_scorecard_requirement_count": 30,
+          "max_ending_common_after_completion": {
+            "gold": 10000,
+            "wood": 12,
+            "ore": 12
+          },
+          "max_ending_common_surplus_ratio_after_completion": {
+            "gold": 0.3,
+            "wood": 0.5,
+            "ore": 0.5
+          },
+          "observed_common_surplus_max": {
+            "gold": 9600,
+            "wood": 10,
+            "ore": 11
+          },
+          "observed_common_surplus_ratio_max": {
+            "gold": 0.2602,
+            "wood": 0.4348,
+            "ore": 0.4783
+          }
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+      "title": "Economy Town Common Surplus Pressure Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T10:22:08Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-common-surplus-pressure-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Town development balance now emits and gates absolute post-completion common-resource caps for gold, wood, and ore.",
+        "Town development balance also gates post-completion common-resource surplus ratios against total deterministic development costs.",
+        "The economy/town scorecard now gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks."
+      ],
+      "validation": [
+        "python3 tests/town_development_balance_report.py (passed; max ending common surplus gold 9600, wood 10, ore 11)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks including common_resource_surplus_pressure)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not final exact-price approval.",
+        "Not final campaign economy approval.",
+        "Not final route safety.",
+        "Not final strategic AI quality.",
+        "Not encounter balance approval."
+      ],
+      "updatedAt": "2026-05-25T10:22:08Z"
+    },
     {
       "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
       "title": "Economy Town Development Phase Curve Scorecard",
@@ -29157,7 +29255,7 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "sliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
+    "sliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
     "commands": [
       "python3 tests/town_development_balance_report.py",
       "python3 tests/economy_town_goal_scorecard_report.py",
@@ -29168,28 +29266,40 @@
       "git diff --check"
     ],
     "evidence": {
-      "deterministic_scorecard_passed_requirement_count": 14,
-      "deterministic_scorecard_requirement_count": 14,
-      "runtime_scorecard_passed_requirement_count": 29,
-      "runtime_scorecard_requirement_count": 29,
-      "min_completion_day": 24,
-      "completion_day_min": 24,
-      "completion_day_max": 30,
-      "phase_min_counts": {
-        "early": 10,
-        "mid": 6,
-        "late": 2
+      "deterministic_scorecard_passed_requirement_count": 15,
+      "deterministic_scorecard_requirement_count": 15,
+      "runtime_scorecard_passed_requirement_count": 30,
+      "runtime_scorecard_requirement_count": 30,
+      "max_ending_common_after_completion": {
+        "gold": 10000,
+        "wood": 12,
+        "ore": 12
+      },
+      "max_ending_common_surplus_ratio_after_completion": {
+        "gold": 0.3,
+        "wood": 0.5,
+        "ore": 0.5
+      },
+      "observed_common_surplus_max": {
+        "gold": 9600,
+        "wood": 10,
+        "ore": 11
+      },
+      "observed_common_surplus_ratio_max": {
+        "gold": 0.2602,
+        "wood": 0.4348,
+        "ore": 0.4783
       }
     }
   },
   "active_slice": {
-    "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
-    "title": "Economy Town Development Phase Curve Scorecard",
+    "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+    "title": "Economy Town Common Surplus Pressure Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T09:54:09Z",
-    "notes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks."
+    "updatedAt": "2026-05-25T10:22:08Z",
+    "notes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks."
   },
-  "currentSliceUpdatedAt": "2026-05-25T09:54:09Z",
+  "currentSliceUpdatedAt": "2026-05-25T10:22:08Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -30094,16 +30204,16 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
-    "title": "Economy Town Development Phase Curve Scorecard",
+    "id": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
+    "title": "Economy Town Common Surplus Pressure Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T09:54:09Z",
-    "notes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks."
+    "updatedAt": "2026-05-25T10:22:08Z",
+    "notes": "Completed. Deterministic town-development balance now caps post-completion common-resource surplus for gold, wood, and ore; the economy/town scorecard gates common_resource_surplus_pressure and passes deterministic 15/15 plus runtime-inclusive 30/30 checks."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T09:54:09Z",
-    "sliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T10:22:08Z",
+    "sliceId": "economy-town-common-surplus-pressure-scorecard-20260525-10184",
     "commands": [
       "python3 tests/town_development_balance_report.py",
       "python3 tests/economy_town_goal_scorecard_report.py",
@@ -30114,17 +30224,29 @@
       "git diff --check"
     ],
     "evidence": {
-      "deterministic_scorecard_passed_requirement_count": 14,
-      "deterministic_scorecard_requirement_count": 14,
-      "runtime_scorecard_passed_requirement_count": 29,
-      "runtime_scorecard_requirement_count": 29,
-      "min_completion_day": 24,
-      "completion_day_min": 24,
-      "completion_day_max": 30,
-      "phase_min_counts": {
-        "early": 10,
-        "mid": 6,
-        "late": 2
+      "deterministic_scorecard_passed_requirement_count": 15,
+      "deterministic_scorecard_requirement_count": 15,
+      "runtime_scorecard_passed_requirement_count": 30,
+      "runtime_scorecard_requirement_count": 30,
+      "max_ending_common_after_completion": {
+        "gold": 10000,
+        "wood": 12,
+        "ore": 12
+      },
+      "max_ending_common_surplus_ratio_after_completion": {
+        "gold": 0.3,
+        "wood": 0.5,
+        "ore": 0.5
+      },
+      "observed_common_surplus_max": {
+        "gold": 9600,
+        "wood": 10,
+        "ore": 11
+      },
+      "observed_common_surplus_ratio_max": {
+        "gold": 0.2602,
+        "wood": 0.4348,
+        "ore": 0.4783
       }
     }
   }
