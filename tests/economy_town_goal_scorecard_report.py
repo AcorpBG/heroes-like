@@ -38,6 +38,10 @@ RARE_RESOURCES = {
     "memory_salt",
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
+BALANCE_REGRESSION_RULES_PATH = ROOT / "scripts" / "core" / "BalanceRegressionReportRules.gd"
+HEADLESS_SIMULATION_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
+BALANCE_REGRESSION_REPORT_TEST_PATH = ROOT / "tests" / "balance_regression_report_suite.gd"
+HEADLESS_SIMULATION_REPORT_TEST_PATH = ROOT / "tests" / "headless_simulation_harness_report.gd"
 GODOT_RUNTIME_REPORTS = (
     {
         "scene": "res://tests/town_development_runtime_balance_report.tscn",
@@ -178,6 +182,77 @@ def add_check(checks: list[dict[str, Any]], check_id: str, ok: bool, summary: st
             "evidence": evidence,
         }
     )
+
+
+def source_contract_row(path: Path, required_tokens: tuple[str, ...], require_resource_literals: bool = False) -> dict[str, Any]:
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    missing_resources = sorted(resource_id for resource_id in LIVE_RESOURCES if require_resource_literals and f'"{resource_id}"' not in text)
+    missing_tokens = [token for token in required_tokens if token not in text]
+    common_only_regression = 'const LIVE_RESOURCE_IDS := ["gold", "wood", "ore"]' in text
+    return {
+        "path": str(path.relative_to(ROOT)),
+        "exists": path.exists(),
+        "missing_resource_ids": missing_resources,
+        "missing_tokens": missing_tokens,
+        "common_only_regression": common_only_regression,
+        "ok": path.exists() and not missing_resources and not missing_tokens and not common_only_regression,
+    }
+
+
+def balance_harness_resource_accounting_report() -> dict[str, Any]:
+    rows = [
+        source_contract_row(
+            BALANCE_REGRESSION_RULES_PATH,
+            (
+                "const LIVE_RESOURCE_IDS",
+                "_economy_pressure_resource_viability",
+                "live_resource_ids",
+                "live_resource_count",
+                "visible_live_resource_support",
+                "missing_live_resource_support",
+            ),
+            True,
+        ),
+        source_contract_row(
+            HEADLESS_SIMULATION_RULES_PATH,
+            (
+                "const LIVE_RESOURCE_IDS",
+                "_economy_resource_delta",
+                "live_resource_ids",
+                "live_resource_count",
+                "before_resources",
+                "after_resources",
+            ),
+            True,
+        ),
+        source_contract_row(
+            BALANCE_REGRESSION_REPORT_TEST_PATH,
+            (
+                "_assert_balance_economy_resource_coverage",
+                "BalanceRegressionReportRulesScript.LIVE_RESOURCE_IDS",
+                "live_resource_count",
+                "visible_live_resource_support",
+            ),
+        ),
+        source_contract_row(
+            HEADLESS_SIMULATION_REPORT_TEST_PATH,
+            (
+                "_assert_economy_resource_delta",
+                "HeadlessSimulationHarnessRulesScript.LIVE_RESOURCE_IDS",
+                "live_resource_count",
+                "before_resources",
+                "after_resources",
+            ),
+        ),
+    ]
+    return {
+        "schema": "balance_harness_resource_accounting_v1",
+        "live_resource_ids": sorted(LIVE_RESOURCES),
+        "file_count": len(rows),
+        "passing_file_count": sum(1 for row in rows if row["ok"]),
+        "rows": rows,
+        "ok": all(row["ok"] for row in rows),
+    }
 
 
 def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
@@ -322,6 +397,21 @@ def main() -> int:
             "live_resources": sorted(LIVE_RESOURCES),
             "matrix_signature": source_matrix.get("matrix_signature", ""),
             "active_scenario_count": int(source_matrix.get("active_scenario_count", 0)),
+        },
+    )
+
+    harness_accounting = balance_harness_resource_accounting_report()
+    add_check(
+        checks,
+        "balance_harness_live_resource_accounting",
+        harness_accounting["ok"],
+        "Shared balance regression and headless simulation economy evidence must account for all nine live stockpile resources.",
+        {
+            "schema": harness_accounting["schema"],
+            "live_resource_ids": harness_accounting["live_resource_ids"],
+            "file_count": harness_accounting["file_count"],
+            "passing_file_count": harness_accounting["passing_file_count"],
+            "rows": harness_accounting["rows"],
         },
     )
 
@@ -586,6 +676,10 @@ def main() -> int:
             },
             "faction_town_unit_asymmetry_report": {
                 "unique_fingerprints": asymmetry.get("unique_fingerprints", {}),
+            },
+            "balance_harness_resource_accounting_v1": {
+                "live_resource_ids": harness_accounting["live_resource_ids"],
+                "passing_file_count": harness_accounting["passing_file_count"],
             },
         },
         "runtime_reports_included": bool(args.include_runtime),

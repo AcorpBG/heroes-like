@@ -8,6 +8,7 @@ The scorecard gates:
 
 - all nine live stockpile resources: `gold`, `wood`, `ore`, `aetherglass`, `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`;
 - active-scenario source coverage for every live resource;
+- full-resource balance/headless harness accounting coverage, so shared economy pressure and economy delta evidence cannot regress to common-only `gold`, `wood`, and `ore` rows;
 - at least 15 authored towns completing full development within the 30-turn target;
 - one build per town turn through authored `one_build_per_turn` profiles and deterministic build logs;
 - common-resource-dominant town development using `gold`, `wood`, and `ore`;
@@ -18,7 +19,7 @@ The scorecard gates:
 - distinct six-faction town/unit/economy fingerprints plus at least five unique non-unit buildings per authored faction town;
 - seven unit tiers and seven matching unit-unlocking town buildings per faction.
 
-The default scorecard is intentionally fast and deterministic. Current deterministic evidence passes 9/9 checks, with 15 authored towns completing between day 24 and day 30, tier 7 signature unit buildings arriving between day 22 and day 28, and 15/15 authored towns carrying at least one rare-cost upgrade chain. The optional `--include-runtime` mode additionally runs the live Godot town-development runtime report, the active player-town scenario runway report, and the active AI-town scenario runway report. Current runtime-inclusive evidence passes 12/12 checks, including 15/15 live runtime town-development and recruitment cases, 105/105 authored-town tier recruitment cases, 18/18 active player-town runway cases with 126/126 recruited tiers, and 20/20 active AI-town runway cases with same-day build guards and delayed-source save/resume.
+The default scorecard is intentionally fast and deterministic. Current deterministic evidence passes 10/10 checks, with 15 authored towns completing between day 24 and day 30, tier 7 signature unit buildings arriving between day 22 and day 28, 15/15 authored towns carrying at least one rare-cost upgrade chain, and 4/4 balance/headless harness source files preserving the nine-resource accounting contract. The optional `--include-runtime` mode additionally runs the live Godot town-development runtime report, the active player-town scenario runway report, and the active AI-town scenario runway report. Current runtime-inclusive evidence passes 13/13 checks, including 15/15 live runtime town-development and recruitment cases, 105/105 authored-town tier recruitment cases, 18/18 active player-town runway cases with 126/126 recruited tiers, and 20/20 active AI-town runway cases with same-day build guards and delayed-source save/resume.
 
 This is production-readiness regression evidence for the current authored economy/town model. It is not final campaign balance, final encounter pacing, final route safety, final strategic AI quality, final town UI/art approval, final exact-price approval, or a claim that every future scenario template has completed economy pacing.
 

@@ -2938,7 +2938,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(report_payload.get("schema") == "economy_town_goal_scorecard_report_v1", errors, "Economy town goal scorecard schema mismatch")
     ensure(report_payload.get("slice_id") == "economy-town-goal-scorecard-20260524-10184", errors, "Economy town goal scorecard slice id mismatch")
     ensure(report_payload.get("ok") is True, errors, "Economy town goal scorecard must pass")
-    ensure(int(report_payload.get("requirement_count", 0)) >= 9, errors, "Economy town goal scorecard must cover the owner objective requirements")
+    ensure(int(report_payload.get("requirement_count", 0)) >= 10, errors, "Economy town goal scorecard must cover the owner objective requirements")
     ensure(
         int(report_payload.get("passed_requirement_count", 0)) == int(report_payload.get("requirement_count", -1)),
         errors,
@@ -2949,6 +2949,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     check_ids = {str(row.get("id", "")) for row in check_rows if isinstance(row, dict)}
     for required_check in (
         "all_live_resources_wired",
+        "balance_harness_live_resource_accounting",
         "authored_town_development_end_to_end",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
@@ -2967,15 +2968,22 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     cost_curve = cost_curve if isinstance(cost_curve, dict) else {}
     matrix = source_reports.get("active_scenario_resource_availability_matrix_v1", {})
     matrix = matrix if isinstance(matrix, dict) else {}
+    harness_accounting = source_reports.get("balance_harness_resource_accounting_v1", {})
+    harness_accounting = harness_accounting if isinstance(harness_accounting, dict) else {}
     ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
     ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
     ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
     ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
+    ensure(int(harness_accounting.get("passing_file_count", 0)) >= 4, errors, "Economy town goal scorecard must include full-resource balance/headless harness accounting coverage")
     script_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     doc_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.read_text(encoding="utf-8") if ECONOMY_TOWN_GOAL_SCORECARD_REPORT_DOC_PATH.exists() else ""
     for required_token in (
         "economy_town_goal_scorecard_report_v1",
         "all_live_resources_wired",
+        "balance_harness_live_resource_accounting",
+        "balance_harness_resource_accounting_v1",
+        "BALANCE_REGRESSION_RULES_PATH",
+        "HEADLESS_SIMULATION_RULES_PATH",
         "authored_town_development_end_to_end",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
@@ -20633,7 +20641,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, town completion, build limits, cost shape, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
