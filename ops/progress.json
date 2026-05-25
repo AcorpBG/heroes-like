@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-high-tier-pacing-balance-20260524-10184",
-  "currentSliceTitle": "Economy Town High-Tier Pacing Balance",
+  "currentSliceId": "economy-town-rare-upgrade-chain-balance-20260525-10184",
+  "currentSliceTitle": "Economy Town Rare Upgrade Chain Balance",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "High-tier unit timing is now part of the economy/town scorecard. Signature tier 5-7 unit buildings use a 4/8/10 faction-rare curve, deterministic authored towns complete between day 24 and day 30, tier 7 signature buildings arrive between day 22 and day 28, and the runtime-inclusive scorecard still passes live town, active player-town, and active AI-town runways.",
+  "currentSliceNotes": "Completed rare-cost high-tier upgrade chain balance gate: six late faction unique/capstone buildings now have upgrade_from chains, cost-curve evidence covers 15/15 authored towns and 15 rare upgrade chains, deterministic scorecard passes 9/9, runtime-inclusive scorecard passes 12/12, validate_repo/jq/diff-check green.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T00:01:20Z",
+  "updatedAt": "2026-05-25T00:23:03Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,35 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-rare-upgrade-chain-balance-20260525-10184",
+      "title": "Economy Town Rare Upgrade Chain Balance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T00:23:03Z",
+      "startedAt": "2026-05-25T00:04:19Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_cost_curve_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "summary": "Make the objective's high-tier upgrades explicit by converting late faction rare-cost town developments into upgrade_from chains and gating rare-cost upgrade coverage in the economy/town scorecard.",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-25T00:23:03Z",
+      "notes": "Completed rare-cost high-tier upgrade chain balance gate: six late faction unique/capstone buildings now have upgrade_from chains, cost-curve evidence covers 15/15 authored towns and 15 rare upgrade chains, deterministic scorecard passes 9/9, runtime-inclusive scorecard passes 12/12, validate_repo/jq/diff-check green."
+    },
     {
       "id": "economy-town-high-tier-pacing-balance-20260524-10184",
       "title": "Economy Town High-Tier Pacing Balance",
