@@ -6,7 +6,7 @@ Slice: `economy-active-scenario-development-runway-20260524-10184`
 
 ## Scope
 
-This slice adds `active_scenario_town_development_runway_report_v1`, a focused Godot report that boots every active authored campaign/skirmish scenario with a player-owned town and simulates live town construction for each player-town case. Current evidence covers 16 active authored scenarios and 18 active player-town cases.
+This slice adds `active_scenario_town_development_runway_report_v1`, a focused Godot report that boots every active authored campaign/skirmish scenario with a player-owned town and simulates live town construction for each player-town case. Current evidence covers 16 active authored scenarios, including 15 campaign scenarios and 16 skirmish scenarios, plus 18 active player-town cases.
 
 The report secures scenario-authored economy sources that provide resources required by that town's authored build list, then drives `TownRules.get_build_actions` and `OverworldRules.build_in_active_town` until the town completes its development target or the 30-turn limit is reached. Each case records completion day, build count, secured source resources, rare-resource spend, one-build-per-town-per-turn rejection, and common-only market boundaries.
 
@@ -21,6 +21,7 @@ The delayed-source replay now also saves and restores each case after route-deri
 ## Evidence Boundaries
 
 - The report covers active authored scenarios and active player-town cases.
+- Current focused evidence covers 17 campaign player-town cases and 18 skirmish player-town cases.
 - Current focused evidence completes all 18 active player-town cases within the 30-turn target and observes high-tier rare-resource spending in every case.
 - Current focused evidence completes 18/18 active player-town recruitment cases after development and recruits 126/126 tier recruitment cases through live active-town recruitment.
 - Current focused evidence completes 18/18 delayed-source replay cases after route-derived source acquisition delays, with delayed completion days ranging from day 21 to day 25.

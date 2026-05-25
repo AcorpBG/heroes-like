@@ -12,8 +12,10 @@ The focused report `active_scenario_town_economy_source_route_report_v1` boots e
 
 ## Evidence
 
-- Coverage: 16 active scenarios, 18 player-town cases, 54 player resource route cases, and 54 reachable player route cases.
+- Coverage: 16 active scenarios, including 15 campaign scenarios and 16 skirmish scenarios, 18 player-town cases, 54 player resource route cases, and 54 reachable player route cases.
+- Split player-town coverage: 17 campaign player-town cases and 18 skirmish player-town cases.
 - Enemy coverage: 20 enemy-town cases, 60 enemy resource route cases, and 60 reachable enemy route cases.
+- Split enemy-town coverage: 19 campaign enemy-town cases and 20 skirmish enemy-town cases.
 - Required common routes are capped at 24 steps, and required rare-resource routes are capped at 40 steps.
 - Each town case requires reachable wood, ore, and faction rare resource routes.
 - Guard-adjacent resource sources remain identified as guarded route targets; this report does not remove combat pressure.

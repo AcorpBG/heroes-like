@@ -2,6 +2,8 @@ extends Node
 
 const REPORT_SCHEMA := "active_scenario_ai_town_development_runway_report_v1"
 const TARGET_TURNS := 30
+const MIN_CAMPAIGN_SCENARIO_COUNT := 15
+const MIN_SKIRMISH_SCENARIO_COUNT := 16
 const LIVE_STOCKPILE_RESOURCE_IDS := [
 	"gold",
 	"wood",
@@ -35,8 +37,14 @@ func _ready() -> void:
 func _run() -> void:
 	var only_scenario := OS.get_environment("ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY")
 	var scenario_count := 0
+	var campaign_scenario_count := 0
+	var skirmish_scenario_count := 0
 	var town_case_count := 0
+	var campaign_town_case_count := 0
+	var skirmish_town_case_count := 0
 	var completed_case_count := 0
+	var campaign_completed_case_count := 0
+	var skirmish_completed_case_count := 0
 	var rare_spend_case_count := 0
 	var same_day_guard_case_count := 0
 	var full_session_case_count := 0
@@ -56,9 +64,15 @@ func _run() -> void:
 		var scenario := ContentService.get_scenario(String(scenario_id))
 		if not _is_active_authored_scenario(scenario):
 			continue
+		var launch_surfaces := _launch_surfaces(scenario)
 		scenario_count += 1
+		if "campaign" in launch_surfaces:
+			campaign_scenario_count += 1
+		if "skirmish" in launch_surfaces:
+			skirmish_scenario_count += 1
 		for authored_town in _enemy_towns(scenario):
 			var row := _run_enemy_town_case(String(scenario_id), scenario, authored_town)
+			row["launch_surfaces"] = launch_surfaces
 			rows.append(row)
 			var row_faction_id := String(row.get("faction_id", ""))
 			if row_faction_id != "":
@@ -68,8 +82,16 @@ func _run() -> void:
 			if ladder_faction_id != "":
 				covered_ladder_faction_ids[ladder_faction_id] = true
 			town_case_count += 1
+			if "campaign" in launch_surfaces:
+				campaign_town_case_count += 1
+			if "skirmish" in launch_surfaces:
+				skirmish_town_case_count += 1
 			if bool(row.get("completed", false)):
 				completed_case_count += 1
+				if "campaign" in launch_surfaces:
+					campaign_completed_case_count += 1
+				if "skirmish" in launch_surfaces:
+					skirmish_completed_case_count += 1
 			if bool(row.get("rare_spend_observed", false)):
 				rare_spend_case_count += 1
 			if bool(row.get("same_day_second_build_blocked", false)):
@@ -107,13 +129,23 @@ func _run() -> void:
 			covered_ladder_faction_id_rows.size(),
 			covered_ladder_faction_id_rows,
 		])
+	if campaign_scenario_count < MIN_CAMPAIGN_SCENARIO_COUNT:
+		_errors.append("AI town-development runway covered only %d campaign scenarios" % campaign_scenario_count)
+	if skirmish_scenario_count < MIN_SKIRMISH_SCENARIO_COUNT:
+		_errors.append("AI town-development runway covered only %d skirmish scenarios" % skirmish_scenario_count)
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"target_turns": TARGET_TURNS,
 		"active_scenario_count": scenario_count,
+		"campaign_scenario_count": campaign_scenario_count,
+		"skirmish_scenario_count": skirmish_scenario_count,
 		"enemy_town_case_count": town_case_count,
+		"campaign_enemy_town_case_count": campaign_town_case_count,
+		"skirmish_enemy_town_case_count": skirmish_town_case_count,
 		"completed_case_count": completed_case_count,
+		"campaign_completed_case_count": campaign_completed_case_count,
+		"skirmish_completed_case_count": skirmish_completed_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
 		"same_day_guard_case_count": same_day_guard_case_count,
 		"full_session_case_count": full_session_case_count,
@@ -1158,9 +1190,20 @@ func _map_size_payload(size: Vector2i) -> Dictionary:
 	return {"width": size.x, "height": size.y}
 
 func _is_active_authored_scenario(scenario: Dictionary) -> bool:
+	return _is_launch_surface_available(scenario, "campaign") or _is_launch_surface_available(scenario, "skirmish")
+
+func _launch_surfaces(scenario: Dictionary) -> Array:
+	var surfaces := []
+	if _is_launch_surface_available(scenario, "campaign"):
+		surfaces.append("campaign")
+	if _is_launch_surface_available(scenario, "skirmish"):
+		surfaces.append("skirmish")
+	return surfaces
+
+func _is_launch_surface_available(scenario: Dictionary, surface_id: String) -> bool:
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
 	var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
-	return bool(availability.get("campaign", false)) or bool(availability.get("skirmish", false))
+	return bool(availability.get(surface_id, false))
 
 func _enemy_towns(scenario: Dictionary) -> Array:
 	var result := []
