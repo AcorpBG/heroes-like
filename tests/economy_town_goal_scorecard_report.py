@@ -403,6 +403,35 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
         },
     )
+    enemy_source_route_runtime_ok = (
+        source_route_runtime.get("ok") is True
+        and source_route_runtime.get("schema") == "active_scenario_town_economy_source_route_report_v1"
+        and int(source_route_runtime.get("active_scenario_count", 0)) >= 16
+        and int(source_route_runtime.get("enemy_town_case_count", 0)) >= 20
+        and int(source_route_runtime.get("enemy_resource_route_case_count", 0)) == int(source_route_runtime.get("enemy_town_case_count", -1)) * 3
+        and int(source_route_runtime.get("enemy_reachable_route_case_count", 0)) == int(source_route_runtime.get("enemy_resource_route_case_count", -1))
+        and int(source_route_runtime.get("max_common_route_steps", 999)) <= 24
+        and int(source_route_runtime.get("max_rare_route_steps", 999)) <= 40
+        and set(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])) == {"wood", "ore"}
+        and set(str(value) for value in source_route_runtime.get("rare_resource_ids", [])) == RARE_RESOURCES
+    )
+    add_check(
+        checks,
+        "active_scenario_enemy_source_route_runtime",
+        enemy_source_route_runtime_ok,
+        "Active enemy-town scenarios must expose reachable wood, ore, and faction-rare source routes through live overworld route rules.",
+        {
+            "schema": str(source_route_runtime.get("schema", "")),
+            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
+            "enemy_town_case_count": int(source_route_runtime.get("enemy_town_case_count", 0)),
+            "enemy_resource_route_case_count": int(source_route_runtime.get("enemy_resource_route_case_count", 0)),
+            "enemy_reachable_route_case_count": int(source_route_runtime.get("enemy_reachable_route_case_count", 0)),
+            "required_common_resource_ids": sorted(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])),
+            "rare_resource_ids": sorted(str(value) for value in source_route_runtime.get("rare_resource_ids", [])),
+            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
+        },
+    )
 
     generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
     generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
@@ -846,6 +875,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "player_town_case_count": int(source_route_runtime.get("player_town_case_count", 0)),
             "resource_route_case_count": int(source_route_runtime.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
+            "enemy_town_case_count": int(source_route_runtime.get("enemy_town_case_count", 0)),
+            "enemy_resource_route_case_count": int(source_route_runtime.get("enemy_resource_route_case_count", 0)),
+            "enemy_reachable_route_case_count": int(source_route_runtime.get("enemy_reachable_route_case_count", 0)),
             "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
             "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
         },

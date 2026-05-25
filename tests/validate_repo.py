@@ -3042,10 +3042,14 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "live_runtime_development_and_recruitment",
         "active_scenario_player_runway_runtime",
         "active_scenario_source_route_runtime",
+        "active_scenario_enemy_source_route_runtime",
         "ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT",
         "active_scenario_town_economy_source_route_report_v1",
         "reachable_route_case_count",
+        "enemy_reachable_route_case_count",
         "resource_route_case_count",
+        "enemy_resource_route_case_count",
+        "enemy_town_case_count",
         "max_common_route_steps",
         "max_rare_route_steps",
         "generated_package_town_economy_runtime",
@@ -3127,6 +3131,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "18/18 active player-town runway cases with rare spend, full-session execution",
         "active source-route report",
         "54/54 active player-town source routes reachable",
+        "60/60 active enemy-town source routes reachable",
         "generated package town-economy runtime surface",
         "7/7 generated package towns backed by authored templates and seven-tier ladders",
         "4 generated project factions and 5 generated town templates",
@@ -3147,7 +3152,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "26/26 checks",
+        "27/27 checks",
         "6/6 TownShell resource/build UI cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
@@ -19819,6 +19824,10 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "MAX_RARE_ROUTE_STEPS",
         "resource_route_case_count",
         "reachable_route_case_count",
+        "enemy_town_case_count",
+        "enemy_resource_route_case_count",
+        "enemy_reachable_route_case_count",
+        "_enemy_towns",
         "_best_resource_route",
         "_resource_source_has_guard",
     ):
@@ -19830,8 +19839,11 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "active_scenario_town_economy_source_route_report_v1",
         "16 active scenarios",
         "18 player-town cases",
-        "54 resource route cases",
-        "54 reachable route cases",
+        "54 player resource route cases",
+        "54 reachable player route cases",
+        "20 enemy-town cases",
+        "60 enemy resource route cases",
+        "60 reachable enemy route cases",
         "normal markets remain common-resource only",
         "not final encounter pacing",
         "No `SAVE_VERSION` bump",
@@ -19845,6 +19857,8 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
     active_scenario_count = 0
     player_town_case_count = 0
     resource_route_case_count = 0
+    enemy_town_case_count = 0
+    enemy_resource_route_case_count = 0
     for scenario_id, scenario in sorted(scenarios.items()):
         if not isinstance(scenario, dict):
             continue
@@ -19873,9 +19887,13 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
                     except (TypeError, ValueError):
                         pass
         for town in scenario.get("towns", []):
-            if not isinstance(town, dict) or str(town.get("owner", "")) != "player":
+            if not isinstance(town, dict) or str(town.get("owner", "")) not in ("player", "enemy"):
                 continue
-            player_town_case_count += 1
+            is_enemy_town = str(town.get("owner", "")) == "enemy"
+            if is_enemy_town:
+                enemy_town_case_count += 1
+            else:
+                player_town_case_count += 1
             town_placement_id = str(town.get("placement_id", "")).strip()
             town_id = str(town.get("town_id", "")).strip()
             town_template = towns.get(town_id, {})
@@ -19883,12 +19901,17 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
             profile = profile if isinstance(profile, dict) else {}
             rare_id = str(profile.get("rare_resource_id", "")).strip()
             for resource_id in ("wood", "ore", rare_id):
-                resource_route_case_count += 1
+                if is_enemy_town:
+                    enemy_resource_route_case_count += 1
+                else:
+                    resource_route_case_count += 1
                 ensure(bool(resource_id), errors, f"{scenario_id}.{town_placement_id} needs a non-empty required resource id")
                 ensure(bool(resource_outputs.get(resource_id, [])), errors, f"{scenario_id}.{town_placement_id} town {town_id} needs an authored {resource_id} source route candidate")
     ensure(active_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover the active authored scenario roster")
     ensure(player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover every current active player-town case")
     ensure(resource_route_case_count == player_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every player town")
+    ensure(enemy_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover every current active enemy-town case")
+    ensure(enemy_resource_route_case_count == enemy_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every enemy town")
 
 
 def validate_active_scenario_town_start_economy(errors: list[str]) -> None:
@@ -20850,7 +20873,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, source-route reachability, generated package town economy, recruitment market coverage, six-faction AI recruitment exposure, town UI surfaces, and persisted market caps")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, player/enemy source-route reachability, generated package town economy, recruitment market coverage, six-faction AI recruitment exposure, town UI surfaces, and persisted market caps")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
