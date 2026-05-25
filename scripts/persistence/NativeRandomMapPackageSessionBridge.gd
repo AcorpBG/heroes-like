@@ -5,6 +5,13 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
+const H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY := {
+	"quicksilver": "site_peatwax_reed_yard",
+	"ember_salt": "site_embergrain_warm_granary",
+	"lens_crystal": "site_aetherglass_lens_house",
+	"cut_gems": "site_memory_salt_pan",
+}
+
 static func build_session_from_adoption(
 	adoption: Dictionary,
 	difficulty: String = "normal",
@@ -259,6 +266,9 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 		if String(object.get("native_record_kind", object.get("kind", ""))) != "town" and String(object.get("kind", "")) != "town":
 			continue
 		var town_template := ContentService.get_town(String(object.get("town_id", "")))
+		var town_faction_id := String(object.get("faction_id", ""))
+		if ContentService.get_faction(town_faction_id).is_empty():
+			town_faction_id = String(town_template.get("faction_id", town_faction_id))
 		var owner_slot := _int_or_default(object.get("owner_slot", object.get("player_slot", -1)), -1)
 		var player_slot := _int_or_default(object.get("player_slot", object.get("owner_slot", -1)), -1)
 		towns.append({
@@ -271,7 +281,7 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			"player_slot": player_slot,
 			"player_type": String(object.get("player_type", "")),
 					"team_id": String(object.get("team_id", "")),
-					"faction_id": String(object.get("faction_id", "")),
+					"faction_id": town_faction_id,
 				"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
 				"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
 				"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
@@ -362,6 +372,9 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 	return objects
 
 static func _resource_site_id_for_object(object: Dictionary) -> String:
+	var rare_mine_site_id := _live_rare_site_id_for_h3m_mine_proxy(object)
+	if rare_mine_site_id != "":
+		return rare_mine_site_id
 	var site_id := String(object.get("site_id", "")).strip_edges()
 	if site_id != "":
 		return site_id
@@ -373,6 +386,26 @@ static func _resource_site_id_for_object(object: Dictionary) -> String:
 		return ""
 	var map_object := ContentService.get_map_object(object_id)
 	return String(map_object.get("resource_site_id", "")).strip_edges()
+
+static func _live_rare_site_id_for_h3m_mine_proxy(object: Dictionary) -> String:
+	var kind := String(object.get("kind", ""))
+	var native_kind := String(object.get("native_record_kind", ""))
+	if kind != "mine" and native_kind != "mine":
+		return ""
+	var proxy_category := String(object.get("native_proxy_category", "")).strip_edges()
+	if H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY.has(proxy_category):
+		return String(H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY[proxy_category])
+	var proxy_object_id := String(object.get("object_id", object.get("native_proxy_object_id", ""))).strip_edges()
+	match proxy_object_id:
+		"mine_alchemist_proxy", "object_marsh_peat_yard":
+			return "site_peatwax_reed_yard"
+		"mine_sulfur_proxy", "object_floodplain_sluice_camp":
+			return "site_embergrain_warm_granary"
+		"mine_crystal_proxy", "object_cinder_ore_face":
+			return "site_aetherglass_lens_house"
+		"mine_gems_proxy", "object_badlands_coin_sluice":
+			return "site_memory_salt_pan"
+	return ""
 
 static func _register_generated_scenario_draft_from_documents(
 	scenario_id: String,

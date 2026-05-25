@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-active-source-route-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Active Source Route Scorecard",
+  "currentSliceId": "economy-generated-package-town-economy-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Town Economy Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing.",
+  "currentSliceNotes": "Completed. Strict Small generated/native package sessions now feed generated_package_town_economy_surface_v1 into the runtime-inclusive economy/town scorecard, with authored town templates, seven-tier ladders, rare-development identity, and player-required common plus rare resource sources gated; runtime scorecard passes 24/24 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T06:10:39Z",
+  "updatedAt": "2026-05-25T06:37:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22133,6 +22133,54 @@
         }
       },
       "completedAt": "2026-05-25T06:10:39Z"
+    },
+    {
+      "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+      "title": "Economy Generated Package Town Economy Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Require the runtime-inclusive economy/town scorecard to cover strict Small generated/native package town economy wiring, not only authored scenarios.",
+      "notes": "Completed. Strict Small generated/native package sessions now feed generated_package_town_economy_surface_v1 into the runtime-inclusive economy/town scorecard, with authored town templates, seven-tier ladders, rare-development identity, and player-required common plus rare resource sources gated; runtime scorecard passes 24/24 checks.",
+      "startedAt": "2026-05-25T06:19:05Z",
+      "validation": {
+        "status": "pass",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "generated_package_town_count": 7,
+          "generated_package_player_town_count": 1,
+          "generated_package_authored_town_template_count": 7,
+          "generated_package_seven_tier_town_count": 7,
+          "generated_package_rare_development_town_count": 7,
+          "generated_resource_node_count": 98,
+          "generated_resource_source_ids": [
+            "aetherglass",
+            "embergrain",
+            "gold",
+            "memory_salt",
+            "ore",
+            "peatwax",
+            "wood"
+          ],
+          "player_required_resource_ids": [
+            "gold",
+            "wood",
+            "ore",
+            "embergrain"
+          ],
+          "missing_player_resource_sources": [],
+          "runtime_scorecard_passed_requirement_count": 24,
+          "runtime_scorecard_requirement_count": 24
+        }
+      },
+      "completedAt": "2026-05-25T06:37:40Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -27126,6 +27174,58 @@
         "Not combat or reward tuning approval.",
         "Not broad generated-map economy approval."
       ]
+    },
+    {
+      "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+      "title": "Economy Generated Package Town Economy Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T06:37:40Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-generated-package-town-economy-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "NativeRandomMapPackageSessionBridge now maps H3M rare mine proxies to original live rare-resource fronts for strict Small generated package sessions.",
+        "Generated town states normalize invalid H3M faction labels back to the authored town template faction.",
+        "Native package adoption report emits generated_package_town_economy_surface_v1.",
+        "Focused evidence covers 7/7 generated package towns backed by authored town templates, seven-tier ladders, and rare-resource development identity.",
+        "Generated resource-node evidence covers 98 nodes and source ids gold, wood, ore, aetherglass, embergrain, peatwax, and memory_salt.",
+        "Player required common and rare resource sources have no missing ids.",
+        "Runtime-inclusive economy/town scorecard gates generated_package_town_economy_runtime and passes 24/24 checks.",
+        "No SAVE_VERSION bump required; wood remains canonical."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ],
+      "nonClaims": [
+        "Not broad generated-map economy balance.",
+        "Not larger-size RMG approval.",
+        "Not final encounter pacing or guard pressure.",
+        "Not final campaign or skirmish balance approval.",
+        "Not full HoMM3-style RMG parity."
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -28441,14 +28541,28 @@
         "jq empty ops/progress.json content/towns.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-25T06:37:40Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T06:10:39Z",
-    "sliceId": "economy-town-active-source-route-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T06:37:40Z",
+    "sliceId": "economy-generated-package-town-economy-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "python3 tests/validate_repo.py",
@@ -28457,36 +28571,40 @@
       "git diff --check"
     ],
     "evidence": {
-      "active_scenario_count": 16,
-      "player_town_case_count": 18,
-      "resource_route_case_count": 54,
-      "reachable_route_case_count": 54,
-      "max_common_route_steps": 24,
-      "max_rare_route_steps": 40,
-      "required_common_resource_ids": [
-        "wood",
-        "ore"
-      ],
-      "rare_resource_ids": [
+      "generated_package_town_count": 7,
+      "generated_package_player_town_count": 1,
+      "generated_package_authored_town_template_count": 7,
+      "generated_package_seven_tier_town_count": 7,
+      "generated_package_rare_development_town_count": 7,
+      "generated_resource_node_count": 98,
+      "generated_resource_source_ids": [
         "aetherglass",
-        "brass_scrip",
         "embergrain",
+        "gold",
         "memory_salt",
+        "ore",
         "peatwax",
-        "verdant_grafts"
+        "wood"
       ],
-      "runtime_scorecard_passed_requirement_count": 23,
-      "runtime_scorecard_requirement_count": 23
+      "player_required_resource_ids": [
+        "gold",
+        "wood",
+        "ore",
+        "embergrain"
+      ],
+      "missing_player_resource_sources": [],
+      "runtime_scorecard_passed_requirement_count": 24,
+      "runtime_scorecard_requirement_count": 24
     }
   },
   "active_slice": {
-    "id": "economy-town-active-source-route-scorecard-20260525-10184",
-    "title": "Economy Town Active Source Route Scorecard",
+    "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Economy Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T06:10:39Z",
-    "notes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing."
+    "updatedAt": "2026-05-25T06:37:40Z",
+    "notes": "Completed. Strict Small generated/native package sessions now feed generated_package_town_economy_surface_v1 into the runtime-inclusive economy/town scorecard, with authored town templates, seven-tier ladders, rare-development identity, and player-required common plus rare resource sources gated; runtime scorecard passes 24/24 checks."
   },
-  "currentSliceUpdatedAt": "2026-05-25T06:10:39Z",
+  "currentSliceUpdatedAt": "2026-05-25T06:37:40Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -29287,21 +29405,35 @@
         "jq empty ops/progress.json content/towns.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+      "status": "passed",
+      "updatedAt": "2026-05-25T06:37:40Z",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/towns.json",
+        "git diff --check"
+      ]
     }
   ],
   "currentSlice": {
-    "id": "economy-town-active-source-route-scorecard-20260525-10184",
-    "title": "Economy Town Active Source Route Scorecard",
+    "id": "economy-generated-package-town-economy-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Economy Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T06:10:39Z",
-    "notes": "Completed. Active player-town economy source route reachability is now part of the runtime-inclusive economy/town scorecard through active_scenario_source_route_runtime, with 54/54 wood, ore, and faction-rare routes reachable and 23/23 checks passing."
+    "updatedAt": "2026-05-25T06:37:40Z",
+    "notes": "Completed. Strict Small generated/native package sessions now feed generated_package_town_economy_surface_v1 into the runtime-inclusive economy/town scorecard, with authored town templates, seven-tier ladders, rare-development identity, and player-required common plus rare resource sources gated; runtime scorecard passes 24/24 checks."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T06:10:39Z",
-    "sliceId": "economy-town-active-source-route-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T06:37:40Z",
+    "sliceId": "economy-generated-package-town-economy-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-source-route-scorecard-gate.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-economy-surface.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "python3 tests/validate_repo.py",
@@ -29310,26 +29442,30 @@
       "git diff --check"
     ],
     "evidence": {
-      "active_scenario_count": 16,
-      "player_town_case_count": 18,
-      "resource_route_case_count": 54,
-      "reachable_route_case_count": 54,
-      "max_common_route_steps": 24,
-      "max_rare_route_steps": 40,
-      "required_common_resource_ids": [
-        "wood",
-        "ore"
-      ],
-      "rare_resource_ids": [
+      "generated_package_town_count": 7,
+      "generated_package_player_town_count": 1,
+      "generated_package_authored_town_template_count": 7,
+      "generated_package_seven_tier_town_count": 7,
+      "generated_package_rare_development_town_count": 7,
+      "generated_resource_node_count": 98,
+      "generated_resource_source_ids": [
         "aetherglass",
-        "brass_scrip",
         "embergrain",
+        "gold",
         "memory_salt",
+        "ore",
         "peatwax",
-        "verdant_grafts"
+        "wood"
       ],
-      "runtime_scorecard_passed_requirement_count": 23,
-      "runtime_scorecard_requirement_count": 23
+      "player_required_resource_ids": [
+        "gold",
+        "wood",
+        "ore",
+        "embergrain"
+      ],
+      "missing_player_resource_sources": [],
+      "runtime_scorecard_passed_requirement_count": 24,
+      "runtime_scorecard_requirement_count": 24
     }
   }
 }
