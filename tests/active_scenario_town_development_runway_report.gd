@@ -46,6 +46,9 @@ func _run() -> void:
 	var recruitment_end_to_end_case_count := 0
 	var seven_tier_recruitment_case_count := 0
 	var recruited_unit_case_count := 0
+	var recruitment_market_covered_case_count := 0
+	var recruitment_market_purchase_count := 0
+	var recruitment_market_reset_wait_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -76,6 +79,10 @@ func _run() -> void:
 				recruitment_end_to_end_case_count += 1
 			seven_tier_recruitment_case_count += int(row.get("recruitment_case_count", 0))
 			recruited_unit_case_count += int(row.get("recruited_unit_case_count", 0))
+			if int(row.get("recruitment_market_purchase_count", 0)) > 0:
+				recruitment_market_covered_case_count += 1
+			recruitment_market_purchase_count += int(row.get("recruitment_market_purchase_count", 0))
+			recruitment_market_reset_wait_count += int(row.get("recruitment_market_reset_wait_count", 0))
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -101,6 +108,9 @@ func _run() -> void:
 		"recruitment_end_to_end_case_count": recruitment_end_to_end_case_count,
 		"seven_tier_recruitment_case_count": seven_tier_recruitment_case_count,
 		"recruited_unit_case_count": recruited_unit_case_count,
+		"recruitment_market_covered_case_count": recruitment_market_covered_case_count,
+		"recruitment_market_purchase_count": recruitment_market_purchase_count,
+		"recruitment_market_reset_wait_count": recruitment_market_reset_wait_count,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"common_market_resource_ids": COMMON_MARKET_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
@@ -290,6 +300,8 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 	base_row["recruitment_end_to_end_ok"] = bool(recruitment_report.get("ok", false))
 	base_row["recruitment_case_count"] = int(recruitment_report.get("case_count", 0))
 	base_row["recruited_unit_case_count"] = int(recruitment_report.get("recruited_unit_case_count", 0))
+	base_row["recruitment_market_purchase_count"] = int(recruitment_report.get("market_purchase_count", 0))
+	base_row["recruitment_market_reset_wait_count"] = int(recruitment_report.get("market_reset_wait_count", 0))
 	base_row["recruitment_report"] = recruitment_report
 	base_row["source_evidence"] = source_evidence
 	base_row["delayed_source_replay_seen"] = true
@@ -607,6 +619,8 @@ func _recruitment_end_to_end_report(session, placement_id: String, faction: Dict
 	var rows := []
 	var errors := []
 	var recruited_count := 0
+	var market_purchase_count := 0
+	var market_reset_wait_count := 0
 	var before_army := _army_stack_counts(session)
 	if ladder_ids.size() != TARGET_TIER_COUNT:
 		errors.append("%s unit ladder must expose seven tiers" % String(faction.get("id", "")))
@@ -642,6 +656,8 @@ func _recruitment_end_to_end_report(session, placement_id: String, faction: Dict
 		row["unit_cost"] = action.get("unit_cost", {})
 		if direct_affordable_count <= 0 and _has_common_recruitment_shortfall(session, action.get("unit_cost", {})):
 			row["market_purchases"] = _apply_recruitment_market_coverage(session, placement_id, action.get("unit_cost", {}))
+			market_purchase_count += _market_purchase_count(row.get("market_purchases", []))
+			market_reset_wait_count += _market_reset_wait_count(row.get("market_purchases", []))
 			action = _recruit_action_for(session, placement_id, unit_id)
 			direct_affordable_count = int(action.get("direct_affordable_count", 0))
 			market_affordable_count = int(action.get("market_affordable_count", 0))
@@ -686,11 +702,35 @@ func _recruitment_end_to_end_report(session, placement_id: String, faction: Dict
 		"faction_id": String(faction.get("id", "")),
 		"case_count": rows.size(),
 		"recruited_unit_case_count": recruited_count,
+		"market_purchase_count": market_purchase_count,
+		"market_reset_wait_count": market_reset_wait_count,
 		"army_before": before_army,
 		"army_after": after_army,
 		"tiers": rows,
 		"errors": errors,
 	}
+
+func _market_purchase_count(rows_value: Variant) -> int:
+	var rows: Array = rows_value if rows_value is Array else []
+	var count := 0
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("ok", false)) and not bool(row.get("waited_for_market_reset", false)):
+			count += 1
+	return count
+
+func _market_reset_wait_count(rows_value: Variant) -> int:
+	var rows: Array = rows_value if rows_value is Array else []
+	var count := 0
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("waited_for_market_reset", false)):
+			count += 1
+	return count
 
 func _has_common_recruitment_shortfall(session, unit_cost_value: Variant) -> bool:
 	var unit_cost: Dictionary = unit_cost_value if unit_cost_value is Dictionary else {}

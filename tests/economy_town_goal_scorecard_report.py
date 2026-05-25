@@ -354,6 +354,32 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         },
     )
 
+    runtime_recruitment_market_coverage_ok = (
+        town_runtime.get("ok") is True
+        and player_runtime.get("ok") is True
+        and int(town_runtime.get("recruitment_market_covered_town_count", 0)) > 0
+        and int(town_runtime.get("recruitment_market_purchase_count", 0)) > 0
+        and int(town_runtime.get("recruitment_market_reset_wait_count", 0)) > 0
+        and "recruitment_market_covered_case_count" in player_runtime
+        and "recruitment_market_purchase_count" in player_runtime
+        and "recruitment_market_reset_wait_count" in player_runtime
+    )
+    add_check(
+        checks,
+        "runtime_recruitment_market_coverage",
+        runtime_recruitment_market_coverage_ok,
+        "Live recruitment after town development must prove common-only market coverage can recover from wood/ore shortfalls.",
+        {
+            "town_runtime_market_covered_town_count": int(town_runtime.get("recruitment_market_covered_town_count", 0)),
+            "town_runtime_market_purchase_count": int(town_runtime.get("recruitment_market_purchase_count", 0)),
+            "town_runtime_market_reset_wait_count": int(town_runtime.get("recruitment_market_reset_wait_count", 0)),
+            "active_player_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
+            "active_player_market_purchase_count": int(player_runtime.get("recruitment_market_purchase_count", 0)),
+            "active_player_market_reset_wait_count": int(player_runtime.get("recruitment_market_reset_wait_count", 0)),
+            "normal_market_resource_ids": player_runtime.get("common_market_resource_ids", []),
+        },
+    )
+
     ai_runtime = payloads["ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT"]
     ai_runtime_ok = (
         ai_runtime.get("ok") is True
@@ -592,12 +618,18 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         "town_development_runtime_balance_report_v1": {
             "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
             "recruitment_end_to_end_town_count": int(town_runtime.get("recruitment_end_to_end_town_count", 0)),
+            "recruitment_market_covered_town_count": int(town_runtime.get("recruitment_market_covered_town_count", 0)),
+            "recruitment_market_purchase_count": int(town_runtime.get("recruitment_market_purchase_count", 0)),
+            "recruitment_market_reset_wait_count": int(town_runtime.get("recruitment_market_reset_wait_count", 0)),
         },
         "active_scenario_town_development_runway_report_v1": {
             "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
             "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
             "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
             "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
+            "recruitment_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
+            "recruitment_market_purchase_count": int(player_runtime.get("recruitment_market_purchase_count", 0)),
+            "recruitment_market_reset_wait_count": int(player_runtime.get("recruitment_market_reset_wait_count", 0)),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),

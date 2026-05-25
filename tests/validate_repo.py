@@ -3042,6 +3042,11 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "live_runtime_development_and_recruitment",
         "active_scenario_player_runway_runtime",
         "active_scenario_ai_runway_runtime",
+        "runtime_recruitment_market_coverage",
+        "recruitment_market_purchase_count",
+        "recruitment_market_reset_wait_count",
+        "recruitment_market_covered_town_count",
+        "recruitment_market_covered_case_count",
         "rare_spend_case_count",
         "full_session_case_count",
         "seven_tier_recruitment_case_count",
@@ -3090,8 +3095,10 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "live unique-building payoff runtime gate",
         "TownShell resource/build UI surface report",
         "TownShell recruitment UI surface report",
+        "runtime recruitment market coverage",
+        "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "20/20 checks",
+        "21/21 checks",
         "6/6 TownShell resource/build UI cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
@@ -20757,7 +20764,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, AI recruitment exposure, town UI surfaces, and persisted market caps")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, wood/ore material pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, recruitment market coverage, AI recruitment exposure, town UI surfaces, and persisted market caps")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
