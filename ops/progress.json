@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
-  "currentSliceTitle": "Economy Veilmourn Late Common Surplus Pressure",
+  "currentSliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+  "currentSliceTitle": "Economy Mireclaw Final Upgrade Pressure",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up strengthened Mireclaw final upgrade pressure after the prior pass left it with the softest rare bottleneck floor. Oathmire Court now costs more gold, ore, and peatwax, keeping the pressure on the final civic upgrade rather than reshaping the whole swamp ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 28, Mireclaw late rare bottleneck counts improve to 3-4 days, peatwax ends at 0, max ending ore falls from 9 to 8, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T19:04:12Z",
+  "updatedAt": "2026-05-25T19:07:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23920,6 +23920,135 @@
       },
       "summary": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
       "completedAt": "2026-05-25T19:04:12Z"
+    },
+    {
+      "id": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+      "title": "Economy Mireclaw Final Upgrade Pressure",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T19:07:55Z",
+        "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_mireclaw_oathmire_court_cost": {
+              "gold": 3650,
+              "wood": 2,
+              "ore": 4,
+              "peatwax": 6
+            }
+          },
+          "affected_completion_days": {
+            "town_blackfen_gate": 28,
+            "town_duskfen": 28,
+            "town_murkward_ford": 28,
+            "town_nightglass_redoubt": 28,
+            "town_reedbarrow_ferry": 28
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_blackfen_gate": 4,
+            "town_duskfen": 4,
+            "town_murkward_ford": 4,
+            "town_nightglass_redoubt": 3,
+            "town_reedbarrow_ferry": 4
+          },
+          "affected_ending_resources": {
+            "town_blackfen_gate": {
+              "gold": 3140,
+              "ore": 5,
+              "peatwax": 0,
+              "wood": 2
+            },
+            "town_duskfen": {
+              "gold": 5340,
+              "ore": 8,
+              "peatwax": 0,
+              "wood": 1
+            },
+            "town_murkward_ford": {
+              "gold": 3140,
+              "ore": 5,
+              "peatwax": 0,
+              "wood": 2
+            },
+            "town_nightglass_redoubt": {
+              "gold": 1740,
+              "ore": 4,
+              "peatwax": 0,
+              "wood": 1
+            },
+            "town_reedbarrow_ferry": {
+              "gold": 3740,
+              "ore": 8,
+              "peatwax": 0,
+              "wood": 2
+            }
+          },
+          "affected_total_development_costs": {
+            "town_blackfen_gate": {
+              "gold": 40460,
+              "ore": 27,
+              "peatwax": 28,
+              "wood": 30
+            },
+            "town_duskfen": {
+              "gold": 38260,
+              "ore": 24,
+              "peatwax": 28,
+              "wood": 31
+            },
+            "town_murkward_ford": {
+              "gold": 40460,
+              "ore": 27,
+              "peatwax": 28,
+              "wood": 30
+            },
+            "town_nightglass_redoubt": {
+              "gold": 41860,
+              "ore": 28,
+              "peatwax": 28,
+              "wood": 31
+            },
+            "town_reedbarrow_ferry": {
+              "gold": 39860,
+              "ore": 24,
+              "peatwax": 28,
+              "wood": 30
+            }
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "late_rare_bottleneck_day_count_min": 3,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 5840,
+            "ore": 8,
+            "wood": 6
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up strengthened Mireclaw final upgrade pressure after the prior pass left it with the softest rare bottleneck floor. Oathmire Court now costs more gold, ore, and peatwax, keeping the pressure on the final civic upgrade rather than reshaping the whole swamp ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 28, Mireclaw late rare bottleneck counts improve to 3-4 days, peatwax ends at 0, max ending ore falls from 9 to 8, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "completedAt": "2026-05-25T19:07:55Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -30434,6 +30563,136 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+      "title": "Economy Mireclaw Final Upgrade Pressure",
+      "completedAt": "2026-05-25T19:07:55Z",
+      "summary": "Completed. Production town-balance follow-up strengthened Mireclaw final upgrade pressure after the prior pass left it with the softest rare bottleneck floor. Oathmire Court now costs more gold, ore, and peatwax, keeping the pressure on the final civic upgrade rather than reshaping the whole swamp ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 28, Mireclaw late rare bottleneck counts improve to 3-4 days, peatwax ends at 0, max ending ore falls from 9 to 8, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T19:07:55Z",
+        "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_mireclaw_oathmire_court_cost": {
+              "gold": 3650,
+              "wood": 2,
+              "ore": 4,
+              "peatwax": 6
+            }
+          },
+          "affected_completion_days": {
+            "town_blackfen_gate": 28,
+            "town_duskfen": 28,
+            "town_murkward_ford": 28,
+            "town_nightglass_redoubt": 28,
+            "town_reedbarrow_ferry": 28
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_blackfen_gate": 4,
+            "town_duskfen": 4,
+            "town_murkward_ford": 4,
+            "town_nightglass_redoubt": 3,
+            "town_reedbarrow_ferry": 4
+          },
+          "affected_ending_resources": {
+            "town_blackfen_gate": {
+              "gold": 3140,
+              "ore": 5,
+              "peatwax": 0,
+              "wood": 2
+            },
+            "town_duskfen": {
+              "gold": 5340,
+              "ore": 8,
+              "peatwax": 0,
+              "wood": 1
+            },
+            "town_murkward_ford": {
+              "gold": 3140,
+              "ore": 5,
+              "peatwax": 0,
+              "wood": 2
+            },
+            "town_nightglass_redoubt": {
+              "gold": 1740,
+              "ore": 4,
+              "peatwax": 0,
+              "wood": 1
+            },
+            "town_reedbarrow_ferry": {
+              "gold": 3740,
+              "ore": 8,
+              "peatwax": 0,
+              "wood": 2
+            }
+          },
+          "affected_total_development_costs": {
+            "town_blackfen_gate": {
+              "gold": 40460,
+              "ore": 27,
+              "peatwax": 28,
+              "wood": 30
+            },
+            "town_duskfen": {
+              "gold": 38260,
+              "ore": 24,
+              "peatwax": 28,
+              "wood": 31
+            },
+            "town_murkward_ford": {
+              "gold": 40460,
+              "ore": 27,
+              "peatwax": 28,
+              "wood": 30
+            },
+            "town_nightglass_redoubt": {
+              "gold": 41860,
+              "ore": 28,
+              "peatwax": 28,
+              "wood": 31
+            },
+            "town_reedbarrow_ferry": {
+              "gold": 39860,
+              "ore": 24,
+              "peatwax": 28,
+              "wood": 30
+            }
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "late_rare_bottleneck_day_count_min": 3,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 5840,
+            "ore": 8,
+            "wood": 6
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -32689,17 +32948,132 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T19:07:55Z",
+      "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_mireclaw_oathmire_court_cost": {
+            "gold": 3650,
+            "wood": 2,
+            "ore": 4,
+            "peatwax": 6
+          }
+        },
+        "affected_completion_days": {
+          "town_blackfen_gate": 28,
+          "town_duskfen": 28,
+          "town_murkward_ford": 28,
+          "town_nightglass_redoubt": 28,
+          "town_reedbarrow_ferry": 28
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_blackfen_gate": 4,
+          "town_duskfen": 4,
+          "town_murkward_ford": 4,
+          "town_nightglass_redoubt": 3,
+          "town_reedbarrow_ferry": 4
+        },
+        "affected_ending_resources": {
+          "town_blackfen_gate": {
+            "gold": 3140,
+            "ore": 5,
+            "peatwax": 0,
+            "wood": 2
+          },
+          "town_duskfen": {
+            "gold": 5340,
+            "ore": 8,
+            "peatwax": 0,
+            "wood": 1
+          },
+          "town_murkward_ford": {
+            "gold": 3140,
+            "ore": 5,
+            "peatwax": 0,
+            "wood": 2
+          },
+          "town_nightglass_redoubt": {
+            "gold": 1740,
+            "ore": 4,
+            "peatwax": 0,
+            "wood": 1
+          },
+          "town_reedbarrow_ferry": {
+            "gold": 3740,
+            "ore": 8,
+            "peatwax": 0,
+            "wood": 2
+          }
+        },
+        "affected_total_development_costs": {
+          "town_blackfen_gate": {
+            "gold": 40460,
+            "ore": 27,
+            "peatwax": 28,
+            "wood": 30
+          },
+          "town_duskfen": {
+            "gold": 38260,
+            "ore": 24,
+            "peatwax": 28,
+            "wood": 31
+          },
+          "town_murkward_ford": {
+            "gold": 40460,
+            "ore": 27,
+            "peatwax": 28,
+            "wood": 30
+          },
+          "town_nightglass_redoubt": {
+            "gold": 41860,
+            "ore": 28,
+            "peatwax": 28,
+            "wood": 31
+          },
+          "town_reedbarrow_ferry": {
+            "gold": 39860,
+            "ore": 24,
+            "peatwax": 28,
+            "wood": 30
+          }
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "late_rare_bottleneck_day_count_min": 3,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 5840,
+          "ore": 8,
+          "wood": 6
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T19:04:12Z",
-    "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T19:07:55Z",
+    "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -32707,66 +33081,99 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_veilmourn_leviathan_sounding_cost": {
-          "gold": 3890,
-          "wood": 2,
-          "ore": 4,
-          "memory_salt": 10
-        },
-        "building_veilmourn_memory_rite_court_cost": {
+        "building_mireclaw_oathmire_court_cost": {
           "gold": 3650,
           "wood": 2,
           "ore": 4,
-          "memory_salt": 2
+          "peatwax": 6
         }
       },
       "affected_completion_days": {
-        "town_veilmourn_fogchart_mooring": 28,
-        "town_veilmourn_bellwake_harbor": 28
+        "town_blackfen_gate": 28,
+        "town_duskfen": 28,
+        "town_murkward_ford": 28,
+        "town_nightglass_redoubt": 28,
+        "town_reedbarrow_ferry": 28
+      },
+      "affected_late_rare_bottleneck_days": {
+        "town_blackfen_gate": 4,
+        "town_duskfen": 4,
+        "town_murkward_ford": 4,
+        "town_nightglass_redoubt": 3,
+        "town_reedbarrow_ferry": 4
       },
       "affected_ending_resources": {
-        "town_veilmourn_fogchart_mooring": {
-          "gold": 4550,
-          "memory_salt": 0,
-          "ore": 3,
-          "wood": 4
+        "town_blackfen_gate": {
+          "gold": 3140,
+          "ore": 5,
+          "peatwax": 0,
+          "wood": 2
         },
-        "town_veilmourn_bellwake_harbor": {
-          "gold": 4060,
-          "memory_salt": 0,
-          "ore": 3,
-          "wood": 4
+        "town_duskfen": {
+          "gold": 5340,
+          "ore": 8,
+          "peatwax": 0,
+          "wood": 1
+        },
+        "town_murkward_ford": {
+          "gold": 3140,
+          "ore": 5,
+          "peatwax": 0,
+          "wood": 2
+        },
+        "town_nightglass_redoubt": {
+          "gold": 1740,
+          "ore": 4,
+          "peatwax": 0,
+          "wood": 1
+        },
+        "town_reedbarrow_ferry": {
+          "gold": 3740,
+          "ore": 8,
+          "peatwax": 0,
+          "wood": 2
         }
       },
       "affected_total_development_costs": {
-        "town_veilmourn_fogchart_mooring": {
-          "gold": 37650,
-          "memory_salt": 28,
-          "ore": 26,
-          "wood": 25
+        "town_blackfen_gate": {
+          "gold": 40460,
+          "ore": 27,
+          "peatwax": 28,
+          "wood": 30
         },
-        "town_veilmourn_bellwake_harbor": {
-          "gold": 38140,
-          "memory_salt": 28,
-          "ore": 26,
-          "wood": 25
+        "town_duskfen": {
+          "gold": 38260,
+          "ore": 24,
+          "peatwax": 28,
+          "wood": 31
+        },
+        "town_murkward_ford": {
+          "gold": 40460,
+          "ore": 27,
+          "peatwax": 28,
+          "wood": 30
+        },
+        "town_nightglass_redoubt": {
+          "gold": 41860,
+          "ore": 28,
+          "peatwax": 28,
+          "wood": 31
+        },
+        "town_reedbarrow_ferry": {
+          "gold": 39860,
+          "ore": 24,
+          "peatwax": 28,
+          "wood": 30
         }
-      },
-      "affected_late_rare_bottleneck_days": {
-        "town_veilmourn_fogchart_mooring": 7,
-        "town_veilmourn_bellwake_harbor": 7
-      },
-      "affected_common_material_bottleneck_days": {
-        "town_veilmourn_fogchart_mooring": 3,
-        "town_veilmourn_bellwake_harbor": 3
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
+      "late_rare_bottleneck_day_count_min": 3,
       "observed_common_surplus_max_after_tuning": {
         "gold": 5840,
-        "ore": 9,
+        "ore": 8,
         "wood": 6
       },
       "new_gate_created": false,
@@ -32774,14 +33181,14 @@
     }
   },
   "active_slice": {
-    "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
-    "title": "Economy Veilmourn Late Common Surplus Pressure",
+    "id": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+    "title": "Economy Mireclaw Final Upgrade Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T19:04:12Z",
-    "completedAt": "2026-05-25T19:04:12Z",
-    "notes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T19:07:55Z",
+    "completedAt": "2026-05-25T19:07:55Z",
+    "notes": "Completed. Production town-balance follow-up strengthened Mireclaw final upgrade pressure after the prior pass left it with the softest rare bottleneck floor. Oathmire Court now costs more gold, ore, and peatwax, keeping the pressure on the final civic upgrade rather than reshaping the whole swamp ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 28, Mireclaw late rare bottleneck counts improve to 3-4 days, peatwax ends at 0, max ending ore falls from 9 to 8, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T19:04:12Z",
+  "currentSliceUpdatedAt": "2026-05-25T19:07:55Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -34575,25 +34982,140 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T19:07:55Z",
+      "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_mireclaw_oathmire_court_cost": {
+            "gold": 3650,
+            "wood": 2,
+            "ore": 4,
+            "peatwax": 6
+          }
+        },
+        "affected_completion_days": {
+          "town_blackfen_gate": 28,
+          "town_duskfen": 28,
+          "town_murkward_ford": 28,
+          "town_nightglass_redoubt": 28,
+          "town_reedbarrow_ferry": 28
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_blackfen_gate": 4,
+          "town_duskfen": 4,
+          "town_murkward_ford": 4,
+          "town_nightglass_redoubt": 3,
+          "town_reedbarrow_ferry": 4
+        },
+        "affected_ending_resources": {
+          "town_blackfen_gate": {
+            "gold": 3140,
+            "ore": 5,
+            "peatwax": 0,
+            "wood": 2
+          },
+          "town_duskfen": {
+            "gold": 5340,
+            "ore": 8,
+            "peatwax": 0,
+            "wood": 1
+          },
+          "town_murkward_ford": {
+            "gold": 3140,
+            "ore": 5,
+            "peatwax": 0,
+            "wood": 2
+          },
+          "town_nightglass_redoubt": {
+            "gold": 1740,
+            "ore": 4,
+            "peatwax": 0,
+            "wood": 1
+          },
+          "town_reedbarrow_ferry": {
+            "gold": 3740,
+            "ore": 8,
+            "peatwax": 0,
+            "wood": 2
+          }
+        },
+        "affected_total_development_costs": {
+          "town_blackfen_gate": {
+            "gold": 40460,
+            "ore": 27,
+            "peatwax": 28,
+            "wood": 30
+          },
+          "town_duskfen": {
+            "gold": 38260,
+            "ore": 24,
+            "peatwax": 28,
+            "wood": 31
+          },
+          "town_murkward_ford": {
+            "gold": 40460,
+            "ore": 27,
+            "peatwax": 28,
+            "wood": 30
+          },
+          "town_nightglass_redoubt": {
+            "gold": 41860,
+            "ore": 28,
+            "peatwax": 28,
+            "wood": 31
+          },
+          "town_reedbarrow_ferry": {
+            "gold": 39860,
+            "ore": 24,
+            "peatwax": 28,
+            "wood": 30
+          }
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "late_rare_bottleneck_day_count_min": 3,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 5840,
+          "ore": 8,
+          "wood": 6
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
-    "title": "Economy Veilmourn Late Common Surplus Pressure",
+    "id": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+    "title": "Economy Mireclaw Final Upgrade Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T19:04:12Z",
-    "completedAt": "2026-05-25T19:04:12Z",
-    "notes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T19:07:55Z",
+    "completedAt": "2026-05-25T19:07:55Z",
+    "notes": "Completed. Production town-balance follow-up strengthened Mireclaw final upgrade pressure after the prior pass left it with the softest rare bottleneck floor. Oathmire Court now costs more gold, ore, and peatwax, keeping the pressure on the final civic upgrade rather than reshaping the whole swamp ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 28, Mireclaw late rare bottleneck counts improve to 3-4 days, peatwax ends at 0, max ending ore falls from 9 to 8, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T19:04:12Z",
-    "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T19:07:55Z",
+    "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -34601,66 +35123,99 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_veilmourn_leviathan_sounding_cost": {
-          "gold": 3890,
-          "wood": 2,
-          "ore": 4,
-          "memory_salt": 10
-        },
-        "building_veilmourn_memory_rite_court_cost": {
+        "building_mireclaw_oathmire_court_cost": {
           "gold": 3650,
           "wood": 2,
           "ore": 4,
-          "memory_salt": 2
+          "peatwax": 6
         }
       },
       "affected_completion_days": {
-        "town_veilmourn_fogchart_mooring": 28,
-        "town_veilmourn_bellwake_harbor": 28
+        "town_blackfen_gate": 28,
+        "town_duskfen": 28,
+        "town_murkward_ford": 28,
+        "town_nightglass_redoubt": 28,
+        "town_reedbarrow_ferry": 28
+      },
+      "affected_late_rare_bottleneck_days": {
+        "town_blackfen_gate": 4,
+        "town_duskfen": 4,
+        "town_murkward_ford": 4,
+        "town_nightglass_redoubt": 3,
+        "town_reedbarrow_ferry": 4
       },
       "affected_ending_resources": {
-        "town_veilmourn_fogchart_mooring": {
-          "gold": 4550,
-          "memory_salt": 0,
-          "ore": 3,
-          "wood": 4
+        "town_blackfen_gate": {
+          "gold": 3140,
+          "ore": 5,
+          "peatwax": 0,
+          "wood": 2
         },
-        "town_veilmourn_bellwake_harbor": {
-          "gold": 4060,
-          "memory_salt": 0,
-          "ore": 3,
-          "wood": 4
+        "town_duskfen": {
+          "gold": 5340,
+          "ore": 8,
+          "peatwax": 0,
+          "wood": 1
+        },
+        "town_murkward_ford": {
+          "gold": 3140,
+          "ore": 5,
+          "peatwax": 0,
+          "wood": 2
+        },
+        "town_nightglass_redoubt": {
+          "gold": 1740,
+          "ore": 4,
+          "peatwax": 0,
+          "wood": 1
+        },
+        "town_reedbarrow_ferry": {
+          "gold": 3740,
+          "ore": 8,
+          "peatwax": 0,
+          "wood": 2
         }
       },
       "affected_total_development_costs": {
-        "town_veilmourn_fogchart_mooring": {
-          "gold": 37650,
-          "memory_salt": 28,
-          "ore": 26,
-          "wood": 25
+        "town_blackfen_gate": {
+          "gold": 40460,
+          "ore": 27,
+          "peatwax": 28,
+          "wood": 30
         },
-        "town_veilmourn_bellwake_harbor": {
-          "gold": 38140,
-          "memory_salt": 28,
-          "ore": 26,
-          "wood": 25
+        "town_duskfen": {
+          "gold": 38260,
+          "ore": 24,
+          "peatwax": 28,
+          "wood": 31
+        },
+        "town_murkward_ford": {
+          "gold": 40460,
+          "ore": 27,
+          "peatwax": 28,
+          "wood": 30
+        },
+        "town_nightglass_redoubt": {
+          "gold": 41860,
+          "ore": 28,
+          "peatwax": 28,
+          "wood": 31
+        },
+        "town_reedbarrow_ferry": {
+          "gold": 39860,
+          "ore": 24,
+          "peatwax": 28,
+          "wood": 30
         }
-      },
-      "affected_late_rare_bottleneck_days": {
-        "town_veilmourn_fogchart_mooring": 7,
-        "town_veilmourn_bellwake_harbor": 7
-      },
-      "affected_common_material_bottleneck_days": {
-        "town_veilmourn_fogchart_mooring": 3,
-        "town_veilmourn_bellwake_harbor": 3
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
+      "late_rare_bottleneck_day_count_min": 3,
       "observed_common_surplus_max_after_tuning": {
         "gold": 5840,
-        "ore": 9,
+        "ore": 8,
         "wood": 6
       },
       "new_gate_created": false,
