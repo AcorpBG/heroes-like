@@ -960,7 +960,7 @@
     },
     {
       "id": "building_embercourt_charter_bastion",
-      "name": "Charter Bastion",
+      "name": "Charter Colossus Bastion",
       "category": "civic",
       "description": "A court-bell bastion that frames the eventual Charter Colossus project.",
       "cost": {
@@ -1035,7 +1035,7 @@
     },
     {
       "id": "building_mireclaw_war_drum_circle",
-      "name": "War Drum Circle",
+      "name": "Mudglass Drum Circle",
       "category": "support",
       "description": "Drum circles teach mudglass crews when to blind and when to break prey.",
       "cost": {
@@ -1084,7 +1084,7 @@
     },
     {
       "id": "building_mireclaw_floodtide_forge",
-      "name": "Floodtide Forge",
+      "name": "Bogplate Floodtide Forge",
       "category": "support",
       "description": "Flood-quenched forges plate the maulers for wet frontal assaults.",
       "cost": {
@@ -1108,7 +1108,7 @@
     },
     {
       "id": "building_mireclaw_nightglass_dominion",
-      "name": "Nightglass Dominion",
+      "name": "Gorefen Nightglass Dominion",
       "category": "civic",
       "description": "A black reedstone dominion that feeds elite Gorefen packs.",
       "cost": {
@@ -1179,7 +1179,7 @@
     },
     {
       "id": "building_sunvault_lens_gallery",
-      "name": "Lens Gallery",
+      "name": "Prism Lens Gallery",
       "category": "dwelling",
       "description": "Lens galleries train prism adepts to fire down calibrated lanes.",
       "cost": {
@@ -1200,7 +1200,7 @@
     },
     {
       "id": "building_sunvault_mirror_forge",
-      "name": "Mirror Forge",
+      "name": "Duelist Mirror Forge",
       "category": "dwelling",
       "description": "Mirror forges cut dueling gear for reflected-lane assaults.",
       "cost": {
@@ -1222,7 +1222,7 @@
     },
     {
       "id": "building_sunvault_harmonic_cloister",
-      "name": "Harmonic Cloister",
+      "name": "Chorister Harmonic Cloister",
       "category": "support",
       "description": "Choir cloisters prepare resonant choristers for array timing.",
       "cost": {
@@ -1274,7 +1274,7 @@
     },
     {
       "id": "building_sunvault_aurora_spire",
-      "name": "Aurora Spire",
+      "name": "Aurora Ballista Spire",
       "category": "dwelling",
       "description": "Relay spires assemble the heavy Aurora Ballistae.",
       "cost": {
@@ -1299,7 +1299,7 @@
     },
     {
       "id": "building_sunvault_daybreak_matrix",
-      "name": "Daybreak Matrix",
+      "name": "Daybreak Colossus Matrix",
       "category": "magic",
       "description": "A grand matrix that carries the Daybreak Colossus blueprint.",
       "cost": {
@@ -2753,7 +2753,7 @@
         "gold": 2650,
         "wood": 2,
         "ore": 2,
-        "embergrain": 5
+        "embergrain": 6
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_embercourt",
@@ -2953,7 +2953,7 @@
         "gold": 3350,
         "wood": 4,
         "ore": 2,
-        "aetherglass": 5
+        "aetherglass": 6
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_sunvault",
