@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-thornwake-late-ore-pressure-tuning-20260525-10184",
-  "currentSliceTitle": "Economy Thornwake Late Ore Pressure Tuning",
+  "currentSliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+  "currentSliceTitle": "Economy Mireclaw Late Rare Capstone Pressure",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Production town-balance follow-up reduced unused ore surplus in Thornwake late development. Bastion Seed Conclave and Rootlaw Moot now each cost 4 ore instead of 2, making late civic development consume more common material while preserving Thornwake rare-resource identity and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, both Thornwake towns still complete on day 30, Thornwake ending ore drops from 11 to 7, observed global max ending ore drops from 11 to 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:49:17Z",
+  "updatedAt": "2026-05-25T18:53:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23557,6 +23557,80 @@
         "tests/economy_town_goal_scorecard_report.py",
         "tests/validate_repo.py"
       ]
+    },
+    {
+      "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+      "title": "Economy Mireclaw Late Rare Capstone Pressure",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:53:25Z",
+        "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_mireclaw_oathmire_court_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "peatwax": 5
+            }
+          },
+          "affected_completion_days": {
+            "town_blackfen_gate": 27,
+            "town_duskfen": 27,
+            "town_murkward_ford": 27,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 27
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_blackfen_gate": 3,
+            "town_duskfen": 3,
+            "town_murkward_ford": 3,
+            "town_nightglass_redoubt": 2,
+            "town_reedbarrow_ferry": 3
+          },
+          "affected_ending_peatwax": {
+            "town_blackfen_gate": 0,
+            "town_duskfen": 0,
+            "town_murkward_ford": 0,
+            "town_nightglass_redoubt": 0,
+            "town_reedbarrow_ferry": 0
+          },
+          "affected_rare_cost_total": {
+            "town_blackfen_gate": 27,
+            "town_duskfen": 27,
+            "town_murkward_ford": 27,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 27
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "late_rare_bottleneck_day_count_min": 2,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "completedAt": "2026-05-25T18:53:25Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -29704,6 +29778,81 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+      "title": "Economy Mireclaw Late Rare Capstone Pressure",
+      "completedAt": "2026-05-25T18:53:25Z",
+      "summary": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:53:25Z",
+        "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_mireclaw_oathmire_court_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "peatwax": 5
+            }
+          },
+          "affected_completion_days": {
+            "town_blackfen_gate": 27,
+            "town_duskfen": 27,
+            "town_murkward_ford": 27,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 27
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_blackfen_gate": 3,
+            "town_duskfen": 3,
+            "town_murkward_ford": 3,
+            "town_nightglass_redoubt": 2,
+            "town_reedbarrow_ferry": 3
+          },
+          "affected_ending_peatwax": {
+            "town_blackfen_gate": 0,
+            "town_duskfen": 0,
+            "town_murkward_ford": 0,
+            "town_nightglass_redoubt": 0,
+            "town_reedbarrow_ferry": 0
+          },
+          "affected_rare_cost_total": {
+            "town_blackfen_gate": 27,
+            "town_duskfen": 27,
+            "town_murkward_ford": 27,
+            "town_nightglass_redoubt": 27,
+            "town_reedbarrow_ferry": 27
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "late_rare_bottleneck_day_count_min": 2,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -31652,17 +31801,77 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:53:25Z",
+      "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_mireclaw_oathmire_court_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "peatwax": 5
+          }
+        },
+        "affected_completion_days": {
+          "town_blackfen_gate": 27,
+          "town_duskfen": 27,
+          "town_murkward_ford": 27,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 27
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_blackfen_gate": 3,
+          "town_duskfen": 3,
+          "town_murkward_ford": 3,
+          "town_nightglass_redoubt": 2,
+          "town_reedbarrow_ferry": 3
+        },
+        "affected_ending_peatwax": {
+          "town_blackfen_gate": 0,
+          "town_duskfen": 0,
+          "town_murkward_ford": 0,
+          "town_nightglass_redoubt": 0,
+          "town_reedbarrow_ferry": 0
+        },
+        "affected_rare_cost_total": {
+          "town_blackfen_gate": 27,
+          "town_duskfen": 27,
+          "town_murkward_ford": 27,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 27
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "late_rare_bottleneck_day_count_min": 2,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:49:17Z",
-    "sliceId": "economy-thornwake-late-ore-pressure-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:53:25Z",
+    "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-thorn-ore.txt (passed; Thornwake completion day 30, ending ore 11 -> 7)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-thorn-ore.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-thorn-ore.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, observed max ending ore 9)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -31670,49 +31879,59 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_thornwake_bastion_seed_conclave_cost": {
-          "gold": 2400,
+        "building_mireclaw_oathmire_court_cost": {
+          "gold": 2650,
           "wood": 2,
-          "ore": 4,
-          "verdant_grafts": 2
-        },
-        "building_thornwake_rootlaw_moot_cost": {
-          "gold": 2450,
-          "wood": 2,
-          "ore": 4,
-          "verdant_grafts": 2
+          "ore": 2,
+          "peatwax": 5
         }
       },
       "affected_completion_days": {
-        "town_thornwake_graftroot_caravan": 30,
-        "town_thornwake_rootgate_nursery": 30
+        "town_blackfen_gate": 27,
+        "town_duskfen": 27,
+        "town_murkward_ford": 27,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 27
       },
-      "affected_ending_ore": {
-        "town_thornwake_graftroot_caravan": 7,
-        "town_thornwake_rootgate_nursery": 7
+      "affected_late_rare_bottleneck_days": {
+        "town_blackfen_gate": 3,
+        "town_duskfen": 3,
+        "town_murkward_ford": 3,
+        "town_nightglass_redoubt": 2,
+        "town_reedbarrow_ferry": 3
       },
-      "affected_ore_cost_total": {
-        "town_thornwake_graftroot_caravan": 27,
-        "town_thornwake_rootgate_nursery": 27
+      "affected_ending_peatwax": {
+        "town_blackfen_gate": 0,
+        "town_duskfen": 0,
+        "town_murkward_ford": 0,
+        "town_nightglass_redoubt": 0,
+        "town_reedbarrow_ferry": 0
+      },
+      "affected_rare_cost_total": {
+        "town_blackfen_gate": 27,
+        "town_duskfen": 27,
+        "town_murkward_ford": 27,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 27
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "town_development_completion_day_min": 26,
+      "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
-      "observed_common_surplus_max_ore": 9,
+      "late_rare_bottleneck_day_count_min": 2,
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   },
   "active_slice": {
-    "id": "economy-thornwake-late-ore-pressure-tuning-20260525-10184",
-    "title": "Economy Thornwake Late Ore Pressure Tuning",
+    "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+    "title": "Economy Mireclaw Late Rare Capstone Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:49:17Z",
-    "completedAt": "2026-05-25T18:49:17Z",
-    "notes": "Completed. Production town-balance follow-up reduced unused ore surplus in Thornwake late development. Bastion Seed Conclave and Rootlaw Moot now each cost 4 ore instead of 2, making late civic development consume more common material while preserving Thornwake rare-resource identity and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, both Thornwake towns still complete on day 30, Thornwake ending ore drops from 11 to 7, observed global max ending ore drops from 11 to 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:53:25Z",
+    "completedAt": "2026-05-25T18:53:25Z",
+    "notes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:49:17Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:53:25Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -33199,25 +33418,85 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:53:25Z",
+      "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_mireclaw_oathmire_court_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "peatwax": 5
+          }
+        },
+        "affected_completion_days": {
+          "town_blackfen_gate": 27,
+          "town_duskfen": 27,
+          "town_murkward_ford": 27,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 27
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_blackfen_gate": 3,
+          "town_duskfen": 3,
+          "town_murkward_ford": 3,
+          "town_nightglass_redoubt": 2,
+          "town_reedbarrow_ferry": 3
+        },
+        "affected_ending_peatwax": {
+          "town_blackfen_gate": 0,
+          "town_duskfen": 0,
+          "town_murkward_ford": 0,
+          "town_nightglass_redoubt": 0,
+          "town_reedbarrow_ferry": 0
+        },
+        "affected_rare_cost_total": {
+          "town_blackfen_gate": 27,
+          "town_duskfen": 27,
+          "town_murkward_ford": 27,
+          "town_nightglass_redoubt": 27,
+          "town_reedbarrow_ferry": 27
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "late_rare_bottleneck_day_count_min": 2,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-thornwake-late-ore-pressure-tuning-20260525-10184",
-    "title": "Economy Thornwake Late Ore Pressure Tuning",
+    "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+    "title": "Economy Mireclaw Late Rare Capstone Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:49:17Z",
-    "completedAt": "2026-05-25T18:49:17Z",
-    "notes": "Completed. Production town-balance follow-up reduced unused ore surplus in Thornwake late development. Bastion Seed Conclave and Rootlaw Moot now each cost 4 ore instead of 2, making late civic development consume more common material while preserving Thornwake rare-resource identity and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, both Thornwake towns still complete on day 30, Thornwake ending ore drops from 11 to 7, observed global max ending ore drops from 11 to 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:53:25Z",
+    "completedAt": "2026-05-25T18:53:25Z",
+    "notes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:49:17Z",
-    "sliceId": "economy-thornwake-late-ore-pressure-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:53:25Z",
+    "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-thorn-ore.txt (passed; Thornwake completion day 30, ending ore 11 -> 7)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-thorn-ore.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-thorn-ore.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, observed max ending ore 9)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -33225,36 +33504,46 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_thornwake_bastion_seed_conclave_cost": {
-          "gold": 2400,
+        "building_mireclaw_oathmire_court_cost": {
+          "gold": 2650,
           "wood": 2,
-          "ore": 4,
-          "verdant_grafts": 2
-        },
-        "building_thornwake_rootlaw_moot_cost": {
-          "gold": 2450,
-          "wood": 2,
-          "ore": 4,
-          "verdant_grafts": 2
+          "ore": 2,
+          "peatwax": 5
         }
       },
       "affected_completion_days": {
-        "town_thornwake_graftroot_caravan": 30,
-        "town_thornwake_rootgate_nursery": 30
+        "town_blackfen_gate": 27,
+        "town_duskfen": 27,
+        "town_murkward_ford": 27,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 27
       },
-      "affected_ending_ore": {
-        "town_thornwake_graftroot_caravan": 7,
-        "town_thornwake_rootgate_nursery": 7
+      "affected_late_rare_bottleneck_days": {
+        "town_blackfen_gate": 3,
+        "town_duskfen": 3,
+        "town_murkward_ford": 3,
+        "town_nightglass_redoubt": 2,
+        "town_reedbarrow_ferry": 3
       },
-      "affected_ore_cost_total": {
-        "town_thornwake_graftroot_caravan": 27,
-        "town_thornwake_rootgate_nursery": 27
+      "affected_ending_peatwax": {
+        "town_blackfen_gate": 0,
+        "town_duskfen": 0,
+        "town_murkward_ford": 0,
+        "town_nightglass_redoubt": 0,
+        "town_reedbarrow_ferry": 0
+      },
+      "affected_rare_cost_total": {
+        "town_blackfen_gate": 27,
+        "town_duskfen": 27,
+        "town_murkward_ford": 27,
+        "town_nightglass_redoubt": 27,
+        "town_reedbarrow_ferry": 27
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "town_development_completion_day_min": 26,
+      "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
-      "observed_common_surplus_max_ore": 9,
+      "late_rare_bottleneck_day_count_min": 2,
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
