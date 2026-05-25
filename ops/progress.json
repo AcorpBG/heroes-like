@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Active Runway Pacing Floor Scorecard",
+  "currentSliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Town Economy Breadth Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active authored player-town and AI-town runway reports now enforce the day-24-to-day-30 pacing window and minimal required-resource source adoption instead of accepting any completion by turn 30 or granting every matching economy source up front. Runtime scorecard passes 30/30 with player cases completing day 24-26 and AI cases completing day 24-30. This is existing authored launch-surface economy evidence, not campaign-content production or campaign balance approval.",
+  "currentSliceNotes": "Completed. Strict Small generated/native package town-economy evidence now covers multiple deterministic package seeds instead of only the active startup package. The native package adoption report emits generated_package_town_economy_breadth_v1 and the runtime scorecard gates generated_package_town_economy_breadth_runtime. Runtime scorecard passes 31/31 with 3/3 generated package economy breadth cases, distinct map/scenario package hashes, 15 total generated towns, 211 generated resource nodes, common sources in every breadth case, player-required rare sources in every breadth case, 3 generated project factions, and 6 generated town templates. This is strict Small generated package economy breadth evidence, not campaign production work or campaign balance approval.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T13:20:05Z",
+  "updatedAt": "2026-05-25T13:49:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22579,6 +22579,74 @@
       }
     },
     {
+      "id": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+      "title": "Economy Generated Package Town Economy Breadth Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "completedAt": "2026-05-25T13:49:45Z",
+      "summary": "Completed. Strict Small generated/native package town-economy evidence now covers multiple deterministic package seeds instead of only the active startup package. The native package adoption report emits generated_package_town_economy_breadth_v1 and the runtime scorecard gates generated_package_town_economy_breadth_runtime. Runtime scorecard passes 31/31 with 3/3 generated package economy breadth cases, distinct map/scenario package hashes, 15 total generated towns, 211 generated resource nodes, common sources in every breadth case, player-required rare sources in every breadth case, 3 generated project factions, and 6 generated town templates. This is strict Small generated package economy breadth evidence, not campaign production work or campaign balance approval.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T13:49:45Z",
+        "sliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-generated-package-breadth.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "runtime_scorecard_passed_requirement_count": 31,
+          "runtime_scorecard_requirement_count": 31,
+          "generated_breadth_case_count": 3,
+          "generated_breadth_passed_case_count": 3,
+          "generated_breadth_distinct_map_package_hash_count": 3,
+          "generated_breadth_distinct_scenario_package_hash_count": 3,
+          "generated_breadth_all_common_source_case_count": 3,
+          "generated_breadth_player_required_source_case_count": 3,
+          "generated_breadth_total_town_count": 15,
+          "generated_breadth_total_resource_node_count": 211,
+          "generated_breadth_unique_faction_count": 3,
+          "generated_breadth_unique_town_template_count": 6,
+          "generated_breadth_generated_faction_ids": [
+            "faction_embercourt",
+            "faction_mireclaw",
+            "faction_sunvault"
+          ],
+          "generated_breadth_generated_town_ids": [
+            "town_blackfen_gate",
+            "town_halo_spire",
+            "town_highwater_keep",
+            "town_nightglass_redoubt",
+            "town_prismhearth",
+            "town_riverwatch"
+          ],
+          "generated_breadth_generated_resource_source_ids": [
+            "aetherglass",
+            "embergrain",
+            "gold",
+            "memory_salt",
+            "ore",
+            "peatwax",
+            "wood"
+          ],
+          "generated_breadth_player_required_resource_ids": [
+            "aetherglass",
+            "gold",
+            "ore",
+            "peatwax",
+            "wood"
+          ],
+          "policy": "strict Small 36x36 one-level land generated package economy breadth, multi-seed package hashes, common and player-required rare source coverage"
+        }
+      }
+    },
+    {
       "id": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
       "title": "Economy Active Runway Pacing Floor Scorecard",
       "status": "completed",
@@ -28149,6 +28217,57 @@
         "active_enemy_unique_ladder_faction_count": 6,
         "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
       }
+    },
+    {
+      "sliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+      "completedAt": "2026-05-25T13:49:45Z",
+      "summary": "Completed. Strict Small generated/native package town-economy evidence now covers multiple deterministic package seeds instead of only the active startup package. The native package adoption report emits generated_package_town_economy_breadth_v1 and the runtime scorecard gates generated_package_town_economy_breadth_runtime. Runtime scorecard passes 31/31 with 3/3 generated package economy breadth cases, distinct map/scenario package hashes, 15 total generated towns, 211 generated resource nodes, common sources in every breadth case, player-required rare sources in every breadth case, 3 generated project factions, and 6 generated town templates. This is strict Small generated package economy breadth evidence, not campaign production work or campaign balance approval.",
+      "evidence": {
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "runtime_scorecard_passed_requirement_count": 31,
+        "runtime_scorecard_requirement_count": 31,
+        "generated_breadth_case_count": 3,
+        "generated_breadth_passed_case_count": 3,
+        "generated_breadth_distinct_map_package_hash_count": 3,
+        "generated_breadth_distinct_scenario_package_hash_count": 3,
+        "generated_breadth_all_common_source_case_count": 3,
+        "generated_breadth_player_required_source_case_count": 3,
+        "generated_breadth_total_town_count": 15,
+        "generated_breadth_total_resource_node_count": 211,
+        "generated_breadth_unique_faction_count": 3,
+        "generated_breadth_unique_town_template_count": 6,
+        "generated_breadth_generated_faction_ids": [
+          "faction_embercourt",
+          "faction_mireclaw",
+          "faction_sunvault"
+        ],
+        "generated_breadth_generated_town_ids": [
+          "town_blackfen_gate",
+          "town_halo_spire",
+          "town_highwater_keep",
+          "town_nightglass_redoubt",
+          "town_prismhearth",
+          "town_riverwatch"
+        ],
+        "generated_breadth_generated_resource_source_ids": [
+          "aetherglass",
+          "embergrain",
+          "gold",
+          "memory_salt",
+          "ore",
+          "peatwax",
+          "wood"
+        ],
+        "generated_breadth_player_required_resource_ids": [
+          "aetherglass",
+          "gold",
+          "ore",
+          "peatwax",
+          "wood"
+        ],
+        "policy": "strict Small 36x36 one-level land generated package economy breadth, multi-seed package hashes, common and player-required rare source coverage"
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -29749,15 +29868,15 @@
         "active_enemy_unique_ladder_faction_count": 6,
         "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
       }
-    }
+    },
+    "2026-05-25 generated package town-economy breadth scorecard: 3/3 deterministic strict Small generated package economy breadth cases pass with distinct map/scenario package hashes, 15 generated towns, 211 resource nodes, common sources and player-required rare sources in every case, 3 project factions, and 6 town templates. Runtime-inclusive economy/town scorecard passes 31/31 checks."
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T13:20:05Z",
-    "sliceId": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T13:49:45Z",
+    "sliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 500 --log-file /tmp/heroes-like-player-runway-pacing.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-ai-runway-pacing.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-generated-package-breadth.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
@@ -29768,41 +29887,58 @@
     "evidence": {
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "runtime_scorecard_passed_requirement_count": 30,
-      "runtime_scorecard_requirement_count": 30,
-      "active_player_town_case_count": 18,
-      "active_player_completed_case_count": 18,
-      "active_player_completion_day_min": 24,
-      "active_player_completion_day_max": 26,
-      "active_player_min_completion_day": 24,
-      "active_player_pacing_floor_case_count": 18,
-      "active_player_source_adoption_policy_case_count": 18,
-      "active_player_rare_spend_case_count": 18,
-      "active_player_recruited_unit_case_count": 126,
-      "active_player_recruitment_market_covered_case_count": 2,
-      "active_enemy_town_case_count": 20,
-      "active_enemy_completed_case_count": 20,
-      "active_enemy_completion_day_min": 24,
-      "active_enemy_completion_day_max": 30,
-      "active_enemy_min_completion_day": 24,
-      "active_enemy_pacing_floor_case_count": 20,
-      "active_enemy_source_adoption_policy_case_count": 20,
-      "active_enemy_rare_spend_case_count": 20,
-      "active_enemy_same_day_guard_case_count": 20,
-      "active_enemy_seven_tier_recruitment_candidate_count": 140,
-      "active_enemy_unique_faction_count": 6,
-      "active_enemy_unique_ladder_faction_count": 6,
-      "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
+      "runtime_scorecard_passed_requirement_count": 31,
+      "runtime_scorecard_requirement_count": 31,
+      "generated_breadth_case_count": 3,
+      "generated_breadth_passed_case_count": 3,
+      "generated_breadth_distinct_map_package_hash_count": 3,
+      "generated_breadth_distinct_scenario_package_hash_count": 3,
+      "generated_breadth_all_common_source_case_count": 3,
+      "generated_breadth_player_required_source_case_count": 3,
+      "generated_breadth_total_town_count": 15,
+      "generated_breadth_total_resource_node_count": 211,
+      "generated_breadth_unique_faction_count": 3,
+      "generated_breadth_unique_town_template_count": 6,
+      "generated_breadth_generated_faction_ids": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault"
+      ],
+      "generated_breadth_generated_town_ids": [
+        "town_blackfen_gate",
+        "town_halo_spire",
+        "town_highwater_keep",
+        "town_nightglass_redoubt",
+        "town_prismhearth",
+        "town_riverwatch"
+      ],
+      "generated_breadth_generated_resource_source_ids": [
+        "aetherglass",
+        "embergrain",
+        "gold",
+        "memory_salt",
+        "ore",
+        "peatwax",
+        "wood"
+      ],
+      "generated_breadth_player_required_resource_ids": [
+        "aetherglass",
+        "gold",
+        "ore",
+        "peatwax",
+        "wood"
+      ],
+      "policy": "strict Small 36x36 one-level land generated package economy breadth, multi-seed package hashes, common and player-required rare source coverage"
     }
   },
   "active_slice": {
-    "id": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
-    "title": "Economy Active Runway Pacing Floor Scorecard",
+    "id": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Economy Breadth Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T13:20:05Z",
-    "notes": "Completed. Active authored player-town and AI-town runway reports now enforce the day-24-to-day-30 pacing window and minimal required-resource source adoption instead of accepting any completion by turn 30 or granting every matching economy source up front. Runtime scorecard passes 30/30 with player cases completing day 24-26 and AI cases completing day 24-30. This is existing authored launch-surface economy evidence, not campaign-content production or campaign balance approval."
+    "updatedAt": "2026-05-25T13:49:45Z",
+    "notes": "Completed. Strict Small generated/native package town-economy evidence now covers multiple deterministic package seeds instead of only the active startup package. The native package adoption report emits generated_package_town_economy_breadth_v1 and the runtime scorecard gates generated_package_town_economy_breadth_runtime. Runtime scorecard passes 31/31 with 3/3 generated package economy breadth cases, distinct map/scenario package hashes, 15 total generated towns, 211 generated resource nodes, common sources in every breadth case, player-required rare sources in every breadth case, 3 generated project factions, and 6 generated town templates. This is strict Small generated package economy breadth evidence, not campaign production work or campaign balance approval."
   },
-  "currentSliceUpdatedAt": "2026-05-25T13:20:05Z",
+  "currentSliceUpdatedAt": "2026-05-25T13:49:45Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -30797,22 +30933,81 @@
         "active_enemy_unique_ladder_faction_count": 6,
         "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T13:49:45Z",
+      "sliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-generated-package-breadth.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json",
+        "git diff --check"
+      ],
+      "evidence": {
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "runtime_scorecard_passed_requirement_count": 31,
+        "runtime_scorecard_requirement_count": 31,
+        "generated_breadth_case_count": 3,
+        "generated_breadth_passed_case_count": 3,
+        "generated_breadth_distinct_map_package_hash_count": 3,
+        "generated_breadth_distinct_scenario_package_hash_count": 3,
+        "generated_breadth_all_common_source_case_count": 3,
+        "generated_breadth_player_required_source_case_count": 3,
+        "generated_breadth_total_town_count": 15,
+        "generated_breadth_total_resource_node_count": 211,
+        "generated_breadth_unique_faction_count": 3,
+        "generated_breadth_unique_town_template_count": 6,
+        "generated_breadth_generated_faction_ids": [
+          "faction_embercourt",
+          "faction_mireclaw",
+          "faction_sunvault"
+        ],
+        "generated_breadth_generated_town_ids": [
+          "town_blackfen_gate",
+          "town_halo_spire",
+          "town_highwater_keep",
+          "town_nightglass_redoubt",
+          "town_prismhearth",
+          "town_riverwatch"
+        ],
+        "generated_breadth_generated_resource_source_ids": [
+          "aetherglass",
+          "embergrain",
+          "gold",
+          "memory_salt",
+          "ore",
+          "peatwax",
+          "wood"
+        ],
+        "generated_breadth_player_required_resource_ids": [
+          "aetherglass",
+          "gold",
+          "ore",
+          "peatwax",
+          "wood"
+        ],
+        "policy": "strict Small 36x36 one-level land generated package economy breadth, multi-seed package hashes, common and player-required rare source coverage"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
-    "title": "Economy Active Runway Pacing Floor Scorecard",
+    "id": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Economy Breadth Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T13:20:05Z",
-    "notes": "Completed. Active authored player-town and AI-town runway reports now enforce the day-24-to-day-30 pacing window and minimal required-resource source adoption instead of accepting any completion by turn 30 or granting every matching economy source up front. Runtime scorecard passes 30/30 with player cases completing day 24-26 and AI cases completing day 24-30. This is existing authored launch-surface economy evidence, not campaign-content production or campaign balance approval."
+    "updatedAt": "2026-05-25T13:49:45Z",
+    "notes": "Completed. Strict Small generated/native package town-economy evidence now covers multiple deterministic package seeds instead of only the active startup package. The native package adoption report emits generated_package_town_economy_breadth_v1 and the runtime scorecard gates generated_package_town_economy_breadth_runtime. Runtime scorecard passes 31/31 with 3/3 generated package economy breadth cases, distinct map/scenario package hashes, 15 total generated towns, 211 generated resource nodes, common sources in every breadth case, player-required rare sources in every breadth case, 3 generated project factions, and 6 generated town templates. This is strict Small generated package economy breadth evidence, not campaign production work or campaign balance approval."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T13:20:05Z",
-    "sliceId": "economy-active-runway-pacing-floor-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T13:49:45Z",
+    "sliceId": "economy-generated-package-town-economy-breadth-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 500 --log-file /tmp/heroes-like-player-runway-pacing.log --path . --scene res://tests/active_scenario_town_development_runway_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-ai-runway-pacing.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 420 --log-file /tmp/heroes-like-generated-package-breadth.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
@@ -30823,31 +31018,48 @@
     "evidence": {
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "runtime_scorecard_passed_requirement_count": 30,
-      "runtime_scorecard_requirement_count": 30,
-      "active_player_town_case_count": 18,
-      "active_player_completed_case_count": 18,
-      "active_player_completion_day_min": 24,
-      "active_player_completion_day_max": 26,
-      "active_player_min_completion_day": 24,
-      "active_player_pacing_floor_case_count": 18,
-      "active_player_source_adoption_policy_case_count": 18,
-      "active_player_rare_spend_case_count": 18,
-      "active_player_recruited_unit_case_count": 126,
-      "active_player_recruitment_market_covered_case_count": 2,
-      "active_enemy_town_case_count": 20,
-      "active_enemy_completed_case_count": 20,
-      "active_enemy_completion_day_min": 24,
-      "active_enemy_completion_day_max": 30,
-      "active_enemy_min_completion_day": 24,
-      "active_enemy_pacing_floor_case_count": 20,
-      "active_enemy_source_adoption_policy_case_count": 20,
-      "active_enemy_rare_spend_case_count": 20,
-      "active_enemy_same_day_guard_case_count": 20,
-      "active_enemy_seven_tier_recruitment_candidate_count": 140,
-      "active_enemy_unique_faction_count": 6,
-      "active_enemy_unique_ladder_faction_count": 6,
-      "policy": "active authored player/enemy town runway minimal_required_resource_coverage with day-24-to-day-30 pacing floor"
+      "runtime_scorecard_passed_requirement_count": 31,
+      "runtime_scorecard_requirement_count": 31,
+      "generated_breadth_case_count": 3,
+      "generated_breadth_passed_case_count": 3,
+      "generated_breadth_distinct_map_package_hash_count": 3,
+      "generated_breadth_distinct_scenario_package_hash_count": 3,
+      "generated_breadth_all_common_source_case_count": 3,
+      "generated_breadth_player_required_source_case_count": 3,
+      "generated_breadth_total_town_count": 15,
+      "generated_breadth_total_resource_node_count": 211,
+      "generated_breadth_unique_faction_count": 3,
+      "generated_breadth_unique_town_template_count": 6,
+      "generated_breadth_generated_faction_ids": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault"
+      ],
+      "generated_breadth_generated_town_ids": [
+        "town_blackfen_gate",
+        "town_halo_spire",
+        "town_highwater_keep",
+        "town_nightglass_redoubt",
+        "town_prismhearth",
+        "town_riverwatch"
+      ],
+      "generated_breadth_generated_resource_source_ids": [
+        "aetherglass",
+        "embergrain",
+        "gold",
+        "memory_salt",
+        "ore",
+        "peatwax",
+        "wood"
+      ],
+      "generated_breadth_player_required_resource_ids": [
+        "aetherglass",
+        "gold",
+        "ore",
+        "peatwax",
+        "wood"
+      ],
+      "policy": "strict Small 36x36 one-level land generated package economy breadth, multi-seed package hashes, common and player-required rare source coverage"
     }
   }
 }
