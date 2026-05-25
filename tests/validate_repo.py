@@ -3151,6 +3151,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "max_rare_route_steps",
         "generated_package_town_economy_runtime",
         "generated_package_town_source_route_runtime",
+        "generated_package_source_guard_pressure_runtime",
         "generated_package_town_economy_breadth_runtime",
         "generated_package_player_town_runway_runtime",
         "MIN_DETERMINISTIC_COMPLETION_DAY",
@@ -3170,6 +3171,10 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "generated_package_town_economy_source_routes_v1",
         "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
         "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
+        "MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY",
+        "guarded_source_route_case_count",
+        "guarded_town_case_count",
+        "max_source_acquisition_day",
         "generated_package_town_economy_breadth_v1",
         "strict_small_36x36_one_level_land_multi_seed",
         "generated_package_player_town_development_runway_v1",
@@ -3274,6 +3279,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "player required common and rare resource sources present",
         "9/9 generated package town source routes reachable",
         "generated package source routes stay within 40 common steps and 56 rare steps",
+        "guarded generated economy-source pressure",
+        "3/3 generated package towns retain guarded source pressure",
+        "generated package source acquisition stays within 6 days",
         "generated package player-town development runway",
         "22 initially missing generated player-town targets built by day 24",
         "minimal required-resource source adoption",
@@ -3294,7 +3302,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "32/32 checks",
+        "33/33 checks",
         "6/6 TownShell resource/build UI cases",
         "6/6 TownShell same-day build lockout cases",
         "42/42 TownShell seven-tier recruitment UI cases",
@@ -3562,8 +3570,15 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "generated_package_town_economy_source_routes_v1",
         "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
         "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
+        "GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY",
+        "GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS",
+        "MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY",
+        "guarded_source_route_case_count",
+        "guarded_town_case_count",
+        "max_source_acquisition_day",
         "_assert_generated_town_economy_source_routes",
         "_best_generated_resource_route",
+        "_generated_source_acquisition_day",
         "generated_town_economy_breadth",
         "generated_package_town_economy_breadth_v1",
         "GENERATED_TOWN_ECONOMY_BREADTH_CASES",
@@ -3603,6 +3618,7 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("generated_package_enemy_town_development_runway_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package enemy-town runway coverage")
     ensure("generated_package_town_economy_source_routes_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package town source-route coverage")
     ensure("9/9 generated package town source routes reachable" in doc_text, errors, "Live stockpile resource surface doc must record generated source-route evidence")
+    ensure("guarded generated economy-source pressure" in doc_text, errors, "Live stockpile resource surface doc must record generated guarded source pressure evidence")
     ensure("2/2 generated package enemy-town runway cases" in doc_text, errors, "Live stockpile resource surface doc must record generated enemy-town case evidence")
     ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
 

@@ -48,6 +48,7 @@ EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS = 40
 MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS = 56
+MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY = 6
 PHASE_WINDOWS = {
     "early": {"start": 1, "end": 10, "min_builds": 8},
     "mid": {"start": 11, "end": 20, "min_builds": 6},
@@ -507,6 +508,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_breadth_town_ids = {str(value) for value in generated_breadth.get("generated_town_ids", [])}
     generated_source_route_common_ids = {str(value) for value in generated_source_routes.get("required_common_resource_ids", [])}
     generated_source_route_rare_ids = {str(value) for value in generated_source_routes.get("required_rare_resource_ids", [])}
+    generated_source_route_town_count = int(generated_source_routes.get("town_case_count", 0))
     generated_package_town_economy_ok = (
         generated_package_runtime.get("ok") is True
         and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
@@ -584,6 +586,34 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "max_rare_route_steps": int(generated_source_routes.get("max_rare_route_steps", 0)),
             "common_route_step_limit": int(generated_source_routes.get("common_route_step_limit", 0)),
             "rare_route_step_limit": int(generated_source_routes.get("rare_route_step_limit", 0)),
+        },
+    )
+    generated_package_source_guard_pressure_ok = (
+        generated_package_town_source_route_ok
+        and int(generated_source_routes.get("guarded_town_case_count", 0)) == generated_source_route_town_count
+        and int(generated_source_routes.get("guarded_source_route_case_count", 0)) >= generated_source_route_town_count
+        and int(generated_source_routes.get("guarded_common_source_route_case_count", 0)) >= generated_source_route_town_count
+        and int(generated_source_routes.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
+        and int(generated_source_routes.get("source_acquisition_day_limit", 0)) == MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
+        and int(generated_source_routes.get("route_steps_per_day", 0)) > 0
+        and int(generated_source_routes.get("guarded_source_extra_days", 0)) > 0
+    )
+    add_check(
+        checks,
+        "generated_package_source_guard_pressure_runtime",
+        generated_package_source_guard_pressure_ok,
+        "Generated/native package town source routes must preserve guarded economy-source pressure for every generated player and enemy town without pushing acquisition outside the 30-turn runway.",
+        {
+            "schema": str(generated_source_routes.get("schema", "")),
+            "town_case_count": generated_source_route_town_count,
+            "guarded_town_case_count": int(generated_source_routes.get("guarded_town_case_count", 0)),
+            "guarded_source_route_case_count": int(generated_source_routes.get("guarded_source_route_case_count", 0)),
+            "guarded_common_source_route_case_count": int(generated_source_routes.get("guarded_common_source_route_case_count", 0)),
+            "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
+            "max_source_acquisition_day": int(generated_source_routes.get("max_source_acquisition_day", 0)),
+            "source_acquisition_day_limit": int(generated_source_routes.get("source_acquisition_day_limit", 0)),
+            "route_steps_per_day": int(generated_source_routes.get("route_steps_per_day", 0)),
+            "guarded_source_extra_days": int(generated_source_routes.get("guarded_source_extra_days", 0)),
         },
     )
     generated_package_town_economy_breadth_ok = (
@@ -1149,10 +1179,15 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
             "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
+            "guarded_town_case_count": int(generated_source_routes.get("guarded_town_case_count", 0)),
+            "guarded_source_route_case_count": int(generated_source_routes.get("guarded_source_route_case_count", 0)),
+            "guarded_common_source_route_case_count": int(generated_source_routes.get("guarded_common_source_route_case_count", 0)),
+            "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
             "required_common_resource_ids": sorted(generated_source_route_common_ids),
             "required_rare_resource_ids": sorted(generated_source_route_rare_ids),
             "max_common_route_steps": int(generated_source_routes.get("max_common_route_steps", 0)),
             "max_rare_route_steps": int(generated_source_routes.get("max_rare_route_steps", 0)),
+            "max_source_acquisition_day": int(generated_source_routes.get("max_source_acquisition_day", 0)),
         },
         "generated_package_player_town_development_runway_v1": {
             "town_id": str(generated_runway.get("town_id", "")),
