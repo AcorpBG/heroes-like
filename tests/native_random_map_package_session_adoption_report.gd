@@ -15,6 +15,9 @@ const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
 const MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS := 40
 const MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS := 56
+const GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY := 12
+const GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS := 1
+const MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY := 6
 const COMMON_MARKET_RESOURCE_IDS := ["wood", "ore"]
 const RARE_RESOURCE_IDS := [
 	"aetherglass",
@@ -690,8 +693,13 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 	var enemy_town_case_count := 0
 	var resource_route_case_count := 0
 	var reachable_route_case_count := 0
+	var guarded_source_route_case_count := 0
+	var guarded_common_source_route_case_count := 0
+	var guarded_rare_source_route_case_count := 0
+	var guarded_town_case_count := 0
 	var common_route_steps := []
 	var rare_route_steps := []
+	var acquisition_days := []
 	var required_rare_resource_ids := {}
 	for town in towns:
 		var row := _run_generated_town_source_route_case(session, town)
@@ -703,6 +711,11 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 			enemy_town_case_count += 1
 		resource_route_case_count += int(row.get("resource_route_case_count", 0))
 		reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
+		guarded_source_route_case_count += int(row.get("guarded_source_route_case_count", 0))
+		guarded_common_source_route_case_count += int(row.get("guarded_common_source_route_case_count", 0))
+		guarded_rare_source_route_case_count += int(row.get("guarded_rare_source_route_case_count", 0))
+		if int(row.get("guarded_source_route_case_count", 0)) > 0:
+			guarded_town_case_count += 1
 		var rare_id := String(row.get("rare_resource_id", ""))
 		if rare_id != "":
 			required_rare_resource_ids[rare_id] = true
@@ -717,16 +730,21 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 				common_route_steps.append(int(route.get("route_steps", 0)))
 			elif resource_id != "":
 				rare_route_steps.append(int(route.get("route_steps", 0)))
+			acquisition_days.append(int(route.get("source_acquisition_day", 0)))
 	var max_common_steps: int = int(common_route_steps.max()) if not common_route_steps.is_empty() else 0
 	var max_rare_steps: int = int(rare_route_steps.max()) if not rare_route_steps.is_empty() else 0
+	var max_acquisition_day: int = int(acquisition_days.max()) if not acquisition_days.is_empty() else 0
 	var status := "pass"
 	if town_case_count < 3 \
 			or player_town_case_count < 1 \
 			or enemy_town_case_count < 2 \
 			or resource_route_case_count != town_case_count * 3 \
 			or reachable_route_case_count != resource_route_case_count \
+			or guarded_town_case_count != town_case_count \
+			or guarded_source_route_case_count < town_case_count \
 			or max_common_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
-			or max_rare_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS:
+			or max_rare_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS \
+			or max_acquisition_day > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY:
 		status = "fail"
 	var surface := {
 		"schema": "generated_package_town_economy_source_routes_v1",
@@ -737,12 +755,20 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 		"enemy_town_case_count": enemy_town_case_count,
 		"resource_route_case_count": resource_route_case_count,
 		"reachable_route_case_count": reachable_route_case_count,
+		"guarded_source_route_case_count": guarded_source_route_case_count,
+		"guarded_common_source_route_case_count": guarded_common_source_route_case_count,
+		"guarded_rare_source_route_case_count": guarded_rare_source_route_case_count,
+		"guarded_town_case_count": guarded_town_case_count,
 		"required_common_resource_ids": COMMON_MARKET_RESOURCE_IDS,
 		"required_rare_resource_ids": _sorted_string_keys(required_rare_resource_ids),
 		"max_common_route_steps": max_common_steps,
 		"max_rare_route_steps": max_rare_steps,
+		"max_source_acquisition_day": max_acquisition_day,
 		"common_route_step_limit": MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS,
 		"rare_route_step_limit": MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS,
+		"route_steps_per_day": GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY,
+		"guarded_source_extra_days": GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS,
+		"source_acquisition_day_limit": MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY,
 		"town_rows": rows,
 	}
 	if status != "pass":
@@ -762,18 +788,33 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	var route_rows := []
 	var errors := []
 	var reachable_count := 0
+	var guarded_source_route_count := 0
+	var guarded_common_source_route_count := 0
+	var guarded_rare_source_route_count := 0
+	var acquisition_days := []
 	for resource_id_value in required_resource_ids:
 		var resource_id := String(resource_id_value)
 		var route_row := _best_generated_resource_route(session, start_tile, resource_id)
 		route_rows.append(route_row)
 		if bool(route_row.get("reachable", false)):
 			reachable_count += 1
+			acquisition_days.append(int(route_row.get("source_acquisition_day", 0)))
 		else:
 			errors.append("%s source unreachable" % resource_id)
+		if bool(route_row.get("guarded", false)):
+			guarded_source_route_count += 1
+			if resource_id in COMMON_MARKET_RESOURCE_IDS:
+				guarded_common_source_route_count += 1
+			else:
+				guarded_rare_source_route_count += 1
 		var route_steps := int(route_row.get("route_steps", 999999))
 		var max_steps := MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS if resource_id in COMMON_MARKET_RESOURCE_IDS else MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
 		if route_steps > max_steps:
 			errors.append("%s source route too long: %d > %d" % [resource_id, route_steps, max_steps])
+		if int(route_row.get("source_acquisition_day", 999999)) > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY:
+			errors.append("%s source acquisition day too late: %d > %d" % [resource_id, int(route_row.get("source_acquisition_day", 999999)), MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY])
+	if guarded_source_route_count < 1:
+		errors.append("town has no guarded generated economy source route")
 	return {
 		"ok": errors.is_empty() and route_rows.size() == 3,
 		"owner": String(town.get("owner", "")),
@@ -784,6 +825,10 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 		"start_tile": _generated_tile_payload(start_tile),
 		"resource_route_case_count": route_rows.size(),
 		"reachable_route_case_count": reachable_count,
+		"guarded_source_route_case_count": guarded_source_route_count,
+		"guarded_common_source_route_case_count": guarded_common_source_route_count,
+		"guarded_rare_source_route_case_count": guarded_rare_source_route_count,
+		"max_source_acquisition_day": int(acquisition_days.max()) if not acquisition_days.is_empty() else 0,
 		"routes": route_rows,
 		"errors": errors,
 		"error": "; ".join(errors),
@@ -800,6 +845,9 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 			continue
 		var target_tile := _generated_resource_route_target_tile(node)
 		var route := _find_generated_route(session, start_tile, target_tile)
+		var route_steps: int = max(0, route.size() - 1) if not route.is_empty() else 999999
+		var guarded := _generated_resource_source_has_guard(session, node)
+		var acquisition_day: int = _generated_source_acquisition_day(route_steps, guarded) if not route.is_empty() else 999999
 		var row := {
 			"resource_id": resource_id,
 			"placement_id": String(node.get("placement_id", "")),
@@ -808,9 +856,12 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 			"target_tile": _generated_tile_payload(target_tile),
 			"output": output,
 			"reachable": not route.is_empty(),
-			"route_steps": max(0, route.size() - 1) if not route.is_empty() else 999999,
+			"route_steps": route_steps,
 			"route_tiles": _generated_route_payload(route),
-			"guarded": _generated_resource_source_has_guard(session, node),
+			"guarded": guarded,
+			"source_acquisition_day": acquisition_day,
+			"route_steps_per_day": GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY,
+			"guarded_source_extra_days": GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS if guarded else 0,
 		}
 		candidates.append(row)
 	if candidates.is_empty():
@@ -818,6 +869,7 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 			"resource_id": resource_id,
 			"reachable": false,
 			"route_steps": 999999,
+			"source_acquisition_day": 999999,
 			"error": "no generated resource source",
 		}
 	candidates.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
@@ -829,6 +881,12 @@ func _best_generated_resource_route(session: SessionStateStoreScript.SessionData
 	best["candidate_count"] = candidates.size()
 	best["reachable_candidate_count"] = _generated_reachable_candidate_count(candidates)
 	return best
+
+func _generated_source_acquisition_day(route_steps: int, guarded: bool) -> int:
+	var acquisition_day: int = max(1, int(ceil(float(route_steps) / float(GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY))))
+	if guarded:
+		acquisition_day += GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS
+	return acquisition_day
 
 func _find_generated_route(session: SessionStateStoreScript.SessionData, start_tile: Vector2i, target_tile: Vector2i) -> Array:
 	var map_size := OverworldRules.derive_map_size(session)
