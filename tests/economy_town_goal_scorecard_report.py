@@ -350,6 +350,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(ai_runtime.get("delayed_source_replay_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("delayed_source_save_resume_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
         and int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("seven_tier_recruitment_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
+        and int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)) >= int(ai_runtime.get("enemy_town_case_count", 0)) * SIGNATURE_TIER_COUNT
+        and int(ai_runtime.get("affordable_recruitment_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
     )
     add_check(
         checks,
@@ -367,6 +370,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "delayed_source_replay_completed_count": int(ai_runtime.get("delayed_source_replay_completed_count", 0)),
             "delayed_source_save_resume_case_count": int(ai_runtime.get("delayed_source_save_resume_case_count", 0)),
             "delayed_source_save_resume_completed_count": int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)),
+            "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),
+            "seven_tier_recruitment_candidate_count": int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)),
+            "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
         },
     )
 
@@ -522,6 +528,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
             "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
             "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
+            "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),
+            "seven_tier_recruitment_candidate_count": int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)),
+            "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
         },
         "town_unique_building_runtime_payoff_report_v1": {
             "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),

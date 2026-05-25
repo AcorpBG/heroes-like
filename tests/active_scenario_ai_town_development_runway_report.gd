@@ -24,6 +24,7 @@ const RARE_RESOURCE_IDS := [
 const DELAYED_SOURCE_ROUTE_STEPS_PER_DAY := 12
 const DELAYED_GUARDED_SOURCE_EXTRA_DAYS := 1
 const DELAYED_SOURCE_SAVE_RESUME_SLOT := 3
+const SIGNATURE_TIER_COUNT := 7
 
 var _errors := []
 
@@ -42,6 +43,9 @@ func _run() -> void:
 	var delayed_source_replay_completed_count := 0
 	var delayed_source_save_resume_case_count := 0
 	var delayed_source_save_resume_completed_count := 0
+	var seven_tier_recruitment_case_count := 0
+	var seven_tier_recruitment_candidate_count := 0
+	var affordable_recruitment_case_count := 0
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -70,6 +74,11 @@ func _run() -> void:
 				delayed_source_save_resume_case_count += 1
 			if bool(row.get("delayed_source_save_resume_ok", false)):
 				delayed_source_save_resume_completed_count += 1
+			if bool(row.get("ai_seven_tier_recruitment_seen", false)):
+				seven_tier_recruitment_case_count += 1
+			seven_tier_recruitment_candidate_count += int(row.get("ai_recruitment_tier_candidate_count", 0))
+			if bool(row.get("ai_recruitment_selected_seen", false)):
+				affordable_recruitment_case_count += 1
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					String(scenario_id),
@@ -90,6 +99,9 @@ func _run() -> void:
 		"delayed_source_replay_completed_count": delayed_source_replay_completed_count,
 		"delayed_source_save_resume_case_count": delayed_source_save_resume_case_count,
 		"delayed_source_save_resume_completed_count": delayed_source_save_resume_completed_count,
+		"seven_tier_recruitment_case_count": seven_tier_recruitment_case_count,
+		"seven_tier_recruitment_candidate_count": seven_tier_recruitment_candidate_count,
+		"affordable_recruitment_case_count": affordable_recruitment_case_count,
 		"delayed_source_save_resume_slot": DELAYED_SOURCE_SAVE_RESUME_SLOT,
 		"delayed_source_route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
 		"delayed_guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
@@ -103,6 +115,7 @@ func _run() -> void:
 			"The delayed-source AI replay saves and restores after delayed source acquisition plus rare-resource construction, then continues the development runway from the restored active scenario session.",
 			"Construction now runs inside the full scenario session state with authored map, resource nodes, encounters, and enemy states preserved.",
 			"Construction runs through EnemyTurnRules.run_enemy_town_economy_turn and EnemyTurnRules.town_governor_pressure_report for the target faction.",
+			"Completed enemy towns must expose the faction seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report.",
 			"This is AI town-development economy runway evidence, not final strategic AI quality, route safety, encounter pacing, or campaign balance approval.",
 		],
 	}
@@ -164,6 +177,7 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 		scenario_id,
 		placement_id,
 		faction_id,
+		config,
 		start_tile,
 		required_resource_ids,
 		target_buildings
@@ -245,12 +259,15 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
+	var recruitment_evidence := _ai_recruitment_evidence(session, config, placement_id, faction_id)
 	base_row["ok"] = (
 		completed
 		and same_day_second_build_blocked
 		and not rare_spend_events.is_empty()
 		and rare_treasury_tracked
 		and governor_report_seen
+		and bool(recruitment_evidence.get("seven_tier_recruitment_seen", false))
+		and bool(recruitment_evidence.get("selected_recruitment_seen", false))
 		and bool(delayed_source_replay.get("ok", false))
 		and String(session.scenario_id) == scenario_id
 		and _source_covers_required_resources(source_evidence, required_resource_ids)
@@ -263,6 +280,12 @@ func _run_enemy_town_case(scenario_id: String, scenario: Dictionary, authored_to
 	base_row["rare_treasury_tracked"] = rare_treasury_tracked
 	base_row["governor_report_seen"] = governor_report_seen
 	base_row["rare_spend_observed"] = not rare_spend_events.is_empty()
+	base_row["ai_recruitment_evidence"] = recruitment_evidence
+	base_row["ai_recruitment_candidate_count"] = int(recruitment_evidence.get("candidate_count", 0))
+	base_row["ai_recruitment_tier_candidate_count"] = int(recruitment_evidence.get("tier_candidate_count", 0))
+	base_row["ai_recruitment_affordable_candidate_count"] = int(recruitment_evidence.get("affordable_candidate_count", 0))
+	base_row["ai_recruitment_selected_seen"] = bool(recruitment_evidence.get("selected_recruitment_seen", false))
+	base_row["ai_seven_tier_recruitment_seen"] = bool(recruitment_evidence.get("seven_tier_recruitment_seen", false))
 	base_row["rare_spend_events"] = rare_spend_events
 	base_row["source_evidence"] = source_evidence
 	base_row["delayed_source_replay_seen"] = true
@@ -286,6 +309,7 @@ func _run_delayed_source_replay(
 	scenario_id: String,
 	placement_id: String,
 	faction_id: String,
+	config: Dictionary,
 	start_tile: Vector2i,
 	required_resource_ids: Array,
 	target_buildings: Array
@@ -386,12 +410,17 @@ func _run_delayed_source_replay(
 		session.day += 1
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
+	var recruitment_evidence := _ai_recruitment_evidence(session, config, placement_id, faction_id)
 	if not completed:
 		errors.append("enemy town did not complete delayed-source development replay")
 	if rare_spend_events.is_empty():
 		errors.append("delayed-source AI replay did not spend a rare resource")
 	if not rare_treasury_tracked:
 		errors.append("delayed-source AI replay did not preserve full enemy treasury keys")
+	if not bool(recruitment_evidence.get("seven_tier_recruitment_seen", false)):
+		errors.append("delayed-source AI replay did not expose seven-tier recruitment candidates")
+	if not bool(recruitment_evidence.get("selected_recruitment_seen", false)):
+		errors.append("delayed-source AI replay did not expose an affordable selected recruitment")
 	if save_resume.is_empty():
 		errors.append("delayed-source AI replay did not save/resume after source acquisition and rare construction")
 	elif not bool(save_resume.get("ok", false)):
@@ -413,6 +442,7 @@ func _run_delayed_source_replay(
 		"rare_treasury_tracked": rare_treasury_tracked,
 		"rare_spend_observed": not rare_spend_events.is_empty(),
 		"rare_spend_events": rare_spend_events,
+		"ai_recruitment_evidence": recruitment_evidence,
 		"save_resume_seen": not save_resume.is_empty(),
 		"save_resume_ok": bool(save_resume.get("ok", false)),
 		"save_resume": _without_session(save_resume),
@@ -538,6 +568,52 @@ func _town_development_signature(town: Dictionary) -> Dictionary:
 		"last_build_day": int(town.get("last_build_day", 0)),
 		"available_recruits": _int_dictionary(town.get("available_recruits", {})),
 	}
+
+func _ai_recruitment_evidence(session, config: Dictionary, placement_id: String, faction_id: String) -> Dictionary:
+	var town := _town(session, placement_id)
+	var treasury := _resources(_enemy_state(session, faction_id).get("treasury", {}))
+	var report: Dictionary = EnemyTurnRules.town_recruitment_pressure_report(session, config, town, treasury, faction_id)
+	var candidates: Array = report.get("candidates", []) if report.get("candidates", []) is Array else []
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var ladder_faction_id := String(town_template.get("faction_id", faction_id))
+	var ladder_ids := _faction_ladder_ids(ladder_faction_id)
+	var candidate_ids := {}
+	var tier_candidate_count := 0
+	var affordable_candidate_count := 0
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		var unit_id := String(candidate.get("unit_id", ""))
+		candidate_ids[unit_id] = true
+		if unit_id in ladder_ids:
+			tier_candidate_count += 1
+		if int(candidate.get("recruit_count", 0)) > 0:
+			affordable_candidate_count += 1
+	var missing_ladder_ids := []
+	for unit_id in ladder_ids:
+		if not bool(candidate_ids.get(String(unit_id), false)):
+			missing_ladder_ids.append(String(unit_id))
+	var selected: Dictionary = report.get("selected_recruitment", {}) if report.get("selected_recruitment", {}) is Dictionary else {}
+	return {
+		"schema": "active_scenario_ai_town_recruitment_surface_v1",
+		"placement_id": placement_id,
+		"controller_faction_id": faction_id,
+		"ladder_faction_id": ladder_faction_id,
+		"candidate_count": candidates.size(),
+		"tier_candidate_count": tier_candidate_count,
+		"affordable_candidate_count": affordable_candidate_count,
+		"expected_tier_count": SIGNATURE_TIER_COUNT,
+		"ladder_unit_ids": ladder_ids,
+		"missing_ladder_unit_ids": missing_ladder_ids,
+		"seven_tier_recruitment_seen": ladder_ids.size() == SIGNATURE_TIER_COUNT and missing_ladder_ids.is_empty(),
+		"selected_recruitment_seen": not selected.is_empty() and int(selected.get("recruit_count", 0)) > 0,
+		"selected_recruitment": selected,
+	}
+
+func _faction_ladder_ids(faction_id: String) -> Array:
+	var faction := ContentService.get_faction(faction_id)
+	return _string_array(faction.get("unit_ladder_ids", []))
 
 func _applied_source_node_signature(session, source_schedule: Array) -> Array:
 	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []

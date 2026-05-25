@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town Runtime UI Surface Scorecard",
+  "currentSliceId": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town AI Seven Tier Recruitment Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime-inclusive economy/town scorecard gate now requires live TownShell resource/build and seven-tier recruitment UI surfaces.",
+  "currentSliceNotes": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T02:51:51Z",
+  "updatedAt": "2026-05-25T03:37:21Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,36 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
+      "title": "Economy Town AI Seven Tier Recruitment Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T03:37:21Z",
+      "startedAt": "2026-05-25T02:54:31Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/active_scenario_ai_town_development_runway_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-active-scenario-ai-town-development-runway-report.md"
+      ],
+      "summary": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=prismhearth-watch GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-ai-town-prismhearth-watch.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; mixed-control Halo Spire exposes native Sunvault seven-tier recruitment ladder)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-ai-town-seven-tier-recruitment.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; 20/20 AI town cases, 140/140 seven-tier recruitment candidates, 20/20 affordable recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks with AI seven-tier recruitment evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Runtime-inclusive scorecard now rejects completed AI town development if any enemy town lacks the native town line seven-tier recruitment surface or affordable selected recruitment evidence.",
+      "completedAt": "2026-05-25T03:37:21Z"
+    },
     {
       "id": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
       "title": "Economy Town Runtime UI Surface Scorecard",
@@ -28056,25 +28086,42 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-24T22:48:04Z",
+    "updatedAt": "2026-05-25T03:37:21Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 700 --log-file /tmp/heroes-like-active-scenario-ai-town-delayed-save-resume.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
-      "python3 tests/validate_repo.py",
-      "python3 tests/validate_repo.py --strict-economy-resource-fixtures",
-      "python3 -m py_compile tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py",
-      "jq empty ops/progress.json",
-      "git diff --check"
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+      "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=prismhearth-watch GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-ai-town-prismhearth-watch.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; mixed-control Halo Spire exposes native Sunvault seven-tier recruitment ladder)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-ai-town-seven-tier-recruitment.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; 20/20 AI town cases, 140/140 seven-tier recruitment candidates, 20/20 affordable recruitment cases)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks with AI seven-tier recruitment evidence)",
+      "python3 tests/validate_repo.py (passed)",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
-    "summary": "Active enemy-town delayed-source runway now saves/restores after target-faction route-derived source acquisition and first rare-resource AI construction, preserving target enemy treasury, target town buildings, last_build_day, recruits, applied source-node claim/control state, overworld resume target, save version, and target-town same-day AI build guard before continuing the 30-turn runway. Current evidence covers 16 active scenarios and 20 enemy-town cases with 20/20 delayed-source AI save/resume checkpoints and 20/20 delayed-source AI replays completed."
+    "summary": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities."
   },
   "active_slice": {
-    "id": "economy-active-scenario-ai-delayed-source-save-resume-20260524-10184",
-    "title": "Economy Active Scenario AI Delayed Source Save Resume",
+    "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
+    "title": "Economy Town AI Seven Tier Recruitment Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-24T22:48:04Z"
+    "updatedAt": "2026-05-25T03:37:21Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T02:51:51Z",
+  "currentSliceUpdatedAt": "2026-05-25T03:37:21Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T03:37:21Z",
+      "commands": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=prismhearth-watch GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-ai-town-prismhearth-watch.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; mixed-control Halo Spire exposes native Sunvault seven-tier recruitment ladder)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-ai-town-seven-tier-recruitment.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; 20/20 AI town cases, 140/140 seven-tier recruitment candidates, 20/20 affordable recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks with AI seven-tier recruitment evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-24T22:23:08Z",
@@ -28778,12 +28825,27 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-runtime-ui-surface-scorecard-20260525-10184",
-    "title": "Economy Town Runtime UI Surface Scorecard",
+    "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
+    "title": "Economy Town AI Seven Tier Recruitment Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T02:51:51Z"
+    "updatedAt": "2026-05-25T03:37:21Z"
   },
   "validation": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T03:37:21Z",
+      "commands": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=prismhearth-watch GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-ai-town-prismhearth-watch.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; mixed-control Halo Spire exposes native Sunvault seven-tier recruitment ladder)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-ai-town-seven-tier-recruitment.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; 20/20 AI town cases, 140/140 seven-tier recruitment candidates, 20/20 affordable recruitment cases)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks with AI seven-tier recruitment evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-24T22:23:08Z",
