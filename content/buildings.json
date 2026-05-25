@@ -1170,7 +1170,8 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_sunvault_shard_yard"
+        "building_sunvault_shard_yard",
+        "building_sunvault_lens_tithe"
       ],
       "unlock_unit_id": "unit_sunvault_prism_adepts",
       "growth_bonus": {
@@ -1215,7 +1216,8 @@
       "content_status": "six_faction_scaffold",
       "requires": [
         "building_sunvault_mirror_forge",
-        "building_market_square"
+        "building_market_square",
+        "building_sunvault_relay_scribes"
       ],
       "unlock_unit_id": "unit_sunvault_resonant_choristers",
       "growth_bonus": {
