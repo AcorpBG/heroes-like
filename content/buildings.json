@@ -831,7 +831,8 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_embercourt_granary_lock_exchange"
+        "building_embercourt_granary_lock_exchange",
+        "building_embercourt_lockhouse_tally"
       ],
       "unlock_unit_id": "unit_embercourt_lantern_sappers",
       "growth_bonus": {
@@ -1025,7 +1026,8 @@
       },
       "content_status": "six_faction_scaffold",
       "requires": [
-        "building_mireclaw_blackbranch_den"
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_reed_toll"
       ],
       "unlock_unit_id": "unit_mireclaw_mudglass_slingers",
       "growth_bonus": {
