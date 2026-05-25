@@ -446,6 +446,9 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 	var seven_tier_town_count := 0
 	var rare_development_town_count := 0
 	var player_rare_resource_ids := {}
+	var generated_faction_ids := {}
+	var generated_town_ids := {}
+	var source_h3maped_faction_ids := {}
 	for town_value in towns:
 		if not (town_value is Dictionary):
 			continue
@@ -457,11 +460,18 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 		var faction := ContentService.get_faction(faction_id)
 		var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
 		var buildable_ids := _string_array(town_template.get("buildable_building_ids", []))
-		var unit_tiers := _unit_tiers_for_buildings(buildable_ids)
+		var starting_ids := _string_array(town_template.get("starting_building_ids", []))
+		var unit_tiers := _unit_tiers_for_buildings(_merged_string_arrays(starting_ids, buildable_ids))
 		var rare_resource_id := String(profile.get("rare_resource_id", ""))
 		var owner := String(town.get("owner", ""))
 		if not town_template.is_empty():
 			authored_town_template_count += 1
+			generated_town_ids[town_id] = true
+		if not faction.is_empty():
+			generated_faction_ids[faction_id] = true
+		var source_h3maped_faction_id := String(town.get("source_h3maped_faction_id", ""))
+		if source_h3maped_faction_id != "":
+			source_h3maped_faction_ids[source_h3maped_faction_id] = true
 		if unit_tiers.size() == 7:
 			seven_tier_town_count += 1
 		if rare_resource_id != "" and rare_resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS and not (rare_resource_id in ["gold", "wood", "ore"]):
@@ -476,6 +486,8 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 			"owner": owner,
 			"faction_id": faction_id,
 			"faction_found": not faction.is_empty(),
+			"source_h3maped_faction_id": source_h3maped_faction_id,
+			"source_package_town_id": String(town.get("source_package_town_id", "")),
 			"authored_town_template": not town_template.is_empty(),
 			"target_building_count": buildable_ids.size(),
 			"unit_tier_count": unit_tiers.size(),
@@ -494,6 +506,8 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 			or authored_town_template_count != town_count \
 			or seven_tier_town_count != town_count \
 			or rare_development_town_count != town_count \
+			or generated_faction_ids.size() < 3 \
+			or generated_town_ids.size() < 3 \
 			or resource_nodes.is_empty() \
 			or not missing_player_resource_sources.is_empty():
 		status = "fail"
@@ -506,6 +520,11 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 		"authored_town_template_count": authored_town_template_count,
 		"seven_tier_town_count": seven_tier_town_count,
 		"rare_development_town_count": rare_development_town_count,
+		"unique_faction_count": generated_faction_ids.size(),
+		"unique_town_template_count": generated_town_ids.size(),
+		"generated_faction_ids": _sorted_string_keys(generated_faction_ids),
+		"generated_town_ids": _sorted_string_keys(generated_town_ids),
+		"source_h3maped_faction_ids": _sorted_string_keys(source_h3maped_faction_ids),
 		"generated_resource_node_count": resource_nodes.size(),
 		"generated_resource_source_ids": _sorted_string_keys(resource_source_ids),
 		"player_required_resource_ids": required_player_resource_ids,
@@ -546,6 +565,7 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 
 	var required_resource_ids := _required_build_resource_ids(target_buildings)
 	var source_evidence := _secure_development_sources(session, required_resource_ids)
+	var initial_missing_buildings := _missing_buildings(session, placement_id, target_buildings)
 	var signature_order := _signature_order(faction)
 	var build_log := []
 	var stalled_days := []
@@ -635,6 +655,8 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 		"faction_id": faction_id,
 		"target_turns": target_turns,
 		"target_building_count": target_buildings.size(),
+		"initial_missing_building_count": initial_missing_buildings.size(),
+		"initial_missing_buildings": initial_missing_buildings,
 		"completed": completed,
 		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0,
 		"build_count": build_log.size(),
@@ -660,7 +682,7 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 	var ok := (
 		completed
 		and int(surface.get("completion_day", 0)) <= TARGET_TURNS
-		and int(surface.get("build_count", 0)) == target_buildings.size()
+		and int(surface.get("build_count", 0)) == initial_missing_buildings.size()
 		and same_day_reject_ok
 		and build_actions_after_build_blocked
 		and not rare_spend_events.is_empty()
@@ -1161,6 +1183,18 @@ func _string_array(value: Variant) -> Array:
 	for item in value:
 		var text := String(item)
 		if text != "":
+			result.append(text)
+	return result
+
+func _merged_string_arrays(left: Array, right: Array) -> Array:
+	var seen := {}
+	var result := []
+	for source in [left, right]:
+		for value in source:
+			var text := String(value)
+			if text == "" or bool(seen.get(text, false)):
+				continue
+			seen[text] = true
 			result.append(text)
 	return result
 

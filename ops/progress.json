@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-player-town-runway-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Player Town Runway Scorecard",
+  "currentSliceId": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Town Identity Diversity Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Strict Small generated/native package sessions now feed generated_package_player_town_development_runway_v1 into the runtime-inclusive economy/town scorecard, proving the disk-loaded generated player town builds all targets within 30 turns, spends rare resources, preserves one-build-per-day blocking, advances generated economy days, and recruits all seven tiers; runtime scorecard passes 25/25 checks.",
+  "currentSliceNotes": "Strict Small generated/native package town identity now maps h3maped/H3M town tokens into original project faction/town identities before session town materialization. The generated package town-economy surface gates 4 generated project factions and 5 generated town templates across 7 generated towns, while preserving 7/7 authored templates, 7/7 seven-tier ladders, rare-development identities, 98 generated resource nodes, and player-required gold/wood/ore/embergrain source coverage. The generated player-town runway now distinguishes total template targets from initially missing targets, proving town_highwater_keep builds 22 initially missing targets by day 22, spends rare resources, preserves one-build-per-day blocking, advances generated package economy days, and recruits all seven tiers. Runtime-inclusive economy/town scorecard passes 25/25 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T07:03:56Z",
+  "updatedAt": "2026-05-25T07:33:15Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,36 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+      "title": "Economy Generated Package Town Identity Diversity Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T07:33:15Z",
+      "startedAt": "2026-05-25T07:33:15Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "summary": "Strict Small generated/native package town identity now maps h3maped/H3M town tokens into original project faction/town identities before session town materialization. The generated package town-economy surface gates 4 generated project factions and 5 generated town templates across 7 generated towns, while preserving 7/7 authored templates, 7/7 seven-tier ladders, rare-development identities, 98 generated resource nodes, and player-required gold/wood/ore/embergrain source coverage. The generated player-town runway now distinguishes total template targets from initially missing targets, proving town_highwater_keep builds 22 initially missing targets by day 22, spends rare resources, preserves one-build-per-day blocking, advances generated package economy days, and recruits all seven tiers. Runtime-inclusive economy/town scorecard passes 25/25 checks.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-identity.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; 7 generated towns, 4 generated project factions, 5 generated town templates, player town_highwater_keep builds 22 initially missing targets by day 22 and recruits all 7 tiers)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 25/25 runtime-inclusive checks with generated identity diversity and initial-missing runway evidence)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed by mapping H3M generated town identity into project town/faction identity and tightening generated package economy/runway reports plus scorecard gates.",
+      "completedAt": "2026-05-25T07:33:15Z"
+    },
     {
       "id": "economy-town-runtime-recruitment-market-coverage-scorecard-20260525-10184",
       "title": "Economy Town Runtime Recruitment Market Coverage Scorecard",
@@ -22229,6 +22259,54 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+      "title": "Economy Generated Package Town Identity Diversity Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T07:33:15Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-generated-package-town-identity-diversity-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "NativeRandomMapPackageSessionBridge maps supported h3maped/H3M town tokens to original project town/faction identities before generated town state materialization.",
+        "Focused generated package report passes with 7 generated towns, 4 generated project factions, 5 generated town templates, 7/7 authored templates, 7/7 seven-tier ladders, and no missing player-required resource sources.",
+        "Generated player-town runway passes for town_highwater_keep with 22 initially missing targets built by day 22, rare spend observed, one-build-per-day guard preserved, generated economy days advanced, and 7/7 tiers recruited.",
+        "Runtime-inclusive economy/town scorecard passes 25/25 checks with generated identity diversity and initial-missing runway evidence."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-identity.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; 7 generated towns, 4 generated project factions, 5 generated town templates, player town_highwater_keep builds 22 initially missing targets by day 22 and recruits all 7 tiers)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 25/25 runtime-inclusive checks with generated identity diversity and initial-missing runway evidence)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not broad generated-map economy balance across sizes/templates.",
+        "Not final route safety.",
+        "Not final encounter pacing or guard pressure.",
+        "Not campaign/skirmish balance approval."
+      ],
+      "updatedAt": "2026-05-25T07:33:15Z"
+    },
+    {
       "id": "economy-town-active-ai-six-faction-runtime-scorecard-20260525-10184",
       "title": "Economy Town Active AI Six Faction Runtime Scorecard",
       "status": "completed",
@@ -27796,6 +27874,53 @@
   "evidenceHistory": {
     "completedImplementationEvidence": [
       {
+        "id": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+        "title": "Economy Generated Package Town Identity Diversity Scorecard",
+        "status": "completed",
+        "phase": "phase-5-playable-alpha-baseline",
+        "completedAt": "2026-05-25T07:33:15Z",
+        "sourceRefs": [
+          "project.md",
+          "PLAN.md",
+          "docs/economy-town-goal-scorecard-report.md",
+          "docs/economy-live-stockpile-resource-surface-report.md"
+        ],
+        "mappedPlannedSliceIds": [
+          "economy-generated-package-town-identity-diversity-scorecard-20260525-10184"
+        ],
+        "implementationRefs": [
+          "PLAN.md",
+          "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+          "tests/native_random_map_package_session_adoption_report.gd",
+          "tests/economy_town_goal_scorecard_report.py",
+          "tests/validate_repo.py",
+          "docs/economy-town-goal-scorecard-report.md",
+          "docs/economy-live-stockpile-resource-surface-report.md",
+          "ops/progress.json"
+        ],
+        "evidence": [
+          "NativeRandomMapPackageSessionBridge maps supported h3maped/H3M town tokens to original project town/faction identities before generated town state materialization.",
+          "Focused generated package report passes with 7 generated towns, 4 generated project factions, 5 generated town templates, 7/7 authored templates, 7/7 seven-tier ladders, and no missing player-required resource sources.",
+          "Generated player-town runway passes for town_highwater_keep with 22 initially missing targets built by day 22, rare spend observed, one-build-per-day guard preserved, generated economy days advanced, and 7/7 tiers recruited.",
+          "Runtime-inclusive economy/town scorecard passes 25/25 checks with generated identity diversity and initial-missing runway evidence."
+        ],
+        "validation": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-identity.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; 7 generated towns, 4 generated project factions, 5 generated town templates, player town_highwater_keep builds 22 initially missing targets by day 22 and recruits all 7 tiers)",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 25/25 runtime-inclusive checks with generated identity diversity and initial-missing runway evidence)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json content/towns.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "nonClaims": [
+          "Not broad generated-map economy balance across sizes/templates.",
+          "Not final route safety.",
+          "Not final encounter pacing or guard pressure.",
+          "Not campaign/skirmish balance approval."
+        ]
+      },
+      {
         "id": "native-rmg-owner-medium-islands-runtime-support-10184",
         "title": "Native RMG Owner Medium Islands Runtime Support",
         "phase": "phase-3-homm3-style-rmg-rework",
@@ -28663,48 +28788,26 @@
     }
   ],
   "lastValidation": {
-    "status": "pass",
-    "updatedAt": "2026-05-25T07:03:56Z",
-    "sliceId": "economy-generated-package-player-town-runway-scorecard-20260525-10184",
+    "status": "passed",
+    "updatedAt": "2026-05-25T07:33:15Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-package-player-town-runway.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
-      "python3 tests/economy_town_goal_scorecard_report.py",
-      "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
-      "jq empty ops/progress.json content/towns.json",
-      "git diff --check"
-    ],
-    "evidence": {
-      "generated_package_player_town_id": "town_riverwatch",
-      "generated_package_player_faction_id": "faction_embercourt",
-      "generated_package_player_build_count": 22,
-      "generated_package_player_target_building_count": 22,
-      "generated_package_player_completion_day": 22,
-      "generated_package_player_target_turns": 30,
-      "generated_package_player_same_day_reject_ok": true,
-      "generated_package_player_build_actions_after_build_blocked": true,
-      "generated_package_player_rare_spend_observed": true,
-      "generated_package_player_recruited_unit_case_count": 7,
-      "generated_package_player_recruitment_case_count": 7,
-      "generated_package_player_secured_resource_ids": [
-        "embergrain",
-        "gold",
-        "ore",
-        "wood"
-      ],
-      "runtime_scorecard_passed_requirement_count": 25,
-      "runtime_scorecard_requirement_count": 25
-    }
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-town-identity.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; 7 generated towns, 4 generated project factions, 5 generated town templates, player town_highwater_keep builds 22 initially missing targets by day 22 and recruits all 7 tiers)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 25/25 runtime-inclusive checks with generated identity diversity and initial-missing runway evidence)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+      "python3 tests/validate_repo.py (passed)",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json content/towns.json (passed)",
+      "git diff --check (passed)"
+    ]
   },
   "active_slice": {
-    "id": "economy-generated-package-player-town-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Player Town Runway Scorecard",
+    "id": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Identity Diversity Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T07:03:56Z",
-    "notes": "Completed. Strict Small generated/native package sessions now feed generated_package_player_town_development_runway_v1 into the runtime-inclusive economy/town scorecard, proving the disk-loaded generated player town builds all targets within 30 turns, spends rare resources, preserves one-build-per-day blocking, advances generated economy days, and recruits all seven tiers; runtime scorecard passes 25/25 checks."
+    "updatedAt": "2026-05-25T07:33:15Z",
+    "notes": "Strict Small generated/native package town identity now maps h3maped/H3M town tokens into original project faction/town identities before session town materialization. The generated package town-economy surface gates 4 generated project factions and 5 generated town templates across 7 generated towns, while preserving 7/7 authored templates, 7/7 seven-tier ladders, rare-development identities, 98 generated resource nodes, and player-required gold/wood/ore/embergrain source coverage. The generated player-town runway now distinguishes total template targets from initially missing targets, proving town_highwater_keep builds 22 initially missing targets by day 22, spends rare resources, preserves one-build-per-day blocking, advances generated package economy days, and recruits all seven tiers. Runtime-inclusive economy/town scorecard passes 25/25 checks."
   },
-  "currentSliceUpdatedAt": "2026-05-25T07:03:56Z",
+  "currentSliceUpdatedAt": "2026-05-25T07:33:15Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -29557,11 +29660,11 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-generated-package-player-town-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Player Town Runway Scorecard",
+    "id": "economy-generated-package-town-identity-diversity-scorecard-20260525-10184",
+    "title": "Economy Generated Package Town Identity Diversity Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T07:03:56Z",
-    "notes": "Completed. Strict Small generated/native package sessions now feed generated_package_player_town_development_runway_v1 into the runtime-inclusive economy/town scorecard, proving the disk-loaded generated player town builds all targets within 30 turns, spends rare resources, preserves one-build-per-day blocking, advances generated economy days, and recruits all seven tiers; runtime scorecard passes 25/25 checks."
+    "updatedAt": "2026-05-25T07:33:15Z",
+    "notes": "Strict Small generated/native package town identity now maps h3maped/H3M town tokens into original project faction/town identities before session town materialization. The generated package town-economy surface gates 4 generated project factions and 5 generated town templates across 7 generated towns, while preserving 7/7 authored templates, 7/7 seven-tier ladders, rare-development identities, 98 generated resource nodes, and player-required gold/wood/ore/embergrain source coverage. The generated player-town runway now distinguishes total template targets from initially missing targets, proving town_highwater_keep builds 22 initially missing targets by day 22, spends rare resources, preserves one-build-per-day blocking, advances generated package economy days, and recruits all seven tiers. Runtime-inclusive economy/town scorecard passes 25/25 checks."
   },
   "validation": {
     "status": "pass",

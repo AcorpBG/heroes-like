@@ -409,6 +409,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_runway = generated_package_runtime.get("generated_player_town_development_runway", {})
     generated_resource_source_ids = {str(value) for value in generated_surface.get("generated_resource_source_ids", [])}
     generated_player_required_ids = {str(value) for value in generated_surface.get("player_required_resource_ids", [])}
+    generated_faction_ids = {str(value) for value in generated_surface.get("generated_faction_ids", [])}
+    generated_town_ids = {str(value) for value in generated_surface.get("generated_town_ids", [])}
     generated_package_town_economy_ok = (
         generated_package_runtime.get("ok") is True
         and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
@@ -421,6 +423,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_surface.get("authored_town_template_count", 0)) == int(generated_surface.get("town_count", -1))
         and int(generated_surface.get("seven_tier_town_count", 0)) == int(generated_surface.get("town_count", -1))
         and int(generated_surface.get("rare_development_town_count", 0)) == int(generated_surface.get("town_count", -1))
+        and int(generated_surface.get("unique_faction_count", 0)) >= 3
+        and int(generated_surface.get("unique_town_template_count", 0)) >= 3
         and int(generated_surface.get("generated_resource_node_count", 0)) > 0
         and COMMON_RESOURCES.issubset(generated_resource_source_ids)
         and generated_player_required_ids.issubset(generated_resource_source_ids)
@@ -439,6 +443,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "authored_town_template_count": int(generated_surface.get("authored_town_template_count", 0)),
             "seven_tier_town_count": int(generated_surface.get("seven_tier_town_count", 0)),
             "rare_development_town_count": int(generated_surface.get("rare_development_town_count", 0)),
+            "unique_faction_count": int(generated_surface.get("unique_faction_count", 0)),
+            "unique_town_template_count": int(generated_surface.get("unique_town_template_count", 0)),
+            "generated_faction_ids": sorted(generated_faction_ids),
+            "generated_town_ids": sorted(generated_town_ids),
+            "source_h3maped_faction_ids": sorted(str(value) for value in generated_surface.get("source_h3maped_faction_ids", [])),
             "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
@@ -452,7 +461,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
         and generated_runway.get("completed") is True
         and int(generated_runway.get("completion_day", 999)) <= TARGET_TURNS
-        and int(generated_runway.get("build_count", 0)) == int(generated_runway.get("target_building_count", -1))
+        and int(generated_runway.get("build_count", 0)) == int(generated_runway.get("initial_missing_building_count", -1))
         and generated_runway.get("same_day_reject_ok") is True
         and generated_runway.get("build_actions_after_build_blocked") is True
         and generated_runway.get("rare_spend_observed") is True
@@ -476,6 +485,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "completion_day": int(generated_runway.get("completion_day", 0)),
             "build_count": int(generated_runway.get("build_count", 0)),
             "target_building_count": int(generated_runway.get("target_building_count", 0)),
+            "initial_missing_building_count": int(generated_runway.get("initial_missing_building_count", 0)),
             "same_day_reject_ok": generated_runway.get("same_day_reject_ok") is True,
             "build_actions_after_build_blocked": generated_runway.get("build_actions_after_build_blocked") is True,
             "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
@@ -803,6 +813,10 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "authored_town_template_count": int(generated_surface.get("authored_town_template_count", 0)),
             "seven_tier_town_count": int(generated_surface.get("seven_tier_town_count", 0)),
             "rare_development_town_count": int(generated_surface.get("rare_development_town_count", 0)),
+            "unique_faction_count": int(generated_surface.get("unique_faction_count", 0)),
+            "unique_town_template_count": int(generated_surface.get("unique_town_template_count", 0)),
+            "generated_faction_ids": sorted(generated_faction_ids),
+            "generated_town_ids": sorted(generated_town_ids),
             "generated_resource_node_count": int(generated_surface.get("generated_resource_node_count", 0)),
             "generated_resource_source_ids": sorted(generated_resource_source_ids),
             "player_required_resource_ids": sorted(generated_player_required_ids),
@@ -814,6 +828,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "completion_day": int(generated_runway.get("completion_day", 0)),
             "build_count": int(generated_runway.get("build_count", 0)),
             "target_building_count": int(generated_runway.get("target_building_count", 0)),
+            "initial_missing_building_count": int(generated_runway.get("initial_missing_building_count", 0)),
             "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
             "recruited_unit_case_count": int(generated_runway.get("recruited_unit_case_count", 0)),
         },

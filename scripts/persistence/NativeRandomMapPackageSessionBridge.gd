@@ -11,6 +11,17 @@ const H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY := {
 	"lens_crystal": "site_aetherglass_lens_house",
 	"cut_gems": "site_memory_salt_pan",
 }
+const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
+	"castle": {"faction_id": "faction_embercourt", "town_id": "town_riverwatch"},
+	"rampart": {"faction_id": "faction_mireclaw", "town_id": "town_duskfen"},
+	"tower": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
+	"inferno": {"faction_id": "faction_veilmourn", "town_id": "town_veilmourn_bellwake_harbor"},
+	"necropolis": {"faction_id": "faction_mireclaw", "town_id": "town_nightglass_redoubt"},
+	"dungeon": {"faction_id": "faction_sunvault", "town_id": "town_halo_spire"},
+	"stronghold": {"faction_id": "faction_embercourt", "town_id": "town_highwater_keep"},
+	"fortress": {"faction_id": "faction_mireclaw", "town_id": "town_blackfen_gate"},
+	"elemental": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
+}
 
 static func build_session_from_adoption(
 	adoption: Dictionary,
@@ -265,35 +276,74 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 	for object in _document_objects(map_document):
 		if String(object.get("native_record_kind", object.get("kind", ""))) != "town" and String(object.get("kind", "")) != "town":
 			continue
-		var town_template := ContentService.get_town(String(object.get("town_id", "")))
-		var town_faction_id := String(object.get("faction_id", ""))
+		var town_identity := _project_town_identity_from_h3m_record(object)
+		var town_id := String(town_identity.get("town_id", object.get("town_id", "")))
+		var town_faction_id := String(town_identity.get("faction_id", object.get("faction_id", "")))
+		var town_template := ContentService.get_town(town_id)
 		if ContentService.get_faction(town_faction_id).is_empty():
 			town_faction_id = String(town_template.get("faction_id", town_faction_id))
 		var owner_slot := _int_or_default(object.get("owner_slot", object.get("player_slot", -1)), -1)
 		var player_slot := _int_or_default(object.get("player_slot", object.get("owner_slot", -1)), -1)
 		towns.append({
 			"placement_id": String(object.get("placement_id", "")),
-			"town_id": String(object.get("town_id", "")),
+			"town_id": town_id,
 			"x": int(object.get("x", 0)),
 			"y": int(object.get("y", 0)),
 			"owner": String(object.get("owner", "neutral")),
 			"owner_slot": owner_slot,
 			"player_slot": player_slot,
 			"player_type": String(object.get("player_type", "")),
-					"team_id": String(object.get("team_id", "")),
-					"faction_id": town_faction_id,
-				"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
-				"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
-				"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
-				"package_block_tiles": object.get("package_block_tiles", []).duplicate(true) if object.get("package_block_tiles", []) is Array else [],
-				"visit_tile": object.get("visit_tile", {}).duplicate(true) if object.get("visit_tile", {}) is Dictionary else {},
-				"package_visit_tiles": object.get("package_visit_tiles", []).duplicate(true) if object.get("package_visit_tiles", []) is Array else [],
-				"blocking_body": bool(object.get("blocking_body", true)),
+			"team_id": String(object.get("team_id", "")),
+			"faction_id": town_faction_id,
+			"source_h3maped_faction_id": String(object.get("h3maped_faction_id", object.get("faction_id", ""))),
+			"source_package_town_id": String(object.get("town_id", "")),
+			"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
+			"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
+			"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
+			"package_block_tiles": object.get("package_block_tiles", []).duplicate(true) if object.get("package_block_tiles", []) is Array else [],
+			"visit_tile": object.get("visit_tile", {}).duplicate(true) if object.get("visit_tile", {}) is Dictionary else {},
+			"package_visit_tiles": object.get("package_visit_tiles", []).duplicate(true) if object.get("package_visit_tiles", []) is Array else [],
+			"blocking_body": bool(object.get("blocking_body", true)),
 			"built_buildings": town_template.get("starting_building_ids", []).duplicate(true) if town_template.get("starting_building_ids", []) is Array else [],
 			"available_recruits": {},
 			"garrison": town_template.get("garrison", []).duplicate(true) if town_template.get("garrison", []) is Array else [],
 		})
 	return towns
+
+static func _project_town_identity_from_h3m_record(object: Dictionary) -> Dictionary:
+	for key in ["h3maped_faction_id", "faction_id", "source_h3maped_faction_id"]:
+		var token := String(object.get(key, "")).strip_edges()
+		var identity := _project_town_identity_for_h3m_token(token)
+		if not identity.is_empty():
+			return identity
+	var faction_id := String(object.get("faction_id", "")).strip_edges()
+	if not ContentService.get_faction(faction_id).is_empty():
+		var town_id := String(object.get("town_id", "")).strip_edges()
+		if ContentService.get_town(town_id).is_empty():
+			town_id = _project_town_id_for_faction(faction_id)
+		return {"faction_id": faction_id, "town_id": town_id}
+	return {"faction_id": "", "town_id": String(object.get("town_id", ""))}
+
+static func _project_town_identity_for_h3m_token(token: String) -> Dictionary:
+	var normalized := token.strip_edges().to_lower()
+	if normalized.begins_with("h3_"):
+		normalized = normalized.substr(3)
+	if normalized.begins_with("h3m_"):
+		normalized = normalized.substr(4)
+	if H3M_TOWN_TYPE_PROJECT_IDENTITY.has(normalized):
+		return (H3M_TOWN_TYPE_PROJECT_IDENTITY[normalized] as Dictionary).duplicate(true)
+	return {}
+
+static func _project_town_id_for_faction(faction_id: String) -> String:
+	var faction := ContentService.get_faction(faction_id)
+	var seed_town_id := String(faction.get("seed_town_id", ""))
+	if not ContentService.get_town(seed_town_id).is_empty():
+		return seed_town_id
+	for town_id_value in faction.get("town_ids", []):
+		var town_id := String(town_id_value)
+		if not ContentService.get_town(town_id).is_empty():
+			return town_id
+	return "town_riverwatch"
 
 static func _int_or_default(value: Variant, default_value: int) -> int:
 	if value == null:
@@ -474,7 +524,9 @@ static func _player_faction_from_document(scenario_document: Variant, overworld_
 		var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
 		for start in starts:
 			if start is Dictionary and String(start.get("owner", "")) == "player":
-				return String(start.get("faction_id", ""))
+				var start_faction_id := String(start.get("faction_id", ""))
+				if not ContentService.get_faction(start_faction_id).is_empty():
+					return start_faction_id
 	var towns: Array = overworld_state.get("towns", []) if overworld_state.get("towns", []) is Array else []
 	for town in towns:
 		if town is Dictionary and String(town.get("owner", "")) == "player":
