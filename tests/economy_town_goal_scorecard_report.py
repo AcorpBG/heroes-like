@@ -616,6 +616,28 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "guarded_source_extra_days": int(generated_source_routes.get("guarded_source_extra_days", 0)),
         },
     )
+    generated_package_rare_source_guard_pressure_ok = (
+        generated_package_town_source_route_ok
+        and generated_source_route_town_count >= 3
+        and int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)) == generated_source_route_town_count
+        and int(generated_source_routes.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
+    )
+    add_check(
+        checks,
+        "generated_package_rare_source_guard_pressure_runtime",
+        generated_package_rare_source_guard_pressure_ok,
+        "Generated/native package faction-rare economy-source routes must remain guarded for every generated player and enemy town.",
+        {
+            "schema": str(generated_source_routes.get("schema", "")),
+            "town_case_count": generated_source_route_town_count,
+            "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
+            "required_rare_resource_ids": list(generated_source_routes.get("required_rare_resource_ids", []))
+            if isinstance(generated_source_routes.get("required_rare_resource_ids", []), list)
+            else [],
+            "max_source_acquisition_day": int(generated_source_routes.get("max_source_acquisition_day", 0)),
+            "source_acquisition_day_limit": int(generated_source_routes.get("source_acquisition_day_limit", 0)),
+        },
+    )
     generated_package_town_economy_breadth_ok = (
         generated_package_runtime.get("ok") is True
         and generated_breadth.get("schema") == "generated_package_town_economy_breadth_v1"

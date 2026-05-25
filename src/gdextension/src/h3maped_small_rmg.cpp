@@ -10895,6 +10895,9 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	int32_t reward_guard_skipped_duplicate_count = 0;
 	int32_t connection_guard_package_object_count = 0;
 	int32_t connection_guard_skipped_duplicate_count = 0;
+	Dictionary package_mine_placement_id_by_vector_index;
+	Dictionary package_pending_mine_guard_link_by_flat;
+	Dictionary package_pending_mine_guard_target_by_flat;
 	for (int64_t index = 0; index < town_records.size(); ++index) {
 		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -10952,6 +10955,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["package_kind"] = "mine";
 		object["object_id"] = source.get("native_proxy_object_id", "");
 		object["native_proxy_object_id"] = source.get("native_proxy_object_id", "");
+		object["source_vector_index"] = source.get("vector_index", -1);
 		object["source_runtime_zone_index"] = source.get("source_runtime_zone_index", -1);
 		object["source_zone_id"] = source.get("source_zone_id", -1);
 		object["mine_subtype"] = source.get("mine_subtype", -1);
@@ -10971,6 +10975,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		h3maped_apply_package_pathing_surface(object, object.get("body_tiles", Array()), Array::make(object.get("visit_tile", Dictionary())), true, "blocking_visitable");
 		object["package_adoption_source"] = "h3maped_private_0x4a9911_0x4a9641_mine_coordinate_record";
 		object["public_runtime_authoritative"] = false;
+		package_mine_placement_id_by_vector_index[String::num_int64(int64_t(source.get("vector_index", -1)))] = object.get("placement_id", "");
 		package_objects.append(object);
 	}
 
@@ -10981,8 +10986,23 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		Dictionary source = mine_guard_records[index];
 		const int32_t flat = int32_t(source.get("flat_cell_index", -1));
 		const String flat_key = String::num_int64(flat);
+		const String protected_mine_placement_id = String(package_mine_placement_id_by_vector_index.get(String::num_int64(int64_t(source.get("protected_mine_vector_index", -1))), ""));
+		Dictionary guard_link;
+		if (!protected_mine_placement_id.is_empty()) {
+			guard_link["guard_role"] = "guards_resource_source";
+			guard_link["target_kind"] = "resource_node";
+			guard_link["target_id"] = source.get("protected_resource_category_id", "");
+			guard_link["target_placement_id"] = protected_mine_placement_id;
+			guard_link["blocks_approach"] = true;
+			guard_link["clear_required_for_target"] = true;
+			guard_link["source"] = "h3maped_private_mine_guard_protected_mine_vector_index";
+		}
 		const bool overlaps_town_guard_clearance = package_town_guard_clearance_keys.has(h3maped_package_cell_key(h3maped_package_adoption_cell_from_record(source)));
 		if (flat < 0 || overlaps_town_guard_clearance || connection_guard_flat_keys.has(flat_key) || package_guard_occupied_flats.has(flat_key)) {
+			if (flat >= 0 && !guard_link.is_empty()) {
+				package_pending_mine_guard_link_by_flat[flat_key] = guard_link;
+				package_pending_mine_guard_target_by_flat[flat_key] = protected_mine_placement_id;
+			}
 			mine_guard_skipped_duplicate_count += 1;
 			continue;
 		}
@@ -10995,6 +11015,13 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["source_zone_id"] = source.get("source_zone_id", -1);
 		object["protected_mine_subtype"] = source.get("protected_mine_subtype", -1);
 		object["protected_resource_category_id"] = source.get("protected_resource_category_id", "");
+		object["protected_mine_vector_index"] = source.get("protected_mine_vector_index", -1);
+		if (!protected_mine_placement_id.is_empty()) {
+			object["protected_mine_placement_id"] = protected_mine_placement_id;
+			object["target_kind"] = "resource";
+			object["target_placement_id"] = protected_mine_placement_id;
+			object["guard_link"] = guard_link;
+		}
 		object["guard_value"] = source.get("guard_value", 0);
 		object["x"] = source.get("x", -1);
 		object["y"] = source.get("y", -1);
@@ -11339,6 +11366,13 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 					existing_object["package_guard_duplicate_cell_policy"] = "single_guard_object_shared_by_recovered_route_links";
 					const int32_t merged_guard_value = std::max(int32_t(existing_object.get("guard_value", 0)), int32_t(source.get("guard_value", 0)));
 					existing_object["guard_value"] = merged_guard_value;
+					if (package_pending_mine_guard_link_by_flat.has(flat_key)) {
+						const String protected_mine_placement_id = String(package_pending_mine_guard_target_by_flat.get(flat_key, ""));
+						existing_object["shared_mine_guard_link"] = true;
+						existing_object["target_kind"] = "resource";
+						existing_object["target_placement_id"] = protected_mine_placement_id;
+						existing_object["guard_link"] = Dictionary(package_pending_mine_guard_link_by_flat.get(flat_key, Dictionary()));
+					}
 					package_objects[existing_object_index] = existing_object;
 				}
 			}
@@ -11354,6 +11388,13 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["connection_ids"] = connection_id.is_empty() ? Array() : Array::make(connection_id);
 		object["runtime_zone_a"] = source.get("runtime_zone_a", -1);
 		object["runtime_zone_b"] = source.get("runtime_zone_b", -1);
+		if (package_pending_mine_guard_link_by_flat.has(flat_key)) {
+			const String protected_mine_placement_id = String(package_pending_mine_guard_target_by_flat.get(flat_key, ""));
+			object["shared_mine_guard_link"] = true;
+			object["target_kind"] = "resource";
+			object["target_placement_id"] = protected_mine_placement_id;
+			object["guard_link"] = Dictionary(package_pending_mine_guard_link_by_flat.get(flat_key, Dictionary()));
+		}
 		object["guard_value"] = source.get("guard_value", 0);
 		object["x"] = source.get("x", -1);
 		object["y"] = source.get("y", -1);

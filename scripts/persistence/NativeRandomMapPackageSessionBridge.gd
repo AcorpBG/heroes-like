@@ -52,7 +52,7 @@ static func build_session_from_adoption(
 	var towns := _town_states_from_document(map_document)
 	var resource_nodes := _resource_nodes_from_document(map_document)
 	var artifact_nodes := _artifact_nodes_from_document(map_document)
-	var encounters := _encounters_from_document(map_document)
+	var encounters := _ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document))
 	var map_objects := _map_objects_from_document(map_document)
 	var overworld_state := {
 		"map": map_rows,
@@ -399,6 +399,88 @@ static func _encounters_from_document(map_document: Variant) -> Array:
 			encounter["object_id"] = encounter_id
 		encounters.append(encounter)
 	return encounters
+
+static func _ensure_generated_rare_source_guards(resource_nodes: Array, encounters: Array) -> Array:
+	var result := encounters.duplicate(true)
+	for node_value in resource_nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if not _generated_resource_node_is_rare_source(node):
+			continue
+		if _resource_node_has_linked_guard(result, node):
+			continue
+		result.append(_supplemental_rare_source_guard(node))
+	return result
+
+static func _generated_resource_node_is_rare_source(node: Dictionary) -> bool:
+	var placement_id := String(node.get("placement_id", ""))
+	if not placement_id.begins_with("h3maped_small_"):
+		return false
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	for bucket in [site.get("claim_rewards", site.get("rewards", {})), site.get("control_income", {})]:
+		if not (bucket is Dictionary):
+			continue
+		for key in bucket.keys():
+			var resource_id := String(key)
+			if resource_id in ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"] and int(bucket.get(key, 0)) > 0:
+				return true
+	return false
+
+static func _resource_node_has_linked_guard(encounters: Array, node: Dictionary) -> bool:
+	var placement_id := String(node.get("placement_id", ""))
+	for encounter_value in encounters:
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("target_kind", "")) == "resource" and String(encounter.get("target_placement_id", "")) == placement_id:
+			return true
+		var guard_link: Dictionary = encounter.get("guard_link", {}) if encounter.get("guard_link", {}) is Dictionary else {}
+		if String(guard_link.get("target_placement_id", "")) == placement_id:
+			return true
+	return false
+
+static func _supplemental_rare_source_guard(node: Dictionary) -> Dictionary:
+	var placement_id := String(node.get("placement_id", ""))
+	var x := int(node.get("x", 0))
+	var y := int(node.get("y", 0))
+	var level := int(node.get("level", 0))
+	var tile := {"x": x, "y": y, "level": level}
+	var guard_link := {
+		"guard_role": "guards_resource_source",
+		"target_kind": "resource_node",
+		"target_id": String(node.get("site_id", "")),
+		"target_placement_id": placement_id,
+		"blocks_approach": true,
+		"clear_required_for_target": true,
+		"source": "generated_package_rare_source_guard_pressure_runtime_adoption",
+	}
+	return {
+		"placement_id": "h3maped_small_rare_source_guard_%s" % placement_id,
+		"kind": "guard",
+		"package_kind": "guard",
+		"encounter_id": "encounter_mire_raid",
+		"object_id": "encounter_mire_raid",
+		"native_guard_object_id": "encounter_h3maped_mine_guard",
+		"generated_package_guard_policy": "rare_economy_source_requires_runtime_guard_link",
+		"target_kind": "resource",
+		"target_placement_id": placement_id,
+		"guard_link": guard_link,
+		"guard_value": 600,
+		"x": x,
+		"y": y,
+		"level": level,
+		"primary_tile": tile,
+		"body_tiles": [tile],
+		"package_body_tiles": [tile],
+		"package_block_tiles": [tile],
+		"package_visit_tiles": [tile],
+		"visit_tile": tile,
+		"blocking_body": true,
+		"passability_class": "neutral_stack_blocking",
+		"package_guard_engagement_tiles": [tile],
+		"package_guard_engagement_tile_count": 1,
+	}
 
 static func _map_objects_from_document(map_document: Variant) -> Array:
 	var objects := []
