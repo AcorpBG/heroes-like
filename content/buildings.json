@@ -38,7 +38,8 @@
       "recruitment_discount_percent": {
         "unit_river_guard": 10
       },
-      "readiness_bonus": 8
+      "readiness_bonus": 8,
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_market_square",
@@ -102,7 +103,8 @@
       "recruitment_discount_percent": {
         "unit_ember_archer": 10
       },
-      "readiness_bonus": 5
+      "readiness_bonus": 5,
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_stone_store",
@@ -177,7 +179,8 @@
       "growth_bonus": {
         "unit_river_guard": 1
       },
-      "readiness_bonus": 4
+      "readiness_bonus": 4,
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_quartermasters_depot",
@@ -204,7 +207,8 @@
         "unit_river_guard": 12,
         "unit_ember_archer": 10
       },
-      "readiness_bonus": 10
+      "readiness_bonus": 10,
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_signal_citadel",
@@ -230,7 +234,8 @@
         "unit_ember_archer": 8
       },
       "readiness_bonus": 18,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_citadel_pikehall",
@@ -305,7 +310,8 @@
           "growth_penalty_percent": 12
         },
         "summary": "The Charter Bastion can pour reserve columns onto the roads while its beacon net hardens the basin line."
-      }
+      },
+      "faction_id": "faction_embercourt"
     },
     {
       "id": "building_blackbranch_den",
@@ -341,7 +347,8 @@
       "recruitment_discount_percent": {
         "unit_blackbranch_cutthroat": 10
       },
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_mire_pens",
@@ -380,7 +387,8 @@
         "unit_bog_brute": 10
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_slingers_post",
@@ -416,7 +424,8 @@
       "recruitment_discount_percent": {
         "unit_mire_slinger": 10
       },
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_war_drum_circle",
@@ -464,7 +473,8 @@
         "unit_blackbranch_cutthroat": 1
       },
       "pressure_bonus": 1,
-      "readiness_bonus": 4
+      "readiness_bonus": 4,
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_floodtide_forge",
@@ -491,7 +501,8 @@
         "unit_bog_brute": 10
       },
       "pressure_bonus": 1,
-      "readiness_bonus": 12
+      "readiness_bonus": 12,
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_gorefen_ring",
@@ -567,7 +578,8 @@
           "growth_penalty_percent": 15
         },
         "summary": "Nightglass Dominion keeps the ferry chains moving and lets the covenant sustain a deeper drum-led surge."
-      }
+      },
+      "faction_id": "faction_mireclaw"
     },
     {
       "id": "building_shard_yard",
@@ -603,7 +615,8 @@
       "recruitment_discount_percent": {
         "unit_shard_guard": 10
       },
-      "readiness_bonus": 6
+      "readiness_bonus": 6,
+      "faction_id": "faction_sunvault"
     },
     {
       "id": "building_prism_range",
@@ -641,7 +654,8 @@
       "recruitment_discount_percent": {
         "unit_prism_adept": 10
       },
-      "readiness_bonus": 5
+      "readiness_bonus": 5,
+      "faction_id": "faction_sunvault"
     },
     {
       "id": "building_duel_circle",
@@ -688,7 +702,8 @@
         "unit_prism_adept": 1
       },
       "pressure_bonus": 1,
-      "readiness_bonus": 4
+      "readiness_bonus": 4,
+      "faction_id": "faction_sunvault"
     },
     {
       "id": "building_harmonic_cloister",
@@ -719,7 +734,8 @@
         "unit_mirror_duelist": 8
       },
       "pressure_bonus": 1,
-      "readiness_bonus": 10
+      "readiness_bonus": 10,
+      "faction_id": "faction_sunvault"
     },
     {
       "id": "building_aurora_spire",
@@ -796,7 +812,8 @@
           "growth_penalty_percent": 10
         },
         "summary": "The Daybreak Matrix aligns Prismhearth's relays into a full-theater battery network for the final push."
-      }
+      },
+      "faction_id": "faction_sunvault"
     },
     {
       "id": "building_embercourt_granary_lock_exchange",
