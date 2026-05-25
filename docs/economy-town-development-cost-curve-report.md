@@ -22,11 +22,12 @@ The deterministic report `town_development_cost_curve_report_v1` parses authored
 - Six faction signature ladders keep seven unit-building tiers, with tiers 1-4 common-resource only and tiers 5-7 costing the faction rare resource on the 4/8/10 curve.
 - Every authored town now spends at least 24 faction rare resources across full development, so high-tier rare costs are meaningful rather than token blockers.
 - Every authored town includes at least one rare-cost high-tier upgrade building with explicit `upgrade_from` metadata behind tier 5+ development. Current deterministic coverage is 15/15 towns with 15 total rare-cost upgrade chains.
+- Every authored town must stay inside deterministic price-band sanity limits for total development cost: `gold` 34000-45000, `wood` 20-38, `ore` 20-38, faction rare 24-32, 20-24 target buildings, and 4-7 rare-cost buildings. This rejects extreme price regressions before manual exact-price approval.
 
 ## Evidence Boundaries
 
 - This is authored cost-curve and prerequisite-shape evidence, not final campaign balance approval.
-- It does not tune exact prices, encounter pacing, route safety, strategic AI quality, or final town UI/art.
+- It does not replace manual exact-price approval, encounter pacing, route safety, strategic AI quality, or final town UI/art.
 - Existing runtime and active-scenario runway reports remain the evidence for 30-turn completion through live construction rules.
 - No `SAVE_VERSION` bump is required.
 - `wood` remains canonical.
