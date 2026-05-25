@@ -3007,12 +3007,14 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "live_runtime_development_and_recruitment",
         "active_scenario_player_runway_runtime",
         "active_scenario_ai_runway_runtime",
+        "live_unique_town_payoff_runtime",
         "--include-runtime",
         "GODOT_RUNTIME_REPORTS",
         "EXPECTED_SIGNATURE_RARE_CURVE",
         "MIN_HIGH_TIER_UNIT_BUILD_DAYS",
         "MIN_UNIQUE_NON_UNIT_PER_TOWN",
         "MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN",
+        "town_unique_building_runtime_payoff_report_v1",
     ):
         ensure(required_token in script_text, errors, f"Economy town goal scorecard script is missing token {required_token}")
     for required_text in (
@@ -3033,6 +3035,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "15/15 live runtime town-development and recruitment cases",
         "18/18 active player-town runway cases",
         "20/20 active AI-town runway cases",
+        "live unique-building payoff runtime gate",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
@@ -19956,6 +19959,8 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
         "town_unique_building_runtime_payoff_report_v1",
         "MIN_UNIQUE_NON_UNIT_PER_FACTION",
         "MIN_UNIQUE_NON_UNIT_PER_TOWN",
+        "MIN_PAYOFF_DOMAINS_PER_FACTION",
+        "MIN_PAYOFF_DOMAINS_PER_TOWN",
         "TownRules.get_build_actions",
         "OverworldRules.build_in_active_town",
         "OverworldRules.town_income",
@@ -19964,6 +19969,9 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
         "TownRules.current_spell_tier",
         "runtime_payoff_case_count",
         "rare_unique_case_count",
+        "payoff_domains",
+        "payoff_domain_count",
+        "payoff_profile_count",
     ):
         ensure(required_token in script_text, errors, f"Town unique building runtime payoff report is missing token {required_token}")
     ensure("res://tests/town_unique_building_runtime_payoff_report.gd" in scene_text, errors, "Town unique building runtime payoff scene must load its report script")
@@ -19979,6 +19987,8 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
         "at least five unique non-unit buildings per faction",
         "at least five unique non-unit buildings per authored town",
         "live income, readiness, pressure, reinforcement, spell, or market surface",
+        "payoff-domain diversity",
+        "at least four payoff domains",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
@@ -19991,6 +20001,7 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
     covered_towns = 0
     unique_non_unit_building_ids: set[str] = set()
     rare_unique_cases = 0
+    faction_payoff_domain_rows: dict[str, set[str]] = {}
     for faction_id, faction in sorted(factions.items()):
         town_ids = [str(value) for value in faction.get("town_ids", [])] if isinstance(faction.get("town_ids", []), list) else []
         seed_town_id = str(faction.get("seed_town_id", "")).strip()
@@ -20009,6 +20020,7 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
         if len(faction_unique_ids) >= 5:
             covered_factions += 1
         rare_for_faction = 0
+        payoff_domains: set[str] = set()
         for building_id in faction_unique_ids:
             unique_non_unit_building_ids.add(building_id)
             building = buildings.get(building_id, {})
@@ -20020,7 +20032,24 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
             ensure(not rare_cost_ids or rare_cost_ids == {rare_id}, errors, f"{building_id} rare cost must use faction rare {rare_id}")
             if rare_id in rare_cost_ids:
                 rare_for_faction += 1
+            if isinstance(building.get("income", {}), dict) and building.get("income", {}):
+                payoff_domains.add("income")
+            if int(building.get("pressure_bonus", 0)) != 0:
+                payoff_domains.add("frontier_pressure")
+            if int(building.get("spell_tier", 0)) > 0:
+                payoff_domains.add("spell_access")
+            if int(building.get("readiness_bonus", 0)) != 0:
+                payoff_domains.add("defense_readiness")
+            if (
+                (isinstance(building.get("growth_bonus", {}), dict) and building.get("growth_bonus", {}))
+                or (isinstance(building.get("recruitment_discount_percent", {}), dict) and building.get("recruitment_discount_percent", {}))
+            ):
+                payoff_domains.add("muster_quality")
+            if "exchange" in building_id or "market" in building_id:
+                payoff_domains.add("market_exchange")
         ensure(rare_for_faction >= 1, errors, f"{faction_id} must have at least one faction-unique high-tier rare-cost building")
+        ensure(len(payoff_domains) >= 4, errors, f"{faction_id} unique buildings must expose at least four payoff domains")
+        faction_payoff_domain_rows[faction_id] = payoff_domains
         rare_unique_cases += rare_for_faction
         for town_id in town_ids:
             town = towns.get(town_id, {})
@@ -20033,6 +20062,7 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
     ensure(covered_towns >= 15, errors, "Town unique building runtime payoff gate must cover all authored faction towns")
     ensure(len(unique_non_unit_building_ids) >= 56, errors, "Town unique building runtime payoff gate must cover at least 56 unique non-unit buildings")
     ensure(rare_unique_cases >= 6, errors, "Town unique building runtime payoff gate must cover at least one rare-cost unique building per faction")
+    ensure(len(faction_payoff_domain_rows) >= 6, errors, "Town unique building payoff domain gate must cover all six factions")
 
 
 def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
@@ -20655,7 +20685,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, and seven-tier ladders")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
@@ -20665,7 +20695,7 @@ def main() -> int:
     print("- active authored scenario starts now prove natural first-week town construction, common-resource spend, one-build-per-day guards, and nine-resource stockpile normalization")
     print("- active enemy-town starts now seed natural AI development treasuries and prove first-week AI construction, common-resource spend, one-build-per-town-per-turn guards, and nine-resource treasury normalization")
     print("- town build and recruit action surfaces now expose seven-tier unit identity across six faction ladders, with high tiers gated by faction rare resources")
-    print("- six-faction unique non-unit town buildings now expose live income/readiness/pressure/reinforcement/spell/market payoff gates across authored towns")
+    print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")

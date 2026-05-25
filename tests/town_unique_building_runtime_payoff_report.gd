@@ -3,6 +3,8 @@ extends Node
 const REPORT_SCHEMA := "town_unique_building_runtime_payoff_report_v1"
 const MIN_UNIQUE_NON_UNIT_PER_FACTION := 5
 const MIN_UNIQUE_NON_UNIT_PER_TOWN := 5
+const MIN_PAYOFF_DOMAINS_PER_FACTION := 4
+const MIN_PAYOFF_DOMAINS_PER_TOWN := 4
 const HERO_ID := "hero_lyra"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
 const LIVE_STOCKPILE_RESOURCE_IDS := [
@@ -60,6 +62,8 @@ func _run() -> void:
 		"rare_unique_case_count": rare_unique_case_count,
 		"min_unique_non_unit_per_faction": MIN_UNIQUE_NON_UNIT_PER_FACTION,
 		"min_unique_non_unit_per_town": MIN_UNIQUE_NON_UNIT_PER_TOWN,
+		"min_payoff_domains_per_faction": MIN_PAYOFF_DOMAINS_PER_FACTION,
+		"min_payoff_domains_per_town": MIN_PAYOFF_DOMAINS_PER_TOWN,
 		"common_resource_ids": COMMON_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
@@ -102,11 +106,31 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 		if not bool(town_row.get("ok", false)):
 			for error in town_row.get("errors", []):
 				faction_errors.append(String(error))
+	var payoff_domains := []
+	var payoff_profiles := []
+	for town_row in town_rows:
+		for domain in _string_array(town_row.get("payoff_domains", [])):
+			if domain not in payoff_domains:
+				payoff_domains.append(domain)
+		for profile in _string_array(town_row.get("payoff_profiles", [])):
+			if profile not in payoff_profiles:
+				payoff_profiles.append(profile)
+	payoff_domains.sort()
+	payoff_profiles.sort()
+	if payoff_domains.size() < MIN_PAYOFF_DOMAINS_PER_FACTION:
+		faction_errors.append(
+			"%s unique buildings must cover at least %d live payoff domains, got %d"
+			% [faction_id, MIN_PAYOFF_DOMAINS_PER_FACTION, payoff_domains.size()]
+		)
 	return {
 		"ok": faction_errors.is_empty(),
 		"faction_id": faction_id,
 		"unique_non_unit_building_ids": unique_building_ids,
 		"unique_non_unit_building_count": unique_building_ids.size(),
+		"payoff_domains": payoff_domains,
+		"payoff_domain_count": payoff_domains.size(),
+		"payoff_profiles": payoff_profiles,
+		"payoff_profile_count": payoff_profiles.size(),
 		"rare_resource_id": rare_id,
 		"rare_unique_case_count": rare_unique_case_count,
 		"town_case_count": town_rows.size(),
@@ -121,6 +145,8 @@ func _run_town_case(faction_id: String, town_template: Dictionary, unique_buildi
 	var town_errors := []
 	var case_rows := []
 	var town_unique_ids := []
+	var payoff_domains := []
+	var payoff_profiles := []
 	for building_id in unique_building_ids:
 		if String(building_id) in _string_array(town_template.get("buildable_building_ids", [])):
 			town_unique_ids.append(String(building_id))
@@ -132,12 +158,29 @@ func _run_town_case(faction_id: String, town_template: Dictionary, unique_buildi
 		case_rows.append(case_row)
 		if bool(case_row.get("runtime_payoff_observed", false)):
 			runtime_payoff_case_count += 1
+		for domain in _string_array(case_row.get("payoff_domains", [])):
+			if domain not in payoff_domains:
+				payoff_domains.append(domain)
+		var profile := String(case_row.get("payoff_profile", ""))
+		if profile != "" and profile not in payoff_profiles:
+			payoff_profiles.append(profile)
 		if not bool(case_row.get("ok", false)):
 			town_errors.append(String(case_row.get("error", "unknown unique building payoff failure")))
+	payoff_domains.sort()
+	payoff_profiles.sort()
+	if payoff_domains.size() < MIN_PAYOFF_DOMAINS_PER_TOWN:
+		town_errors.append(
+			"%s unique buildings must cover at least %d live payoff domains, got %d"
+			% [town_id, MIN_PAYOFF_DOMAINS_PER_TOWN, payoff_domains.size()]
+		)
 	return {
 		"ok": town_errors.is_empty(),
 		"town_id": town_id,
 		"unique_non_unit_building_count": town_unique_ids.size(),
+		"payoff_domains": payoff_domains,
+		"payoff_domain_count": payoff_domains.size(),
+		"payoff_profiles": payoff_profiles,
+		"payoff_profile_count": payoff_profiles.size(),
 		"building_case_count": case_rows.size(),
 		"runtime_payoff_case_count": runtime_payoff_case_count,
 		"cases": case_rows,
@@ -190,6 +233,8 @@ func _run_building_case(faction_id: String, town_template: Dictionary, building_
 		and String(action.get("summary", "")).contains("Defense/frontier:")
 	)
 	var runtime_payoff_observed := _surface_has_delta(deltas)
+	var payoff_domains := _building_payoff_domains(building, deltas)
+	var payoff_profile := "|".join(PackedStringArray(payoff_domains))
 	var ok := common_cost_ok and rare_cost_ok and action_surface_ok and runtime_payoff_observed
 	return {
 		"ok": ok,
@@ -203,6 +248,9 @@ func _run_building_case(faction_id: String, town_template: Dictionary, building_
 		"rare_cost_ok": rare_cost_ok,
 		"action_surface_ok": action_surface_ok,
 		"runtime_payoff_observed": runtime_payoff_observed,
+		"payoff_domains": payoff_domains,
+		"payoff_profile": payoff_profile,
+		"payoff_domain_count": payoff_domains.size(),
 		"before": before,
 		"after": after,
 		"deltas": deltas,
@@ -295,6 +343,35 @@ func _surface_has_delta(deltas: Dictionary) -> bool:
 		if int(deltas.get(key, 0)) != 0:
 			return true
 	return false
+
+func _building_payoff_domains(building: Dictionary, deltas: Dictionary) -> Array:
+	var domains := []
+	var income_payload: Dictionary = building.get("income", {}) if building.get("income", {}) is Dictionary else {}
+	var income_delta: Dictionary = deltas.get("income", {}) if deltas.get("income", {}) is Dictionary else {}
+	if not income_payload.is_empty() or not income_delta.is_empty():
+		domains.append("income")
+	if int(building.get("pressure_bonus", 0)) != 0 or int(deltas.get("pressure", 0)) != 0:
+		domains.append("frontier_pressure")
+	if int(building.get("spell_tier", 0)) > 0 or int(deltas.get("spell_tier", 0)) != 0:
+		domains.append("spell_access")
+	if int(building.get("readiness_bonus", 0)) != 0 or int(deltas.get("readiness", 0)) != 0:
+		domains.append("defense_readiness")
+	if _building_has_growth_or_discount(building) or int(deltas.get("reinforcement_quality", 0)) != 0:
+		domains.append("muster_quality")
+	if _building_has_market_payoff(building) or int(deltas.get("market_exchange_value", 0)) != 0:
+		domains.append("market_exchange")
+	domains.sort()
+	return domains
+
+func _building_has_growth_or_discount(building: Dictionary) -> bool:
+	var growth: Dictionary = building.get("growth_bonus", {}) if building.get("growth_bonus", {}) is Dictionary else {}
+	var discount: Dictionary = building.get("recruitment_discount_percent", {}) if building.get("recruitment_discount_percent", {}) is Dictionary else {}
+	return not growth.is_empty() or not discount.is_empty()
+
+func _building_has_market_payoff(building: Dictionary) -> bool:
+	var building_id := String(building.get("id", ""))
+	var building_name := String(building.get("name", "")).to_lower()
+	return "exchange" in building_id or "exchange" in building_name or "market" in building_id or "market" in building_name
 
 func _case_error(common_cost_ok: bool, rare_cost_ok: bool, action_surface_ok: bool, runtime_payoff_observed: bool) -> String:
 	if not common_cost_ok:
