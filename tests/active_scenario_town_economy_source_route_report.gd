@@ -20,9 +20,12 @@ func _ready() -> void:
 
 func _run() -> void:
 	var scenario_count := 0
-	var town_case_count := 0
-	var resource_route_case_count := 0
-	var reachable_route_case_count := 0
+	var player_town_case_count := 0
+	var player_resource_route_case_count := 0
+	var player_reachable_route_case_count := 0
+	var enemy_town_case_count := 0
+	var enemy_resource_route_case_count := 0
+	var enemy_reachable_route_case_count := 0
 	var rows := []
 	for scenario_id_value in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		var scenario_id := String(scenario_id_value)
@@ -36,11 +39,23 @@ func _run() -> void:
 			continue
 		OverworldRules.normalize_overworld_state(session)
 		for authored_town in _player_towns(scenario):
-			var row := _run_town_case(session, scenario_id, authored_town)
+			var row := _run_town_case(session, scenario_id, authored_town, "player")
 			rows.append(row)
-			town_case_count += 1
-			resource_route_case_count += int(row.get("resource_route_case_count", 0))
-			reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
+			player_town_case_count += 1
+			player_resource_route_case_count += int(row.get("resource_route_case_count", 0))
+			player_reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
+			if not bool(row.get("ok", false)):
+				_errors.append("%s/%s failed: %s" % [
+					scenario_id,
+					String(authored_town.get("placement_id", "")),
+					String(row.get("error", "unknown route failure")),
+				])
+		for authored_town in _enemy_towns(scenario):
+			var row := _run_town_case(session, scenario_id, authored_town, "enemy")
+			rows.append(row)
+			enemy_town_case_count += 1
+			enemy_resource_route_case_count += int(row.get("resource_route_case_count", 0))
+			enemy_reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
 			if not bool(row.get("ok", false)):
 				_errors.append("%s/%s failed: %s" % [
 					scenario_id,
@@ -52,9 +67,12 @@ func _run() -> void:
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"active_scenario_count": scenario_count,
-		"player_town_case_count": town_case_count,
-		"resource_route_case_count": resource_route_case_count,
-		"reachable_route_case_count": reachable_route_case_count,
+		"player_town_case_count": player_town_case_count,
+		"resource_route_case_count": player_resource_route_case_count,
+		"reachable_route_case_count": player_reachable_route_case_count,
+		"enemy_town_case_count": enemy_town_case_count,
+		"enemy_resource_route_case_count": enemy_resource_route_case_count,
+		"enemy_reachable_route_case_count": enemy_reachable_route_case_count,
 		"required_common_resource_ids": REQUIRED_COMMON_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
 		"max_common_route_steps": MAX_COMMON_ROUTE_STEPS,
@@ -70,7 +88,7 @@ func _run() -> void:
 	print("ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT %s" % JSON.stringify(report))
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
-func _run_town_case(session, scenario_id: String, authored_town: Dictionary) -> Dictionary:
+func _run_town_case(session, scenario_id: String, authored_town: Dictionary, owner: String) -> Dictionary:
 	var placement_id := String(authored_town.get("placement_id", ""))
 	var town_id := String(authored_town.get("town_id", ""))
 	var town_template := ContentService.get_town(town_id)
@@ -98,6 +116,7 @@ func _run_town_case(session, scenario_id: String, authored_town: Dictionary) -> 
 	return {
 		"ok": ok,
 		"scenario_id": scenario_id,
+		"owner": owner,
 		"town_placement_id": placement_id,
 		"town_id": town_id,
 		"rare_resource_id": rare_id,
@@ -244,6 +263,13 @@ func _player_towns(scenario: Dictionary) -> Array:
 	var result := []
 	for town in scenario.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "player":
+			result.append(town)
+	return result
+
+func _enemy_towns(scenario: Dictionary) -> Array:
+	var result := []
+	for town in scenario.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "")) == "enemy":
 			result.append(town)
 	return result
 

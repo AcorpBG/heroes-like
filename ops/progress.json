@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Enemy Town Runway Scorecard",
+  "currentSliceId": "economy-active-enemy-source-route-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Active Enemy Source Route Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Strict Small generated/native package enemy-town development now runs through live AI economy evidence. EnemyTurnRules resolves enemy faction configs from authored scenarios, valid native package runtime records, or synthesized generated town controllers when package labels are non-project H3M ids. The native package adoption report emits generated_package_enemy_town_development_runway_v1 with 2 generated enemy towns, 44 total AI builds, all cases complete, rare spend, same-day build guards, full live treasury keys, governor report coverage, generated source coverage, seven-tier recruitment candidates, and selected affordable recruitment. Runtime-inclusive economy/town scorecard passes 26/26 checks.",
+  "currentSliceNotes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T08:12:59Z",
+  "updatedAt": "2026-05-25T08:38:22Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,33 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
+      "title": "Economy Active Enemy Source Route Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T08:38:22Z",
+      "startedAt": "2026-05-25T08:38:22Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/active_scenario_town_economy_source_route_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-economy-source-route-report.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "summary": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
+      ],
+      "notes": "Completed by extending the active source-route report and runtime scorecard from player town routes to enemy town routes.",
+      "completedAt": "2026-05-25T08:38:22Z"
+    },
     {
       "id": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
       "title": "Economy Generated Package Enemy Town Runway Scorecard",
@@ -22289,6 +22316,51 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
+      "title": "Economy Active Enemy Source Route Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T08:38:22Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-active-scenario-town-economy-source-route-report.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-active-enemy-source-route-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "tests/active_scenario_town_economy_source_route_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-active-scenario-town-economy-source-route-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Active source-route report now checks player-owned and enemy-owned active towns against required wood, ore, and faction-rare resource sources.",
+        "Focused evidence passes with 16 active scenarios, 18 player-town cases, 54/54 player source routes reachable, 20 enemy-town cases, and 60/60 enemy source routes reachable.",
+        "Runtime-inclusive economy/town scorecard gates active_scenario_enemy_source_route_runtime and passes 27/27 checks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
+      ],
+      "nonClaims": [
+        "Not final encounter pacing.",
+        "Not final route safety or combat/reward tuning.",
+        "Not final strategic AI quality.",
+        "Not campaign/skirmish balance approval.",
+        "Not broad generated-map economy approval."
+      ],
+      "updatedAt": "2026-05-25T08:38:22Z"
+    },
+    {
       "id": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
       "title": "Economy Generated Package Enemy Town Runway Scorecard",
       "status": "completed",
@@ -27953,6 +28025,51 @@
   "evidenceHistory": {
     "completedImplementationEvidence": [
       {
+        "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
+        "title": "Economy Active Enemy Source Route Scorecard",
+        "status": "completed",
+        "phase": "phase-5-playable-alpha-baseline",
+        "completedAt": "2026-05-25T08:38:22Z",
+        "sourceRefs": [
+          "project.md",
+          "PLAN.md",
+          "docs/economy-active-scenario-town-economy-source-route-report.md",
+          "docs/economy-town-goal-scorecard-report.md"
+        ],
+        "mappedPlannedSliceIds": [
+          "economy-active-enemy-source-route-scorecard-20260525-10184"
+        ],
+        "implementationRefs": [
+          "PLAN.md",
+          "tests/active_scenario_town_economy_source_route_report.gd",
+          "tests/economy_town_goal_scorecard_report.py",
+          "tests/validate_repo.py",
+          "docs/economy-active-scenario-town-economy-source-route-report.md",
+          "docs/economy-town-goal-scorecard-report.md",
+          "ops/progress.json"
+        ],
+        "evidence": [
+          "Active source-route report now checks player-owned and enemy-owned active towns against required wood, ore, and faction-rare resource sources.",
+          "Focused evidence passes with 16 active scenarios, 18 player-town cases, 54/54 player source routes reachable, 20 enemy-town cases, and 60/60 enemy source routes reachable.",
+          "Runtime-inclusive economy/town scorecard gates active_scenario_enemy_source_route_runtime and passes 27/27 checks."
+        ],
+        "validation": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
+        ],
+        "nonClaims": [
+          "Not final encounter pacing.",
+          "Not final route safety or combat/reward tuning.",
+          "Not final strategic AI quality.",
+          "Not campaign/skirmish balance approval.",
+          "Not broad generated-map economy approval."
+        ],
+        "updatedAt": "2026-05-25T08:38:22Z"
+      },
+      {
         "id": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
         "title": "Economy Generated Package Enemy Town Runway Scorecard",
         "status": "completed",
@@ -28198,6 +28315,7 @@
     }
   },
   "validationResults": [
+    "2026-05-25 active enemy source-route scorecard: Active authored source-route report now covers 20 enemy-town cases with 60/60 enemy wood/ore/faction-rare routes reachable while preserving 54/54 player routes. Runtime-inclusive economy/town scorecard passes 27/27 checks.",
     "2026-05-25 generated package enemy-town runway scorecard: Generated package enemy towns now run through live AI development evidence with 2/2 cases complete, 44 total builds, rare spend, same-day guards, full treasury keys, governor report/source coverage, and selected seven-tier recruitment. Runtime-inclusive economy/town scorecard passes 26/26 checks.",
     "2026-05-25 economy town runtime recruitment market coverage scorecard: Runtime recruitment market coverage is now counted and scorecard-gated. The live authored-town runtime report proves 2 towns recover post-development common-material recruitment shortfalls through the common-only market, with 14 market purchases and 10 weekly cap-reset waits, while preserving 15/15 live runtime town-development/recruitment cases. The runtime-inclusive economy/town scorecard now passes 21/21 checks. Validation passed focused Godot runtime reports, deterministic and runtime-inclusive scorecards, repo validation, Python compilation, JSON validation, and diff whitespace checks.",
     "2026-05-25 economy town common-material pressure scorecard: Common-material town pressure is now gated: authored town development income/start stock creates at least one wood/ore bottleneck day in every authored town while preserving 24-30 day completion, one-build-per-town-turn limits, late rare-resource bottlenecks, rare upgrade chains, market-cap boundaries, and seven-tier ladders. The runtime recruitment reports now exercise common-market coverage and weekly cap reset when post-development material pressure leaves low ore, preserving 15/15 live runtime town recruitment cases and 126/126 active player recruited tiers. Evidence passes 13/13 deterministic economy/town scorecard checks and 20/20 runtime-inclusive checks. Validation passed deterministic balance, deterministic scorecard, live runtime town report, runtime-inclusive scorecard, repo validation, Python compilation, JSON validation, and diff whitespace checks.",
@@ -28918,26 +29036,47 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-25T08:12:59Z",
+    "updatedAt": "2026-05-25T08:38:22Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-town-runway.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; generated_package_enemy_town_development_runway_v1 status pass, 2/2 enemy towns complete, 44 total builds)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 26/26 runtime-inclusive checks including generated_package_enemy_town_runway_runtime)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json content/towns.json (passed)",
-      "git diff --check (passed)"
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
     ]
   },
   "active_slice": {
-    "id": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Enemy Town Runway Scorecard",
+    "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
+    "title": "Economy Active Enemy Source Route Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T08:12:59Z",
-    "notes": "Strict Small generated/native package enemy-town development now runs through live AI economy evidence. EnemyTurnRules resolves enemy faction configs from authored scenarios, valid native package runtime records, or synthesized generated town controllers when package labels are non-project H3M ids. The native package adoption report emits generated_package_enemy_town_development_runway_v1 with 2 generated enemy towns, 44 total AI builds, all cases complete, rare spend, same-day build guards, full live treasury keys, governor report coverage, generated source coverage, seven-tier recruitment candidates, and selected affordable recruitment. Runtime-inclusive economy/town scorecard passes 26/26 checks."
+    "updatedAt": "2026-05-25T08:38:22Z",
+    "notes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated."
   },
-  "currentSliceUpdatedAt": "2026-05-25T08:12:59Z",
+  "currentSliceUpdatedAt": "2026-05-25T08:38:22Z",
   "validationHistory": [
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T08:38:22Z",
+      "sliceId": "economy-active-enemy-source-route-scorecard-20260525-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
+      ],
+      "evidence": {
+        "active_scenario_count": 16,
+        "player_town_case_count": 18,
+        "player_resource_route_case_count": 54,
+        "player_reachable_route_case_count": 54,
+        "enemy_town_case_count": 20,
+        "enemy_resource_route_case_count": 60,
+        "enemy_reachable_route_case_count": 60,
+        "runtime_scorecard_passed_requirement_count": 27,
+        "runtime_scorecard_requirement_count": 27
+      }
+    },
     {
       "status": "pass",
       "updatedAt": "2026-05-25T08:12:59Z",
@@ -29818,39 +29957,33 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
-    "title": "Economy Generated Package Enemy Town Runway Scorecard",
+    "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
+    "title": "Economy Active Enemy Source Route Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T08:12:59Z",
-    "notes": "Strict Small generated/native package enemy-town development now runs through live AI economy evidence. EnemyTurnRules resolves enemy faction configs from authored scenarios, valid native package runtime records, or synthesized generated town controllers when package labels are non-project H3M ids. The native package adoption report emits generated_package_enemy_town_development_runway_v1 with 2 generated enemy towns, 44 total AI builds, all cases complete, rare spend, same-day build guards, full live treasury keys, governor report coverage, generated source coverage, seven-tier recruitment candidates, and selected affordable recruitment. Runtime-inclusive economy/town scorecard passes 26/26 checks."
+    "updatedAt": "2026-05-25T08:38:22Z",
+    "notes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T08:12:59Z",
-    "sliceId": "economy-generated-package-enemy-town-runway-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T08:38:22Z",
+    "sliceId": "economy-active-enemy-source-route-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-town-runway.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; generated_package_enemy_town_development_runway_v1 status pass, 2/2 enemy towns complete, 44 total builds)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 26/26 runtime-inclusive checks including generated_package_enemy_town_runway_runtime)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json content/towns.json (passed)",
-      "git diff --check (passed)"
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
     ],
     "evidence": {
-      "generated_enemy_town_case_count": 2,
-      "generated_enemy_completed_case_count": 2,
-      "generated_enemy_build_count_total": 44,
-      "generated_enemy_rare_spend_case_count": 2,
-      "generated_enemy_same_day_guard_case_count": 2,
-      "generated_enemy_rare_treasury_tracked_case_count": 2,
-      "generated_enemy_governor_report_case_count": 2,
-      "generated_enemy_source_covered_case_count": 2,
-      "generated_enemy_full_session_case_count": 2,
-      "generated_enemy_seven_tier_recruitment_case_count": 2,
-      "generated_enemy_selected_recruitment_case_count": 2,
-      "runtime_scorecard_passed_requirement_count": 26,
-      "runtime_scorecard_requirement_count": 26
+      "active_scenario_count": 16,
+      "player_town_case_count": 18,
+      "player_resource_route_case_count": 54,
+      "player_reachable_route_case_count": 54,
+      "enemy_town_case_count": 20,
+      "enemy_resource_route_case_count": 60,
+      "enemy_reachable_route_case_count": 60,
+      "runtime_scorecard_passed_requirement_count": 27,
+      "runtime_scorecard_requirement_count": 27
     }
   }
 }
