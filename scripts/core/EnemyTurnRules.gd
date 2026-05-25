@@ -51,8 +51,7 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 		return
 	DifficultyRulesScript.normalize_session(session)
 
-	var scenario = ContentService.get_scenario(session.scenario_id)
-	var configs = scenario.get("enemy_factions", [])
+	var configs = _enemy_faction_configs_for_session(session)
 	var existing_states = session.overworld.get("enemy_states", [])
 	var normalized_states = []
 
@@ -140,8 +139,7 @@ static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
 static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	DifficultyRulesScript.normalize_session(session)
 	normalize_enemy_states(session)
-	var scenario = ContentService.get_scenario(session.scenario_id)
-	var configs = scenario.get("enemy_factions", [])
+	var configs = _enemy_faction_configs_for_session(session)
 	if not (configs is Array) or configs.is_empty():
 		return {"ok": true, "message": ""}
 
@@ -178,8 +176,7 @@ static func run_enemy_town_economy_turn(
 ) -> Dictionary:
 	DifficultyRulesScript.normalize_session(session)
 	normalize_enemy_states(session)
-	var scenario = ContentService.get_scenario(session.scenario_id)
-	var configs = scenario.get("enemy_factions", [])
+	var configs = _enemy_faction_configs_for_session(session)
 	if not (configs is Array) or configs.is_empty():
 		return {"ok": true, "message": "", "events": []}
 
@@ -227,8 +224,7 @@ static func _append_event_records(output: Array, events_value: Variant) -> void:
 
 static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_enemy_states(session)
-	var scenario = ContentService.get_scenario(session.scenario_id)
-	var configs = scenario.get("enemy_factions", [])
+	var configs = _enemy_faction_configs_for_session(session)
 	if not (configs is Array) or configs.is_empty():
 		return "No hostile factions are active."
 
@@ -341,8 +337,7 @@ static func town_governor_pressure_report(
 	if resolved_faction_id == "":
 		resolved_faction_id = String(config.get("faction_id", ""))
 	if config.is_empty() or resolved_faction_id == "":
-		var scenario := ContentService.get_scenario(session.scenario_id)
-		for enemy_config in scenario.get("enemy_factions", []):
+		for enemy_config in _enemy_faction_configs_for_session(session):
 			if not (enemy_config is Dictionary):
 				continue
 			if resolved_faction_id == "" or String(enemy_config.get("faction_id", "")) == resolved_faction_id:
@@ -2164,6 +2159,54 @@ static func _first_open_spawn_point(session: SessionStateStoreScript.SessionData
 		if not occupied:
 			return {"x": x, "y": y}
 	return {}
+
+static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
+	if session == null:
+		return []
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var configs = scenario.get("enemy_factions", [])
+	if configs is Array and not configs.is_empty():
+		var valid_configs := _valid_enemy_faction_configs(configs)
+		if not valid_configs.is_empty():
+			return valid_configs
+	var runtime_record: Dictionary = session.overworld.get("native_random_map_runtime_scenario_record", {}) if session.overworld.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
+	configs = runtime_record.get("enemy_factions", [])
+	if configs is Array:
+		var valid_runtime_configs := _valid_enemy_faction_configs(configs)
+		if not valid_runtime_configs.is_empty():
+			return valid_runtime_configs
+	var fallback_configs := []
+	var seen := {}
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		var faction_id := _town_controller_faction_id(town)
+		if faction_id == "" or bool(seen.get(faction_id, false)):
+			continue
+		var faction := ContentService.get_faction(faction_id)
+		if faction.is_empty():
+			continue
+		seen[faction_id] = true
+		fallback_configs.append({
+			"faction_id": faction_id,
+			"label": String(faction.get("name", faction_id)),
+			"generated_package_town_config": true,
+		})
+	return fallback_configs
+
+static func _valid_enemy_faction_configs(configs: Array) -> Array:
+	var result := []
+	for config_value in configs:
+		if not (config_value is Dictionary):
+			continue
+		var config: Dictionary = config_value
+		if ContentService.get_faction(String(config.get("faction_id", ""))).is_empty():
+			continue
+		result.append(config)
+	return result
 
 static func _owned_town_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _owned_town_entries(session, faction_id).size()

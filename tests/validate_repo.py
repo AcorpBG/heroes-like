@@ -3050,9 +3050,12 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "max_rare_route_steps",
         "generated_package_town_economy_runtime",
         "generated_package_player_town_runway_runtime",
+        "generated_package_enemy_town_runway_runtime",
         "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT",
         "generated_package_town_economy_surface_v1",
         "generated_package_player_town_development_runway_v1",
+        "generated_package_enemy_town_development_runway_v1",
+        "generated_enemy_town_development_runway",
         "generated_resource_source_ids",
         "player_required_resource_ids",
         "missing_player_resource_sources",
@@ -3062,6 +3065,10 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "generated_town_ids",
         "initial_missing_building_count",
         "same_day_reject_ok",
+        "same_day_guard_case_count",
+        "rare_treasury_tracked_case_count",
+        "source_covered_case_count",
+        "selected_recruitment_case_count",
         "recruited_unit_case_count",
         "active_scenario_ai_runway_runtime",
         "active_ai_six_faction_town_coverage",
@@ -3127,6 +3134,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "generated package player-town development runway",
         "22 initially missing generated player-town targets",
         "generated package player town builds all targets, spends rare resources, blocks same-day second builds, and recruits all seven tiers",
+        "generated package enemy-town development runway",
+        "2/2 generated package enemy-town runway cases",
+        "44 total builds",
         "20/20 active AI-town runway cases with rare spend, full-session execution",
         "140/140 seven-tier AI recruitment candidates",
         "active AI six-faction town coverage",
@@ -3137,7 +3147,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "25/25 checks",
+        "26/26 checks",
         "6/6 TownShell resource/build UI cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
@@ -3402,6 +3412,14 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "generated_package_town_economy_surface_v1",
         "generated_player_town_development_runway",
         "generated_package_player_town_development_runway_v1",
+        "generated_enemy_town_development_runway",
+        "generated_package_enemy_town_development_runway_v1",
+        "_assert_generated_enemy_town_development_runway",
+        "_run_generated_enemy_town_case",
+        "_secure_enemy_development_sources",
+        "same_day_guard_case_count",
+        "rare_treasury_tracked_case_count",
+        "selected_recruitment_case_count",
         "missing_player_resource_sources",
         "unique_faction_count",
         "unique_town_template_count",
@@ -3415,6 +3433,8 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("Gold %d | Wood %d | Ore %d" not in overworld_shell_text, errors, "Overworld shell must not hard-code the common-only resource line")
     ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
     ensure("generated/native package sessions" in doc_text, errors, "Live stockpile resource surface doc must record generated/native package session coverage")
+    ensure("generated_package_enemy_town_development_runway_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package enemy-town runway coverage")
+    ensure("2/2 generated package enemy-town runway cases" in doc_text, errors, "Live stockpile resource surface doc must record generated enemy-town case evidence")
     ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
 
 
