@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
-  "currentSliceTitle": "Economy Mireclaw Late Rare Capstone Pressure",
+  "currentSliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+  "currentSliceTitle": "Economy Brasshollow Late Cost Mix Pressure",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up made Brasshollow late industrial development read less like a single forced ore choke. Redline Assembly Yard, Brassbound Directorate, and Warrant Engine House now each move one point of pressure from ore into wood plus higher gold costs, preserving Brasshollow industrial identity while spending more of the gold and wood that previously piled up unused. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Brasshollow towns complete on day 28, Brasshollow common-material bottleneck days drop from 9 to 5, ending gold drops from roughly 9k-9.6k to 4.7k-5.2k, ending wood drops from 10 to 6, ending ore rises from 0 to 2, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:53:25Z",
+  "updatedAt": "2026-05-25T18:57:29Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23631,6 +23631,103 @@
       },
       "summary": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
       "completedAt": "2026-05-25T18:53:25Z"
+    },
+    {
+      "id": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+      "title": "Economy Brasshollow Late Cost Mix Pressure",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:57:29Z",
+        "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_brasshollow_redline_assembly_yard_cost": {
+              "gold": 2950,
+              "wood": 3,
+              "ore": 2
+            },
+            "building_brasshollow_brassbound_directorate_cost": {
+              "gold": 4750,
+              "wood": 3,
+              "ore": 2,
+              "brass_scrip": 2
+            },
+            "building_brasshollow_warrant_engine_house_cost": {
+              "gold": 3400,
+              "wood": 3,
+              "ore": 2,
+              "brass_scrip": 2
+            }
+          },
+          "affected_completion_days": {
+            "town_brasshollow_clauseworks_depot": 28,
+            "town_brasshollow_orevein_gantry": 28
+          },
+          "affected_common_material_bottleneck_days": {
+            "town_brasshollow_clauseworks_depot": 5,
+            "town_brasshollow_orevein_gantry": 5
+          },
+          "affected_ending_resources": {
+            "town_brasshollow_clauseworks_depot": {
+              "brass_scrip": 0,
+              "gold": 5200,
+              "ore": 2,
+              "wood": 6
+            },
+            "town_brasshollow_orevein_gantry": {
+              "brass_scrip": 0,
+              "gold": 4710,
+              "ore": 2,
+              "wood": 6
+            }
+          },
+          "affected_total_development_costs": {
+            "town_brasshollow_clauseworks_depot": {
+              "brass_scrip": 28,
+              "gold": 39800,
+              "ore": 30,
+              "wood": 26
+            },
+            "town_brasshollow_orevein_gantry": {
+              "brass_scrip": 28,
+              "gold": 40290,
+              "ore": 30,
+              "wood": 26
+            }
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 6550,
+            "ore": 9,
+            "wood": 10
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up made Brasshollow late industrial development read less like a single forced ore choke. Redline Assembly Yard, Brassbound Directorate, and Warrant Engine House now each move one point of pressure from ore into wood plus higher gold costs, preserving Brasshollow industrial identity while spending more of the gold and wood that previously piled up unused. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Brasshollow towns complete on day 28, Brasshollow common-material bottleneck days drop from 9 to 5, ending gold drops from roughly 9k-9.6k to 4.7k-5.2k, ending wood drops from 10 to 6, ending ore rises from 0 to 2, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "completedAt": "2026-05-25T18:57:29Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -29853,6 +29950,104 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+      "title": "Economy Brasshollow Late Cost Mix Pressure",
+      "completedAt": "2026-05-25T18:57:29Z",
+      "summary": "Completed. Production town-balance follow-up made Brasshollow late industrial development read less like a single forced ore choke. Redline Assembly Yard, Brassbound Directorate, and Warrant Engine House now each move one point of pressure from ore into wood plus higher gold costs, preserving Brasshollow industrial identity while spending more of the gold and wood that previously piled up unused. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Brasshollow towns complete on day 28, Brasshollow common-material bottleneck days drop from 9 to 5, ending gold drops from roughly 9k-9.6k to 4.7k-5.2k, ending wood drops from 10 to 6, ending ore rises from 0 to 2, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:57:29Z",
+        "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_brasshollow_redline_assembly_yard_cost": {
+              "gold": 2950,
+              "wood": 3,
+              "ore": 2
+            },
+            "building_brasshollow_brassbound_directorate_cost": {
+              "gold": 4750,
+              "wood": 3,
+              "ore": 2,
+              "brass_scrip": 2
+            },
+            "building_brasshollow_warrant_engine_house_cost": {
+              "gold": 3400,
+              "wood": 3,
+              "ore": 2,
+              "brass_scrip": 2
+            }
+          },
+          "affected_completion_days": {
+            "town_brasshollow_clauseworks_depot": 28,
+            "town_brasshollow_orevein_gantry": 28
+          },
+          "affected_common_material_bottleneck_days": {
+            "town_brasshollow_clauseworks_depot": 5,
+            "town_brasshollow_orevein_gantry": 5
+          },
+          "affected_ending_resources": {
+            "town_brasshollow_clauseworks_depot": {
+              "brass_scrip": 0,
+              "gold": 5200,
+              "ore": 2,
+              "wood": 6
+            },
+            "town_brasshollow_orevein_gantry": {
+              "brass_scrip": 0,
+              "gold": 4710,
+              "ore": 2,
+              "wood": 6
+            }
+          },
+          "affected_total_development_costs": {
+            "town_brasshollow_clauseworks_depot": {
+              "brass_scrip": 28,
+              "gold": 39800,
+              "ore": 30,
+              "wood": 26
+            },
+            "town_brasshollow_orevein_gantry": {
+              "brass_scrip": 28,
+              "gold": 40290,
+              "ore": 30,
+              "wood": 26
+            }
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 6550,
+            "ore": 9,
+            "wood": 10
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -31861,17 +32056,100 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:57:29Z",
+      "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_brasshollow_redline_assembly_yard_cost": {
+            "gold": 2950,
+            "wood": 3,
+            "ore": 2
+          },
+          "building_brasshollow_brassbound_directorate_cost": {
+            "gold": 4750,
+            "wood": 3,
+            "ore": 2,
+            "brass_scrip": 2
+          },
+          "building_brasshollow_warrant_engine_house_cost": {
+            "gold": 3400,
+            "wood": 3,
+            "ore": 2,
+            "brass_scrip": 2
+          }
+        },
+        "affected_completion_days": {
+          "town_brasshollow_clauseworks_depot": 28,
+          "town_brasshollow_orevein_gantry": 28
+        },
+        "affected_common_material_bottleneck_days": {
+          "town_brasshollow_clauseworks_depot": 5,
+          "town_brasshollow_orevein_gantry": 5
+        },
+        "affected_ending_resources": {
+          "town_brasshollow_clauseworks_depot": {
+            "brass_scrip": 0,
+            "gold": 5200,
+            "ore": 2,
+            "wood": 6
+          },
+          "town_brasshollow_orevein_gantry": {
+            "brass_scrip": 0,
+            "gold": 4710,
+            "ore": 2,
+            "wood": 6
+          }
+        },
+        "affected_total_development_costs": {
+          "town_brasshollow_clauseworks_depot": {
+            "brass_scrip": 28,
+            "gold": 39800,
+            "ore": 30,
+            "wood": 26
+          },
+          "town_brasshollow_orevein_gantry": {
+            "brass_scrip": 28,
+            "gold": 40290,
+            "ore": 30,
+            "wood": 26
+          }
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 6550,
+          "ore": 9,
+          "wood": 10
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:53:25Z",
-    "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T18:57:29Z",
+    "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -31879,59 +32157,82 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_mireclaw_oathmire_court_cost": {
-          "gold": 2650,
-          "wood": 2,
+        "building_brasshollow_redline_assembly_yard_cost": {
+          "gold": 2950,
+          "wood": 3,
+          "ore": 2
+        },
+        "building_brasshollow_brassbound_directorate_cost": {
+          "gold": 4750,
+          "wood": 3,
           "ore": 2,
-          "peatwax": 5
+          "brass_scrip": 2
+        },
+        "building_brasshollow_warrant_engine_house_cost": {
+          "gold": 3400,
+          "wood": 3,
+          "ore": 2,
+          "brass_scrip": 2
         }
       },
       "affected_completion_days": {
-        "town_blackfen_gate": 27,
-        "town_duskfen": 27,
-        "town_murkward_ford": 27,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 27
+        "town_brasshollow_clauseworks_depot": 28,
+        "town_brasshollow_orevein_gantry": 28
       },
-      "affected_late_rare_bottleneck_days": {
-        "town_blackfen_gate": 3,
-        "town_duskfen": 3,
-        "town_murkward_ford": 3,
-        "town_nightglass_redoubt": 2,
-        "town_reedbarrow_ferry": 3
+      "affected_common_material_bottleneck_days": {
+        "town_brasshollow_clauseworks_depot": 5,
+        "town_brasshollow_orevein_gantry": 5
       },
-      "affected_ending_peatwax": {
-        "town_blackfen_gate": 0,
-        "town_duskfen": 0,
-        "town_murkward_ford": 0,
-        "town_nightglass_redoubt": 0,
-        "town_reedbarrow_ferry": 0
+      "affected_ending_resources": {
+        "town_brasshollow_clauseworks_depot": {
+          "brass_scrip": 0,
+          "gold": 5200,
+          "ore": 2,
+          "wood": 6
+        },
+        "town_brasshollow_orevein_gantry": {
+          "brass_scrip": 0,
+          "gold": 4710,
+          "ore": 2,
+          "wood": 6
+        }
       },
-      "affected_rare_cost_total": {
-        "town_blackfen_gate": 27,
-        "town_duskfen": 27,
-        "town_murkward_ford": 27,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 27
+      "affected_total_development_costs": {
+        "town_brasshollow_clauseworks_depot": {
+          "brass_scrip": 28,
+          "gold": 39800,
+          "ore": 30,
+          "wood": 26
+        },
+        "town_brasshollow_orevein_gantry": {
+          "brass_scrip": 28,
+          "gold": 40290,
+          "ore": 30,
+          "wood": 26
+        }
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
-      "late_rare_bottleneck_day_count_min": 2,
+      "observed_common_surplus_max_after_tuning": {
+        "gold": 6550,
+        "ore": 9,
+        "wood": 10
+      },
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   },
   "active_slice": {
-    "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
-    "title": "Economy Mireclaw Late Rare Capstone Pressure",
+    "id": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+    "title": "Economy Brasshollow Late Cost Mix Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:53:25Z",
-    "completedAt": "2026-05-25T18:53:25Z",
-    "notes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:57:29Z",
+    "completedAt": "2026-05-25T18:57:29Z",
+    "notes": "Completed. Production town-balance follow-up made Brasshollow late industrial development read less like a single forced ore choke. Redline Assembly Yard, Brassbound Directorate, and Warrant Engine House now each move one point of pressure from ore into wood plus higher gold costs, preserving Brasshollow industrial identity while spending more of the gold and wood that previously piled up unused. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Brasshollow towns complete on day 28, Brasshollow common-material bottleneck days drop from 9 to 5, ending gold drops from roughly 9k-9.6k to 4.7k-5.2k, ending wood drops from 10 to 6, ending ore rises from 0 to 2, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:53:25Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:57:29Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -33478,25 +33779,108 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:57:29Z",
+      "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_brasshollow_redline_assembly_yard_cost": {
+            "gold": 2950,
+            "wood": 3,
+            "ore": 2
+          },
+          "building_brasshollow_brassbound_directorate_cost": {
+            "gold": 4750,
+            "wood": 3,
+            "ore": 2,
+            "brass_scrip": 2
+          },
+          "building_brasshollow_warrant_engine_house_cost": {
+            "gold": 3400,
+            "wood": 3,
+            "ore": 2,
+            "brass_scrip": 2
+          }
+        },
+        "affected_completion_days": {
+          "town_brasshollow_clauseworks_depot": 28,
+          "town_brasshollow_orevein_gantry": 28
+        },
+        "affected_common_material_bottleneck_days": {
+          "town_brasshollow_clauseworks_depot": 5,
+          "town_brasshollow_orevein_gantry": 5
+        },
+        "affected_ending_resources": {
+          "town_brasshollow_clauseworks_depot": {
+            "brass_scrip": 0,
+            "gold": 5200,
+            "ore": 2,
+            "wood": 6
+          },
+          "town_brasshollow_orevein_gantry": {
+            "brass_scrip": 0,
+            "gold": 4710,
+            "ore": 2,
+            "wood": 6
+          }
+        },
+        "affected_total_development_costs": {
+          "town_brasshollow_clauseworks_depot": {
+            "brass_scrip": 28,
+            "gold": 39800,
+            "ore": 30,
+            "wood": 26
+          },
+          "town_brasshollow_orevein_gantry": {
+            "brass_scrip": 28,
+            "gold": 40290,
+            "ore": 30,
+            "wood": 26
+          }
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 6550,
+          "ore": 9,
+          "wood": 10
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
-    "title": "Economy Mireclaw Late Rare Capstone Pressure",
+    "id": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
+    "title": "Economy Brasshollow Late Cost Mix Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:53:25Z",
-    "completedAt": "2026-05-25T18:53:25Z",
-    "notes": "Completed. Production town-balance follow-up tightened Mireclaw late rare-resource pressure. Oathmire Court now costs 5 peatwax instead of 3, improving late rare pressure across all Mireclaw towns while preserving common-resource-dominant costs, Mireclaw economy identity, and the seven-tier unit ladder. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, all Mireclaw towns complete on day 27, late rare bottleneck counts improve to 2-3 days, affected towns end with 0 peatwax, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:57:29Z",
+    "completedAt": "2026-05-25T18:57:29Z",
+    "notes": "Completed. Production town-balance follow-up made Brasshollow late industrial development read less like a single forced ore choke. Redline Assembly Yard, Brassbound Directorate, and Warrant Engine House now each move one point of pressure from ore into wood plus higher gold costs, preserving Brasshollow industrial identity while spending more of the gold and wood that previously piled up unused. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Brasshollow towns complete on day 28, Brasshollow common-material bottleneck days drop from 9 to 5, ending gold drops from roughly 9k-9.6k to 4.7k-5.2k, ending wood drops from 10 to 6, ending ore rises from 0 to 2, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:53:25Z",
-    "sliceId": "economy-mireclaw-late-rare-capstone-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T18:57:29Z",
+    "sliceId": "economy-brasshollow-late-cost-mix-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-mire-rare.txt (passed; Mireclaw towns complete day 27, peatwax ends at 0)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-mire-rare.txt (passed; Mireclaw rare total 27)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-mire-rare.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-brass-mix.json (passed; Brasshollow completion day 28, material bottleneck days 9 -> 5, ending ore 0 -> 2)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-brass-mix.json (passed; Brasshollow gold 39800/40290, wood 26, ore 30, rare 28)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-brass-mix.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-brass-mix.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -33504,46 +33888,69 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_mireclaw_oathmire_court_cost": {
-          "gold": 2650,
-          "wood": 2,
+        "building_brasshollow_redline_assembly_yard_cost": {
+          "gold": 2950,
+          "wood": 3,
+          "ore": 2
+        },
+        "building_brasshollow_brassbound_directorate_cost": {
+          "gold": 4750,
+          "wood": 3,
           "ore": 2,
-          "peatwax": 5
+          "brass_scrip": 2
+        },
+        "building_brasshollow_warrant_engine_house_cost": {
+          "gold": 3400,
+          "wood": 3,
+          "ore": 2,
+          "brass_scrip": 2
         }
       },
       "affected_completion_days": {
-        "town_blackfen_gate": 27,
-        "town_duskfen": 27,
-        "town_murkward_ford": 27,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 27
+        "town_brasshollow_clauseworks_depot": 28,
+        "town_brasshollow_orevein_gantry": 28
       },
-      "affected_late_rare_bottleneck_days": {
-        "town_blackfen_gate": 3,
-        "town_duskfen": 3,
-        "town_murkward_ford": 3,
-        "town_nightglass_redoubt": 2,
-        "town_reedbarrow_ferry": 3
+      "affected_common_material_bottleneck_days": {
+        "town_brasshollow_clauseworks_depot": 5,
+        "town_brasshollow_orevein_gantry": 5
       },
-      "affected_ending_peatwax": {
-        "town_blackfen_gate": 0,
-        "town_duskfen": 0,
-        "town_murkward_ford": 0,
-        "town_nightglass_redoubt": 0,
-        "town_reedbarrow_ferry": 0
+      "affected_ending_resources": {
+        "town_brasshollow_clauseworks_depot": {
+          "brass_scrip": 0,
+          "gold": 5200,
+          "ore": 2,
+          "wood": 6
+        },
+        "town_brasshollow_orevein_gantry": {
+          "brass_scrip": 0,
+          "gold": 4710,
+          "ore": 2,
+          "wood": 6
+        }
       },
-      "affected_rare_cost_total": {
-        "town_blackfen_gate": 27,
-        "town_duskfen": 27,
-        "town_murkward_ford": 27,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 27
+      "affected_total_development_costs": {
+        "town_brasshollow_clauseworks_depot": {
+          "brass_scrip": 28,
+          "gold": 39800,
+          "ore": 30,
+          "wood": 26
+        },
+        "town_brasshollow_orevein_gantry": {
+          "brass_scrip": 28,
+          "gold": 40290,
+          "ore": 30,
+          "wood": 26
+        }
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
-      "late_rare_bottleneck_day_count_min": 2,
+      "observed_common_surplus_max_after_tuning": {
+        "gold": 6550,
+        "ore": 9,
+        "wood": 10
+      },
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
