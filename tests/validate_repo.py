@@ -17665,6 +17665,8 @@ def validate_random_map_generated_setup_pending_retry_surface(errors: list[str])
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
+    balance_rules_path = ROOT / "scripts/core/BalanceRegressionReportRules.gd"
+    headless_rules_path = ROOT / "scripts/core/HeadlessSimulationHarnessRules.gd"
     balance_report_path = ROOT / "tests/balance_regression_report_suite.gd"
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
     combat_balance_report_path = ROOT / "tests/battle_autoplay_combat_balance_report.gd"
@@ -17706,6 +17708,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     for path in (
         harness_path,
         battle_ai_path,
+        balance_rules_path,
+        headless_rules_path,
         balance_report_path,
         headless_report_path,
         combat_balance_report_path,
@@ -17841,6 +17845,32 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "func _side_health_ratio",
         ):
             ensure(required_token in battle_ai_text, errors, f"Battle AI rules are missing tactical autoplay token: {required_token}")
+    if balance_rules_path.exists():
+        balance_rules_text = balance_rules_path.read_text(encoding="utf-8")
+        for resource_id in ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS:
+            ensure(f'"{resource_id}"' in balance_rules_text, errors, f"Balance regression rules are missing live stockpile resource id: {resource_id}")
+        for required_token in (
+            "const LIVE_RESOURCE_IDS",
+            "live_resource_ids",
+            "live_resource_count",
+            "visible_live_resource_support",
+            "missing_live_resource_support",
+            "_economy_pressure_resource_viability",
+        ):
+            ensure(required_token in balance_rules_text, errors, f"Balance regression rules are missing full-resource economy token: {required_token}")
+    if headless_rules_path.exists():
+        headless_rules_text = headless_rules_path.read_text(encoding="utf-8")
+        for resource_id in ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS:
+            ensure(f'"{resource_id}"' in headless_rules_text, errors, f"Headless simulation rules are missing live stockpile resource id: {resource_id}")
+        for required_token in (
+            "const LIVE_RESOURCE_IDS",
+            "live_resource_ids",
+            "live_resource_count",
+            "before_resources",
+            "after_resources",
+            "_economy_resource_delta",
+        ):
+            ensure(required_token in headless_rules_text, errors, f"Headless simulation rules are missing full-resource economy token: {required_token}")
     for path in (balance_report_path, headless_report_path):
         if not path.exists():
             continue
@@ -17876,6 +17906,25 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "not outliers.is_empty()",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
+    if balance_report_path.exists():
+        balance_report_text = balance_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "_assert_balance_economy_resource_coverage",
+            "BalanceRegressionReportRulesScript.LIVE_RESOURCE_IDS",
+            "live_resource_count",
+            "visible_live_resource_support",
+        ):
+            ensure(required_token in balance_report_text, errors, f"Balance regression report is missing full-resource economy assertion token: {required_token}")
+    if headless_report_path.exists():
+        headless_report_text = headless_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "_assert_economy_resource_delta",
+            "HeadlessSimulationHarnessRulesScript.LIVE_RESOURCE_IDS",
+            "live_resource_count",
+            "before_resources",
+            "after_resources",
+        ):
+            ensure(required_token in headless_report_text, errors, f"Headless simulation report is missing full-resource economy assertion token: {required_token}")
     if combat_balance_report_path.exists():
         combat_balance_text = combat_balance_report_path.read_text(encoding="utf-8")
         for required_token in (

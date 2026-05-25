@@ -10,7 +10,17 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_SCHEMA_ID := "balance_regression_report_suite_v1"
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"
 const HEX_DIGITS := "0123456789abcdef"
-const LIVE_RESOURCE_IDS := ["gold", "wood", "ore"]
+const LIVE_RESOURCE_IDS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 const REQUIRED_SECTION_IDS := [
 	"faction_content_balance_snapshot",
 	"economy_pressure_resource_viability",
@@ -230,6 +240,8 @@ static func _economy_pressure_resource_viability(input_config: Dictionary, gener
 		status,
 		{
 			"scenario_count": scenario_rows.size(),
+			"live_resource_ids": LIVE_RESOURCE_IDS.duplicate(),
+			"live_resource_count": LIVE_RESOURCE_IDS.size(),
 			"generated_fairness_status": String(rmg_fairness.get("status", "deferred" if rmg_fairness.is_empty() else "")),
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),

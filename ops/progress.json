@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-full-stockpile-session-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Full Stockpile Session",
+  "currentSliceId": "economy-balance-harness-full-resource-coverage-20260525-10184",
+  "currentSliceTitle": "Economy Balance Harness Full Resource Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Generated/native package sessions now seed all nine live stockpile resources through NativeRandomMapPackageSessionBridge._opening_resource_stockpile. The native package-session adoption smoke reports bridge_resource_stockpile and active_resource_stockpile with 9 resources and rare_resources_seeded_at_zero=true; validate_repo, jq, and git diff --check passed.",
+  "currentSliceNotes": "Completed full nine-resource balance harness coverage. Balance regression and headless simulation economy evidence now carries all live stockpile resources with focused report assertions and repo-validator static coverage.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T00:30:06Z",
+  "updatedAt": "2026-05-25T00:48:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,33 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-balance-harness-full-resource-coverage-20260525-10184",
+      "title": "Economy Balance Harness Full Resource Coverage",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T00:48:30Z",
+      "startedAt": "2026-05-25T00:34:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "summary": "Automated balance and headless economy evidence should track all nine live stockpile resources instead of silently collapsing economy deltas and pressure support to gold, wood, and ore.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/balance_regression_report_suite.tscn (passed; report status warning, no failures; economy section reports 9 live resources)",
+        "timeout 480s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 420 tests/headless_simulation_harness_report.tscn (passed; report status warning, no failures; economy delta reports 9 live resources)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "completedAt": "2026-05-25T00:48:30Z",
+      "notes": "Completed full nine-resource balance harness coverage. Balance regression and headless simulation economy evidence now carries all live stockpile resources with focused report assertions and repo-validator static coverage."
+    },
     {
       "id": "economy-generated-package-full-stockpile-session-20260525-10184",
       "title": "Economy Generated Package Full Stockpile Session",

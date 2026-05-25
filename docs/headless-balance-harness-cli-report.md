@@ -15,6 +15,8 @@ The default `standard` suite runs:
 
 The `full` suite also runs the difficulty sweep, runtime consequence matrix, and tuning queue report scenes.
 
+The standard balance regression and headless simulation reports preserve the full live stockpile contract for economy evidence. Their economy pressure and economy delta rows identify all nine live resources: `gold`, `wood`, `ore`, `aetherglass`, `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`. This keeps balance harness output aligned with authored and generated-session resource wiring instead of falling back to common-only accounting.
+
 ## Artifact Contract
 
 The runner writes:

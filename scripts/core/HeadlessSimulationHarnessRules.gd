@@ -10,7 +10,17 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
 const HEX_DIGITS := "0123456789abcdef"
-const LIVE_RESOURCE_IDS := ["gold", "wood", "ore"]
+const LIVE_RESOURCE_IDS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 const REQUIRED_SUBSYSTEM_IDS := [
 	"scenario_session_turn_loop",
 	"strategic_ai_pressure_tick",
@@ -2151,6 +2161,8 @@ static func _economy_resource_delta(input_config: Dictionary) -> Dictionary:
 		{
 			"scenario_id": scenario_id,
 			"turns": bounded_turns,
+			"live_resource_ids": LIVE_RESOURCE_IDS.duplicate(),
+			"live_resource_count": LIVE_RESOURCE_IDS.size(),
 			"delta": delta,
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
