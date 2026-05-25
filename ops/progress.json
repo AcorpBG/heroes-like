@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
-  "currentSliceTitle": "Economy High Tier Early Spike Build Curve Tuning",
+  "currentSliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+  "currentSliceTitle": "Economy Fastest Town Late Rare Capstone Pacing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up pulled the fastest authored town completions closer to the 30-turn target by increasing late rare capstone pressure. Embercourt Charter Flame now costs 5 embergrain and Sunvault Zenith Court now costs 5 aetherglass, keeping common-resource dominance and seven-tier ladders intact while delaying the fastest final upgrade steps. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, Riverwatch and Highwater complete on day 27, Halo Spire completes on day 27, Prismhearth remains day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:41:25Z",
+  "updatedAt": "2026-05-25T18:45:42Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23408,6 +23408,80 @@
         "tests/economy_town_goal_scorecard_report.py",
         "tests/validate_repo.py"
       ]
+    },
+    {
+      "id": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+      "title": "Economy Fastest Town Late Rare Capstone Pacing",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:45:42Z",
+        "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_embercourt_charter_flame_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "embergrain": 5
+            },
+            "building_sunvault_zenith_court_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 5
+            }
+          },
+          "affected_completion_days": {
+            "town_riverwatch": 27,
+            "town_highwater_keep": 27,
+            "town_halo_spire": 27,
+            "town_prismhearth": 30
+          },
+          "affected_rare_spend": {
+            "town_riverwatch": 27,
+            "town_highwater_keep": 27,
+            "town_halo_spire": 27,
+            "town_prismhearth": 27
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 26,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up pulled the fastest authored town completions closer to the 30-turn target by increasing late rare capstone pressure. Embercourt Charter Flame now costs 5 embergrain and Sunvault Zenith Court now costs 5 aetherglass, keeping common-resource dominance and seven-tier ladders intact while delaying the fastest final upgrade steps. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, Riverwatch and Highwater complete on day 27, Halo Spire completes on day 27, Prismhearth remains day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "updatedAt": "2026-05-25T18:45:42Z",
+      "startedAt": "2026-05-25T18:45:42Z",
+      "completedAt": "2026-05-25T18:45:42Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -29426,6 +29500,70 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+      "title": "Economy Fastest Town Late Rare Capstone Pacing",
+      "completedAt": "2026-05-25T18:45:42Z",
+      "summary": "Completed. Production town-balance follow-up pulled the fastest authored town completions closer to the 30-turn target by increasing late rare capstone pressure. Embercourt Charter Flame now costs 5 embergrain and Sunvault Zenith Court now costs 5 aetherglass, keeping common-resource dominance and seven-tier ladders intact while delaying the fastest final upgrade steps. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, Riverwatch and Highwater complete on day 27, Halo Spire completes on day 27, Prismhearth remains day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:45:42Z",
+        "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_embercourt_charter_flame_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "embergrain": 5
+            },
+            "building_sunvault_zenith_court_cost": {
+              "gold": 2650,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 5
+            }
+          },
+          "affected_completion_days": {
+            "town_riverwatch": 27,
+            "town_highwater_keep": 27,
+            "town_halo_spire": 27,
+            "town_prismhearth": 30
+          },
+          "affected_rare_spend": {
+            "town_riverwatch": 27,
+            "town_highwater_keep": 27,
+            "town_halo_spire": 27,
+            "town_prismhearth": 27
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 26,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -31275,17 +31413,66 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:45:42Z",
+      "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_embercourt_charter_flame_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "embergrain": 5
+          },
+          "building_sunvault_zenith_court_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "aetherglass": 5
+          }
+        },
+        "affected_completion_days": {
+          "town_riverwatch": 27,
+          "town_highwater_keep": 27,
+          "town_halo_spire": 27,
+          "town_prismhearth": 30
+        },
+        "affected_rare_spend": {
+          "town_riverwatch": 27,
+          "town_highwater_keep": 27,
+          "town_halo_spire": 27,
+          "town_prismhearth": 27
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 26,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:41:25Z",
-    "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:45:42Z",
+    "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -31293,55 +31480,48 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_brasshollow_pressure_rail_requires": [
-          "building_brasshollow_boiler_cathedral",
-          "building_market_square",
-          "building_brasshollow_scalehouse"
-        ],
-        "building_thornwake_pilgrim_orchard_requires": [
-          "building_thornwake_barkmantle_run",
-          "building_market_square",
-          "building_thornwake_rootroad_markers"
-        ],
-        "building_veilmourn_obituary_vault_requires": [
-          "building_veilmourn_harpoon_gantry",
-          "building_market_square",
-          "building_veilmourn_salt_counting_house"
-        ]
-      },
-      "affected_tier5_days": {
-        "town_brasshollow_clauseworks_depot": 6,
-        "town_brasshollow_orevein_gantry": 6,
-        "town_thornwake_graftroot_caravan": 6,
-        "town_thornwake_rootgate_nursery": 6,
-        "town_veilmourn_bellwake_harbor": 9,
-        "town_veilmourn_fogchart_mooring": 9
+        "building_embercourt_charter_flame_cost": {
+          "gold": 2650,
+          "wood": 2,
+          "ore": 2,
+          "embergrain": 5
+        },
+        "building_sunvault_zenith_court_cost": {
+          "gold": 2650,
+          "wood": 2,
+          "ore": 2,
+          "aetherglass": 5
+        }
       },
       "affected_completion_days": {
-        "town_brasshollow_clauseworks_depot": 29,
-        "town_brasshollow_orevein_gantry": 29,
-        "town_thornwake_graftroot_caravan": 30,
-        "town_thornwake_rootgate_nursery": 30,
-        "town_veilmourn_bellwake_harbor": 28,
-        "town_veilmourn_fogchart_mooring": 28
+        "town_riverwatch": 27,
+        "town_highwater_keep": 27,
+        "town_halo_spire": 27,
+        "town_prismhearth": 30
+      },
+      "affected_rare_spend": {
+        "town_riverwatch": 27,
+        "town_highwater_keep": 27,
+        "town_halo_spire": 27,
+        "town_prismhearth": 27
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "town_development_completion_day_min": 24,
+      "town_development_completion_day_min": 26,
       "town_development_completion_day_max": 30,
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   },
   "active_slice": {
-    "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
-    "title": "Economy High Tier Early Spike Build Curve Tuning",
+    "id": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+    "title": "Economy Fastest Town Late Rare Capstone Pacing",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:41:25Z",
-    "completedAt": "2026-05-25T18:41:25Z",
-    "notes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:45:42Z",
+    "completedAt": "2026-05-25T18:45:42Z",
+    "notes": "Completed. Production town-balance follow-up pulled the fastest authored town completions closer to the 30-turn target by increasing late rare capstone pressure. Embercourt Charter Flame now costs 5 embergrain and Sunvault Zenith Court now costs 5 aetherglass, keeping common-resource dominance and seven-tier ladders intact while delaying the fastest final upgrade steps. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, Riverwatch and Highwater complete on day 27, Halo Spire completes on day 27, Prismhearth remains day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:41:25Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:45:42Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -32729,25 +32909,74 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:45:42Z",
+      "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_embercourt_charter_flame_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "embergrain": 5
+          },
+          "building_sunvault_zenith_court_cost": {
+            "gold": 2650,
+            "wood": 2,
+            "ore": 2,
+            "aetherglass": 5
+          }
+        },
+        "affected_completion_days": {
+          "town_riverwatch": 27,
+          "town_highwater_keep": 27,
+          "town_halo_spire": 27,
+          "town_prismhearth": 30
+        },
+        "affected_rare_spend": {
+          "town_riverwatch": 27,
+          "town_highwater_keep": 27,
+          "town_halo_spire": 27,
+          "town_prismhearth": 27
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 26,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
-    "title": "Economy High Tier Early Spike Build Curve Tuning",
+    "id": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
+    "title": "Economy Fastest Town Late Rare Capstone Pacing",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:41:25Z",
-    "completedAt": "2026-05-25T18:41:25Z",
-    "notes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T18:45:42Z",
+    "completedAt": "2026-05-25T18:45:42Z",
+    "notes": "Completed. Production town-balance follow-up pulled the fastest authored town completions closer to the 30-turn target by increasing late rare capstone pressure. Embercourt Charter Flame now costs 5 embergrain and Sunvault Zenith Court now costs 5 aetherglass, keeping common-resource dominance and seven-tier ladders intact while delaying the fastest final upgrade steps. Existing reports remain green without adding new gates: authored town development completes inside day 26-30, Riverwatch and Highwater complete on day 27, Halo Spire completes on day 27, Prismhearth remains day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:41:25Z",
-    "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:45:42Z",
+    "sliceId": "economy-fastest-town-late-rare-capstone-pacing-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-fastest.txt (passed; authored completion range day 26-30, Riverwatch/Halo moved to day 27)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-fastest.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-fastest.txt (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks, completion range day 26-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -32755,41 +32984,34 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_brasshollow_pressure_rail_requires": [
-          "building_brasshollow_boiler_cathedral",
-          "building_market_square",
-          "building_brasshollow_scalehouse"
-        ],
-        "building_thornwake_pilgrim_orchard_requires": [
-          "building_thornwake_barkmantle_run",
-          "building_market_square",
-          "building_thornwake_rootroad_markers"
-        ],
-        "building_veilmourn_obituary_vault_requires": [
-          "building_veilmourn_harpoon_gantry",
-          "building_market_square",
-          "building_veilmourn_salt_counting_house"
-        ]
-      },
-      "affected_tier5_days": {
-        "town_brasshollow_clauseworks_depot": 6,
-        "town_brasshollow_orevein_gantry": 6,
-        "town_thornwake_graftroot_caravan": 6,
-        "town_thornwake_rootgate_nursery": 6,
-        "town_veilmourn_bellwake_harbor": 9,
-        "town_veilmourn_fogchart_mooring": 9
+        "building_embercourt_charter_flame_cost": {
+          "gold": 2650,
+          "wood": 2,
+          "ore": 2,
+          "embergrain": 5
+        },
+        "building_sunvault_zenith_court_cost": {
+          "gold": 2650,
+          "wood": 2,
+          "ore": 2,
+          "aetherglass": 5
+        }
       },
       "affected_completion_days": {
-        "town_brasshollow_clauseworks_depot": 29,
-        "town_brasshollow_orevein_gantry": 29,
-        "town_thornwake_graftroot_caravan": 30,
-        "town_thornwake_rootgate_nursery": 30,
-        "town_veilmourn_bellwake_harbor": 28,
-        "town_veilmourn_fogchart_mooring": 28
+        "town_riverwatch": 27,
+        "town_highwater_keep": 27,
+        "town_halo_spire": 27,
+        "town_prismhearth": 30
+      },
+      "affected_rare_spend": {
+        "town_riverwatch": 27,
+        "town_highwater_keep": 27,
+        "town_halo_spire": 27,
+        "town_prismhearth": 27
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
-      "town_development_completion_day_min": 24,
+      "town_development_completion_day_min": 26,
       "town_development_completion_day_max": 30,
       "new_gate_created": false,
       "policy": "player-balance content tuning using existing reports; not campaign production work"
