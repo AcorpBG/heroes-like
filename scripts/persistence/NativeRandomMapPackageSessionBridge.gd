@@ -504,9 +504,9 @@ static func _ensure_generated_town_source_route_support(session: SessionStateSto
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if not (String(town.get("owner", "")) in ["player", "enemy"]):
+		if not (String(town.get("owner", "")) in ["player", "enemy", "neutral"]):
 			continue
-		var start_tile := _generated_town_source_start_tile(town)
+		var start_tile := _generated_town_source_start_tile(session, town)
 		for resource_id_value in _generated_town_required_source_ids(town):
 			var resource_id := String(resource_id_value)
 			var require_guard := not GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id)
@@ -638,7 +638,7 @@ static func _generated_town_source_support_tile(
 			queue.append(neighbor)
 	if candidates.is_empty():
 		if stackable_candidates.is_empty():
-			return Vector2i(-1, -1)
+			return start_tile
 		return stackable_candidates[source_index % stackable_candidates.size()]
 	return candidates[source_index % candidates.size()]
 
@@ -679,17 +679,40 @@ static func _generated_source_target_tile(node: Dictionary) -> Vector2i:
 				return Vector2i(int(tile_value.get("x", node.get("x", 0))), int(tile_value.get("y", node.get("y", 0))))
 	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 
-static func _generated_town_source_start_tile(town: Dictionary) -> Vector2i:
-	for key in ["hero_start_tile", "runtime_start_tile", "visit_tile", "primary_tile"]:
+static func _generated_town_source_start_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	for key in ["hero_start_tile", "runtime_start_tile"]:
 		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
 		if not tile.is_empty():
 			return Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
-	for key in ["package_visit_tiles", "approach_tiles"]:
+	var fallback := Vector2i(-1, -1)
+	for key in ["approach_tiles", "package_visit_tiles"]:
 		var tiles: Array = town.get(key, []) if town.get(key, []) is Array else []
 		for tile_value in tiles:
 			if tile_value is Dictionary:
-				return Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+				var candidate := Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+				if fallback == Vector2i(-1, -1):
+					fallback = candidate
+				if _generated_source_route_start_tile_usable(session, candidate):
+					return candidate
+	for key in ["visit_tile", "primary_tile"]:
+		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			var candidate := Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
+			if _generated_source_route_start_tile_usable(session, candidate):
+				return candidate
+			if fallback == Vector2i(-1, -1):
+				fallback = candidate
+	if fallback != Vector2i(-1, -1):
+		return fallback
 	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+
+static func _generated_source_route_start_tile_usable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	var map_size := OverworldRulesScript.derive_map_size(session)
+	if not _generated_source_in_bounds(tile, map_size):
+		return false
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+		return false
+	return not OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y)
 
 static func _generated_source_route_neighbors(tile: Vector2i) -> Array:
 	return [

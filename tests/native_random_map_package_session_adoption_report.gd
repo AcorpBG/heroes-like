@@ -687,7 +687,7 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 			or route_pressure_case_count != case_count \
 			or guarded_rare_source_route_breadth_case_count != case_count \
 			or total_town_count < case_count * 3 \
-			or total_route_town_case_count < case_count * 3 \
+			or total_route_town_case_count != total_town_count \
 			or total_resource_route_case_count != total_route_town_case_count * 3 \
 			or total_reachable_route_case_count != total_resource_route_case_count \
 			or total_guarded_source_route_case_count < total_route_town_case_count \
@@ -738,11 +738,12 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 	return breadth
 
 func _assert_generated_town_economy_source_routes(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var towns := _player_and_enemy_towns(session)
+	var towns := _generated_economy_towns(session)
 	var rows := []
 	var town_case_count := 0
 	var player_town_case_count := 0
 	var enemy_town_case_count := 0
+	var neutral_town_case_count := 0
 	var resource_route_case_count := 0
 	var reachable_route_case_count := 0
 	var guarded_source_route_case_count := 0
@@ -761,6 +762,8 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 			player_town_case_count += 1
 		elif String(row.get("owner", "")) == "enemy":
 			enemy_town_case_count += 1
+		elif String(row.get("owner", "")) == "neutral":
+			neutral_town_case_count += 1
 		resource_route_case_count += int(row.get("resource_route_case_count", 0))
 		reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
 		guarded_source_route_case_count += int(row.get("guarded_source_route_case_count", 0))
@@ -806,6 +809,7 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 		"town_case_count": town_case_count,
 		"player_town_case_count": player_town_case_count,
 		"enemy_town_case_count": enemy_town_case_count,
+		"neutral_town_case_count": neutral_town_case_count,
 		"resource_route_case_count": resource_route_case_count,
 		"reachable_route_case_count": reachable_route_case_count,
 		"guarded_source_route_case_count": guarded_source_route_case_count,
@@ -837,7 +841,7 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	var rare_id := String(profile.get("rare_resource_id", ""))
 	var required_resource_ids := COMMON_MARKET_RESOURCE_IDS.duplicate()
 	required_resource_ids.append(rare_id)
-	var start_tile := _generated_town_route_start_tile(town)
+	var start_tile := _generated_town_route_start_tile(session, town)
 	var route_rows := []
 	var errors := []
 	var reachable_count := 0
@@ -847,7 +851,7 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	var acquisition_days := []
 	for resource_id_value in required_resource_ids:
 		var resource_id := String(resource_id_value)
-		var route_row := _best_generated_resource_route(session, start_tile, resource_id)
+		var route_row := _best_generated_resource_route(session, start_tile, resource_id, placement_id)
 		route_rows.append(route_row)
 		if bool(route_row.get("reachable", false)):
 			reachable_count += 1
@@ -891,12 +895,25 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 		"error": "; ".join(errors),
 	}
 
-func _best_generated_resource_route(session: SessionStateStoreScript.SessionData, start_tile: Vector2i, resource_id: String) -> Dictionary:
+func _best_generated_resource_route(
+	session: SessionStateStoreScript.SessionData,
+	start_tile: Vector2i,
+	resource_id: String,
+	town_placement_id: String
+) -> Dictionary:
 	var candidates := []
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
+		var support_town_placement_id := String(node.get("generated_package_source_town_placement_id", ""))
+		if support_town_placement_id != "" and support_town_placement_id != town_placement_id:
+			continue
+		var node_placement_id := String(node.get("placement_id", ""))
+		var support_prefix := "h3maped_small_town_source_support_"
+		var expected_support_prefix := "%s%s_" % [support_prefix, town_placement_id]
+		if node_placement_id.begins_with(support_prefix) and not node_placement_id.begins_with(expected_support_prefix):
+			continue
 		var output := _generated_resource_node_output(node)
 		if int(output.get(resource_id, 0)) <= 0:
 			continue
@@ -1068,25 +1085,48 @@ func _generated_resource_source_guard_blocks_claim(session: SessionStateStoreScr
 	var result := OverworldRules.collect_active_resource(copy)
 	return not bool(result.get("ok", false)) and String(result.get("message", "")).contains("Clear")
 
-func _player_and_enemy_towns(session: SessionStateStoreScript.SessionData) -> Array:
+func _generated_economy_towns(session: SessionStateStoreScript.SessionData) -> Array:
 	var result := []
 	var towns: Array = session.overworld.get("towns", []) if session != null and session.overworld.get("towns", []) is Array else []
 	for town_value in towns:
-		if town_value is Dictionary and String(town_value.get("owner", "")) in ["player", "enemy"]:
+		if town_value is Dictionary and String(town_value.get("owner", "")) in ["player", "enemy", "neutral"]:
 			result.append(town_value)
 	return result
 
-func _generated_town_route_start_tile(town: Dictionary) -> Vector2i:
-	for key in ["hero_start_tile", "runtime_start_tile", "visit_tile", "primary_tile"]:
+func _generated_town_route_start_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	for key in ["hero_start_tile", "runtime_start_tile"]:
 		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
 		if not tile.is_empty():
 			return Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
-	for key in ["package_visit_tiles", "approach_tiles"]:
+	var fallback := Vector2i(-1, -1)
+	for key in ["approach_tiles", "package_visit_tiles"]:
 		var tiles: Array = town.get(key, []) if town.get(key, []) is Array else []
 		for tile_value in tiles:
 			if tile_value is Dictionary:
-				return Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+				var candidate := Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+				if fallback == Vector2i(-1, -1):
+					fallback = candidate
+				if _generated_route_start_tile_usable(session, candidate):
+					return candidate
+	for key in ["visit_tile", "primary_tile"]:
+		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			var candidate := Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
+			if _generated_route_start_tile_usable(session, candidate):
+				return candidate
+			if fallback == Vector2i(-1, -1):
+				fallback = candidate
+	if fallback != Vector2i(-1, -1):
+		return fallback
 	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+
+func _generated_route_start_tile_usable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	var map_size := OverworldRules.derive_map_size(session)
+	if not _generated_in_bounds(tile, map_size):
+		return false
+	if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+		return false
+	return not OverworldRules.tile_has_route_interaction(session, tile.x, tile.y)
 
 func _generated_reachable_candidate_count(candidates: Array) -> int:
 	var count := 0

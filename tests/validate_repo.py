@@ -3281,12 +3281,13 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "3/3 generated package economy breadth cases",
         "15 total generated package breadth towns",
         "4 generated project factions and 5 generated town templates",
+        "4 neutral generated town route cases",
         "player required common and rare resource sources present",
-        "9/9 generated package town source routes reachable",
+        "21/21 generated package town source routes reachable",
         "generated package source routes stay within 40 common steps and 56 rare steps",
         "guarded generated economy-source pressure",
-        "3/3 generated package towns retain guarded source pressure",
-        "3/3 generated package towns retain guarded rare-source pressure",
+        "7/7 generated package towns retain guarded source pressure",
+        "7/7 generated package towns retain guarded rare-source pressure",
         "generated package source acquisition stays within 6 days",
         "guarded source pressure retained in every breadth case",
         "guarded faction-rare source pressure retained for every breadth town",
@@ -3576,6 +3577,8 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "generated_package_town_economy_surface_v1",
         "generated_town_economy_source_routes",
         "generated_package_town_economy_source_routes_v1",
+        "neutral_town_case_count",
+        "_generated_economy_towns",
         "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
         "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
         "GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY",
@@ -3628,7 +3631,8 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("generated/native package sessions" in doc_text, errors, "Live stockpile resource surface doc must record generated/native package session coverage")
     ensure("generated_package_enemy_town_development_runway_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package enemy-town runway coverage")
     ensure("generated_package_town_economy_source_routes_v1" in doc_text, errors, "Live stockpile resource surface doc must record generated package town source-route coverage")
-    ensure("9/9 generated package town source routes reachable" in doc_text, errors, "Live stockpile resource surface doc must record generated source-route evidence")
+    ensure("21/21 generated package town source routes reachable" in doc_text, errors, "Live stockpile resource surface doc must record generated source-route evidence")
+    ensure("4 neutral generated town route cases" in doc_text, errors, "Live stockpile resource surface doc must record generated neutral-town source-route evidence")
     ensure("guarded generated economy-source pressure" in doc_text, errors, "Live stockpile resource surface doc must record generated guarded source pressure evidence")
     ensure("2/2 generated package enemy-town runway cases" in doc_text, errors, "Live stockpile resource surface doc must record generated enemy-town case evidence")
     ensure("save/resume preserves the full stockpile" in doc_text, errors, "Live stockpile resource surface doc must record save/resume coverage")
