@@ -2732,6 +2732,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     min_late_rare_bottleneck_days_per_town = int(report_payload.get("min_late_rare_bottleneck_days_per_town", 0)) if isinstance(report_payload, dict) else 0
     min_common_material_bottleneck_days_per_town = int(report_payload.get("min_common_material_bottleneck_days_per_town", 0)) if isinstance(report_payload, dict) else 0
     min_high_tier_unit_build_days = report_payload.get("min_high_tier_unit_build_days", {}) if isinstance(report_payload, dict) else {}
+    phase_windows = report_payload.get("phase_windows", {}) if isinstance(report_payload, dict) else {}
     ensure(authored_town_count >= 15, errors, "Town development balance report must cover all authored towns, not just seed towns")
     ensure(full_ladder_town_count == authored_town_count, errors, "Every authored town must expose its faction seven-building ladder")
     ensure(breadth_parity_town_count >= 6, errors, "Six-faction town development breadth parity must cover Thornwake, Brasshollow, and Veilmourn towns")
@@ -2741,6 +2742,15 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
     ensure(min_late_rare_bottleneck_days_per_town >= 1, errors, "Town development balance report must require late rare-resource bottleneck evidence")
     ensure(min_common_material_bottleneck_days_per_town >= 1, errors, "Town development balance report must require wood/ore bottleneck evidence")
     ensure(min_high_tier_unit_build_days == {"5": 4, "6": 12, "7": 22}, errors, "Town development balance report must gate high-tier unit build pacing days")
+    ensure(
+        phase_windows == {
+            "early": {"start": 1, "end": 10, "min_builds": 8},
+            "mid": {"start": 11, "end": 20, "min_builds": 6},
+            "late": {"start": 21, "end": 30, "min_builds": 2},
+        },
+        errors,
+        "Town development balance report must gate early/mid/late phase build distribution",
+    )
     ensure(isinstance(town_results, dict) and len(town_results) == authored_town_count, errors, "Town development balance report must include one result per authored town")
     for town_id, result in town_results.items():
         if not isinstance(result, dict):
@@ -2748,8 +2758,13 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
             continue
         ensure(int(result.get("target_building_count", 0)) >= 20, errors, f"{town_id} must expose at least twenty buildable development targets")
         ensure(int(result.get("non_unit_building_count", 0)) >= 12, errors, f"{town_id} must expose at least twelve non-unit development targets")
-        ensure(int(result.get("completion_day", 0)) >= 20, errors, f"{town_id} must not finish before the day-20 production pacing floor")
+        ensure(int(result.get("completion_day", 0)) >= 24, errors, f"{town_id} must not finish before the day-24 production pacing floor")
         ensure(int(result.get("build_count", 0)) == int(result.get("target_building_count", -1)), errors, f"{town_id} must build every target development building")
+        phase_build_counts = result.get("phase_build_counts", {})
+        phase_build_counts = phase_build_counts if isinstance(phase_build_counts, dict) else {}
+        ensure(int(phase_build_counts.get("early", 0)) >= 8, errors, f"{town_id} must preserve early development work")
+        ensure(int(phase_build_counts.get("mid", 0)) >= 6, errors, f"{town_id} must preserve midgame development work")
+        ensure(int(phase_build_counts.get("late", 0)) >= 2, errors, f"{town_id} must preserve late development work")
         ensure(int(result.get("rare_development_spend", 0)) >= min_rare_development_spend, errors, f"{town_id} must spend enough faction rare resource")
         ensure(int(result.get("ending_rare_resource", 999)) <= max_ending_rare_after_completion, errors, f"{town_id} must not end with excessive unspent rare resource")
         ensure(
@@ -2777,7 +2792,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "MIN_BUILDABLE_TARGETS = 20",
         "MIN_NON_UNIT_BUILDABLE_TARGETS = 12",
         "MIN_BREADTH_PARITY_BUILDINGS = 5",
-        "MIN_COMPLETION_DAY = 20",
+        "MIN_COMPLETION_DAY = 24",
         "MIN_RARE_DEVELOPMENT_SPEND = 24",
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
         "MIN_LATE_RARE_BOTTLENECK_DAY = 18",
@@ -2785,6 +2800,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1",
         "COMMON_MATERIAL_RESOURCES",
         "MIN_HIGH_TIER_UNIT_BUILD_DAYS",
+        "PHASE_WINDOWS",
         "SIX_FACTION_BREADTH_PARITY_STATUS",
         "breadth_parity_town_count",
         "non_unit_building_count",
@@ -2795,6 +2811,8 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "common_material_bottleneck_days",
         "common_material_bottleneck_day_count",
         "signature_tier_build_days",
+        "phase_build_counts",
+        "phase_windows",
     ):
         ensure(token in balance_report_text, errors, f"Town development balance report must gate breadth token {token}")
     for required_text in (
@@ -2802,7 +2820,7 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "economy-six-faction-town-development-breadth-parity-20260524-10184",
         "at least 20 buildable development targets",
         "at least 12 non-unit development targets",
-        "day-20 production pacing floor",
+        "day-24 production pacing floor",
         "six_faction_town_breadth_parity",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
@@ -2813,7 +2831,8 @@ def validate_town_development_balance_policy(errors: list[str]) -> None:
         "economy-town-development-pacing-parity-20260524-10184",
         "at least 20 buildable development targets",
         "at least 12 non-unit targets",
-        "day-20 production pacing floor",
+        "day-24 production pacing floor",
+        "early/mid/late phase build distribution",
         "completion days now range from day 24 to day 30",
         "late rare-resource bottleneck",
         "completion days now range from day 20 to day 23",
@@ -2984,6 +3003,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "all_live_resources_wired",
         "balance_harness_live_resource_accounting",
         "authored_town_development_end_to_end",
+        "town_development_phase_curve",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
         "town_development_price_band_sanity",
@@ -3008,6 +3028,8 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     harness_accounting = harness_accounting if isinstance(harness_accounting, dict) else {}
     ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
     ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
+    ensure(int(town_balance.get("completion_day_min", 0)) >= 24, errors, "Economy town goal scorecard must preserve the day-24 deterministic completion floor")
+    ensure(isinstance(town_balance.get("phase_windows", {}), dict) and bool(town_balance.get("phase_windows", {})), errors, "Economy town goal scorecard must include phase-curve build distribution evidence")
     ensure(int(town_balance.get("min_late_rare_bottleneck_days_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include late rare-resource bottleneck evidence")
     ensure(int(town_balance.get("min_common_material_bottleneck_days_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include wood/ore bottleneck evidence")
     ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
@@ -3024,6 +3046,11 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "BALANCE_REGRESSION_RULES_PATH",
         "HEADLESS_SIMULATION_RULES_PATH",
         "authored_town_development_end_to_end",
+        "MIN_DETERMINISTIC_COMPLETION_DAY",
+        "PHASE_WINDOWS",
+        "town_development_phase_curve",
+        "phase_build_counts",
+        "phase_min_counts",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
         "town_development_price_band_sanity",
@@ -3118,6 +3145,8 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "economy-town-goal-scorecard-20260524-10184",
         "all nine live stockpile resources",
         "30-turn target",
+        "day-24 deterministic completion floor",
+        "early/mid/late build distribution",
         "one build per town turn",
         "common-resource-dominant town development",
         "price-band sanity",
@@ -3155,7 +3184,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "28/28 checks",
+        "29/29 checks",
         "6/6 TownShell resource/build UI cases",
         "6/6 TownShell same-day build lockout cases",
         "42/42 TownShell seven-tier recruitment UI cases",

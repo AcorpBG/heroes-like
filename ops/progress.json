@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town UI Build Lockout Scorecard",
+  "currentSliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Development Phase Curve Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks.",
+  "currentSliceNotes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T09:26:58Z",
+  "updatedAt": "2026-05-25T09:54:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22345,9 +22345,97 @@
           "post_build_enabled_action_count_max": 0
         }
       }
+    },
+    {
+      "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
+      "title": "Economy Town Development Phase Curve Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Tighten the deterministic economy/town balance gate so authored towns must preserve a production-shaped 30-turn development curve, not merely finish after an old day-20 pacing floor.",
+      "notes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks.",
+      "startedAt": "2026-05-25T09:30:10Z",
+      "completedAt": "2026-05-25T09:54:09Z",
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "deterministic_scorecard_passed_requirement_count": 14,
+          "deterministic_scorecard_requirement_count": 14,
+          "runtime_scorecard_passed_requirement_count": 29,
+          "runtime_scorecard_requirement_count": 29,
+          "min_completion_day": 24,
+          "completion_day_min": 24,
+          "completion_day_max": 30,
+          "phase_min_counts": {
+            "early": 10,
+            "mid": 6,
+            "late": 2
+          }
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
+      "title": "Economy Town Development Phase Curve Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T09:54:09Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-six-faction-town-development-breadth-parity-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-town-development-phase-curve-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-development-pacing-parity-report.md",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-six-faction-town-development-breadth-parity-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Town development balance now requires authored towns to complete no earlier than day 24 and no later than day 30.",
+        "The deterministic balance report emits and gates early/mid/late build distribution with observed minimum phase counts of early 10, mid 6, and late 2 builds.",
+        "The economy/town scorecard now gates town_development_phase_curve and passes deterministic 14/14 checks plus runtime-inclusive 29/29 checks."
+      ],
+      "validation": [
+        "python3 tests/town_development_balance_report.py (passed; completion day range 24-30, phase minimums early 10, mid 6, late 2)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 14/14 deterministic checks including town_development_phase_curve)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 29/29 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not final campaign economy approval.",
+        "Not final route safety.",
+        "Not final strategic AI quality.",
+        "Not encounter balance approval.",
+        "Not exact manual price approval."
+      ],
+      "updatedAt": "2026-05-25T09:54:09Z"
+    },
     {
       "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
       "title": "Economy Active Enemy Source Route Scorecard",
@@ -29069,35 +29157,39 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "sliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+    "sliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-ui-build-lockout.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+      "python3 tests/town_development_balance_report.py",
       "python3 tests/economy_town_goal_scorecard_report.py",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
       "jq empty ops/progress.json content/towns.json",
       "git diff --check"
     ],
     "evidence": {
-      "town_resource_ui_same_day_build_lockout_case_count": 6,
-      "town_resource_ui_faction_case_count": 6,
-      "runtime_scorecard_passed_requirement_count": 28,
-      "runtime_scorecard_requirement_count": 28,
-      "deterministic_scorecard_passed_requirement_count": 13,
-      "deterministic_scorecard_requirement_count": 13,
-      "post_build_action_count_max": 0,
-      "post_build_enabled_action_count_max": 0
+      "deterministic_scorecard_passed_requirement_count": 14,
+      "deterministic_scorecard_requirement_count": 14,
+      "runtime_scorecard_passed_requirement_count": 29,
+      "runtime_scorecard_requirement_count": 29,
+      "min_completion_day": 24,
+      "completion_day_min": 24,
+      "completion_day_max": 30,
+      "phase_min_counts": {
+        "early": 10,
+        "mid": 6,
+        "late": 2
+      }
     }
   },
   "active_slice": {
-    "id": "economy-town-ui-build-lockout-scorecard-20260525-10184",
-    "title": "Economy Town UI Build Lockout Scorecard",
+    "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
+    "title": "Economy Town Development Phase Curve Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T09:26:58Z",
-    "notes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks."
+    "updatedAt": "2026-05-25T09:54:09Z",
+    "notes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks."
   },
-  "currentSliceUpdatedAt": "2026-05-25T09:26:58Z",
+  "currentSliceUpdatedAt": "2026-05-25T09:54:09Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -30002,34 +30094,38 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-ui-build-lockout-scorecard-20260525-10184",
-    "title": "Economy Town UI Build Lockout Scorecard",
+    "id": "economy-town-development-phase-curve-scorecard-20260525-10184",
+    "title": "Economy Town Development Phase Curve Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T09:26:58Z",
-    "notes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks."
+    "updatedAt": "2026-05-25T09:54:09Z",
+    "notes": "Completed. Deterministic town-development balance now requires a day-24 completion floor and early/mid/late build distribution; the economy/town scorecard gates town_development_phase_curve and passes deterministic 14/14 plus runtime-inclusive 29/29 checks."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T08:38:22Z",
-    "sliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T09:54:09Z",
+    "sliceId": "economy-town-development-phase-curve-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-ui-build-lockout.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+      "python3 tests/town_development_balance_report.py",
       "python3 tests/economy_town_goal_scorecard_report.py",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "python3 -m py_compile tests/town_development_balance_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
       "jq empty ops/progress.json content/towns.json",
       "git diff --check"
     ],
     "evidence": {
-      "town_resource_ui_same_day_build_lockout_case_count": 6,
-      "town_resource_ui_faction_case_count": 6,
-      "runtime_scorecard_passed_requirement_count": 28,
-      "runtime_scorecard_requirement_count": 28,
-      "deterministic_scorecard_passed_requirement_count": 13,
-      "deterministic_scorecard_requirement_count": 13,
-      "post_build_action_count_max": 0,
-      "post_build_enabled_action_count_max": 0
+      "deterministic_scorecard_passed_requirement_count": 14,
+      "deterministic_scorecard_requirement_count": 14,
+      "runtime_scorecard_passed_requirement_count": 29,
+      "runtime_scorecard_requirement_count": 29,
+      "min_completion_day": 24,
+      "completion_day_min": 24,
+      "completion_day_max": 30,
+      "phase_min_counts": {
+        "early": 10,
+        "mid": 6,
+        "late": 2
+      }
     }
   }
 }

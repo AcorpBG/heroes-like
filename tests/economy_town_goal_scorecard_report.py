@@ -16,6 +16,7 @@ CONTENT = ROOT / "content"
 REPORT_SCHEMA = "economy_town_goal_scorecard_report_v1"
 SLICE_ID = "economy-town-goal-scorecard-20260524-10184"
 TARGET_TURNS = 30
+MIN_DETERMINISTIC_COMPLETION_DAY = 24
 MIN_AUTHORED_TOWNS = 15
 MIN_FACTIONS = 6
 EXPECTED_FACTION_IDS = {
@@ -37,6 +38,11 @@ MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
+PHASE_WINDOWS = {
+    "early": {"start": 1, "end": 10, "min_builds": 8},
+    "mid": {"start": 11, "end": 20, "min_builds": 6},
+    "late": {"start": 21, "end": 30, "min_builds": 2},
+}
 COMMON_RESOURCES = {"gold", "wood", "ore"}
 RARE_RESOURCES = {
     "aetherglass",
@@ -1058,7 +1064,7 @@ def main() -> int:
         balance.get("ok") is True
         and int(balance.get("authored_town_count", 0)) >= MIN_AUTHORED_TOWNS
         and len(town_rows) >= MIN_AUTHORED_TOWNS
-        and all(20 <= day <= TARGET_TURNS for day in completion_days)
+        and all(MIN_DETERMINISTIC_COMPLETION_DAY <= day <= TARGET_TURNS for day in completion_days)
         and all(
             isinstance(row, dict)
             and row.get("completed") is True
@@ -1075,7 +1081,47 @@ def main() -> int:
             "authored_town_count": int(balance.get("authored_town_count", 0)),
             "completion_day_min": min(completion_days) if completion_days else 0,
             "completion_day_max": max(completion_days) if completion_days else 0,
+            "min_completion_day": MIN_DETERMINISTIC_COMPLETION_DAY,
             "target_turns": TARGET_TURNS,
+        },
+    )
+
+    balance_phase_windows = balance.get("phase_windows", {})
+    balance_phase_windows = balance_phase_windows if isinstance(balance_phase_windows, dict) else {}
+    phase_curve_ok = (
+        balance.get("ok") is True
+        and balance_phase_windows == PHASE_WINDOWS
+        and all(
+            isinstance(row, dict)
+            and isinstance(row.get("phase_build_counts", {}), dict)
+            and all(
+                int(row.get("phase_build_counts", {}).get(phase_id, 0)) >= int(window["min_builds"])
+                for phase_id, window in PHASE_WINDOWS.items()
+            )
+            for row in town_rows.values()
+        )
+    )
+    phase_min_counts = {
+        phase_id: min(
+            [
+                int(row.get("phase_build_counts", {}).get(phase_id, 0))
+                for row in town_rows.values()
+                if isinstance(row, dict) and isinstance(row.get("phase_build_counts", {}), dict)
+            ]
+            or [0]
+        )
+        for phase_id in PHASE_WINDOWS
+    }
+    add_check(
+        checks,
+        "town_development_phase_curve",
+        phase_curve_ok,
+        "Authored town development must preserve early, mid, and late construction work across the 30-turn balance curve.",
+        {
+            "phase_windows": PHASE_WINDOWS,
+            "observed_phase_min_counts": phase_min_counts,
+            "completion_day_min": min(completion_days) if completion_days else 0,
+            "completion_day_max": max(completion_days) if completion_days else 0,
         },
     )
 
@@ -1391,6 +1437,9 @@ def main() -> int:
                 "authored_town_count": int(balance.get("authored_town_count", 0)),
                 "completion_day_min": min(completion_days) if completion_days else 0,
                 "completion_day_max": max(completion_days) if completion_days else 0,
+                "min_completion_day": int(balance.get("min_completion_day", 0)),
+                "phase_windows": balance.get("phase_windows", {}),
+                "phase_min_counts": phase_min_counts,
                 "min_late_rare_bottleneck_day": int(balance.get("min_late_rare_bottleneck_day", 0)),
                 "min_late_rare_bottleneck_days_per_town": int(balance.get("min_late_rare_bottleneck_days_per_town", 0)),
                 "min_common_material_bottleneck_days_per_town": int(balance.get("min_common_material_bottleneck_days_per_town", 0)),
