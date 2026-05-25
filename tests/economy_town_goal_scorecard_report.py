@@ -67,6 +67,18 @@ GODOT_RUNTIME_REPORTS = (
         "quit_after": 300,
         "log_file": "/tmp/heroes-like-scorecard-unique-town-payoff.log",
     },
+    {
+        "scene": "res://tests/town_economy_resource_ui_surface_report.tscn",
+        "marker": "TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-town-resource-ui.log",
+    },
+    {
+        "scene": "res://tests/town_recruitment_ui_surface_report.tscn",
+        "marker": "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-town-recruitment-ui.log",
+    },
 )
 
 
@@ -410,6 +422,90 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "observed_town_payoff_domain_min": town_payoff_domain_min,
         },
     )
+
+    resource_ui_runtime = payloads["TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT"]
+    resource_ui_cases = resource_ui_runtime.get("cases", [])
+    resource_ui_cases = resource_ui_cases if isinstance(resource_ui_cases, list) else []
+    blocked_rare_action_case_count = 0
+    ready_rare_action_case_count = 0
+    common_only_market_case_count = 0
+    for row in resource_ui_cases:
+        if not isinstance(row, dict):
+            continue
+        rare_id = str(row.get("rare_resource_id", ""))
+        blocked_action = row.get("blocked_action", {})
+        blocked_action = blocked_action if isinstance(blocked_action, dict) else {}
+        ready_action = row.get("ready_action", {})
+        ready_action = ready_action if isinstance(ready_action, dict) else {}
+        blocked_cost = blocked_action.get("cost", {})
+        blocked_cost = blocked_cost if isinstance(blocked_cost, dict) else {}
+        ready_cost = ready_action.get("cost", {})
+        ready_cost = ready_cost if isinstance(ready_cost, dict) else {}
+        if (
+            rare_id in RARE_RESOURCES
+            and int(blocked_cost.get(rare_id, 0)) > 0
+            and bool(blocked_action.get("disabled", False))
+            and not bool(blocked_action.get("direct_affordable", True))
+            and not bool(blocked_action.get("market_coverable", True))
+        ):
+            blocked_rare_action_case_count += 1
+        if (
+            rare_id in RARE_RESOURCES
+            and int(ready_cost.get(rare_id, 0)) > 0
+            and not bool(ready_action.get("disabled", True))
+            and bool(ready_action.get("direct_affordable", False))
+            and not bool(ready_action.get("market_coverable", True))
+        ):
+            ready_rare_action_case_count += 1
+        if int(row.get("market_action_count", 0)) > 0:
+            common_only_market_case_count += 1
+    resource_ui_runtime_ok = (
+        resource_ui_runtime.get("ok") is True
+        and int(resource_ui_runtime.get("faction_case_count", 0)) >= MIN_FACTIONS
+        and set(str(value) for value in resource_ui_runtime.get("live_stockpile_resource_ids", [])) == LIVE_RESOURCES
+        and set(str(value) for value in resource_ui_runtime.get("common_resource_ids", [])) == COMMON_RESOURCES
+        and set(str(value) for value in resource_ui_runtime.get("rare_resource_ids", [])) == RARE_RESOURCES
+        and blocked_rare_action_case_count >= MIN_FACTIONS
+        and ready_rare_action_case_count >= MIN_FACTIONS
+        and common_only_market_case_count >= MIN_FACTIONS
+    )
+    add_check(
+        checks,
+        "town_resource_ui_surface_runtime",
+        resource_ui_runtime_ok,
+        "Live TownShell resource/build UI must expose all nine resources, rare build bottlenecks, and common-only market boundaries.",
+        {
+            "faction_case_count": int(resource_ui_runtime.get("faction_case_count", 0)),
+            "blocked_rare_action_case_count": blocked_rare_action_case_count,
+            "ready_rare_action_case_count": ready_rare_action_case_count,
+            "common_only_market_case_count": common_only_market_case_count,
+            "live_stockpile_resource_ids": sorted(str(value) for value in resource_ui_runtime.get("live_stockpile_resource_ids", [])),
+        },
+    )
+
+    recruitment_ui_runtime = payloads["TOWN_RECRUITMENT_UI_SURFACE_REPORT"]
+    recruitment_ui_runtime_ok = (
+        recruitment_ui_runtime.get("ok") is True
+        and int(recruitment_ui_runtime.get("faction_case_count", 0)) >= MIN_FACTIONS
+        and int(recruitment_ui_runtime.get("target_tier_count", 0)) == SIGNATURE_TIER_COUNT
+        and int(recruitment_ui_runtime.get("recruitment_action_count", 0)) >= MIN_FACTIONS * SIGNATURE_TIER_COUNT
+        and int(recruitment_ui_runtime.get("tier_button_case_count", 0)) >= MIN_FACTIONS * SIGNATURE_TIER_COUNT
+        and int(recruitment_ui_runtime.get("portrait_loaded_count", 0)) >= MIN_FACTIONS * SIGNATURE_TIER_COUNT
+        and set(str(value) for value in recruitment_ui_runtime.get("live_stockpile_resource_ids", [])) == LIVE_RESOURCES
+    )
+    add_check(
+        checks,
+        "town_recruitment_ui_surface_runtime",
+        recruitment_ui_runtime_ok,
+        "Live TownShell recruitment UI must expose seven-tier recruit actions, tier labels, affordability, and loaded unit portraits.",
+        {
+            "faction_case_count": int(recruitment_ui_runtime.get("faction_case_count", 0)),
+            "target_tier_count": int(recruitment_ui_runtime.get("target_tier_count", 0)),
+            "recruitment_action_count": int(recruitment_ui_runtime.get("recruitment_action_count", 0)),
+            "tier_button_case_count": int(recruitment_ui_runtime.get("tier_button_case_count", 0)),
+            "portrait_loaded_count": int(recruitment_ui_runtime.get("portrait_loaded_count", 0)),
+        },
+    )
     return {
         "town_development_runtime_balance_report_v1": {
             "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
@@ -432,6 +528,18 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "town_case_count": int(unique_payoff_runtime.get("town_case_count", 0)),
             "runtime_payoff_case_count": int(unique_payoff_runtime.get("runtime_payoff_case_count", 0)),
             "observed_town_payoff_domain_min": town_payoff_domain_min,
+        },
+        "town_economy_resource_ui_surface_report_v1": {
+            "faction_case_count": int(resource_ui_runtime.get("faction_case_count", 0)),
+            "blocked_rare_action_case_count": blocked_rare_action_case_count,
+            "ready_rare_action_case_count": ready_rare_action_case_count,
+            "common_only_market_case_count": common_only_market_case_count,
+        },
+        "town_recruitment_ui_surface_report_v1": {
+            "faction_case_count": int(recruitment_ui_runtime.get("faction_case_count", 0)),
+            "recruitment_action_count": int(recruitment_ui_runtime.get("recruitment_action_count", 0)),
+            "tier_button_case_count": int(recruitment_ui_runtime.get("tier_button_case_count", 0)),
+            "portrait_loaded_count": int(recruitment_ui_runtime.get("portrait_loaded_count", 0)),
         },
     }
 
