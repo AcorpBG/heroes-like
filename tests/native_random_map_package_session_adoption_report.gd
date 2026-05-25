@@ -12,6 +12,7 @@ const FEATURE_GATE := "native_rmg_package_session_adoption_report"
 const TARGET_TURNS := 30
 const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 24
 const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 24
+const MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
 const MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS := 40
 const MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS := 56
@@ -180,6 +181,9 @@ func _run() -> void:
 	var generated_player_town_development_runway := _assert_generated_player_town_development_runway(active_session)
 	if generated_player_town_development_runway.is_empty():
 		return
+	var generated_neutral_town_capture_development_runway := _assert_generated_neutral_town_capture_development_runway(active_setup)
+	if generated_neutral_town_capture_development_runway.is_empty():
+		return
 	var generated_enemy_town_development_runway := _assert_generated_enemy_town_development_runway(active_setup)
 	if generated_enemy_town_development_runway.is_empty():
 		return
@@ -219,6 +223,7 @@ func _run() -> void:
 		"generated_town_economy_source_routes": generated_town_economy_source_routes,
 		"generated_town_economy_breadth": generated_town_economy_breadth,
 		"generated_player_town_development_runway": generated_player_town_development_runway,
+		"generated_neutral_town_capture_development_runway": generated_neutral_town_capture_development_runway,
 		"generated_enemy_town_development_runway": generated_enemy_town_development_runway,
 		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
@@ -1317,6 +1322,264 @@ func _assert_generated_player_town_development_runway(session: SessionStateStore
 		return {}
 	return surface
 
+func _assert_generated_neutral_town_capture_development_runway(active_setup: Dictionary) -> Dictionary:
+	var probe_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(active_setup)
+	if probe_session == null or probe_session.session_id == "":
+		_fail("Generated package neutral-town capture runway could not start a fresh package session.")
+		return {}
+	var neutral_towns := _neutral_towns(probe_session)
+	if neutral_towns.is_empty():
+		_fail("Generated package neutral-town capture runway found no neutral towns.")
+		return {}
+	var rows := []
+	for neutral_town in neutral_towns:
+		var case_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(active_setup)
+		if case_session == null or case_session.session_id == "":
+			_fail("Generated package neutral-town capture runway could not start a case session.")
+			return {}
+		rows.append(_run_generated_neutral_town_capture_case(case_session, neutral_town))
+	var case_count := rows.size()
+	var captured_case_count := 0
+	var completed_case_count := 0
+	var pacing_floor_case_count := 0
+	var rare_spend_case_count := 0
+	var same_day_guard_case_count := 0
+	var source_covered_case_count := 0
+	var source_adoption_policy_case_count := 0
+	var recruitment_case_count := 0
+	var build_count_total := 0
+	var secured_source_count_total := 0
+	var completion_days := []
+	for row_value in rows:
+		var row: Dictionary = row_value
+		if bool(row.get("captured", false)):
+			captured_case_count += 1
+		if bool(row.get("completed", false)):
+			completed_case_count += 1
+			completion_days.append(int(row.get("completion_day", 0)))
+		if bool(row.get("pacing_floor_ok", false)):
+			pacing_floor_case_count += 1
+		if bool(row.get("rare_spend_observed", false)):
+			rare_spend_case_count += 1
+		if bool(row.get("same_day_reject_ok", false)) and bool(row.get("build_actions_after_build_blocked", false)):
+			same_day_guard_case_count += 1
+		var source_evidence: Dictionary = row.get("source_evidence", {}) if row.get("source_evidence", {}) is Dictionary else {}
+		if bool(row.get("source_coverage_ok", false)):
+			source_covered_case_count += 1
+		if String(source_evidence.get("source_adoption_policy", "")) == "minimal_required_resource_coverage":
+			source_adoption_policy_case_count += 1
+		if bool(row.get("recruitment_end_to_end_ok", false)) and int(row.get("recruited_unit_case_count", 0)) == TARGET_TIER_COUNT:
+			recruitment_case_count += 1
+		build_count_total += int(row.get("build_count", 0))
+		secured_source_count_total += int(source_evidence.get("secured_source_count", 0))
+	var status := "pass"
+	if case_count < 1 \
+			or captured_case_count != case_count \
+			or completed_case_count != case_count \
+			or pacing_floor_case_count != case_count \
+			or rare_spend_case_count != case_count \
+			or same_day_guard_case_count != case_count \
+			or source_covered_case_count != case_count \
+			or source_adoption_policy_case_count != case_count \
+			or recruitment_case_count != case_count:
+		status = "fail"
+	var surface := {
+		"schema": "generated_package_neutral_town_capture_development_runway_v1",
+		"status": status,
+		"package_session_scope": "strict_small_36x36_one_level_land_only",
+		"neutral_town_case_count": case_count,
+		"captured_case_count": captured_case_count,
+		"completed_case_count": completed_case_count,
+		"min_completion_day": MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY,
+		"completion_day_min": completion_days.min() if not completion_days.is_empty() else 0,
+		"completion_day_max": completion_days.max() if not completion_days.is_empty() else 0,
+		"pacing_floor_case_count": pacing_floor_case_count,
+		"rare_spend_case_count": rare_spend_case_count,
+		"same_day_guard_case_count": same_day_guard_case_count,
+		"source_covered_case_count": source_covered_case_count,
+		"source_adoption_policy_case_count": source_adoption_policy_case_count,
+		"recruitment_end_to_end_case_count": recruitment_case_count,
+		"build_count_total": build_count_total,
+		"secured_source_count_total": secured_source_count_total,
+		"town_rows": rows,
+	}
+	if status != "pass":
+		_fail("Generated package neutral-town capture development runway failed: %s" % JSON.stringify(surface))
+		return {}
+	return surface
+
+func _run_generated_neutral_town_capture_case(session: SessionStateStoreScript.SessionData, neutral_town: Dictionary) -> Dictionary:
+	OverworldRules.normalize_overworld_state(session)
+	session.game_state = "overworld"
+	session.scenario_status = "in_progress"
+	var placement_id := String(neutral_town.get("placement_id", ""))
+	var town := _town(session, placement_id)
+	var previous_owner := String(town.get("owner", neutral_town.get("owner", "")))
+	var capture_message := OverworldRules.capture_town_by_placement(session, placement_id)
+	town = _town(session, placement_id)
+	var captured := previous_owner == "neutral" and String(town.get("owner", "")) == "player"
+	var town_id := String(town.get("town_id", neutral_town.get("town_id", "")))
+	var town_template := ContentService.get_town(town_id)
+	var faction_id := String(town.get("faction_id", town_template.get("faction_id", "")))
+	var faction := ContentService.get_faction(faction_id)
+	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+	var target_turns: int = min(TARGET_TURNS, int(profile.get("target_complete_turns", TARGET_TURNS)))
+	var target_buildings := _string_array(town_template.get("buildable_building_ids", []))
+	var initial_missing_buildings := _missing_buildings(session, placement_id, target_buildings)
+	var required_resource_ids := _required_build_resource_ids(target_buildings)
+	var row := {
+		"ok": false,
+		"town_placement_id": placement_id,
+		"town_id": town_id,
+		"faction_id": faction_id,
+		"previous_owner": previous_owner,
+		"captured": captured,
+		"capture_message": capture_message,
+		"target_turns": target_turns,
+		"target_building_count": target_buildings.size(),
+		"initial_missing_building_count": initial_missing_buildings.size(),
+		"required_resource_ids": required_resource_ids,
+		"rare_resource_id": String(profile.get("rare_resource_id", "")),
+	}
+	if not captured:
+		row["error"] = "neutral generated town did not transition to player ownership"
+		return row
+	if town.is_empty() or town_template.is_empty() or faction.is_empty() or target_buildings.is_empty():
+		row["error"] = "missing captured neutral generated town/faction/build targets"
+		return row
+	if String(profile.get("rare_resource_id", "")) not in RARE_RESOURCE_IDS:
+		row["error"] = "captured neutral generated town development profile missing live rare resource"
+		return row
+	var select_result := _set_active_town(session, placement_id)
+	if not bool(select_result.get("ok", false)):
+		row["error"] = "captured neutral generated town could not be selected: %s" % String(select_result.get("message", ""))
+		return row
+
+	var source_evidence := _secure_development_sources(session, required_resource_ids)
+	var signature_order := _signature_order(faction)
+	var build_log := []
+	var stalled_days := []
+	var rare_spend_events := []
+	var same_day_reject_ok := false
+	var build_actions_after_build_blocked := false
+	var market_common_only := true
+	var economy_day_advance_count := 0
+	var post_completion_economy_day_count := 0
+
+	for _turn in range(target_turns):
+		_set_active_town(session, placement_id)
+		var selected_id := _select_building_id(session, placement_id, target_buildings, signature_order)
+		if selected_id == "":
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "no_affordable_build_action",
+				"resources": _resources(session),
+				"open_buildings": _open_building_ids(_town(session, placement_id), target_buildings),
+			})
+		else:
+			var before_resources := _resources(session)
+			var selected_building := ContentService.get_building(selected_id)
+			var build_result: Dictionary = OverworldRules.build_in_active_town(session, selected_id)
+			if not bool(build_result.get("ok", false)):
+				stalled_days.append({
+					"day": int(session.day),
+					"reason": "build_failed",
+					"building_id": selected_id,
+					"message": String(build_result.get("message", "")),
+				})
+			else:
+				var after_resources := _resources(session)
+				var rare_delta := _rare_resource_spend(selected_building.get("cost", {}), before_resources, after_resources)
+				if not rare_delta.is_empty():
+					rare_spend_events.append({
+						"day": int(session.day),
+						"building_id": selected_id,
+						"spent": rare_delta,
+					})
+				var same_day_result: Dictionary = OverworldRules.build_in_active_town(session, selected_id)
+				if not bool(same_day_result.get("ok", true)) and String(same_day_result.get("message", "")).contains("already completed a build order today"):
+					same_day_reject_ok = true
+				build_actions_after_build_blocked = TownRules.get_build_actions(session).is_empty()
+				build_log.append({
+					"day": int(session.day),
+					"building_id": selected_id,
+					"resources_before": before_resources,
+					"resources_after": after_resources,
+				})
+				market_common_only = market_common_only and _market_actions_common_only(session)
+				if _missing_buildings(session, placement_id, target_buildings).is_empty():
+					break
+		var turn_result: Dictionary = _advance_generated_package_economy_day(session)
+		if not bool(turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "economy_day_advance_failed",
+				"message": String(turn_result.get("message", "")),
+			})
+		else:
+			economy_day_advance_count += 1
+
+	var missing := _missing_buildings(session, placement_id, target_buildings)
+	var completed := missing.is_empty()
+	var completion_day := int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0
+	while completed and int(session.day) < TARGET_TURNS:
+		var completion_turn_result: Dictionary = _advance_generated_package_economy_day(session)
+		if not bool(completion_turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "post_completion_economy_day_advance_failed",
+				"message": String(completion_turn_result.get("message", "")),
+			})
+			break
+		economy_day_advance_count += 1
+		post_completion_economy_day_count += 1
+	var recruitment_report := _recruitment_end_to_end_report(session, placement_id, faction) if completed else {
+		"ok": false,
+		"errors": ["captured neutral town did not complete development before recruitment check"],
+	}
+	var source_coverage_ok := _source_covers_required_resources(source_evidence, required_resource_ids)
+	row["ok"] = (
+		completed
+		and completion_day >= MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY
+		and completion_day <= TARGET_TURNS
+		and int(build_log.size()) == initial_missing_buildings.size()
+		and same_day_reject_ok
+		and build_actions_after_build_blocked
+		and not rare_spend_events.is_empty()
+		and market_common_only
+		and source_coverage_ok
+		and String(source_evidence.get("source_adoption_policy", "")) == "minimal_required_resource_coverage"
+		and economy_day_advance_count > 0
+		and bool(recruitment_report.get("ok", false))
+		and int(recruitment_report.get("recruited_unit_case_count", 0)) == TARGET_TIER_COUNT
+	)
+	row["completed"] = completed
+	row["completion_day"] = completion_day
+	row["min_completion_day"] = MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY
+	row["pacing_floor_ok"] = completion_day >= MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY
+	row["build_count"] = build_log.size()
+	row["missing_buildings"] = missing
+	row["same_day_reject_ok"] = same_day_reject_ok
+	row["build_actions_after_build_blocked"] = build_actions_after_build_blocked
+	row["rare_spend_observed"] = not rare_spend_events.is_empty()
+	row["rare_spend_events"] = rare_spend_events
+	row["market_common_only"] = market_common_only
+	row["focused_economy_day_advance_count"] = economy_day_advance_count
+	row["post_completion_economy_day_count"] = post_completion_economy_day_count
+	row["source_coverage_ok"] = source_coverage_ok
+	row["source_evidence"] = source_evidence
+	row["recruitment_end_to_end_ok"] = bool(recruitment_report.get("ok", false))
+	row["recruited_unit_case_count"] = int(recruitment_report.get("recruited_unit_case_count", 0))
+	row["recruitment_case_count"] = int(recruitment_report.get("case_count", 0))
+	row["recruitment_market_purchase_count"] = int(recruitment_report.get("market_purchase_count", 0))
+	row["recruitment_market_reset_wait_count"] = int(recruitment_report.get("market_reset_wait_count", 0))
+	row["ending_resources"] = _resources(session)
+	row["stalled_days"] = stalled_days.slice(0, 5)
+	row["build_log"] = build_log
+	if not bool(row.get("ok", false)):
+		row["error"] = _generated_neutral_capture_runway_error(row)
+	return row
+
 func _assert_generated_enemy_town_development_runway(active_setup: Dictionary) -> Dictionary:
 	var probe_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(active_setup)
 	if probe_session == null or probe_session.session_id == "":
@@ -2099,6 +2362,15 @@ func _enemy_towns(session: SessionStateStoreScript.SessionData) -> Array:
 			result.append(town_value)
 	return result
 
+func _neutral_towns(session: SessionStateStoreScript.SessionData) -> Array:
+	var result := []
+	if session == null:
+		return result
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "neutral":
+			result.append(town_value)
+	return result
+
 func _enemy_config_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	var runtime_record: Dictionary = session.overworld.get("native_random_map_runtime_scenario_record", {}) if session.overworld.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
 	var configs: Array = runtime_record.get("enemy_factions", []) if runtime_record.get("enemy_factions", []) is Array else []
@@ -2262,6 +2534,28 @@ func _generated_enemy_runway_error(row: Dictionary) -> String:
 	if not bool(row.get("ai_recruitment_selected_seen", false)):
 		return "generated enemy selected recruitment was not affordable"
 	return "unknown generated enemy runway failure"
+
+func _generated_neutral_capture_runway_error(row: Dictionary) -> String:
+	if not bool(row.get("captured", false)):
+		return "generated neutral town did not become player-owned after capture"
+	if not bool(row.get("completed", false)):
+		return "captured generated neutral town did not complete its development runway"
+	if not bool(row.get("pacing_floor_ok", false)):
+		return "captured generated neutral town completed before the day-24 production pacing floor"
+	if not bool(row.get("same_day_reject_ok", false)) or not bool(row.get("build_actions_after_build_blocked", false)):
+		return "captured generated neutral town same-day second build was not blocked"
+	if not bool(row.get("rare_spend_observed", false)):
+		return "captured generated neutral town high-tier rare-resource spend was not observed"
+	if not bool(row.get("source_coverage_ok", false)):
+		return "captured generated neutral town secured sources did not cover required build resources"
+	var source_evidence: Dictionary = row.get("source_evidence", {}) if row.get("source_evidence", {}) is Dictionary else {}
+	if String(source_evidence.get("source_adoption_policy", "")) != "minimal_required_resource_coverage":
+		return "captured generated neutral town source adoption did not use minimal required-resource coverage"
+	if not bool(row.get("recruitment_end_to_end_ok", false)):
+		return "captured generated neutral town recruitment did not complete"
+	if int(row.get("recruited_unit_case_count", 0)) != TARGET_TIER_COUNT:
+		return "captured generated neutral town did not recruit all seven tiers"
+	return "unknown captured generated neutral town runway failure"
 
 func _filter_resources(resources: Dictionary, allowed: Array) -> Dictionary:
 	var result := {}
