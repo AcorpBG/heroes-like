@@ -13,6 +13,8 @@ const TARGET_TURNS := 30
 const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 24
 const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
+const MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS := 40
+const MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS := 56
 const COMMON_MARKET_RESOURCE_IDS := ["wood", "ore"]
 const RARE_RESOURCE_IDS := [
 	"aetherglass",
@@ -166,6 +168,9 @@ func _run() -> void:
 	var generated_town_economy_surface := _assert_generated_town_economy_surface(active_session)
 	if generated_town_economy_surface.is_empty():
 		return
+	var generated_town_economy_source_routes := _assert_generated_town_economy_source_routes(active_session)
+	if generated_town_economy_source_routes.is_empty():
+		return
 	var generated_town_economy_breadth := _assert_generated_town_economy_breadth(service, bridge)
 	if generated_town_economy_breadth.is_empty():
 		return
@@ -208,6 +213,7 @@ func _run() -> void:
 		"bridge_resource_stockpile": bridge_resource_stockpile,
 		"active_resource_stockpile": active_resource_stockpile,
 		"generated_town_economy_surface": generated_town_economy_surface,
+		"generated_town_economy_source_routes": generated_town_economy_source_routes,
 		"generated_town_economy_breadth": generated_town_economy_breadth,
 		"generated_player_town_development_runway": generated_player_town_development_runway,
 		"generated_enemy_town_development_runway": generated_enemy_town_development_runway,
@@ -675,6 +681,295 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 		_fail("Generated package town economy breadth failed: %s" % JSON.stringify(breadth))
 		return {}
 	return breadth
+
+func _assert_generated_town_economy_source_routes(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var towns := _player_and_enemy_towns(session)
+	var rows := []
+	var town_case_count := 0
+	var player_town_case_count := 0
+	var enemy_town_case_count := 0
+	var resource_route_case_count := 0
+	var reachable_route_case_count := 0
+	var common_route_steps := []
+	var rare_route_steps := []
+	var required_rare_resource_ids := {}
+	for town in towns:
+		var row := _run_generated_town_source_route_case(session, town)
+		rows.append(row)
+		town_case_count += 1
+		if String(row.get("owner", "")) == "player":
+			player_town_case_count += 1
+		elif String(row.get("owner", "")) == "enemy":
+			enemy_town_case_count += 1
+		resource_route_case_count += int(row.get("resource_route_case_count", 0))
+		reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
+		var rare_id := String(row.get("rare_resource_id", ""))
+		if rare_id != "":
+			required_rare_resource_ids[rare_id] = true
+		for route_value in row.get("routes", []):
+			if not (route_value is Dictionary):
+				continue
+			var route: Dictionary = route_value
+			if not bool(route.get("reachable", false)):
+				continue
+			var resource_id := String(route.get("resource_id", ""))
+			if resource_id in COMMON_MARKET_RESOURCE_IDS:
+				common_route_steps.append(int(route.get("route_steps", 0)))
+			elif resource_id != "":
+				rare_route_steps.append(int(route.get("route_steps", 0)))
+	var max_common_steps: int = int(common_route_steps.max()) if not common_route_steps.is_empty() else 0
+	var max_rare_steps: int = int(rare_route_steps.max()) if not rare_route_steps.is_empty() else 0
+	var status := "pass"
+	if town_case_count < 3 \
+			or player_town_case_count < 1 \
+			or enemy_town_case_count < 2 \
+			or resource_route_case_count != town_case_count * 3 \
+			or reachable_route_case_count != resource_route_case_count \
+			or max_common_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
+			or max_rare_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS:
+		status = "fail"
+	var surface := {
+		"schema": "generated_package_town_economy_source_routes_v1",
+		"status": status,
+		"package_session_scope": "strict_small_36x36_one_level_land_only",
+		"town_case_count": town_case_count,
+		"player_town_case_count": player_town_case_count,
+		"enemy_town_case_count": enemy_town_case_count,
+		"resource_route_case_count": resource_route_case_count,
+		"reachable_route_case_count": reachable_route_case_count,
+		"required_common_resource_ids": COMMON_MARKET_RESOURCE_IDS,
+		"required_rare_resource_ids": _sorted_string_keys(required_rare_resource_ids),
+		"max_common_route_steps": max_common_steps,
+		"max_rare_route_steps": max_rare_steps,
+		"common_route_step_limit": MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS,
+		"rare_route_step_limit": MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS,
+		"town_rows": rows,
+	}
+	if status != "pass":
+		_fail("Generated package town economy source routes failed: %s" % JSON.stringify(surface))
+		return {}
+	return surface
+
+func _run_generated_town_source_route_case(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var placement_id := String(town.get("placement_id", ""))
+	var town_id := String(town.get("town_id", ""))
+	var town_template := ContentService.get_town(town_id)
+	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+	var rare_id := String(profile.get("rare_resource_id", ""))
+	var required_resource_ids := COMMON_MARKET_RESOURCE_IDS.duplicate()
+	required_resource_ids.append(rare_id)
+	var start_tile := _generated_town_route_start_tile(town)
+	var route_rows := []
+	var errors := []
+	var reachable_count := 0
+	for resource_id_value in required_resource_ids:
+		var resource_id := String(resource_id_value)
+		var route_row := _best_generated_resource_route(session, start_tile, resource_id)
+		route_rows.append(route_row)
+		if bool(route_row.get("reachable", false)):
+			reachable_count += 1
+		else:
+			errors.append("%s source unreachable" % resource_id)
+		var route_steps := int(route_row.get("route_steps", 999999))
+		var max_steps := MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS if resource_id in COMMON_MARKET_RESOURCE_IDS else MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
+		if route_steps > max_steps:
+			errors.append("%s source route too long: %d > %d" % [resource_id, route_steps, max_steps])
+	return {
+		"ok": errors.is_empty() and route_rows.size() == 3,
+		"owner": String(town.get("owner", "")),
+		"town_placement_id": placement_id,
+		"town_id": town_id,
+		"faction_id": String(town.get("faction_id", town_template.get("faction_id", ""))),
+		"rare_resource_id": rare_id,
+		"start_tile": _generated_tile_payload(start_tile),
+		"resource_route_case_count": route_rows.size(),
+		"reachable_route_case_count": reachable_count,
+		"routes": route_rows,
+		"errors": errors,
+		"error": "; ".join(errors),
+	}
+
+func _best_generated_resource_route(session: SessionStateStoreScript.SessionData, start_tile: Vector2i, resource_id: String) -> Dictionary:
+	var candidates := []
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var output := _generated_resource_node_output(node)
+		if int(output.get(resource_id, 0)) <= 0:
+			continue
+		var target_tile := _generated_resource_route_target_tile(node)
+		var route := _find_generated_route(session, start_tile, target_tile)
+		var row := {
+			"resource_id": resource_id,
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"site_name": String(ContentService.get_resource_site(String(node.get("site_id", ""))).get("name", "")),
+			"target_tile": _generated_tile_payload(target_tile),
+			"output": output,
+			"reachable": not route.is_empty(),
+			"route_steps": max(0, route.size() - 1) if not route.is_empty() else 999999,
+			"route_tiles": _generated_route_payload(route),
+			"guarded": _generated_resource_source_has_guard(session, node),
+		}
+		candidates.append(row)
+	if candidates.is_empty():
+		return {
+			"resource_id": resource_id,
+			"reachable": false,
+			"route_steps": 999999,
+			"error": "no generated resource source",
+		}
+	candidates.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		if bool(left.get("reachable", false)) != bool(right.get("reachable", false)):
+			return bool(left.get("reachable", false))
+		return int(left.get("route_steps", 999999)) < int(right.get("route_steps", 999999))
+	)
+	var best: Dictionary = candidates[0]
+	best["candidate_count"] = candidates.size()
+	best["reachable_candidate_count"] = _generated_reachable_candidate_count(candidates)
+	return best
+
+func _find_generated_route(session: SessionStateStoreScript.SessionData, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var map_size := OverworldRules.derive_map_size(session)
+	if not _generated_in_bounds(start_tile, map_size) or not _generated_in_bounds(target_tile, map_size):
+		return []
+	var start_key := _generated_tile_key(start_tile)
+	var queue := [start_tile]
+	var visited := {start_key: true}
+	var parent := {}
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		if current == target_tile:
+			return _reconstruct_generated_route(parent, start_tile, target_tile)
+		for neighbor in _generated_route_neighbors(current):
+			if not _generated_in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _generated_tile_key(neighbor)
+			if bool(visited.get(neighbor_key, false)):
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(session, current, neighbor):
+				continue
+			var is_destination: bool = neighbor == target_tile
+			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not (is_destination and OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)):
+				continue
+			if not is_destination and OverworldRules.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+				continue
+			visited[neighbor_key] = true
+			parent[neighbor_key] = current
+			queue.append(neighbor)
+	return []
+
+func _reconstruct_generated_route(parent: Dictionary, start_tile: Vector2i, target_tile: Vector2i) -> Array:
+	var route := [target_tile]
+	var current := target_tile
+	var guard := 0
+	while current != start_tile and guard < 10000:
+		guard += 1
+		var current_key := _generated_tile_key(current)
+		if not parent.has(current_key):
+			return []
+		current = parent[current_key]
+		route.push_front(current)
+	return route
+
+func _generated_route_neighbors(tile: Vector2i) -> Array:
+	return [
+		Vector2i(tile.x - 1, tile.y - 1),
+		Vector2i(tile.x, tile.y - 1),
+		Vector2i(tile.x + 1, tile.y - 1),
+		Vector2i(tile.x - 1, tile.y),
+		Vector2i(tile.x + 1, tile.y),
+		Vector2i(tile.x - 1, tile.y + 1),
+		Vector2i(tile.x, tile.y + 1),
+		Vector2i(tile.x + 1, tile.y + 1),
+	]
+
+func _generated_resource_node_output(node: Dictionary) -> Dictionary:
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var result := {}
+	for bucket in [site.get("claim_rewards", site.get("rewards", {})), site.get("control_income", {})]:
+		if not (bucket is Dictionary):
+			continue
+		for key in bucket.keys():
+			var resource_id := String(key)
+			if resource_id == "experience" or resource_id == "":
+				continue
+			result[resource_id] = int(result.get(resource_id, 0)) + int(bucket.get(key, 0))
+	return result
+
+func _generated_resource_route_target_tile(node: Dictionary) -> Vector2i:
+	for key in ["visit_tile", "primary_tile", "action_tile"]:
+		var tile: Dictionary = node.get(key, {}) if node.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			return Vector2i(int(tile.get("x", node.get("x", 0))), int(tile.get("y", node.get("y", 0))))
+	for key in ["package_visit_tiles", "action_tiles", "package_action_tiles", "approach_tiles"]:
+		var tiles: Array = node.get(key, []) if node.get(key, []) is Array else []
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				return Vector2i(int(tile_value.get("x", node.get("x", 0))), int(tile_value.get("y", node.get("y", 0))))
+	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+
+func _generated_resource_source_has_guard(session: SessionStateStoreScript.SessionData, node: Dictionary) -> bool:
+	var placement_id := String(node.get("placement_id", ""))
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if OverworldRules.is_encounter_resolved(session, encounter):
+			continue
+		if String(encounter.get("target_kind", "")) == "resource" and String(encounter.get("target_placement_id", "")) == placement_id:
+			return true
+		var dx: int = abs(int(encounter.get("x", 0)) - int(node.get("x", 0)))
+		var dy: int = abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
+		if max(dx, dy) <= 1:
+			return true
+	return false
+
+func _player_and_enemy_towns(session: SessionStateStoreScript.SessionData) -> Array:
+	var result := []
+	var towns: Array = session.overworld.get("towns", []) if session != null and session.overworld.get("towns", []) is Array else []
+	for town_value in towns:
+		if town_value is Dictionary and String(town_value.get("owner", "")) in ["player", "enemy"]:
+			result.append(town_value)
+	return result
+
+func _generated_town_route_start_tile(town: Dictionary) -> Vector2i:
+	for key in ["hero_start_tile", "runtime_start_tile", "visit_tile", "primary_tile"]:
+		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			return Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
+	for key in ["package_visit_tiles", "approach_tiles"]:
+		var tiles: Array = town.get(key, []) if town.get(key, []) is Array else []
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				return Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+
+func _generated_reachable_candidate_count(candidates: Array) -> int:
+	var count := 0
+	for candidate in candidates:
+		if candidate is Dictionary and bool(candidate.get("reachable", false)):
+			count += 1
+	return count
+
+func _generated_in_bounds(tile: Vector2i, map_size: Vector2i) -> bool:
+	return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
+
+func _generated_tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
+
+func _generated_tile_payload(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
+
+func _generated_route_payload(route: Array) -> Array:
+	var payload := []
+	for tile in route:
+		if tile is Vector2i:
+			payload.append(_generated_tile_payload(tile))
+	return payload
 
 func _assert_generated_player_town_development_runway(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var player_town := _player_town(session)
