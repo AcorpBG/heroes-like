@@ -11,6 +11,7 @@ const REPORT_SCHEMA_ID := "native_random_map_package_session_adoption_smoke_v1"
 const FEATURE_GATE := "native_rmg_package_session_adoption_report"
 const TARGET_TURNS := 30
 const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 24
+const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 24
 const TARGET_TIER_COUNT := 7
 const COMMON_MARKET_RESOURCE_IDS := ["wood", "ore"]
 const RARE_RESOURCE_IDS := [
@@ -729,11 +730,16 @@ func _assert_generated_enemy_town_development_runway(active_setup: Dictionary) -
 	var full_session_case_count := 0
 	var seven_tier_recruitment_case_count := 0
 	var selected_recruitment_case_count := 0
+	var pacing_floor_case_count := 0
+	var source_adoption_policy_case_count := 0
 	var build_count_total := 0
+	var secured_source_count_total := 0
+	var completion_days := []
 	for row_value in rows:
 		var row: Dictionary = row_value
 		if bool(row.get("completed", false)):
 			completed_case_count += 1
+			completion_days.append(int(row.get("completion_day", 0)))
 		if bool(row.get("rare_spend_observed", false)):
 			rare_spend_case_count += 1
 		if bool(row.get("same_day_second_build_blocked", false)):
@@ -750,16 +756,24 @@ func _assert_generated_enemy_town_development_runway(active_setup: Dictionary) -
 			seven_tier_recruitment_case_count += 1
 		if bool(row.get("ai_recruitment_selected_seen", false)):
 			selected_recruitment_case_count += 1
+		if bool(row.get("pacing_floor_ok", false)):
+			pacing_floor_case_count += 1
+		var row_source_evidence: Dictionary = row.get("source_evidence", {}) if row.get("source_evidence", {}) is Dictionary else {}
+		if String(row_source_evidence.get("source_adoption_policy", "")) == "minimal_required_resource_coverage":
+			source_adoption_policy_case_count += 1
+		secured_source_count_total += int(row_source_evidence.get("secured_source_count", 0))
 		build_count_total += int(row.get("build_count", 0))
 	var enemy_case_count := rows.size()
 	var status := "pass"
 	if enemy_case_count < 2 \
 			or completed_case_count != enemy_case_count \
+			or pacing_floor_case_count != enemy_case_count \
 			or rare_spend_case_count != enemy_case_count \
 			or same_day_guard_case_count != enemy_case_count \
 			or treasury_case_count != enemy_case_count \
 			or governor_case_count != enemy_case_count \
 			or source_covered_case_count != enemy_case_count \
+			or source_adoption_policy_case_count != enemy_case_count \
 			or full_session_case_count != enemy_case_count \
 			or seven_tier_recruitment_case_count != enemy_case_count \
 			or selected_recruitment_case_count != enemy_case_count:
@@ -770,15 +784,21 @@ func _assert_generated_enemy_town_development_runway(active_setup: Dictionary) -
 		"package_session_scope": "strict_small_36x36_one_level_land_only",
 		"enemy_town_case_count": enemy_case_count,
 		"completed_case_count": completed_case_count,
+		"min_completion_day": MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY,
+		"completion_day_min": completion_days.min() if not completion_days.is_empty() else 0,
+		"completion_day_max": completion_days.max() if not completion_days.is_empty() else 0,
+		"pacing_floor_case_count": pacing_floor_case_count,
 		"rare_spend_case_count": rare_spend_case_count,
 		"same_day_guard_case_count": same_day_guard_case_count,
 		"rare_treasury_tracked_case_count": treasury_case_count,
 		"governor_report_case_count": governor_case_count,
 		"source_covered_case_count": source_covered_case_count,
+		"source_adoption_policy_case_count": source_adoption_policy_case_count,
 		"full_session_case_count": full_session_case_count,
 		"seven_tier_recruitment_case_count": seven_tier_recruitment_case_count,
 		"selected_recruitment_case_count": selected_recruitment_case_count,
 		"build_count_total": build_count_total,
+		"secured_source_count_total": secured_source_count_total,
 		"town_rows": rows,
 	}
 	if status != "pass":
@@ -892,21 +912,28 @@ func _run_generated_enemy_town_case(session: SessionStateStoreScript.SessionData
 
 	var missing := _missing_buildings(session, placement_id, target_buildings)
 	var completed := missing.is_empty()
+	var completion_day := int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0
+	var pacing_floor_ok := completion_day >= MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY
 	var recruitment_evidence := _ai_recruitment_evidence(session, config, placement_id, faction_id)
 	var source_coverage_ok := _source_covers_required_resources(source_evidence, required_resource_ids)
+	var source_adoption_policy_ok := String(source_evidence.get("source_adoption_policy", "")) == "minimal_required_resource_coverage"
 	row["ok"] = (
 		completed
+		and pacing_floor_ok
 		and int(build_log.size()) == initial_missing_buildings.size()
 		and same_day_second_build_blocked
 		and not rare_spend_events.is_empty()
 		and rare_treasury_tracked
 		and governor_report_seen
 		and source_coverage_ok
+		and source_adoption_policy_ok
 		and bool(recruitment_evidence.get("seven_tier_recruitment_seen", false))
 		and bool(recruitment_evidence.get("selected_recruitment_seen", false))
 	)
 	row["completed"] = completed
-	row["completion_day"] = int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0
+	row["completion_day"] = completion_day
+	row["min_completion_day"] = MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY
+	row["pacing_floor_ok"] = pacing_floor_ok
 	row["build_count"] = build_log.size()
 	row["missing_buildings"] = missing
 	row["same_day_second_build_blocked"] = same_day_second_build_blocked
@@ -914,6 +941,7 @@ func _run_generated_enemy_town_case(session: SessionStateStoreScript.SessionData
 	row["governor_report_seen"] = governor_report_seen
 	row["rare_spend_observed"] = not rare_spend_events.is_empty()
 	row["source_coverage_ok"] = source_coverage_ok
+	row["source_adoption_policy_ok"] = source_adoption_policy_ok
 	row["source_evidence"] = source_evidence
 	row["ai_recruitment_evidence"] = recruitment_evidence
 	row["ai_recruitment_candidate_count"] = int(recruitment_evidence.get("candidate_count", 0))
@@ -1061,38 +1089,58 @@ func _secure_enemy_development_sources(session: SessionStateStoreScript.SessionD
 	var secured_resource_ids := {}
 	var secured_income := {}
 	var secured_claims := {}
+	var covered_resource_ids := {}
 	for index in range(nodes.size()):
 		if not (nodes[index] is Dictionary):
 			continue
+		if _source_covers_required_resources({"secured_resource_ids": _sorted_string_keys(covered_resource_ids)}, required_resource_ids):
+			break
 		var node: Dictionary = nodes[index]
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty():
 			continue
 		var claim_rewards: Dictionary = site.get("claim_rewards", site.get("rewards", {})) if site.get("claim_rewards", site.get("rewards", {})) is Dictionary else {}
 		var control_income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+		var persistent_control := bool(site.get("persistent_control", false))
 		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
 		var relevant_income := _filter_resources(control_income, required_resource_ids)
-		if relevant_claims.is_empty() and relevant_income.is_empty():
+		var applied_claims := {} if persistent_control else relevant_claims
+		var applied_income := relevant_income if persistent_control else {}
+		if applied_claims.is_empty() and applied_income.is_empty():
 			continue
-		if not relevant_claims.is_empty():
-			treasury = _add_resource_sets(treasury, relevant_claims)
+		var source_resource_ids := {}
+		for resource_id in applied_claims.keys():
+			source_resource_ids[String(resource_id)] = true
+		for resource_id in applied_income.keys():
+			source_resource_ids[String(resource_id)] = true
+		var adds_uncovered_required_resource := false
+		for resource_id in source_resource_ids.keys():
+			if not bool(covered_resource_ids.get(String(resource_id), false)):
+				adds_uncovered_required_resource = true
+				break
+		if not adds_uncovered_required_resource:
+			continue
+		if not applied_claims.is_empty():
+			treasury = _add_resource_sets(treasury, applied_claims)
 			node["collected"] = true
 			node["collected_day"] = int(session.day)
 			node["collected_by_faction_id"] = faction_id
-			secured_claims = _add_resource_sets(secured_claims, relevant_claims)
-		if not relevant_income.is_empty() and bool(site.get("persistent_control", false)):
+			secured_claims = _add_resource_sets(secured_claims, applied_claims)
+		if not applied_income.is_empty():
 			node["collected_by_faction_id"] = faction_id
-			secured_income = _add_resource_sets(secured_income, relevant_income)
-		for resource_id in relevant_claims.keys():
+			secured_income = _add_resource_sets(secured_income, applied_income)
+		for resource_id in applied_claims.keys():
 			secured_resource_ids[String(resource_id)] = true
-		for resource_id in relevant_income.keys():
+			covered_resource_ids[String(resource_id)] = true
+		for resource_id in applied_income.keys():
 			secured_resource_ids[String(resource_id)] = true
+			covered_resource_ids[String(resource_id)] = true
 		source_rows.append({
 			"placement_id": String(node.get("placement_id", "")),
 			"site_id": String(node.get("site_id", "")),
-			"persistent_control": bool(site.get("persistent_control", false)),
-			"claim_rewards": relevant_claims,
-			"control_income": relevant_income,
+			"persistent_control": persistent_control,
+			"claim_rewards": applied_claims,
+			"control_income": applied_income,
 		})
 		secured_nodes.append({
 			"placement_id": String(node.get("placement_id", "")),
@@ -1106,6 +1154,7 @@ func _secure_enemy_development_sources(session: SessionStateStoreScript.SessionD
 		nodes[index] = node
 	session.overworld["resource_nodes"] = nodes
 	return {
+		"source_adoption_policy": "minimal_required_resource_coverage",
 		"secured_source_count": source_rows.size(),
 		"secured_resource_ids": _sorted_string_keys(secured_resource_ids),
 		"secured_claims": secured_claims,
@@ -1585,6 +1634,8 @@ func _rare_cost(cost_value: Variant) -> Dictionary:
 func _generated_enemy_runway_error(row: Dictionary) -> String:
 	if not bool(row.get("completed", false)):
 		return "generated enemy town did not complete its development runway"
+	if not bool(row.get("pacing_floor_ok", false)):
+		return "generated enemy town completed before the day-24 production pacing floor"
 	if not bool(row.get("same_day_second_build_blocked", false)):
 		return "generated enemy same-day second build was not blocked"
 	if not bool(row.get("rare_spend_observed", false)):
@@ -1595,6 +1646,8 @@ func _generated_enemy_runway_error(row: Dictionary) -> String:
 		return "generated enemy town governor report did not cover the target faction"
 	if not bool(row.get("source_coverage_ok", false)):
 		return "generated enemy secured sources did not cover required build resources"
+	if not bool(row.get("source_adoption_policy_ok", false)):
+		return "generated enemy source adoption did not use minimal required-resource coverage"
 	if not bool(row.get("ai_seven_tier_recruitment_seen", false)):
 		return "generated enemy seven-tier recruitment candidates were not exposed"
 	if not bool(row.get("ai_recruitment_selected_seen", false)):

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Player Town Pacing Scorecard",
+  "currentSliceId": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Enemy Town Pacing Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage, the native package report gates the day-24 pacing floor, and the runtime-inclusive economy/town scorecard passes 30/30 checks.",
+  "currentSliceNotes": "Completed. Generated enemy source adoption now uses minimal required-resource coverage, persistent enemy mines no longer add one-time claim rewards to AI treasury setup, and the runtime-inclusive economy/town scorecard passes 30/30 checks with enemy completion days 24-25.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T10:54:38Z",
+  "updatedAt": "2026-05-25T11:25:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22475,9 +22475,102 @@
           "deterministic_scorecard_requirement_count": 15
         }
       }
+    },
+    {
+      "id": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+      "title": "Economy Generated Package Enemy Town Pacing Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Apply the authored day-24-to-day-30 town pacing expectation to strict Small generated/native package enemy-town runway evidence instead of only proving completion by day 30.",
+      "notes": "Completed. Generated enemy source adoption now uses minimal required-resource coverage, persistent enemy mines contribute control income without one-time claim rewards in AI treasury setup, and the runtime scorecard gates enemy completion days 24-25.",
+      "startedAt": "2026-05-25T10:58:31Z",
+      "completedAt": "2026-05-25T11:25:09Z",
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-pacing2.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "generated_enemy_town_case_count": 2,
+          "generated_enemy_completed_case_count": 2,
+          "generated_enemy_build_count_total": 44,
+          "generated_enemy_completion_day_min": 24,
+          "generated_enemy_completion_day_max": 25,
+          "generated_enemy_min_completion_day": 24,
+          "generated_enemy_pacing_floor_case_count": 2,
+          "generated_enemy_source_adoption_policy_case_count": 2,
+          "generated_enemy_secured_source_count_total": 7,
+          "generated_enemy_rare_spend_case_count": 2,
+          "generated_enemy_same_day_guard_case_count": 2,
+          "generated_enemy_rare_treasury_tracked_case_count": 2,
+          "generated_enemy_governor_report_case_count": 2,
+          "generated_enemy_source_covered_case_count": 2,
+          "generated_enemy_seven_tier_recruitment_case_count": 2,
+          "generated_enemy_selected_recruitment_case_count": 2,
+          "runtime_scorecard_passed_requirement_count": 30,
+          "runtime_scorecard_requirement_count": 30,
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+      "title": "Economy Generated Package Enemy Town Pacing Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T11:25:09Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "PLAN.md",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Generated enemy source adoption now uses minimal required-resource coverage instead of securing every matching generated source.",
+        "Pre-secured persistent enemy mines contribute control income without also adding one-time claim rewards to the AI treasury setup.",
+        "Native package report emits enemy min_completion_day, completion_day_min/max, pacing_floor_case_count, source_adoption_policy_case_count, and secured_source_count_total.",
+        "Focused strict Small generated package evidence passes with 2/2 generated enemy towns completing between days 24 and 25 with 44 total builds and 7 total secured generated sources.",
+        "The generated enemy runway still proves rare spend, same-day build guards, full live treasury tracking, governor report coverage, generated source coverage, seven-tier recruitment candidates, and selected affordable recruitment.",
+        "Runtime-inclusive economy/town scorecard gates the generated enemy-town pacing floor and passes 30/30 checks."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-pacing2.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; completion days 24-25, pacing_floor_case_count 2, secured_source_count_total 7)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 runtime-inclusive checks)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not broad generated-map economy balance across sizes or templates.",
+        "Not final route safety.",
+        "Not final strategic AI quality.",
+        "Not campaign or skirmish balance approval.",
+        "Not final encounter pacing approval."
+      ],
+      "updatedAt": "2026-05-25T11:25:09Z"
+    },
     {
       "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
       "title": "Economy Generated Package Player Town Pacing Scorecard",
@@ -29387,9 +29480,9 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+    "sliceId": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-pacing2.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
@@ -29402,31 +29495,32 @@
       "deterministic_scorecard_requirement_count": 15,
       "runtime_scorecard_passed_requirement_count": 30,
       "runtime_scorecard_requirement_count": 30,
-      "generated_package_player_town_id": "town_highwater_keep",
-      "generated_package_player_faction_id": "faction_embercourt",
-      "generated_package_player_build_count": 22,
-      "generated_package_player_initial_missing_building_count": 22,
-      "generated_package_player_target_building_count": 23,
-      "generated_package_player_completion_day": 24,
-      "generated_package_player_min_completion_day": 24,
-      "generated_package_player_pacing_floor_ok": true,
-      "generated_package_player_target_turns": 30,
-      "generated_package_player_same_day_reject_ok": true,
-      "generated_package_player_build_actions_after_build_blocked": true,
-      "generated_package_player_rare_spend_observed": true,
-      "generated_package_player_recruited_unit_case_count": 7,
-      "generated_package_player_secured_source_count": 3,
-      "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage"
+      "generated_enemy_town_case_count": 2,
+      "generated_enemy_completed_case_count": 2,
+      "generated_enemy_build_count_total": 44,
+      "generated_enemy_completion_day_min": 24,
+      "generated_enemy_completion_day_max": 25,
+      "generated_enemy_min_completion_day": 24,
+      "generated_enemy_pacing_floor_case_count": 2,
+      "generated_enemy_source_adoption_policy_case_count": 2,
+      "generated_enemy_secured_source_count_total": 7,
+      "generated_enemy_rare_spend_case_count": 2,
+      "generated_enemy_same_day_guard_case_count": 2,
+      "generated_enemy_rare_treasury_tracked_case_count": 2,
+      "generated_enemy_governor_report_case_count": 2,
+      "generated_enemy_source_covered_case_count": 2,
+      "generated_enemy_seven_tier_recruitment_case_count": 2,
+      "generated_enemy_selected_recruitment_case_count": 2
     }
   },
   "active_slice": {
-    "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
-    "title": "Economy Generated Package Player Town Pacing Scorecard",
+    "id": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+    "title": "Economy Generated Package Enemy Town Pacing Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T10:54:38Z",
-    "notes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage; completion day 24 satisfies the generated player-town pacing floor and runtime-inclusive economy/town scorecard passes 30/30."
+    "updatedAt": "2026-05-25T11:25:09Z",
+    "notes": "Completed. Generated enemy source adoption now uses minimal required-resource coverage, persistent enemy mines no longer add one-time claim rewards to AI treasury setup, and completion days 24-25 pass the runtime-inclusive scorecard."
   },
-  "currentSliceUpdatedAt": "2026-05-25T10:54:38Z",
+  "currentSliceUpdatedAt": "2026-05-25T11:25:09Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -30331,18 +30425,18 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
-    "title": "Economy Generated Package Player Town Pacing Scorecard",
+    "id": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
+    "title": "Economy Generated Package Enemy Town Pacing Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T10:54:38Z",
-    "notes": "Completed. Generated package player-town source adoption now uses minimal required-resource coverage; completion day 24 satisfies the generated player-town pacing floor and runtime-inclusive economy/town scorecard passes 30/30."
+    "updatedAt": "2026-05-25T11:25:09Z",
+    "notes": "Completed. Generated enemy source adoption now uses minimal required-resource coverage, persistent enemy mines no longer add one-time claim rewards to AI treasury setup, and completion days 24-25 pass the runtime-inclusive scorecard."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T10:54:38Z",
-    "sliceId": "economy-generated-package-player-town-pacing-scorecard-20260525-10184",
+    "updatedAt": "2026-05-25T11:25:09Z",
+    "sliceId": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-pacing-final.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-generated-enemy-pacing2.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
       "python3 tests/economy_town_goal_scorecard_report.py",
       "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
       "python3 tests/validate_repo.py",
@@ -30355,21 +30449,22 @@
       "deterministic_scorecard_requirement_count": 15,
       "runtime_scorecard_passed_requirement_count": 30,
       "runtime_scorecard_requirement_count": 30,
-      "generated_package_player_town_id": "town_highwater_keep",
-      "generated_package_player_faction_id": "faction_embercourt",
-      "generated_package_player_build_count": 22,
-      "generated_package_player_initial_missing_building_count": 22,
-      "generated_package_player_target_building_count": 23,
-      "generated_package_player_completion_day": 24,
-      "generated_package_player_min_completion_day": 24,
-      "generated_package_player_pacing_floor_ok": true,
-      "generated_package_player_target_turns": 30,
-      "generated_package_player_same_day_reject_ok": true,
-      "generated_package_player_build_actions_after_build_blocked": true,
-      "generated_package_player_rare_spend_observed": true,
-      "generated_package_player_recruited_unit_case_count": 7,
-      "generated_package_player_secured_source_count": 3,
-      "generated_package_player_source_adoption_policy": "minimal_required_resource_coverage"
+      "generated_enemy_town_case_count": 2,
+      "generated_enemy_completed_case_count": 2,
+      "generated_enemy_build_count_total": 44,
+      "generated_enemy_completion_day_min": 24,
+      "generated_enemy_completion_day_max": 25,
+      "generated_enemy_min_completion_day": 24,
+      "generated_enemy_pacing_floor_case_count": 2,
+      "generated_enemy_source_adoption_policy_case_count": 2,
+      "generated_enemy_secured_source_count_total": 7,
+      "generated_enemy_rare_spend_case_count": 2,
+      "generated_enemy_same_day_guard_case_count": 2,
+      "generated_enemy_rare_treasury_tracked_case_count": 2,
+      "generated_enemy_governor_report_case_count": 2,
+      "generated_enemy_source_covered_case_count": 2,
+      "generated_enemy_seven_tier_recruitment_case_count": 2,
+      "generated_enemy_selected_recruitment_case_count": 2
     }
   }
 }

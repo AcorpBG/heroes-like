@@ -559,11 +559,16 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_enemy_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
         and generated_enemy_case_count >= 2
         and int(generated_enemy_runway.get("completed_case_count", 0)) == generated_enemy_case_count
+        and int(generated_enemy_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_enemy_runway.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_enemy_runway.get("completion_day_max", 999)) <= TARGET_TURNS
+        and int(generated_enemy_runway.get("pacing_floor_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("rare_spend_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("same_day_guard_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("rare_treasury_tracked_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("governor_report_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("source_covered_case_count", 0)) == generated_enemy_case_count
+        and int(generated_enemy_runway.get("source_adoption_policy_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("full_session_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("seven_tier_recruitment_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("selected_recruitment_case_count", 0)) == generated_enemy_case_count
@@ -573,21 +578,27 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_enemy_town_runway_runtime",
         generated_package_enemy_runway_ok,
-        "Generated/native package sessions must run enemy towns through live AI development, rare spend, one-build-per-day guards, full treasury tracking, source coverage, and seven-tier recruitment selection.",
+        "Generated/native package sessions must run enemy towns through live AI development inside the day-24-to-day-30 pacing window, rare spend, one-build-per-day guards, full treasury tracking, source coverage, and seven-tier recruitment selection.",
         {
             "schema": str(generated_enemy_runway.get("schema", "")),
             "package_session_scope": str(generated_enemy_runway.get("package_session_scope", "")),
             "enemy_town_case_count": generated_enemy_case_count,
             "completed_case_count": int(generated_enemy_runway.get("completed_case_count", 0)),
+            "min_completion_day": int(generated_enemy_runway.get("min_completion_day", 0)),
+            "completion_day_min": int(generated_enemy_runway.get("completion_day_min", 0)),
+            "completion_day_max": int(generated_enemy_runway.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(generated_enemy_runway.get("pacing_floor_case_count", 0)),
             "rare_spend_case_count": int(generated_enemy_runway.get("rare_spend_case_count", 0)),
             "same_day_guard_case_count": int(generated_enemy_runway.get("same_day_guard_case_count", 0)),
             "rare_treasury_tracked_case_count": int(generated_enemy_runway.get("rare_treasury_tracked_case_count", 0)),
             "governor_report_case_count": int(generated_enemy_runway.get("governor_report_case_count", 0)),
             "source_covered_case_count": int(generated_enemy_runway.get("source_covered_case_count", 0)),
+            "source_adoption_policy_case_count": int(generated_enemy_runway.get("source_adoption_policy_case_count", 0)),
             "full_session_case_count": int(generated_enemy_runway.get("full_session_case_count", 0)),
             "seven_tier_recruitment_case_count": int(generated_enemy_runway.get("seven_tier_recruitment_case_count", 0)),
             "selected_recruitment_case_count": int(generated_enemy_runway.get("selected_recruitment_case_count", 0)),
             "build_count_total": int(generated_enemy_runway.get("build_count_total", 0)),
+            "secured_source_count_total": int(generated_enemy_runway.get("secured_source_count_total", 0)),
         },
     )
 
@@ -961,15 +972,21 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         "generated_package_enemy_town_development_runway_v1": {
             "enemy_town_case_count": generated_enemy_case_count,
             "completed_case_count": int(generated_enemy_runway.get("completed_case_count", 0)),
+            "min_completion_day": int(generated_enemy_runway.get("min_completion_day", 0)),
+            "completion_day_min": int(generated_enemy_runway.get("completion_day_min", 0)),
+            "completion_day_max": int(generated_enemy_runway.get("completion_day_max", 0)),
+            "pacing_floor_case_count": int(generated_enemy_runway.get("pacing_floor_case_count", 0)),
             "rare_spend_case_count": int(generated_enemy_runway.get("rare_spend_case_count", 0)),
             "same_day_guard_case_count": int(generated_enemy_runway.get("same_day_guard_case_count", 0)),
             "rare_treasury_tracked_case_count": int(generated_enemy_runway.get("rare_treasury_tracked_case_count", 0)),
             "governor_report_case_count": int(generated_enemy_runway.get("governor_report_case_count", 0)),
             "source_covered_case_count": int(generated_enemy_runway.get("source_covered_case_count", 0)),
+            "source_adoption_policy_case_count": int(generated_enemy_runway.get("source_adoption_policy_case_count", 0)),
             "full_session_case_count": int(generated_enemy_runway.get("full_session_case_count", 0)),
             "seven_tier_recruitment_case_count": int(generated_enemy_runway.get("seven_tier_recruitment_case_count", 0)),
             "selected_recruitment_case_count": int(generated_enemy_runway.get("selected_recruitment_case_count", 0)),
             "build_count_total": int(generated_enemy_runway.get("build_count_total", 0)),
+            "secured_source_count_total": int(generated_enemy_runway.get("secured_source_count_total", 0)),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
