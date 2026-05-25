@@ -498,12 +498,16 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_runway.get("status") == "pass"
         and generated_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
         and generated_runway.get("completed") is True
+        and int(generated_runway.get("completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
         and int(generated_runway.get("completion_day", 999)) <= TARGET_TURNS
+        and int(generated_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and generated_runway.get("pacing_floor_ok") is True
         and int(generated_runway.get("build_count", 0)) == int(generated_runway.get("initial_missing_building_count", -1))
         and generated_runway.get("same_day_reject_ok") is True
         and generated_runway.get("build_actions_after_build_blocked") is True
         and generated_runway.get("rare_spend_observed") is True
         and generated_runway.get("market_common_only") is True
+        and generated_runway.get("source_evidence", {}).get("source_adoption_policy", "") == "minimal_required_resource_coverage"
         and int(generated_runway.get("focused_economy_day_advance_count", 0)) > 0
         and generated_runway.get("recruitment_end_to_end_ok") is True
         and int(generated_runway.get("recruited_unit_case_count", 0)) == SIGNATURE_TIER_COUNT
@@ -521,6 +525,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "faction_id": str(generated_runway.get("faction_id", "")),
             "completed": generated_runway.get("completed") is True,
             "completion_day": int(generated_runway.get("completion_day", 0)),
+            "min_completion_day": int(generated_runway.get("min_completion_day", 0)),
+            "pacing_floor_ok": generated_runway.get("pacing_floor_ok") is True,
             "build_count": int(generated_runway.get("build_count", 0)),
             "target_building_count": int(generated_runway.get("target_building_count", 0)),
             "initial_missing_building_count": int(generated_runway.get("initial_missing_building_count", 0)),
@@ -529,6 +535,12 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
             "recruitment_end_to_end_ok": generated_runway.get("recruitment_end_to_end_ok") is True,
             "recruited_unit_case_count": int(generated_runway.get("recruited_unit_case_count", 0)),
+            "source_adoption_policy": str(generated_runway.get("source_evidence", {}).get("source_adoption_policy", ""))
+            if isinstance(generated_runway.get("source_evidence", {}), dict)
+            else "",
+            "secured_source_count": int(generated_runway.get("source_evidence", {}).get("secured_source_count", 0))
+            if isinstance(generated_runway.get("source_evidence", {}), dict)
+            else 0,
             "secured_resource_ids": sorted(
                 str(value)
                 for value in generated_runway.get("source_evidence", {}).get("secured_resource_ids", [])
@@ -932,11 +944,19 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "faction_id": str(generated_runway.get("faction_id", "")),
             "completed": generated_runway.get("completed") is True,
             "completion_day": int(generated_runway.get("completion_day", 0)),
+            "min_completion_day": int(generated_runway.get("min_completion_day", 0)),
+            "pacing_floor_ok": generated_runway.get("pacing_floor_ok") is True,
             "build_count": int(generated_runway.get("build_count", 0)),
             "target_building_count": int(generated_runway.get("target_building_count", 0)),
             "initial_missing_building_count": int(generated_runway.get("initial_missing_building_count", 0)),
             "rare_spend_observed": generated_runway.get("rare_spend_observed") is True,
             "recruited_unit_case_count": int(generated_runway.get("recruited_unit_case_count", 0)),
+            "source_adoption_policy": str(generated_runway.get("source_evidence", {}).get("source_adoption_policy", ""))
+            if isinstance(generated_runway.get("source_evidence", {}), dict)
+            else "",
+            "secured_source_count": int(generated_runway.get("source_evidence", {}).get("secured_source_count", 0))
+            if isinstance(generated_runway.get("source_evidence", {}), dict)
+            else 0,
         },
         "generated_package_enemy_town_development_runway_v1": {
             "enemy_town_case_count": generated_enemy_case_count,
