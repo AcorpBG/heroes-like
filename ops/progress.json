@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Town AI Seven Tier Recruitment Scorecard",
+  "currentSliceId": "economy-town-market-cap-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Market Cap Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities.",
+  "currentSliceNotes": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T03:37:21Z",
+  "updatedAt": "2026-05-25T04:00:52Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,35 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-market-cap-scorecard-20260525-10184",
+      "title": "Economy Town Market Cap Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T04:00:52Z",
+      "startedAt": "2026-05-25T03:40:20Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/runtime_market_cap_persistence_report.gd",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-runtime-market-cap-persistence-report.md"
+      ],
+      "summary": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-market-cap-scorecard-focused.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn (passed; buy/sell caps exhaust, save/resume preserves usage, next week resets, rare market buying disabled)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 19/19 runtime-inclusive checks with runtime market-cap persistence evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Top-level owner goal scorecard now rejects runtime regressions where town markets lose weekly cap enforcement, persistence, reset behavior, or common-resource-only boundaries.",
+      "completedAt": "2026-05-25T04:00:52Z"
+    },
     {
       "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
       "title": "Economy Town AI Seven Tier Recruitment Scorecard",
@@ -28086,27 +28115,40 @@
   ],
   "lastValidation": {
     "status": "passed",
-    "updatedAt": "2026-05-25T03:37:21Z",
+    "updatedAt": "2026-05-25T04:00:52Z",
     "commands": [
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
-      "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=prismhearth-watch GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-ai-town-prismhearth-watch.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; mixed-control Halo Spire exposes native Sunvault seven-tier recruitment ladder)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 900 --log-file /tmp/heroes-like-ai-town-seven-tier-recruitment.log --path . --scene res://tests/active_scenario_ai_town_development_runway_report.tscn (passed; 20/20 AI town cases, 140/140 seven-tier recruitment candidates, 20/20 affordable recruitment cases)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 18/18 runtime-inclusive checks with AI seven-tier recruitment evidence)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-market-cap-scorecard-focused.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn (passed; buy/sell caps exhaust, save/resume preserves usage, next week resets, rare market buying disabled)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 19/19 runtime-inclusive checks with runtime market-cap persistence evidence)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Completed active AI town development runways now expose the native town line seven-tier recruitment ladder through EnemyTurnRules.town_recruitment_pressure_report after development. Evidence passes 12/12 deterministic scorecard checks and 18/18 runtime-inclusive checks, with 20/20 AI runway cases, 140/140 expected AI seven-tier recruitment candidates, 20/20 affordable selected recruitment cases, rare-resource spend, full-session execution, same-day build guards, and delayed-source save/resume. The mixed-control Halo Spire case proves a Mireclaw-controlled Sunvault town exposes the native Sunvault ladder while preserving controller-faction AI priorities."
+    "summary": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included."
   },
   "active_slice": {
-    "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
-    "title": "Economy Town AI Seven Tier Recruitment Scorecard",
+    "id": "economy-town-market-cap-scorecard-20260525-10184",
+    "title": "Economy Town Market Cap Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T03:37:21Z"
+    "updatedAt": "2026-05-25T04:00:52Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T03:37:21Z",
+  "currentSliceUpdatedAt": "2026-05-25T04:00:52Z",
   "validationHistory": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T04:00:52Z",
+      "commands": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-market-cap-scorecard-focused.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn (passed; buy/sell caps exhaust, save/resume preserves usage, next week resets, rare market buying disabled)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 19/19 runtime-inclusive checks with runtime market-cap persistence evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-25T03:37:21Z",
@@ -28825,12 +28867,26 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-town-ai-seven-tier-recruitment-scorecard-20260525-10184",
-    "title": "Economy Town AI Seven Tier Recruitment Scorecard",
+    "id": "economy-town-market-cap-scorecard-20260525-10184",
+    "title": "Economy Town Market Cap Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T03:37:21Z"
+    "updatedAt": "2026-05-25T04:00:52Z"
   },
   "validation": [
+    {
+      "status": "passed",
+      "updatedAt": "2026-05-25T04:00:52Z",
+      "commands": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 12/12 deterministic checks)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-market-cap-scorecard-focused.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn (passed; buy/sell caps exhaust, save/resume preserves usage, next week resets, rare market buying disabled)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 19/19 runtime-inclusive checks with runtime market-cap persistence evidence)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Runtime-inclusive economy/town scorecard now requires persisted weekly common-market caps: buy/sell cap exhaustion, save/resume continuity, next-week reset, and rare-resource market exclusion. Evidence passes 12/12 deterministic scorecard checks and 19/19 runtime-inclusive checks with runtime_market_cap_persistence_report_v1 included."
+    },
     {
       "status": "passed",
       "updatedAt": "2026-05-25T03:37:21Z",

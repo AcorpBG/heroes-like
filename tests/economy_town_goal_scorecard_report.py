@@ -79,6 +79,12 @@ GODOT_RUNTIME_REPORTS = (
         "quit_after": 300,
         "log_file": "/tmp/heroes-like-scorecard-town-recruitment-ui.log",
     },
+    {
+        "scene": "res://tests/runtime_market_cap_persistence_report.tscn",
+        "marker": "RUNTIME_MARKET_CAP_PERSISTENCE_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-market-cap.log",
+    },
 )
 
 
@@ -200,6 +206,16 @@ def add_check(checks: list[dict[str, Any]], check_id: str, ok: bool, summary: st
             "evidence": evidence,
         }
     )
+
+
+def market_action(snapshot: dict[str, Any], action_id: str) -> dict[str, Any]:
+    actions = snapshot.get("actions", [])
+    if not isinstance(actions, list):
+        return {}
+    for action in actions:
+        if isinstance(action, dict) and str(action.get("id", "")) == action_id:
+            return action
+    return {}
 
 
 def source_contract_row(path: Path, required_tokens: tuple[str, ...], require_resource_literals: bool = False) -> dict[str, Any]:
@@ -512,6 +528,65 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "portrait_loaded_count": int(recruitment_ui_runtime.get("portrait_loaded_count", 0)),
         },
     )
+
+    market_cap_runtime = payloads["RUNTIME_MARKET_CAP_PERSISTENCE_REPORT"]
+    policy = market_cap_runtime.get("policy", {})
+    policy = policy if isinstance(policy, dict) else {}
+    initial_buy = market_action(market_cap_runtime.get("initial", {}), "market:buy:wood:1")
+    initial_sell = market_action(market_cap_runtime.get("initial", {}), "market:sell:ore:1")
+    after_buy = market_action(market_cap_runtime.get("after_buy_cap", {}), "market:buy:wood:1")
+    after_sell = market_action(market_cap_runtime.get("after_sell_cap", {}), "market:sell:ore:1")
+    restored_buy = market_action(market_cap_runtime.get("restored_same_week", {}), "market:buy:wood:1")
+    restored_sell = market_action(market_cap_runtime.get("restored_same_week", {}), "market:sell:ore:1")
+    next_week_buy = market_action(market_cap_runtime.get("next_week", {}), "market:buy:wood:1")
+    next_week_sell = market_action(market_cap_runtime.get("next_week", {}), "market:sell:ore:1")
+    market_cap_runtime_ok = (
+        market_cap_runtime.get("ok") is True
+        and market_cap_runtime.get("schema") == "runtime_market_cap_persistence_report_v1"
+        and set(str(value) for value in policy.get("normal_market_resource_ids", [])) == {"wood", "ore"}
+        and policy.get("rare_resource_buying_enabled") is False
+        and str(policy.get("refresh_cadence", "")) == "weekly"
+        and str(policy.get("usage_storage", "")) == "town.market_usage"
+        and market_cap_runtime.get("save_resume", {}).get("ok") is True
+        and not bool(initial_buy.get("disabled", True))
+        and int(initial_buy.get("cap_remaining", 0)) == 6
+        and not bool(initial_sell.get("disabled", True))
+        and int(initial_sell.get("cap_remaining", 0)) == 8
+        and bool(after_buy.get("disabled", False))
+        and int(after_buy.get("cap_remaining", -1)) == 0
+        and bool(after_sell.get("disabled", False))
+        and int(after_sell.get("cap_remaining", -1)) == 0
+        and bool(restored_buy.get("disabled", False))
+        and int(restored_buy.get("cap_remaining", -1)) == 0
+        and bool(restored_sell.get("disabled", False))
+        and int(restored_sell.get("cap_remaining", -1)) == 0
+        and not bool(next_week_buy.get("disabled", True))
+        and int(next_week_buy.get("cap_remaining", 0)) == 6
+        and not bool(next_week_sell.get("disabled", True))
+        and int(next_week_sell.get("cap_remaining", 0)) == 8
+    )
+    add_check(
+        checks,
+        "runtime_market_cap_persistence",
+        market_cap_runtime_ok,
+        "Live town markets must enforce persisted weekly common-resource exchange caps and reset them on the next week.",
+        {
+            "schema": str(market_cap_runtime.get("schema", "")),
+            "normal_market_resource_ids": sorted(str(value) for value in policy.get("normal_market_resource_ids", [])),
+            "rare_resource_buying_enabled": bool(policy.get("rare_resource_buying_enabled", True)),
+            "refresh_cadence": str(policy.get("refresh_cadence", "")),
+            "usage_storage": str(policy.get("usage_storage", "")),
+            "save_resume_ok": market_cap_runtime.get("save_resume", {}).get("ok") is True,
+            "initial_buy_remaining": int(initial_buy.get("cap_remaining", 0)),
+            "initial_sell_remaining": int(initial_sell.get("cap_remaining", 0)),
+            "after_buy_remaining": int(after_buy.get("cap_remaining", -1)),
+            "after_sell_remaining": int(after_sell.get("cap_remaining", -1)),
+            "restored_buy_remaining": int(restored_buy.get("cap_remaining", -1)),
+            "restored_sell_remaining": int(restored_sell.get("cap_remaining", -1)),
+            "next_week_buy_remaining": int(next_week_buy.get("cap_remaining", 0)),
+            "next_week_sell_remaining": int(next_week_sell.get("cap_remaining", 0)),
+        },
+    )
     return {
         "town_development_runtime_balance_report_v1": {
             "authored_town_count": int(town_runtime.get("authored_town_count", 0)),
@@ -549,6 +624,18 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "recruitment_action_count": int(recruitment_ui_runtime.get("recruitment_action_count", 0)),
             "tier_button_case_count": int(recruitment_ui_runtime.get("tier_button_case_count", 0)),
             "portrait_loaded_count": int(recruitment_ui_runtime.get("portrait_loaded_count", 0)),
+        },
+        "runtime_market_cap_persistence_report_v1": {
+            "save_resume_ok": market_cap_runtime.get("save_resume", {}).get("ok") is True,
+            "rare_resource_buying_enabled": bool(policy.get("rare_resource_buying_enabled", True)),
+            "initial_buy_remaining": int(initial_buy.get("cap_remaining", 0)),
+            "after_buy_remaining": int(after_buy.get("cap_remaining", -1)),
+            "restored_buy_remaining": int(restored_buy.get("cap_remaining", -1)),
+            "next_week_buy_remaining": int(next_week_buy.get("cap_remaining", 0)),
+            "initial_sell_remaining": int(initial_sell.get("cap_remaining", 0)),
+            "after_sell_remaining": int(after_sell.get("cap_remaining", -1)),
+            "restored_sell_remaining": int(restored_sell.get("cap_remaining", -1)),
+            "next_week_sell_remaining": int(next_week_sell.get("cap_remaining", 0)),
         },
     }
 
