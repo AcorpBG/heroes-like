@@ -65,6 +65,12 @@ GODOT_RUNTIME_REPORTS = (
         "log_file": "/tmp/heroes-like-scorecard-active-player-town.log",
     },
     {
+        "scene": "res://tests/active_scenario_town_economy_source_route_report.tscn",
+        "marker": "ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT",
+        "quit_after": 300,
+        "log_file": "/tmp/heroes-like-scorecard-active-source-route.log",
+    },
+    {
         "scene": "res://tests/active_scenario_ai_town_development_runway_report.tscn",
         "marker": "ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT",
         "quit_after": 700,
@@ -359,6 +365,36 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "delayed_source_save_resume_case_count": int(player_runtime.get("delayed_source_save_resume_case_count", 0)),
             "delayed_source_save_resume_completed_count": int(player_runtime.get("delayed_source_save_resume_completed_count", 0)),
             "recruited_unit_case_count": int(player_runtime.get("recruited_unit_case_count", 0)),
+        },
+    )
+    source_route_runtime = payloads["ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT"]
+    source_route_runtime_ok = (
+        source_route_runtime.get("ok") is True
+        and source_route_runtime.get("schema") == "active_scenario_town_economy_source_route_report_v1"
+        and int(source_route_runtime.get("active_scenario_count", 0)) >= 16
+        and int(source_route_runtime.get("player_town_case_count", 0)) >= 18
+        and int(source_route_runtime.get("resource_route_case_count", 0)) == int(source_route_runtime.get("player_town_case_count", -1)) * 3
+        and int(source_route_runtime.get("reachable_route_case_count", 0)) == int(source_route_runtime.get("resource_route_case_count", -1))
+        and int(source_route_runtime.get("max_common_route_steps", 999)) <= 24
+        and int(source_route_runtime.get("max_rare_route_steps", 999)) <= 40
+        and set(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])) == {"wood", "ore"}
+        and set(str(value) for value in source_route_runtime.get("rare_resource_ids", [])) == RARE_RESOURCES
+    )
+    add_check(
+        checks,
+        "active_scenario_source_route_runtime",
+        source_route_runtime_ok,
+        "Active player-town scenarios must expose reachable wood, ore, and faction-rare source routes through live overworld route rules.",
+        {
+            "schema": str(source_route_runtime.get("schema", "")),
+            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
+            "player_town_case_count": int(source_route_runtime.get("player_town_case_count", 0)),
+            "resource_route_case_count": int(source_route_runtime.get("resource_route_case_count", 0)),
+            "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
+            "required_common_resource_ids": sorted(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])),
+            "rare_resource_ids": sorted(str(value) for value in source_route_runtime.get("rare_resource_ids", [])),
+            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
         },
     )
 
@@ -660,6 +696,14 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "recruitment_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
             "recruitment_market_purchase_count": int(player_runtime.get("recruitment_market_purchase_count", 0)),
             "recruitment_market_reset_wait_count": int(player_runtime.get("recruitment_market_reset_wait_count", 0)),
+        },
+        "active_scenario_town_economy_source_route_report_v1": {
+            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
+            "player_town_case_count": int(source_route_runtime.get("player_town_case_count", 0)),
+            "resource_route_case_count": int(source_route_runtime.get("resource_route_case_count", 0)),
+            "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
+            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
+            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
         },
         "active_scenario_ai_town_development_runway_report_v1": {
             "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
