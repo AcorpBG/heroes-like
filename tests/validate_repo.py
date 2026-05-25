@@ -3027,6 +3027,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "active_scenario_ai_runway_runtime",
         "rare_spend_case_count",
         "full_session_case_count",
+        "seven_tier_recruitment_case_count",
+        "seven_tier_recruitment_candidate_count",
+        "affordable_recruitment_case_count",
         "live_unique_town_payoff_runtime",
         "town_resource_ui_surface_runtime",
         "town_recruitment_ui_surface_runtime",
@@ -3060,6 +3063,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "15/15 live runtime town-development and recruitment cases",
         "18/18 active player-town runway cases with rare spend, full-session execution",
         "20/20 active AI-town runway cases with rare spend, full-session execution",
+        "140/140 seven-tier AI recruitment candidates",
         "live unique-building payoff runtime gate",
         "TownShell resource/build UI surface report",
         "TownShell recruitment UI surface report",
@@ -20389,6 +20393,14 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "SaveService.save_runtime_manual_session",
         "SaveService.restore_manual_session",
         "_delayed_source_save_resume_checkpoint",
+        "EnemyTurnRules.town_recruitment_pressure_report",
+        "SIGNATURE_TIER_COUNT",
+        "seven_tier_recruitment_case_count",
+        "seven_tier_recruitment_candidate_count",
+        "affordable_recruitment_case_count",
+        "_ai_recruitment_evidence",
+        "active_scenario_ai_town_recruitment_surface_v1",
+        "ladder_faction_id",
         "same_day_guard_after_restore",
         "source_state_preserved",
         "treasury_state_preserved",
@@ -20408,6 +20420,10 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "20 active enemy-town cases",
         "20/20 delayed-source replay cases",
         "20/20 delayed-source AI save/resume checkpoints",
+        "seven-tier AI recruitment candidates",
+        "140/140 expected tier candidates",
+        "20/20 affordable selected recruitment cases",
+        "EnemyTurnRules.town_recruitment_pressure_report",
         "route-derived source acquisition delays",
         "SaveService.save_runtime_manual_session",
         "SaveService.restore_manual_session",
@@ -20715,7 +20731,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, and seven-tier ladders")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, late rare bottlenecks, rare upgrade chains, high-tier pacing, faction identity, unique payoff-domain diversity, seven-tier ladders, AI recruitment exposure, and town UI surfaces")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
