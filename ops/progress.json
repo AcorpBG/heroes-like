@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-balance-harness-full-resource-coverage-20260525-10184",
-  "currentSliceTitle": "Economy Balance Harness Full Resource Coverage",
+  "currentSliceId": "economy-town-scorecard-harness-resource-coverage-20260525-10184",
+  "currentSliceTitle": "Economy Town Scorecard Harness Resource Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed full nine-resource balance harness coverage. Balance regression and headless simulation economy evidence now carries all live stockpile resources with focused report assertions and repo-validator static coverage.",
+  "currentSliceNotes": "Completed top-level scorecard coverage for full-resource balance/headless harness accounting. Scorecard now passes 10/10 default checks and repo validation gates the new requirement.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T00:48:30Z",
+  "updatedAt": "2026-05-25T00:52:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,33 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-scorecard-harness-resource-coverage-20260525-10184",
+      "title": "Economy Town Scorecard Harness Resource Coverage",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T00:52:44Z",
+      "startedAt": "2026-05-25T00:52:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd"
+      ],
+      "summary": "The top-level economy/town goal scorecard should include the full live-resource balance/headless harness accounting contract, not only focused harness tests.",
+      "validation": [
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 10/10 default checks, balance_harness_live_resource_accounting passing_file_count=4)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 13/13 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed top-level scorecard coverage for full-resource balance/headless harness accounting. Scorecard now passes 10/10 default checks and repo validation gates the new requirement.",
+      "completedAt": "2026-05-25T00:52:44Z"
+    },
     {
       "id": "economy-balance-harness-full-resource-coverage-20260525-10184",
       "title": "Economy Balance Harness Full Resource Coverage",
