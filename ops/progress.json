@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-sunvault-late-wood-surplus-pressure-20260525-10184",
-  "currentSliceTitle": "Economy Sunvault Late Wood Surplus Pressure",
+  "currentSliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+  "currentSliceTitle": "Economy Veilmourn Late Common Surplus Pressure",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Production town-balance follow-up spent Sunvault late wood surplus in its magical/civic finish. Daybreak Matrix and Zenith Court now cost more wood and gold, preserving the aetherglass rare curve and Sunvault relay identity while making late optical works consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, Halo Spire completes on day 27, Prismhearth completes on day 30, Sunvault ending wood drops from 10/9 to 6/5, global max ending wood drops to 6, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T19:00:52Z",
+  "updatedAt": "2026-05-25T19:04:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23824,6 +23824,102 @@
       },
       "summary": "Completed. Production town-balance follow-up spent Sunvault late wood surplus in its magical/civic finish. Daybreak Matrix and Zenith Court now cost more wood and gold, preserving the aetherglass rare curve and Sunvault relay identity while making late optical works consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, Halo Spire completes on day 27, Prismhearth completes on day 30, Sunvault ending wood drops from 10/9 to 6/5, global max ending wood drops to 6, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
       "completedAt": "2026-05-25T19:00:52Z"
+    },
+    {
+      "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+      "title": "Economy Veilmourn Late Common Surplus Pressure",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T19:04:12Z",
+        "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_veilmourn_leviathan_sounding_cost": {
+              "gold": 3890,
+              "wood": 2,
+              "ore": 4,
+              "memory_salt": 10
+            },
+            "building_veilmourn_memory_rite_court_cost": {
+              "gold": 3650,
+              "wood": 2,
+              "ore": 4,
+              "memory_salt": 2
+            }
+          },
+          "affected_completion_days": {
+            "town_veilmourn_fogchart_mooring": 28,
+            "town_veilmourn_bellwake_harbor": 28
+          },
+          "affected_ending_resources": {
+            "town_veilmourn_fogchart_mooring": {
+              "gold": 4550,
+              "memory_salt": 0,
+              "ore": 3,
+              "wood": 4
+            },
+            "town_veilmourn_bellwake_harbor": {
+              "gold": 4060,
+              "memory_salt": 0,
+              "ore": 3,
+              "wood": 4
+            }
+          },
+          "affected_total_development_costs": {
+            "town_veilmourn_fogchart_mooring": {
+              "gold": 37650,
+              "memory_salt": 28,
+              "ore": 26,
+              "wood": 25
+            },
+            "town_veilmourn_bellwake_harbor": {
+              "gold": 38140,
+              "memory_salt": 28,
+              "ore": 26,
+              "wood": 25
+            }
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_veilmourn_fogchart_mooring": 7,
+            "town_veilmourn_bellwake_harbor": 7
+          },
+          "affected_common_material_bottleneck_days": {
+            "town_veilmourn_fogchart_mooring": 3,
+            "town_veilmourn_bellwake_harbor": 3
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 5840,
+            "ore": 9,
+            "wood": 6
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "completedAt": "2026-05-25T19:04:12Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -30241,6 +30337,103 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+      "title": "Economy Veilmourn Late Common Surplus Pressure",
+      "completedAt": "2026-05-25T19:04:12Z",
+      "summary": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T19:04:12Z",
+        "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_veilmourn_leviathan_sounding_cost": {
+              "gold": 3890,
+              "wood": 2,
+              "ore": 4,
+              "memory_salt": 10
+            },
+            "building_veilmourn_memory_rite_court_cost": {
+              "gold": 3650,
+              "wood": 2,
+              "ore": 4,
+              "memory_salt": 2
+            }
+          },
+          "affected_completion_days": {
+            "town_veilmourn_fogchart_mooring": 28,
+            "town_veilmourn_bellwake_harbor": 28
+          },
+          "affected_ending_resources": {
+            "town_veilmourn_fogchart_mooring": {
+              "gold": 4550,
+              "memory_salt": 0,
+              "ore": 3,
+              "wood": 4
+            },
+            "town_veilmourn_bellwake_harbor": {
+              "gold": 4060,
+              "memory_salt": 0,
+              "ore": 3,
+              "wood": 4
+            }
+          },
+          "affected_total_development_costs": {
+            "town_veilmourn_fogchart_mooring": {
+              "gold": 37650,
+              "memory_salt": 28,
+              "ore": 26,
+              "wood": 25
+            },
+            "town_veilmourn_bellwake_harbor": {
+              "gold": 38140,
+              "memory_salt": 28,
+              "ore": 26,
+              "wood": 25
+            }
+          },
+          "affected_late_rare_bottleneck_days": {
+            "town_veilmourn_fogchart_mooring": 7,
+            "town_veilmourn_bellwake_harbor": 7
+          },
+          "affected_common_material_bottleneck_days": {
+            "town_veilmourn_fogchart_mooring": 3,
+            "town_veilmourn_bellwake_harbor": 3
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 27,
+          "town_development_completion_day_max": 30,
+          "observed_common_surplus_max_after_tuning": {
+            "gold": 5840,
+            "ore": 9,
+            "wood": 6
+          },
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -32414,17 +32607,99 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T19:04:12Z",
+      "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_veilmourn_leviathan_sounding_cost": {
+            "gold": 3890,
+            "wood": 2,
+            "ore": 4,
+            "memory_salt": 10
+          },
+          "building_veilmourn_memory_rite_court_cost": {
+            "gold": 3650,
+            "wood": 2,
+            "ore": 4,
+            "memory_salt": 2
+          }
+        },
+        "affected_completion_days": {
+          "town_veilmourn_fogchart_mooring": 28,
+          "town_veilmourn_bellwake_harbor": 28
+        },
+        "affected_ending_resources": {
+          "town_veilmourn_fogchart_mooring": {
+            "gold": 4550,
+            "memory_salt": 0,
+            "ore": 3,
+            "wood": 4
+          },
+          "town_veilmourn_bellwake_harbor": {
+            "gold": 4060,
+            "memory_salt": 0,
+            "ore": 3,
+            "wood": 4
+          }
+        },
+        "affected_total_development_costs": {
+          "town_veilmourn_fogchart_mooring": {
+            "gold": 37650,
+            "memory_salt": 28,
+            "ore": 26,
+            "wood": 25
+          },
+          "town_veilmourn_bellwake_harbor": {
+            "gold": 38140,
+            "memory_salt": 28,
+            "ore": 26,
+            "wood": 25
+          }
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_veilmourn_fogchart_mooring": 7,
+          "town_veilmourn_bellwake_harbor": 7
+        },
+        "affected_common_material_bottleneck_days": {
+          "town_veilmourn_fogchart_mooring": 3,
+          "town_veilmourn_bellwake_harbor": 3
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 5840,
+          "ore": 9,
+          "wood": 6
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T19:00:52Z",
-    "sliceId": "economy-sunvault-late-wood-surplus-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T19:04:12Z",
+    "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-sunvault-wood.json (passed; Halo wood 10 -> 6, Prismhearth wood 9 -> 5, global max ending wood 6)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-sunvault-wood.json (passed; Halo wood total 25, Prismhearth wood total 29)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-sunvault-wood.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-sunvault-wood.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -32432,65 +32707,65 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_sunvault_daybreak_matrix_cost": {
-          "gold": 3290,
-          "wood": 4,
-          "ore": 2,
-          "aetherglass": 10
+        "building_veilmourn_leviathan_sounding_cost": {
+          "gold": 3890,
+          "wood": 2,
+          "ore": 4,
+          "memory_salt": 10
         },
-        "building_sunvault_zenith_court_cost": {
-          "gold": 3350,
-          "wood": 4,
-          "ore": 2,
-          "aetherglass": 5
+        "building_veilmourn_memory_rite_court_cost": {
+          "gold": 3650,
+          "wood": 2,
+          "ore": 4,
+          "memory_salt": 2
         }
       },
       "affected_completion_days": {
-        "town_halo_spire": 27,
-        "town_prismhearth": 30
+        "town_veilmourn_fogchart_mooring": 28,
+        "town_veilmourn_bellwake_harbor": 28
       },
       "affected_ending_resources": {
-        "town_halo_spire": {
-          "aetherglass": 0,
-          "gold": 4740,
-          "ore": 2,
-          "wood": 6
+        "town_veilmourn_fogchart_mooring": {
+          "gold": 4550,
+          "memory_salt": 0,
+          "ore": 3,
+          "wood": 4
         },
-        "town_prismhearth": {
-          "aetherglass": 3,
-          "gold": 4390,
-          "ore": 0,
-          "wood": 5
+        "town_veilmourn_bellwake_harbor": {
+          "gold": 4060,
+          "memory_salt": 0,
+          "ore": 3,
+          "wood": 4
         }
       },
       "affected_total_development_costs": {
-        "town_halo_spire": {
-          "aetherglass": 27,
-          "gold": 38760,
-          "ore": 29,
+        "town_veilmourn_fogchart_mooring": {
+          "gold": 37650,
+          "memory_salt": 28,
+          "ore": 26,
           "wood": 25
         },
-        "town_prismhearth": {
-          "aetherglass": 27,
-          "gold": 43610,
-          "ore": 34,
-          "wood": 29
+        "town_veilmourn_bellwake_harbor": {
+          "gold": 38140,
+          "memory_salt": 28,
+          "ore": 26,
+          "wood": 25
         }
       },
       "affected_late_rare_bottleneck_days": {
-        "town_halo_spire": 5,
-        "town_prismhearth": 5
+        "town_veilmourn_fogchart_mooring": 7,
+        "town_veilmourn_bellwake_harbor": 7
       },
       "affected_common_material_bottleneck_days": {
-        "town_halo_spire": 4,
-        "town_prismhearth": 7
+        "town_veilmourn_fogchart_mooring": 3,
+        "town_veilmourn_bellwake_harbor": 3
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
       "observed_common_surplus_max_after_tuning": {
-        "gold": 6550,
+        "gold": 5840,
         "ore": 9,
         "wood": 6
       },
@@ -32499,14 +32774,14 @@
     }
   },
   "active_slice": {
-    "id": "economy-sunvault-late-wood-surplus-pressure-20260525-10184",
-    "title": "Economy Sunvault Late Wood Surplus Pressure",
+    "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+    "title": "Economy Veilmourn Late Common Surplus Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T19:00:52Z",
-    "completedAt": "2026-05-25T19:00:52Z",
-    "notes": "Completed. Production town-balance follow-up spent Sunvault late wood surplus in its magical/civic finish. Daybreak Matrix and Zenith Court now cost more wood and gold, preserving the aetherglass rare curve and Sunvault relay identity while making late optical works consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, Halo Spire completes on day 27, Prismhearth completes on day 30, Sunvault ending wood drops from 10/9 to 6/5, global max ending wood drops to 6, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T19:04:12Z",
+    "completedAt": "2026-05-25T19:04:12Z",
+    "notes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T19:00:52Z",
+  "currentSliceUpdatedAt": "2026-05-25T19:04:12Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -34218,25 +34493,107 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T19:04:12Z",
+      "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_veilmourn_leviathan_sounding_cost": {
+            "gold": 3890,
+            "wood": 2,
+            "ore": 4,
+            "memory_salt": 10
+          },
+          "building_veilmourn_memory_rite_court_cost": {
+            "gold": 3650,
+            "wood": 2,
+            "ore": 4,
+            "memory_salt": 2
+          }
+        },
+        "affected_completion_days": {
+          "town_veilmourn_fogchart_mooring": 28,
+          "town_veilmourn_bellwake_harbor": 28
+        },
+        "affected_ending_resources": {
+          "town_veilmourn_fogchart_mooring": {
+            "gold": 4550,
+            "memory_salt": 0,
+            "ore": 3,
+            "wood": 4
+          },
+          "town_veilmourn_bellwake_harbor": {
+            "gold": 4060,
+            "memory_salt": 0,
+            "ore": 3,
+            "wood": 4
+          }
+        },
+        "affected_total_development_costs": {
+          "town_veilmourn_fogchart_mooring": {
+            "gold": 37650,
+            "memory_salt": 28,
+            "ore": 26,
+            "wood": 25
+          },
+          "town_veilmourn_bellwake_harbor": {
+            "gold": 38140,
+            "memory_salt": 28,
+            "ore": 26,
+            "wood": 25
+          }
+        },
+        "affected_late_rare_bottleneck_days": {
+          "town_veilmourn_fogchart_mooring": 7,
+          "town_veilmourn_bellwake_harbor": 7
+        },
+        "affected_common_material_bottleneck_days": {
+          "town_veilmourn_fogchart_mooring": 3,
+          "town_veilmourn_bellwake_harbor": 3
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 27,
+        "town_development_completion_day_max": 30,
+        "observed_common_surplus_max_after_tuning": {
+          "gold": 5840,
+          "ore": 9,
+          "wood": 6
+        },
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-sunvault-late-wood-surplus-pressure-20260525-10184",
-    "title": "Economy Sunvault Late Wood Surplus Pressure",
+    "id": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
+    "title": "Economy Veilmourn Late Common Surplus Pressure",
     "status": "completed",
-    "updatedAt": "2026-05-25T19:00:52Z",
-    "completedAt": "2026-05-25T19:00:52Z",
-    "notes": "Completed. Production town-balance follow-up spent Sunvault late wood surplus in its magical/civic finish. Daybreak Matrix and Zenith Court now cost more wood and gold, preserving the aetherglass rare curve and Sunvault relay identity while making late optical works consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, Halo Spire completes on day 27, Prismhearth completes on day 30, Sunvault ending wood drops from 10/9 to 6/5, global max ending wood drops to 6, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
+    "updatedAt": "2026-05-25T19:04:12Z",
+    "completedAt": "2026-05-25T19:04:12Z",
+    "notes": "Completed. Production town-balance follow-up spent Veilmourn late gold and ore surplus without weakening its memory-salt identity. Leviathan Sounding and Memory-Rite Court now cost more gold and ore, keeping the same rare-resource curve while making the final harbor rite and leviathan command pier consume more of the common economy. Existing reports remain green without adding new gates: authored town development completes inside day 27-30, both Veilmourn towns complete on day 28, Veilmourn ending gold drops by 2000 per town, ending ore drops from 7 to 3, memory-salt ends at 0, and deterministic economy/town scorecard passes 15/15. This is narrow player-balance content tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T19:00:52Z",
-    "sliceId": "economy-sunvault-late-wood-surplus-pressure-20260525-10184",
+    "updatedAt": "2026-05-25T19:04:12Z",
+    "sliceId": "economy-veilmourn-late-common-surplus-pressure-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-sunvault-wood.json (passed; Halo wood 10 -> 6, Prismhearth wood 9 -> 5, global max ending wood 6)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-sunvault-wood.json (passed; Halo wood total 25, Prismhearth wood total 29)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-sunvault-wood.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-sunvault-wood.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-veilmourn-common.json (passed; Veilmourn ending gold -2000 per town, ore 7 -> 3, completion day 28)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-veilmourn-common.json (passed; Veilmourn gold 37650/38140, ore 26, wood 25, rare 28)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-veilmourn-common.json (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-veilmourn-common.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
       "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
@@ -34244,65 +34601,65 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_sunvault_daybreak_matrix_cost": {
-          "gold": 3290,
-          "wood": 4,
-          "ore": 2,
-          "aetherglass": 10
+        "building_veilmourn_leviathan_sounding_cost": {
+          "gold": 3890,
+          "wood": 2,
+          "ore": 4,
+          "memory_salt": 10
         },
-        "building_sunvault_zenith_court_cost": {
-          "gold": 3350,
-          "wood": 4,
-          "ore": 2,
-          "aetherglass": 5
+        "building_veilmourn_memory_rite_court_cost": {
+          "gold": 3650,
+          "wood": 2,
+          "ore": 4,
+          "memory_salt": 2
         }
       },
       "affected_completion_days": {
-        "town_halo_spire": 27,
-        "town_prismhearth": 30
+        "town_veilmourn_fogchart_mooring": 28,
+        "town_veilmourn_bellwake_harbor": 28
       },
       "affected_ending_resources": {
-        "town_halo_spire": {
-          "aetherglass": 0,
-          "gold": 4740,
-          "ore": 2,
-          "wood": 6
+        "town_veilmourn_fogchart_mooring": {
+          "gold": 4550,
+          "memory_salt": 0,
+          "ore": 3,
+          "wood": 4
         },
-        "town_prismhearth": {
-          "aetherglass": 3,
-          "gold": 4390,
-          "ore": 0,
-          "wood": 5
+        "town_veilmourn_bellwake_harbor": {
+          "gold": 4060,
+          "memory_salt": 0,
+          "ore": 3,
+          "wood": 4
         }
       },
       "affected_total_development_costs": {
-        "town_halo_spire": {
-          "aetherglass": 27,
-          "gold": 38760,
-          "ore": 29,
+        "town_veilmourn_fogchart_mooring": {
+          "gold": 37650,
+          "memory_salt": 28,
+          "ore": 26,
           "wood": 25
         },
-        "town_prismhearth": {
-          "aetherglass": 27,
-          "gold": 43610,
-          "ore": 34,
-          "wood": 29
+        "town_veilmourn_bellwake_harbor": {
+          "gold": 38140,
+          "memory_salt": 28,
+          "ore": 26,
+          "wood": 25
         }
       },
       "affected_late_rare_bottleneck_days": {
-        "town_halo_spire": 5,
-        "town_prismhearth": 5
+        "town_veilmourn_fogchart_mooring": 7,
+        "town_veilmourn_bellwake_harbor": 7
       },
       "affected_common_material_bottleneck_days": {
-        "town_halo_spire": 4,
-        "town_prismhearth": 7
+        "town_veilmourn_fogchart_mooring": 3,
+        "town_veilmourn_bellwake_harbor": 3
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 27,
       "town_development_completion_day_max": 30,
       "observed_common_surplus_max_after_tuning": {
-        "gold": 6550,
+        "gold": 5840,
         "ore": 9,
         "wood": 6
       },
