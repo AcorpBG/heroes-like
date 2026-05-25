@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
+  "currentSliceId": "economy-generated-package-neutral-town-source-route-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Neutral Town Source Route Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Strict Small generated/native package economy breadth now applies guarded source-route pressure to every deterministic breadth case. Native package session adoption adds local required-source support for generated player/enemy towns after exact masks are applied, so guard-blocked inter-town paths no longer leave a generated town without reachable wood, ore, or faction-rare source access. The native package report passes 3/3 breadth cases, 9/9 breadth player/enemy town route cases, 27/27 breadth source routes reachable, 9/9 breadth guarded faction-rare source routes, max breadth source acquisition day 2 <= 6, 15 total breadth towns, 238 breadth resource nodes, three generated project factions, and six generated town templates. Runtime-inclusive economy/town scorecard passes 34/34. Campaign production remains out of scope.",
+  "currentSliceNotes": "Completed. Active generated package route evidence now covers player, enemy, and neutral generated towns; runtime scorecard passes 34/34.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T16:29:12Z",
+  "updatedAt": "2026-05-25T17:03:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22896,6 +22896,73 @@
         "final encounter pacing",
         "final route-safety approval"
       ]
+    },
+    {
+      "id": "economy-generated-package-neutral-town-source-route-scorecard-20260525-10184",
+      "title": "Economy Generated Package Neutral Town Source Route Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-live-stockpile-resource-surface-report.md"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T17:03:57Z",
+        "sliceId": "economy-generated-package-neutral-town-source-route-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_package_session_adoption_report.tscn",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "runtime_scorecard_passed_requirement_count": 34,
+          "runtime_scorecard_requirement_count": 34,
+          "generated_source_route_schema": "generated_package_town_economy_source_routes_v1",
+          "generated_source_route_status": "pass",
+          "generated_source_route_town_case_count": 7,
+          "generated_source_route_player_town_case_count": 1,
+          "generated_source_route_enemy_town_case_count": 2,
+          "generated_source_route_neutral_town_case_count": 4,
+          "generated_source_route_case_count": 21,
+          "generated_source_route_reachable_case_count": 21,
+          "generated_source_route_guarded_town_case_count": 7,
+          "generated_source_route_guarded_case_count": 21,
+          "generated_source_route_guarded_common_case_count": 14,
+          "generated_source_route_guarded_rare_case_count": 7,
+          "generated_source_route_max_common_steps": 3,
+          "generated_source_route_max_rare_steps": 3,
+          "generated_source_route_max_source_acquisition_day": 2,
+          "generated_surface_town_count": 7,
+          "generated_surface_resource_node_count": 119,
+          "generated_breadth_case_count": 3,
+          "generated_breadth_passed_case_count": 3,
+          "generated_breadth_total_town_count": 15,
+          "generated_breadth_total_route_town_case_count": 15,
+          "generated_breadth_total_resource_route_case_count": 45,
+          "generated_breadth_total_reachable_route_case_count": 45,
+          "generated_breadth_total_guarded_source_route_case_count": 45,
+          "generated_breadth_total_guarded_rare_source_route_case_count": 15,
+          "generated_breadth_total_resource_node_count": 256,
+          "generated_breadth_max_source_acquisition_day": 2
+        }
+      },
+      "updatedAt": "2026-05-25T17:03:57Z",
+      "startedAt": "2026-05-25T16:34:26Z",
+      "notes": "Completed. Generated package source-route/support evidence now covers every generated economy town, including neutral towns; active evidence passes 7 town cases, 21/21 routes, guarded pressure for every town, and breadth totals match all 15 generated towns with 45/45 routes.",
+      "completedAt": "2026-05-25T17:03:57Z"
     }
   ],
   "completedImplementationEvidence": [

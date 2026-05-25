@@ -557,9 +557,10 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_source_routes.get("schema") == "generated_package_town_economy_source_routes_v1"
         and generated_source_routes.get("status") == "pass"
         and generated_source_routes.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
-        and int(generated_source_routes.get("town_case_count", 0)) >= 3
+        and int(generated_source_routes.get("town_case_count", 0)) == int(generated_surface.get("town_count", -1))
         and int(generated_source_routes.get("player_town_case_count", 0)) >= 1
         and int(generated_source_routes.get("enemy_town_case_count", 0)) >= 2
+        and int(generated_source_routes.get("neutral_town_case_count", 0)) > 0
         and int(generated_source_routes.get("resource_route_case_count", 0)) == int(generated_source_routes.get("town_case_count", -1)) * 3
         and int(generated_source_routes.get("reachable_route_case_count", 0)) == int(generated_source_routes.get("resource_route_case_count", -1))
         and generated_source_route_common_ids == {"wood", "ore"}
@@ -571,13 +572,14 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_town_source_route_runtime",
         generated_package_town_source_route_ok,
-        "Generated/native package player and enemy towns must have reachable generated wood, ore, and faction-rare source routes after exact guard/block masks are applied.",
+        "Generated/native package player, enemy, and neutral towns must have reachable generated wood, ore, and faction-rare source routes after exact guard/block masks are applied.",
         {
             "schema": str(generated_source_routes.get("schema", "")),
             "package_session_scope": str(generated_source_routes.get("package_session_scope", "")),
             "town_case_count": int(generated_source_routes.get("town_case_count", 0)),
             "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
             "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
+            "neutral_town_case_count": int(generated_source_routes.get("neutral_town_case_count", 0)),
             "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
             "required_common_resource_ids": sorted(generated_source_route_common_ids),
@@ -602,7 +604,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_source_guard_pressure_runtime",
         generated_package_source_guard_pressure_ok,
-        "Generated/native package town source routes must preserve guarded economy-source pressure for every generated player and enemy town without pushing acquisition outside the 30-turn runway.",
+        "Generated/native package town source routes must preserve guarded economy-source pressure for every generated player, enemy, and neutral town without pushing acquisition outside the 30-turn runway.",
         {
             "schema": str(generated_source_routes.get("schema", "")),
             "town_case_count": generated_source_route_town_count,
@@ -626,7 +628,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_rare_source_guard_pressure_runtime",
         generated_package_rare_source_guard_pressure_ok,
-        "Generated/native package faction-rare economy-source routes must remain guarded for every generated player and enemy town.",
+        "Generated/native package faction-rare economy-source routes must remain guarded for every generated player, enemy, and neutral town.",
         {
             "schema": str(generated_source_routes.get("schema", "")),
             "town_case_count": generated_source_route_town_count,
@@ -653,7 +655,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_breadth.get("guarded_rare_source_route_breadth_case_count", 0)) == int(generated_breadth.get("case_count", -1))
         and int(generated_breadth.get("total_town_count", 0)) >= int(generated_breadth.get("case_count", 0)) * 3
         and int(generated_breadth.get("total_resource_node_count", 0)) > 0
-        and int(generated_breadth.get("total_route_town_case_count", 0)) >= int(generated_breadth.get("case_count", 0)) * 3
+        and int(generated_breadth.get("total_route_town_case_count", 0)) == int(generated_breadth.get("total_town_count", -1))
         and int(generated_breadth.get("total_resource_route_case_count", 0))
         == int(generated_breadth.get("total_route_town_case_count", -1)) * 3
         and int(generated_breadth.get("total_reachable_route_case_count", 0))
@@ -1245,6 +1247,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "town_case_count": int(generated_source_routes.get("town_case_count", 0)),
             "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
             "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
+            "neutral_town_case_count": int(generated_source_routes.get("neutral_town_case_count", 0)),
             "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
             "guarded_town_case_count": int(generated_source_routes.get("guarded_town_case_count", 0)),
