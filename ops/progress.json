@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-runtime-scorecard-integration-20260524-10184",
-  "currentSliceTitle": "Economy Town Runtime Scorecard Integration",
+  "currentSliceId": "economy-town-high-tier-pacing-balance-20260524-10184",
+  "currentSliceTitle": "Economy Town High-Tier Pacing Balance",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "The economy/town scorecard now has an optional runtime-inclusive mode. It passes 10/10 checks by folding in live Godot town runtime development/recruitment, active player-town scenario runway, and active AI-town scenario runway evidence while the default validator keeps the fast deterministic path.",
+  "currentSliceNotes": "High-tier unit timing is now part of the economy/town scorecard. Signature tier 5-7 unit buildings use a 4/8/10 faction-rare curve, deterministic authored towns complete between day 24 and day 30, tier 7 signature buildings arrive between day 22 and day 28, and the runtime-inclusive scorecard still passes live town, active player-town, and active AI-town runways.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-24T23:40:19Z",
+  "updatedAt": "2026-05-25T00:01:20Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-high-tier-pacing-balance-20260524-10184",
+      "title": "Economy Town High-Tier Pacing Balance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T00:01:20Z",
+      "startedAt": "2026-05-24T23:43:55Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "docs/economy-town-development-live-balance-gate-report.md",
+        "tests/town_development_balance_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "content/buildings.json"
+      ],
+      "summary": "High-tier unit timing is now part of the economy/town scorecard. Signature tier 5-7 unit buildings use a 4/8/10 faction-rare curve, deterministic authored towns complete between day 24 and day 30, tier 7 signature buildings arrive between day 22 and day 28, and the runtime-inclusive scorecard still passes live town, active player-town, and active AI-town runways.",
+      "validation": [
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "python3 -m py_compile tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-25T00:01:20Z"
+    },
     {
       "id": "economy-town-runtime-scorecard-integration-20260524-10184",
       "title": "Economy Town Runtime Scorecard Integration",

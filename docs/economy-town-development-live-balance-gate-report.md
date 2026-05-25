@@ -43,17 +43,14 @@ Rare-resource sites and matching resource-front map-object metadata are live sto
 - each seed faction town has seven signature unit-building tiers;
 - lower signature tiers avoid rare-resource costs;
 - high signature tiers include the matching faction rare resource;
+- tier 5-7 signature unit buildings obey pacing floors of day 4, day 12, and day 22;
 - one build per simulated town day is enforced by the build loop;
-- all six seed towns complete their buildable development within 30 turns.
+- all authored towns complete their buildable development within 30 turns.
 
 Current focused completion days are:
 
-- Embercourt `town_highwater_keep`: day 20
-- Mireclaw `town_nightglass_redoubt`: day 21
-- Sunvault `town_prismhearth`: day 21
-- Thornwake `town_thornwake_graftroot_caravan`: day 8
-- Brasshollow `town_brasshollow_orevein_gantry`: day 8
-- Veilmourn `town_veilmourn_bellwake_harbor`: day 8
+- 15 authored towns complete between day 24 and day 30.
+- Tier 7 signature unit buildings arrive between day 22 and day 28.
 
 ## Boundaries
 
