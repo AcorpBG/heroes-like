@@ -44,12 +44,14 @@ Rare-resource sites and matching resource-front map-object metadata are live sto
 - lower signature tiers avoid rare-resource costs;
 - high signature tiers include the matching faction rare resource;
 - tier 5-7 signature unit buildings obey pacing floors of day 4, day 12, and day 22;
+- every authored town hits at least one late rare-resource bottleneck on day 18 or later before full development completes;
 - one build per simulated town day is enforced by the build loop;
 - all authored towns complete their buildable development within 30 turns.
 
 Current focused completion days are:
 
 - 15 authored towns complete between day 24 and day 30.
+- Late rare-resource bottleneck evidence covers 15/15 authored towns, with at least one day 18+ rare-gated high-tier or upgrade stall in every deterministic development curve.
 - Tier 7 signature unit buildings arrive between day 22 and day 28.
 
 ## Boundaries

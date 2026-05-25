@@ -27,6 +27,8 @@ MIN_BREADTH_PARITY_BUILDINGS = 5
 MIN_COMPLETION_DAY = 20
 MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
+MIN_LATE_RARE_BOTTLENECK_DAY = 18
+MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 SIX_FACTION_BREADTH_PARITY_STATUS = "six_faction_town_breadth_parity"
 SIX_FACTION_BREADTH_PARITY_FACTIONS = {
@@ -67,6 +69,16 @@ def requirements_met(building: dict[str, Any], built: set[str]) -> bool:
     return all(str(requirement) in built for requirement in building.get("requires", []))
 
 
+def missing_costs(pool: dict[str, int], cost: dict[str, Any]) -> dict[str, int]:
+    result: dict[str, int] = {}
+    for key, value in cost.items():
+        resource_id = str(key)
+        missing = int(value) - int(pool.get(resource_id, 0))
+        if missing > 0:
+            result[resource_id] = missing
+    return result
+
+
 def simulate_town(
     town: dict[str, Any],
     faction: dict[str, Any],
@@ -98,6 +110,7 @@ def simulate_town(
     ]
     build_log: list[dict[str, Any]] = []
     stalled_days: list[dict[str, Any]] = []
+    late_rare_bottleneck_days: list[dict[str, Any]] = []
 
     signature_order = {
         str(building_id): index
@@ -120,11 +133,39 @@ def simulate_town(
         ]
         if not affordable:
             if available:
+                blocked_by = []
+                for building_id in available:
+                    cost = buildings.get(building_id, {}).get("cost", {})
+                    missing = missing_costs(resources, cost if isinstance(cost, dict) else {})
+                    if not missing:
+                        continue
+                    blocked_by.append(
+                        {
+                            "building_id": building_id,
+                            "missing": dict(sorted(missing.items())),
+                        }
+                    )
+                    if (
+                        day >= MIN_LATE_RARE_BOTTLENECK_DAY
+                        and rare_id in missing
+                        and int(cost.get(rare_id, 0)) > 0
+                    ):
+                        late_rare_bottleneck_days.append(
+                            {
+                                "day": day,
+                                "building_id": building_id,
+                                "rare_resource_id": rare_id,
+                                "available_rare": int(resources.get(rare_id, 0)),
+                                "required_rare": int(cost.get(rare_id, 0)),
+                                "missing_rare": int(missing.get(rare_id, 0)),
+                            }
+                        )
                 stalled_days.append(
                     {
                         "day": day,
                         "available": available,
                         "resources": dict(sorted(resources.items())),
+                        "blocked_by": blocked_by,
                     }
                 )
             continue
@@ -164,6 +205,10 @@ def simulate_town(
         "total_development_costs": dict(sorted(total_development_costs.items())),
         "rare_development_spend": int(total_development_costs.get(rare_id, 0)),
         "ending_rare_resource": int(resources.get(rare_id, 0)),
+        "late_rare_bottleneck_days": late_rare_bottleneck_days,
+        "late_rare_bottleneck_day_count": len({int(row["day"]) for row in late_rare_bottleneck_days}),
+        "min_late_rare_bottleneck_day": MIN_LATE_RARE_BOTTLENECK_DAY,
+        "min_late_rare_bottleneck_days_per_town": MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN,
         "signature_tier_build_days": signature_tier_build_days,
         "min_high_tier_unit_build_days": {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()},
         "stalled_days": stalled_days[:5],
@@ -291,6 +336,10 @@ def main() -> int:
             errors.append(f"{town_id} must spend at least {MIN_RARE_DEVELOPMENT_SPEND} faction rare resources across development")
         if int(result.get("ending_rare_resource", 0)) > MAX_ENDING_RARE_AFTER_COMPLETION:
             errors.append(f"{town_id} ends development with too much unspent faction rare resource")
+        if int(result.get("late_rare_bottleneck_day_count", 0)) < MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN:
+            errors.append(
+                f"{town_id} must have at least {MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN} late rare-resource bottleneck days"
+            )
         signature_tier_days = result.get("signature_tier_build_days", {})
         for tier, minimum_day in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items():
             build_day = int(signature_tier_days.get(str(tier), 0))
@@ -307,6 +356,8 @@ def main() -> int:
     report["min_breadth_parity_buildings"] = MIN_BREADTH_PARITY_BUILDINGS
     report["min_rare_development_spend"] = MIN_RARE_DEVELOPMENT_SPEND
     report["max_ending_rare_after_completion"] = MAX_ENDING_RARE_AFTER_COMPLETION
+    report["min_late_rare_bottleneck_day"] = MIN_LATE_RARE_BOTTLENECK_DAY
+    report["min_late_rare_bottleneck_days_per_town"] = MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN
     report["min_high_tier_unit_build_days"] = {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()}
 
     for faction_id, faction in factions.items():
