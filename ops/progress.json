@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
-  "currentSliceTitle": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
+  "currentSliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+  "currentSliceTitle": "Economy Sunvault Early Relay Build Curve Tuning",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate.",
+  "currentSliceNotes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:33:46Z",
+  "updatedAt": "2026-05-25T18:37:56Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23243,6 +23243,90 @@
         "tests/economy_town_goal_scorecard_report.py",
         "tests/validate_repo.py"
       ]
+    },
+    {
+      "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+      "title": "Economy Sunvault Early Relay Build Curve Tuning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:37:56Z",
+        "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_sunvault_lens_gallery_requires": [
+              "building_sunvault_shard_yard",
+              "building_sunvault_lens_tithe"
+            ],
+            "building_sunvault_harmonic_cloister_requires": [
+              "building_sunvault_mirror_forge",
+              "building_market_square",
+              "building_sunvault_relay_scribes"
+            ],
+            "sunvault_town_build_order_priority": [
+              "building_sunvault_lens_tithe",
+              "building_market_square",
+              "building_sunvault_relay_scribes"
+            ]
+          },
+          "affected_town_completion_days": {
+            "town_halo_spire": 25,
+            "town_prismhearth": 30
+          },
+          "affected_early_identity_steps": {
+            "town_halo_spire": [
+              "day 2 building_sunvault_lens_tithe",
+              "day 3 building_sunvault_lens_gallery",
+              "day 6 building_sunvault_relay_scribes",
+              "day 7 building_sunvault_harmonic_cloister"
+            ],
+            "town_prismhearth": [
+              "day 2 building_sunvault_lens_tithe",
+              "day 3 building_sunvault_lens_gallery",
+              "day 6 building_sunvault_relay_scribes",
+              "day 7 building_sunvault_harmonic_cloister"
+            ]
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate.",
+      "updatedAt": "2026-05-25T18:37:56Z",
+      "startedAt": "2026-05-25T18:37:56Z",
+      "completedAt": "2026-05-25T18:37:56Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -29117,6 +29201,79 @@
           "town_development_completion_day_max": 30
         }
       }
+    },
+    {
+      "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+      "title": "Economy Sunvault Early Relay Build Curve Tuning",
+      "completedAt": "2026-05-25T18:37:56Z",
+      "summary": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "content/towns.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:37:56Z",
+        "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_sunvault_lens_gallery_requires": [
+              "building_sunvault_shard_yard",
+              "building_sunvault_lens_tithe"
+            ],
+            "building_sunvault_harmonic_cloister_requires": [
+              "building_sunvault_mirror_forge",
+              "building_market_square",
+              "building_sunvault_relay_scribes"
+            ],
+            "sunvault_town_build_order_priority": [
+              "building_sunvault_lens_tithe",
+              "building_market_square",
+              "building_sunvault_relay_scribes"
+            ]
+          },
+          "affected_town_completion_days": {
+            "town_halo_spire": 25,
+            "town_prismhearth": 30
+          },
+          "affected_early_identity_steps": {
+            "town_halo_spire": [
+              "day 2 building_sunvault_lens_tithe",
+              "day 3 building_sunvault_lens_gallery",
+              "day 6 building_sunvault_relay_scribes",
+              "day 7 building_sunvault_harmonic_cloister"
+            ],
+            "town_prismhearth": [
+              "day 2 building_sunvault_lens_tithe",
+              "day 3 building_sunvault_lens_gallery",
+              "day 6 building_sunvault_relay_scribes",
+              "day 7 building_sunvault_harmonic_cloister"
+            ]
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -30853,16 +31010,73 @@
         "town_development_completion_day_min": 24,
         "town_development_completion_day_max": 30
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:37:56Z",
+      "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_sunvault_lens_gallery_requires": [
+            "building_sunvault_shard_yard",
+            "building_sunvault_lens_tithe"
+          ],
+          "building_sunvault_harmonic_cloister_requires": [
+            "building_sunvault_mirror_forge",
+            "building_market_square",
+            "building_sunvault_relay_scribes"
+          ],
+          "sunvault_town_build_order_priority": [
+            "building_sunvault_lens_tithe",
+            "building_market_square",
+            "building_sunvault_relay_scribes"
+          ]
+        },
+        "affected_town_completion_days": {
+          "town_halo_spire": 25,
+          "town_prismhearth": 30
+        },
+        "affected_early_identity_steps": {
+          "town_halo_spire": [
+            "day 2 building_sunvault_lens_tithe",
+            "day 3 building_sunvault_lens_gallery",
+            "day 6 building_sunvault_relay_scribes",
+            "day 7 building_sunvault_harmonic_cloister"
+          ],
+          "town_prismhearth": [
+            "day 2 building_sunvault_lens_tithe",
+            "day 3 building_sunvault_lens_gallery",
+            "day 6 building_sunvault_relay_scribes",
+            "day 7 building_sunvault_harmonic_cloister"
+          ]
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:33:46Z",
-    "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:37:56Z",
+    "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
@@ -30870,73 +31084,57 @@
       "git diff --check (passed)"
     ],
     "evidence": {
-      "audit_findings": {
-        "stronger_economic_identity_factions": [
-          "faction_brasshollow",
-          "faction_thornwake",
-          "faction_veilmourn",
-          "faction_sunvault"
-        ],
-        "weaker_economic_identity_factions": [
-          "faction_embercourt",
-          "faction_mireclaw"
-        ],
-        "boring_or_forced_curve_examples": [
-          "town_riverwatch",
-          "town_highwater_keep",
-          "town_blackfen_gate",
-          "town_murkward_ford",
-          "town_reedbarrow_ferry",
-          "town_halo_spire"
-        ],
-        "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
-        "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
-      },
       "content_changes": {
-        "building_embercourt_tollstone_weir_requires": [
-          "building_embercourt_granary_lock_exchange",
-          "building_embercourt_lockhouse_tally"
+        "building_sunvault_lens_gallery_requires": [
+          "building_sunvault_shard_yard",
+          "building_sunvault_lens_tithe"
         ],
-        "building_mireclaw_war_drum_circle_requires": [
-          "building_mireclaw_blackbranch_den",
-          "building_mireclaw_reed_toll"
+        "building_sunvault_harmonic_cloister_requires": [
+          "building_sunvault_mirror_forge",
+          "building_market_square",
+          "building_sunvault_relay_scribes"
+        ],
+        "sunvault_town_build_order_priority": [
+          "building_sunvault_lens_tithe",
+          "building_market_square",
+          "building_sunvault_relay_scribes"
         ]
       },
       "affected_town_completion_days": {
-        "town_highwater_keep": 26,
-        "town_riverwatch": 24,
-        "town_blackfen_gate": 26,
-        "town_duskfen": 27,
-        "town_murkward_ford": 26,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 26
+        "town_halo_spire": 25,
+        "town_prismhearth": 30
       },
       "affected_early_identity_steps": {
-        "town_highwater_keep": [
-          "day 8 building_embercourt_lockhouse_tally",
-          "day 9 building_embercourt_tollstone_weir"
+        "town_halo_spire": [
+          "day 2 building_sunvault_lens_tithe",
+          "day 3 building_sunvault_lens_gallery",
+          "day 6 building_sunvault_relay_scribes",
+          "day 7 building_sunvault_harmonic_cloister"
         ],
-        "town_riverwatch": [
-          "day 11 building_embercourt_lockhouse_tally",
-          "day 12 building_embercourt_tollstone_weir"
-        ],
-        "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+        "town_prismhearth": [
+          "day 2 building_sunvault_lens_tithe",
+          "day 3 building_sunvault_lens_gallery",
+          "day 6 building_sunvault_relay_scribes",
+          "day 7 building_sunvault_harmonic_cloister"
+        ]
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 24,
-      "town_development_completion_day_max": 30
+      "town_development_completion_day_max": 30,
+      "new_gate_created": false,
+      "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   },
   "active_slice": {
-    "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
-    "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
+    "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+    "title": "Economy Sunvault Early Relay Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:33:46Z",
-    "completedAt": "2026-05-25T18:33:46Z",
-    "notes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate."
+    "updatedAt": "2026-05-25T18:37:56Z",
+    "completedAt": "2026-05-25T18:37:56Z",
+    "notes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:33:46Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:37:56Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -32211,24 +32409,81 @@
         "town_development_completion_day_min": 24,
         "town_development_completion_day_max": 30
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:37:56Z",
+      "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_sunvault_lens_gallery_requires": [
+            "building_sunvault_shard_yard",
+            "building_sunvault_lens_tithe"
+          ],
+          "building_sunvault_harmonic_cloister_requires": [
+            "building_sunvault_mirror_forge",
+            "building_market_square",
+            "building_sunvault_relay_scribes"
+          ],
+          "sunvault_town_build_order_priority": [
+            "building_sunvault_lens_tithe",
+            "building_market_square",
+            "building_sunvault_relay_scribes"
+          ]
+        },
+        "affected_town_completion_days": {
+          "town_halo_spire": 25,
+          "town_prismhearth": 30
+        },
+        "affected_early_identity_steps": {
+          "town_halo_spire": [
+            "day 2 building_sunvault_lens_tithe",
+            "day 3 building_sunvault_lens_gallery",
+            "day 6 building_sunvault_relay_scribes",
+            "day 7 building_sunvault_harmonic_cloister"
+          ],
+          "town_prismhearth": [
+            "day 2 building_sunvault_lens_tithe",
+            "day 3 building_sunvault_lens_gallery",
+            "day 6 building_sunvault_relay_scribes",
+            "day 7 building_sunvault_harmonic_cloister"
+          ]
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
-    "title": "Economy Embercourt Mireclaw Early Identity Build Curve Tuning",
+    "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+    "title": "Economy Sunvault Early Relay Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:33:46Z",
-    "completedAt": "2026-05-25T18:33:46Z",
-    "notes": "Completed. Player-balance audit found Embercourt and Mireclaw early town curves could sprint through T2 unit support before faction economy support, making them read like renamed rare-resource pressure. Embercourt Tollstone Weir now requires Lockhouse Tally, and Mireclaw War Drum Circle now requires Reed Toll, so the first-week curve passes through visible toll/route economy identity before T2/T3 acceleration. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Embercourt/Mireclaw towns complete on days 24-27, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final faction economy identity completion, broad generated-map generalization, or a new validation gate."
+    "updatedAt": "2026-05-25T18:37:56Z",
+    "completedAt": "2026-05-25T18:37:56Z",
+    "notes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:33:46Z",
-    "sliceId": "economy-embercourt-mireclaw-early-identity-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:37:56Z",
+    "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tuned.jsonl (passed; affected Embercourt/Mireclaw towns complete on days 24-27)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tuned.jsonl (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tuned.jsonl (passed)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
@@ -32236,62 +32491,46 @@
       "git diff --check (passed)"
     ],
     "evidence": {
-      "audit_findings": {
-        "stronger_economic_identity_factions": [
-          "faction_brasshollow",
-          "faction_thornwake",
-          "faction_veilmourn",
-          "faction_sunvault"
-        ],
-        "weaker_economic_identity_factions": [
-          "faction_embercourt",
-          "faction_mireclaw"
-        ],
-        "boring_or_forced_curve_examples": [
-          "town_riverwatch",
-          "town_highwater_keep",
-          "town_blackfen_gate",
-          "town_murkward_ford",
-          "town_reedbarrow_ferry",
-          "town_halo_spire"
-        ],
-        "rare_source_placement": "Ninefold narrowest rare placement was addressed in the prior rare-source breadth tuning slice; remaining broad placement generalization is not proven by strict Small evidence.",
-        "generated_small_generalization": "Strict Small 36x36 one-level land generated-map evidence remains useful but over-narrow; it does not prove larger maps, water, underground, or broad template ecology."
-      },
       "content_changes": {
-        "building_embercourt_tollstone_weir_requires": [
-          "building_embercourt_granary_lock_exchange",
-          "building_embercourt_lockhouse_tally"
+        "building_sunvault_lens_gallery_requires": [
+          "building_sunvault_shard_yard",
+          "building_sunvault_lens_tithe"
         ],
-        "building_mireclaw_war_drum_circle_requires": [
-          "building_mireclaw_blackbranch_den",
-          "building_mireclaw_reed_toll"
+        "building_sunvault_harmonic_cloister_requires": [
+          "building_sunvault_mirror_forge",
+          "building_market_square",
+          "building_sunvault_relay_scribes"
+        ],
+        "sunvault_town_build_order_priority": [
+          "building_sunvault_lens_tithe",
+          "building_market_square",
+          "building_sunvault_relay_scribes"
         ]
       },
       "affected_town_completion_days": {
-        "town_highwater_keep": 26,
-        "town_riverwatch": 24,
-        "town_blackfen_gate": 26,
-        "town_duskfen": 27,
-        "town_murkward_ford": 26,
-        "town_nightglass_redoubt": 27,
-        "town_reedbarrow_ferry": 26
+        "town_halo_spire": 25,
+        "town_prismhearth": 30
       },
       "affected_early_identity_steps": {
-        "town_highwater_keep": [
-          "day 8 building_embercourt_lockhouse_tally",
-          "day 9 building_embercourt_tollstone_weir"
+        "town_halo_spire": [
+          "day 2 building_sunvault_lens_tithe",
+          "day 3 building_sunvault_lens_gallery",
+          "day 6 building_sunvault_relay_scribes",
+          "day 7 building_sunvault_harmonic_cloister"
         ],
-        "town_riverwatch": [
-          "day 11 building_embercourt_lockhouse_tally",
-          "day 12 building_embercourt_tollstone_weir"
-        ],
-        "mireclaw_towns": "building_mireclaw_reed_toll now precedes building_mireclaw_war_drum_circle in affected authored build logs"
+        "town_prismhearth": [
+          "day 2 building_sunvault_lens_tithe",
+          "day 3 building_sunvault_lens_gallery",
+          "day 6 building_sunvault_relay_scribes",
+          "day 7 building_sunvault_harmonic_cloister"
+        ]
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
       "town_development_completion_day_min": 24,
-      "town_development_completion_day_max": 30
+      "town_development_completion_day_max": 30,
+      "new_gate_created": false,
+      "policy": "player-balance content tuning using existing reports; not campaign production work"
     }
   }
 }
