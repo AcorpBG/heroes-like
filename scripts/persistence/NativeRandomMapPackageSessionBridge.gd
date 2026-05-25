@@ -11,6 +11,16 @@ const H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY := {
 	"lens_crystal": "site_aetherglass_lens_house",
 	"cut_gems": "site_memory_salt_pan",
 }
+const GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE := {
+	"wood": {"site_id": "site_brightwood_sawmill", "object_id": "object_brightwood_sawmill"},
+	"ore": {"site_id": "site_ridge_quarry", "object_id": "object_ridge_quarry"},
+}
+const GENERATED_TOWN_RARE_SOURCE_SITE_BY_RESOURCE := {
+	"aetherglass": "site_aetherglass_lens_house",
+	"embergrain": "site_embergrain_warm_granary",
+	"peatwax": "site_peatwax_reed_yard",
+	"memory_salt": "site_memory_salt_pan",
+}
 const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"castle": {"faction_id": "faction_embercourt", "town_id": "town_riverwatch"},
 	"rampart": {"faction_id": "faction_mireclaw", "town_id": "town_duskfen"},
@@ -138,6 +148,8 @@ static func build_session_from_adoption(
 		"native_random_map_scenario_draft_registration": draft_registration,
 	}
 	OverworldRulesScript.normalize_overworld_state(session)
+	if _ensure_generated_town_source_route_support(session):
+		OverworldRulesScript.normalize_overworld_state(session)
 	return session
 
 static func build_session_from_loaded_packages(
@@ -481,6 +493,225 @@ static func _supplemental_rare_source_guard(node: Dictionary) -> Dictionary:
 		"package_guard_engagement_tiles": [tile],
 		"package_guard_engagement_tile_count": 1,
 	}
+
+static func _ensure_generated_town_source_route_support(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null or not bool(session.flags.get("generated_random_map", false)):
+		return false
+	var changed := false
+	var source_index := 0
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for town_value in towns:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if not (String(town.get("owner", "")) in ["player", "enemy"]):
+			continue
+		var start_tile := _generated_town_source_start_tile(town)
+		for resource_id_value in _generated_town_required_source_ids(town):
+			var resource_id := String(resource_id_value)
+			var require_guard := not GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id)
+			var support_tile := _existing_generated_town_support_tile(session, town)
+			if support_tile == Vector2i(-1, -1):
+				support_tile = _generated_town_source_support_tile(session, start_tile, source_index)
+			if support_tile == Vector2i(-1, -1):
+				support_tile = _existing_generated_town_support_tile(session, town)
+			if support_tile == Vector2i(-1, -1):
+				continue
+			var node := _supplemental_generated_town_source_node(town, resource_id, support_tile)
+			if node.is_empty():
+				continue
+			var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+			nodes.append(node)
+			session.overworld["resource_nodes"] = nodes
+			if require_guard:
+				var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+				encounters.append(_supplemental_rare_source_guard(node))
+				session.overworld["encounters"] = encounters
+			changed = true
+			source_index += 1
+	return changed
+
+static func _generated_town_required_source_ids(town: Dictionary) -> Array:
+	var result := []
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+	var rare_id := String(profile.get("rare_resource_id", ""))
+	if rare_id != "":
+		result.append(rare_id)
+	result.append("wood")
+	result.append("ore")
+	return result
+
+static func _supplemental_generated_town_source_node(town: Dictionary, resource_id: String, tile: Vector2i) -> Dictionary:
+	var site_id := ""
+	var object_id := ""
+	if GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id):
+		var record: Dictionary = GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE[resource_id]
+		site_id = String(record.get("site_id", ""))
+		object_id = String(record.get("object_id", ""))
+	else:
+		site_id = String(GENERATED_TOWN_RARE_SOURCE_SITE_BY_RESOURCE.get(resource_id, ""))
+	if site_id == "" or ContentService.get_resource_site(site_id).is_empty():
+		return {}
+	var placement_id := "h3maped_small_town_source_support_%s_%s" % [
+		String(town.get("placement_id", "town")),
+		resource_id,
+	]
+	var tile_payload := {"x": tile.x, "y": tile.y, "level": int(town.get("level", 0))}
+	return {
+		"placement_id": placement_id,
+		"kind": "mine",
+		"package_kind": "mine",
+		"site_id": site_id,
+		"object_id": object_id,
+		"owner": "neutral",
+		"player_slot": 0,
+		"player_type": "neutral",
+		"generated_kind": "mine",
+		"generated_package_source_policy": "town_required_source_route_support",
+		"generated_package_source_town_placement_id": String(town.get("placement_id", "")),
+		"resource_id": resource_id,
+		"x": tile.x,
+		"y": tile.y,
+		"level": int(town.get("level", 0)),
+		"primary_tile": tile_payload,
+		"visit_tile": tile_payload,
+		"body_tiles": [tile_payload],
+		"package_body_tiles": [tile_payload],
+		"package_block_tiles": [],
+		"package_visit_tiles": [tile_payload],
+		"approach_tiles": [tile_payload],
+		"blocking_body": false,
+		"object_footprint_catalog_ref": {"source": "generated_package_town_source_route_support"},
+		"collected": false,
+	}
+
+static func _existing_generated_town_support_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	var town_placement_id := String(town.get("placement_id", ""))
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("generated_package_source_town_placement_id", "")) != town_placement_id:
+			continue
+		return _generated_source_target_tile(node)
+	return Vector2i(-1, -1)
+
+static func _generated_town_source_support_tile(
+	session: SessionStateStoreScript.SessionData,
+	start_tile: Vector2i,
+	source_index: int
+) -> Vector2i:
+	var map_size := OverworldRulesScript.derive_map_size(session)
+	if not _generated_source_in_bounds(start_tile, map_size):
+		return Vector2i(-1, -1)
+	var queue := [start_tile]
+	var distances := {_generated_source_tile_key(start_tile): 0}
+	var candidates := []
+	var stackable_candidates := []
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		var current_distance := int(distances.get(_generated_source_tile_key(current), 0))
+		if current_distance > 3:
+			continue
+		if current_distance >= 1 and _generated_source_tile_available(session, current):
+			candidates.append(current)
+		elif current_distance >= 1 and _generated_source_tile_stackable(session, current):
+			stackable_candidates.append(current)
+		for neighbor in _generated_source_route_neighbors(current):
+			if not _generated_source_in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _generated_source_tile_key(neighbor)
+			if distances.has(neighbor_key):
+				continue
+			if OverworldRulesScript.tile_step_cuts_blocked_corner(session, current, neighbor):
+				continue
+			if OverworldRulesScript.tile_is_blocked(session, neighbor.x, neighbor.y):
+				if _generated_source_tile_stackable(session, neighbor):
+					stackable_candidates.append(neighbor)
+				continue
+			if OverworldRulesScript.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+				continue
+			distances[neighbor_key] = current_distance + 1
+			queue.append(neighbor)
+	if candidates.is_empty():
+		if stackable_candidates.is_empty():
+			return Vector2i(-1, -1)
+		return stackable_candidates[source_index % stackable_candidates.size()]
+	return candidates[source_index % candidates.size()]
+
+static func _generated_source_tile_available(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+		return false
+	if OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y):
+		return false
+	for node_value in session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and int(node_value.get("x", -9999)) == tile.x and int(node_value.get("y", -9999)) == tile.y:
+			return false
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and int(encounter_value.get("x", -9999)) == tile.x and int(encounter_value.get("y", -9999)) == tile.y:
+			return false
+	return true
+
+static func _generated_source_tile_stackable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if int(node.get("x", -9999)) == tile.x and int(node.get("y", -9999)) == tile.y:
+			return true
+		var visit_tile: Dictionary = node.get("visit_tile", {}) if node.get("visit_tile", {}) is Dictionary else {}
+		if int(visit_tile.get("x", -9999)) == tile.x and int(visit_tile.get("y", -9999)) == tile.y:
+			return true
+	return not OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y)
+
+static func _generated_source_target_tile(node: Dictionary) -> Vector2i:
+	for key in ["visit_tile", "primary_tile", "action_tile"]:
+		var tile: Dictionary = node.get(key, {}) if node.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			return Vector2i(int(tile.get("x", node.get("x", 0))), int(tile.get("y", node.get("y", 0))))
+	for key in ["package_visit_tiles", "action_tiles", "package_action_tiles", "approach_tiles"]:
+		var tiles: Array = node.get(key, []) if node.get(key, []) is Array else []
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				return Vector2i(int(tile_value.get("x", node.get("x", 0))), int(tile_value.get("y", node.get("y", 0))))
+	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+
+static func _generated_town_source_start_tile(town: Dictionary) -> Vector2i:
+	for key in ["hero_start_tile", "runtime_start_tile", "visit_tile", "primary_tile"]:
+		var tile: Dictionary = town.get(key, {}) if town.get(key, {}) is Dictionary else {}
+		if not tile.is_empty():
+			return Vector2i(int(tile.get("x", town.get("x", 0))), int(tile.get("y", town.get("y", 0))))
+	for key in ["package_visit_tiles", "approach_tiles"]:
+		var tiles: Array = town.get(key, []) if town.get(key, []) is Array else []
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				return Vector2i(int(tile_value.get("x", town.get("x", 0))), int(tile_value.get("y", town.get("y", 0))))
+	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+
+static func _generated_source_route_neighbors(tile: Vector2i) -> Array:
+	return [
+		Vector2i(tile.x - 1, tile.y - 1),
+		Vector2i(tile.x, tile.y - 1),
+		Vector2i(tile.x + 1, tile.y - 1),
+		Vector2i(tile.x - 1, tile.y),
+		Vector2i(tile.x + 1, tile.y),
+		Vector2i(tile.x - 1, tile.y + 1),
+		Vector2i(tile.x, tile.y + 1),
+		Vector2i(tile.x + 1, tile.y + 1),
+	]
+
+static func _generated_source_in_bounds(tile: Vector2i, map_size: Variant) -> bool:
+	if map_size is Vector2i:
+		return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
+	if map_size is Dictionary:
+		return tile.x >= 0 and tile.y >= 0 and tile.x < int(map_size.get("x", map_size.get("width", 0))) and tile.y < int(map_size.get("y", map_size.get("height", 0)))
+	return false
+
+static func _generated_source_tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
 
 static func _map_objects_from_document(map_document: Variant) -> Array:
 	var objects := []

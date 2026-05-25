@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-generated-package-rare-source-guard-pressure-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Generated Package Rare Source Guard Pressure Scorecard",
+  "currentSliceId": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Strict Small generated package rare-source guard pressure implemented and focused evidence passes: 3/3 generated player/enemy towns retain guarded faction-rare routes, rare-source guard links block direct claiming before guard clear, max source acquisition day 4 <= 6. Campaign production remains out of scope.",
+  "currentSliceNotes": "Completed. Strict Small generated/native package economy breadth now applies guarded source-route pressure to every deterministic breadth case. Native package session adoption adds local required-source support for generated player/enemy towns after exact masks are applied, so guard-blocked inter-town paths no longer leave a generated town without reachable wood, ore, or faction-rare source access. The native package report passes 3/3 breadth cases, 9/9 breadth player/enemy town route cases, 27/27 breadth source routes reachable, 9/9 breadth guarded faction-rare source routes, max breadth source acquisition day 2 <= 6, 15 total breadth towns, 238 breadth resource nodes, three generated project factions, and six generated town templates. Runtime-inclusive economy/town scorecard passes 34/34. Campaign production remains out of scope.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T15:22:12Z",
+  "updatedAt": "2026-05-25T16:29:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,38 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
+      "title": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "planRef": "Current Tactical State",
+      "implementationTargets": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_package_session_adoption_report.tscn (passed; 27/27 breadth source routes reachable, 9/9 guarded rare-source routes, max acquisition day 2)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 34/34 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "updatedAt": "2026-05-25T16:29:12Z",
+      "startedAt": "2026-05-25T15:46:39Z",
+      "notes": "Completed. Strict Small generated/native package economy breadth now applies guarded source-route pressure to every deterministic breadth case. Native package session adoption adds local required-source support for generated player/enemy towns after exact masks are applied, so guard-blocked inter-town paths no longer leave a generated town without reachable wood, ore, or faction-rare source access. The native package report passes 3/3 breadth cases, 9/9 breadth player/enemy town route cases, 27/27 breadth source routes reachable, 9/9 breadth guarded faction-rare source routes, max breadth source acquisition day 2 <= 6, 15 total breadth towns, 238 breadth resource nodes, three generated project factions, and six generated town templates. Runtime-inclusive economy/town scorecard passes 34/34. Campaign production remains out of scope.",
+      "completedAt": "2026-05-25T16:29:12Z"
+    },
     {
       "id": "economy-generated-package-rare-source-guard-pressure-scorecard-20260525-10184",
       "title": "Economy Generated Package Rare Source Guard Pressure Scorecard",
@@ -22868,6 +22900,54 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
+      "title": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-25T16:29:12Z",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-goal-scorecard-report.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184"
+      ],
+      "implementationRefs": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-live-stockpile-resource-surface-report.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Native package session adoption adds local required-source support for generated player/enemy towns after exact native masks are normalized.",
+        "The native package breadth report embeds source-route evidence for every deterministic strict Small breadth case.",
+        "Focused evidence passes 3/3 breadth cases, 9/9 player/enemy town route cases, 27/27 source routes reachable, and 9/9 guarded faction-rare source routes.",
+        "Runtime-inclusive economy/town scorecard gates the strengthened breadth totals through generated_package_town_economy_breadth_runtime and passes 34/34."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_package_session_adoption_report.tscn (passed; 27/27 breadth source routes reachable, 9/9 guarded rare-source routes, max acquisition day 2)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 34/34 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "nonClaims": [
+        "Not campaign production work.",
+        "Not larger-size generated-map economy approval.",
+        "Not final strategic AI quality.",
+        "Not final encounter pacing approval.",
+        "Not final route-safety approval."
+      ],
+      "updatedAt": "2026-05-25T16:29:12Z"
+    },
+    {
       "id": "economy-generated-package-enemy-town-pacing-scorecard-20260525-10184",
       "title": "Economy Generated Package Enemy Town Pacing Scorecard",
       "status": "completed",
@@ -30106,42 +30186,17 @@
     "2026-05-25 generated package town-economy breadth scorecard: 3/3 deterministic strict Small generated package economy breadth cases pass with distinct map/scenario package hashes, 15 generated towns, 211 resource nodes, common sources and player-required rare sources in every case, 3 project factions, and 6 town templates. Runtime-inclusive economy/town scorecard passes 31/31 checks."
   ],
   "lastValidation": {
-    "status": "pass",
-    "updatedAt": "2026-05-25T15:03:55Z",
-    "sliceId": "economy-generated-package-source-guard-pressure-scorecard-20260525-10184",
+    "status": "passed",
+    "updatedAt": "2026-05-25T16:29:12Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 480 --log-file /tmp/heroes-like-generated-package-guard-pressure.log --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
-      "python3 tests/economy_town_goal_scorecard_report.py",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
-      "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
-      "jq empty ops/progress.json content/scenarios.json content/towns.json",
-      "git diff --check"
-    ],
-    "evidence": {
-      "deterministic_scorecard_passed_requirement_count": 15,
-      "deterministic_scorecard_requirement_count": 15,
-      "runtime_scorecard_passed_requirement_count": 33,
-      "runtime_scorecard_requirement_count": 33,
-      "generated_source_route_schema": "generated_package_town_economy_source_routes_v1",
-      "generated_source_route_status": "pass",
-      "generated_source_route_town_case_count": 3,
-      "generated_source_route_player_town_case_count": 1,
-      "generated_source_route_enemy_town_case_count": 2,
-      "generated_source_route_case_count": 9,
-      "generated_source_route_reachable_case_count": 9,
-      "generated_source_route_guarded_town_case_count": 3,
-      "generated_source_route_guarded_case_count": 3,
-      "generated_source_route_guarded_common_case_count": 3,
-      "generated_source_route_guarded_rare_case_count": 0,
-      "generated_source_route_max_common_route_steps": 8,
-      "generated_source_route_max_rare_route_steps": 26,
-      "generated_source_route_max_source_acquisition_day": 3,
-      "generated_source_route_acquisition_day_limit": 6,
-      "generated_source_route_steps_per_day": 12,
-      "generated_source_route_guarded_extra_days": 1,
-      "policy": "strict Small generated package source-route guard pressure through live route rules; not campaign production work"
-    }
+      "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_package_session_adoption_report.tscn (passed; 27/27 breadth source routes reachable, 9/9 guarded rare-source routes, max acquisition day 2)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 34/34 runtime-inclusive checks)",
+      "python3 tests/validate_repo.py (passed)",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json content/scenarios.json content/towns.json (passed)",
+      "git diff --check (passed)"
+    ]
   },
   "active_slice": {
     "id": "economy-generated-package-source-guard-pressure-scorecard-20260525-10184",
@@ -30150,7 +30205,7 @@
     "updatedAt": "2026-05-25T15:03:55Z",
     "notes": "Completed. Strict Small generated/native package economy evidence now fails if generated player/enemy town source routes collapse into free unguarded pickups. The native package adoption report derives route-based source acquisition days from generated source-route steps, applies a guarded-source delay, and requires every generated player/enemy town to retain at least one guarded generated economy-source route while acquisition stays inside the 30-turn town-development runway. The runtime-inclusive economy/town scorecard now gates generated_package_source_guard_pressure_runtime. Current evidence passes 3/3 generated package towns retaining guarded source pressure, 3 guarded source routes, 3 guarded common-source routes, max source acquisition day 3, source acquisition limit 6, and runtime scorecard 33/33. This is strict Small 36x36 one-level land generated economy-source pressure evidence, not campaign production work, broad larger-size generated-map economy approval, final strategic AI quality, final encounter pacing, or final route-safety approval."
   },
-  "currentSliceUpdatedAt": "2026-05-25T15:22:12Z",
+  "currentSliceUpdatedAt": "2026-05-25T16:29:12Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -31295,11 +31350,11 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-generated-package-source-guard-pressure-scorecard-20260525-10184",
-    "title": "Economy Generated Package Source Guard Pressure Scorecard",
+    "id": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
+    "title": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T15:03:55Z",
-    "notes": "Completed. Strict Small generated/native package economy evidence now fails if generated player/enemy town source routes collapse into free unguarded pickups. The native package adoption report derives route-based source acquisition days from generated source-route steps, applies a guarded-source delay, and requires every generated player/enemy town to retain at least one guarded generated economy-source route while acquisition stays inside the 30-turn town-development runway. The runtime-inclusive economy/town scorecard now gates generated_package_source_guard_pressure_runtime. Current evidence passes 3/3 generated package towns retaining guarded source pressure, 3 guarded source routes, 3 guarded common-source routes, max source acquisition day 3, source acquisition limit 6, and runtime scorecard 33/33. This is strict Small 36x36 one-level land generated economy-source pressure evidence, not campaign production work, broad larger-size generated-map economy approval, final strategic AI quality, final encounter pacing, or final route-safety approval."
+    "updatedAt": "2026-05-25T16:29:12Z",
+    "notes": "Completed. Strict Small generated/native package economy breadth now applies guarded source-route pressure to every deterministic breadth case. Native package session adoption adds local required-source support for generated player/enemy towns after exact masks are applied, so guard-blocked inter-town paths no longer leave a generated town without reachable wood, ore, or faction-rare source access. The native package report passes 3/3 breadth cases, 9/9 breadth player/enemy town route cases, 27/27 breadth source routes reachable, 9/9 breadth guarded faction-rare source routes, max breadth source acquisition day 2 <= 6, 15 total breadth towns, 238 breadth resource nodes, three generated project factions, and six generated town templates. Runtime-inclusive economy/town scorecard passes 34/34. Campaign production remains out of scope."
   },
   "validation": {
     "status": "pass",
