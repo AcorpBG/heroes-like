@@ -25,6 +25,7 @@ const DELAYED_SOURCE_ROUTE_STEPS_PER_DAY := 12
 const DELAYED_GUARDED_SOURCE_EXTRA_DAYS := 1
 const DELAYED_SOURCE_SAVE_RESUME_SLOT := 3
 const SIGNATURE_TIER_COUNT := 7
+const MIN_FACTION_COVERAGE := 6
 
 var _errors := []
 
@@ -46,6 +47,8 @@ func _run() -> void:
 	var seven_tier_recruitment_case_count := 0
 	var seven_tier_recruitment_candidate_count := 0
 	var affordable_recruitment_case_count := 0
+	var covered_faction_ids := {}
+	var covered_ladder_faction_ids := {}
 	var rows := []
 	for scenario_id in ContentService.get_content_ids(ContentService.SCENARIOS_PATH):
 		if only_scenario != "" and String(scenario_id) != only_scenario:
@@ -57,6 +60,13 @@ func _run() -> void:
 		for authored_town in _enemy_towns(scenario):
 			var row := _run_enemy_town_case(String(scenario_id), scenario, authored_town)
 			rows.append(row)
+			var row_faction_id := String(row.get("faction_id", ""))
+			if row_faction_id != "":
+				covered_faction_ids[row_faction_id] = true
+			var recruitment_evidence: Dictionary = row.get("ai_recruitment_evidence", {}) if row.get("ai_recruitment_evidence", {}) is Dictionary else {}
+			var ladder_faction_id := String(recruitment_evidence.get("ladder_faction_id", ""))
+			if ladder_faction_id != "":
+				covered_ladder_faction_ids[ladder_faction_id] = true
 			town_case_count += 1
 			if bool(row.get("completed", false)):
 				completed_case_count += 1
@@ -85,6 +95,18 @@ func _run() -> void:
 					String(authored_town.get("placement_id", "")),
 					String(row.get("error", "unknown AI runway failure")),
 				])
+	var covered_faction_id_rows := _sorted_keys(covered_faction_ids)
+	var covered_ladder_faction_id_rows := _sorted_keys(covered_ladder_faction_ids)
+	if covered_faction_id_rows.size() < MIN_FACTION_COVERAGE:
+		_errors.append("AI town-development runway covered only %d controller factions: %s" % [
+			covered_faction_id_rows.size(),
+			covered_faction_id_rows,
+		])
+	if covered_ladder_faction_id_rows.size() < MIN_FACTION_COVERAGE:
+		_errors.append("AI town-development runway covered only %d native ladder factions: %s" % [
+			covered_ladder_faction_id_rows.size(),
+			covered_ladder_faction_id_rows,
+		])
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
@@ -102,6 +124,11 @@ func _run() -> void:
 		"seven_tier_recruitment_case_count": seven_tier_recruitment_case_count,
 		"seven_tier_recruitment_candidate_count": seven_tier_recruitment_candidate_count,
 		"affordable_recruitment_case_count": affordable_recruitment_case_count,
+		"unique_faction_count": covered_faction_id_rows.size(),
+		"covered_faction_ids": covered_faction_id_rows,
+		"unique_ladder_faction_count": covered_ladder_faction_id_rows.size(),
+		"covered_ladder_faction_ids": covered_ladder_faction_id_rows,
+		"min_faction_coverage": MIN_FACTION_COVERAGE,
 		"delayed_source_save_resume_slot": DELAYED_SOURCE_SAVE_RESUME_SLOT,
 		"delayed_source_route_steps_per_day": DELAYED_SOURCE_ROUTE_STEPS_PER_DAY,
 		"delayed_guarded_source_extra_days": DELAYED_GUARDED_SOURCE_EXTRA_DAYS,
