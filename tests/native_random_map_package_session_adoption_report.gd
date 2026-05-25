@@ -9,6 +9,17 @@ const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.
 const REPORT_ID := "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_package_session_adoption_smoke_v1"
 const FEATURE_GATE := "native_rmg_package_session_adoption_report"
+const TARGET_TURNS := 30
+const TARGET_TIER_COUNT := 7
+const COMMON_MARKET_RESOURCE_IDS := ["wood", "ore"]
+const RARE_RESOURCE_IDS := [
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -148,6 +159,9 @@ func _run() -> void:
 	var generated_town_economy_surface := _assert_generated_town_economy_surface(active_session)
 	if generated_town_economy_surface.is_empty():
 		return
+	var generated_player_town_development_runway := _assert_generated_player_town_development_runway(active_session)
+	if generated_player_town_development_runway.is_empty():
+		return
 	var active_boundary: Dictionary = active_session.flags.get("generated_random_map_boundary", {}) if active_session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
 	if String(active_boundary.get("adoption_path", "")) != "native_rmg_generated_package_saved_loaded_from_disk":
 		_fail("Active session did not load through disk package startup: %s" % JSON.stringify(active_boundary))
@@ -181,6 +195,7 @@ func _run() -> void:
 		"bridge_resource_stockpile": bridge_resource_stockpile,
 		"active_resource_stockpile": active_resource_stockpile,
 		"generated_town_economy_surface": generated_town_economy_surface,
+		"generated_player_town_development_runway": generated_player_town_development_runway,
 		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
 		"full_parity_claim": false,
@@ -502,6 +517,165 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 		return {}
 	return surface
 
+func _assert_generated_player_town_development_runway(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var player_town := _player_town(session)
+	if player_town.is_empty():
+		_fail("Generated package session did not expose a player town for development runway.")
+		return {}
+	var placement_id := String(player_town.get("placement_id", ""))
+	var town_id := String(player_town.get("town_id", ""))
+	var town_template := ContentService.get_town(town_id)
+	var faction_id := String(player_town.get("faction_id", town_template.get("faction_id", "")))
+	var faction := ContentService.get_faction(faction_id)
+	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
+	var target_turns: int = min(TARGET_TURNS, int(profile.get("target_complete_turns", TARGET_TURNS)))
+	var target_buildings := _string_array(town_template.get("buildable_building_ids", []))
+	if town_template.is_empty() or faction.is_empty() or target_buildings.is_empty():
+		_fail("Generated package player town development runway missed authored town/faction targets: town=%s faction=%s targets=%d" % [town_id, faction_id, target_buildings.size()])
+		return {}
+	if String(profile.get("rare_resource_id", "")) not in RARE_RESOURCE_IDS:
+		_fail("Generated package player town missed live rare development profile: %s" % JSON.stringify(profile))
+		return {}
+
+	session.game_state = "town"
+	session.scenario_status = "in_progress"
+	var select_result := _set_active_town(session, placement_id)
+	if not bool(select_result.get("ok", false)):
+		_fail("Generated package player town could not be selected: %s" % String(select_result.get("message", "")))
+		return {}
+
+	var required_resource_ids := _required_build_resource_ids(target_buildings)
+	var source_evidence := _secure_development_sources(session, required_resource_ids)
+	var signature_order := _signature_order(faction)
+	var build_log := []
+	var stalled_days := []
+	var rare_spend_events := []
+	var same_day_reject_ok := false
+	var build_actions_after_build_blocked := false
+	var market_common_only := true
+	var economy_day_advance_count := 0
+	var post_completion_economy_day_count := 0
+
+	for _turn in range(target_turns):
+		_set_active_town(session, placement_id)
+		var selected_id := _select_building_id(session, placement_id, target_buildings, signature_order)
+		if selected_id == "":
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "no_affordable_build_action",
+				"resources": _resources(session),
+				"open_buildings": _open_building_ids(_town(session, placement_id), target_buildings),
+			})
+		else:
+			var before_resources := _resources(session)
+			var selected_building := ContentService.get_building(selected_id)
+			var build_result: Dictionary = OverworldRules.build_in_active_town(session, selected_id)
+			if not bool(build_result.get("ok", false)):
+				stalled_days.append({
+					"day": int(session.day),
+					"reason": "build_failed",
+					"building_id": selected_id,
+					"message": String(build_result.get("message", "")),
+				})
+			else:
+				var after_resources := _resources(session)
+				var rare_delta := _rare_resource_spend(selected_building.get("cost", {}), before_resources, after_resources)
+				if not rare_delta.is_empty():
+					rare_spend_events.append({
+						"day": int(session.day),
+						"building_id": selected_id,
+						"spent": rare_delta,
+					})
+				var same_day_result: Dictionary = OverworldRules.build_in_active_town(session, selected_id)
+				if not bool(same_day_result.get("ok", true)) and String(same_day_result.get("message", "")).contains("already completed a build order today"):
+					same_day_reject_ok = true
+				build_actions_after_build_blocked = TownRules.get_build_actions(session).is_empty()
+				build_log.append({
+					"day": int(session.day),
+					"building_id": selected_id,
+					"resources_before": before_resources,
+					"resources_after": after_resources,
+				})
+				market_common_only = market_common_only and _market_actions_common_only(session)
+				if _missing_buildings(session, placement_id, target_buildings).is_empty():
+					break
+		var turn_result: Dictionary = _advance_generated_package_economy_day(session)
+		if not bool(turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "economy_day_advance_failed",
+				"message": String(turn_result.get("message", "")),
+			})
+		else:
+			economy_day_advance_count += 1
+
+	var missing := _missing_buildings(session, placement_id, target_buildings)
+	var completed := missing.is_empty()
+	while completed and int(session.day) < TARGET_TURNS:
+		var completion_turn_result: Dictionary = _advance_generated_package_economy_day(session)
+		if not bool(completion_turn_result.get("ok", false)):
+			stalled_days.append({
+				"day": int(session.day),
+				"reason": "post_completion_economy_day_advance_failed",
+				"message": String(completion_turn_result.get("message", "")),
+			})
+			break
+		economy_day_advance_count += 1
+		post_completion_economy_day_count += 1
+	var recruitment_report := _recruitment_end_to_end_report(session, placement_id, faction) if completed else {
+		"ok": false,
+		"errors": ["town did not complete development before recruitment check"],
+	}
+	var surface := {
+		"schema": "generated_package_player_town_development_runway_v1",
+		"status": "pass",
+		"package_session_scope": "strict_small_36x36_one_level_land_only",
+		"town_placement_id": placement_id,
+		"town_id": town_id,
+		"faction_id": faction_id,
+		"target_turns": target_turns,
+		"target_building_count": target_buildings.size(),
+		"completed": completed,
+		"completion_day": int(build_log[-1].get("day", 0)) if not build_log.is_empty() else 0,
+		"build_count": build_log.size(),
+		"missing_buildings": missing,
+		"same_day_reject_ok": same_day_reject_ok,
+		"build_actions_after_build_blocked": build_actions_after_build_blocked,
+		"rare_spend_observed": not rare_spend_events.is_empty(),
+		"rare_spend_events": rare_spend_events,
+		"market_common_only": market_common_only,
+		"focused_economy_day_advance_count": economy_day_advance_count,
+		"post_completion_economy_day_count": post_completion_economy_day_count,
+		"source_evidence": source_evidence,
+		"recruitment_end_to_end_ok": bool(recruitment_report.get("ok", false)),
+		"recruitment_case_count": int(recruitment_report.get("case_count", 0)),
+		"recruited_unit_case_count": int(recruitment_report.get("recruited_unit_case_count", 0)),
+		"recruitment_market_purchase_count": int(recruitment_report.get("market_purchase_count", 0)),
+		"recruitment_market_reset_wait_count": int(recruitment_report.get("market_reset_wait_count", 0)),
+		"recruitment_report": recruitment_report,
+		"ending_resources": _resources(session),
+		"stalled_days": stalled_days.slice(0, 5),
+		"build_log": build_log,
+	}
+	var ok := (
+		completed
+		and int(surface.get("completion_day", 0)) <= TARGET_TURNS
+		and int(surface.get("build_count", 0)) == target_buildings.size()
+		and same_day_reject_ok
+		and build_actions_after_build_blocked
+		and not rare_spend_events.is_empty()
+		and market_common_only
+		and _source_covers_required_resources(source_evidence, required_resource_ids)
+		and economy_day_advance_count > 0
+		and bool(recruitment_report.get("ok", false))
+		and int(recruitment_report.get("recruited_unit_case_count", 0)) == TARGET_TIER_COUNT
+	)
+	if not ok:
+		surface["status"] = "fail"
+		_fail("Generated package player town development runway failed: %s" % JSON.stringify(surface))
+		return {}
+	return surface
+
 func _generated_resource_source_ids(resource_nodes: Array) -> Dictionary:
 	var resource_ids := {}
 	for node_value in resource_nodes:
@@ -533,6 +707,439 @@ func _resource_outputs_for_site(site: Dictionary) -> Array:
 		if resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
 			resource_ids[resource_id] = true
 	return _sorted_string_keys(resource_ids)
+
+func _required_build_resource_ids(target_buildings: Array) -> Array:
+	var ids := {}
+	for building_id in target_buildings:
+		var building := ContentService.get_building(String(building_id))
+		var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
+		for resource_id in cost.keys():
+			var id := String(resource_id)
+			if id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+				ids[id] = true
+	return _sorted_string_keys(ids)
+
+func _secure_development_sources(session: SessionStateStoreScript.SessionData, required_resource_ids: Array) -> Dictionary:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	var source_rows := []
+	var secured_nodes := []
+	var secured_resource_ids := {}
+	var secured_income := {}
+	var secured_claims := {}
+	for index in range(nodes.size()):
+		if not (nodes[index] is Dictionary):
+			continue
+		var node: Dictionary = nodes[index]
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if site.is_empty():
+			continue
+		var claim_rewards: Dictionary = site.get("claim_rewards", site.get("rewards", {})) if site.get("claim_rewards", site.get("rewards", {})) is Dictionary else {}
+		var control_income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+		var relevant_claims := _filter_resources(claim_rewards, required_resource_ids)
+		var relevant_income := _filter_resources(control_income, required_resource_ids)
+		if relevant_claims.is_empty() and relevant_income.is_empty():
+			continue
+		if bool(site.get("persistent_control", false)):
+			node["collected_by_faction_id"] = "player"
+		if not relevant_claims.is_empty() and not bool(node.get("collected", false)):
+			_add_to_session_resources(session, relevant_claims)
+			node["collected"] = true
+			node["collected_day"] = int(session.day)
+			secured_claims = _add_resource_sets(secured_claims, relevant_claims)
+		if not relevant_income.is_empty() and bool(site.get("persistent_control", false)):
+			secured_income = _add_resource_sets(secured_income, relevant_income)
+		for resource_id in relevant_claims.keys():
+			secured_resource_ids[String(resource_id)] = true
+		for resource_id in relevant_income.keys():
+			secured_resource_ids[String(resource_id)] = true
+		source_rows.append({
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"persistent_control": bool(site.get("persistent_control", false)),
+			"claim_rewards": relevant_claims,
+			"control_income": relevant_income,
+		})
+		secured_nodes.append({
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"collected": bool(node.get("collected", false)),
+			"collected_day": int(node.get("collected_day", 0)),
+			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+		})
+		nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	return {
+		"secured_source_count": source_rows.size(),
+		"secured_resource_ids": _sorted_string_keys(secured_resource_ids),
+		"secured_claims": secured_claims,
+		"secured_daily_income": secured_income,
+		"resources_after_claims": _resources(session),
+		"secured_resource_nodes": secured_nodes,
+		"sources": source_rows,
+	}
+
+func _advance_generated_package_economy_day(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {"ok": false, "message": "missing session"}
+	session.day = int(session.day) + 1
+	var town_income := {}
+	var weekly_growth := {}
+	var should_apply_weekly_growth := OverworldRules.is_weekly_growth_day(int(session.day))
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		if should_apply_weekly_growth:
+			var growth := OverworldRules.town_weekly_growth(town, session)
+			if not growth.is_empty():
+				town["available_recruits"] = _add_recruit_sets(town.get("available_recruits", {}), growth)
+				weekly_growth = _add_recruit_sets(weekly_growth, growth)
+				towns[index] = town
+	session.overworld["towns"] = towns
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		town_income = _add_resource_sets(
+			town_income,
+			DifficultyRules.scale_income_resources(session, OverworldRules.town_income(town, session))
+		)
+	var site_income := DifficultyRules.scale_income_resources(session, OverworldRules.controlled_resource_site_income(session, "player"))
+	var total_income := _add_resource_sets(town_income, site_income)
+	_add_to_session_resources(session, total_income)
+	return {
+		"ok": true,
+		"message": "Focused generated-package economy day advanced.",
+		"day": int(session.day),
+		"town_income": _normalized_resources(town_income),
+		"site_income": _normalized_resources(site_income),
+		"total_income": _normalized_resources(total_income),
+		"weekly_growth": weekly_growth,
+	}
+
+func _select_building_id(session: SessionStateStoreScript.SessionData, placement_id: String, target_buildings: Array, signature_order: Dictionary) -> String:
+	var actions := []
+	var town := _town(session, placement_id)
+	var resources := _resources(session)
+	for building_id_value in OverworldRules.get_town_build_options(town, int(session.day)):
+		var building_id := String(building_id_value)
+		if building_id not in target_buildings:
+			continue
+		var building := ContentService.get_building(building_id)
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, building.get("cost", {}), int(session.day))
+		if not bool(readiness.get("direct_affordable", false)):
+			continue
+		actions.append(building_id)
+	actions.sort_custom(func(a, b): return _build_sort_key(a, target_buildings, signature_order) < _build_sort_key(b, target_buildings, signature_order))
+	return String(actions[0]) if not actions.is_empty() else ""
+
+func _build_sort_key(building_id: String, target_buildings: Array, signature_order: Dictionary) -> String:
+	var signature_rank := int(signature_order.get(building_id, 99))
+	var target_rank := target_buildings.find(building_id)
+	if target_rank < 0:
+		target_rank = 999
+	return "%03d:%03d:%s" % [signature_rank, target_rank, building_id]
+
+func _signature_order(faction: Dictionary) -> Dictionary:
+	var order := {}
+	var signature_ids := _string_array(faction.get("signature_building_ids", []))
+	for index in range(signature_ids.size()):
+		order[signature_ids[index]] = index + 1
+	return order
+
+func _open_building_ids(town: Dictionary, target_buildings: Array) -> Array:
+	var result := []
+	for building_id in target_buildings:
+		if bool(OverworldRules.get_town_build_status(town, String(building_id)).get("buildable", false)):
+			result.append(String(building_id))
+	return result
+
+func _missing_buildings(session: SessionStateStoreScript.SessionData, placement_id: String, target_buildings: Array) -> Array:
+	var town := _town(session, placement_id)
+	var built := _string_array(town.get("built_buildings", []))
+	var missing := []
+	for building_id in target_buildings:
+		if String(building_id) not in built:
+			missing.append(String(building_id))
+	return missing
+
+func _town(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+			return town_value
+	return {}
+
+func _player_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			return town_value
+	return {}
+
+func _set_active_town(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	return OverworldRules.set_active_town_visit(session, placement_id)
+
+func _source_covers_required_resources(source_evidence: Dictionary, required_resource_ids: Array) -> bool:
+	var secured := _string_array(source_evidence.get("secured_resource_ids", []))
+	for resource_id in required_resource_ids:
+		var id := String(resource_id)
+		if id == "gold":
+			continue
+		if id not in secured:
+			return false
+	return true
+
+func _rare_resource_spend(cost_value: Variant, before: Dictionary, after: Dictionary) -> Dictionary:
+	var cost: Dictionary = cost_value if cost_value is Dictionary else {}
+	var spent := {}
+	for resource_id in RARE_RESOURCE_IDS:
+		if int(cost.get(resource_id, 0)) <= 0:
+			continue
+		var delta := int(before.get(resource_id, 0)) - int(after.get(resource_id, 0))
+		if delta > 0:
+			spent[resource_id] = delta
+	return spent
+
+func _recruitment_end_to_end_report(session: SessionStateStoreScript.SessionData, placement_id: String, faction: Dictionary) -> Dictionary:
+	_set_active_town(session, placement_id)
+	var ladder_ids := _string_array(faction.get("unit_ladder_ids", []))
+	var rows := []
+	var errors := []
+	var recruited_count := 0
+	var market_purchase_count := 0
+	var market_reset_wait_count := 0
+	var before_army := _army_stack_counts(session)
+	if ladder_ids.size() != TARGET_TIER_COUNT:
+		errors.append("%s unit ladder must expose seven tiers" % String(faction.get("id", "")))
+	for index in range(ladder_ids.size()):
+		var unit_id := String(ladder_ids[index])
+		var expected_tier := index + 1
+		var action := _recruit_action_for(session, placement_id, unit_id)
+		var row := {
+			"ok": false,
+			"unit_id": unit_id,
+			"expected_tier": expected_tier,
+			"action_found": not action.is_empty(),
+		}
+		if action.is_empty():
+			row["error"] = "missing recruit action"
+			errors.append("%s missing recruit action for %s" % [String(faction.get("id", "")), unit_id])
+			rows.append(row)
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		var before_count := int(_army_stack_counts(session).get(unit_id, 0))
+		var available_before := int(action.get("available_count", 0))
+		var weekly_growth := int(action.get("weekly_growth", 0))
+		var direct_affordable_count := int(action.get("direct_affordable_count", 0))
+		var market_affordable_count := int(action.get("market_affordable_count", 0))
+		row["unit_name"] = String(unit.get("name", unit_id))
+		row["unit_tier"] = int(action.get("unit_tier", 0))
+		row["tier_label"] = String(action.get("tier_label", ""))
+		row["available_before"] = available_before
+		row["weekly_growth"] = weekly_growth
+		row["direct_affordable_count"] = direct_affordable_count
+		row["market_affordable_count"] = market_affordable_count
+		row["market_coverable"] = bool(action.get("market_coverable", false))
+		row["unit_cost"] = action.get("unit_cost", {})
+		if direct_affordable_count <= 0 and _has_common_recruitment_shortfall(session, action.get("unit_cost", {})):
+			row["market_purchases"] = _apply_recruitment_market_coverage(session, placement_id, action.get("unit_cost", {}))
+			market_purchase_count += _market_purchase_count(row.get("market_purchases", []))
+			market_reset_wait_count += _market_reset_wait_count(row.get("market_purchases", []))
+			action = _recruit_action_for(session, placement_id, unit_id)
+			direct_affordable_count = int(action.get("direct_affordable_count", 0))
+			market_affordable_count = int(action.get("market_affordable_count", 0))
+			row["direct_affordable_count"] = direct_affordable_count
+			row["market_affordable_count"] = market_affordable_count
+			row["market_coverable"] = bool(action.get("market_coverable", false))
+		if int(unit.get("tier", 0)) != expected_tier or int(action.get("unit_tier", 0)) != expected_tier:
+			row["error"] = "tier mismatch"
+		elif available_before <= 0:
+			row["error"] = "no recruits available"
+		elif weekly_growth <= 0:
+			row["error"] = "weekly growth missing"
+		elif direct_affordable_count <= 0:
+			row["error"] = "not directly affordable"
+		elif not String(action.get("summary", "")).contains("Tier %d" % expected_tier):
+			row["error"] = "summary missing tier label"
+		else:
+			var recruit_result: Dictionary = OverworldRules.recruit_in_active_town(session, unit_id, 1)
+			var after_count := int(_army_stack_counts(session).get(unit_id, 0))
+			row["recruit_result_ok"] = bool(recruit_result.get("ok", false))
+			row["recruit_message"] = String(recruit_result.get("message", ""))
+			row["army_count_before"] = before_count
+			row["army_count_after"] = after_count
+			if not bool(recruit_result.get("ok", false)):
+				row["error"] = "recruit action failed"
+			elif after_count != before_count + 1:
+				row["error"] = "field army did not receive recruit"
+			else:
+				row["ok"] = true
+				recruited_count += 1
+		if not bool(row.get("ok", false)):
+			errors.append("%s %s tier %d recruitment failed: %s" % [
+				String(faction.get("id", "")),
+				unit_id,
+				expected_tier,
+				String(row.get("error", "unknown")),
+			])
+		rows.append(row)
+	var after_army := _army_stack_counts(session)
+	return {
+		"ok": errors.is_empty() and ladder_ids.size() == TARGET_TIER_COUNT and recruited_count == TARGET_TIER_COUNT,
+		"faction_id": String(faction.get("id", "")),
+		"case_count": rows.size(),
+		"recruited_unit_case_count": recruited_count,
+		"market_purchase_count": market_purchase_count,
+		"market_reset_wait_count": market_reset_wait_count,
+		"army_before": before_army,
+		"army_after": after_army,
+		"tiers": rows,
+		"errors": errors,
+	}
+
+func _recruit_action_for(session: SessionStateStoreScript.SessionData, placement_id: String, unit_id: String) -> Dictionary:
+	_set_active_town(session, placement_id)
+	for action_value in TownRules.get_recruit_actions(session):
+		if action_value is Dictionary and String(action_value.get("id", "")) == "recruit:%s" % unit_id:
+			return action_value
+	return {}
+
+func _army_stack_counts(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var counts := {}
+	for stack_value in session.overworld.get("army", {}).get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		if unit_id == "":
+			continue
+		counts[unit_id] = int(counts.get(unit_id, 0)) + int(stack_value.get("count", 0))
+	return counts
+
+func _has_common_recruitment_shortfall(session: SessionStateStoreScript.SessionData, unit_cost_value: Variant) -> bool:
+	var unit_cost: Dictionary = unit_cost_value if unit_cost_value is Dictionary else {}
+	for resource_id in COMMON_MARKET_RESOURCE_IDS:
+		if int(unit_cost.get(resource_id, 0)) > int(_resources(session).get(resource_id, 0)):
+			return true
+	return false
+
+func _apply_recruitment_market_coverage(session: SessionStateStoreScript.SessionData, placement_id: String, unit_cost_value: Variant) -> Array:
+	_set_active_town(session, placement_id)
+	var unit_cost: Dictionary = unit_cost_value if unit_cost_value is Dictionary else {}
+	var rows := []
+	for resource_id in COMMON_MARKET_RESOURCE_IDS:
+		var needed = max(0, int(unit_cost.get(resource_id, 0)) - int(_resources(session).get(resource_id, 0)))
+		var wait_days := 0
+		while needed > 0:
+			var result: Dictionary = TownRules.perform_market_action(session, "market:buy:%s:1" % resource_id)
+			rows.append({
+				"resource_id": resource_id,
+				"ok": bool(result.get("ok", false)),
+				"message": String(result.get("message", "")),
+				"day": int(session.day),
+			})
+			if bool(result.get("ok", false)):
+				needed -= 1
+				wait_days = 0
+				continue
+			if wait_days >= 7:
+				return rows
+			var end_turn_result: Dictionary = _advance_generated_package_economy_day(session)
+			rows.append({
+				"resource_id": resource_id,
+				"ok": bool(end_turn_result.get("ok", false)),
+				"message": String(end_turn_result.get("message", "")),
+				"day": int(session.day),
+				"waited_for_market_reset": true,
+			})
+			_set_active_town(session, placement_id)
+			if not bool(end_turn_result.get("ok", false)):
+				return rows
+			wait_days += 1
+	return rows
+
+func _market_purchase_count(rows_value: Variant) -> int:
+	var rows: Array = rows_value if rows_value is Array else []
+	var count := 0
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("ok", false)) and not bool(row.get("waited_for_market_reset", false)):
+			count += 1
+	return count
+
+func _market_reset_wait_count(rows_value: Variant) -> int:
+	var rows: Array = rows_value if rows_value is Array else []
+	var count := 0
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("waited_for_market_reset", false)):
+			count += 1
+	return count
+
+func _market_actions_common_only(session: SessionStateStoreScript.SessionData) -> bool:
+	for action_value in TownRules.get_market_actions(session):
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var resource_id := String(action.get("resource_id", ""))
+		if resource_id != "" and resource_id not in COMMON_MARKET_RESOURCE_IDS:
+			return false
+	return true
+
+func _filter_resources(resources: Dictionary, allowed: Array) -> Dictionary:
+	var result := {}
+	for resource_id in resources.keys():
+		var id := String(resource_id)
+		if id in allowed and int(resources.get(resource_id, 0)) > 0:
+			result[id] = int(resources.get(resource_id, 0))
+	return result
+
+func _add_to_session_resources(session: SessionStateStoreScript.SessionData, resources: Dictionary) -> void:
+	var pool: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
+	for resource_id in resources.keys():
+		var id := String(resource_id)
+		pool[id] = int(pool.get(id, 0)) + int(resources.get(resource_id, 0))
+	session.overworld["resources"] = pool
+
+func _add_resource_sets(left: Dictionary, right: Dictionary) -> Dictionary:
+	var result := left.duplicate(true)
+	for resource_id in right.keys():
+		var id := String(resource_id)
+		result[id] = int(result.get(id, 0)) + int(right.get(resource_id, 0))
+	return result
+
+func _add_recruit_sets(left: Variant, right: Variant) -> Dictionary:
+	var result := {}
+	if left is Dictionary:
+		for unit_id in left.keys():
+			result[String(unit_id)] = int(left.get(unit_id, 0))
+	if right is Dictionary:
+		for unit_id in right.keys():
+			result[String(unit_id)] = int(result.get(String(unit_id), 0)) + int(right.get(unit_id, 0))
+	return result
+
+func _resources(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var result := {}
+	for resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+		result[String(resource_id)] = int(session.overworld.get("resources", {}).get(String(resource_id), 0))
+	return result
+
+func _normalized_resources(resources: Dictionary) -> Dictionary:
+	var result := {}
+	for resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+		result[String(resource_id)] = int(resources.get(String(resource_id), 0))
+	return result
 
 func _unit_tiers_for_buildings(building_ids: Array) -> Dictionary:
 	var tiers := {}
