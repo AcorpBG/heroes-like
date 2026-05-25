@@ -649,10 +649,208 @@ func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
 	return departure
 
 func _resource_ledger_tooltip_text() -> String:
-	return "Resource Ledger\nFull stockpile: %s" % OverworldRules.describe_resource_stockpile(
-		_session.overworld.get("resources", {}),
-		true
-	)
+	var economy_plan := _economy_readability_surface()
+	return _join_tooltip_sections([
+		"Resource Ledger\nFull stockpile: %s" % OverworldRules.describe_resource_stockpile(
+			_session.overworld.get("resources", {}),
+			true
+		),
+		String(economy_plan.get("tooltip_text", "")),
+	])
+
+func _economy_readability_surface() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	var town_income := OverworldRules.town_income(town, _session) if not town.is_empty() else {}
+	var site_income := OverworldRules.controlled_resource_site_income(_session, "player")
+	var build_plan := _economy_build_plan_surface(town, resources)
+	var muster_plan := _economy_muster_plan_surface(town, resources)
+	var field_site_count := _player_controlled_economy_site_count()
+	var field_site_line := "Field sites: %d controlled, daily %s." % [
+		field_site_count,
+		_economy_delta_line(site_income, "no field-site income"),
+	]
+	var tooltip_lines := [
+		"Economy Plan",
+		"- Daily income: town %s; field %s." % [
+			_economy_delta_line(town_income, "no town income"),
+			_economy_delta_line(site_income, "no field-site income"),
+		],
+		"- Next build: %s" % String(build_plan.get("player_line", "")),
+		"- Build bottleneck: %s" % String(build_plan.get("bottleneck_line", "")),
+		"- Next muster: %s" % String(muster_plan.get("player_line", "")),
+		"- %s" % field_site_line,
+	]
+	return {
+		"schema": "town_shell_player_economy_readability_surface_v1",
+		"tooltip_text": "\n".join(tooltip_lines),
+		"daily_town_income": _duplicate_dictionary(town_income),
+		"daily_field_income": _duplicate_dictionary(site_income),
+		"field_site_count": field_site_count,
+		"build_plan_state": String(build_plan.get("state", "")),
+		"build_ready_order_count": int(build_plan.get("ready_order_count", 0)),
+		"build_market_order_count": int(build_plan.get("market_order_count", 0)),
+		"build_blocked_order_count": int(build_plan.get("blocked_order_count", 0)),
+		"build_bottleneck_resource_id": String(build_plan.get("bottleneck_resource_id", "")),
+		"build_has_bottleneck": bool(build_plan.get("has_bottleneck", false)),
+		"player_readable_next_build": String(build_plan.get("player_line", "")),
+		"player_readable_build_bottleneck": String(build_plan.get("bottleneck_line", "")),
+		"muster_plan_state": String(muster_plan.get("state", "")),
+		"muster_ready_unit_count": int(muster_plan.get("ready_unit_count", 0)),
+		"muster_market_unit_count": int(muster_plan.get("market_unit_count", 0)),
+		"muster_blocked_unit_count": int(muster_plan.get("blocked_unit_count", 0)),
+		"player_readable_next_muster": String(muster_plan.get("player_line", "")),
+		"field_site_line": field_site_line,
+	}
+
+func _economy_build_plan_surface(town: Dictionary, resources: Dictionary) -> Dictionary:
+	var actions := TownRules.get_build_actions(_session)
+	var ready_orders := 0
+	var market_orders := 0
+	var blocked_orders := 0
+	var selected := {}
+	var bottleneck := {}
+	var bottleneck_resource_id := ""
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var direct_ready := bool(action.get("direct_affordable", false))
+		var market_ready := bool(action.get("market_coverable", false))
+		if direct_ready:
+			ready_orders += 1
+			if selected.is_empty():
+				selected = action
+		elif market_ready:
+			market_orders += 1
+			if selected.is_empty() or not bool(selected.get("direct_affordable", false)):
+				selected = action
+		else:
+			blocked_orders += 1
+			if selected.is_empty():
+				selected = action
+		var cost: Dictionary = action.get("cost", {}) if action.get("cost", {}) is Dictionary else {}
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, cost, int(_session.day))
+		var short_resource := _first_positive_resource_id(readiness.get("direct_shortfall", {}))
+		if short_resource != "" and (bottleneck.is_empty() or short_resource not in ["gold", "wood", "ore"]):
+			bottleneck = action
+			bottleneck_resource_id = short_resource
+			if short_resource not in ["gold", "wood", "ore"]:
+				break
+	var state := "none"
+	if ready_orders > 0:
+		state = "ready"
+	elif market_orders > 0:
+		state = "trade"
+	elif blocked_orders > 0:
+		state = "blocked"
+	var selected_name := _economy_action_name(selected, "No build order")
+	var readiness_line := String(selected.get("affordability_label", selected.get("disabled_reason", "No construction order is currently available.")))
+	var player_line := "%s - %s" % [selected_name, readiness_line]
+	var bottleneck_line := "none blocking current build choices"
+	if not bottleneck.is_empty():
+		var bottleneck_name := _economy_action_name(bottleneck, "Build order")
+		var shortfall := String(bottleneck.get("shortfall_summary", "stores are short"))
+		bottleneck_line = "%s is blocked: %s; capture or income-plan %s." % [
+			bottleneck_name,
+			shortfall,
+			_economy_resource_label(bottleneck_resource_id),
+		]
+	return {
+		"state": state,
+		"ready_order_count": ready_orders,
+		"market_order_count": market_orders,
+		"blocked_order_count": blocked_orders,
+		"player_line": player_line,
+		"bottleneck_line": bottleneck_line,
+		"bottleneck_resource_id": bottleneck_resource_id,
+		"has_bottleneck": not bottleneck.is_empty(),
+	}
+
+func _economy_muster_plan_surface(town: Dictionary, resources: Dictionary) -> Dictionary:
+	var actions := TownRules.get_recruit_actions(_session)
+	var ready_units := 0
+	var market_units := 0
+	var blocked_units := 0
+	var selected := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var available: int = max(0, int(action.get("available_count", 0)))
+		var direct_count: int = max(0, int(action.get("direct_affordable_count", 0)))
+		var market_count: int = max(0, int(action.get("market_affordable_count", 0)))
+		if direct_count > 0:
+			ready_units += direct_count
+			if selected.is_empty() or direct_count > int(selected.get("direct_affordable_count", 0)):
+				selected = action
+		elif market_count > 0:
+			market_units += market_count
+			if selected.is_empty():
+				selected = action
+		else:
+			blocked_units += available
+			if selected.is_empty() and available > 0:
+				selected = action
+	var state := "none"
+	if ready_units > 0:
+		state = "ready"
+	elif market_units > 0:
+		state = "trade"
+	elif blocked_units > 0:
+		state = "blocked"
+	var selected_name := _economy_action_name(selected, "No muster order")
+	var readiness_line := String(selected.get("affordability_label", selected.get("disabled_reason", "No recruit order is currently available.")))
+	return {
+		"state": state,
+		"ready_unit_count": ready_units,
+		"market_unit_count": market_units,
+		"blocked_unit_count": blocked_units,
+		"player_line": "%s - %s" % [selected_name, readiness_line],
+	}
+
+func _economy_action_name(action: Dictionary, fallback: String) -> String:
+	if action.is_empty():
+		return fallback
+	var label := String(action.get("label", action.get("button_label", fallback))).strip_edges()
+	if label == "":
+		return fallback
+	return label
+
+func _economy_delta_line(resources: Variant, empty_label: String) -> String:
+	if not (resources is Dictionary):
+		return empty_label
+	var parts := []
+	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
+		var resource_id := String(resource_id_value)
+		var amount := int((resources as Dictionary).get(resource_id, 0))
+		if amount > 0:
+			parts.append("%s +%d" % [_economy_resource_label(resource_id), amount])
+	return ", ".join(parts) if not parts.is_empty() else empty_label
+
+func _economy_resource_label(resource_id: String) -> String:
+	if resource_id == "":
+		return "that resource"
+	return resource_id.replace("_", " ").capitalize()
+
+func _first_positive_resource_id(resources: Variant) -> String:
+	if not (resources is Dictionary):
+		return ""
+	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
+		var resource_id := String(resource_id_value)
+		if int((resources as Dictionary).get(resource_id, 0)) > 0:
+			return resource_id
+	return ""
+
+func _player_controlled_economy_site_count() -> int:
+	var count := 0
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("controller_id", node.get("owner", ""))) == "player":
+			count += 1
+	return count
 
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var current_lanes := _current_town_tab_lanes()
@@ -1431,6 +1629,7 @@ func validation_resource_ledger_snapshot() -> Dictionary:
 		"resources_visible_text": _resource_label.text,
 		"resources_tooltip_text": _resource_label.tooltip_text,
 		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
+		"economy_readability_surface": _economy_readability_surface(),
 	}
 
 func validation_unit_art_summary() -> Dictionary:

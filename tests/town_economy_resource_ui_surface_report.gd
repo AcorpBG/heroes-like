@@ -59,15 +59,27 @@ func _run() -> void:
 	if rows.size() < 6:
 		_errors.append("Expected six faction town UI economy cases, got %d." % rows.size())
 	var same_day_build_lockout_case_count := 0
+	var player_readable_economy_plan_case_count := 0
+	var rare_bottleneck_surface_case_count := 0
+	var ready_build_plan_surface_case_count := 0
 	for row in rows:
 		if row is Dictionary and bool(row.get("same_day_build_lockout_ok", false)):
 			same_day_build_lockout_case_count += 1
+		if row is Dictionary and bool(row.get("player_readable_economy_plan_ok", false)):
+			player_readable_economy_plan_case_count += 1
+		if row is Dictionary and bool(row.get("rare_bottleneck_surface_ok", false)):
+			rare_bottleneck_surface_case_count += 1
+		if row is Dictionary and bool(row.get("ready_build_plan_surface_ok", false)):
+			ready_build_plan_surface_case_count += 1
 
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"faction_case_count": rows.size(),
 		"same_day_build_lockout_case_count": same_day_build_lockout_case_count,
+		"player_readable_economy_plan_case_count": player_readable_economy_plan_case_count,
+		"rare_bottleneck_surface_case_count": rare_bottleneck_surface_case_count,
+		"ready_build_plan_surface_case_count": ready_build_plan_surface_case_count,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"common_resource_ids": COMMON_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
@@ -128,12 +140,21 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	if not shell.has_method("validation_resource_ledger_snapshot") or not shell.has_method("validation_action_catalog"):
+		case_errors.append("TownShell validation API did not load; script-load or scene wiring failed.")
+		row["ok"] = false
+		row["errors"] = case_errors
+		shell.queue_free()
+		await get_tree().process_frame
+		SessionState.reset_session()
+		return row
 
 	var blocked_snapshot: Dictionary = shell.call("validation_resource_ledger_snapshot")
 	var blocked_catalog: Dictionary = shell.call("validation_action_catalog")
 	var blocked_action: Dictionary = _action_by_id(blocked_catalog.get("build", []), "build:%s" % target_building_id)
 	var blocked_market_actions: Array = blocked_catalog.get("market", []) if blocked_catalog.get("market", []) is Array else []
 	_assert_town_shell_resource_surface(blocked_snapshot, rare_id, false, case_errors)
+	var blocked_economy_plan := _assert_player_economy_readability_surface(blocked_snapshot, rare_id, false, case_errors)
 	_assert_common_only_market_actions(blocked_market_actions, case_errors)
 	_assert_blocked_rare_build_action(blocked_action, rare_id, target_cost, case_errors)
 
@@ -147,6 +168,7 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	var ready_catalog: Dictionary = shell.call("validation_action_catalog")
 	var ready_action: Dictionary = _action_by_id(ready_catalog.get("build", []), "build:%s" % target_building_id)
 	_assert_town_shell_resource_surface(ready_snapshot, rare_id, true, case_errors)
+	var ready_economy_plan := _assert_player_economy_readability_surface(ready_snapshot, rare_id, true, case_errors)
 	_assert_ready_rare_build_action(ready_action, rare_id, target_cost, case_errors)
 
 	var build_result: Dictionary = TownRules.build_active_town(session, target_building_id)
@@ -182,6 +204,11 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	row["post_build_action_ids"] = _action_ids(post_build_actions)
 	row["blocked_resource_surface"] = _resource_surface_summary(blocked_snapshot)
 	row["ready_resource_surface"] = _resource_surface_summary(ready_snapshot)
+	row["blocked_economy_plan"] = _economy_plan_summary(blocked_snapshot)
+	row["ready_economy_plan"] = _economy_plan_summary(ready_snapshot)
+	row["player_readable_economy_plan_ok"] = bool(blocked_economy_plan.get("player_readable_ok", false)) and bool(ready_economy_plan.get("player_readable_ok", false))
+	row["rare_bottleneck_surface_ok"] = bool(blocked_economy_plan.get("rare_bottleneck_ok", false))
+	row["ready_build_plan_surface_ok"] = bool(ready_economy_plan.get("ready_build_plan_ok", false))
 	row["market_action_count"] = blocked_market_actions.size()
 	row["built_prerequisite_count"] = _string_array(town_state.get("built_buildings", [])).size()
 	row["errors"] = case_errors
@@ -269,6 +296,52 @@ func _assert_town_shell_resource_surface(snapshot: Dictionary, rare_id: String, 
 	else:
 		if visible_text.find(rare_label) >= 0:
 			errors.append("Visible resource line should stay compact and omit zero %s: %s." % [rare_id, visible_text])
+
+func _assert_player_economy_readability_surface(
+	snapshot: Dictionary,
+	rare_id: String,
+	rare_positive: bool,
+	errors: Array
+) -> Dictionary:
+	var surface: Dictionary = snapshot.get("economy_readability_surface", {}) if snapshot.get("economy_readability_surface", {}) is Dictionary else {}
+	if surface.is_empty():
+		errors.append("TownShell snapshot is missing economy_readability_surface.")
+		return {
+			"player_readable_ok": false,
+			"rare_bottleneck_ok": false,
+			"ready_build_plan_ok": false,
+		}
+	if String(surface.get("schema", "")) != "town_shell_player_economy_readability_surface_v1":
+		errors.append("TownShell economy readability surface has wrong schema: %s." % String(surface.get("schema", "")))
+	var tooltip_text := String(surface.get("tooltip_text", ""))
+	for token in ["Economy Plan", "Daily income", "Next build", "Build bottleneck", "Next muster", "Field sites"]:
+		_assert_contains(tooltip_text, token, "economy readability tooltip", errors)
+	var next_build := String(surface.get("player_readable_next_build", ""))
+	var next_muster := String(surface.get("player_readable_next_muster", ""))
+	var build_bottleneck_resource_id := String(surface.get("build_bottleneck_resource_id", ""))
+	var player_readable_ok := (
+		next_build.strip_edges() != ""
+		and next_muster.strip_edges() != ""
+		and String(surface.get("field_site_line", "")).find("Field sites") >= 0
+		and tooltip_text.find("Daily income") >= 0
+	)
+	if not player_readable_ok:
+		errors.append("TownShell economy plan is not player-readable enough: %s." % JSON.stringify(surface))
+	var rare_bottleneck_ok := true
+	if not rare_positive:
+		rare_bottleneck_ok = bool(surface.get("build_has_bottleneck", false)) and build_bottleneck_resource_id == rare_id
+		if not rare_bottleneck_ok:
+			errors.append("TownShell economy plan did not surface %s as the build bottleneck: %s." % [rare_id, JSON.stringify(surface)])
+	var ready_build_plan_ok := true
+	if rare_positive:
+		ready_build_plan_ok = String(surface.get("build_plan_state", "")) == "ready" and int(surface.get("build_ready_order_count", 0)) > 0
+		if not ready_build_plan_ok:
+			errors.append("TownShell economy plan did not surface a ready build after stocking %s: %s." % [rare_id, JSON.stringify(surface)])
+	return {
+		"player_readable_ok": player_readable_ok,
+		"rare_bottleneck_ok": rare_bottleneck_ok,
+		"ready_build_plan_ok": ready_build_plan_ok,
+	}
 
 func _assert_blocked_rare_build_action(action: Dictionary, rare_id: String, target_cost: Dictionary, errors: Array) -> void:
 	if action.is_empty():
@@ -437,6 +510,24 @@ func _resource_surface_summary(snapshot: Dictionary) -> Dictionary:
 		"resources_visible_text": String(snapshot.get("resources_visible_text", "")),
 		"resources_tooltip_text": String(snapshot.get("resources_tooltip_text", "")),
 		"resources_full_ledger_text": String(snapshot.get("resources_full_ledger_text", "")),
+	}
+
+func _economy_plan_summary(snapshot: Dictionary) -> Dictionary:
+	var surface: Dictionary = snapshot.get("economy_readability_surface", {}) if snapshot.get("economy_readability_surface", {}) is Dictionary else {}
+	return {
+		"schema": String(surface.get("schema", "")),
+		"build_plan_state": String(surface.get("build_plan_state", "")),
+		"build_ready_order_count": int(surface.get("build_ready_order_count", 0)),
+		"build_market_order_count": int(surface.get("build_market_order_count", 0)),
+		"build_blocked_order_count": int(surface.get("build_blocked_order_count", 0)),
+		"build_bottleneck_resource_id": String(surface.get("build_bottleneck_resource_id", "")),
+		"build_has_bottleneck": bool(surface.get("build_has_bottleneck", false)),
+		"player_readable_next_build": String(surface.get("player_readable_next_build", "")),
+		"player_readable_build_bottleneck": String(surface.get("player_readable_build_bottleneck", "")),
+		"muster_plan_state": String(surface.get("muster_plan_state", "")),
+		"player_readable_next_muster": String(surface.get("player_readable_next_muster", "")),
+		"field_site_count": int(surface.get("field_site_count", 0)),
+		"field_site_line": String(surface.get("field_site_line", "")),
 	}
 
 func _dictionary_keys(value: Dictionary) -> Array:
