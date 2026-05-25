@@ -35,6 +35,8 @@ MIN_RARE_DEVELOPMENT_SPEND = 24
 MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_COMMON_ONLY_TO_RARE_RATIO = 2.0
 MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
+MAX_ENDING_COMMON_AFTER_COMPLETION = {"gold": 10000, "wood": 12, "ore": 12}
+MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION = {"gold": 0.30, "wood": 0.50, "ore": 0.50}
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
@@ -1300,6 +1302,59 @@ def main() -> int:
         },
     )
 
+    report_common_surplus_limits = balance.get("max_ending_common_after_completion", {})
+    report_common_surplus_limits = report_common_surplus_limits if isinstance(report_common_surplus_limits, dict) else {}
+    report_common_surplus_ratio_limits = balance.get("max_ending_common_surplus_ratio_after_completion", {})
+    report_common_surplus_ratio_limits = (
+        report_common_surplus_ratio_limits if isinstance(report_common_surplus_ratio_limits, dict) else {}
+    )
+    common_surplus_pressure_ok = (
+        balance.get("ok") is True
+        and report_common_surplus_limits == MAX_ENDING_COMMON_AFTER_COMPLETION
+        and report_common_surplus_ratio_limits == MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION
+    )
+    max_observed_common_surplus: dict[str, int] = {resource_id: 0 for resource_id in COMMON_RESOURCES}
+    max_observed_common_surplus_ratios: dict[str, float] = {resource_id: 0.0 for resource_id in COMMON_RESOURCES}
+    common_surplus_failure_count = 0
+    for town_id, row in town_rows.items():
+        if not isinstance(row, dict):
+            common_surplus_pressure_ok = False
+            continue
+        ending_resources = row.get("ending_resources", {})
+        ending_resources = ending_resources if isinstance(ending_resources, dict) else {}
+        ratios = row.get("ending_common_surplus_ratios", {})
+        ratios = ratios if isinstance(ratios, dict) else {}
+        failures = row.get("ending_common_surplus_failures", [])
+        failures = failures if isinstance(failures, list) else []
+        common_surplus_failure_count += len(failures)
+        if failures:
+            common_surplus_pressure_ok = False
+        for resource_id in COMMON_RESOURCES:
+            amount = int(ending_resources.get(resource_id, 0))
+            ratio = float(ratios.get(resource_id, 0.0))
+            max_observed_common_surplus[resource_id] = max(max_observed_common_surplus[resource_id], amount)
+            max_observed_common_surplus_ratios[resource_id] = max(max_observed_common_surplus_ratios[resource_id], ratio)
+            if amount > int(MAX_ENDING_COMMON_AFTER_COMPLETION[resource_id]):
+                common_surplus_pressure_ok = False
+            if ratio > float(MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION[resource_id]):
+                common_surplus_pressure_ok = False
+    add_check(
+        checks,
+        "common_resource_surplus_pressure",
+        common_surplus_pressure_ok,
+        "Authored towns must finish deterministic development inside bounded post-completion gold, wood, and ore surplus envelopes.",
+        {
+            "max_ending_common_after_completion": MAX_ENDING_COMMON_AFTER_COMPLETION,
+            "max_ending_common_surplus_ratio_after_completion": MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION,
+            "observed_common_surplus_max": dict(sorted(max_observed_common_surplus.items())),
+            "observed_common_surplus_ratio_max": {
+                resource_id: round(value, 4)
+                for resource_id, value in sorted(max_observed_common_surplus_ratios.items())
+            },
+            "failure_count": common_surplus_failure_count,
+        },
+    )
+
     high_tier_pacing_ok = balance.get("min_high_tier_unit_build_days", {}) == {
         str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()
     }
@@ -1443,6 +1498,16 @@ def main() -> int:
                 "min_late_rare_bottleneck_day": int(balance.get("min_late_rare_bottleneck_day", 0)),
                 "min_late_rare_bottleneck_days_per_town": int(balance.get("min_late_rare_bottleneck_days_per_town", 0)),
                 "min_common_material_bottleneck_days_per_town": int(balance.get("min_common_material_bottleneck_days_per_town", 0)),
+                "max_ending_common_after_completion": balance.get("max_ending_common_after_completion", {}),
+                "max_ending_common_surplus_ratio_after_completion": balance.get(
+                    "max_ending_common_surplus_ratio_after_completion",
+                    {},
+                ),
+                "observed_common_surplus_max": dict(sorted(max_observed_common_surplus.items())),
+                "observed_common_surplus_ratio_max": {
+                    resource_id: round(value, 4)
+                    for resource_id, value in sorted(max_observed_common_surplus_ratios.items())
+                },
             },
             "town_development_cost_curve_report_v1": {
                 "authored_town_count": int(cost_curve.get("authored_town_count", 0)),

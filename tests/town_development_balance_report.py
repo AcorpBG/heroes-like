@@ -30,6 +30,8 @@ MAX_ENDING_RARE_AFTER_COMPLETION = 13
 MIN_LATE_RARE_BOTTLENECK_DAY = 18
 MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN = 1
 MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN = 1
+MAX_ENDING_COMMON_AFTER_COMPLETION = {"gold": 10000, "wood": 12, "ore": 12}
+MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION = {"gold": 0.30, "wood": 0.50, "ore": 0.50}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 PHASE_WINDOWS = {
     "early": {"start": 1, "end": 10, "min_builds": 8},
@@ -217,6 +219,26 @@ def simulate_town(
         )
         for phase_id, window in PHASE_WINDOWS.items()
     }
+    ending_common_surplus_ratios: dict[str, float] = {}
+    ending_common_surplus_failures: list[dict[str, Any]] = []
+    for resource_id in sorted(COMMON_RESOURCES):
+        ending_amount = int(resources.get(resource_id, 0))
+        total_cost = int(total_development_costs.get(resource_id, 0))
+        ratio = float(ending_amount) / float(total_cost) if total_cost > 0 else 0.0
+        ending_common_surplus_ratios[resource_id] = round(ratio, 4)
+        absolute_limit = int(MAX_ENDING_COMMON_AFTER_COMPLETION[resource_id])
+        ratio_limit = float(MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION[resource_id])
+        if ending_amount > absolute_limit or ratio > ratio_limit:
+            ending_common_surplus_failures.append(
+                {
+                    "resource_id": resource_id,
+                    "ending_amount": ending_amount,
+                    "absolute_limit": absolute_limit,
+                    "surplus_ratio": round(ratio, 4),
+                    "ratio_limit": ratio_limit,
+                    "total_development_cost": total_cost,
+                }
+            )
     return {
         "town_id": str(town.get("id", "")),
         "faction_id": str(town.get("faction_id", "")),
@@ -229,6 +251,10 @@ def simulate_town(
         "build_count": len(build_log),
         "missing_buildings": missing,
         "ending_resources": dict(sorted(resources.items())),
+        "ending_common_surplus_limits": dict(sorted(MAX_ENDING_COMMON_AFTER_COMPLETION.items())),
+        "ending_common_surplus_ratio_limits": dict(sorted(MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION.items())),
+        "ending_common_surplus_ratios": dict(sorted(ending_common_surplus_ratios.items())),
+        "ending_common_surplus_failures": ending_common_surplus_failures,
         "total_development_costs": dict(sorted(total_development_costs.items())),
         "rare_development_spend": int(total_development_costs.get(rare_id, 0)),
         "ending_rare_resource": int(resources.get(rare_id, 0)),
@@ -384,6 +410,9 @@ def main() -> int:
             errors.append(
                 f"{town_id} must have at least {MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN} wood/ore bottleneck days"
             )
+        common_surplus_failures = result.get("ending_common_surplus_failures", [])
+        if isinstance(common_surplus_failures, list) and common_surplus_failures:
+            errors.append(f"{town_id} ends development with excessive common-resource surplus: {common_surplus_failures}")
         signature_tier_days = result.get("signature_tier_build_days", {})
         for tier, minimum_day in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items():
             build_day = int(signature_tier_days.get(str(tier), 0))
@@ -403,6 +432,10 @@ def main() -> int:
     report["min_late_rare_bottleneck_day"] = MIN_LATE_RARE_BOTTLENECK_DAY
     report["min_late_rare_bottleneck_days_per_town"] = MIN_LATE_RARE_BOTTLENECK_DAYS_PER_TOWN
     report["min_common_material_bottleneck_days_per_town"] = MIN_COMMON_MATERIAL_BOTTLENECK_DAYS_PER_TOWN
+    report["max_ending_common_after_completion"] = dict(sorted(MAX_ENDING_COMMON_AFTER_COMPLETION.items()))
+    report["max_ending_common_surplus_ratio_after_completion"] = dict(
+        sorted(MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION.items())
+    )
     report["min_high_tier_unit_build_days"] = {str(key): value for key, value in MIN_HIGH_TIER_UNIT_BUILD_DAYS.items()}
     report["phase_windows"] = PHASE_WINDOWS
 
