@@ -2854,6 +2854,8 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
     ensure(int(report_payload.get("min_common_only_to_rare_ratio", 0)) >= 2, errors, "Town development cost curve report must keep common-only buildings dominant")
     ensure(int(report_payload.get("min_rare_development_spend", 0)) >= 24, errors, "Town development cost curve report must require meaningful rare-resource spend")
     ensure(int(report_payload.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Town development cost curve report must require rare-cost upgrade chains")
+    price_band_limits = report_payload.get("price_band_limits", {})
+    ensure(isinstance(price_band_limits, dict) and bool(price_band_limits), errors, "Town development cost curve report must emit price-band sanity limits")
     town_rows = report_payload.get("towns", {})
     ensure(isinstance(town_rows, dict) and len(town_rows) >= 15, errors, "Town development cost curve report must emit every town row")
     if isinstance(town_rows, dict):
@@ -2865,6 +2867,7 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
             ensure(float(row.get("common_only_to_rare_ratio", 0.0)) >= 2.0, errors, f"{town_id} must keep at least 2:1 common-only to rare-cost buildings")
             ensure(int(row.get("rare_cost_building_count", 0)) >= 3, errors, f"{town_id} must retain high-tier rare-resource pressure")
             ensure(int(row.get("rare_upgrade_building_count", 0)) >= 1, errors, f"{town_id} must retain at least one rare-cost high-tier upgrade chain")
+            ensure(not row.get("price_band_failures", []), errors, f"{town_id} must stay within development price-band sanity limits")
             rare_id = str(row.get("rare_resource_id", ""))
             total_costs = row.get("total_costs", {})
             total_costs = total_costs if isinstance(total_costs, dict) else {}
@@ -2879,8 +2882,11 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN",
         "HIGH_TIER_START",
         "SIGNATURE_TIER_COUNT",
+        "PRICE_BAND_LIMITS",
         "prerequisite_closure",
         "common_only_to_rare_ratio",
+        "price_band_values",
+        "price_band_failures",
         "rare_upgrade_buildings",
         "rare-cost upgrade must upgrade from tier",
         "rare cost must be gated behind tier",
@@ -2899,6 +2905,8 @@ def validate_town_development_cost_curve_policy(errors: list[str]) -> None:
         "4/8/10 curve",
         "at least 24 faction rare resources",
         "rare-cost high-tier upgrade",
+        "price-band sanity",
+        "34000-45000",
         "No `SAVE_VERSION` bump",
         "`wood` remains canonical",
     ):
@@ -2938,7 +2946,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(report_payload.get("schema") == "economy_town_goal_scorecard_report_v1", errors, "Economy town goal scorecard schema mismatch")
     ensure(report_payload.get("slice_id") == "economy-town-goal-scorecard-20260524-10184", errors, "Economy town goal scorecard slice id mismatch")
     ensure(report_payload.get("ok") is True, errors, "Economy town goal scorecard must pass")
-    ensure(int(report_payload.get("requirement_count", 0)) >= 10, errors, "Economy town goal scorecard must cover the owner objective requirements")
+    ensure(int(report_payload.get("requirement_count", 0)) >= 11, errors, "Economy town goal scorecard must cover the owner objective requirements")
     ensure(
         int(report_payload.get("passed_requirement_count", 0)) == int(report_payload.get("requirement_count", -1)),
         errors,
@@ -2953,6 +2961,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "authored_town_development_end_to_end",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
+        "town_development_price_band_sanity",
         "high_tier_rare_resource_pressure",
         "high_tier_unit_build_pacing",
         "rare_upgrade_chain_pressure",
@@ -2973,6 +2982,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
     ensure(int(town_balance.get("authored_town_count", 0)) >= 15, errors, "Economy town goal scorecard must cover at least fifteen authored towns")
     ensure(int(town_balance.get("completion_day_max", 99)) <= 30, errors, "Economy town goal scorecard must preserve the 30-turn town development target")
     ensure(int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)) >= 1, errors, "Economy town goal scorecard must include rare-cost upgrade chain pressure")
+    ensure(isinstance(cost_curve.get("price_band_limits", {}), dict) and bool(cost_curve.get("price_band_limits", {})), errors, "Economy town goal scorecard must include town development price-band sanity limits")
     ensure(int(matrix.get("active_scenario_count", 0)) >= 16, errors, "Economy town goal scorecard must include active-scenario resource coverage")
     ensure(int(harness_accounting.get("passing_file_count", 0)) >= 4, errors, "Economy town goal scorecard must include full-resource balance/headless harness accounting coverage")
     script_text = ECONOMY_TOWN_GOAL_SCORECARD_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -2987,6 +2997,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "authored_town_development_end_to_end",
         "one_build_per_town_turn",
         "common_resource_dominant_cost_shape",
+        "town_development_price_band_sanity",
+        "price_band_limits",
+        "price_band_values",
         "high_tier_rare_resource_pressure",
         "faction_identity_and_unique_towns",
         "seven_tier_unit_buildings",
@@ -3009,6 +3022,7 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "30-turn target",
         "one build per town turn",
         "common-resource-dominant town development",
+        "price-band sanity",
         "4/8/10 rare-resource tier curve",
         "MIN_RARE_DEVELOPMENT_SPEND = 24",
         "MAX_ENDING_RARE_AFTER_COMPLETION = 13",
@@ -20641,7 +20655,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")
     print("- authored-town development balance gate proves every authored town exposes its faction seven-building ladder and fully develops within 30 turns")
     print("- authored-town rare pressure now requires meaningful high-tier rare spend, high-tier unit pacing floors, and capped leftover rare stock after development")
-    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
+    print("- economy/town goal scorecard now consolidates live resources, full-resource harness accounting, town completion, build limits, cost shape, price-band sanity, rare pressure, rare upgrade chains, high-tier pacing, faction identity, unique buildings, and seven-tier ladders")
     print("- six-faction town-development breadth parity now prevents seven-unit-only towns from counting as fully developed")
     print("- town development save/resume now preserves rare-resource build checkpoints, one-build-per-day guards, and town resume targets across all authored towns")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")

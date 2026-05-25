@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-town-scorecard-harness-resource-coverage-20260525-10184",
-  "currentSliceTitle": "Economy Town Scorecard Harness Resource Coverage",
+  "currentSliceId": "economy-town-price-band-sanity-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town Price Band Sanity Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed top-level scorecard coverage for full-resource balance/headless harness accounting. Scorecard now passes 10/10 default checks and repo validation gates the new requirement.",
+  "currentSliceNotes": "Completed deterministic price-band sanity coverage. Cost-curve report and economy/town scorecard now reject extreme total development cost regressions; scorecard passes 11/11 default and 14/14 runtime-inclusive checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T00:52:44Z",
+  "updatedAt": "2026-05-25T01:23:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "economy-town-price-band-sanity-scorecard-20260525-10184",
+      "title": "Economy Town Price Band Sanity Scorecard",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "updatedAt": "2026-05-25T01:23:58Z",
+      "startedAt": "2026-05-25T01:03:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "tests/town_development_cost_curve_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-town-development-cost-curve-report.md"
+      ],
+      "summary": "The economy/town production-readiness gate should reject extreme authored price regressions, not only prove completion by turn 30.",
+      "validation": [
+        "python3 tests/town_development_cost_curve_report.py (passed; 15 authored towns inside price-band limits)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 11/11 default checks)",
+        "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 14/14 runtime-inclusive checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Completed deterministic price-band sanity coverage. Cost-curve report and economy/town scorecard now reject extreme total development cost regressions; scorecard passes 11/11 default and 14/14 runtime-inclusive checks.",
+      "completedAt": "2026-05-25T01:23:58Z"
+    },
     {
       "id": "economy-town-scorecard-harness-resource-coverage-20260525-10184",
       "title": "Economy Town Scorecard Harness Resource Coverage",

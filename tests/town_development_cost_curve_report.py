@@ -26,6 +26,14 @@ MIN_RARE_DEVELOPMENT_SPEND = 24
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
+PRICE_BAND_LIMITS = {
+    "gold": {"min": 34000, "max": 45000},
+    "wood": {"min": 20, "max": 38},
+    "ore": {"min": 20, "max": 38},
+    "rare": {"min": 24, "max": 32},
+    "target_buildings": {"min": 20, "max": 24},
+    "rare_cost_buildings": {"min": 4, "max": 7},
+}
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -218,6 +226,22 @@ def main() -> int:
         if int(total_costs.get("wood", 0)) <= 0 or int(total_costs.get("ore", 0)) <= 0:
             errors.append(f"{town_id} must spend both wood and ore across development")
 
+        price_band_values = {
+            "gold": int(total_costs.get("gold", 0)),
+            "wood": int(total_costs.get("wood", 0)),
+            "ore": int(total_costs.get("ore", 0)),
+            "rare": int(total_costs.get(town_rare_id, 0)),
+            "target_buildings": len(target_ids),
+            "rare_cost_buildings": rare_cost_count,
+        }
+        price_band_failures: list[dict[str, Any]] = []
+        for field, limits in PRICE_BAND_LIMITS.items():
+            value = int(price_band_values.get(field, 0))
+            if value < int(limits["min"]) or value > int(limits["max"]):
+                price_band_failures.append({"field": field, "value": value, "limits": limits})
+        if price_band_failures:
+            errors.append(f"{town_id} development price-band sanity failed: {price_band_failures}")
+
         town_rows[town_id] = {
             "faction_id": faction_id,
             "rare_resource_id": town_rare_id,
@@ -231,6 +255,8 @@ def main() -> int:
             "rare_buildings": rare_buildings,
             "rare_upgrade_buildings": rare_upgrade_buildings,
             "common_only_buildings": common_only_buildings,
+            "price_band_values": price_band_values,
+            "price_band_failures": price_band_failures,
         }
 
     report = {
@@ -245,6 +271,7 @@ def main() -> int:
         "min_common_only_to_rare_ratio": MIN_COMMON_ONLY_TO_RARE_RATIO,
         "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
         "min_rare_upgrade_buildings_per_town": MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN,
+        "price_band_limits": PRICE_BAND_LIMITS,
         "faction_curves": faction_curves,
         "towns": town_rows,
         "errors": errors,

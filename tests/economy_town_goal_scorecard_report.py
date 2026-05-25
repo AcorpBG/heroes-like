@@ -464,9 +464,14 @@ def main() -> int:
 
     cost_rows = cost_curve.get("towns", {}) if isinstance(cost_curve.get("towns", {}), dict) else {}
     common_cost_ok = cost_curve.get("ok") is True
+    price_band_ok = cost_curve.get("ok") is True
+    price_band_limits = cost_curve.get("price_band_limits", {})
+    price_band_limits = price_band_limits if isinstance(price_band_limits, dict) else {}
+    price_band_rows: dict[str, Any] = {}
     for town_id, row in cost_rows.items():
         if not isinstance(row, dict):
             common_cost_ok = False
+            price_band_ok = False
             continue
         total_costs = row.get("total_costs", {})
         total_costs = total_costs if isinstance(total_costs, dict) else {}
@@ -478,6 +483,16 @@ def main() -> int:
             common_cost_ok = False
         if float(row.get("common_only_to_rare_ratio", 0.0)) < MIN_COMMON_ONLY_TO_RARE_RATIO:
             common_cost_ok = False
+        price_band_values = row.get("price_band_values", {})
+        price_band_values = price_band_values if isinstance(price_band_values, dict) else {}
+        price_band_failures = row.get("price_band_failures", [])
+        price_band_failures = price_band_failures if isinstance(price_band_failures, list) else []
+        if price_band_failures:
+            price_band_ok = False
+        price_band_rows[town_id] = {
+            "values": price_band_values,
+            "failure_count": len(price_band_failures),
+        }
     add_check(
         checks,
         "common_resource_dominant_cost_shape",
@@ -487,6 +502,18 @@ def main() -> int:
             "min_common_only_to_rare_ratio": MIN_COMMON_ONLY_TO_RARE_RATIO,
             "town_count": len(cost_rows),
             "common_resources": sorted(COMMON_RESOURCES),
+        },
+    )
+    add_check(
+        checks,
+        "town_development_price_band_sanity",
+        price_band_ok,
+        "Authored town development totals must stay inside bounded price bands for gold, wood, ore, faction rare spend, target count, and rare-cost building count.",
+        {
+            "price_band_limits": price_band_limits,
+            "town_count": len(price_band_rows),
+            "failure_count": sum(int(row.get("failure_count", 0)) for row in price_band_rows.values()),
+            "town_price_bands": price_band_rows,
         },
     )
 
@@ -668,6 +695,7 @@ def main() -> int:
                 "authored_town_count": int(cost_curve.get("authored_town_count", 0)),
                 "faction_count": int(cost_curve.get("faction_count", 0)),
                 "min_rare_upgrade_buildings_per_town": int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)),
+                "price_band_limits": cost_curve.get("price_band_limits", {}),
             },
             "active_scenario_resource_availability_matrix_v1": {
                 "active_scenario_count": int(source_matrix.get("active_scenario_count", 0)),
