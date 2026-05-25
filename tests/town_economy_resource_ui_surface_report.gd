@@ -58,11 +58,16 @@ func _run() -> void:
 
 	if rows.size() < 6:
 		_errors.append("Expected six faction town UI economy cases, got %d." % rows.size())
+	var same_day_build_lockout_case_count := 0
+	for row in rows:
+		if row is Dictionary and bool(row.get("same_day_build_lockout_ok", false)):
+			same_day_build_lockout_case_count += 1
 
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"faction_case_count": rows.size(),
+		"same_day_build_lockout_case_count": same_day_build_lockout_case_count,
 		"live_stockpile_resource_ids": LIVE_STOCKPILE_RESOURCE_IDS,
 		"common_resource_ids": COMMON_RESOURCE_IDS,
 		"rare_resource_ids": RARE_RESOURCE_IDS,
@@ -70,7 +75,7 @@ func _run() -> void:
 		"errors": _errors,
 		"caveats": [
 			"Each case instantiates TownShell with an isolated seed-town state and a high-tier rare-cost building made available through authored prerequisites.",
-			"The report validates player-facing town resource ledger and build-readiness surfaces; it does not retune scenario-wide economy pacing.",
+			"The report validates player-facing town resource ledger, build-readiness, and same-day construction lockout surfaces; it does not retune scenario-wide economy pacing.",
 		],
 	}
 	if _errors.is_empty():
@@ -144,9 +149,37 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	_assert_town_shell_resource_surface(ready_snapshot, rare_id, true, case_errors)
 	_assert_ready_rare_build_action(ready_action, rare_id, target_cost, case_errors)
 
+	var build_result: Dictionary = TownRules.build_active_town(session, target_building_id)
+	build_result["action_id"] = "build:%s" % target_building_id
+	build_result["lane"] = "build"
+	build_result["state_changed"] = bool(build_result.get("ok", false))
+	shell.call("validation_force_refresh")
+	await get_tree().process_frame
+	var post_build_catalog: Dictionary = shell.call("validation_action_catalog")
+	var post_build_actions: Array = post_build_catalog.get("build", []) if post_build_catalog.get("build", []) is Array else []
+	var post_build_town := _town_by_placement_id(session, placement_id)
+	var same_day_guarded_unbuilt_count := _same_day_guarded_unbuilt_count(post_build_town, int(session.day))
+	var post_build_enabled_action_count := _enabled_action_count(post_build_actions)
+	var same_day_build_lockout_ok := _assert_same_day_build_lockout(
+		build_result,
+		post_build_actions,
+		post_build_town,
+		target_building_id,
+		int(session.day),
+		same_day_guarded_unbuilt_count,
+		case_errors
+	)
+
 	row["ok"] = case_errors.is_empty()
 	row["blocked_action"] = _action_summary(blocked_action)
 	row["ready_action"] = _action_summary(ready_action)
+	row["build_result"] = _build_result_summary(build_result)
+	row["same_day_build_lockout_ok"] = same_day_build_lockout_ok
+	row["post_build_action_count"] = post_build_actions.size()
+	row["post_build_enabled_action_count"] = post_build_enabled_action_count
+	row["post_build_last_build_day"] = int(post_build_town.get("last_build_day", 0))
+	row["same_day_guarded_unbuilt_count"] = same_day_guarded_unbuilt_count
+	row["post_build_action_ids"] = _action_ids(post_build_actions)
 	row["blocked_resource_surface"] = _resource_surface_summary(blocked_snapshot)
 	row["ready_resource_surface"] = _resource_surface_summary(ready_snapshot)
 	row["market_action_count"] = blocked_market_actions.size()
@@ -280,6 +313,66 @@ func _assert_common_only_market_actions(actions: Array, errors: Array) -> void:
 			if resource_id not in ["wood", "ore"]:
 				errors.append("Normal town market exposed non-common resource %s in %s." % [resource_id, action_id])
 
+func _assert_same_day_build_lockout(
+	build_result: Dictionary,
+	post_build_actions: Array,
+	post_build_town: Dictionary,
+	target_building_id: String,
+	current_day: int,
+	same_day_guarded_unbuilt_count: int,
+	errors: Array
+) -> bool:
+	var ok := true
+	if not bool(build_result.get("ok", false)):
+		errors.append("TownShell build action did not complete before same-day lockout check: %s." % JSON.stringify(build_result))
+		ok = false
+	var built_buildings := _string_array(post_build_town.get("built_buildings", []))
+	if target_building_id not in built_buildings:
+		errors.append("Built target %s was not present in post-build town state: %s." % [target_building_id, JSON.stringify(post_build_town)])
+		ok = false
+	if int(post_build_town.get("last_build_day", 0)) != current_day:
+		errors.append("Post-build town last_build_day did not match current day %d: %s." % [current_day, JSON.stringify(post_build_town)])
+		ok = false
+	if post_build_actions.size() > 0:
+		errors.append("TownShell still exposed build actions after same-day build order: %s." % JSON.stringify(_action_ids(post_build_actions)))
+		ok = false
+	if _enabled_action_count(post_build_actions) > 0:
+		errors.append("TownShell still exposed enabled build actions after same-day build order.")
+		ok = false
+	if same_day_guarded_unbuilt_count <= 0:
+		errors.append("No remaining unbuilt town building carried the same-day build guard after construction.")
+		ok = false
+	return ok
+
+func _town_by_placement_id(session, placement_id: String) -> Dictionary:
+	var towns = session.overworld.get("towns", [])
+	if towns is Array:
+		for town_value in towns:
+			if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+				return town_value
+	return {}
+
+func _same_day_guarded_unbuilt_count(town: Dictionary, current_day: int) -> int:
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var built_buildings := _string_array(town.get("built_buildings", []))
+	var count := 0
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building_id := String(building_id_value)
+		if building_id == "" or building_id in built_buildings:
+			continue
+		var status: Dictionary = OverworldRules.get_town_build_status(town, building_id, current_day)
+		var blockers: Array = status.get("blockers", []) if status.get("blockers", []) is Array else []
+		if "Already built in this town today." in blockers:
+			count += 1
+	return count
+
+func _enabled_action_count(actions: Array) -> int:
+	var count := 0
+	for action_value in actions:
+		if action_value is Dictionary and not bool(action_value.get("disabled", false)):
+			count += 1
+	return count
+
 func _assert_contains(text: String, needle: String, label: String, errors: Array) -> void:
 	if needle == "":
 		return
@@ -321,6 +414,23 @@ func _action_summary(action: Dictionary) -> Dictionary:
 		"shortfall_summary": String(action.get("shortfall_summary", "")),
 		"disabled_reason": String(action.get("disabled_reason", "")),
 	}
+
+func _build_result_summary(result: Dictionary) -> Dictionary:
+	return {
+		"ok": bool(result.get("ok", false)),
+		"action_id": String(result.get("action_id", "")),
+		"lane": String(result.get("lane", "")),
+		"state_changed": bool(result.get("state_changed", false)),
+		"message": String(result.get("message", "")),
+	}
+
+func _action_ids(actions: Array) -> Array:
+	var ids := []
+	for action_value in actions:
+		if action_value is Dictionary:
+			ids.append(String(action_value.get("id", "")))
+	ids.sort()
+	return ids
 
 func _resource_surface_summary(snapshot: Dictionary) -> Dictionary:
 	return {

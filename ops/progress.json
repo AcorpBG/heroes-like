@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-active-enemy-source-route-scorecard-20260525-10184",
-  "currentSliceTitle": "Economy Active Enemy Source Route Scorecard",
+  "currentSliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+  "currentSliceTitle": "Economy Town UI Build Lockout Scorecard",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated.",
+  "currentSliceNotes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T08:38:22Z",
+  "updatedAt": "2026-05-25T09:26:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -22312,6 +22312,39 @@
         }
       },
       "completedAt": "2026-05-25T07:03:56Z"
+    },
+    {
+      "id": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+      "title": "Economy Town UI Build Lockout Scorecard",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "purpose": "Require the runtime-inclusive economy/town scorecard to prove the live TownShell build surface stops offering same-day construction after a town completes one build order.",
+      "notes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks.",
+      "startedAt": "2026-05-25T08:45:44Z",
+      "completedAt": "2026-05-25T09:26:58Z",
+      "validation": {
+        "status": "pass",
+        "sliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-ui-build-lockout.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
+          "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+          "jq empty ops/progress.json content/towns.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "town_resource_ui_same_day_build_lockout_case_count": 6,
+          "town_resource_ui_faction_case_count": 6,
+          "runtime_scorecard_passed_requirement_count": 28,
+          "runtime_scorecard_requirement_count": 28,
+          "deterministic_scorecard_passed_requirement_count": 13,
+          "deterministic_scorecard_requirement_count": 13,
+          "post_build_action_count_max": 0,
+          "post_build_enabled_action_count_max": 0
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -29035,24 +29068,36 @@
     }
   ],
   "lastValidation": {
-    "status": "passed",
-    "updatedAt": "2026-05-25T08:38:22Z",
+    "status": "pass",
+    "sliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
-      "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
-    ]
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-ui-build-lockout.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+      "python3 tests/economy_town_goal_scorecard_report.py",
+      "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "jq empty ops/progress.json content/towns.json",
+      "git diff --check"
+    ],
+    "evidence": {
+      "town_resource_ui_same_day_build_lockout_case_count": 6,
+      "town_resource_ui_faction_case_count": 6,
+      "runtime_scorecard_passed_requirement_count": 28,
+      "runtime_scorecard_requirement_count": 28,
+      "deterministic_scorecard_passed_requirement_count": 13,
+      "deterministic_scorecard_requirement_count": 13,
+      "post_build_action_count_max": 0,
+      "post_build_enabled_action_count_max": 0
+    }
   },
   "active_slice": {
-    "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
-    "title": "Economy Active Enemy Source Route Scorecard",
+    "id": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+    "title": "Economy Town UI Build Lockout Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T08:38:22Z",
-    "notes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated."
+    "updatedAt": "2026-05-25T09:26:58Z",
+    "notes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks."
   },
-  "currentSliceUpdatedAt": "2026-05-25T08:38:22Z",
+  "currentSliceUpdatedAt": "2026-05-25T09:26:58Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -29957,33 +30002,34 @@
     }
   ],
   "currentSlice": {
-    "id": "economy-active-enemy-source-route-scorecard-20260525-10184",
-    "title": "Economy Active Enemy Source Route Scorecard",
+    "id": "economy-town-ui-build-lockout-scorecard-20260525-10184",
+    "title": "Economy Town UI Build Lockout Scorecard",
     "status": "completed",
-    "updatedAt": "2026-05-25T08:38:22Z",
-    "notes": "Active authored scenario source-route evidence now covers both player and enemy towns. active_scenario_town_economy_source_route_report_v1 checks player-owned and enemy-owned active towns against reachable wood, ore, and faction-rare sources through live overworld blocker, action-destination, route-interaction, and corner-cut rules. Current focused evidence covers 16 active scenarios, 18 player-town cases with 54/54 player source routes reachable, and 20 enemy-town cases with 60/60 enemy source routes reachable. Runtime-inclusive economy/town scorecard passes 27/27 checks with active_scenario_enemy_source_route_runtime gated."
+    "updatedAt": "2026-05-25T09:26:58Z",
+    "notes": "Completed. TownShell resource/build UI surface evidence now selects a live rare-cost build from the TownShell action catalog, builds it through live town rules, refreshes TownShell, and proves post-build construction actions are locked out for the same town day across 6/6 faction seed towns. The runtime-inclusive economy/town scorecard now gates town_resource_ui_same_day_build_lockout_runtime and passes 28/28 checks."
   },
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-25T08:38:22Z",
-    "sliceId": "economy-active-enemy-source-route-scorecard-20260525-10184",
+    "sliceId": "economy-town-ui-build-lockout-scorecard-20260525-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
-      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 27/27 runtime-inclusive checks including active_scenario_enemy_source_route_runtime)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 13/13 deterministic checks)",
-      "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py (passed)"
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-town-ui-build-lockout.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
+      "timeout 1800s python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+      "python3 tests/economy_town_goal_scorecard_report.py",
+      "python3 tests/validate_repo.py",
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py",
+      "jq empty ops/progress.json content/towns.json",
+      "git diff --check"
     ],
     "evidence": {
-      "active_scenario_count": 16,
-      "player_town_case_count": 18,
-      "player_resource_route_case_count": 54,
-      "player_reachable_route_case_count": 54,
-      "enemy_town_case_count": 20,
-      "enemy_resource_route_case_count": 60,
-      "enemy_reachable_route_case_count": 60,
-      "runtime_scorecard_passed_requirement_count": 27,
-      "runtime_scorecard_requirement_count": 27
+      "town_resource_ui_same_day_build_lockout_case_count": 6,
+      "town_resource_ui_faction_case_count": 6,
+      "runtime_scorecard_passed_requirement_count": 28,
+      "runtime_scorecard_requirement_count": 28,
+      "deterministic_scorecard_passed_requirement_count": 13,
+      "deterministic_scorecard_requirement_count": 13,
+      "post_build_action_count_max": 0,
+      "post_build_enabled_action_count_max": 0
     }
   }
 }

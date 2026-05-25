@@ -3093,6 +3093,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "affordable_recruitment_case_count",
         "live_unique_town_payoff_runtime",
         "town_resource_ui_surface_runtime",
+        "town_resource_ui_same_day_build_lockout_runtime",
+        "same_day_build_lockout_case_count",
+        "post_build_action_count",
         "town_recruitment_ui_surface_runtime",
         "runtime_market_cap_persistence",
         "TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT",
@@ -3152,8 +3155,9 @@ def validate_economy_town_goal_scorecard(errors: list[str]) -> None:
         "runtime recruitment market coverage",
         "post-development common-material shortfalls",
         "runtime market-cap persistence report",
-        "27/27 checks",
+        "28/28 checks",
         "6/6 TownShell resource/build UI cases",
+        "6/6 TownShell same-day build lockout cases",
         "42/42 TownShell seven-tier recruitment UI cases",
         "persisted weekly town-market caps",
         "common-resource-only exchange",
@@ -20254,6 +20258,10 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         "market_coverable",
         "direct_affordable",
         "shortfall_summary",
+        "same_day_build_lockout_case_count",
+        "same_day_build_lockout_ok",
+        "post_build_action_count",
+        "TownRules.build_active_town",
         "resources_full_ledger_text",
         "resources_tooltip_text",
     ):
@@ -20274,6 +20282,7 @@ def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
         "town_economy_resource_ui_surface_report_v1",
         "six faction seed towns",
         "normal markets remain common-resource only",
+        "6/6 same-day build lockout cases",
     ):
         ensure(required_text in doc_text, errors, f"Town economy resource UI surface doc is missing text: {required_text}")
 
