@@ -1414,7 +1414,8 @@
       "content_status": "six_faction_scaffold",
       "requires": [
         "building_thornwake_barkmantle_run",
-        "building_market_square"
+        "building_market_square",
+        "building_thornwake_rootroad_markers"
       ],
       "unlock_unit_id": "unit_thornwake_stagknot_runners",
       "growth_bonus": {
@@ -1690,7 +1691,8 @@
       "content_status": "six_faction_scaffold",
       "requires": [
         "building_brasshollow_boiler_cathedral",
-        "building_market_square"
+        "building_market_square",
+        "building_brasshollow_scalehouse"
       ],
       "unlock_unit_id": "unit_brasshollow_debt_engine_exactors",
       "growth_bonus": {
@@ -1965,7 +1967,8 @@
       "content_status": "six_faction_scaffold",
       "requires": [
         "building_veilmourn_harpoon_gantry",
-        "building_market_square"
+        "building_market_square",
+        "building_veilmourn_salt_counting_house"
       ],
       "unlock_unit_id": "unit_veilmourn_obituary_scribes",
       "growth_bonus": {

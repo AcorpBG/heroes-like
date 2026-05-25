@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
-  "currentSliceTitle": "Economy Sunvault Early Relay Build Curve Tuning",
+  "currentSliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+  "currentSliceTitle": "Economy High Tier Early Spike Build Curve Tuning",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate.",
+  "currentSliceNotes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T18:37:56Z",
+  "updatedAt": "2026-05-25T18:41:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -23327,6 +23327,87 @@
         "tests/economy_town_goal_scorecard_report.py",
         "tests/validate_repo.py"
       ]
+    },
+    {
+      "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+      "title": "Economy High Tier Early Spike Build Curve Tuning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_directed_economy_town_goal_player_balance_followup",
+      "planRef": "PLAN.md Current Tactical State",
+      "implementationTargets": [
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:41:25Z",
+        "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_brasshollow_pressure_rail_requires": [
+              "building_brasshollow_boiler_cathedral",
+              "building_market_square",
+              "building_brasshollow_scalehouse"
+            ],
+            "building_thornwake_pilgrim_orchard_requires": [
+              "building_thornwake_barkmantle_run",
+              "building_market_square",
+              "building_thornwake_rootroad_markers"
+            ],
+            "building_veilmourn_obituary_vault_requires": [
+              "building_veilmourn_harpoon_gantry",
+              "building_market_square",
+              "building_veilmourn_salt_counting_house"
+            ]
+          },
+          "affected_tier5_days": {
+            "town_brasshollow_clauseworks_depot": 6,
+            "town_brasshollow_orevein_gantry": 6,
+            "town_thornwake_graftroot_caravan": 6,
+            "town_thornwake_rootgate_nursery": 6,
+            "town_veilmourn_bellwake_harbor": 9,
+            "town_veilmourn_fogchart_mooring": 9
+          },
+          "affected_completion_days": {
+            "town_brasshollow_clauseworks_depot": 29,
+            "town_brasshollow_orevein_gantry": 29,
+            "town_thornwake_graftroot_caravan": 30,
+            "town_thornwake_rootgate_nursery": 30,
+            "town_veilmourn_bellwake_harbor": 28,
+            "town_veilmourn_fogchart_mooring": 28
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      },
+      "summary": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "updatedAt": "2026-05-25T18:41:25Z",
+      "startedAt": "2026-05-25T18:41:25Z",
+      "completedAt": "2026-05-25T18:41:25Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -29274,6 +29355,77 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+      "title": "Economy High Tier Early Spike Build Curve Tuning",
+      "completedAt": "2026-05-25T18:41:25Z",
+      "summary": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization.",
+      "sourceRefs": [
+        "PLAN.md",
+        "content/buildings.json",
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/faction_town_unit_asymmetry_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-25T18:41:25Z",
+        "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+        "commands": [
+          "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+          "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+          "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+          "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "content_changes": {
+            "building_brasshollow_pressure_rail_requires": [
+              "building_brasshollow_boiler_cathedral",
+              "building_market_square",
+              "building_brasshollow_scalehouse"
+            ],
+            "building_thornwake_pilgrim_orchard_requires": [
+              "building_thornwake_barkmantle_run",
+              "building_market_square",
+              "building_thornwake_rootroad_markers"
+            ],
+            "building_veilmourn_obituary_vault_requires": [
+              "building_veilmourn_harpoon_gantry",
+              "building_market_square",
+              "building_veilmourn_salt_counting_house"
+            ]
+          },
+          "affected_tier5_days": {
+            "town_brasshollow_clauseworks_depot": 6,
+            "town_brasshollow_orevein_gantry": 6,
+            "town_thornwake_graftroot_caravan": 6,
+            "town_thornwake_rootgate_nursery": 6,
+            "town_veilmourn_bellwake_harbor": 9,
+            "town_veilmourn_fogchart_mooring": 9
+          },
+          "affected_completion_days": {
+            "town_brasshollow_clauseworks_depot": 29,
+            "town_brasshollow_orevein_gantry": 29,
+            "town_thornwake_graftroot_caravan": 30,
+            "town_thornwake_rootgate_nursery": 30,
+            "town_veilmourn_bellwake_harbor": 28,
+            "town_veilmourn_fogchart_mooring": 28
+          },
+          "deterministic_scorecard_passed_requirement_count": 15,
+          "deterministic_scorecard_requirement_count": 15,
+          "town_development_completion_day_min": 24,
+          "town_development_completion_day_max": 30,
+          "new_gate_created": false,
+          "policy": "player-balance content tuning using existing reports; not campaign production work"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -31067,16 +31219,72 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:41:25Z",
+      "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_brasshollow_pressure_rail_requires": [
+            "building_brasshollow_boiler_cathedral",
+            "building_market_square",
+            "building_brasshollow_scalehouse"
+          ],
+          "building_thornwake_pilgrim_orchard_requires": [
+            "building_thornwake_barkmantle_run",
+            "building_market_square",
+            "building_thornwake_rootroad_markers"
+          ],
+          "building_veilmourn_obituary_vault_requires": [
+            "building_veilmourn_harpoon_gantry",
+            "building_market_square",
+            "building_veilmourn_salt_counting_house"
+          ]
+        },
+        "affected_tier5_days": {
+          "town_brasshollow_clauseworks_depot": 6,
+          "town_brasshollow_orevein_gantry": 6,
+          "town_thornwake_graftroot_caravan": 6,
+          "town_thornwake_rootgate_nursery": 6,
+          "town_veilmourn_bellwake_harbor": 9,
+          "town_veilmourn_fogchart_mooring": 9
+        },
+        "affected_completion_days": {
+          "town_brasshollow_clauseworks_depot": 29,
+          "town_brasshollow_orevein_gantry": 29,
+          "town_thornwake_graftroot_caravan": 30,
+          "town_thornwake_rootgate_nursery": 30,
+          "town_veilmourn_bellwake_harbor": 28,
+          "town_veilmourn_fogchart_mooring": 28
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:37:56Z",
-    "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:41:25Z",
+    "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
@@ -31085,38 +31293,37 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_sunvault_lens_gallery_requires": [
-          "building_sunvault_shard_yard",
-          "building_sunvault_lens_tithe"
-        ],
-        "building_sunvault_harmonic_cloister_requires": [
-          "building_sunvault_mirror_forge",
+        "building_brasshollow_pressure_rail_requires": [
+          "building_brasshollow_boiler_cathedral",
           "building_market_square",
-          "building_sunvault_relay_scribes"
+          "building_brasshollow_scalehouse"
         ],
-        "sunvault_town_build_order_priority": [
-          "building_sunvault_lens_tithe",
+        "building_thornwake_pilgrim_orchard_requires": [
+          "building_thornwake_barkmantle_run",
           "building_market_square",
-          "building_sunvault_relay_scribes"
+          "building_thornwake_rootroad_markers"
+        ],
+        "building_veilmourn_obituary_vault_requires": [
+          "building_veilmourn_harpoon_gantry",
+          "building_market_square",
+          "building_veilmourn_salt_counting_house"
         ]
       },
-      "affected_town_completion_days": {
-        "town_halo_spire": 25,
-        "town_prismhearth": 30
+      "affected_tier5_days": {
+        "town_brasshollow_clauseworks_depot": 6,
+        "town_brasshollow_orevein_gantry": 6,
+        "town_thornwake_graftroot_caravan": 6,
+        "town_thornwake_rootgate_nursery": 6,
+        "town_veilmourn_bellwake_harbor": 9,
+        "town_veilmourn_fogchart_mooring": 9
       },
-      "affected_early_identity_steps": {
-        "town_halo_spire": [
-          "day 2 building_sunvault_lens_tithe",
-          "day 3 building_sunvault_lens_gallery",
-          "day 6 building_sunvault_relay_scribes",
-          "day 7 building_sunvault_harmonic_cloister"
-        ],
-        "town_prismhearth": [
-          "day 2 building_sunvault_lens_tithe",
-          "day 3 building_sunvault_lens_gallery",
-          "day 6 building_sunvault_relay_scribes",
-          "day 7 building_sunvault_harmonic_cloister"
-        ]
+      "affected_completion_days": {
+        "town_brasshollow_clauseworks_depot": 29,
+        "town_brasshollow_orevein_gantry": 29,
+        "town_thornwake_graftroot_caravan": 30,
+        "town_thornwake_rootgate_nursery": 30,
+        "town_veilmourn_bellwake_harbor": 28,
+        "town_veilmourn_fogchart_mooring": 28
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
@@ -31127,14 +31334,14 @@
     }
   },
   "active_slice": {
-    "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
-    "title": "Economy Sunvault Early Relay Build Curve Tuning",
+    "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+    "title": "Economy High Tier Early Spike Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:37:56Z",
-    "completedAt": "2026-05-25T18:37:56Z",
-    "notes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate."
+    "updatedAt": "2026-05-25T18:41:25Z",
+    "completedAt": "2026-05-25T18:41:25Z",
+    "notes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
-  "currentSliceUpdatedAt": "2026-05-25T18:37:56Z",
+  "currentSliceUpdatedAt": "2026-05-25T18:41:25Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -32466,24 +32673,80 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-25T18:41:25Z",
+      "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+      "commands": [
+        "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+        "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+        "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
+        "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "content_changes": {
+          "building_brasshollow_pressure_rail_requires": [
+            "building_brasshollow_boiler_cathedral",
+            "building_market_square",
+            "building_brasshollow_scalehouse"
+          ],
+          "building_thornwake_pilgrim_orchard_requires": [
+            "building_thornwake_barkmantle_run",
+            "building_market_square",
+            "building_thornwake_rootroad_markers"
+          ],
+          "building_veilmourn_obituary_vault_requires": [
+            "building_veilmourn_harpoon_gantry",
+            "building_market_square",
+            "building_veilmourn_salt_counting_house"
+          ]
+        },
+        "affected_tier5_days": {
+          "town_brasshollow_clauseworks_depot": 6,
+          "town_brasshollow_orevein_gantry": 6,
+          "town_thornwake_graftroot_caravan": 6,
+          "town_thornwake_rootgate_nursery": 6,
+          "town_veilmourn_bellwake_harbor": 9,
+          "town_veilmourn_fogchart_mooring": 9
+        },
+        "affected_completion_days": {
+          "town_brasshollow_clauseworks_depot": 29,
+          "town_brasshollow_orevein_gantry": 29,
+          "town_thornwake_graftroot_caravan": 30,
+          "town_thornwake_rootgate_nursery": 30,
+          "town_veilmourn_bellwake_harbor": 28,
+          "town_veilmourn_fogchart_mooring": 28
+        },
+        "deterministic_scorecard_passed_requirement_count": 15,
+        "deterministic_scorecard_requirement_count": 15,
+        "town_development_completion_day_min": 24,
+        "town_development_completion_day_max": 30,
+        "new_gate_created": false,
+        "policy": "player-balance content tuning using existing reports; not campaign production work"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
-    "title": "Economy Sunvault Early Relay Build Curve Tuning",
+    "id": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
+    "title": "Economy High Tier Early Spike Build Curve Tuning",
     "status": "completed",
-    "updatedAt": "2026-05-25T18:37:56Z",
-    "completedAt": "2026-05-25T18:37:56Z",
-    "notes": "Completed. Player-balance audit follow-up found Sunvault Prismhearth and Halo Spire still reached early high-tier signature development before their ore/lens/relay economy support was player-visible. Sunvault Lens Gallery now requires Lens Tithe, Harmonic Cloister now requires Relay Scribes, and the two Sunvault town build lists surface Lens Tithe and Relay Scribes before generic filler buildings can hide that identity. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, Halo Spire completes on day 25, Prismhearth completes on day 30, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final generated-map economy generalization, or a new validation gate."
+    "updatedAt": "2026-05-25T18:41:25Z",
+    "completedAt": "2026-05-25T18:41:25Z",
+    "notes": "Completed. Production town-balance follow-up removed the remaining day-4/day-5 tier-5 spikes from Brasshollow, Thornwake, and Veilmourn authored town curves. Brasshollow Pressure Rail now requires Scalehouse, Thornwake Pilgrim Orchard now requires Rootroad Markers, and Veilmourn Obituary Vault now requires Salt Counting House, so each high-tier rare unit step waits behind a faction-specific economy or route-support identity step. Existing reports remain green without adding new gates: authored town development completes inside day 24-30, affected Brasshollow/Thornwake tier 5 moves to day 6, affected Veilmourn tier 5 moves to day 9, and deterministic economy/town scorecard passes 15/15. This is narrow content balance tuning, not campaign production work, final combat balance, or broad generated-map economy generalization."
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T18:37:56Z",
-    "sliceId": "economy-sunvault-early-relay-build-curve-tuning-20260525-10184",
+    "updatedAt": "2026-05-25T18:41:25Z",
+    "sliceId": "economy-high-tier-early-spike-build-curve-tuning-20260525-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-sunvault2.txt (passed; Halo Spire completes day 25, Prismhearth completes day 30)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-sunvault2.txt (passed)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-sunvault2.txt (passed)",
+      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-town-balance-tier5.txt (passed; affected T5 timing moved to day 6 for Brasshollow/Thornwake and day 9 for Veilmourn)",
+      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-town-cost-tier5.txt (passed)",
+      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-town-asymmetry-tier5.txt (passed)",
       "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
@@ -32492,38 +32755,37 @@
     ],
     "evidence": {
       "content_changes": {
-        "building_sunvault_lens_gallery_requires": [
-          "building_sunvault_shard_yard",
-          "building_sunvault_lens_tithe"
-        ],
-        "building_sunvault_harmonic_cloister_requires": [
-          "building_sunvault_mirror_forge",
+        "building_brasshollow_pressure_rail_requires": [
+          "building_brasshollow_boiler_cathedral",
           "building_market_square",
-          "building_sunvault_relay_scribes"
+          "building_brasshollow_scalehouse"
         ],
-        "sunvault_town_build_order_priority": [
-          "building_sunvault_lens_tithe",
+        "building_thornwake_pilgrim_orchard_requires": [
+          "building_thornwake_barkmantle_run",
           "building_market_square",
-          "building_sunvault_relay_scribes"
+          "building_thornwake_rootroad_markers"
+        ],
+        "building_veilmourn_obituary_vault_requires": [
+          "building_veilmourn_harpoon_gantry",
+          "building_market_square",
+          "building_veilmourn_salt_counting_house"
         ]
       },
-      "affected_town_completion_days": {
-        "town_halo_spire": 25,
-        "town_prismhearth": 30
+      "affected_tier5_days": {
+        "town_brasshollow_clauseworks_depot": 6,
+        "town_brasshollow_orevein_gantry": 6,
+        "town_thornwake_graftroot_caravan": 6,
+        "town_thornwake_rootgate_nursery": 6,
+        "town_veilmourn_bellwake_harbor": 9,
+        "town_veilmourn_fogchart_mooring": 9
       },
-      "affected_early_identity_steps": {
-        "town_halo_spire": [
-          "day 2 building_sunvault_lens_tithe",
-          "day 3 building_sunvault_lens_gallery",
-          "day 6 building_sunvault_relay_scribes",
-          "day 7 building_sunvault_harmonic_cloister"
-        ],
-        "town_prismhearth": [
-          "day 2 building_sunvault_lens_tithe",
-          "day 3 building_sunvault_lens_gallery",
-          "day 6 building_sunvault_relay_scribes",
-          "day 7 building_sunvault_harmonic_cloister"
-        ]
+      "affected_completion_days": {
+        "town_brasshollow_clauseworks_depot": 29,
+        "town_brasshollow_orevein_gantry": 29,
+        "town_thornwake_graftroot_caravan": 30,
+        "town_thornwake_rootgate_nursery": 30,
+        "town_veilmourn_bellwake_harbor": 28,
+        "town_veilmourn_fogchart_mooring": 28
       },
       "deterministic_scorecard_passed_requirement_count": 15,
       "deterministic_scorecard_requirement_count": 15,
