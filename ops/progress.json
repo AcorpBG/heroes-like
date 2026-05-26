@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-fast-faction-benchmark-10184",
-  "currentSliceTitle": "Battle Fast Faction Benchmark",
+  "currentSliceId": "combat-feel-balance-pass-10184",
+  "currentSliceTitle": "Combat Feel Balance Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
+  "currentSliceNotes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T16:48:32Z",
+  "updatedAt": "2026-05-26T17:17:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24647,7 +24647,7 @@
     {
       "id": "combat-feel-balance-pass-10184",
       "title": "Combat Feel Balance Pass",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
@@ -24655,15 +24655,19 @@
       "purpose": "Tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.",
       "sourceDocs": [
         "project.md",
-        "PLAN.md"
+        "PLAN.md",
+        "GOALS.md",
+        "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "implementationTargets": [
-        "content/army_groups.json",
-        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "scripts/core/BattleAiRules.gd",
         "scripts/core/BattleRules.gd",
-        "battle autoplay reports"
+        "content/units.json as needed after benchmark parity is credible"
       ],
       "baselineChecks": [
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate",
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
@@ -24675,14 +24679,183 @@
         "broad release/parity claims"
       ],
       "validation": {
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "status": "pass",
+        "updatedAt": "2026-05-26T17:17:12Z",
         "sliceId": "combat-feel-balance-pass-10184",
-        "commands": [],
-        "evidence": {}
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "scope": "Focused evidence-driven combat-feel slice. Fixed fast benchmark AI scoring parity/passivity before content stat tuning.",
+          "implementation": {
+            "benchmark_ai_scoring_parity": [
+              "ported BattleAiRules-style attack valuation: damage share, kill value, ranged/shots pressure, cohesion/momentum pressure, status/trait/ability bonuses",
+              "replaced alive-count retaliation penalty with estimated retaliation damage penalty",
+              "ported defend and advance scoring factors that matter for neutral benchmark contexts",
+              "benchmark now emits full balance_outliers plus top_balance_outliers"
+            ]
+          },
+          "before_100_seed_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.77,
+              "stalemate_rate": 37.3,
+              "average_rounds": 7.56
+            },
+            {
+              "week": 2,
+              "side_bias_points": 7.7,
+              "stalemate_rate": 17.57,
+              "average_rounds": 5.76
+            },
+            {
+              "week": 3,
+              "side_bias_points": 3.63,
+              "stalemate_rate": 7.3,
+              "average_rounds": 5.19
+            },
+            {
+              "week": 4,
+              "side_bias_points": 4.5,
+              "stalemate_rate": 6.63,
+              "average_rounds": 5.65
+            }
+          ],
+          "after_100_seed_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 1.2,
+              "stalemate_rate": 0.0,
+              "average_rounds": 3.81
+            },
+            {
+              "week": 2,
+              "side_bias_points": 0.93,
+              "stalemate_rate": 0.0,
+              "average_rounds": 3.88
+            },
+            {
+              "week": 3,
+              "side_bias_points": 6.4,
+              "stalemate_rate": 0.13,
+              "average_rounds": 4.51
+            },
+            {
+              "week": 4,
+              "side_bias_points": 5.7,
+              "stalemate_rate": 0.3,
+              "average_rounds": 4.96
+            }
+          ],
+          "after_100_seed_matrix": {
+            "ok": true,
+            "ordered_matchup_count": 120,
+            "faction_count": 6,
+            "seeds_per_ordered_matchup": 100,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 64,
+            "full_outlier_rows_emitted": true
+          },
+          "remaining_tuning_target": "Faction-pair dominant win-rate spread remains too deterministic; next pass should tune unit stats/growth/ability power from full outlier rows, not from stale stalemate artifacts.",
+          "town_development_balance_report": {
+            "ok": true,
+            "authored_town_count": 15,
+            "full_ladder_town_count": 15,
+            "target_turns": 30
+          },
+          "policy": "This slice improves benchmark parity and removes artificial stalemates; it does not claim final combat balance."
+        }
       },
-      "summary": "Pending. Tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "summary": "Completed focused pass. Fast benchmark AI scoring now avoids artificial defense-loop stalemates; remaining evidence points to faction-pair stat/growth tuning.",
+      "updatedAt": "2026-05-26T17:17:12Z",
+      "sliceEvidence": {
+        "scope": "Focused evidence-driven combat-feel slice. Fixed fast benchmark AI scoring parity/passivity before content stat tuning.",
+        "implementation": {
+          "benchmark_ai_scoring_parity": [
+            "ported BattleAiRules-style attack valuation: damage share, kill value, ranged/shots pressure, cohesion/momentum pressure, status/trait/ability bonuses",
+            "replaced alive-count retaliation penalty with estimated retaliation damage penalty",
+            "ported defend and advance scoring factors that matter for neutral benchmark contexts",
+            "benchmark now emits full balance_outliers plus top_balance_outliers"
+          ]
+        },
+        "before_100_seed_week_summaries": [
+          {
+            "week": 1,
+            "side_bias_points": 0.77,
+            "stalemate_rate": 37.3,
+            "average_rounds": 7.56
+          },
+          {
+            "week": 2,
+            "side_bias_points": 7.7,
+            "stalemate_rate": 17.57,
+            "average_rounds": 5.76
+          },
+          {
+            "week": 3,
+            "side_bias_points": 3.63,
+            "stalemate_rate": 7.3,
+            "average_rounds": 5.19
+          },
+          {
+            "week": 4,
+            "side_bias_points": 4.5,
+            "stalemate_rate": 6.63,
+            "average_rounds": 5.65
+          }
+        ],
+        "after_100_seed_week_summaries": [
+          {
+            "week": 1,
+            "side_bias_points": 1.2,
+            "stalemate_rate": 0.0,
+            "average_rounds": 3.81
+          },
+          {
+            "week": 2,
+            "side_bias_points": 0.93,
+            "stalemate_rate": 0.0,
+            "average_rounds": 3.88
+          },
+          {
+            "week": 3,
+            "side_bias_points": 6.4,
+            "stalemate_rate": 0.13,
+            "average_rounds": 4.51
+          },
+          {
+            "week": 4,
+            "side_bias_points": 5.7,
+            "stalemate_rate": 0.3,
+            "average_rounds": 4.96
+          }
+        ],
+        "after_100_seed_matrix": {
+          "ok": true,
+          "ordered_matchup_count": 120,
+          "faction_count": 6,
+          "seeds_per_ordered_matchup": 100,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 64,
+          "full_outlier_rows_emitted": true
+        },
+        "remaining_tuning_target": "Faction-pair dominant win-rate spread remains too deterministic; next pass should tune unit stats/growth/ability power from full outlier rows, not from stale stalemate artifacts.",
+        "town_development_balance_report": {
+          "ok": true,
+          "authored_town_count": 15,
+          "full_ladder_town_count": 15,
+          "target_turns": 30
+        },
+        "policy": "This slice improves benchmark parity and removes artificial stalemates; it does not claim final combat balance."
+      },
+      "startedAt": "2026-05-26T17:03:30Z",
+      "completedAt": "2026-05-26T17:17:12Z"
     },
     {
       "id": "strategic-ai-quality-pass-10184",
@@ -24972,6 +25145,47 @@
       ],
       "updatedAt": "2026-05-26T14:12:31Z",
       "completedAt": "2026-05-26T14:12:31Z"
+    },
+    {
+      "id": "combat-faction-pair-stat-tuning-10184",
+      "title": "Combat Faction Pair Stat Tuning",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
+      "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
+      "implementationTargets": [
+        "content/units.json",
+        "content/factions.json",
+        "tests/battle_faction_fast_balance_benchmark.py"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T17:17:12Z",
+        "sliceId": "combat-faction-pair-stat-tuning-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that artificial stalemates have been removed.",
+      "classification": "implementation_slice",
+      "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after AI scoring parity removed artificial stalemate artifacts.",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "tests/battle_faction_fast_balance_benchmark.py"
+      ],
+      "baselineChecks": [
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Faction-pair win-rate spread improves materially without reintroducing side bias, stalemates, or too-short battle pacing; evidence is recorded in ops/progress.json.",
+      "nonGoals": [
+        "final combat balance claim",
+        "campaign production",
+        "authored scenario balance target"
+      ],
+      "updatedAt": "2026-05-26T17:17:12Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -32169,6 +32383,136 @@
   ],
   "actionableNextTasks": [
     {
+      "id": "combat-feel-balance-pass-10184",
+      "title": "Combat Feel Balance Pass",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleRules.gd",
+        "content/units.json as needed after benchmark parity is credible"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T17:17:12Z",
+        "sliceId": "combat-feel-balance-pass-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "scope": "Focused evidence-driven combat-feel slice. Fixed fast benchmark AI scoring parity/passivity before content stat tuning.",
+          "implementation": {
+            "benchmark_ai_scoring_parity": [
+              "ported BattleAiRules-style attack valuation: damage share, kill value, ranged/shots pressure, cohesion/momentum pressure, status/trait/ability bonuses",
+              "replaced alive-count retaliation penalty with estimated retaliation damage penalty",
+              "ported defend and advance scoring factors that matter for neutral benchmark contexts",
+              "benchmark now emits full balance_outliers plus top_balance_outliers"
+            ]
+          },
+          "before_100_seed_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.77,
+              "stalemate_rate": 37.3,
+              "average_rounds": 7.56
+            },
+            {
+              "week": 2,
+              "side_bias_points": 7.7,
+              "stalemate_rate": 17.57,
+              "average_rounds": 5.76
+            },
+            {
+              "week": 3,
+              "side_bias_points": 3.63,
+              "stalemate_rate": 7.3,
+              "average_rounds": 5.19
+            },
+            {
+              "week": 4,
+              "side_bias_points": 4.5,
+              "stalemate_rate": 6.63,
+              "average_rounds": 5.65
+            }
+          ],
+          "after_100_seed_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 1.2,
+              "stalemate_rate": 0.0,
+              "average_rounds": 3.81
+            },
+            {
+              "week": 2,
+              "side_bias_points": 0.93,
+              "stalemate_rate": 0.0,
+              "average_rounds": 3.88
+            },
+            {
+              "week": 3,
+              "side_bias_points": 6.4,
+              "stalemate_rate": 0.13,
+              "average_rounds": 4.51
+            },
+            {
+              "week": 4,
+              "side_bias_points": 5.7,
+              "stalemate_rate": 0.3,
+              "average_rounds": 4.96
+            }
+          ],
+          "after_100_seed_matrix": {
+            "ok": true,
+            "ordered_matchup_count": 120,
+            "faction_count": 6,
+            "seeds_per_ordered_matchup": 100,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 64,
+            "full_outlier_rows_emitted": true
+          },
+          "remaining_tuning_target": "Faction-pair dominant win-rate spread remains too deterministic; next pass should tune unit stats/growth/ability power from full outlier rows, not from stale stalemate artifacts.",
+          "town_development_balance_report": {
+            "ok": true,
+            "authored_town_count": 15,
+            "full_ladder_town_count": 15,
+            "target_turns": 30
+          },
+          "policy": "This slice improves benchmark parity and removes artificial stalemates; it does not claim final combat balance."
+        }
+      },
+      "notes": "Completed focused pass. Next combat work should tune faction-pair win spread using the full benchmark outlier list."
+    },
+    {
+      "id": "combat-faction-pair-stat-tuning-10184",
+      "title": "Combat Faction Pair Stat Tuning",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
+      "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
+      "implementationTargets": [
+        "content/units.json",
+        "content/factions.json",
+        "tests/battle_faction_fast_balance_benchmark.py"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T17:17:12Z",
+        "sliceId": "combat-faction-pair-stat-tuning-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that artificial stalemates have been removed."
+    },
+    {
       "id": "battle-fast-faction-benchmark-10184",
       "title": "Battle Fast Faction Benchmark",
       "status": "completed",
@@ -34272,27 +34616,27 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T16:48:32Z",
+    "updatedAt": "2026-05-26T17:17:12Z",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Fast Python faction benchmark, town balance report, repo validation, progress JSON, and diff whitespace checks passed."
+    "summary": "Focused combat-feel pass validated: fast benchmark AI scoring parity removed artificial stalemates, town balance and repo validation passed."
   },
   "active_slice": {
-    "id": "battle-fast-faction-benchmark-10184",
-    "title": "Battle Fast Faction Benchmark",
+    "id": "combat-feel-balance-pass-10184",
+    "title": "Combat Feel Balance Pass",
     "status": "completed",
-    "updatedAt": "2026-05-26T16:48:32Z",
-    "notes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
-    "completedAt": "2026-05-26T16:48:32Z"
+    "updatedAt": "2026-05-26T17:17:12Z",
+    "notes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
+    "completedAt": "2026-05-26T17:17:12Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T16:48:32Z",
+  "currentSliceUpdatedAt": "2026-05-26T17:17:12Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -36275,108 +36619,114 @@
       "status": "pass",
       "updatedAt": "2026-05-26T16:48:32Z",
       "summary": "Fast Python faction benchmark, town balance report, repo validation, progress JSON, and diff whitespace checks passed."
+    },
+    {
+      "sliceId": "combat-feel-balance-pass-10184",
+      "status": "pass",
+      "updatedAt": "2026-05-26T17:17:12Z",
+      "summary": "Focused combat-feel pass validated: fast benchmark AI scoring parity removed artificial stalemates, town balance and repo validation passed."
     }
   ],
   "currentSlice": {
-    "id": "battle-fast-faction-benchmark-10184",
-    "title": "Battle Fast Faction Benchmark",
+    "id": "combat-feel-balance-pass-10184",
+    "title": "Combat Feel Balance Pass",
     "status": "completed",
-    "updatedAt": "2026-05-26T16:48:32Z",
-    "notes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
-    "completedAt": "2026-05-26T16:48:32Z"
+    "updatedAt": "2026-05-26T17:17:12Z",
+    "notes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
+    "completedAt": "2026-05-26T17:17:12Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T16:48:32Z",
-    "sliceId": "battle-fast-faction-benchmark-10184",
+    "updatedAt": "2026-05-26T17:17:12Z",
+    "sliceId": "combat-feel-balance-pass-10184",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "benchmark": {
-        "quick": {
-          "ok": true,
-          "ordered_matchup_count": 30,
-          "faction_count": 6,
-          "balance_status": "needs_tuning",
-          "balance_outlier_count": 17
+      "scope": "Focused evidence-driven combat-feel slice. Fixed fast benchmark AI scoring parity/passivity before content stat tuning.",
+      "implementation": {
+        "benchmark_ai_scoring_parity": [
+          "ported BattleAiRules-style attack valuation: damage share, kill value, ranged/shots pressure, cohesion/momentum pressure, status/trait/ability bonuses",
+          "replaced alive-count retaliation penalty with estimated retaliation damage penalty",
+          "ported defend and advance scoring factors that matter for neutral benchmark contexts",
+          "benchmark now emits full balance_outliers plus top_balance_outliers"
+        ]
+      },
+      "before_100_seed_week_summaries": [
+        {
+          "week": 1,
+          "side_bias_points": 0.77,
+          "stalemate_rate": 37.3,
+          "average_rounds": 7.56
         },
-        "full_100_seed": {
-          "ok": true,
-          "ordered_matchup_count": 120,
-          "faction_count": 6,
-          "seeds_per_ordered_matchup": 100,
-          "balance_status": "needs_tuning",
-          "balance_outlier_count": 70,
-          "week_summaries": [
-            {
-              "week": 1,
-              "ordered_matchup_count": 30,
-              "sample_count": 3000,
-              "player_side_win_rate": 31.73,
-              "enemy_side_win_rate": 30.97,
-              "side_bias_points": 0.77,
-              "stalemate_rate": 37.3,
-              "average_rounds": 7.56
-            },
-            {
-              "week": 2,
-              "ordered_matchup_count": 30,
-              "sample_count": 3000,
-              "player_side_win_rate": 45.07,
-              "enemy_side_win_rate": 37.37,
-              "side_bias_points": 7.7,
-              "stalemate_rate": 17.57,
-              "average_rounds": 5.76
-            },
-            {
-              "week": 3,
-              "ordered_matchup_count": 30,
-              "sample_count": 3000,
-              "player_side_win_rate": 44.53,
-              "enemy_side_win_rate": 48.17,
-              "side_bias_points": 3.63,
-              "stalemate_rate": 7.3,
-              "average_rounds": 5.19
-            },
-            {
-              "week": 4,
-              "ordered_matchup_count": 30,
-              "sample_count": 3000,
-              "player_side_win_rate": 44.43,
-              "enemy_side_win_rate": 48.93,
-              "side_bias_points": 4.5,
-              "stalemate_rate": 6.63,
-              "average_rounds": 5.65
-            }
-          ],
-          "top_outlier_themes": [
-            "week 1 stalemates are too high",
-            "some faction-pair dominant win rates are outside 45-55",
-            "week 2 side bias is slightly above target"
-          ]
+        {
+          "week": 2,
+          "side_bias_points": 7.7,
+          "stalemate_rate": 17.57,
+          "average_rounds": 5.76
+        },
+        {
+          "week": 3,
+          "side_bias_points": 3.63,
+          "stalemate_rate": 7.3,
+          "average_rounds": 5.19
+        },
+        {
+          "week": 4,
+          "side_bias_points": 4.5,
+          "stalemate_rate": 6.63,
+          "average_rounds": 5.65
         }
+      ],
+      "after_100_seed_week_summaries": [
+        {
+          "week": 1,
+          "side_bias_points": 1.2,
+          "stalemate_rate": 0.0,
+          "average_rounds": 3.81
+        },
+        {
+          "week": 2,
+          "side_bias_points": 0.93,
+          "stalemate_rate": 0.0,
+          "average_rounds": 3.88
+        },
+        {
+          "week": 3,
+          "side_bias_points": 6.4,
+          "stalemate_rate": 0.13,
+          "average_rounds": 4.51
+        },
+        {
+          "week": 4,
+          "side_bias_points": 5.7,
+          "stalemate_rate": 0.3,
+          "average_rounds": 4.96
+        }
+      ],
+      "after_100_seed_matrix": {
+        "ok": true,
+        "ordered_matchup_count": 120,
+        "faction_count": 6,
+        "seeds_per_ordered_matchup": 100,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 64,
+        "full_outlier_rows_emitted": true
       },
-      "army_snapshot_policy": {
-        "initial": "one day-1 representative-town growth tick",
-        "week_1": "initial plus one recruited week capped at T1-T3",
-        "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
-        "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
-        "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks"
-      },
+      "remaining_tuning_target": "Faction-pair dominant win-rate spread remains too deterministic; next pass should tune unit stats/growth/ability power from full outlier rows, not from stale stalemate artifacts.",
       "town_development_balance_report": {
         "ok": true,
         "authored_town_count": 15,
         "full_ladder_town_count": 15,
         "target_turns": 30
       },
-      "policy": "benchmark gates structural failures and reports balance outliers as next tuning evidence; this slice does not claim final combat balance"
+      "policy": "This slice improves benchmark parity and removes artificial stalemates; it does not claim final combat balance."
     }
   }
 }
