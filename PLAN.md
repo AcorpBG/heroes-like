@@ -24,7 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
-- No implementation slice is currently in progress.
+- Current implementation slice in progress: `combat-faction-pair-stat-tuning-10184`.
 - Latest completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
@@ -44,7 +44,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
-- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed.
+- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed and the public benchmark report uses side-neutral `side_a`/`side_b` terminology.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -106,10 +106,12 @@ Required benchmark shape:
 - JSON report rows for win rates, average rounds, action mix, casualties by tier, battle consequences, pair summaries, week summaries, and outliers.
 
 Initial target bands:
-- faction-pair dominant win rates should trend toward 45-55%;
+- faction-pair dominant win rates should land within 45-55% before the combat-balance goal is complete;
+- ordered faction rows, outcomes, casualties, and week side-bias summaries should use `side_a`/`side_b`, not player/enemy labels;
+- army snapshots should use Native RMG-suitable faction/unit growth rather than authored representative-town build logs;
 - side bias should stay low;
 - no fake stalemate outcome should exist in benchmark data; emergency simulation guard hits are structural failures;
-- average rounds should remain readable.
+- average rounds should remain readable, and later-week battles should take more turns on average than early battles.
 
 The first benchmark should report outliers as tuning evidence. Do not tune away failures blindly just to make the initial benchmark look green.
 
