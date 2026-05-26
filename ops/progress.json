@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-benchmark-no-round-cap-10184",
-  "currentSliceTitle": "Battle Benchmark No Round Cap Outcome",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
+  "currentSliceId": "combat-faction-pair-stat-tuning-10184",
+  "currentSliceTitle": "Combat Faction Pair Stat Tuning",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "In progress. Public benchmark output has been corrected to side_a/side_b, fake stalemate remains removed, initiative tie side is seed-varied to avoid side-order artifact, and army snapshots no longer use authored representative-town build logs; current 20-seed matrix still has faction-pair win-rate outliers, so the balance goal is not complete.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T18:18:00Z",
+  "updatedAt": "2026-05-26T19:14:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25149,7 +25149,7 @@
     {
       "id": "combat-faction-pair-stat-tuning-10184",
       "title": "Combat Faction Pair Stat Tuning",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-5-playable-alpha-baseline",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
@@ -25165,7 +25165,7 @@
         "commands": [],
         "evidence": {}
       },
-      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that fake round-cap outcomes have been removed.",
+      "notes": "In progress. Public benchmark output has been corrected to side_a/side_b, fake stalemate remains removed, initiative tie side is seed-varied to avoid side-order artifact, and army snapshots no longer use authored representative-town build logs; current 20-seed matrix still has faction-pair win-rate outliers, so the balance goal is not complete.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25185,7 +25185,8 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T18:18:00Z"
+      "updatedAt": "2026-05-26T19:14:45Z",
+      "startedAt": "2026-05-26T19:02:51Z"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",

@@ -36,6 +36,12 @@ BALANCE_MAX_WIN_RATE = 55.0
 MAX_SIDE_BIAS_POINTS = 7.0
 MIN_AVERAGE_ROUNDS = 3.0
 MAX_AVERAGE_ROUNDS = 50.0
+INTERNAL_SIDE_A = "player"
+INTERNAL_SIDE_B = "enemy"
+PUBLIC_SIDE_NAMES = {
+    INTERNAL_SIDE_A: "side_a",
+    INTERNAL_SIDE_B: "side_b",
+}
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -214,7 +220,7 @@ class FastBattleBenchmark:
                 "army_snapshots": {},
             }
             for week in DEFAULT_WEEKS:
-                models[faction_id]["army_snapshots"][str(week)] = self._army_snapshot(representative_town, week, ladder)
+                models[faction_id]["army_snapshots"][str(week)] = self._army_snapshot(faction_id, week, ladder)
         return models
 
     def _hero_payload(self, hero: dict[str, Any]) -> dict[str, Any]:
@@ -236,18 +242,18 @@ class FastBattleBenchmark:
             "mana_max": mana,
         }
 
-    def _army_snapshot(self, town_id: str, week: int, ladder: list[str]) -> list[dict[str, Any]]:
+    def _army_snapshot(self, faction_id: str, week: int, ladder: list[str]) -> list[dict[str, Any]]:
         counts: dict[str, int] = defaultdict(int)
-        # Initial starting units: one day-1 growth tick from the representative town.
-        for unit_id, amount in self._growth_for_town_day(town_id, 1).items():
-            if unit_id in ladder:
-                counts[unit_id] += amount
+        # Native-RMG balance surface: do not let authored representative-town build logs
+        # shape faction-vs-faction benchmark armies.
+        if ladder:
+            counts[ladder[0]] += self._benchmark_unit_growth(faction_id, ladder[0], fully_developed=False)
         for tick_index, tier_cap in enumerate(BATTLE_RECRUITMENT_TIER_CAPS[week], start=1):
-            day = 28 if week >= 4 and tier_cap >= 7 else WEEK_BOUNDARY_DAYS[min(tick_index, 4)]
+            fully_developed = bool(week >= 4 and tier_cap >= 7)
             for unit_id in ladder:
                 unit = self.units[unit_id]
                 if int(unit.get("tier", 0)) <= tier_cap:
-                    counts[unit_id] += self._effective_unit_growth_for_town_day(town_id, unit_id, day)
+                    counts[unit_id] += self._benchmark_unit_growth(faction_id, unit_id, fully_developed=fully_developed)
         return [
             {
                 "unit_id": unit_id,
@@ -258,6 +264,26 @@ class FastBattleBenchmark:
             for unit_id in ladder
             if int(counts.get(unit_id, 0)) > 0
         ]
+
+    def _benchmark_unit_growth(self, faction_id: str, unit_id: str, fully_developed: bool) -> int:
+        amount = self._unit_growth(unit_id)
+        faction = self.factions.get(faction_id, {})
+        recruitment = faction.get("recruitment", {}) if isinstance(faction.get("recruitment", {}), dict) else {}
+        growth_bonus = recruitment.get("growth_bonus", {}) if isinstance(recruitment.get("growth_bonus", {}), dict) else {}
+        amount += max(0, int(growth_bonus.get(unit_id, 0)))
+        if fully_developed:
+            amount += self._unit_building_growth_bonus(unit_id)
+        return max(0, int(amount))
+
+    def _unit_building_growth_bonus(self, unit_id: str) -> int:
+        result = 0
+        for building in self.buildings.values():
+            if str(building.get("unlock_unit_id", "")) != unit_id:
+                continue
+            bonus = building.get("growth_bonus", {})
+            if isinstance(bonus, dict):
+                result += max(0, int(bonus.get(unit_id, 0)))
+        return result
 
     def _effective_unit_growth_for_town_day(self, town_id: str, unit_id: str, day: int) -> int:
         amount = self._unit_growth(unit_id)
@@ -290,11 +316,11 @@ class FastBattleBenchmark:
         faction_ids = sorted(self.faction_models)
         for week in weeks:
             for context in contexts:
-                for player_faction in faction_ids:
-                    for enemy_faction in faction_ids:
-                        if player_faction == enemy_faction:
+                for side_a_faction in faction_ids:
+                    for side_b_faction in faction_ids:
+                        if side_a_faction == side_b_faction:
                             continue
-                        row = self._run_ordered_matchup(player_faction, enemy_faction, week, seeds, context)
+                        row = self._run_ordered_matchup(side_a_faction, side_b_faction, week, seeds, context)
                         ordered_rows.append(row)
                         if context["id"] == "neutral_plains":
                             primary_rows.append(row)
@@ -303,17 +329,17 @@ class FastBattleBenchmark:
         outliers = self._balance_outliers(pair_summaries, week_summaries)
         structural_failures = self._structural_failures(weeks, seeds, primary_rows)
         return {
-            "schema": "battle_faction_fast_balance_benchmark_v1",
+            "schema": "battle_faction_fast_balance_benchmark_v2",
             "ok": not structural_failures,
             "balance_status": "needs_tuning" if outliers else "within_target",
             "policy": "python_fast_faction_battle_benchmark",
             "parity_scope": "ported BattleRules/BattleAiRules tactical math without Godot runtime",
             "army_snapshot_policy": {
-                "initial": "one day-1 representative-town growth tick",
+                "initial": "one Native RMG-suitable faction/unit T1 growth tick",
                 "week_1": "initial plus one recruited week capped at T1-T3",
                 "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
                 "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
-                "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for T7 ticks",
+                "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks",
             },
             "seeds_per_ordered_matchup": seeds,
             "weeks": weeks,
@@ -346,8 +372,8 @@ class FastBattleBenchmark:
 
     def _run_ordered_matchup(
         self,
-        player_faction: str,
-        enemy_faction: str,
+        side_a_faction: str,
+        side_b_faction: str,
         week: int,
         seeds: int,
         context: dict[str, Any],
@@ -356,28 +382,29 @@ class FastBattleBenchmark:
         rounds: list[int] = []
         margins: list[int] = []
         action_mix: Counter[str] = Counter()
-        casualties_by_tier: dict[str, Counter[str]] = {"player": Counter(), "enemy": Counter()}
+        casualties_by_tier: dict[str, Counter[str]] = {"side_a": Counter(), "side_b": Counter()}
         consequence_counts: Counter[str] = Counter()
         for seed_index in range(seeds):
-            battle = self._create_battle(player_faction, enemy_faction, week, context)
-            result = self._simulate_battle(battle, stable_seed(player_faction, enemy_faction, week, context["id"], seed_index))
-            outcomes[result["outcome"]] += 1
+            battle = self._create_battle(side_a_faction, side_b_faction, week, context)
+            result = self._simulate_battle(battle, stable_seed(side_a_faction, side_b_faction, week, context["id"], seed_index))
+            outcomes[self._public_side(str(result["outcome"]))] += 1
             rounds.append(int(result["rounds"]))
             margins.append(int(result["terminal_health_margin_pct"]))
             action_mix.update(result["action_mix"])
-            for side in ["player", "enemy"]:
-                casualties_by_tier[side].update(result["casualties_by_tier"].get(side, {}))
+            for internal_side in [INTERNAL_SIDE_A, INTERNAL_SIDE_B]:
+                public_side = self._public_side(internal_side)
+                casualties_by_tier[public_side].update(result["casualties_by_tier"].get(internal_side, {}))
             consequence_counts.update(result["consequence_counts"])
-        player_win_rate = 100.0 * float(outcomes.get("player", 0)) / float(max(1, seeds))
-        enemy_win_rate = 100.0 * float(outcomes.get("enemy", 0)) / float(max(1, seeds))
+        side_a_win_rate = 100.0 * float(outcomes.get("side_a", 0)) / float(max(1, seeds))
+        side_b_win_rate = 100.0 * float(outcomes.get("side_b", 0)) / float(max(1, seeds))
         return {
             "week": week,
             "context_id": context["id"],
-            "player_faction_id": player_faction,
-            "enemy_faction_id": enemy_faction,
+            "side_a_faction_id": side_a_faction,
+            "side_b_faction_id": side_b_faction,
             "sample_count": seeds,
-            "player_win_rate": round(player_win_rate, 2),
-            "enemy_win_rate": round(enemy_win_rate, 2),
+            "side_a_win_rate": round(side_a_win_rate, 2),
+            "side_b_win_rate": round(side_b_win_rate, 2),
             "outcomes": dict(sorted(outcomes.items())),
             "average_rounds": round(sum(rounds) / float(max(1, len(rounds))), 2),
             "average_terminal_health_margin_pct": round(sum(margins) / float(max(1, len(margins))), 2),
@@ -389,20 +416,20 @@ class FastBattleBenchmark:
             "consequence_counts": dict(sorted(consequence_counts.items())),
         }
 
-    def _create_battle(self, player_faction: str, enemy_faction: str, week: int, context: dict[str, Any]) -> dict[str, Any]:
-        player_model = self.faction_models[player_faction]
-        enemy_model = self.faction_models[enemy_faction]
+    def _create_battle(self, side_a_faction: str, side_b_faction: str, week: int, context: dict[str, Any]) -> dict[str, Any]:
+        side_a_model = self.faction_models[side_a_faction]
+        side_b_model = self.faction_models[side_b_faction]
         return {
             "round": 1,
             "distance": 2,
             "terrain": context["terrain"],
             "battlefield_tags": list(context.get("battlefield_tags", [])),
-            "player_hero": dict(player_model["hero"]),
-            "enemy_hero": dict(enemy_model["hero"]),
+            "player_hero": dict(side_a_model["hero"]),
+            "enemy_hero": dict(side_b_model["hero"]),
             "commander_spell_cast_rounds": {},
             "stacks": (
-                self._build_stacks(player_model["army_snapshots"][str(week)], "player")
-                + self._build_stacks(enemy_model["army_snapshots"][str(week)], "enemy")
+                self._build_stacks(side_a_model["army_snapshots"][str(week)], INTERNAL_SIDE_A)
+                + self._build_stacks(side_b_model["army_snapshots"][str(week)], INTERNAL_SIDE_B)
             ),
         }
 
@@ -446,6 +473,7 @@ class FastBattleBenchmark:
 
     def _simulate_battle(self, battle: dict[str, Any], seed: int) -> dict[str, Any]:
         rng = random.Random(seed)
+        battle["initiative_tie_side"] = INTERNAL_SIDE_A if rng.getrandbits(1) == 0 else INTERNAL_SIDE_B
         initial_health = self._side_healths(battle)
         action_mix: Counter[str] = Counter()
         consequence_counts: Counter[str] = Counter()
@@ -455,15 +483,15 @@ class FastBattleBenchmark:
                 raise RuntimeError(
                     "simulation_guard_exceeded:"
                     f"round={int(battle['round'])}:"
-                    f"player_alive={self._living_side_count(battle, 'player')}:"
-                    f"enemy_alive={self._living_side_count(battle, 'enemy')}"
+                    f"side_a_alive={self._living_side_count(battle, INTERNAL_SIDE_A)}:"
+                    f"side_b_alive={self._living_side_count(battle, INTERNAL_SIDE_B)}"
                 )
             active = self._active_stack(battle)
             if not active:
                 self._prepare_round(battle, int(battle["round"]) + 1)
                 continue
             side = active["side"]
-            if self._living_side_count(battle, "player") <= 0 or self._living_side_count(battle, "enemy") <= 0:
+            if self._living_side_count(battle, INTERNAL_SIDE_A) <= 0 or self._living_side_count(battle, INTERNAL_SIDE_B) <= 0:
                 break
             spell_action = self._choose_spell_action(battle, active)
             if spell_action:
@@ -477,8 +505,8 @@ class FastBattleBenchmark:
             self._advance_turn(battle)
         outcome = self._outcome(battle)
         final_health = self._side_healths(battle)
-        total_initial = max(1, initial_health["player"] + initial_health["enemy"])
-        margin = int(round(((final_health["player"] - final_health["enemy"]) / float(total_initial)) * 100.0))
+        total_initial = max(1, initial_health[INTERNAL_SIDE_A] + initial_health[INTERNAL_SIDE_B])
+        margin = int(round(((final_health[INTERNAL_SIDE_A] - final_health[INTERNAL_SIDE_B]) / float(total_initial)) * 100.0))
         casualties = self._casualties_by_tier(battle)
         return {
             "outcome": outcome,
@@ -512,7 +540,7 @@ class FastBattleBenchmark:
         initiative = self._stack_initiative_total(stack, battle)
         if str(battle.get("terrain", "")) == "mire":
             initiative -= 1
-        side_bias = 1 if stack.get("side") == "player" else 0
+        side_bias = 1 if stack.get("side") == battle.get("initiative_tie_side", INTERNAL_SIDE_A) else 0
         return (-initiative, -int(stack.get("speed", 0)), -side_bias, battle_id)
 
     def _advance_turn(self, battle: dict[str, Any]) -> None:
@@ -1341,11 +1369,11 @@ class FastBattleBenchmark:
     def _side_healths(self, battle: dict[str, Any]) -> dict[str, int]:
         return {
             side: sum(max(0, int(stack.get("total_health", 0))) for stack in battle["stacks"] if stack.get("side") == side)
-            for side in ["player", "enemy"]
+            for side in [INTERNAL_SIDE_A, INTERNAL_SIDE_B]
         }
 
     def _casualties_by_tier(self, battle: dict[str, Any]) -> dict[str, dict[str, int]]:
-        result: dict[str, dict[str, int]] = {"player": defaultdict(int), "enemy": defaultdict(int)}
+        result: dict[str, dict[str, int]] = {INTERNAL_SIDE_A: defaultdict(int), INTERNAL_SIDE_B: defaultdict(int)}
         for stack in battle["stacks"]:
             lost = max(0, int(stack.get("base_count", 0)) - self._alive_count(stack))
             if lost > 0:
@@ -1353,14 +1381,14 @@ class FastBattleBenchmark:
         return {side: dict(sorted(values.items())) for side, values in result.items()}
 
     def _outcome(self, battle: dict[str, Any]) -> str:
-        player_alive = self._living_side_count(battle, "player") > 0
-        enemy_alive = self._living_side_count(battle, "enemy") > 0
-        if player_alive and not enemy_alive:
-            return "player"
-        if enemy_alive and not player_alive:
-            return "enemy"
+        side_a_alive = self._living_side_count(battle, INTERNAL_SIDE_A) > 0
+        side_b_alive = self._living_side_count(battle, INTERNAL_SIDE_B) > 0
+        if side_a_alive and not side_b_alive:
+            return INTERNAL_SIDE_A
+        if side_b_alive and not side_a_alive:
+            return INTERNAL_SIDE_B
         health = self._side_healths(battle)
-        return "player" if int(health.get("player", 0)) >= int(health.get("enemy", 0)) else "enemy"
+        return INTERNAL_SIDE_A if int(health.get(INTERNAL_SIDE_A, 0)) >= int(health.get(INTERNAL_SIDE_B, 0)) else INTERNAL_SIDE_B
 
     def _living_side_count(self, battle: dict[str, Any], side: str) -> int:
         return len(self._alive_stacks_for_side(battle, side))
@@ -1378,10 +1406,10 @@ class FastBattleBenchmark:
         return self._stack_by_id(battle, str(battle.get("active_stack_id", "")))
 
     def _opposing_side(self, side: str) -> str:
-        return "enemy" if side == "player" else "player"
+        return INTERNAL_SIDE_B if side == INTERNAL_SIDE_A else INTERNAL_SIDE_A
 
     def _hero_for_side(self, battle: dict[str, Any], side: str) -> dict[str, Any]:
-        return battle["player_hero"] if side == "player" else battle["enemy_hero"]
+        return battle["player_hero"] if side == INTERNAL_SIDE_A else battle["enemy_hero"]
 
     def _hero_has_trait(self, battle: dict[str, Any], side: str, trait: str) -> bool:
         return trait in self._hero_for_side(battle, side).get("battle_traits", [])
@@ -1439,7 +1467,7 @@ class FastBattleBenchmark:
     def _pair_summaries(self, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         by_key: dict[tuple[int, str, str], list[dict[str, Any]]] = defaultdict(list)
         for row in rows:
-            left, right = sorted([str(row["player_faction_id"]), str(row["enemy_faction_id"])])
+            left, right = sorted([str(row["side_a_faction_id"]), str(row["side_b_faction_id"])])
             by_key[(int(row["week"]), left, right)].append(row)
         summaries: list[dict[str, Any]] = []
         for (week, left, right), pair_rows in sorted(by_key.items()):
@@ -1451,12 +1479,12 @@ class FastBattleBenchmark:
             for row in pair_rows:
                 count = int(row["sample_count"])
                 samples += count
-                if str(row["player_faction_id"]) == left:
-                    left_wins += float(row["player_win_rate"]) * count / 100.0
-                    right_wins += float(row["enemy_win_rate"]) * count / 100.0
+                if str(row["side_a_faction_id"]) == left:
+                    left_wins += float(row["side_a_win_rate"]) * count / 100.0
+                    right_wins += float(row["side_b_win_rate"]) * count / 100.0
                 else:
-                    right_wins += float(row["player_win_rate"]) * count / 100.0
-                    left_wins += float(row["enemy_win_rate"]) * count / 100.0
+                    right_wins += float(row["side_a_win_rate"]) * count / 100.0
+                    left_wins += float(row["side_b_win_rate"]) * count / 100.0
                 rounds.append(float(row["average_rounds"]))
                 margins.append(float(row["average_terminal_health_margin_pct"]))
             left_rate = 100.0 * left_wins / float(max(1, samples))
@@ -1480,16 +1508,16 @@ class FastBattleBenchmark:
             by_week[int(row["week"])].append(row)
         result: list[dict[str, Any]] = []
         for week, week_rows in sorted(by_week.items()):
-            player_wins = sum(float(row["player_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
-            enemy_wins = sum(float(row["enemy_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
+            side_a_wins = sum(float(row["side_a_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
+            side_b_wins = sum(float(row["side_b_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
             samples = sum(int(row["sample_count"]) for row in week_rows)
             result.append({
                 "week": week,
                 "ordered_matchup_count": len(week_rows),
                 "sample_count": samples,
-                "player_side_win_rate": round(100.0 * player_wins / float(max(1, samples)), 2),
-                "enemy_side_win_rate": round(100.0 * enemy_wins / float(max(1, samples)), 2),
-                "side_bias_points": round(abs(player_wins - enemy_wins) * 100.0 / float(max(1, samples)), 2),
+                "side_a_win_rate": round(100.0 * side_a_wins / float(max(1, samples)), 2),
+                "side_b_win_rate": round(100.0 * side_b_wins / float(max(1, samples)), 2),
+                "side_bias_points": round(abs(side_a_wins - side_b_wins) * 100.0 / float(max(1, samples)), 2),
                 "average_rounds": round(sum(float(row["average_rounds"]) for row in week_rows) / float(max(1, len(week_rows))), 2),
             })
         return result
@@ -1543,13 +1571,16 @@ class FastBattleBenchmark:
         if len(rows) != expected_rows:
             failures.append(f"expected_{expected_rows}_ordered_rows_got_{len(rows)}")
         bad_seed_rows = [
-            f"{row['week']}:{row['player_faction_id']}:{row['enemy_faction_id']}"
+            f"{row['week']}:{row['side_a_faction_id']}:{row['side_b_faction_id']}"
             for row in rows
             if int(row.get("sample_count", 0)) != seeds
         ]
         if bad_seed_rows:
             failures.append(f"rows_with_wrong_sample_count:{','.join(bad_seed_rows[:8])}")
         return failures
+
+    def _public_side(self, internal_side: str) -> str:
+        return PUBLIC_SIDE_NAMES.get(internal_side, internal_side)
 
 
 def parse_weeks(value: str) -> list[int]:
