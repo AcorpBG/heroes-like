@@ -24478,8 +24478,8 @@
                 "week": 1,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 31.73,
-                "enemy_side_win_rate": 30.97,
+                "side_a_win_rate": 31.73,
+                "side_b_win_rate": 30.97,
                 "side_bias_points": 0.77,
                 "stalemate_rate": 37.3,
                 "average_rounds": 7.56
@@ -24488,8 +24488,8 @@
                 "week": 2,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 45.07,
-                "enemy_side_win_rate": 37.37,
+                "side_a_win_rate": 45.07,
+                "side_b_win_rate": 37.37,
                 "side_bias_points": 7.7,
                 "stalemate_rate": 17.57,
                 "average_rounds": 5.76
@@ -24498,8 +24498,8 @@
                 "week": 3,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 44.53,
-                "enemy_side_win_rate": 48.17,
+                "side_a_win_rate": 44.53,
+                "side_b_win_rate": 48.17,
                 "side_bias_points": 3.63,
                 "stalemate_rate": 7.3,
                 "average_rounds": 5.19
@@ -24508,8 +24508,8 @@
                 "week": 4,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 44.43,
-                "enemy_side_win_rate": 48.93,
+                "side_a_win_rate": 44.43,
+                "side_b_win_rate": 48.93,
                 "side_bias_points": 4.5,
                 "stalemate_rate": 6.63,
                 "average_rounds": 5.65
@@ -24579,8 +24579,8 @@
                   "week": 1,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 31.73,
-                  "enemy_side_win_rate": 30.97,
+                  "side_a_win_rate": 31.73,
+                  "side_b_win_rate": 30.97,
                   "side_bias_points": 0.77,
                   "stalemate_rate": 37.3,
                   "average_rounds": 7.56
@@ -24589,8 +24589,8 @@
                   "week": 2,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 45.07,
-                  "enemy_side_win_rate": 37.37,
+                  "side_a_win_rate": 45.07,
+                  "side_b_win_rate": 37.37,
                   "side_bias_points": 7.7,
                   "stalemate_rate": 17.57,
                   "average_rounds": 5.76
@@ -24599,8 +24599,8 @@
                   "week": 3,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 44.53,
-                  "enemy_side_win_rate": 48.17,
+                  "side_a_win_rate": 44.53,
+                  "side_b_win_rate": 48.17,
                   "side_bias_points": 3.63,
                   "stalemate_rate": 7.3,
                   "average_rounds": 5.19
@@ -24609,8 +24609,8 @@
                   "week": 4,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 44.43,
-                  "enemy_side_win_rate": 48.93,
+                  "side_a_win_rate": 44.43,
+                  "side_b_win_rate": 48.93,
                   "side_bias_points": 4.5,
                   "stalemate_rate": 6.63,
                   "average_rounds": 5.65
@@ -25250,7 +25250,7 @@
         "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
         "reproduced_case_after_fix": {
           "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
-          "outcome": "enemy",
+          "outcome": "side_b",
           "rounds": 8
         },
         "full_100_seed_matrix": {
@@ -25261,8 +25261,8 @@
           "balance_status": "needs_tuning",
           "balance_outlier_count": 64,
           "outcomes": [
-            "enemy",
-            "player"
+            "side_a",
+            "side_b"
           ],
           "has_stalemate_rate": false,
           "week_summaries": [
@@ -25270,8 +25270,8 @@
               "week": 1,
               "ordered_matchup_count": 30,
               "sample_count": 3000,
-              "player_side_win_rate": 48.77,
-              "enemy_side_win_rate": 51.23,
+              "side_a_win_rate": 48.77,
+              "side_b_win_rate": 51.23,
               "side_bias_points": 2.47,
               "average_rounds": 3.76
             },
@@ -25279,8 +25279,8 @@
               "week": 2,
               "ordered_matchup_count": 30,
               "sample_count": 3000,
-              "player_side_win_rate": 50.4,
-              "enemy_side_win_rate": 49.6,
+              "side_a_win_rate": 50.4,
+              "side_b_win_rate": 49.6,
               "side_bias_points": 0.8,
               "average_rounds": 3.83
             },
@@ -25288,8 +25288,8 @@
               "week": 3,
               "ordered_matchup_count": 30,
               "sample_count": 3000,
-              "player_side_win_rate": 53.13,
-              "enemy_side_win_rate": 46.87,
+              "side_a_win_rate": 53.13,
+              "side_b_win_rate": 46.87,
               "side_bias_points": 6.27,
               "average_rounds": 4.45
             },
@@ -25297,8 +25297,8 @@
               "week": 4,
               "ordered_matchup_count": 30,
               "sample_count": 3000,
-              "player_side_win_rate": 52.87,
-              "enemy_side_win_rate": 47.13,
+              "side_a_win_rate": 52.87,
+              "side_b_win_rate": 47.13,
               "side_bias_points": 5.73,
               "average_rounds": 4.86
             }
@@ -25307,7 +25307,7 @@
         "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
         "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
       },
-      "completionCriteria": "The benchmark has no normal round cap outcome, emits no stalemate fields, full 100-seed week 1-4 matrix resolves to player/enemy outcomes only, and emergency guard failures would fail the run.",
+      "completionCriteria": "The benchmark has no normal round cap outcome, emits no stalemate fields, full 100-seed week 1-4 matrix resolves to side_a/side_b outcomes only, and emergency guard failures would fail the run.",
       "nonGoals": [
         "final faction balance",
         "unit stat/growth tuning"
@@ -25318,8 +25318,8 @@
         "sliceId": "battle-benchmark-no-round-cap-10184",
         "commands": [
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
           "python3 tests/town_development_balance_report.py (passed; ok=true)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
@@ -25344,7 +25344,7 @@
           "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
           "reproduced_case_after_fix": {
             "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
-            "outcome": "enemy",
+            "outcome": "side_b",
             "rounds": 8
           },
           "full_100_seed_matrix": {
@@ -25355,8 +25355,8 @@
             "balance_status": "needs_tuning",
             "balance_outlier_count": 64,
             "outcomes": [
-              "enemy",
-              "player"
+              "side_a",
+              "side_b"
             ],
             "has_stalemate_rate": false,
             "week_summaries": [
@@ -25364,8 +25364,8 @@
                 "week": 1,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 48.77,
-                "enemy_side_win_rate": 51.23,
+                "side_a_win_rate": 48.77,
+                "side_b_win_rate": 51.23,
                 "side_bias_points": 2.47,
                 "average_rounds": 3.76
               },
@@ -25373,8 +25373,8 @@
                 "week": 2,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 50.4,
-                "enemy_side_win_rate": 49.6,
+                "side_a_win_rate": 50.4,
+                "side_b_win_rate": 49.6,
                 "side_bias_points": 0.8,
                 "average_rounds": 3.83
               },
@@ -25382,8 +25382,8 @@
                 "week": 3,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 53.13,
-                "enemy_side_win_rate": 46.87,
+                "side_a_win_rate": 53.13,
+                "side_b_win_rate": 46.87,
                 "side_bias_points": 6.27,
                 "average_rounds": 4.45
               },
@@ -25391,8 +25391,8 @@
                 "week": 4,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 52.87,
-                "enemy_side_win_rate": 47.13,
+                "side_a_win_rate": 52.87,
+                "side_b_win_rate": 47.13,
                 "side_bias_points": 5.73,
                 "average_rounds": 4.86
               }
@@ -32621,8 +32621,8 @@
         "sliceId": "battle-benchmark-no-round-cap-10184",
         "commands": [
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
           "python3 tests/town_development_balance_report.py (passed; ok=true)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
@@ -32647,7 +32647,7 @@
           "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
           "reproduced_case_after_fix": {
             "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
-            "outcome": "enemy",
+            "outcome": "side_b",
             "rounds": 8
           },
           "full_100_seed_matrix": {
@@ -32658,8 +32658,8 @@
             "balance_status": "needs_tuning",
             "balance_outlier_count": 64,
             "outcomes": [
-              "enemy",
-              "player"
+              "side_a",
+              "side_b"
             ],
             "has_stalemate_rate": false,
             "week_summaries": [
@@ -32667,8 +32667,8 @@
                 "week": 1,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 48.77,
-                "enemy_side_win_rate": 51.23,
+                "side_a_win_rate": 48.77,
+                "side_b_win_rate": 51.23,
                 "side_bias_points": 2.47,
                 "average_rounds": 3.76
               },
@@ -32676,8 +32676,8 @@
                 "week": 2,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 50.4,
-                "enemy_side_win_rate": 49.6,
+                "side_a_win_rate": 50.4,
+                "side_b_win_rate": 49.6,
                 "side_bias_points": 0.8,
                 "average_rounds": 3.83
               },
@@ -32685,8 +32685,8 @@
                 "week": 3,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 53.13,
-                "enemy_side_win_rate": 46.87,
+                "side_a_win_rate": 53.13,
+                "side_b_win_rate": 46.87,
                 "side_bias_points": 6.27,
                 "average_rounds": 4.45
               },
@@ -32694,8 +32694,8 @@
                 "week": 4,
                 "ordered_matchup_count": 30,
                 "sample_count": 3000,
-                "player_side_win_rate": 52.87,
-                "enemy_side_win_rate": 47.13,
+                "side_a_win_rate": 52.87,
+                "side_b_win_rate": 47.13,
                 "side_bias_points": 5.73,
                 "average_rounds": 4.86
               }
@@ -32705,7 +32705,7 @@
           "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
         }
       },
-      "notes": "Completed. No round-cap/stalemate outcome remains in the fast benchmark; full 100-seed matrix resolves to player/enemy outcomes only."
+      "notes": "Completed. No round-cap/stalemate outcome remains in the fast benchmark; full 100-seed matrix resolves to side_a/side_b outcomes only."
     },
     {
       "id": "combat-feel-balance-pass-10184",
@@ -32887,8 +32887,8 @@
                   "week": 1,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 31.73,
-                  "enemy_side_win_rate": 30.97,
+                  "side_a_win_rate": 31.73,
+                  "side_b_win_rate": 30.97,
                   "side_bias_points": 0.77,
                   "stalemate_rate": 37.3,
                   "average_rounds": 7.56
@@ -32897,8 +32897,8 @@
                   "week": 2,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 45.07,
-                  "enemy_side_win_rate": 37.37,
+                  "side_a_win_rate": 45.07,
+                  "side_b_win_rate": 37.37,
                   "side_bias_points": 7.7,
                   "stalemate_rate": 17.57,
                   "average_rounds": 5.76
@@ -32907,8 +32907,8 @@
                   "week": 3,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 44.53,
-                  "enemy_side_win_rate": 48.17,
+                  "side_a_win_rate": 44.53,
+                  "side_b_win_rate": 48.17,
                   "side_bias_points": 3.63,
                   "stalemate_rate": 7.3,
                   "average_rounds": 5.19
@@ -32917,8 +32917,8 @@
                   "week": 4,
                   "ordered_matchup_count": 30,
                   "sample_count": 3000,
-                  "player_side_win_rate": 44.43,
-                  "enemy_side_win_rate": 48.93,
+                  "side_a_win_rate": 44.43,
+                  "side_b_win_rate": 48.93,
                   "side_bias_points": 4.5,
                   "stalemate_rate": 6.63,
                   "average_rounds": 5.65
@@ -34944,8 +34944,8 @@
     "updatedAt": "2026-05-26T18:18:00Z",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -36972,8 +36972,8 @@
     "sliceId": "battle-benchmark-no-round-cap-10184",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -36998,7 +36998,7 @@
       "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
       "reproduced_case_after_fix": {
         "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
-        "outcome": "enemy",
+        "outcome": "side_b",
         "rounds": 8
       },
       "full_100_seed_matrix": {
@@ -37009,8 +37009,8 @@
         "balance_status": "needs_tuning",
         "balance_outlier_count": 64,
         "outcomes": [
-          "enemy",
-          "player"
+          "side_a",
+          "side_b"
         ],
         "has_stalemate_rate": false,
         "week_summaries": [
@@ -37018,8 +37018,8 @@
             "week": 1,
             "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "player_side_win_rate": 48.77,
-            "enemy_side_win_rate": 51.23,
+            "side_a_win_rate": 48.77,
+            "side_b_win_rate": 51.23,
             "side_bias_points": 2.47,
             "average_rounds": 3.76
           },
@@ -37027,8 +37027,8 @@
             "week": 2,
             "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "player_side_win_rate": 50.4,
-            "enemy_side_win_rate": 49.6,
+            "side_a_win_rate": 50.4,
+            "side_b_win_rate": 49.6,
             "side_bias_points": 0.8,
             "average_rounds": 3.83
           },
@@ -37036,8 +37036,8 @@
             "week": 3,
             "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "player_side_win_rate": 53.13,
-            "enemy_side_win_rate": 46.87,
+            "side_a_win_rate": 53.13,
+            "side_b_win_rate": 46.87,
             "side_bias_points": 6.27,
             "average_rounds": 4.45
           },
@@ -37045,8 +37045,8 @@
             "week": 4,
             "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "player_side_win_rate": 52.87,
-            "enemy_side_win_rate": 47.13,
+            "side_a_win_rate": 52.87,
+            "side_b_win_rate": 47.13,
             "side_bias_points": 5.73,
             "average_rounds": 4.86
           }

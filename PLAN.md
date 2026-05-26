@@ -107,7 +107,7 @@ Required benchmark shape:
 
 Initial target bands:
 - faction-pair dominant win rates should land within 45-55% before the combat-balance goal is complete;
-- ordered faction rows, outcomes, casualties, and week side-bias summaries should use `side_a`/`side_b`, not player/enemy labels;
+- ordered faction rows, outcomes, casualties, and week side-bias summaries should use `side_a`/`side_b`, not scenario ownership labels;
 - army snapshots should use Native RMG-suitable faction/unit growth rather than authored representative-town build logs;
 - side bias should stay low;
 - no fake stalemate outcome should exist in benchmark data; emergency simulation guard hits are structural failures;
