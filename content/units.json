@@ -651,22 +651,21 @@
       "faction_id": "faction_mireclaw",
       "role": "ranged",
       "tier": 2,
-      "hp": 9,
+      "hp": 10,
       "attack": 5,
-      "defense": 3,
+      "defense": 4,
       "min_damage": 3,
       "max_damage": 4,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 5,
       "cost": {
         "gold": 70,
         "wood": 1
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 8
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_mireclaw_bogplate_maulers",
@@ -674,21 +673,22 @@
       "faction_id": "faction_mireclaw",
       "role": "melee",
       "tier": 3,
-      "hp": 15,
+      "hp": 13,
       "attack": 7,
-      "defense": 6,
+      "defense": 5,
       "min_damage": 4,
       "max_damage": 6,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 4,
       "cost": {
         "gold": 145,
         "ore": 1
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 6
     },
     {
       "id": "unit_mireclaw_ferrychain_lashers",
@@ -734,7 +734,7 @@
         "wood": 1
       },
       "content_status": "six_faction_scaffold",
-      "shots": 6
+      "shots": 7
     },
     {
       "id": "unit_mireclaw_gorefen_rippers",
@@ -809,22 +809,21 @@
       "faction_id": "faction_sunvault",
       "role": "ranged",
       "tier": 2,
-      "hp": 9,
+      "hp": 10,
       "attack": 5,
-      "defense": 3,
+      "defense": 4,
       "min_damage": 3,
       "max_damage": 4,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 5,
       "cost": {
         "gold": 105,
         "ore": 1
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 8
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_sunvault_mirror_duelists",
@@ -832,21 +831,22 @@
       "faction_id": "faction_sunvault",
       "role": "melee",
       "tier": 3,
-      "hp": 15,
+      "hp": 13,
       "attack": 7,
-      "defense": 6,
+      "defense": 5,
       "min_damage": 4,
       "max_damage": 6,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 4,
       "cost": {
         "gold": 165,
         "ore": 1
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 6
     },
     {
       "id": "unit_sunvault_resonant_choristers",
@@ -854,23 +854,22 @@
       "faction_id": "faction_sunvault",
       "role": "ranged",
       "tier": 4,
-      "hp": 18,
+      "hp": 21,
       "attack": 8,
-      "defense": 7,
+      "defense": 8,
       "min_damage": 5,
       "max_damage": 8,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 3,
       "cost": {
         "gold": 250,
         "wood": 1,
         "ore": 1
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 6
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_sunvault_solar_array_striders",
@@ -878,21 +877,22 @@
       "faction_id": "faction_sunvault",
       "role": "melee",
       "tier": 5,
-      "hp": 28,
+      "hp": 25,
       "attack": 10,
-      "defense": 9,
+      "defense": 8,
       "min_damage": 7,
       "max_damage": 11,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 2,
       "cost": {
         "gold": 430,
         "ore": 2
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 7
     },
     {
       "id": "unit_sunvault_aurora_ballistae",
@@ -900,23 +900,22 @@
       "faction_id": "faction_sunvault",
       "role": "ranged",
       "tier": 6,
-      "hp": 45,
+      "hp": 50,
       "attack": 13,
-      "defense": 10,
+      "defense": 11,
       "min_damage": 9,
       "max_damage": 14,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 1,
       "cost": {
         "gold": 720,
         "wood": 2,
         "ore": 3
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 5
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_sunvault_daybreak_colossus",
@@ -924,22 +923,21 @@
       "faction_id": "faction_sunvault",
       "role": "ranged",
       "tier": 7,
-      "hp": 91,
+      "hp": 102,
       "attack": 17,
-      "defense": 17,
+      "defense": 18,
       "min_damage": 16,
       "max_damage": 26,
-      "speed": 3,
-      "initiative": 6,
+      "speed": 4,
+      "initiative": 5,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 1,
       "cost": {
         "gold": 1450,
         "ore": 4
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 4
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_thornwake_seedcutters",
@@ -1037,21 +1035,22 @@
       "faction_id": "faction_thornwake",
       "role": "melee",
       "tier": 5,
-      "hp": 28,
+      "hp": 25,
       "attack": 10,
-      "defense": 9,
+      "defense": 8,
       "min_damage": 7,
       "max_damage": 11,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 2,
       "cost": {
         "gold": 410,
         "wood": 2
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 7
     },
     {
       "id": "unit_thornwake_graft_matriarchs",
@@ -1149,22 +1148,23 @@
       "faction_id": "faction_brasshollow",
       "role": "melee",
       "tier": 3,
-      "hp": 15,
+      "hp": 13,
       "attack": 7,
-      "defense": 6,
+      "defense": 5,
       "min_damage": 4,
       "max_damage": 6,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 4,
       "cost": {
         "gold": 180,
         "wood": 1,
         "ore": 2
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 6
     },
     {
       "id": "unit_brasshollow_boiler_rivetcasters",
@@ -1172,22 +1172,21 @@
       "faction_id": "faction_brasshollow",
       "role": "ranged",
       "tier": 4,
-      "hp": 18,
+      "hp": 21,
       "attack": 8,
-      "defense": 7,
+      "defense": 8,
       "min_damage": 5,
       "max_damage": 8,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 3,
       "cost": {
         "gold": 270,
         "ore": 2
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 6
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_brasshollow_debt_engine_exactors",
@@ -1195,21 +1194,22 @@
       "faction_id": "faction_brasshollow",
       "role": "melee",
       "tier": 5,
-      "hp": 28,
+      "hp": 25,
       "attack": 10,
-      "defense": 9,
+      "defense": 8,
       "min_damage": 7,
       "max_damage": 11,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 2,
       "cost": {
         "gold": 520,
         "ore": 3
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 7
     },
     {
       "id": "unit_brasshollow_crucible_crawlers",
@@ -1217,23 +1217,22 @@
       "faction_id": "faction_brasshollow",
       "role": "ranged",
       "tier": 6,
-      "hp": 45,
+      "hp": 50,
       "attack": 13,
-      "defense": 10,
+      "defense": 11,
       "min_damage": 9,
       "max_damage": 14,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 1,
       "cost": {
         "gold": 820,
         "wood": 2,
         "ore": 4
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 4
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_brasshollow_foundry_saint",
@@ -1284,22 +1283,21 @@
       "faction_id": "faction_veilmourn",
       "role": "ranged",
       "tier": 2,
-      "hp": 9,
+      "hp": 10,
       "attack": 5,
-      "defense": 3,
+      "defense": 4,
       "min_damage": 3,
       "max_damage": 4,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 5,
       "cost": {
         "gold": 90,
         "wood": 1
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 7
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_veilmourn_maskglass_corsairs",
@@ -1307,21 +1305,22 @@
       "faction_id": "faction_veilmourn",
       "role": "melee",
       "tier": 3,
-      "hp": 15,
+      "hp": 13,
       "attack": 7,
-      "defense": 6,
+      "defense": 5,
       "min_damage": 4,
       "max_damage": 6,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 3,
+      "initiative": 7,
       "retaliations": 1,
-      "ranged": false,
+      "ranged": true,
       "growth": 4,
       "cost": {
         "gold": 155,
         "wood": 1
       },
-      "content_status": "six_faction_scaffold"
+      "content_status": "six_faction_scaffold",
+      "shots": 6
     },
     {
       "id": "unit_veilmourn_undertow_harpooners",
@@ -1329,23 +1328,22 @@
       "faction_id": "faction_veilmourn",
       "role": "ranged",
       "tier": 4,
-      "hp": 18,
+      "hp": 21,
       "attack": 8,
-      "defense": 7,
+      "defense": 8,
       "min_damage": 5,
       "max_damage": 8,
-      "speed": 3,
-      "initiative": 7,
+      "speed": 4,
+      "initiative": 6,
       "retaliations": 1,
-      "ranged": true,
+      "ranged": false,
       "growth": 3,
       "cost": {
         "gold": 245,
         "wood": 1,
         "ore": 1
       },
-      "content_status": "six_faction_scaffold",
-      "shots": 6
+      "content_status": "six_faction_scaffold"
     },
     {
       "id": "unit_veilmourn_obituary_scribes",
@@ -1368,7 +1366,7 @@
         "wood": 1
       },
       "content_status": "six_faction_scaffold",
-      "shots": 6
+      "shots": 7
     },
     {
       "id": "unit_veilmourn_mirrorkeel_reavers",

@@ -983,60 +983,7 @@ class FastBattleBenchmark:
         return modifier
 
     def _faction_damage_modifier(self, attacker: dict[str, Any], defender: dict[str, Any], battle: dict[str, Any], is_ranged: bool, attack_distance: int) -> float:
-        modifier = 1.0
-        faction_id = str(attacker.get("faction_id", ""))
-        side = str(attacker.get("side", ""))
-        if faction_id == "faction_embercourt":
-            if is_ranged and self._side_defending_count(battle, side) > 0:
-                modifier *= 1.08
-                if self._side_has_ability(battle, side, "formation_guard"):
-                    modifier *= self._side_max_ability_float(battle, side, "formation_guard", "ally_ranged_damage_multiplier", 1.0)
-            if self._has_effect_id(defender, battle, STATUS_STAGGERED):
-                modifier *= 1.08
-            if int(battle.get("round", 1)) >= 3 and self._side_has_role_mix(battle, side):
-                modifier *= 1.06 if self._side_has_ability(battle, side, "formation_guard") else 1.04
-        elif faction_id == "faction_mireclaw":
-            wounded_count = self._opposing_wounded_count(battle, side)
-            if wounded_count > 0:
-                modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
-            if self._has_effect_id(defender, battle, STATUS_HARRIED):
-                modifier *= 1.08
-            if not is_ranged and int(battle.get("round", 1)) >= 3 and attack_distance <= 0:
-                modifier *= 1.0 + (float(min(wounded_count, 2)) * 0.03)
-        elif faction_id == "faction_sunvault":
-            positive_count = self._side_positive_effect_count(battle, side)
-            if self._stack_has_positive_effect(attacker, battle):
-                modifier *= 1.08
-                if self._battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
-                    modifier *= 1.04
-            if positive_count >= 2:
-                modifier *= 1.0 + (float(min(positive_count, 3)) * 0.03)
-            if self._has_effect_id(defender, battle, STATUS_STAGGERED):
-                modifier *= 1.05
-            if is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_count > 0:
-                modifier *= 1.04
-        elif faction_id == "faction_thornwake":
-            if self._has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
-                modifier *= 1.07
-            if self._battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
-                modifier *= 1.05
-            if int(battle.get("round", 1)) >= 4 and self._side_defending_count(battle, side) > 0:
-                modifier *= 1.04
-        elif faction_id == "faction_brasshollow":
-            if self._battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "battery_nest"]):
-                modifier *= 1.05
-            if is_ranged and attack_distance >= 2:
-                modifier *= 1.04
-            if self._side_has_ability(battle, side, "shielding") and int(battle.get("round", 1)) >= 3:
-                modifier *= 1.04
-        elif faction_id == "faction_veilmourn":
-            if self._stack_is_isolated(battle, defender):
-                modifier *= 1.08
-            if self._has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
-                modifier *= 1.06
-            if self._battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]) and not is_ranged:
-                modifier *= 1.05
-        return modifier
+        return 1.0
 
     def _terrain_tag_damage_modifier(self, attacker: dict[str, Any], defender: dict[str, Any], battle: dict[str, Any], is_ranged: bool, attack_distance: int) -> float:
         modifier = 1.0
@@ -1195,10 +1142,6 @@ class FastBattleBenchmark:
             bonus += 1
         if self._hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", False)) and self._battle_has_tag(battle, "ambush_cover") and int(battle.get("round", 1)) <= 2:
             bonus += 1
-        if str(stack.get("faction_id", "")) == "faction_sunvault" and self._stack_has_positive_effect(stack, battle):
-            bonus += 1
-            if bool(stack.get("ranged", False)) and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
-                bonus += 1
         return bonus
 
     def _contextual_defense_bonus(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
@@ -1452,8 +1395,6 @@ class FastBattleBenchmark:
         return any(bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0 for target in targets)
 
     def _should_close_distance(self, stack: dict[str, Any]) -> bool:
-        if stack.get("faction_id") in ["faction_mireclaw", "faction_thornwake", "faction_veilmourn"]:
-            return True
         return not bool(stack.get("ranged", False))
 
     def _side_has_ability(self, battle: dict[str, Any], side: str, ability_id: str) -> bool:
