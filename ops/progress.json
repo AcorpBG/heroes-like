@@ -6,9 +6,9 @@
   "currentSliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
   "currentSliceTitle": "Economy Fastest Capstone Rare Pacing Followup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
+  "currentSliceNotes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation. Planning update on 2026-05-26: next economy identity target is multi-rare town costs with signature rare highest, one secondary rare at about half pressure, and each remaining rare at about one-third pressure.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T09:44:34Z",
+  "updatedAt": "2026-05-26T10:15:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24293,7 +24293,7 @@
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
       "planRef": "PLAN.md Selectable Near-Term Work",
-      "purpose": "Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
+      "purpose": "Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
       "sourceDocs": [
         "project.md",
         "PLAN.md"
@@ -24302,28 +24302,32 @@
         "content/buildings.json",
         "content/towns.json",
         "scripts/core/TownRules.gd as needed",
-        "existing economy/town reports"
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/economy_town_goal_scorecard_report.py"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "completionCriteria": "Authored towns use every rare resource with signature/secondary/remaining pressure ratios recorded in evidence; 30-turn town development, common-resource dominance, UI readability, AI development, and source-route evidence remain valid.",
       "nonGoals": [
         "campaign production unless explicitly selected",
-        "new gates without player-facing value",
+        "rare-only pricing that displaces gold/wood/ore as the dominant cost shape",
+        "market shortcuts or free stockpile seeding to hide missing rare-source placement",
         "broad release/parity claims"
       ],
       "validation": {
         "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "updatedAt": "2026-05-26T10:15:09Z",
         "sliceId": "economy-faction-identity-second-pass-10184",
         "commands": [],
         "evidence": {}
       },
-      "summary": "Pending. Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "summary": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
+      "updatedAt": "2026-05-26T10:15:09Z",
+      "notes": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant."
     },
     {
       "id": "economy-authored-rare-source-breadth-10184",
@@ -24333,7 +24337,7 @@
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
       "planRef": "PLAN.md Selectable Near-Term Work",
-      "purpose": "Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
+      "purpose": "Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
       "sourceDocs": [
         "project.md",
         "PLAN.md"
@@ -24341,28 +24345,31 @@
       "implementationTargets": [
         "content/scenarios.json",
         "content/resource_sites.json",
-        "existing active source-route and economy scorecard reports"
+        "existing active source-route and economy scorecard reports",
+        "generated package economy support as needed after authored source model changes"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "completionCriteria": "Every rare required by the multi-rare town model has reachable, guarded authored-source coverage in active play surfaces; source routes and economy/town scorecards remain valid without campaign production scope.",
       "nonGoals": [
         "campaign production unless explicitly selected",
-        "new gates without player-facing value",
-        "broad release/parity claims"
+        "free stockpile seeding as a substitute for map control",
+        "broad RMG economy approval from authored-source breadth work",
+        "new gates without player-facing value"
       ],
       "validation": {
         "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "updatedAt": "2026-05-26T10:15:09Z",
         "sliceId": "economy-authored-rare-source-breadth-10184",
         "commands": [],
         "evidence": {}
       },
-      "summary": "Pending. Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "summary": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
+      "updatedAt": "2026-05-26T10:15:09Z",
+      "notes": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding."
     },
     {
       "id": "battle-layout-smoke-followup-10184",
@@ -31753,17 +31760,28 @@
         "content/buildings.json",
         "content/towns.json",
         "scripts/core/TownRules.gd as needed",
-        "existing economy/town reports"
+        "tests/town_development_balance_report.py",
+        "tests/town_development_cost_curve_report.py",
+        "tests/economy_town_goal_scorecard_report.py"
       ],
       "validation": {
         "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "updatedAt": "2026-05-26T10:15:09Z",
         "sliceId": "economy-faction-identity-second-pass-10184",
         "commands": [],
         "evidence": {}
       },
-      "notes": "Pending. Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "notes": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
+      "updatedAt": "2026-05-26T10:15:09Z",
+      "purpose": "Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
+      "summary": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
+      "completionCriteria": "Authored towns use every rare resource with signature/secondary/remaining pressure ratios recorded in evidence; 30-turn town development, common-resource dominance, UI readability, AI development, and source-route evidence remain valid.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "rare-only pricing that displaces gold/wood/ore as the dominant cost shape",
+        "market shortcuts or free stockpile seeding to hide missing rare-source placement",
+        "broad release/parity claims"
+      ]
     },
     {
       "id": "economy-authored-rare-source-breadth-10184",
@@ -31775,17 +31793,27 @@
       "implementationTargets": [
         "content/scenarios.json",
         "content/resource_sites.json",
-        "existing active source-route and economy scorecard reports"
+        "existing active source-route and economy scorecard reports",
+        "generated package economy support as needed after authored source model changes"
       ],
       "validation": {
         "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "updatedAt": "2026-05-26T10:15:09Z",
         "sliceId": "economy-authored-rare-source-breadth-10184",
         "commands": [],
         "evidence": {}
       },
-      "notes": "Pending. Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "notes": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
+      "updatedAt": "2026-05-26T10:15:09Z",
+      "purpose": "Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
+      "summary": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
+      "completionCriteria": "Every rare required by the multi-rare town model has reachable, guarded authored-source coverage in active play surfaces; source routes and economy/town scorecards remain valid without campaign production scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "free stockpile seeding as a substitute for map control",
+        "broad RMG economy approval from authored-source breadth work",
+        "new gates without player-facing value"
+      ]
     },
     {
       "id": "battle-layout-smoke-followup-10184",
@@ -33724,7 +33752,7 @@
     "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
     "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-26T09:43:39Z",
+    "updatedAt": "2026-05-26T10:15:09Z",
     "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
     "completedAt": "2026-05-25T21:23:25Z"
   },
@@ -35643,7 +35671,7 @@
     "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
     "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-26T09:43:39Z",
+    "updatedAt": "2026-05-26T10:15:09Z",
     "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
     "completedAt": "2026-05-25T21:23:25Z"
   },
