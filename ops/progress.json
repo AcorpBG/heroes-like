@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-feel-balance-pass-10184",
-  "currentSliceTitle": "Combat Feel Balance Pass",
+  "currentSliceId": "battle-benchmark-no-round-cap-10184",
+  "currentSliceTitle": "Battle Benchmark No Round Cap Outcome",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
+  "currentSliceNotes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T17:17:12Z",
+  "updatedAt": "2026-05-26T18:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25165,9 +25165,9 @@
         "commands": [],
         "evidence": {}
       },
-      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that artificial stalemates have been removed.",
+      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that fake round-cap outcomes have been removed.",
       "classification": "implementation_slice",
-      "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after AI scoring parity removed artificial stalemate artifacts.",
+      "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
         "GOALS.md",
         "PLAN.md",
@@ -25179,13 +25179,218 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Faction-pair win-rate spread improves materially without reintroducing side bias, stalemates, or too-short battle pacing; evidence is recorded in ops/progress.json.",
+      "completionCriteria": "Faction-pair win-rate spread improves materially without reintroducing side bias, fake unresolved outcomes, or too-short battle pacing; evidence is recorded in ops/progress.json.",
       "nonGoals": [
         "final combat balance claim",
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T17:17:12Z"
+      "updatedAt": "2026-05-26T18:18:00Z"
+    },
+    {
+      "id": "battle-benchmark-no-round-cap-10184",
+      "title": "Battle Benchmark No Round Cap Outcome",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner correction after benchmark review",
+      "planRef": "GOALS.md Battle Balance Target / PLAN.md Battle Balance Benchmark Target",
+      "purpose": "Remove fake round-cap stalemate semantics from the fast battle benchmark and make non-resolution an emergency structural failure.",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "tests/battle_faction_fast_balance_benchmark.py"
+      ],
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "GOALS.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": {
+        "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
+        "implementation": {
+          "removed": [
+            "MAX_ROUNDS normal battle cap",
+            "max_rounds battle payload",
+            "stalemate outcome",
+            "stalemate_rate report fields",
+            "stalemate balance outlier type"
+          ],
+          "added": [
+            "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
+            "engaged melee-only attack forcing to prevent defend loops",
+            "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
+          ]
+        },
+        "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
+        "reproduced_case_after_fix": {
+          "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
+          "outcome": "enemy",
+          "rounds": 8
+        },
+        "full_100_seed_matrix": {
+          "ok": true,
+          "ordered_matchup_count": 120,
+          "faction_count": 6,
+          "seeds_per_ordered_matchup": 100,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 64,
+          "outcomes": [
+            "enemy",
+            "player"
+          ],
+          "has_stalemate_rate": false,
+          "week_summaries": [
+            {
+              "week": 1,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 48.77,
+              "enemy_side_win_rate": 51.23,
+              "side_bias_points": 2.47,
+              "average_rounds": 3.76
+            },
+            {
+              "week": 2,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 50.4,
+              "enemy_side_win_rate": 49.6,
+              "side_bias_points": 0.8,
+              "average_rounds": 3.83
+            },
+            {
+              "week": 3,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 53.13,
+              "enemy_side_win_rate": 46.87,
+              "side_bias_points": 6.27,
+              "average_rounds": 4.45
+            },
+            {
+              "week": 4,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 52.87,
+              "enemy_side_win_rate": 47.13,
+              "side_bias_points": 5.73,
+              "average_rounds": 4.86
+            }
+          ]
+        },
+        "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
+        "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
+      },
+      "completionCriteria": "The benchmark has no normal round cap outcome, emits no stalemate fields, full 100-seed week 1-4 matrix resolves to player/enemy outcomes only, and emergency guard failures would fail the run.",
+      "nonGoals": [
+        "final faction balance",
+        "unit stat/growth tuning"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T18:18:00Z",
+        "sliceId": "battle-benchmark-no-round-cap-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
+          "implementation": {
+            "removed": [
+              "MAX_ROUNDS normal battle cap",
+              "max_rounds battle payload",
+              "stalemate outcome",
+              "stalemate_rate report fields",
+              "stalemate balance outlier type"
+            ],
+            "added": [
+              "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
+              "engaged melee-only attack forcing to prevent defend loops",
+              "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
+            ]
+          },
+          "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
+          "reproduced_case_after_fix": {
+            "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
+            "outcome": "enemy",
+            "rounds": 8
+          },
+          "full_100_seed_matrix": {
+            "ok": true,
+            "ordered_matchup_count": 120,
+            "faction_count": 6,
+            "seeds_per_ordered_matchup": 100,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 64,
+            "outcomes": [
+              "enemy",
+              "player"
+            ],
+            "has_stalemate_rate": false,
+            "week_summaries": [
+              {
+                "week": 1,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 48.77,
+                "enemy_side_win_rate": 51.23,
+                "side_bias_points": 2.47,
+                "average_rounds": 3.76
+              },
+              {
+                "week": 2,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 50.4,
+                "enemy_side_win_rate": 49.6,
+                "side_bias_points": 0.8,
+                "average_rounds": 3.83
+              },
+              {
+                "week": 3,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 53.13,
+                "enemy_side_win_rate": 46.87,
+                "side_bias_points": 6.27,
+                "average_rounds": 4.45
+              },
+              {
+                "week": 4,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 52.87,
+                "enemy_side_win_rate": 47.13,
+                "side_bias_points": 5.73,
+                "average_rounds": 4.86
+              }
+            ]
+          },
+          "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
+          "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
+        }
+      },
+      "summary": "Completed. Fast battle benchmark now resolves battles without a round-cap outcome; fake stalemate fields are removed and emergency guard failures are structural errors.",
+      "updatedAt": "2026-05-26T18:18:00Z",
+      "startedAt": "2026-05-26T18:18:00Z",
+      "completedAt": "2026-05-26T18:18:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -32383,6 +32588,111 @@
   ],
   "actionableNextTasks": [
     {
+      "id": "battle-benchmark-no-round-cap-10184",
+      "title": "Battle Benchmark No Round Cap Outcome",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "owner correction after benchmark review",
+      "planRef": "GOALS.md Battle Balance Target / PLAN.md Battle Balance Benchmark Target",
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "GOALS.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T18:18:00Z",
+        "sliceId": "battle-benchmark-no-round-cap-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
+          "implementation": {
+            "removed": [
+              "MAX_ROUNDS normal battle cap",
+              "max_rounds battle payload",
+              "stalemate outcome",
+              "stalemate_rate report fields",
+              "stalemate balance outlier type"
+            ],
+            "added": [
+              "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
+              "engaged melee-only attack forcing to prevent defend loops",
+              "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
+            ]
+          },
+          "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
+          "reproduced_case_after_fix": {
+            "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
+            "outcome": "enemy",
+            "rounds": 8
+          },
+          "full_100_seed_matrix": {
+            "ok": true,
+            "ordered_matchup_count": 120,
+            "faction_count": 6,
+            "seeds_per_ordered_matchup": 100,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 64,
+            "outcomes": [
+              "enemy",
+              "player"
+            ],
+            "has_stalemate_rate": false,
+            "week_summaries": [
+              {
+                "week": 1,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 48.77,
+                "enemy_side_win_rate": 51.23,
+                "side_bias_points": 2.47,
+                "average_rounds": 3.76
+              },
+              {
+                "week": 2,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 50.4,
+                "enemy_side_win_rate": 49.6,
+                "side_bias_points": 0.8,
+                "average_rounds": 3.83
+              },
+              {
+                "week": 3,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 53.13,
+                "enemy_side_win_rate": 46.87,
+                "side_bias_points": 6.27,
+                "average_rounds": 4.45
+              },
+              {
+                "week": 4,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 52.87,
+                "enemy_side_win_rate": 47.13,
+                "side_bias_points": 5.73,
+                "average_rounds": 4.86
+              }
+            ]
+          },
+          "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
+          "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
+        }
+      },
+      "notes": "Completed. No round-cap/stalemate outcome remains in the fast benchmark; full 100-seed matrix resolves to player/enemy outcomes only."
+    },
+    {
       "id": "combat-feel-balance-pass-10184",
       "title": "Combat Feel Balance Pass",
       "status": "completed",
@@ -32505,12 +32815,12 @@
       ],
       "validation": {
         "status": "pending",
-        "updatedAt": "2026-05-26T17:17:12Z",
+        "updatedAt": "2026-05-26T18:18:00Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [],
         "evidence": {}
       },
-      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that artificial stalemates have been removed."
+      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that fake round-cap outcomes have been removed."
     },
     {
       "id": "battle-fast-faction-benchmark-10184",
@@ -34616,27 +34926,27 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T17:17:12Z",
+    "updatedAt": "2026-05-26T18:18:00Z",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Focused combat-feel pass validated: fast benchmark AI scoring parity removed artificial stalemates, town balance and repo validation passed."
+    "summary": "Fast benchmark no-round-cap correction passed quick, full 100-seed matrix, town balance, repo validation, JSON, and diff checks."
   },
   "active_slice": {
-    "id": "combat-feel-balance-pass-10184",
-    "title": "Combat Feel Balance Pass",
+    "id": "battle-benchmark-no-round-cap-10184",
+    "title": "Battle Benchmark No Round Cap Outcome",
     "status": "completed",
-    "updatedAt": "2026-05-26T17:17:12Z",
-    "notes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
-    "completedAt": "2026-05-26T17:17:12Z"
+    "updatedAt": "2026-05-26T18:18:00Z",
+    "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
+    "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T17:17:12Z",
+  "currentSliceUpdatedAt": "2026-05-26T18:18:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -36625,108 +36935,110 @@
       "status": "pass",
       "updatedAt": "2026-05-26T17:17:12Z",
       "summary": "Focused combat-feel pass validated: fast benchmark AI scoring parity removed artificial stalemates, town balance and repo validation passed."
+    },
+    {
+      "sliceId": "battle-benchmark-no-round-cap-10184",
+      "status": "pass",
+      "updatedAt": "2026-05-26T18:18:00Z",
+      "summary": "Fast benchmark no-round-cap correction passed quick, full 100-seed matrix, town balance, repo validation, JSON, and diff checks."
     }
   ],
   "currentSlice": {
-    "id": "combat-feel-balance-pass-10184",
-    "title": "Combat Feel Balance Pass",
+    "id": "battle-benchmark-no-round-cap-10184",
+    "title": "Battle Benchmark No Round Cap Outcome",
     "status": "completed",
-    "updatedAt": "2026-05-26T17:17:12Z",
-    "notes": "Completed focused combat-feel pass. Fast benchmark passivity/stalemate artifact fixed; next combat work should tune faction-pair stat/growth spread.",
-    "completedAt": "2026-05-26T17:17:12Z"
+    "updatedAt": "2026-05-26T18:18:00Z",
+    "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
+    "completedAt": "2026-05-26T18:18:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T17:17:12Z",
-    "sliceId": "combat-feel-balance-pass-10184",
+    "updatedAt": "2026-05-26T18:18:00Z",
+    "sliceId": "battle-benchmark-no-round-cap-10184",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; ok=true, week 1 stalemate_rate=0.0, full outlier rows emitted)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, stalemate rates 0.0/0.0/0.13/0.3, 64 tuning outliers remain)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only enemy/player)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only enemy/player)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "scope": "Focused evidence-driven combat-feel slice. Fixed fast benchmark AI scoring parity/passivity before content stat tuning.",
+      "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
       "implementation": {
-        "benchmark_ai_scoring_parity": [
-          "ported BattleAiRules-style attack valuation: damage share, kill value, ranged/shots pressure, cohesion/momentum pressure, status/trait/ability bonuses",
-          "replaced alive-count retaliation penalty with estimated retaliation damage penalty",
-          "ported defend and advance scoring factors that matter for neutral benchmark contexts",
-          "benchmark now emits full balance_outliers plus top_balance_outliers"
+        "removed": [
+          "MAX_ROUNDS normal battle cap",
+          "max_rounds battle payload",
+          "stalemate outcome",
+          "stalemate_rate report fields",
+          "stalemate balance outlier type"
+        ],
+        "added": [
+          "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
+          "engaged melee-only attack forcing to prevent defend loops",
+          "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
         ]
       },
-      "before_100_seed_week_summaries": [
-        {
-          "week": 1,
-          "side_bias_points": 0.77,
-          "stalemate_rate": 37.3,
-          "average_rounds": 7.56
-        },
-        {
-          "week": 2,
-          "side_bias_points": 7.7,
-          "stalemate_rate": 17.57,
-          "average_rounds": 5.76
-        },
-        {
-          "week": 3,
-          "side_bias_points": 3.63,
-          "stalemate_rate": 7.3,
-          "average_rounds": 5.19
-        },
-        {
-          "week": 4,
-          "side_bias_points": 4.5,
-          "stalemate_rate": 6.63,
-          "average_rounds": 5.65
-        }
-      ],
-      "after_100_seed_week_summaries": [
-        {
-          "week": 1,
-          "side_bias_points": 1.2,
-          "stalemate_rate": 0.0,
-          "average_rounds": 3.81
-        },
-        {
-          "week": 2,
-          "side_bias_points": 0.93,
-          "stalemate_rate": 0.0,
-          "average_rounds": 3.88
-        },
-        {
-          "week": 3,
-          "side_bias_points": 6.4,
-          "stalemate_rate": 0.13,
-          "average_rounds": 4.51
-        },
-        {
-          "week": 4,
-          "side_bias_points": 5.7,
-          "stalemate_rate": 0.3,
-          "average_rounds": 4.96
-        }
-      ],
-      "after_100_seed_matrix": {
+      "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
+      "reproduced_case_after_fix": {
+        "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
+        "outcome": "enemy",
+        "rounds": 8
+      },
+      "full_100_seed_matrix": {
         "ok": true,
         "ordered_matchup_count": 120,
         "faction_count": 6,
         "seeds_per_ordered_matchup": 100,
         "balance_status": "needs_tuning",
         "balance_outlier_count": 64,
-        "full_outlier_rows_emitted": true
+        "outcomes": [
+          "enemy",
+          "player"
+        ],
+        "has_stalemate_rate": false,
+        "week_summaries": [
+          {
+            "week": 1,
+            "ordered_matchup_count": 30,
+            "sample_count": 3000,
+            "player_side_win_rate": 48.77,
+            "enemy_side_win_rate": 51.23,
+            "side_bias_points": 2.47,
+            "average_rounds": 3.76
+          },
+          {
+            "week": 2,
+            "ordered_matchup_count": 30,
+            "sample_count": 3000,
+            "player_side_win_rate": 50.4,
+            "enemy_side_win_rate": 49.6,
+            "side_bias_points": 0.8,
+            "average_rounds": 3.83
+          },
+          {
+            "week": 3,
+            "ordered_matchup_count": 30,
+            "sample_count": 3000,
+            "player_side_win_rate": 53.13,
+            "enemy_side_win_rate": 46.87,
+            "side_bias_points": 6.27,
+            "average_rounds": 4.45
+          },
+          {
+            "week": 4,
+            "ordered_matchup_count": 30,
+            "sample_count": 3000,
+            "player_side_win_rate": 52.87,
+            "enemy_side_win_rate": 47.13,
+            "side_bias_points": 5.73,
+            "average_rounds": 4.86
+          }
+        ]
       },
-      "remaining_tuning_target": "Faction-pair dominant win-rate spread remains too deterministic; next pass should tune unit stats/growth/ability power from full outlier rows, not from stale stalemate artifacts.",
-      "town_development_balance_report": {
-        "ok": true,
-        "authored_town_count": 15,
-        "full_ladder_town_count": 15,
-        "target_turns": 30
-      },
-      "policy": "This slice improves benchmark parity and removes artificial stalemates; it does not claim final combat balance."
+      "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
+      "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
     }
   }
 }

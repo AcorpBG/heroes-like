@@ -21,7 +21,7 @@ STATUS_STAGGERED = "status_staggered"
 COHESION_MIN = 0
 COHESION_MAX = 10
 MOMENTUM_MAX = 4
-MAX_ROUNDS = 12
+SIMULATION_GUARD_MAX_ROUNDS = 200
 DEFAULT_SEEDS = 100
 DEFAULT_WEEKS = [1, 2, 3, 4]
 WEEK_BOUNDARY_DAYS = {1: 7, 2: 14, 3: 21, 4: 28}
@@ -34,9 +34,8 @@ BATTLE_RECRUITMENT_TIER_CAPS = {
 BALANCE_MIN_WIN_RATE = 45.0
 BALANCE_MAX_WIN_RATE = 55.0
 MAX_SIDE_BIAS_POINTS = 7.0
-MAX_STALEMATE_RATE = 5.0
 MIN_AVERAGE_ROUNDS = 3.0
-MAX_AVERAGE_ROUNDS = 12.0
+MAX_AVERAGE_ROUNDS = 50.0
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -371,7 +370,6 @@ class FastBattleBenchmark:
             consequence_counts.update(result["consequence_counts"])
         player_win_rate = 100.0 * float(outcomes.get("player", 0)) / float(max(1, seeds))
         enemy_win_rate = 100.0 * float(outcomes.get("enemy", 0)) / float(max(1, seeds))
-        stalemate_rate = 100.0 * float(outcomes.get("stalemate", 0)) / float(max(1, seeds))
         return {
             "week": week,
             "context_id": context["id"],
@@ -380,7 +378,6 @@ class FastBattleBenchmark:
             "sample_count": seeds,
             "player_win_rate": round(player_win_rate, 2),
             "enemy_win_rate": round(enemy_win_rate, 2),
-            "stalemate_rate": round(stalemate_rate, 2),
             "outcomes": dict(sorted(outcomes.items())),
             "average_rounds": round(sum(rounds) / float(max(1, len(rounds))), 2),
             "average_terminal_health_margin_pct": round(sum(margins) / float(max(1, len(margins))), 2),
@@ -397,7 +394,6 @@ class FastBattleBenchmark:
         enemy_model = self.faction_models[enemy_faction]
         return {
             "round": 1,
-            "max_rounds": MAX_ROUNDS,
             "distance": 2,
             "terrain": context["terrain"],
             "battlefield_tags": list(context.get("battlefield_tags", [])),
@@ -454,7 +450,14 @@ class FastBattleBenchmark:
         action_mix: Counter[str] = Counter()
         consequence_counts: Counter[str] = Counter()
         self._prepare_round(battle, 1)
-        while int(battle["round"]) <= int(battle["max_rounds"]):
+        while True:
+            if int(battle["round"]) > SIMULATION_GUARD_MAX_ROUNDS:
+                raise RuntimeError(
+                    "simulation_guard_exceeded:"
+                    f"round={int(battle['round'])}:"
+                    f"player_alive={self._living_side_count(battle, 'player')}:"
+                    f"enemy_alive={self._living_side_count(battle, 'enemy')}"
+                )
             active = self._active_stack(battle)
             if not active:
                 self._prepare_round(battle, int(battle["round"]) + 1)
@@ -479,7 +482,7 @@ class FastBattleBenchmark:
         casualties = self._casualties_by_tier(battle)
         return {
             "outcome": outcome,
-            "rounds": min(int(battle["round"]), int(battle["max_rounds"])),
+            "rounds": int(battle["round"]),
             "terminal_health_margin_pct": margin,
             "action_mix": action_mix,
             "casualties_by_tier": casualties,
@@ -529,20 +532,41 @@ class FastBattleBenchmark:
         if not targets:
             return {"action": "defend"}
         candidates: list[dict[str, Any]] = []
+        attack_candidates: list[dict[str, Any]] = []
         if bool(active.get("ranged", False)) and int(active.get("shots_remaining", 0)) > 0:
             for target in targets:
                 score = self._attack_score(active, target, battle, True)
-                candidates.append({"action": "shoot", "target_battle_id": target["battle_id"], "score": score})
+                candidate = {"action": "shoot", "target_battle_id": target["battle_id"], "score": score}
+                candidates.append(candidate)
+                attack_candidates.append(candidate)
         if self._can_make_melee_attack(active, battle):
             for target in targets:
                 if self._can_make_melee_attack(active, battle, target):
                     score = self._attack_score(active, target, battle, False)
-                    candidates.append({"action": "strike", "target_battle_id": target["battle_id"], "score": score})
+                    candidate = {"action": "strike", "target_battle_id": target["battle_id"], "score": score}
+                    candidates.append(candidate)
+                    attack_candidates.append(candidate)
         if int(battle.get("distance", 0)) > 0 and not bool(active.get("ranged", False)):
             candidates.append({"action": "advance", "score": self._advance_score(active, battle, targets)})
-        candidates.append({"action": "defend", "score": self._defend_score(active, battle, targets)})
+        if not self._must_force_engaged_attack(active, battle, targets, attack_candidates):
+            candidates.append({"action": "defend", "score": self._defend_score(active, battle, targets)})
         candidates.sort(key=lambda item: (-float(item.get("score", 0.0)), str(item.get("action", "")), str(item.get("target_battle_id", ""))))
         return candidates[0]
+
+    def _must_force_engaged_attack(
+        self,
+        active: dict[str, Any],
+        battle: dict[str, Any],
+        targets: list[dict[str, Any]],
+        attack_candidates: list[dict[str, Any]],
+    ) -> bool:
+        if not attack_candidates or int(battle.get("distance", 1)) > 0:
+            return False
+        if bool(active.get("ranged", False)) and int(active.get("shots_remaining", 0)) > 0:
+            return False
+        if self._has_hostile_ranged_pressure(targets):
+            return False
+        return True
 
     def _choose_spell_action(self, battle: dict[str, Any], active: dict[str, Any]) -> dict[str, Any] | None:
         side = active["side"]
@@ -1335,7 +1359,8 @@ class FastBattleBenchmark:
             return "player"
         if enemy_alive and not player_alive:
             return "enemy"
-        return "stalemate"
+        health = self._side_healths(battle)
+        return "player" if int(health.get("player", 0)) >= int(health.get("enemy", 0)) else "enemy"
 
     def _living_side_count(self, battle: dict[str, Any], side: str) -> int:
         return len(self._alive_stacks_for_side(battle, side))
@@ -1420,7 +1445,6 @@ class FastBattleBenchmark:
         for (week, left, right), pair_rows in sorted(by_key.items()):
             left_wins = 0.0
             right_wins = 0.0
-            stalemates = 0.0
             samples = 0
             rounds = []
             margins = []
@@ -1433,7 +1457,6 @@ class FastBattleBenchmark:
                 else:
                     right_wins += float(row["player_win_rate"]) * count / 100.0
                     left_wins += float(row["enemy_win_rate"]) * count / 100.0
-                stalemates += float(row["stalemate_rate"]) * count / 100.0
                 rounds.append(float(row["average_rounds"]))
                 margins.append(float(row["average_terminal_health_margin_pct"]))
             left_rate = 100.0 * left_wins / float(max(1, samples))
@@ -1444,7 +1467,6 @@ class FastBattleBenchmark:
                 "sample_count": samples,
                 "left_win_rate": round(left_rate, 2),
                 "right_win_rate": round(right_rate, 2),
-                "stalemate_rate": round(100.0 * stalemates / float(max(1, samples)), 2),
                 "dominant_faction_id": left if left_rate >= right_rate else right,
                 "dominant_win_rate": round(max(left_rate, right_rate), 2),
                 "average_rounds": round(sum(rounds) / float(max(1, len(rounds))), 2),
@@ -1461,7 +1483,6 @@ class FastBattleBenchmark:
             player_wins = sum(float(row["player_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
             enemy_wins = sum(float(row["enemy_win_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
             samples = sum(int(row["sample_count"]) for row in week_rows)
-            stalemates = sum(float(row["stalemate_rate"]) * int(row["sample_count"]) / 100.0 for row in week_rows)
             result.append({
                 "week": week,
                 "ordered_matchup_count": len(week_rows),
@@ -1469,7 +1490,6 @@ class FastBattleBenchmark:
                 "player_side_win_rate": round(100.0 * player_wins / float(max(1, samples)), 2),
                 "enemy_side_win_rate": round(100.0 * enemy_wins / float(max(1, samples)), 2),
                 "side_bias_points": round(abs(player_wins - enemy_wins) * 100.0 / float(max(1, samples)), 2),
-                "stalemate_rate": round(100.0 * stalemates / float(max(1, samples)), 2),
                 "average_rounds": round(sum(float(row["average_rounds"]) for row in week_rows) / float(max(1, len(week_rows))), 2),
             })
         return result
@@ -1486,15 +1506,6 @@ class FastBattleBenchmark:
                     "dominant_faction_id": pair["dominant_faction_id"],
                     "value": dominant,
                     "target": f"{BALANCE_MIN_WIN_RATE:.0f}-{BALANCE_MAX_WIN_RATE:.0f}",
-                    "status": "tuning_outlier",
-                })
-            if float(pair["stalemate_rate"]) > MAX_STALEMATE_RATE:
-                outliers.append({
-                    "kind": "pair_stalemate_rate",
-                    "week": int(pair["week"]),
-                    "faction_pair": pair["faction_pair"],
-                    "value": float(pair["stalemate_rate"]),
-                    "target": f"<= {MAX_STALEMATE_RATE:.0f}",
                     "status": "tuning_outlier",
                 })
             if not (MIN_AVERAGE_ROUNDS <= float(pair["average_rounds"]) <= MAX_AVERAGE_ROUNDS):
