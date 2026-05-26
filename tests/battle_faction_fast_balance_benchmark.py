@@ -386,7 +386,11 @@ class FastBattleBenchmark:
         consequence_counts: Counter[str] = Counter()
         for seed_index in range(seeds):
             battle = self._create_battle(side_a_faction, side_b_faction, week, context)
-            result = self._simulate_battle(battle, stable_seed(side_a_faction, side_b_faction, week, context["id"], seed_index))
+            matchup_seed_parts = sorted([side_a_faction, side_b_faction])
+            result = self._simulate_battle(
+                battle,
+                stable_seed(matchup_seed_parts[0], matchup_seed_parts[1], week, context["id"], seed_index),
+            )
             outcomes[self._public_side(str(result["outcome"]))] += 1
             rounds.append(int(result["rounds"]))
             margins.append(int(result["terminal_health_margin_pct"]))
@@ -444,6 +448,7 @@ class FastBattleBenchmark:
             stack = {
                 "battle_id": f"{side}_{index}_{unit['id']}",
                 "side": side,
+                "side_slot": index,
                 "faction_id": str(unit.get("faction_id", "")),
                 "unit_id": str(unit["id"]),
                 "name": str(unit.get("name", unit["id"])),
@@ -535,13 +540,13 @@ class FastBattleBenchmark:
         battle["turn_index"] = 0
         battle["active_stack_id"] = order[0] if order else ""
 
-    def _turn_order_key(self, battle: dict[str, Any], battle_id: str) -> tuple[int, int, int, str]:
+    def _turn_order_key(self, battle: dict[str, Any], battle_id: str) -> tuple[int, int, int, int]:
         stack = self._stack_by_id(battle, battle_id)
         initiative = self._stack_initiative_total(stack, battle)
         if str(battle.get("terrain", "")) == "mire":
             initiative -= 1
         side_bias = 1 if stack.get("side") == battle.get("initiative_tie_side", INTERNAL_SIDE_A) else 0
-        return (-initiative, -int(stack.get("speed", 0)), -side_bias, battle_id)
+        return (-initiative, -int(stack.get("speed", 0)), -side_bias, int(stack.get("side_slot", 0)))
 
     def _advance_turn(self, battle: dict[str, Any]) -> None:
         order = battle.get("turn_order", [])
@@ -578,8 +583,16 @@ class FastBattleBenchmark:
             candidates.append({"action": "advance", "score": self._advance_score(active, battle, targets)})
         if not self._must_force_engaged_attack(active, battle, targets, attack_candidates):
             candidates.append({"action": "defend", "score": self._defend_score(active, battle, targets)})
-        candidates.sort(key=lambda item: (-float(item.get("score", 0.0)), str(item.get("action", "")), str(item.get("target_battle_id", ""))))
+        candidates.sort(key=lambda item: self._candidate_sort_key(battle, item))
         return candidates[0]
+
+    def _candidate_sort_key(self, battle: dict[str, Any], item: dict[str, Any]) -> tuple[float, str, int]:
+        target = self._stack_by_id(battle, str(item.get("target_battle_id", "")))
+        return (
+            -float(item.get("score", 0.0)),
+            str(item.get("action", "")),
+            int(target.get("side_slot", -1)),
+        )
 
     def _must_force_engaged_attack(
         self,
