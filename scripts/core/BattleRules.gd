@@ -8228,68 +8228,10 @@ static func _faction_damage_modifier(
 	is_ranged: bool,
 	attack_distance: int
 ) -> float:
-	var modifier = 1.0
-	var faction_id = String(attacker.get("faction_id", ""))
-	var side = String(attacker.get("side", ""))
-	var side_defending_count = _side_defending_count(battle, side)
-	match faction_id:
-		"faction_embercourt":
-			if is_ranged and side_defending_count > 0:
-				modifier *= 1.08
-				if _side_has_ability(battle, side, "formation_guard"):
-					modifier *= _side_max_ability_float(
-						battle,
-						side,
-						"formation_guard",
-						"ally_ranged_damage_multiplier",
-						1.0
-					)
-			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
-				modifier *= 1.08
-			if int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side):
-				modifier *= 1.06 if _side_has_ability(battle, side, "formation_guard") else 1.04
-		"faction_mireclaw":
-			var wounded_count = _enemy_wounded_count(battle, side)
-			if wounded_count > 0:
-				modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
-			if SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
-				modifier *= 1.08
-			if not is_ranged and int(battle.get("round", 1)) >= 3 and attack_distance <= 0:
-				modifier *= 1.0 + (float(min(wounded_count, 2)) * 0.03)
-		"faction_sunvault":
-			var positive_effect_count = _side_positive_effect_count(battle, side)
-			if _stack_has_positive_effect(attacker, battle):
-				modifier *= 1.08
-				if _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
-					modifier *= 1.04
-			if positive_effect_count >= 2:
-				modifier *= 1.0 + (float(min(positive_effect_count, 3)) * 0.03)
-			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
-				modifier *= 1.05
-			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
-				modifier *= 1.04
-		"faction_thornwake":
-			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
-				modifier *= 1.07
-			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
-				modifier *= 1.05
-			if int(battle.get("round", 1)) >= 4 and _side_defending_count(battle, side) > 0:
-				modifier *= 1.04
-		"faction_brasshollow":
-			if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "battery_nest"]):
-				modifier *= 1.05
-			if is_ranged and attack_distance >= 2:
-				modifier *= 1.04
-			if _side_has_ability(battle, side, "shielding") and int(battle.get("round", 1)) >= 3:
-				modifier *= 1.04
-		"faction_veilmourn":
-			if _stack_is_isolated(battle, defender):
-				modifier *= 1.08
-			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
-				modifier *= 1.06
-			if _battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]) and not is_ranged:
-				modifier *= 1.05
-	return modifier
+	return 1.0
+
+static func _faction_tactical_modifiers_enabled() -> bool:
+	return false
 
 static func _terrain_tag_damage_modifier(
 	attacker: Dictionary,
@@ -9472,7 +9414,7 @@ static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> i
 		bonus += 1
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
-	if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
+	if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 		bonus += 1
 		if bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 			bonus += 1
@@ -9531,11 +9473,11 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 		bonus += 1
 	if _hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and _battle_has_any_tags(battle, ["ambush_cover"]):
 		bonus += 1
-	if String(stack.get("faction_id", "")) == "faction_embercourt" and _side_has_role_mix(battle, side) and not _stack_is_isolated(battle, stack):
+	if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_embercourt" and _side_has_role_mix(battle, side) and not _stack_is_isolated(battle, stack):
 		bonus += 1
-	if String(stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
+	if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
 		bonus += 1
-	if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle) and not _stack_is_isolated(battle, stack):
+	if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle) and not _stack_is_isolated(battle, stack):
 		bonus += 1
 		if _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
 			bonus += 1
@@ -9604,7 +9546,7 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 		bonus += 1
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
-	if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
+	if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 		bonus += 1
 		if _side_positive_effect_count(battle, side) >= 2 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
 			bonus += 1
@@ -9612,6 +9554,8 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 	return bonus
 
 static func _faction_initiative_bonus(stack: Dictionary, battle: Dictionary) -> int:
+	if not _faction_tactical_modifiers_enabled():
+		return 0
 	var faction_id = String(stack.get("faction_id", ""))
 	var side = String(stack.get("side", ""))
 	match faction_id:
@@ -9711,11 +9655,11 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 				_adjust_stack_cohesion(battle, battle_id, 1)
 		if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
 			_adjust_stack_cohesion(battle, battle_id, 1)
-		if String(stack.get("faction_id", "")) == "faction_embercourt" and int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side) and not _stack_is_isolated(battle, stack) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 2:
+		if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_embercourt" and int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side) and not _stack_is_isolated(battle, stack) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 2:
 			_adjust_stack_cohesion(battle, battle_id, 1)
-		if String(stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, side) > 0 and (_has_ability(stack, "backstab") or _has_ability(stack, "bloodrush") or not bool(stack.get("ranged", false))):
+		if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, side) > 0 and (_has_ability(stack, "backstab") or _has_ability(stack, "bloodrush") or not bool(stack.get("ranged", false))):
 			_adjust_stack_momentum(battle, battle_id, 1)
-		if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
+		if _faction_tactical_modifiers_enabled() and String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 			if not _stack_is_isolated(battle, stack) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 2:
 				_adjust_stack_cohesion(battle, battle_id, 1)
 			if _side_positive_effect_count(battle, side) >= 2 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
@@ -9845,9 +9789,9 @@ static func _attack_momentum_gain(
 static func _supportive_cohesion_gain(attacker: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
 	var gain = 0
 	var side = String(attacker.get("side", ""))
-	if String(attacker.get("faction_id", "")) == "faction_embercourt" and is_ranged and _side_defending_count(battle, side) > 0:
+	if _faction_tactical_modifiers_enabled() and String(attacker.get("faction_id", "")) == "faction_embercourt" and is_ranged and _side_defending_count(battle, side) > 0:
 		gain += 1
-	if String(attacker.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(attacker, battle):
+	if _faction_tactical_modifiers_enabled() and String(attacker.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(attacker, battle):
 		gain += 1
 		if _side_positive_effect_count(battle, side) >= 2 and _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
 			gain += 1
