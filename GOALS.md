@@ -53,7 +53,7 @@ Use the benchmark to produce the first faction matrix evidence:
 
 Initial balance target:
 - faction-pair dominant win rates should land in a 45-55% band over repeated seeds before the balance goal is complete;
-- benchmark rows and summaries must use side-neutral language (`side_a` / `side_b`), not player/enemy labels, because these are ordered faction-vs-faction simulations;
+- benchmark rows and summaries must use side-neutral language (`side_a` / `side_b`), not scenario ownership labels, because these are ordered faction-vs-faction simulations;
 - the benchmark army snapshot surface must be based on faction/unit growth suitable for Native RMG generated-map balance, not authored representative-town build logs;
 - the benchmark must not model fake stalemate outcomes; unresolved simulations are structural failures, not balance data;
 - average battle length should usually land in a readable tactical range;
