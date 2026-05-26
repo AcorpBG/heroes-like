@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-native-rmg-required-source-support-10184",
-  "currentSliceTitle": "Economy Native RMG Required Source Support",
+  "currentSliceId": "battle-fast-faction-benchmark-10184",
+  "currentSliceTitle": "Battle Fast Faction Benchmark",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
+  "currentSliceNotes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T14:12:31Z",
+  "updatedAt": "2026-05-26T16:48:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24427,6 +24427,224 @@
       "updatedAt": "2026-05-26T09:44:34Z"
     },
     {
+      "id": "battle-fast-faction-benchmark-10184",
+      "title": "Battle Fast Faction Benchmark",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "GOALS.md Battle Balance Target",
+      "planRef": "PLAN.md Battle Balance Benchmark Target",
+      "purpose": "Add a fast deterministic Python faction-vs-faction battle benchmark for week 1-4 balance evidence without launching the Godot runtime.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "content/units.json",
+        "content/factions.json",
+        "content/heroes.json",
+        "content/spells.json",
+        "content/towns.json",
+        "content/buildings.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate",
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": {
+        "benchmark": {
+          "quick": {
+            "ok": true,
+            "ordered_matchup_count": 30,
+            "faction_count": 6,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 17
+          },
+          "full_100_seed": {
+            "ok": true,
+            "ordered_matchup_count": 120,
+            "faction_count": 6,
+            "seeds_per_ordered_matchup": 100,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 70,
+            "week_summaries": [
+              {
+                "week": 1,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 31.73,
+                "enemy_side_win_rate": 30.97,
+                "side_bias_points": 0.77,
+                "stalemate_rate": 37.3,
+                "average_rounds": 7.56
+              },
+              {
+                "week": 2,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 45.07,
+                "enemy_side_win_rate": 37.37,
+                "side_bias_points": 7.7,
+                "stalemate_rate": 17.57,
+                "average_rounds": 5.76
+              },
+              {
+                "week": 3,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 44.53,
+                "enemy_side_win_rate": 48.17,
+                "side_bias_points": 3.63,
+                "stalemate_rate": 7.3,
+                "average_rounds": 5.19
+              },
+              {
+                "week": 4,
+                "ordered_matchup_count": 30,
+                "sample_count": 3000,
+                "player_side_win_rate": 44.43,
+                "enemy_side_win_rate": 48.93,
+                "side_bias_points": 4.5,
+                "stalemate_rate": 6.63,
+                "average_rounds": 5.65
+              }
+            ],
+            "top_outlier_themes": [
+              "week 1 stalemates are too high",
+              "some faction-pair dominant win rates are outside 45-55",
+              "week 2 side bias is slightly above target"
+            ]
+          }
+        },
+        "army_snapshot_policy": {
+          "initial": "one day-1 representative-town growth tick",
+          "week_1": "initial plus one recruited week capped at T1-T3",
+          "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
+          "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
+          "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks"
+        },
+        "town_development_balance_report": {
+          "ok": true,
+          "authored_town_count": 15,
+          "full_ladder_town_count": 15,
+          "target_turns": 30
+        },
+        "policy": "benchmark gates structural failures and reports balance outliers as next tuning evidence; this slice does not claim final combat balance"
+      },
+      "completionCriteria": "Pure-Python benchmark runs all six faction ordered non-self matchups for week 1-4 army snapshots, gates structural failures, reports balance outliers, and existing repo/town validation remains green.",
+      "nonGoals": [
+        "campaign production",
+        "final combat balance claim",
+        "authored scenario map balancing",
+        "new gates that hide bad battle results",
+        "replacement for Godot battle validation"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T16:48:32Z",
+        "sliceId": "battle-fast-faction-benchmark-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "benchmark": {
+            "quick": {
+              "ok": true,
+              "ordered_matchup_count": 30,
+              "faction_count": 6,
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 17
+            },
+            "full_100_seed": {
+              "ok": true,
+              "ordered_matchup_count": 120,
+              "faction_count": 6,
+              "seeds_per_ordered_matchup": 100,
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 70,
+              "week_summaries": [
+                {
+                  "week": 1,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 31.73,
+                  "enemy_side_win_rate": 30.97,
+                  "side_bias_points": 0.77,
+                  "stalemate_rate": 37.3,
+                  "average_rounds": 7.56
+                },
+                {
+                  "week": 2,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 45.07,
+                  "enemy_side_win_rate": 37.37,
+                  "side_bias_points": 7.7,
+                  "stalemate_rate": 17.57,
+                  "average_rounds": 5.76
+                },
+                {
+                  "week": 3,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 44.53,
+                  "enemy_side_win_rate": 48.17,
+                  "side_bias_points": 3.63,
+                  "stalemate_rate": 7.3,
+                  "average_rounds": 5.19
+                },
+                {
+                  "week": 4,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 44.43,
+                  "enemy_side_win_rate": 48.93,
+                  "side_bias_points": 4.5,
+                  "stalemate_rate": 6.63,
+                  "average_rounds": 5.65
+                }
+              ],
+              "top_outlier_themes": [
+                "week 1 stalemates are too high",
+                "some faction-pair dominant win rates are outside 45-55",
+                "week 2 side bias is slightly above target"
+              ]
+            }
+          },
+          "army_snapshot_policy": {
+            "initial": "one day-1 representative-town growth tick",
+            "week_1": "initial plus one recruited week capped at T1-T3",
+            "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
+            "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
+            "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks"
+          },
+          "town_development_balance_report": {
+            "ok": true,
+            "authored_town_count": 15,
+            "full_ladder_town_count": 15,
+            "target_turns": 30
+          },
+          "policy": "benchmark gates structural failures and reports balance outliers as next tuning evidence; this slice does not claim final combat balance"
+        }
+      },
+      "summary": "Completed. Fast Python week 1-4 faction benchmark runs all six faction ordered matchups, gates structural failures, and reports concrete combat tuning outliers.",
+      "updatedAt": "2026-05-26T16:48:32Z",
+      "startedAt": "2026-05-26T16:44:29Z",
+      "completedAt": "2026-05-26T16:48:32Z"
+    },
+    {
       "id": "combat-feel-balance-pass-10184",
       "title": "Combat Feel Balance Pass",
       "status": "pending",
@@ -31951,6 +32169,118 @@
   ],
   "actionableNextTasks": [
     {
+      "id": "battle-fast-faction-benchmark-10184",
+      "title": "Battle Fast Faction Benchmark",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "GOALS.md Battle Balance Target",
+      "planRef": "PLAN.md Battle Balance Benchmark Target",
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "content/units.json",
+        "content/factions.json",
+        "content/heroes.json",
+        "content/spells.json",
+        "content/towns.json",
+        "content/buildings.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T16:48:32Z",
+        "sliceId": "battle-fast-faction-benchmark-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "benchmark": {
+            "quick": {
+              "ok": true,
+              "ordered_matchup_count": 30,
+              "faction_count": 6,
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 17
+            },
+            "full_100_seed": {
+              "ok": true,
+              "ordered_matchup_count": 120,
+              "faction_count": 6,
+              "seeds_per_ordered_matchup": 100,
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 70,
+              "week_summaries": [
+                {
+                  "week": 1,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 31.73,
+                  "enemy_side_win_rate": 30.97,
+                  "side_bias_points": 0.77,
+                  "stalemate_rate": 37.3,
+                  "average_rounds": 7.56
+                },
+                {
+                  "week": 2,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 45.07,
+                  "enemy_side_win_rate": 37.37,
+                  "side_bias_points": 7.7,
+                  "stalemate_rate": 17.57,
+                  "average_rounds": 5.76
+                },
+                {
+                  "week": 3,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 44.53,
+                  "enemy_side_win_rate": 48.17,
+                  "side_bias_points": 3.63,
+                  "stalemate_rate": 7.3,
+                  "average_rounds": 5.19
+                },
+                {
+                  "week": 4,
+                  "ordered_matchup_count": 30,
+                  "sample_count": 3000,
+                  "player_side_win_rate": 44.43,
+                  "enemy_side_win_rate": 48.93,
+                  "side_bias_points": 4.5,
+                  "stalemate_rate": 6.63,
+                  "average_rounds": 5.65
+                }
+              ],
+              "top_outlier_themes": [
+                "week 1 stalemates are too high",
+                "some faction-pair dominant win rates are outside 45-55",
+                "week 2 side bias is slightly above target"
+              ]
+            }
+          },
+          "army_snapshot_policy": {
+            "initial": "one day-1 representative-town growth tick",
+            "week_1": "initial plus one recruited week capped at T1-T3",
+            "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
+            "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
+            "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks"
+          },
+          "town_development_balance_report": {
+            "ok": true,
+            "authored_town_count": 15,
+            "full_ladder_town_count": 15,
+            "target_turns": 30
+          },
+          "policy": "benchmark gates structural failures and reports balance outliers as next tuning evidence; this slice does not claim final combat balance"
+        }
+      },
+      "notes": "Completed. Use reported stalemate, win-rate, pacing, and side-bias outliers to select the next combat-feel tuning slice."
+    },
+    {
       "id": "economy-faction-identity-second-pass-10184",
       "title": "Economy Faction Identity Second Pass",
       "status": "pending",
@@ -33942,30 +34272,27 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T14:12:56Z",
+    "updatedAt": "2026-05-26T16:48:32Z",
     "commands": [
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
-      "python3 tests/town_development_balance_report.py (passed)",
-      "python3 tests/town_development_cost_curve_report.py (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
-      "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
-      "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
-      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+      "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Native RMG generated-map economy source-access support passed deterministic scorecard, runtime-inclusive scorecard, generated package adoption report, TownShell all-rare UI smoke, and repo validation."
+    "summary": "Fast Python faction benchmark, town balance report, repo validation, progress JSON, and diff whitespace checks passed."
   },
   "active_slice": {
-    "id": "economy-native-rmg-required-source-support-10184",
-    "title": "Economy Native RMG Required Source Support",
+    "id": "battle-fast-faction-benchmark-10184",
+    "title": "Battle Fast Faction Benchmark",
     "status": "completed",
-    "updatedAt": "2026-05-26T14:12:31Z",
-    "notes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
-    "completedAt": "2026-05-26T14:12:31Z"
+    "updatedAt": "2026-05-26T16:48:32Z",
+    "notes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
+    "completedAt": "2026-05-26T16:48:32Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T14:12:31Z",
+  "currentSliceUpdatedAt": "2026-05-26T16:48:32Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -35942,82 +36269,114 @@
         "new_gate_created": false,
         "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
       }
+    },
+    {
+      "sliceId": "battle-fast-faction-benchmark-10184",
+      "status": "pass",
+      "updatedAt": "2026-05-26T16:48:32Z",
+      "summary": "Fast Python faction benchmark, town balance report, repo validation, progress JSON, and diff whitespace checks passed."
     }
   ],
   "currentSlice": {
-    "id": "economy-native-rmg-required-source-support-10184",
-    "title": "Economy Native RMG Required Source Support",
+    "id": "battle-fast-faction-benchmark-10184",
+    "title": "Battle Fast Faction Benchmark",
     "status": "completed",
-    "updatedAt": "2026-05-26T14:12:31Z",
-    "notes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
-    "completedAt": "2026-05-26T14:12:31Z"
+    "updatedAt": "2026-05-26T16:48:32Z",
+    "notes": "Completed. Fast Python battle benchmark implemented and validated; next combat work should tune from the reported outliers.",
+    "completedAt": "2026-05-26T16:48:32Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T14:12:56Z",
-    "sliceId": "economy-native-rmg-required-source-support-10184",
+    "updatedAt": "2026-05-26T16:48:32Z",
+    "sliceId": "battle-fast-faction-benchmark-10184",
     "commands": [
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
-      "python3 tests/town_development_balance_report.py (passed)",
-      "python3 tests/town_development_cost_curve_report.py (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
-      "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
-      "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
-      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed; ok=true, 30 ordered rows, 17 tuning outliers reported)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed structurally; 120 ordered rows, 70 tuning outliers reported)",
+      "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "scope": "Native RMG generated maps only for source-access balance; authored scenario rare-source breadth paused",
-      "deterministic_scorecard": "15/15",
-      "runtime_inclusive_scorecard": "30/30",
-      "town_development_completion_day_min": 28,
-      "town_development_completion_day_max": 30,
-      "rare_pressure_model": {
-        "signature_rare_total": "28-30",
-        "secondary_rare_total": 14,
-        "remaining_rare_total_each": 9,
-        "all_rare_resources_used_by_each_town": true
+      "benchmark": {
+        "quick": {
+          "ok": true,
+          "ordered_matchup_count": 30,
+          "faction_count": 6,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 17
+        },
+        "full_100_seed": {
+          "ok": true,
+          "ordered_matchup_count": 120,
+          "faction_count": 6,
+          "seeds_per_ordered_matchup": 100,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 70,
+          "week_summaries": [
+            {
+              "week": 1,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 31.73,
+              "enemy_side_win_rate": 30.97,
+              "side_bias_points": 0.77,
+              "stalemate_rate": 37.3,
+              "average_rounds": 7.56
+            },
+            {
+              "week": 2,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 45.07,
+              "enemy_side_win_rate": 37.37,
+              "side_bias_points": 7.7,
+              "stalemate_rate": 17.57,
+              "average_rounds": 5.76
+            },
+            {
+              "week": 3,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 44.53,
+              "enemy_side_win_rate": 48.17,
+              "side_bias_points": 3.63,
+              "stalemate_rate": 7.3,
+              "average_rounds": 5.19
+            },
+            {
+              "week": 4,
+              "ordered_matchup_count": 30,
+              "sample_count": 3000,
+              "player_side_win_rate": 44.43,
+              "enemy_side_win_rate": 48.93,
+              "side_bias_points": 4.5,
+              "stalemate_rate": 6.63,
+              "average_rounds": 5.65
+            }
+          ],
+          "top_outlier_themes": [
+            "week 1 stalemates are too high",
+            "some faction-pair dominant win rates are outside 45-55",
+            "week 2 side bias is slightly above target"
+          ]
+        }
       },
-      "generated_package_source_routes": {
-        "town_case_count": 7,
-        "resource_route_case_count": 56,
-        "reachable_route_case_count": 56,
-        "required_rare_source_route_case_count": 42,
-        "guarded_rare_source_route_case_count": 42,
-        "generated_resource_source_ids": [
-          "aetherglass",
-          "brass_scrip",
-          "embergrain",
-          "gold",
-          "memory_salt",
-          "ore",
-          "peatwax",
-          "verdant_grafts",
-          "wood"
-        ]
+      "army_snapshot_policy": {
+        "initial": "one day-1 representative-town growth tick",
+        "week_1": "initial plus one recruited week capped at T1-T3",
+        "week_2": "initial plus week-one T1-T4 and week-two T1-T5 recruitment",
+        "week_3": "initial plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment",
+        "week_4": "initial plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment using fully developed growth for final full-tier ticks"
       },
-      "generated_package_breadth": {
-        "case_count": 3,
-        "total_town_count": 15,
-        "total_resource_route_case_count": 120,
-        "total_reachable_route_case_count": 120,
-        "total_guarded_rare_source_route_case_count": 90
+      "town_development_balance_report": {
+        "ok": true,
+        "authored_town_count": 15,
+        "full_ladder_town_count": 15,
+        "target_turns": 30
       },
-      "generated_runways": {
-        "player_completion_day": 22,
-        "neutral_completion_day_range": "20-23",
-        "enemy_completion_day_range": "24-24"
-      },
-      "townshell_all_rare_ui": {
-        "faction_case_count": 6,
-        "rare_bottleneck_surface_case_count": 6,
-        "ready_build_plan_surface_case_count": 6,
-        "same_day_build_lockout_case_count": 6
-      },
-      "new_gate_created": false,
-      "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
+      "policy": "benchmark gates structural failures and reports balance outliers as next tuning evidence; this slice does not claim final combat balance"
     }
   }
 }
