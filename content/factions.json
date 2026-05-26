@@ -30,12 +30,7 @@
       "recruitment": {
         "readiness_bonus": 8,
         "growth_bonus": {
-          "unit_river_guard": 1,
-          "unit_ember_archer": 1,
-          "unit_citadel_pikeward": 1,
-          "unit_embercourt_fordhook_cadets": 1,
-          "unit_embercourt_lantern_sappers": 1,
-          "unit_embercourt_bargebow_crews": 1
+          "unit_embercourt_fordhook_cadets": 1
         },
         "cost_discount_percent": {
           "unit_river_guard": 6,
@@ -189,13 +184,7 @@
       "recruitment": {
         "readiness_bonus": 2,
         "growth_bonus": {
-          "unit_blackbranch_cutthroat": 2,
-          "unit_mire_slinger": 2,
-          "unit_bog_brute": 1,
-          "unit_gorefen_ripper": 1,
-          "unit_mireclaw_reedsnare_kin": 1,
-          "unit_mireclaw_mudglass_slingers": 1,
-          "unit_mireclaw_bogplate_maulers": 1
+          "unit_mireclaw_reedsnare_kin": 1
         },
         "cost_discount_percent": {
           "unit_blackbranch_cutthroat": 10,
@@ -354,13 +343,7 @@
       "recruitment": {
         "readiness_bonus": 5,
         "growth_bonus": {
-          "unit_shard_guard": 1,
-          "unit_prism_adept": 1,
-          "unit_mirror_duelist": 1,
-          "unit_aurora_ballista": 1,
-          "unit_sunvault_shard_wardens": 1,
-          "unit_sunvault_prism_adepts": 1,
-          "unit_sunvault_mirror_duelists": 1
+          "unit_sunvault_shard_wardens": 1
         },
         "cost_discount_percent": {
           "unit_shard_guard": 5,
@@ -510,9 +493,7 @@
       "recruitment": {
         "readiness_bonus": 3,
         "growth_bonus": {
-          "unit_thornwake_seedcutters": 2,
-          "unit_thornwake_thornwhip_carriers": 1,
-          "unit_thornwake_sporeglass_menders": 1
+          "unit_thornwake_seedcutters": 1
         },
         "cost_discount_percent": {
           "unit_thornwake_seedcutters": 8,
@@ -658,9 +639,7 @@
       "recruitment": {
         "readiness_bonus": 4,
         "growth_bonus": {
-          "unit_brasshollow_scrip_haulers": 1,
-          "unit_brasshollow_rivet_hounds": 1,
-          "unit_brasshollow_furnace_pavis_teams": 1
+          "unit_brasshollow_scrip_haulers": 1
         },
         "cost_discount_percent": {
           "unit_brasshollow_scrip_haulers": 5,
@@ -805,9 +784,7 @@
       "recruitment": {
         "readiness_bonus": 2,
         "growth_bonus": {
-          "unit_veilmourn_bellwake_oars": 2,
-          "unit_veilmourn_mourning_lanterns": 1,
-          "unit_veilmourn_maskglass_corsairs": 1
+          "unit_veilmourn_bellwake_oars": 1
         },
         "cost_discount_percent": {
           "unit_veilmourn_bellwake_oars": 8,

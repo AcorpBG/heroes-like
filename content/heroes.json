@@ -26,12 +26,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "artillerist",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 1
       },
@@ -63,12 +62,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       },
@@ -100,12 +98,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       },
@@ -138,12 +135,11 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "artillerist",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       },
@@ -175,12 +171,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       },
@@ -213,11 +208,10 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "vanguard",
-        "packhunter"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
+        "attack": 0,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -250,12 +244,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "bogwise",
-        "packhunter"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       },
@@ -287,12 +280,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "ambusher",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 2
       },
@@ -325,12 +317,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "packhunter"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       },
@@ -362,12 +353,11 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       },
@@ -399,12 +389,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "artillerist",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       },
@@ -436,11 +425,10 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "vanguard",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
+        "attack": 0,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -474,12 +462,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       },
@@ -513,12 +500,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -550,12 +536,11 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "artillerist",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 0
       }
@@ -587,12 +572,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "artillerist",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -624,12 +608,11 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 1,
         "knowledge": 2
       }
@@ -661,11 +644,10 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
+        "attack": 0,
         "defense": 0,
         "power": 2,
         "knowledge": 1
@@ -698,12 +680,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "vanguard",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -735,12 +716,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "packhunter"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       }
@@ -772,11 +752,10 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "packhunter",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
+        "attack": 0,
         "defense": 0,
         "power": 2,
         "knowledge": 1
@@ -809,12 +788,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "bogwise",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -846,12 +824,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "bogwise",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 1,
         "knowledge": 2
       }
@@ -883,11 +860,10 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "packhunter",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
+        "attack": 0,
         "defense": 0,
         "power": 1,
         "knowledge": 2
@@ -920,12 +896,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "artillerist",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       }
@@ -957,12 +932,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "artillerist",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 1
       }
@@ -994,12 +968,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -1031,12 +1004,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -1068,12 +1040,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 2,
+        "defense": 0,
         "power": 1,
         "knowledge": 1
       }
@@ -1105,8 +1076,7 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "artillerist",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
@@ -1142,12 +1112,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -1179,12 +1148,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       }
@@ -1216,12 +1184,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "vanguard",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 2
       }
@@ -1253,12 +1220,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 2,
+        "defense": 0,
         "power": 1,
         "knowledge": 1
       }
@@ -1290,11 +1256,10 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "ambusher",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
+        "attack": 0,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -1327,12 +1292,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "bogwise",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -1364,12 +1328,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 1,
         "knowledge": 2
       }
@@ -1401,7 +1364,6 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "bogwise",
         "linekeeper"
       ],
       "command": {
@@ -1438,12 +1400,11 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -1475,12 +1436,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 1,
         "knowledge": 2
       }
@@ -1512,12 +1472,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 0
       }
@@ -1549,12 +1508,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "artillerist",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       }
@@ -1586,12 +1544,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -1623,12 +1580,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 1,
         "knowledge": 0
       }
@@ -1660,12 +1616,11 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 3,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 0
       }
@@ -1697,12 +1652,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -1734,12 +1688,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 2,
+        "defense": 0,
         "power": 1,
         "knowledge": 1
       }
@@ -1771,8 +1724,7 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "artillerist",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
@@ -1808,12 +1760,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -1845,8 +1796,7 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "artillerist",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
@@ -1882,11 +1832,10 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "ambusher",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
+        "attack": 0,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -1919,12 +1868,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 2,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -1956,11 +1904,10 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "ambusher",
-        "packhunter"
+        "linekeeper"
       ],
       "command": {
-        "attack": 2,
+        "attack": 0,
         "defense": 0,
         "power": 0,
         "knowledge": 2
@@ -1993,12 +1940,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "ambusher",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 1,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 2
       }
@@ -2030,12 +1976,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper",
-        "ambusher"
+        "linekeeper"
       ],
       "command": {
-        "attack": 1,
-        "defense": 2,
+        "attack": 0,
+        "defense": 0,
         "power": 0,
         "knowledge": 1
       }
@@ -2067,8 +2012,7 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "ambusher",
-        "bogwise"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
@@ -2104,12 +2048,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "packhunter",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -2141,8 +2084,7 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "ambusher",
-        "vanguard"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,
@@ -2178,12 +2120,11 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "bogwise",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 1,
+        "defense": 0,
         "power": 2,
         "knowledge": 1
       }
@@ -2215,8 +2156,7 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "ambusher",
-        "artillerist"
+        "linekeeper"
       ],
       "command": {
         "attack": 0,

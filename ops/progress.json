@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Benchmark side labels are side-neutral and the ordered-matchup harness now removes hidden faction/unit-id tie bias: ordered matchup seeds are mirrored by unordered faction pair and equal-score turn/action ties use side slots instead of unit ids. A neutral lower-bound probe with identical armies and disabled faction/commander modifiers produced 0 balance outliers, proving the side/tie surface can represent true 50/50 mirrors. The real 100-seed content matrix remains needs_tuning: 60 balance outliers, side-bias points by week 0.07/1.0/1.87/0.0, average rounds 5.18/5.51/5.94/5.8, so the combat balance goal is not complete.",
+  "currentSliceNotes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T20:16:33Z",
+  "updatedAt": "2026-05-26T20:46:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25160,24 +25160,26 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-26T20:16:33Z",
+        "updatedAt": "2026-05-26T20:46:57Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
           "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --gate",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
         ],
         "evidence": {
-          "harness_bias_fix": "ordered matchup seeds are keyed by unordered faction pair; equal-score turn/action ties use side slots instead of faction/unit ids",
-          "neutral_lower_bound_probe": "identical armies with disabled faction/commander modifiers produced 0 balance outliers and max dominant rate 50.0",
-          "current_100_seed_status": "needs_tuning; 60 balance outliers; week side-bias points 0.07, 1.0, 1.87, 0.0; average rounds 5.18, 5.51, 5.94, 5.8",
-          "remaining_failure": "all week-pair summaries still need real content/mechanics tuning into the 45-55 target and week 4 pacing must exceed week 3"
+          "content_tuning_scope": "normalized active six-faction ladder tier stats/growth, removed active-ladder ability payloads, uniform T1 growth bonus, normalized direct hero combat command/trait spikes, and extended T6/T7 pacing",
+          "previous_100_seed_baseline": "needs_tuning; 60 balance outliers; average rounds 5.18, 5.51, 5.94, 5.8",
+          "current_100_seed_status": "needs_tuning; 43 balance outliers; week side-bias points 0.8, 1.6, 3.2, 1.4; average rounds 5.4, 5.92, 6.76, 7.13",
+          "current_worst_remaining": "week 1 Brasshollow over Veilmourn 88.5; week 2 Embercourt over Mireclaw and Veilmourn over Thornwake 93.0; week 3 Embercourt over Thornwake 79.0; week 4 Brasshollow over Thornwake 71.5",
+          "remaining_failure": "dominant win rates are not yet all within 45-55, so the active goal is not complete"
         }
       },
-      "notes": "In progress. Benchmark side labels are side-neutral and the ordered-matchup harness now removes hidden faction/unit-id tie bias: ordered matchup seeds are mirrored by unordered faction pair and equal-score turn/action ties use side slots instead of unit ids. A neutral lower-bound probe with identical armies and disabled faction/commander modifiers produced 0 balance outliers, proving the side/tie surface can represent true 50/50 mirrors. The real 100-seed content matrix remains needs_tuning: 60 balance outliers, side-bias points by week 0.07/1.0/1.87/0.0, average rounds 5.18/5.51/5.94/5.8, so the combat balance goal is not complete.",
+      "notes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25197,7 +25199,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T20:16:33Z",
+      "updatedAt": "2026-05-26T20:46:57Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
@@ -34959,7 +34961,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T20:16:33Z",
+  "currentSliceUpdatedAt": "2026-05-26T20:46:57Z",
   "validationHistory": [
     {
       "status": "pass",
