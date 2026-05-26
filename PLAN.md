@@ -34,6 +34,7 @@ Latest economy/town evidence:
 - Authored town development completion: day 28-30.
 - Active authored source routes: 54/54 player routes and 60/60 enemy routes reachable.
 - Current player-balance finding: Brasshollow, Thornwake, and Veilmourn have the clearest economy identity; Embercourt, Mireclaw, and Sunvault still need deeper identity beyond rare-resource pressure.
+- Current rare-cost model: each town currently uses only its faction-specific rare resource. This is no longer the target model.
 - Active authored rare-source placement remains narrow for `verdant_grafts`, `brass_scrip`, and `memory_salt`.
 - Strict Small generated-map economy evidence is scoped to 36x36 one-level land packages. It is useful regression evidence, not broad RMG economy approval.
 
@@ -47,8 +48,8 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
-- `economy-faction-identity-second-pass-10184`: deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.
-- `economy-authored-rare-source-breadth-10184`: broaden and guard active authored rare-source placement for `verdant_grafts`, `brass_scrip`, and `memory_salt` without touching campaign production.
+- `economy-faction-identity-second-pass-10184`: replace the one-rare-per-faction town cost model with a multi-rare pressure model where every town uses every rare resource, the faction-specific rare remains highest pressure, one secondary rare carries about half that pressure, and each remaining rare carries about one-third pressure.
+- `economy-authored-rare-source-breadth-10184`: broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
 - `combat-feel-balance-pass-10184`: tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
@@ -62,6 +63,26 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Economy Rare-Resource Target
+
+The next economy identity pass should move authored towns away from a one-signature-rare model.
+
+Target cost-pressure model for every authored town:
+- Every rare resource should appear in at least one town-development cost.
+- The town faction's signature rare resource should remain the highest-pressure rare and should still define the core late-game faction bottleneck.
+- One secondary rare resource should create about half as much pressure as the faction signature rare.
+- Each remaining rare resource should create about one-third as much pressure as the faction signature rare.
+- `gold`, `wood`, and `ore` should remain the dominant common-resource development shape; multi-rare costs should not turn the economy into all-rare-only pricing.
+- Rare-resource use should create meaningful player choices in different building categories, not just append small costs to arbitrary filler buildings.
+- Source placement, guarded access, generated-package support, AI town development, and player-facing town UI must be updated with the cost model so every required rare can be acquired through play.
+
+Example pressure interpretation if a faction's signature rare target remains near the current 28-30 total spend:
+- faction signature rare: roughly 28-30 total pressure;
+- secondary rare: roughly 14-15 total pressure;
+- each remaining rare: roughly 9-10 total pressure.
+
+This target is a design direction for the next economy slice. It is not yet implemented by the current content.
 
 ## Slice Status Model
 
