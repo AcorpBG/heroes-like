@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Public benchmark output has been corrected to side_a/side_b, fake stalemate remains removed, initiative tie side is seed-varied to avoid side-order artifact, and army snapshots no longer use authored representative-town build logs; current 20-seed matrix still has faction-pair win-rate outliers, so the balance goal is not complete.",
+  "currentSliceNotes": "In progress. Fast battle benchmark internals and public output now use side_a/side_b throughout the neutral ordered faction harness; no player/enemy tokens remain in quick JSON output. Fake stalemate remains removed, initiative tie side is seed-varied, and army snapshots do not use authored representative-town build logs. Quick structural gate passes, but balance remains needs_tuning with faction-pair win-rate outliers, so the balance goal is not complete.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T19:14:45Z",
+  "updatedAt": "2026-05-26T19:38:24Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25159,13 +25159,22 @@
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "validation": {
-        "status": "pending",
-        "updatedAt": "2026-05-26T17:17:12Z",
+        "status": "partial",
+        "updatedAt": "2026-05-26T19:38:24Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
-        "commands": [],
-        "evidence": {}
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --gate",
+          "git diff --check"
+        ],
+        "evidence": {
+          "side_neutral_token_check": "quick JSON output contains no player/enemy tokens after internal side rename",
+          "quick_gate": "ok true, structural_failures empty",
+          "balance_status": "needs_tuning; quick week-1 balance_outlier_count 14"
+        }
       },
-      "notes": "In progress. Public benchmark output has been corrected to side_a/side_b, fake stalemate remains removed, initiative tie side is seed-varied to avoid side-order artifact, and army snapshots no longer use authored representative-town build logs; current 20-seed matrix still has faction-pair win-rate outliers, so the balance goal is not complete.",
+      "notes": "In progress. Fast battle benchmark internals and public output now use side_a/side_b throughout the neutral ordered faction harness; no player/enemy tokens remain in quick JSON output. Fake stalemate remains removed, initiative tie side is seed-varied, and army snapshots do not use authored representative-town build logs. Quick structural gate passes, but balance remains needs_tuning with faction-pair win-rate outliers, so the balance goal is not complete.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25185,7 +25194,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T19:14:45Z",
+      "updatedAt": "2026-05-26T19:38:24Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
@@ -34947,7 +34956,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T18:18:00Z",
+  "currentSliceUpdatedAt": "2026-05-26T19:38:24Z",
   "validationHistory": [
     {
       "status": "pass",
