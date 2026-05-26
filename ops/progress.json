@@ -6,9 +6,9 @@
   "currentSliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
   "currentSliceTitle": "Economy Fastest Capstone Rare Pacing Followup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+  "currentSliceNotes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-25T21:45:24Z",
+  "updatedAt": "2026-05-26T09:44:34Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24284,6 +24284,357 @@
       "updatedAt": "2026-05-25T21:45:24Z",
       "completedAt": "2026-05-25T21:23:25Z",
       "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false."
+    },
+    {
+      "id": "economy-faction-identity-second-pass-10184",
+      "title": "Economy Faction Identity Second Pass",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "scripts/core/TownRules.gd as needed",
+        "existing economy/town reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "economy-faction-identity-second-pass-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "economy-authored-rare-source-breadth-10184",
+      "title": "Economy Authored Rare Source Breadth",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/resource_sites.json",
+        "existing active source-route and economy scorecard reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "economy-authored-rare-source-breadth-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "battle-layout-smoke-followup-10184",
+      "title": "Battle Layout Smoke Followup",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "battle shell/view scenes",
+        "focused battle smoke reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "battle-layout-smoke-followup-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "combat-feel-balance-pass-10184",
+      "title": "Combat Feel Balance Pass",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "content/army_groups.json",
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "battle autoplay reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "combat-feel-balance-pass-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "strategic-ai-quality-pass-10184",
+      "title": "Strategic AI Quality Pass",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "strategic AI reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "strategic-ai-quality-pass-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "title": "RMG Small Generalization Hardening",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "native package/session adoption code",
+        "RMG strict Small reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "ux-polish-player-comprehension-10184",
+      "title": "UX Polish Player Comprehension",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and reduce debug-like seams.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scene shells",
+        "UI rules",
+        "existing UI smoke reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "ux-polish-player-comprehension-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and reduce debug-like seams.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "packaging-platform-readiness-followup-10184",
+      "title": "Packaging Platform Readiness Followup",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Continue clean Windows/Linux packaging and smoke-test hardening.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "export presets",
+        "packaging scripts",
+        "packaged smoke reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "packaging-platform-readiness-followup-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Continue clean Windows/Linux packaging and smoke-test hardening.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "headless-balance-harness-next-10184",
+      "title": "Headless Balance Harness Next",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "purpose": "Expand automated balance harness depth before scaling content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "headless harness rules",
+        "balance reports",
+        "scenario/battle/economy fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "new gates without player-facing value",
+        "broad release/parity claims"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "headless-balance-harness-next-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "summary": "Pending. Expand automated balance harness depth before scaling content.",
+      "updatedAt": "2026-05-26T09:44:34Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -31392,11 +31743,70 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-package-session-authoritative-replay-gate-10184",
-      "title": "Native RMG Package Session Authoritative Replay Gate",
-      "status": "completed",
-      "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed after Small/Medium/Large/XL owner-compared status promotion; stable replay identity and package/session save-load replay are now proved while runtime-authoritative adoption remains disabled."
+      "id": "economy-faction-identity-second-pass-10184",
+      "title": "Economy Faction Identity Second Pass",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "scripts/core/TownRules.gd as needed",
+        "existing economy/town reports"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "economy-faction-identity-second-pass-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Deepen Embercourt, Mireclaw, and Sunvault economic identity with real player choices, not only renamed rare-resource pressure.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "economy-authored-rare-source-breadth-10184",
+      "title": "Economy Authored Rare Source Breadth",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/resource_sites.json",
+        "existing active source-route and economy scorecard reports"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "economy-authored-rare-source-breadth-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Broaden and guard active authored rare-source placement for verdant_grafts, brass_scrip, and memory_salt without campaign production.",
+      "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "battle-layout-smoke-followup-10184",
+      "title": "Battle Layout Smoke Followup",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "implementationTargets": [
+        "battle shell/view scenes",
+        "focused battle smoke reports"
+      ],
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-26T09:44:34Z",
+        "sliceId": "battle-layout-smoke-followup-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.",
+      "updatedAt": "2026-05-26T09:44:34Z"
     }
   ],
   "stoppedOrPausedTasks": [
@@ -33302,128 +33712,23 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T19:07:55Z",
-    "sliceId": "economy-mireclaw-final-upgrade-pressure-20260525-10184",
+    "updatedAt": "2026-05-26T09:44:34Z",
     "commands": [
-      "python3 tests/town_development_balance_report.py > /tmp/heroes-like-balance-mireclaw-final2.json (passed; all Mireclaw towns complete day 28, late rare bottleneck counts 3-4, max ending ore 8)",
-      "python3 tests/town_development_cost_curve_report.py > /tmp/heroes-like-cost-mireclaw-final2.json (passed; Mireclaw rare total 28, Oathmire Court cost gold 3650/ore 4/peatwax 6)",
-      "python3 tests/faction_town_unit_asymmetry_report.py > /tmp/heroes-like-asymmetry-mireclaw-final.json (passed)",
-      "python3 tests/economy_town_goal_scorecard_report.py > /tmp/heroes-like-scorecard-mireclaw-final2.json (passed; 15/15 deterministic checks, authored completion range day 27-30)",
-      "python3 tests/validate_repo.py (passed)",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/validate_repo.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py (passed)",
-      "jq empty ops/progress.json content/scenarios.json content/towns.json content/buildings.json (passed)",
-      "git diff --check (passed)"
+      "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+      "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like",
+      "jq empty ops/progress.json"
     ],
-    "evidence": {
-      "content_changes": {
-        "building_mireclaw_oathmire_court_cost": {
-          "gold": 3650,
-          "wood": 2,
-          "ore": 4,
-          "peatwax": 6
-        }
-      },
-      "affected_completion_days": {
-        "town_blackfen_gate": 28,
-        "town_duskfen": 28,
-        "town_murkward_ford": 28,
-        "town_nightglass_redoubt": 28,
-        "town_reedbarrow_ferry": 28
-      },
-      "affected_late_rare_bottleneck_days": {
-        "town_blackfen_gate": 4,
-        "town_duskfen": 4,
-        "town_murkward_ford": 4,
-        "town_nightglass_redoubt": 3,
-        "town_reedbarrow_ferry": 4
-      },
-      "affected_ending_resources": {
-        "town_blackfen_gate": {
-          "gold": 3140,
-          "ore": 5,
-          "peatwax": 0,
-          "wood": 2
-        },
-        "town_duskfen": {
-          "gold": 5340,
-          "ore": 8,
-          "peatwax": 0,
-          "wood": 1
-        },
-        "town_murkward_ford": {
-          "gold": 3140,
-          "ore": 5,
-          "peatwax": 0,
-          "wood": 2
-        },
-        "town_nightglass_redoubt": {
-          "gold": 1740,
-          "ore": 4,
-          "peatwax": 0,
-          "wood": 1
-        },
-        "town_reedbarrow_ferry": {
-          "gold": 3740,
-          "ore": 8,
-          "peatwax": 0,
-          "wood": 2
-        }
-      },
-      "affected_total_development_costs": {
-        "town_blackfen_gate": {
-          "gold": 40460,
-          "ore": 27,
-          "peatwax": 28,
-          "wood": 30
-        },
-        "town_duskfen": {
-          "gold": 38260,
-          "ore": 24,
-          "peatwax": 28,
-          "wood": 31
-        },
-        "town_murkward_ford": {
-          "gold": 40460,
-          "ore": 27,
-          "peatwax": 28,
-          "wood": 30
-        },
-        "town_nightglass_redoubt": {
-          "gold": 41860,
-          "ore": 28,
-          "peatwax": 28,
-          "wood": 31
-        },
-        "town_reedbarrow_ferry": {
-          "gold": 39860,
-          "ore": 24,
-          "peatwax": 28,
-          "wood": 30
-        }
-      },
-      "deterministic_scorecard_passed_requirement_count": 15,
-      "deterministic_scorecard_requirement_count": 15,
-      "town_development_completion_day_min": 27,
-      "town_development_completion_day_max": 30,
-      "late_rare_bottleneck_day_count_min": 3,
-      "observed_common_surplus_max_after_tuning": {
-        "gold": 5840,
-        "ore": 8,
-        "wood": 6
-      },
-      "new_gate_created": false,
-      "policy": "player-balance content tuning using existing reports; not campaign production work"
-    }
+    "summary": "Document role alignment cleanup plus pending near-term slice reconciliation."
   },
   "active_slice": {
     "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
     "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-25T21:45:24Z",
-    "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+    "updatedAt": "2026-05-26T09:43:39Z",
+    "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
     "completedAt": "2026-05-25T21:23:25Z"
   },
-  "currentSliceUpdatedAt": "2026-05-25T21:45:24Z",
+  "currentSliceUpdatedAt": "2026-05-26T09:43:39Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -35338,8 +35643,8 @@
     "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
     "title": "Economy Fastest Capstone Rare Pacing Followup",
     "status": "completed",
-    "updatedAt": "2026-05-25T21:45:24Z",
-    "notes": "Completed. Paused new gate creation and audited the current economy/town work as a player-balance pass before tuning. Findings: Brasshollow, Thornwake, and Veilmourn currently have the clearest economic identities because late rare pressure appears across more civic/support decisions; Embercourt, Mireclaw, and Sunvault have real payoff hooks but still lean more on renamed rare-resource pressure and repeated curve patterns; active authored rare-source placement remains narrow, especially Verdant Grafts, Brass Scrip, and Memory Salt; strict Small generated-map evidence is useful regression evidence but remains 36x36 land/template scoped, not broad RMG economy approval. Implemented the highest-value tuning slice without adding gates: kept the late Embercourt/Sunvault capstone rare-pressure correction and fixed duplicate player-facing town-building names in Embercourt, Mireclaw, and Sunvault so authored town build lists no longer read as repeated buildings. Existing reports stay green: town balance completion day 28-30, deterministic scorecard 15/15, cost curve/asymmetry pass, active source routes 54/54 player and 60/60 enemy reachable, unique payoff runtime pass, and duplicate display-name audit false.",
+    "updatedAt": "2026-05-26T09:43:39Z",
+    "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
     "completedAt": "2026-05-25T21:23:25Z"
   },
   "validation": {

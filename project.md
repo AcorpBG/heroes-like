@@ -198,11 +198,13 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework is reset around a small-map-only h3maped-derived port.
+Current phase: Phase 5 — Playable Alpha Baseline.
 
-Completed RMG slices and the archived native catalog-auto path are evidence/debug material only, not broad HoMM3-style production parity. The next production path must be isolated from the archived implementation, scoped to 36x36 maps first, and derived from `/root/Downloads/h3maped.exe` behavior plus the recovered h3maped spec before adapting output to our runtime assets and registries.
+The strategic focus is now to turn the validated systems foundation into a coherent playable alpha that can be played repeatedly without developer interpretation. Economy/town development, save/load, generated-art loading, strict Small generated package adoption, active scenario source routes, battle presentation foundations, and strategic AI foundations all have meaningful evidence, but they are not product-completion claims.
 
-Native package/session adoption remains feature-gated and non-authoritative until the small-map port proves stable full-output package/session identity, physical zone separation, road topology, object density, guard placement, and town separation across the supported small-map profiles.
+Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, packaging hardening, and balance harness depth. Campaign production remains deferred until explicitly selected in a later phase.
+
+Random map generation remains strategically important, but the current proven scope is strict Small 36x36 one-level land package/session evidence. Larger sizes, water, underground, broad template families, final reward ecology, route safety, and full HoMM-style production parity remain incomplete and must not be inferred from Small-map validation.
 
 ## Non-Goals
 
