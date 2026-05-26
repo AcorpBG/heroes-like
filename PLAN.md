@@ -25,8 +25,9 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
 - No implementation slice is currently in progress.
-- Latest completed slice: `combat-feel-balance-pass-10184`.
-- Previous completed slice: `battle-fast-faction-benchmark-10184`.
+- Latest completed slice: `battle-benchmark-no-round-cap-10184`.
+- Previous completed slice: `combat-feel-balance-pass-10184`.
+- Earlier completed slice: `battle-fast-faction-benchmark-10184`.
 - Earlier completed slice: `economy-native-rmg-required-source-support-10184`.
 - `ops/progress.json` remains the operational source of truth for completed evidence, validation commands, and paused/superseded slice state.
 
@@ -43,7 +44,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
-- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that artificial stalemate artifacts have been removed.
+- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -102,12 +103,12 @@ Required benchmark shape:
 - week 2 snapshots: initial starting growth plus week-one T1-T4 and week-two T1-T5 recruitment;
 - week 3 snapshots: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment;
 - week 4 snapshots: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment with fully developed growth for final full-tier ticks;
-- JSON report rows for win rates, stalemates, average rounds, action mix, casualties by tier, battle consequences, pair summaries, week summaries, and outliers.
+- JSON report rows for win rates, average rounds, action mix, casualties by tier, battle consequences, pair summaries, week summaries, and outliers.
 
 Initial target bands:
 - faction-pair dominant win rates should trend toward 45-55%;
 - side bias should stay low;
-- stalemates should stay low;
+- no fake stalemate outcome should exist in benchmark data; emergency simulation guard hits are structural failures;
 - average rounds should remain readable.
 
 The first benchmark should report outliers as tuning evidence. Do not tune away failures blindly just to make the initial benchmark look green.

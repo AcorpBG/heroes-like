@@ -21,7 +21,7 @@ Target state:
 - A fast Python benchmark can simulate faction-vs-faction battles without launching the Godot runtime.
 - The benchmark uses live faction, town, hero, spell, unit, growth, and battle-stat content from `content/*.json`.
 - The benchmark reports week 1, week 2, week 3, and week 4 matchup matrices for every ordered faction pairing.
-- The benchmark exposes win-rate, stalemate, pacing, action-mix, casualty, and consequence outliers as tuning evidence.
+- The benchmark exposes win-rate, pacing, action-mix, casualty, and consequence outliers as tuning evidence.
 - The benchmark is a balance tool first. It must not hide bad combat results just to make a gate pass.
 
 ## Goal 1 - Fast Faction Battle Benchmark
@@ -49,11 +49,11 @@ Use the benchmark to produce the first faction matrix evidence:
 - midgame faction-vs-faction tests for weeks 2 and 3;
 - endgame faction-vs-faction tests for week 4;
 - ordered matchup rows for all six factions;
-- pair summaries that make side bias, stalemates, runaway matchups, and too-short/too-long battle pacing visible.
+- pair summaries that make side bias, runaway matchups, and too-short/too-long battle pacing visible.
 
 Initial balance target:
 - faction-pair dominant win rates should trend toward a 45-55% health band over repeated seeds;
-- stalemates should stay low enough to avoid non-decisions;
+- the benchmark must not model fake stalemate outcomes; unresolved simulations are structural failures, not balance data;
 - average battle length should usually land in a readable tactical range;
 - failures are tuning evidence for the next combat pass, not a reason to suppress the benchmark.
 
