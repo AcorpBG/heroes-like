@@ -105,11 +105,13 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	var target_building_id := _first_rare_building_id(town_template, rare_id)
 	var target_building := ContentService.get_building(target_building_id)
 	var target_cost: Dictionary = target_building.get("cost", {}) if target_building.get("cost", {}) is Dictionary else {}
+	var target_rare_cost_ids := _rare_cost_ids(target_cost)
 	var placement_id := "town_ui_surface_%s" % town_id
 	var row := {
 		"faction_id": faction_id,
 		"town_id": town_id,
 		"rare_resource_id": rare_id,
+		"target_rare_cost_ids": target_rare_cost_ids,
 		"target_building_id": target_building_id,
 		"errors": case_errors,
 	}
@@ -154,12 +156,12 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	var blocked_action: Dictionary = _action_by_id(blocked_catalog.get("build", []), "build:%s" % target_building_id)
 	var blocked_market_actions: Array = blocked_catalog.get("market", []) if blocked_catalog.get("market", []) is Array else []
 	_assert_town_shell_resource_surface(blocked_snapshot, rare_id, false, case_errors)
-	var blocked_economy_plan := _assert_player_economy_readability_surface(blocked_snapshot, rare_id, false, case_errors)
+	var blocked_economy_plan := _assert_player_economy_readability_surface(blocked_snapshot, rare_id, target_rare_cost_ids, false, case_errors)
 	_assert_common_only_market_actions(blocked_market_actions, case_errors)
-	_assert_blocked_rare_build_action(blocked_action, rare_id, target_cost, case_errors)
+	_assert_blocked_rare_build_action(blocked_action, rare_id, target_rare_cost_ids, target_cost, case_errors)
 
-	var rare_amount: int = max(1, int(target_cost.get(rare_id, 0)))
-	session.overworld["resources"][rare_id] = rare_amount
+	for target_rare_id in target_rare_cost_ids:
+		session.overworld["resources"][String(target_rare_id)] = max(1, int(target_cost.get(String(target_rare_id), 0)))
 	OverworldRules.normalize_overworld_state(session)
 	shell.call("validation_force_refresh")
 	await get_tree().process_frame
@@ -168,8 +170,8 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	var ready_catalog: Dictionary = shell.call("validation_action_catalog")
 	var ready_action: Dictionary = _action_by_id(ready_catalog.get("build", []), "build:%s" % target_building_id)
 	_assert_town_shell_resource_surface(ready_snapshot, rare_id, true, case_errors)
-	var ready_economy_plan := _assert_player_economy_readability_surface(ready_snapshot, rare_id, true, case_errors)
-	_assert_ready_rare_build_action(ready_action, rare_id, target_cost, case_errors)
+	var ready_economy_plan := _assert_player_economy_readability_surface(ready_snapshot, rare_id, target_rare_cost_ids, true, case_errors)
+	_assert_ready_rare_build_action(ready_action, rare_id, target_rare_cost_ids, target_cost, case_errors)
 
 	var build_result: Dictionary = TownRules.build_active_town(session, target_building_id)
 	build_result["action_id"] = "build:%s" % target_building_id
@@ -263,6 +265,13 @@ func _first_rare_building_id(town_template: Dictionary, rare_id: String) -> Stri
 			return building_id
 	return ""
 
+func _rare_cost_ids(cost: Dictionary) -> Array:
+	var ids := []
+	for resource_id in RARE_RESOURCE_IDS:
+		if int(cost.get(resource_id, 0)) > 0:
+			ids.append(resource_id)
+	return ids
+
 func _blocked_resource_stockpile() -> Dictionary:
 	var resources := {}
 	for resource_id in LIVE_STOCKPILE_RESOURCE_IDS:
@@ -300,6 +309,7 @@ func _assert_town_shell_resource_surface(snapshot: Dictionary, rare_id: String, 
 func _assert_player_economy_readability_surface(
 	snapshot: Dictionary,
 	rare_id: String,
+	rare_cost_ids: Array,
 	rare_positive: bool,
 	errors: Array
 ) -> Dictionary:
@@ -329,9 +339,9 @@ func _assert_player_economy_readability_surface(
 		errors.append("TownShell economy plan is not player-readable enough: %s." % JSON.stringify(surface))
 	var rare_bottleneck_ok := true
 	if not rare_positive:
-		rare_bottleneck_ok = bool(surface.get("build_has_bottleneck", false)) and build_bottleneck_resource_id == rare_id
+		rare_bottleneck_ok = bool(surface.get("build_has_bottleneck", false)) and build_bottleneck_resource_id in rare_cost_ids
 		if not rare_bottleneck_ok:
-			errors.append("TownShell economy plan did not surface %s as the build bottleneck: %s." % [rare_id, JSON.stringify(surface)])
+			errors.append("TownShell economy plan did not surface one of %s as the build bottleneck: %s." % [JSON.stringify(rare_cost_ids), JSON.stringify(surface)])
 	var ready_build_plan_ok := true
 	if rare_positive:
 		ready_build_plan_ok = String(surface.get("build_plan_state", "")) == "ready" and int(surface.get("build_ready_order_count", 0)) > 0
@@ -343,33 +353,35 @@ func _assert_player_economy_readability_surface(
 		"ready_build_plan_ok": ready_build_plan_ok,
 	}
 
-func _assert_blocked_rare_build_action(action: Dictionary, rare_id: String, target_cost: Dictionary, errors: Array) -> void:
+func _assert_blocked_rare_build_action(action: Dictionary, rare_id: String, rare_cost_ids: Array, target_cost: Dictionary, errors: Array) -> void:
 	if action.is_empty():
 		errors.append("Rare-cost build action was missing.")
 		return
 	var cost: Dictionary = action.get("cost", {}) if action.get("cost", {}) is Dictionary else {}
-	if int(cost.get(rare_id, 0)) <= 0 or int(target_cost.get(rare_id, 0)) <= 0:
-		errors.append("Rare-cost build action did not carry %s cost: %s." % [rare_id, JSON.stringify(action)])
+	for target_rare_id in rare_cost_ids:
+		if int(cost.get(String(target_rare_id), 0)) != int(target_cost.get(String(target_rare_id), 0)):
+			errors.append("Rare-cost build action did not carry %s cost: %s." % [String(target_rare_id), JSON.stringify(action)])
 	if not bool(action.get("disabled", false)):
-		errors.append("Rare-cost build action should be disabled while %s is missing." % rare_id)
+		errors.append("Rare-cost build action should be disabled while required rares are missing.")
 	if bool(action.get("direct_affordable", false)):
-		errors.append("Rare-cost build action incorrectly reported direct_affordable without %s." % rare_id)
+		errors.append("Rare-cost build action incorrectly reported direct_affordable without required rares.")
 	if bool(action.get("market_coverable", false)):
-		errors.append("Rare-cost build action incorrectly allowed normal-market coverage for %s." % rare_id)
+		errors.append("Rare-cost build action incorrectly allowed normal-market coverage for required rares.")
 	_assert_contains(String(action.get("shortfall_summary", "")), rare_id, "rare build shortfall", errors)
 	_assert_contains(String(action.get("disabled_reason", "")), rare_id, "rare build disabled reason", errors)
 
-func _assert_ready_rare_build_action(action: Dictionary, rare_id: String, target_cost: Dictionary, errors: Array) -> void:
+func _assert_ready_rare_build_action(action: Dictionary, rare_id: String, rare_cost_ids: Array, target_cost: Dictionary, errors: Array) -> void:
 	if action.is_empty():
 		errors.append("Ready rare-cost build action was missing.")
 		return
 	var cost: Dictionary = action.get("cost", {}) if action.get("cost", {}) is Dictionary else {}
-	if int(cost.get(rare_id, 0)) != int(target_cost.get(rare_id, 0)):
-		errors.append("Ready rare-cost build action changed %s cost: %s." % [rare_id, JSON.stringify(action)])
+	for target_rare_id in rare_cost_ids:
+		if int(cost.get(String(target_rare_id), 0)) != int(target_cost.get(String(target_rare_id), 0)):
+			errors.append("Ready rare-cost build action changed %s cost: %s." % [String(target_rare_id), JSON.stringify(action)])
 	if bool(action.get("disabled", true)):
-		errors.append("Rare-cost build action stayed disabled after %s was stocked." % rare_id)
+		errors.append("Rare-cost build action stayed disabled after required rares were stocked.")
 	if not bool(action.get("direct_affordable", false)):
-		errors.append("Rare-cost build action did not become direct_affordable after %s was stocked." % rare_id)
+		errors.append("Rare-cost build action did not become direct_affordable after required rares were stocked.")
 	if bool(action.get("market_coverable", false)):
 		errors.append("Directly affordable rare-cost build action should not require market coverage.")
 

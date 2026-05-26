@@ -10537,6 +10537,53 @@
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     },
     {
+      "id": "site_generated_town_required_source_cache",
+      "name": "Generated Town Supply Cache",
+      "family": "mine",
+      "persistent_control": true,
+      "claim_rewards": {
+        "wood": 1,
+        "ore": 1,
+        "aetherglass": 1,
+        "embergrain": 1,
+        "peatwax": 1,
+        "verdant_grafts": 1,
+        "brass_scrip": 1,
+        "memory_salt": 1
+      },
+      "control_income": {
+        "aetherglass": 1,
+        "embergrain": 1,
+        "peatwax": 1,
+        "verdant_grafts": 1,
+        "brass_scrip": 1,
+        "memory_salt": 1
+      },
+      "resource_outputs": [
+        {"resource_id": "aetherglass", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
+        {"resource_id": "embergrain", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
+        {"resource_id": "peatwax", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
+        {"resource_id": "verdant_grafts", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
+        {"resource_id": "brass_scrip", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
+        {"resource_id": "memory_salt", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0}
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 8,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": ["generated_town_economy"]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": ["generated_town_economy", "resource_front"],
+        "reward_tone": "generated town required-source control"
+      },
+      "content_batch_id": "native-rmg-generated-town-economy-support-10184"
+    },
+    {
       "id": "site_withered_rootgate_marker",
       "name": "Withered Rootgate Marker",
       "family": "scenario_objective",

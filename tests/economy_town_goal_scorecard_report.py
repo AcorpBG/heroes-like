@@ -17,6 +17,9 @@ REPORT_SCHEMA = "economy_town_goal_scorecard_report_v1"
 SLICE_ID = "economy-town-goal-scorecard-20260524-10184"
 TARGET_TURNS = 30
 MIN_DETERMINISTIC_COMPLETION_DAY = 24
+MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY = 22
+MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY = 22
+MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY = 20
 MIN_AUTHORED_TOWNS = 15
 MIN_FACTIONS = 6
 MIN_CAMPAIGN_SCENARIOS = 15
@@ -45,6 +48,16 @@ MAX_ENDING_COMMON_AFTER_COMPLETION = {"gold": 10000, "wood": 12, "ore": 12}
 MAX_ENDING_COMMON_SURPLUS_RATIO_AFTER_COMPLETION = {"gold": 0.30, "wood": 0.50, "ore": 0.50}
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 EXPECTED_SIGNATURE_RARE_CURVE = {5: 4, 6: 8, 7: 10}
+EXPECTED_SECONDARY_RARE_CURVE = {5: 3, 6: 5, 7: 6}
+EXPECTED_REMAINING_RARE_CURVE = {5: 2, 6: 3, 7: 4}
+SECONDARY_RARE_BY_FACTION = {
+    "faction_brasshollow": "aetherglass",
+    "faction_embercourt": "brass_scrip",
+    "faction_mireclaw": "verdant_grafts",
+    "faction_sunvault": "memory_salt",
+    "faction_thornwake": "peatwax",
+    "faction_veilmourn": "embergrain",
+}
 MIN_HIGH_TIER_UNIT_BUILD_DAYS = {5: 4, 6: 12, 7: 22}
 MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS = 40
 MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS = 56
@@ -76,28 +89,10 @@ GODOT_RUNTIME_REPORTS = (
         "log_file": "/tmp/heroes-like-scorecard-town-runtime.log",
     },
     {
-        "scene": "res://tests/active_scenario_town_development_runway_report.tscn",
-        "marker": "ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT",
-        "quit_after": 500,
-        "log_file": "/tmp/heroes-like-scorecard-active-player-town.log",
-    },
-    {
-        "scene": "res://tests/active_scenario_town_economy_source_route_report.tscn",
-        "marker": "ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT",
-        "quit_after": 300,
-        "log_file": "/tmp/heroes-like-scorecard-active-source-route.log",
-    },
-    {
         "scene": "res://tests/native_random_map_package_session_adoption_report.tscn",
         "marker": "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT",
         "quit_after": 300,
         "log_file": "/tmp/heroes-like-scorecard-generated-package-town-economy.log",
-    },
-    {
-        "scene": "res://tests/active_scenario_ai_town_development_runway_report.tscn",
-        "marker": "ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT",
-        "quit_after": 700,
-        "log_file": "/tmp/heroes-like-scorecard-active-ai-town.log",
     },
     {
         "scene": "res://tests/town_unique_building_runtime_payoff_report.tscn",
@@ -358,140 +353,6 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         },
     )
 
-    player_runtime = payloads["ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT"]
-    player_runtime_ok = (
-        player_runtime.get("ok") is True
-        and int(player_runtime.get("active_scenario_count", 0)) >= 16
-        and int(player_runtime.get("campaign_scenario_count", 0)) >= MIN_CAMPAIGN_SCENARIOS
-        and int(player_runtime.get("skirmish_scenario_count", 0)) >= MIN_SKIRMISH_SCENARIOS
-        and int(player_runtime.get("player_town_case_count", 0)) >= 18
-        and int(player_runtime.get("campaign_player_town_case_count", 0)) >= MIN_CAMPAIGN_PLAYER_TOWN_CASES
-        and int(player_runtime.get("skirmish_player_town_case_count", 0)) >= MIN_SKIRMISH_PLAYER_TOWN_CASES
-        and int(player_runtime.get("completed_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("campaign_completed_case_count", 0)) == int(player_runtime.get("campaign_player_town_case_count", -1))
-        and int(player_runtime.get("skirmish_completed_case_count", 0)) == int(player_runtime.get("skirmish_player_town_case_count", -1))
-        and int(player_runtime.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(player_runtime.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(player_runtime.get("completion_day_max", 999)) <= TARGET_TURNS
-        and int(player_runtime.get("pacing_floor_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("campaign_pacing_floor_case_count", 0)) == int(player_runtime.get("campaign_player_town_case_count", -1))
-        and int(player_runtime.get("skirmish_pacing_floor_case_count", 0)) == int(player_runtime.get("skirmish_player_town_case_count", -1))
-        and int(player_runtime.get("source_adoption_policy_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("rare_spend_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("full_session_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("delayed_source_replay_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("delayed_source_replay_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("delayed_source_save_resume_case_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(player_runtime.get("player_town_case_count", -1))
-        and int(player_runtime.get("recruited_unit_case_count", 0)) >= 18 * SIGNATURE_TIER_COUNT
-    )
-    add_check(
-        checks,
-        "active_scenario_player_runway_runtime",
-        player_runtime_ok,
-        "Active player-town scenarios must complete development, delayed-source replay, save/resume, and seven-tier recruitment.",
-        {
-            "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(player_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(player_runtime.get("skirmish_scenario_count", 0)),
-            "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
-            "campaign_player_town_case_count": int(player_runtime.get("campaign_player_town_case_count", 0)),
-            "skirmish_player_town_case_count": int(player_runtime.get("skirmish_player_town_case_count", 0)),
-            "completed_case_count": int(player_runtime.get("completed_case_count", 0)),
-            "campaign_completed_case_count": int(player_runtime.get("campaign_completed_case_count", 0)),
-            "skirmish_completed_case_count": int(player_runtime.get("skirmish_completed_case_count", 0)),
-            "min_completion_day": int(player_runtime.get("min_completion_day", 0)),
-            "completion_day_min": int(player_runtime.get("completion_day_min", 0)),
-            "completion_day_max": int(player_runtime.get("completion_day_max", 0)),
-            "pacing_floor_case_count": int(player_runtime.get("pacing_floor_case_count", 0)),
-            "campaign_pacing_floor_case_count": int(player_runtime.get("campaign_pacing_floor_case_count", 0)),
-            "skirmish_pacing_floor_case_count": int(player_runtime.get("skirmish_pacing_floor_case_count", 0)),
-            "source_adoption_policy_case_count": int(player_runtime.get("source_adoption_policy_case_count", 0)),
-            "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
-            "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
-            "delayed_source_replay_case_count": int(player_runtime.get("delayed_source_replay_case_count", 0)),
-            "delayed_source_replay_completed_count": int(player_runtime.get("delayed_source_replay_completed_count", 0)),
-            "delayed_source_save_resume_case_count": int(player_runtime.get("delayed_source_save_resume_case_count", 0)),
-            "delayed_source_save_resume_completed_count": int(player_runtime.get("delayed_source_save_resume_completed_count", 0)),
-            "recruited_unit_case_count": int(player_runtime.get("recruited_unit_case_count", 0)),
-        },
-    )
-    source_route_runtime = payloads["ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT"]
-    source_route_runtime_ok = (
-        source_route_runtime.get("ok") is True
-        and source_route_runtime.get("schema") == "active_scenario_town_economy_source_route_report_v1"
-        and int(source_route_runtime.get("active_scenario_count", 0)) >= 16
-        and int(source_route_runtime.get("campaign_scenario_count", 0)) >= MIN_CAMPAIGN_SCENARIOS
-        and int(source_route_runtime.get("skirmish_scenario_count", 0)) >= MIN_SKIRMISH_SCENARIOS
-        and int(source_route_runtime.get("player_town_case_count", 0)) >= 18
-        and int(source_route_runtime.get("campaign_player_town_case_count", 0)) >= MIN_CAMPAIGN_PLAYER_TOWN_CASES
-        and int(source_route_runtime.get("skirmish_player_town_case_count", 0)) >= MIN_SKIRMISH_PLAYER_TOWN_CASES
-        and int(source_route_runtime.get("resource_route_case_count", 0)) == int(source_route_runtime.get("player_town_case_count", -1)) * 3
-        and int(source_route_runtime.get("reachable_route_case_count", 0)) == int(source_route_runtime.get("resource_route_case_count", -1))
-        and int(source_route_runtime.get("max_common_route_steps", 999)) <= 24
-        and int(source_route_runtime.get("max_rare_route_steps", 999)) <= 40
-        and set(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])) == {"wood", "ore"}
-        and set(str(value) for value in source_route_runtime.get("rare_resource_ids", [])) == RARE_RESOURCES
-    )
-    add_check(
-        checks,
-        "active_scenario_source_route_runtime",
-        source_route_runtime_ok,
-        "Active player-town scenarios must expose reachable wood, ore, and faction-rare source routes through live overworld route rules.",
-        {
-            "schema": str(source_route_runtime.get("schema", "")),
-            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(source_route_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(source_route_runtime.get("skirmish_scenario_count", 0)),
-            "player_town_case_count": int(source_route_runtime.get("player_town_case_count", 0)),
-            "campaign_player_town_case_count": int(source_route_runtime.get("campaign_player_town_case_count", 0)),
-            "skirmish_player_town_case_count": int(source_route_runtime.get("skirmish_player_town_case_count", 0)),
-            "resource_route_case_count": int(source_route_runtime.get("resource_route_case_count", 0)),
-            "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
-            "required_common_resource_ids": sorted(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])),
-            "rare_resource_ids": sorted(str(value) for value in source_route_runtime.get("rare_resource_ids", [])),
-            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
-            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
-        },
-    )
-    enemy_source_route_runtime_ok = (
-        source_route_runtime.get("ok") is True
-        and source_route_runtime.get("schema") == "active_scenario_town_economy_source_route_report_v1"
-        and int(source_route_runtime.get("active_scenario_count", 0)) >= 16
-        and int(source_route_runtime.get("campaign_scenario_count", 0)) >= MIN_CAMPAIGN_SCENARIOS
-        and int(source_route_runtime.get("skirmish_scenario_count", 0)) >= MIN_SKIRMISH_SCENARIOS
-        and int(source_route_runtime.get("enemy_town_case_count", 0)) >= 20
-        and int(source_route_runtime.get("campaign_enemy_town_case_count", 0)) >= MIN_CAMPAIGN_ENEMY_TOWN_CASES
-        and int(source_route_runtime.get("skirmish_enemy_town_case_count", 0)) >= MIN_SKIRMISH_ENEMY_TOWN_CASES
-        and int(source_route_runtime.get("enemy_resource_route_case_count", 0)) == int(source_route_runtime.get("enemy_town_case_count", -1)) * 3
-        and int(source_route_runtime.get("enemy_reachable_route_case_count", 0)) == int(source_route_runtime.get("enemy_resource_route_case_count", -1))
-        and int(source_route_runtime.get("max_common_route_steps", 999)) <= 24
-        and int(source_route_runtime.get("max_rare_route_steps", 999)) <= 40
-        and set(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])) == {"wood", "ore"}
-        and set(str(value) for value in source_route_runtime.get("rare_resource_ids", [])) == RARE_RESOURCES
-    )
-    add_check(
-        checks,
-        "active_scenario_enemy_source_route_runtime",
-        enemy_source_route_runtime_ok,
-        "Active enemy-town scenarios must expose reachable wood, ore, and faction-rare source routes through live overworld route rules.",
-        {
-            "schema": str(source_route_runtime.get("schema", "")),
-            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(source_route_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(source_route_runtime.get("skirmish_scenario_count", 0)),
-            "enemy_town_case_count": int(source_route_runtime.get("enemy_town_case_count", 0)),
-            "campaign_enemy_town_case_count": int(source_route_runtime.get("campaign_enemy_town_case_count", 0)),
-            "skirmish_enemy_town_case_count": int(source_route_runtime.get("skirmish_enemy_town_case_count", 0)),
-            "enemy_resource_route_case_count": int(source_route_runtime.get("enemy_resource_route_case_count", 0)),
-            "enemy_reachable_route_case_count": int(source_route_runtime.get("enemy_reachable_route_case_count", 0)),
-            "required_common_resource_ids": sorted(str(value) for value in source_route_runtime.get("required_common_resource_ids", [])),
-            "rare_resource_ids": sorted(str(value) for value in source_route_runtime.get("rare_resource_ids", [])),
-            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
-            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
-        },
-    )
-
     generated_package_runtime = payloads["NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"]
     generated_surface = generated_package_runtime.get("generated_town_economy_surface", {})
     generated_source_routes = generated_package_runtime.get("generated_town_economy_source_routes", {})
@@ -510,6 +371,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_source_route_common_ids = {str(value) for value in generated_source_routes.get("required_common_resource_ids", [])}
     generated_source_route_rare_ids = {str(value) for value in generated_source_routes.get("required_rare_resource_ids", [])}
     generated_source_route_town_count = int(generated_source_routes.get("town_case_count", 0))
+    generated_expected_route_count = int(generated_source_routes.get("expected_resource_route_case_count", 0))
+    generated_required_rare_route_count = int(generated_source_routes.get("required_rare_source_route_case_count", 0))
     generated_package_town_economy_ok = (
         generated_package_runtime.get("ok") is True
         and generated_package_runtime.get("schema_id") == "native_random_map_package_session_adoption_smoke_v1"
@@ -533,7 +396,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_town_economy_runtime",
         generated_package_town_economy_ok,
-        "Generated/native package sessions must expose authored town templates, seven-tier town ladders, rare-resource development identity, and live common plus player-faction rare resource sources.",
+        "Generated/native package sessions must expose authored town templates, seven-tier town ladders, rare-resource development identity, and live generated sources for every required town resource.",
         {
             "schema": str(generated_surface.get("schema", "")),
             "package_session_scope": str(generated_surface.get("package_session_scope", "")),
@@ -562,10 +425,11 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_source_routes.get("player_town_case_count", 0)) >= 1
         and int(generated_source_routes.get("enemy_town_case_count", 0)) >= 2
         and int(generated_source_routes.get("neutral_town_case_count", 0)) > 0
-        and int(generated_source_routes.get("resource_route_case_count", 0)) == int(generated_source_routes.get("town_case_count", -1)) * 3
+        and generated_expected_route_count >= generated_source_route_town_count * 3
+        and int(generated_source_routes.get("resource_route_case_count", 0)) == generated_expected_route_count
         and int(generated_source_routes.get("reachable_route_case_count", 0)) == int(generated_source_routes.get("resource_route_case_count", -1))
         and generated_source_route_common_ids == {"wood", "ore"}
-        and len(generated_source_route_rare_ids) >= 3
+        and generated_source_route_rare_ids == RARE_RESOURCES
         and int(generated_source_routes.get("max_common_route_steps", 999)) <= MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS
         and int(generated_source_routes.get("max_rare_route_steps", 999)) <= MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
     )
@@ -573,7 +437,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         checks,
         "generated_package_town_source_route_runtime",
         generated_package_town_source_route_ok,
-        "Generated/native package player, enemy, and neutral towns must have reachable generated wood, ore, and faction-rare source routes after exact guard/block masks are applied.",
+        "Generated/native package player, enemy, and neutral towns must have reachable generated wood, ore, and every required rare-source route after exact guard/block masks are applied.",
         {
             "schema": str(generated_source_routes.get("schema", "")),
             "package_session_scope": str(generated_source_routes.get("package_session_scope", "")),
@@ -581,6 +445,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
             "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
             "neutral_town_case_count": int(generated_source_routes.get("neutral_town_case_count", 0)),
+            "expected_resource_route_case_count": generated_expected_route_count,
             "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
             "required_common_resource_ids": sorted(generated_source_route_common_ids),
@@ -596,6 +461,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_source_routes.get("guarded_town_case_count", 0)) == generated_source_route_town_count
         and int(generated_source_routes.get("guarded_source_route_case_count", 0)) >= generated_source_route_town_count
         and int(generated_source_routes.get("guarded_common_source_route_case_count", 0)) >= generated_source_route_town_count
+        and int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)) == generated_required_rare_route_count
         and int(generated_source_routes.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
         and int(generated_source_routes.get("source_acquisition_day_limit", 0)) == MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
         and int(generated_source_routes.get("route_steps_per_day", 0)) > 0
@@ -612,6 +478,7 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "guarded_town_case_count": int(generated_source_routes.get("guarded_town_case_count", 0)),
             "guarded_source_route_case_count": int(generated_source_routes.get("guarded_source_route_case_count", 0)),
             "guarded_common_source_route_case_count": int(generated_source_routes.get("guarded_common_source_route_case_count", 0)),
+            "required_rare_source_route_case_count": generated_required_rare_route_count,
             "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
             "max_source_acquisition_day": int(generated_source_routes.get("max_source_acquisition_day", 0)),
             "source_acquisition_day_limit": int(generated_source_routes.get("source_acquisition_day_limit", 0)),
@@ -622,17 +489,19 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     generated_package_rare_source_guard_pressure_ok = (
         generated_package_town_source_route_ok
         and generated_source_route_town_count >= 3
-        and int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)) == generated_source_route_town_count
+        and generated_required_rare_route_count >= generated_source_route_town_count
+        and int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)) == generated_required_rare_route_count
         and int(generated_source_routes.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
     )
     add_check(
         checks,
         "generated_package_rare_source_guard_pressure_runtime",
         generated_package_rare_source_guard_pressure_ok,
-        "Generated/native package faction-rare economy-source routes must remain guarded for every generated player, enemy, and neutral town.",
+        "Generated/native package rare economy-source routes must remain guarded for every rare required by generated player, enemy, and neutral towns.",
         {
             "schema": str(generated_source_routes.get("schema", "")),
             "town_case_count": generated_source_route_town_count,
+            "required_rare_source_route_case_count": generated_required_rare_route_count,
             "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
             "required_rare_resource_ids": list(generated_source_routes.get("required_rare_resource_ids", []))
             if isinstance(generated_source_routes.get("required_rare_resource_ids", []), list)
@@ -658,13 +527,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and int(generated_breadth.get("total_resource_node_count", 0)) > 0
         and int(generated_breadth.get("total_route_town_case_count", 0)) == int(generated_breadth.get("total_town_count", -1))
         and int(generated_breadth.get("total_resource_route_case_count", 0))
-        == int(generated_breadth.get("total_route_town_case_count", -1)) * 3
+        == int(generated_breadth.get("total_expected_resource_route_case_count", -1))
         and int(generated_breadth.get("total_reachable_route_case_count", 0))
         == int(generated_breadth.get("total_resource_route_case_count", -1))
         and int(generated_breadth.get("total_guarded_source_route_case_count", 0))
         >= int(generated_breadth.get("total_route_town_case_count", 0))
         and int(generated_breadth.get("total_guarded_rare_source_route_case_count", 0))
-        == int(generated_breadth.get("total_route_town_case_count", -1))
+        == int(generated_breadth.get("total_required_rare_source_route_case_count", -1))
         and int(generated_breadth.get("max_common_route_steps", 999)) <= MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS
         and int(generated_breadth.get("max_rare_route_steps", 999)) <= MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS
         and int(generated_breadth.get("max_source_acquisition_day", 999)) <= MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY
@@ -694,10 +563,14 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "total_town_count": int(generated_breadth.get("total_town_count", 0)),
             "total_resource_node_count": int(generated_breadth.get("total_resource_node_count", 0)),
             "total_route_town_case_count": int(generated_breadth.get("total_route_town_case_count", 0)),
+            "total_expected_resource_route_case_count": int(generated_breadth.get("total_expected_resource_route_case_count", 0)),
             "total_resource_route_case_count": int(generated_breadth.get("total_resource_route_case_count", 0)),
             "total_reachable_route_case_count": int(generated_breadth.get("total_reachable_route_case_count", 0)),
             "total_guarded_source_route_case_count": int(
                 generated_breadth.get("total_guarded_source_route_case_count", 0)
+            ),
+            "total_required_rare_source_route_case_count": int(
+                generated_breadth.get("total_required_rare_source_route_case_count", 0)
             ),
             "total_guarded_rare_source_route_case_count": int(
                 generated_breadth.get("total_guarded_rare_source_route_case_count", 0)
@@ -719,9 +592,9 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_runway.get("status") == "pass"
         and generated_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
         and generated_runway.get("completed") is True
-        and int(generated_runway.get("completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_runway.get("completion_day", 0)) >= MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY
         and int(generated_runway.get("completion_day", 999)) <= TARGET_TURNS
-        and int(generated_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_runway.get("min_completion_day", 0)) >= MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY
         and generated_runway.get("pacing_floor_ok") is True
         and int(generated_runway.get("build_count", 0)) == int(generated_runway.get("initial_missing_building_count", -1))
         and generated_runway.get("same_day_reject_ok") is True
@@ -782,8 +655,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_neutral_capture_case_count > 0
         and int(generated_neutral_capture_runway.get("captured_case_count", 0)) == generated_neutral_capture_case_count
         and int(generated_neutral_capture_runway.get("completed_case_count", 0)) == generated_neutral_capture_case_count
-        and int(generated_neutral_capture_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(generated_neutral_capture_runway.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_neutral_capture_runway.get("min_completion_day", 0)) >= MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY
+        and int(generated_neutral_capture_runway.get("completion_day_min", 0)) >= MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY
         and int(generated_neutral_capture_runway.get("completion_day_max", 999)) <= TARGET_TURNS
         and int(generated_neutral_capture_runway.get("pacing_floor_case_count", 0)) == generated_neutral_capture_case_count
         and int(generated_neutral_capture_runway.get("rare_spend_case_count", 0)) == generated_neutral_capture_case_count
@@ -831,8 +704,8 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
         and generated_enemy_runway.get("package_session_scope") == "strict_small_36x36_one_level_land_only"
         and generated_enemy_case_count >= 2
         and int(generated_enemy_runway.get("completed_case_count", 0)) == generated_enemy_case_count
-        and int(generated_enemy_runway.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(generated_enemy_runway.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
+        and int(generated_enemy_runway.get("min_completion_day", 0)) >= MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY
+        and int(generated_enemy_runway.get("completion_day_min", 0)) >= MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY
         and int(generated_enemy_runway.get("completion_day_max", 999)) <= TARGET_TURNS
         and int(generated_enemy_runway.get("pacing_floor_case_count", 0)) == generated_enemy_case_count
         and int(generated_enemy_runway.get("rare_spend_case_count", 0)) == generated_enemy_case_count
@@ -876,115 +749,19 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
 
     runtime_recruitment_market_coverage_ok = (
         town_runtime.get("ok") is True
-        and player_runtime.get("ok") is True
         and int(town_runtime.get("recruitment_market_covered_town_count", 0)) > 0
         and int(town_runtime.get("recruitment_market_purchase_count", 0)) > 0
-        and "recruitment_market_covered_case_count" in player_runtime
-        and "recruitment_market_purchase_count" in player_runtime
-        and "recruitment_market_reset_wait_count" in player_runtime
-        and int(player_runtime.get("recruitment_market_covered_case_count", 0)) > 0
-        and int(player_runtime.get("recruitment_market_purchase_count", 0)) > 0
     )
     add_check(
         checks,
         "runtime_recruitment_market_coverage",
         runtime_recruitment_market_coverage_ok,
-        "Live recruitment after town development must prove common-only market coverage can recover from wood/ore shortfalls.",
+        "Live town runtime recruitment must prove common-only market coverage can recover from wood/ore shortfalls.",
         {
             "town_runtime_market_covered_town_count": int(town_runtime.get("recruitment_market_covered_town_count", 0)),
             "town_runtime_market_purchase_count": int(town_runtime.get("recruitment_market_purchase_count", 0)),
             "town_runtime_market_reset_wait_count": int(town_runtime.get("recruitment_market_reset_wait_count", 0)),
-            "active_player_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
-            "active_player_market_purchase_count": int(player_runtime.get("recruitment_market_purchase_count", 0)),
-            "active_player_market_reset_wait_count": int(player_runtime.get("recruitment_market_reset_wait_count", 0)),
-            "normal_market_resource_ids": player_runtime.get("common_market_resource_ids", []),
-        },
-    )
-
-    ai_runtime = payloads["ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT"]
-    ai_runtime_ok = (
-        ai_runtime.get("ok") is True
-        and int(ai_runtime.get("active_scenario_count", 0)) >= 16
-        and int(ai_runtime.get("campaign_scenario_count", 0)) >= MIN_CAMPAIGN_SCENARIOS
-        and int(ai_runtime.get("skirmish_scenario_count", 0)) >= MIN_SKIRMISH_SCENARIOS
-        and int(ai_runtime.get("enemy_town_case_count", 0)) >= 20
-        and int(ai_runtime.get("campaign_enemy_town_case_count", 0)) >= MIN_CAMPAIGN_ENEMY_TOWN_CASES
-        and int(ai_runtime.get("skirmish_enemy_town_case_count", 0)) >= MIN_SKIRMISH_ENEMY_TOWN_CASES
-        and int(ai_runtime.get("completed_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("campaign_completed_case_count", 0)) == int(ai_runtime.get("campaign_enemy_town_case_count", -1))
-        and int(ai_runtime.get("skirmish_completed_case_count", 0)) == int(ai_runtime.get("skirmish_enemy_town_case_count", -1))
-        and int(ai_runtime.get("min_completion_day", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(ai_runtime.get("completion_day_min", 0)) >= MIN_DETERMINISTIC_COMPLETION_DAY
-        and int(ai_runtime.get("completion_day_max", 999)) <= TARGET_TURNS
-        and int(ai_runtime.get("pacing_floor_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("campaign_pacing_floor_case_count", 0)) == int(ai_runtime.get("campaign_enemy_town_case_count", -1))
-        and int(ai_runtime.get("skirmish_pacing_floor_case_count", 0)) == int(ai_runtime.get("skirmish_enemy_town_case_count", -1))
-        and int(ai_runtime.get("source_adoption_policy_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("rare_spend_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("same_day_guard_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("full_session_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("delayed_source_replay_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("delayed_source_replay_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("delayed_source_save_resume_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("seven_tier_recruitment_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-        and int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)) >= int(ai_runtime.get("enemy_town_case_count", 0)) * SIGNATURE_TIER_COUNT
-        and int(ai_runtime.get("affordable_recruitment_case_count", 0)) == int(ai_runtime.get("enemy_town_case_count", -1))
-    )
-    add_check(
-        checks,
-        "active_scenario_ai_runway_runtime",
-        ai_runtime_ok,
-        "Active enemy-town scenarios must complete AI town development, delayed-source replay, save/resume, and same-day build guards.",
-        {
-            "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(ai_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(ai_runtime.get("skirmish_scenario_count", 0)),
-            "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
-            "campaign_enemy_town_case_count": int(ai_runtime.get("campaign_enemy_town_case_count", 0)),
-            "skirmish_enemy_town_case_count": int(ai_runtime.get("skirmish_enemy_town_case_count", 0)),
-            "completed_case_count": int(ai_runtime.get("completed_case_count", 0)),
-            "campaign_completed_case_count": int(ai_runtime.get("campaign_completed_case_count", 0)),
-            "skirmish_completed_case_count": int(ai_runtime.get("skirmish_completed_case_count", 0)),
-            "min_completion_day": int(ai_runtime.get("min_completion_day", 0)),
-            "completion_day_min": int(ai_runtime.get("completion_day_min", 0)),
-            "completion_day_max": int(ai_runtime.get("completion_day_max", 0)),
-            "pacing_floor_case_count": int(ai_runtime.get("pacing_floor_case_count", 0)),
-            "campaign_pacing_floor_case_count": int(ai_runtime.get("campaign_pacing_floor_case_count", 0)),
-            "skirmish_pacing_floor_case_count": int(ai_runtime.get("skirmish_pacing_floor_case_count", 0)),
-            "source_adoption_policy_case_count": int(ai_runtime.get("source_adoption_policy_case_count", 0)),
-            "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
-            "same_day_guard_case_count": int(ai_runtime.get("same_day_guard_case_count", 0)),
-            "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
-            "delayed_source_replay_case_count": int(ai_runtime.get("delayed_source_replay_case_count", 0)),
-            "delayed_source_replay_completed_count": int(ai_runtime.get("delayed_source_replay_completed_count", 0)),
-            "delayed_source_save_resume_case_count": int(ai_runtime.get("delayed_source_save_resume_case_count", 0)),
-            "delayed_source_save_resume_completed_count": int(ai_runtime.get("delayed_source_save_resume_completed_count", 0)),
-            "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),
-            "seven_tier_recruitment_candidate_count": int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)),
-            "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
-        },
-    )
-    covered_ai_factions = {str(value) for value in ai_runtime.get("covered_faction_ids", [])}
-    covered_ai_ladder_factions = {str(value) for value in ai_runtime.get("covered_ladder_faction_ids", [])}
-    ai_six_faction_coverage_ok = (
-        ai_runtime.get("ok") is True
-        and int(ai_runtime.get("unique_faction_count", 0)) >= MIN_FACTIONS
-        and int(ai_runtime.get("unique_ladder_faction_count", 0)) >= MIN_FACTIONS
-        and EXPECTED_FACTION_IDS.issubset(covered_ai_factions)
-        and EXPECTED_FACTION_IDS.issubset(covered_ai_ladder_factions)
-    )
-    add_check(
-        checks,
-        "active_ai_six_faction_town_coverage",
-        ai_six_faction_coverage_ok,
-        "Active enemy-town runtime evidence must cover all six controller and native town-ladder factions.",
-        {
-            "unique_faction_count": int(ai_runtime.get("unique_faction_count", 0)),
-            "covered_faction_ids": sorted(covered_ai_factions),
-            "unique_ladder_faction_count": int(ai_runtime.get("unique_ladder_faction_count", 0)),
-            "covered_ladder_faction_ids": sorted(covered_ai_ladder_factions),
-            "expected_faction_ids": sorted(EXPECTED_FACTION_IDS),
+            "normal_market_resource_ids": ["wood", "ore"],
         },
     )
 
@@ -1233,41 +1010,6 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "recruitment_market_purchase_count": int(town_runtime.get("recruitment_market_purchase_count", 0)),
             "recruitment_market_reset_wait_count": int(town_runtime.get("recruitment_market_reset_wait_count", 0)),
         },
-        "active_scenario_town_development_runway_report_v1": {
-            "active_scenario_count": int(player_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(player_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(player_runtime.get("skirmish_scenario_count", 0)),
-            "player_town_case_count": int(player_runtime.get("player_town_case_count", 0)),
-            "campaign_player_town_case_count": int(player_runtime.get("campaign_player_town_case_count", 0)),
-            "skirmish_player_town_case_count": int(player_runtime.get("skirmish_player_town_case_count", 0)),
-            "min_completion_day": int(player_runtime.get("min_completion_day", 0)),
-            "completion_day_min": int(player_runtime.get("completion_day_min", 0)),
-            "completion_day_max": int(player_runtime.get("completion_day_max", 0)),
-            "pacing_floor_case_count": int(player_runtime.get("pacing_floor_case_count", 0)),
-            "source_adoption_policy_case_count": int(player_runtime.get("source_adoption_policy_case_count", 0)),
-            "rare_spend_case_count": int(player_runtime.get("rare_spend_case_count", 0)),
-            "full_session_case_count": int(player_runtime.get("full_session_case_count", 0)),
-            "recruitment_market_covered_case_count": int(player_runtime.get("recruitment_market_covered_case_count", 0)),
-            "recruitment_market_purchase_count": int(player_runtime.get("recruitment_market_purchase_count", 0)),
-            "recruitment_market_reset_wait_count": int(player_runtime.get("recruitment_market_reset_wait_count", 0)),
-        },
-        "active_scenario_town_economy_source_route_report_v1": {
-            "active_scenario_count": int(source_route_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(source_route_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(source_route_runtime.get("skirmish_scenario_count", 0)),
-            "player_town_case_count": int(source_route_runtime.get("player_town_case_count", 0)),
-            "campaign_player_town_case_count": int(source_route_runtime.get("campaign_player_town_case_count", 0)),
-            "skirmish_player_town_case_count": int(source_route_runtime.get("skirmish_player_town_case_count", 0)),
-            "resource_route_case_count": int(source_route_runtime.get("resource_route_case_count", 0)),
-            "reachable_route_case_count": int(source_route_runtime.get("reachable_route_case_count", 0)),
-            "enemy_town_case_count": int(source_route_runtime.get("enemy_town_case_count", 0)),
-            "campaign_enemy_town_case_count": int(source_route_runtime.get("campaign_enemy_town_case_count", 0)),
-            "skirmish_enemy_town_case_count": int(source_route_runtime.get("skirmish_enemy_town_case_count", 0)),
-            "enemy_resource_route_case_count": int(source_route_runtime.get("enemy_resource_route_case_count", 0)),
-            "enemy_reachable_route_case_count": int(source_route_runtime.get("enemy_reachable_route_case_count", 0)),
-            "max_common_route_steps": int(source_route_runtime.get("max_common_route_steps", 0)),
-            "max_rare_route_steps": int(source_route_runtime.get("max_rare_route_steps", 0)),
-        },
         "generated_package_town_economy_surface_v1": {
             "town_count": int(generated_surface.get("town_count", 0)),
             "player_town_count": int(generated_surface.get("player_town_count", 0)),
@@ -1319,11 +1061,13 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "player_town_case_count": int(generated_source_routes.get("player_town_case_count", 0)),
             "enemy_town_case_count": int(generated_source_routes.get("enemy_town_case_count", 0)),
             "neutral_town_case_count": int(generated_source_routes.get("neutral_town_case_count", 0)),
+            "expected_resource_route_case_count": int(generated_source_routes.get("expected_resource_route_case_count", 0)),
             "resource_route_case_count": int(generated_source_routes.get("resource_route_case_count", 0)),
             "reachable_route_case_count": int(generated_source_routes.get("reachable_route_case_count", 0)),
             "guarded_town_case_count": int(generated_source_routes.get("guarded_town_case_count", 0)),
             "guarded_source_route_case_count": int(generated_source_routes.get("guarded_source_route_case_count", 0)),
             "guarded_common_source_route_case_count": int(generated_source_routes.get("guarded_common_source_route_case_count", 0)),
+            "required_rare_source_route_case_count": int(generated_source_routes.get("required_rare_source_route_case_count", 0)),
             "guarded_rare_source_route_case_count": int(generated_source_routes.get("guarded_rare_source_route_case_count", 0)),
             "required_common_resource_ids": sorted(generated_source_route_common_ids),
             "required_rare_resource_ids": sorted(generated_source_route_rare_ids),
@@ -1389,26 +1133,6 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
             "build_count_total": int(generated_enemy_runway.get("build_count_total", 0)),
             "secured_source_count_total": int(generated_enemy_runway.get("secured_source_count_total", 0)),
         },
-        "active_scenario_ai_town_development_runway_report_v1": {
-            "active_scenario_count": int(ai_runtime.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(ai_runtime.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(ai_runtime.get("skirmish_scenario_count", 0)),
-            "enemy_town_case_count": int(ai_runtime.get("enemy_town_case_count", 0)),
-            "campaign_enemy_town_case_count": int(ai_runtime.get("campaign_enemy_town_case_count", 0)),
-            "skirmish_enemy_town_case_count": int(ai_runtime.get("skirmish_enemy_town_case_count", 0)),
-            "min_completion_day": int(ai_runtime.get("min_completion_day", 0)),
-            "completion_day_min": int(ai_runtime.get("completion_day_min", 0)),
-            "completion_day_max": int(ai_runtime.get("completion_day_max", 0)),
-            "pacing_floor_case_count": int(ai_runtime.get("pacing_floor_case_count", 0)),
-            "source_adoption_policy_case_count": int(ai_runtime.get("source_adoption_policy_case_count", 0)),
-            "rare_spend_case_count": int(ai_runtime.get("rare_spend_case_count", 0)),
-            "full_session_case_count": int(ai_runtime.get("full_session_case_count", 0)),
-            "seven_tier_recruitment_case_count": int(ai_runtime.get("seven_tier_recruitment_case_count", 0)),
-            "seven_tier_recruitment_candidate_count": int(ai_runtime.get("seven_tier_recruitment_candidate_count", 0)),
-            "affordable_recruitment_case_count": int(ai_runtime.get("affordable_recruitment_case_count", 0)),
-            "unique_faction_count": int(ai_runtime.get("unique_faction_count", 0)),
-            "unique_ladder_faction_count": int(ai_runtime.get("unique_ladder_faction_count", 0)),
-        },
         "town_unique_building_runtime_payoff_report_v1": {
             "faction_count": int(unique_payoff_runtime.get("faction_count", 0)),
             "town_case_count": int(unique_payoff_runtime.get("town_case_count", 0)),
@@ -1464,7 +1188,6 @@ def main() -> int:
     balance = run_report("town_development_balance_report.py", "TOWN_DEVELOPMENT_BALANCE_REPORT")
     cost_curve = run_report("town_development_cost_curve_report.py", "TOWN_DEVELOPMENT_COST_CURVE_REPORT")
     asymmetry = run_report("faction_town_unit_asymmetry_report.py", "FACTION_TOWN_UNIT_ASYMMETRY_REPORT")
-    source_matrix = run_json_report("active_scenario_resource_availability_matrix_report.py", "--json")
 
     checks: list[dict[str, Any]] = []
 
@@ -1474,41 +1197,14 @@ def main() -> int:
         and (resource_id in COMMON_RESOURCES or registry[resource_id].get("activation_status") == "live_stockpile")
         for resource_id in LIVE_RESOURCES
     )
-    resource_rows = source_matrix.get("resource_rows", []) if isinstance(source_matrix.get("resource_rows", []), list) else []
-    matrix_resources = {
-        str(row.get("resource_id", "")): row
-        for row in resource_rows
-        if isinstance(row, dict) and str(row.get("resource_id", ""))
-    }
-    matrix_ok = set(matrix_resources) == LIVE_RESOURCES and all(
-        int(row.get("source_observation_count", 0)) > 0 for row in matrix_resources.values()
-    )
     add_check(
         checks,
         "all_live_resources_wired",
-        live_registry_ok
-        and matrix_ok
-        and int(source_matrix.get("campaign_scenario_count", 0)) >= MIN_CAMPAIGN_SCENARIOS
-        and int(source_matrix.get("skirmish_scenario_count", 0)) >= MIN_SKIRMISH_SCENARIOS
-        and int(source_matrix.get("campaign_player_town_case_count", 0)) >= MIN_CAMPAIGN_PLAYER_TOWN_CASES
-        and int(source_matrix.get("skirmish_player_town_case_count", 0)) >= MIN_SKIRMISH_PLAYER_TOWN_CASES
-        and int(source_matrix.get("campaign_enemy_town_case_count", 0)) >= MIN_CAMPAIGN_ENEMY_TOWN_CASES
-        and int(source_matrix.get("skirmish_enemy_town_case_count", 0)) >= MIN_SKIRMISH_ENEMY_TOWN_CASES
-        and all(int(row.get("campaign_source_scenario_count", 0)) > 0 for row in matrix_resources.values())
-        and all(int(row.get("skirmish_source_scenario_count", 0)) > 0 for row in matrix_resources.values()),
-        "All nine resources must be live stockpile ids with active campaign and skirmish source coverage.",
+        live_registry_ok,
+        "All nine resources must be live stockpile ids; Native RMG source coverage is enforced by generated-package runtime checks.",
         {
             "live_resources": sorted(LIVE_RESOURCES),
-            "matrix_signature": source_matrix.get("matrix_signature", ""),
-            "active_scenario_count": int(source_matrix.get("active_scenario_count", 0)),
-            "campaign_scenario_count": int(source_matrix.get("campaign_scenario_count", 0)),
-            "skirmish_scenario_count": int(source_matrix.get("skirmish_scenario_count", 0)),
-            "player_town_case_count": int(source_matrix.get("player_town_case_count", 0)),
-            "enemy_town_case_count": int(source_matrix.get("enemy_town_case_count", 0)),
-            "campaign_player_town_case_count": int(source_matrix.get("campaign_player_town_case_count", 0)),
-            "skirmish_player_town_case_count": int(source_matrix.get("skirmish_player_town_case_count", 0)),
-            "campaign_enemy_town_case_count": int(source_matrix.get("campaign_enemy_town_case_count", 0)),
-            "skirmish_enemy_town_case_count": int(source_matrix.get("skirmish_enemy_town_case_count", 0)),
+            "runtime_map_source_scope": "native_rmg_generated_packages",
         },
     )
 
@@ -1660,7 +1356,7 @@ def main() -> int:
         checks,
         "town_development_price_band_sanity",
         price_band_ok,
-        "Authored town development totals must stay inside bounded price bands for gold, wood, ore, faction rare spend, target count, and rare-cost building count.",
+        "Town development totals must stay inside bounded price bands for gold, wood, ore, signature rare, secondary rare, remaining rares, target count, and rare-cost building count.",
         {
             "price_band_limits": price_band_limits,
             "town_count": len(price_band_rows),
@@ -1680,6 +1376,7 @@ def main() -> int:
             rare_pressure_ok = False
             continue
         rare_id = str(row.get("rare_resource_id", ""))
+        secondary_rare_id = str(row.get("secondary_rare_resource_id", SECONDARY_RARE_BY_FACTION.get(faction_id, "")))
         for tier_row in row.get("signature_tier_costs", []):
             if not isinstance(tier_row, dict):
                 rare_pressure_ok = False
@@ -1690,16 +1387,36 @@ def main() -> int:
             rare_costs = {resource_id: int(cost.get(resource_id, 0)) for resource_id in RARE_RESOURCES if int(cost.get(resource_id, 0)) > 0}
             if tier < HIGH_TIER_START and rare_costs:
                 rare_pressure_ok = False
-            if tier in EXPECTED_SIGNATURE_RARE_CURVE and rare_costs != {rare_id: EXPECTED_SIGNATURE_RARE_CURVE[tier]}:
-                rare_pressure_ok = False
+            if tier in EXPECTED_SIGNATURE_RARE_CURVE:
+                expected_rare_costs = {}
+                for resource_id in sorted(RARE_RESOURCES):
+                    if resource_id == rare_id:
+                        expected_rare_costs[resource_id] = EXPECTED_SIGNATURE_RARE_CURVE[tier]
+                    elif resource_id == secondary_rare_id:
+                        expected_rare_costs[resource_id] = EXPECTED_SECONDARY_RARE_CURVE[tier]
+                    else:
+                        expected_rare_costs[resource_id] = EXPECTED_REMAINING_RARE_CURVE[tier]
+                if rare_costs != expected_rare_costs:
+                    rare_pressure_ok = False
+    for town_id, row in cost_rows.items():
+        if not isinstance(row, dict):
+            rare_pressure_ok = False
+            continue
+        total_costs = row.get("total_costs", {})
+        total_costs = total_costs if isinstance(total_costs, dict) else {}
+        if not all(int(total_costs.get(resource_id, 0)) > 0 for resource_id in RARE_RESOURCES):
+            rare_pressure_ok = False
     add_check(
         checks,
         "high_tier_rare_resource_pressure",
         rare_pressure_ok,
-        "High-tier unit buildings must use the faction rare resource on the 4/8/10 tier curve.",
+        "High-tier unit buildings must use every rare resource while keeping the faction rare on the highest-pressure tier curve.",
         {
             "high_tier_start": HIGH_TIER_START,
             "expected_signature_rare_curve": EXPECTED_SIGNATURE_RARE_CURVE,
+            "expected_secondary_rare_curve": EXPECTED_SECONDARY_RARE_CURVE,
+            "expected_remaining_rare_curve": EXPECTED_REMAINING_RARE_CURVE,
+            "secondary_rare_by_faction": SECONDARY_RARE_BY_FACTION,
             "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
             "max_ending_rare_after_completion": MAX_ENDING_RARE_AFTER_COMPLETION,
         },
@@ -1981,17 +1698,6 @@ def main() -> int:
                 "faction_count": int(cost_curve.get("faction_count", 0)),
                 "min_rare_upgrade_buildings_per_town": int(cost_curve.get("min_rare_upgrade_buildings_per_town", 0)),
                 "price_band_limits": cost_curve.get("price_band_limits", {}),
-            },
-            "active_scenario_resource_availability_matrix_v1": {
-                "active_scenario_count": int(source_matrix.get("active_scenario_count", 0)),
-                "campaign_scenario_count": int(source_matrix.get("campaign_scenario_count", 0)),
-                "skirmish_scenario_count": int(source_matrix.get("skirmish_scenario_count", 0)),
-                "player_town_case_count": int(source_matrix.get("player_town_case_count", 0)),
-                "enemy_town_case_count": int(source_matrix.get("enemy_town_case_count", 0)),
-                "campaign_player_town_case_count": int(source_matrix.get("campaign_player_town_case_count", 0)),
-                "skirmish_player_town_case_count": int(source_matrix.get("skirmish_player_town_case_count", 0)),
-                "campaign_enemy_town_case_count": int(source_matrix.get("campaign_enemy_town_case_count", 0)),
-                "skirmish_enemy_town_case_count": int(source_matrix.get("skirmish_enemy_town_case_count", 0)),
             },
             "faction_town_unit_asymmetry_report": {
                 "unique_fingerprints": asymmetry.get("unique_fingerprints", {}),

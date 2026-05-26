@@ -19,8 +19,11 @@ const GENERATED_TOWN_RARE_SOURCE_SITE_BY_RESOURCE := {
 	"aetherglass": "site_aetherglass_lens_house",
 	"embergrain": "site_embergrain_warm_granary",
 	"peatwax": "site_peatwax_reed_yard",
+	"verdant_grafts": "site_verdant_graft_nursery",
+	"brass_scrip": "site_brass_scrip_mint",
 	"memory_salt": "site_memory_salt_pan",
 }
+const GENERATED_TOWN_REQUIRED_SOURCE_SITE_ID := "site_generated_town_required_source_cache"
 const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"castle": {"faction_id": "faction_embercourt", "town_id": "town_riverwatch"},
 	"rampart": {"faction_id": "faction_mireclaw", "town_id": "town_duskfen"},
@@ -498,7 +501,6 @@ static func _ensure_generated_town_source_route_support(session: SessionStateSto
 	if session == null or not bool(session.flags.get("generated_random_map", false)):
 		return false
 	var changed := false
-	var source_index := 0
 	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
 	for town_value in towns:
 		if not (town_value is Dictionary):
@@ -507,45 +509,64 @@ static func _ensure_generated_town_source_route_support(session: SessionStateSto
 		if not (String(town.get("owner", "")) in ["player", "enemy", "neutral"]):
 			continue
 		var start_tile := _generated_town_source_start_tile(session, town)
-		for resource_id_value in _generated_town_required_source_ids(town):
-			var resource_id := String(resource_id_value)
-			var require_guard := not GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id)
-			var support_tile := _existing_generated_town_support_tile(session, town)
-			if support_tile == Vector2i(-1, -1):
-				support_tile = _generated_town_source_support_tile(session, start_tile, source_index)
-			if support_tile == Vector2i(-1, -1):
-				support_tile = _existing_generated_town_support_tile(session, town)
-			if support_tile == Vector2i(-1, -1):
-				continue
-			var node := _supplemental_generated_town_source_node(town, resource_id, support_tile)
-			if node.is_empty():
-				continue
-			var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
-			nodes.append(node)
-			session.overworld["resource_nodes"] = nodes
-			if require_guard:
-				var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
-				encounters.append(_supplemental_rare_source_guard(node))
-				session.overworld["encounters"] = encounters
-			changed = true
-			source_index += 1
+		var required_resource_ids := _generated_town_required_source_ids(town)
+		if required_resource_ids.is_empty():
+			continue
+		var support_tile := start_tile if _generated_source_route_start_tile_usable(session, start_tile) else Vector2i(-1, -1)
+		if support_tile == Vector2i(-1, -1) and _generated_source_route_start_tile_usable(session, start_tile):
+			support_tile = start_tile
+		if support_tile == Vector2i(-1, -1):
+			support_tile = _generated_town_source_support_tile(session, start_tile, 0)
+		if support_tile == Vector2i(-1, -1):
+			support_tile = _existing_generated_town_support_tile(session, town)
+		if support_tile == Vector2i(-1, -1):
+			continue
+		var node := _supplemental_generated_town_source_node(town, "required_sources", support_tile)
+		if node.is_empty():
+			continue
+		node["generated_package_source_resource_ids"] = required_resource_ids
+		node["generated_package_source_route_start_tile"] = {
+			"x": support_tile.x,
+			"y": support_tile.y,
+			"level": int(town.get("level", 0)),
+		}
+		var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		nodes.append(node)
+		session.overworld["resource_nodes"] = nodes
+		var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+		encounters.append(_supplemental_rare_source_guard(node))
+		session.overworld["encounters"] = encounters
+		changed = true
+		OverworldRulesScript.normalize_overworld_state(session)
 	return changed
 
 static func _generated_town_required_source_ids(town: Dictionary) -> Array:
-	var result := []
+	var result := {}
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
-	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
-	var rare_id := String(profile.get("rare_resource_id", ""))
-	if rare_id != "":
-		result.append(rare_id)
-	result.append("wood")
-	result.append("ore")
-	return result
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building := ContentService.get_building(String(building_id_value))
+		var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
+		for resource_id_value in cost.keys():
+			var resource_id := String(resource_id_value)
+			if resource_id == "gold":
+				continue
+			if GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id) or GENERATED_TOWN_RARE_SOURCE_SITE_BY_RESOURCE.has(resource_id):
+				result[resource_id] = true
+	var ordered := []
+	for resource_id in ["wood", "ore"]:
+		if bool(result.get(resource_id, false)):
+			ordered.append(resource_id)
+	for resource_id in ["aetherglass", "brass_scrip", "embergrain", "memory_salt", "peatwax", "verdant_grafts"]:
+		if bool(result.get(resource_id, false)):
+			ordered.append(resource_id)
+	return ordered
 
 static func _supplemental_generated_town_source_node(town: Dictionary, resource_id: String, tile: Vector2i) -> Dictionary:
 	var site_id := ""
 	var object_id := ""
-	if GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id):
+	if resource_id == "required_sources":
+		site_id = GENERATED_TOWN_REQUIRED_SOURCE_SITE_ID
+	elif GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE.has(resource_id):
 		var record: Dictionary = GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE[resource_id]
 		site_id = String(record.get("site_id", ""))
 		object_id = String(record.get("object_id", ""))
@@ -608,17 +629,20 @@ static func _generated_town_source_support_tile(
 	var queue := [start_tile]
 	var distances := {_generated_source_tile_key(start_tile): 0}
 	var candidates := []
+	var near_candidates := []
 	var stackable_candidates := []
 	var head := 0
 	while head < queue.size():
 		var current: Vector2i = queue[head]
 		head += 1
 		var current_distance := int(distances.get(_generated_source_tile_key(current), 0))
-		if current_distance > 3:
+		if current_distance > 6:
 			continue
-		if current_distance >= 1 and _generated_source_tile_available(session, current):
+		if current_distance >= 2 and _generated_source_tile_available(session, current):
 			candidates.append(current)
-		elif current_distance >= 1 and _generated_source_tile_stackable(session, current):
+		elif current_distance == 1 and _generated_source_tile_available(session, current):
+			near_candidates.append(current)
+		elif current_distance >= 2 and _generated_source_tile_stackable(session, current):
 			stackable_candidates.append(current)
 		for neighbor in _generated_source_route_neighbors(current):
 			if not _generated_source_in_bounds(neighbor, map_size):
@@ -637,8 +661,10 @@ static func _generated_town_source_support_tile(
 			distances[neighbor_key] = current_distance + 1
 			queue.append(neighbor)
 	if candidates.is_empty():
+		if not near_candidates.is_empty():
+			return near_candidates[source_index % near_candidates.size()]
 		if stackable_candidates.is_empty():
-			return start_tile
+			return Vector2i(-1, -1)
 		return stackable_candidates[source_index % stackable_candidates.size()]
 	return candidates[source_index % candidates.size()]
 
@@ -702,6 +728,12 @@ static func _generated_town_source_start_tile(session: SessionStateStoreScript.S
 				return candidate
 			if fallback == Vector2i(-1, -1):
 				fallback = candidate
+	var nearest := _generated_nearest_source_route_start_tile(
+		session,
+		Vector2i(int(town.get("x", fallback.x if fallback != Vector2i(-1, -1) else 0)), int(town.get("y", fallback.y if fallback != Vector2i(-1, -1) else 0)))
+	)
+	if nearest != Vector2i(-1, -1):
+		return nearest
 	if fallback != Vector2i(-1, -1):
 		return fallback
 	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
@@ -713,6 +745,35 @@ static func _generated_source_route_start_tile_usable(session: SessionStateStore
 	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
 		return false
 	return not OverworldRulesScript.tile_has_route_interaction(session, tile.x, tile.y)
+
+static func _generated_nearest_source_route_start_tile(
+	session: SessionStateStoreScript.SessionData,
+	origin: Vector2i,
+	max_distance: int = 8
+) -> Vector2i:
+	var map_size := OverworldRulesScript.derive_map_size(session)
+	if not _generated_source_in_bounds(origin, map_size):
+		return Vector2i(-1, -1)
+	var queue := [origin]
+	var distances := {_generated_source_tile_key(origin): 0}
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		var current_distance := int(distances.get(_generated_source_tile_key(current), 0))
+		if current_distance > max_distance:
+			continue
+		if current_distance > 0 and _generated_source_route_start_tile_usable(session, current):
+			return current
+		for neighbor in _generated_source_route_neighbors(current):
+			if not _generated_source_in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _generated_source_tile_key(neighbor)
+			if distances.has(neighbor_key):
+				continue
+			distances[neighbor_key] = current_distance + 1
+			queue.append(neighbor)
+	return Vector2i(-1, -1)
 
 static func _generated_source_route_neighbors(tile: Vector2i) -> Array:
 	return [

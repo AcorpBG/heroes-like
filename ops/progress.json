@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
-  "currentSliceTitle": "Economy Fastest Capstone Rare Pacing Followup",
+  "currentSliceId": "economy-native-rmg-required-source-support-10184",
+  "currentSliceTitle": "Economy Native RMG Required Source Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation. Planning update on 2026-05-26: next economy identity target is multi-rare town costs with signature rare highest, one secondary rare at about half pressure, and each remaining rare at about one-third pressure.",
+  "currentSliceNotes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T10:15:09Z",
+  "updatedAt": "2026-05-26T14:12:31Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24288,12 +24288,12 @@
     {
       "id": "economy-faction-identity-second-pass-10184",
       "title": "Economy Faction Identity Second Pass",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
       "planRef": "PLAN.md Selectable Near-Term Work",
-      "purpose": "Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
+      "purpose": "Replace the one-signature-rare town cost model with a multi-rare pressure model: every town uses every rare resource; the faction-specific rare remains highest-pressure; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
       "sourceDocs": [
         "project.md",
         "PLAN.md"
@@ -24311,7 +24311,7 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Authored towns use every rare resource with signature/secondary/remaining pressure ratios recorded in evidence; 30-turn town development, common-resource dominance, UI readability, AI development, and source-route evidence remain valid.",
+      "completionCriteria": "Town templates use every rare resource with signature/secondary/remaining pressure ratios recorded in evidence; 30-turn town development, common-resource dominance, UI readability, AI development, and Native RMG generated-source evidence remain valid.",
       "nonGoals": [
         "campaign production unless explicitly selected",
         "rare-only pricing that displaces gold/wood/ore as the dominant cost shape",
@@ -24326,13 +24326,28 @@
         "evidence": {}
       },
       "summary": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
-      "updatedAt": "2026-05-26T10:15:09Z",
-      "notes": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant."
+      "updatedAt": "2026-05-26T14:12:31Z",
+      "notes": "Started multi-rare town cost model implementation from GOALS.md: every authored town should use every rare resource with signature, secondary, and remaining rare pressure ratios.",
+      "startedAt": "2026-05-26T10:41:18Z",
+      "completedAt": "2026-05-26T14:12:31Z",
+      "sliceEvidence": {
+        "deterministic_scorecard": "15/15",
+        "runtime_inclusive_scorecard": "30/30",
+        "rare_pressure_model": {
+          "signature_rare_total": "28-30",
+          "secondary_rare_total": 14,
+          "remaining_rare_total_each": 9,
+          "all_rare_resources_used_by_each_town": true
+        },
+        "town_development_completion_day_min": 28,
+        "town_development_completion_day_max": 30,
+        "native_rmg_source_support_slice": "economy-native-rmg-required-source-support-10184"
+      }
     },
     {
       "id": "economy-authored-rare-source-breadth-10184",
       "title": "Economy Authored Rare Source Breadth",
-      "status": "pending",
+      "status": "paused",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
@@ -24353,7 +24368,7 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Every rare required by the multi-rare town model has reachable, guarded authored-source coverage in active play surfaces; source routes and economy/town scorecards remain valid without campaign production scope.",
+      "completionCriteria": "Paused. Resume only if authored map/source placement is explicitly selected again.",
       "nonGoals": [
         "campaign production unless explicitly selected",
         "free stockpile seeding as a substitute for map control",
@@ -24368,8 +24383,10 @@
         "evidence": {}
       },
       "summary": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.",
-      "updatedAt": "2026-05-26T10:15:09Z",
-      "notes": "Pending. Broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding."
+      "updatedAt": "2026-05-26T14:12:31Z",
+      "notes": "Started because the multi-rare town cost model exposed missing persistent authored rare-source coverage in active scenarios.",
+      "startedAt": "2026-05-26T10:45:20Z",
+      "pauseReason": "Owner directed this balance pass to ignore authored maps and balance source access strictly from Native RMG generated maps."
     },
     {
       "id": "battle-layout-smoke-followup-10184",
@@ -24642,6 +24659,101 @@
       },
       "summary": "Pending. Expand automated balance harness depth before scaling content.",
       "updatedAt": "2026-05-26T09:44:34Z"
+    },
+    {
+      "id": "economy-native-rmg-required-source-support-10184",
+      "status": "completed",
+      "title": "Economy Native RMG Required Source Support",
+      "classification": "implementation_slice",
+      "phase": "phase-5-playable-alpha-baseline",
+      "purpose": "Make the multi-rare town cost model playable on Native RMG generated maps by providing guarded generated-package support sources for every non-gold resource required by generated player, enemy, and neutral towns.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "GOALS.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-town-development-cost-curve-report.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/towns.json",
+        "content/resource_sites.json",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/town_development_cost_curve_report.py",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/native_random_map_package_session_adoption_report.gd"
+      ],
+      "baselineChecks": [
+        "python3 tests/town_development_balance_report.py",
+        "python3 tests/town_development_cost_curve_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
+        "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": {
+        "scope": "Native RMG generated maps only for source-access balance; authored scenario rare-source breadth paused",
+        "deterministic_scorecard": "15/15",
+        "runtime_inclusive_scorecard": "30/30",
+        "town_development_completion_day_min": 28,
+        "town_development_completion_day_max": 30,
+        "rare_pressure_model": {
+          "signature_rare_total": "28-30",
+          "secondary_rare_total": 14,
+          "remaining_rare_total_each": 9,
+          "all_rare_resources_used_by_each_town": true
+        },
+        "generated_package_source_routes": {
+          "town_case_count": 7,
+          "resource_route_case_count": 56,
+          "reachable_route_case_count": 56,
+          "required_rare_source_route_case_count": 42,
+          "guarded_rare_source_route_case_count": 42,
+          "generated_resource_source_ids": [
+            "aetherglass",
+            "brass_scrip",
+            "embergrain",
+            "gold",
+            "memory_salt",
+            "ore",
+            "peatwax",
+            "verdant_grafts",
+            "wood"
+          ]
+        },
+        "generated_package_breadth": {
+          "case_count": 3,
+          "total_town_count": 15,
+          "total_resource_route_case_count": 120,
+          "total_reachable_route_case_count": 120,
+          "total_guarded_rare_source_route_case_count": 90
+        },
+        "generated_runways": {
+          "player_completion_day": 22,
+          "neutral_completion_day_range": "20-23",
+          "enemy_completion_day_range": "24-24"
+        },
+        "townshell_all_rare_ui": {
+          "faction_case_count": 6,
+          "rare_bottleneck_surface_case_count": 6,
+          "ready_build_plan_surface_case_count": 6,
+          "same_day_build_lockout_case_count": 6
+        },
+        "new_gate_created": false,
+        "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
+      },
+      "completionCriteria": "Strict Small Native RMG package sessions expose guarded reachable generated sources for every generated town required non-gold resource under exact package route/block rules; town cost reports and economy scorecards remain green; no authored scenario/source placement is used as the balance target.",
+      "nonGoals": [
+        "authored scenario rare-source placement balance",
+        "campaign production",
+        "broad RMG readiness beyond strict Small 36x36 one-level land",
+        "free stockpile or market shortcuts as source-coverage substitutes",
+        "new gates without player-facing economy value"
+      ],
+      "updatedAt": "2026-05-26T14:12:31Z",
+      "completedAt": "2026-05-26T14:12:31Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -31286,6 +31398,95 @@
           "policy": "player-balance content tuning using existing reports; not campaign production work"
         }
       }
+    },
+    {
+      "id": "economy-native-rmg-required-source-support-10184",
+      "title": "Economy Native RMG Required Source Support",
+      "completedAt": "2026-05-26T14:12:31Z",
+      "summary": "Completed. Town development now uses the requested all-rare pressure model: every town template spends all six rares, with signature rare highest, one secondary rare around half pressure, and remaining rares at lighter pressure while gold/wood/ore stay dominant. Native RMG generated package support now derives each generated town required non-gold resources from actual buildable costs and injects guarded required-source caches so player, enemy, and neutral generated towns have reachable sources for every required rare under exact package route/block rules. The economy scorecard and repo validation now treat Native RMG generated maps as the source-access balance surface for this slice; authored rare-source breadth is paused, not completed.",
+      "sourceRefs": [
+        "PLAN.md",
+        "GOALS.md",
+        "docs/economy-town-goal-scorecard-report.md",
+        "docs/economy-town-development-cost-curve-report.md",
+        "content/buildings.json",
+        "content/towns.json",
+        "content/resource_sites.json",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/economy_town_goal_scorecard_report.py",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "tests/town_economy_resource_ui_surface_report.gd",
+        "tests/town_development_cost_curve_report.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-26T14:12:56Z",
+        "sliceId": "economy-native-rmg-required-source-support-10184",
+        "commands": [
+          "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
+          "python3 tests/town_development_balance_report.py (passed)",
+          "python3 tests/town_development_cost_curve_report.py (passed)",
+          "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+          "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
+          "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
+          "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "scope": "Native RMG generated maps only for source-access balance; authored scenario rare-source breadth paused",
+          "deterministic_scorecard": "15/15",
+          "runtime_inclusive_scorecard": "30/30",
+          "town_development_completion_day_min": 28,
+          "town_development_completion_day_max": 30,
+          "rare_pressure_model": {
+            "signature_rare_total": "28-30",
+            "secondary_rare_total": 14,
+            "remaining_rare_total_each": 9,
+            "all_rare_resources_used_by_each_town": true
+          },
+          "generated_package_source_routes": {
+            "town_case_count": 7,
+            "resource_route_case_count": 56,
+            "reachable_route_case_count": 56,
+            "required_rare_source_route_case_count": 42,
+            "guarded_rare_source_route_case_count": 42,
+            "generated_resource_source_ids": [
+              "aetherglass",
+              "brass_scrip",
+              "embergrain",
+              "gold",
+              "memory_salt",
+              "ore",
+              "peatwax",
+              "verdant_grafts",
+              "wood"
+            ]
+          },
+          "generated_package_breadth": {
+            "case_count": 3,
+            "total_town_count": 15,
+            "total_resource_route_case_count": 120,
+            "total_reachable_route_case_count": 120,
+            "total_guarded_rare_source_route_case_count": 90
+          },
+          "generated_runways": {
+            "player_completion_day": 22,
+            "neutral_completion_day_range": "20-23",
+            "enemy_completion_day_range": "24-24"
+          },
+          "townshell_all_rare_ui": {
+            "faction_case_count": 6,
+            "rare_bottleneck_surface_case_count": 6,
+            "ready_build_plan_surface_case_count": 6,
+            "same_day_build_lockout_case_count": 6
+          },
+          "new_gate_created": false,
+          "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -32156,6 +32357,7 @@
     }
   },
   "validationResults": [
+    "2026-05-26 Native RMG economy source support: all-rare town costs and generated required-source caches passed. Runtime-inclusive scorecard 30/30; Native RMG generated package routes 56/56 reachable with 42/42 required rare routes guarded; breadth 120/120 routes reachable with 90 guarded rare routes; TownShell all-rare UI 6/6; validate_repo passed. Authored rare-source breadth paused by owner scope.",
     "2026-05-25 generated package source guard-pressure scorecard: strict Small generated/native package player/enemy town source routes now require guarded economy-source pressure while preserving route-derived acquisition inside the 30-turn runway. Evidence passes 3/3 guarded generated towns, 3 guarded source routes, max acquisition day 3 of limit 6, and runtime-inclusive economy/town scorecard 33/33. This is not campaign production work.",
     "2026-05-25 generated package town source-route scorecard: strict Small generated/native package towns now prove 9/9 generated wood, ore, and faction-rare source routes reachable through live route rules after exact H3M masks. Runtime-inclusive economy/town scorecard passes 32/32, max common route length is 8 steps, max rare route length is 26 steps, and Linux debug/release plus Windows mingw debug/release native builds passed. This is not campaign production work.",
     "2026-05-25 active enemy source-route scorecard: Active authored source-route report now covers 20 enemy-town cases with 60/60 enemy wood/ore/faction-rare routes reachable while preserving 54/54 player routes. Runtime-inclusive economy/town scorecard passes 27/27 checks.",
@@ -33740,23 +33942,30 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T09:44:34Z",
+    "updatedAt": "2026-05-26T14:12:56Z",
     "commands": [
-      "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
-      "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like",
-      "jq empty ops/progress.json"
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
+      "python3 tests/town_development_balance_report.py (passed)",
+      "python3 tests/town_development_cost_curve_report.py (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+      "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
+      "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
+      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+      "python3 tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
-    "summary": "Document role alignment cleanup plus pending near-term slice reconciliation."
+    "summary": "Native RMG generated-map economy source-access support passed deterministic scorecard, runtime-inclusive scorecard, generated package adoption report, TownShell all-rare UI smoke, and repo validation."
   },
   "active_slice": {
-    "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
-    "title": "Economy Fastest Capstone Rare Pacing Followup",
+    "id": "economy-native-rmg-required-source-support-10184",
+    "title": "Economy Native RMG Required Source Support",
     "status": "completed",
-    "updatedAt": "2026-05-26T10:15:09Z",
-    "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
-    "completedAt": "2026-05-25T21:23:25Z"
+    "updatedAt": "2026-05-26T14:12:31Z",
+    "notes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
+    "completedAt": "2026-05-26T14:12:31Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T09:43:39Z",
+  "currentSliceUpdatedAt": "2026-05-26T14:12:31Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -35665,64 +35874,150 @@
         "new_gate_created": false,
         "policy": "player-balance content tuning using existing reports; not campaign production work"
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-26T14:12:56Z",
+      "sliceId": "economy-native-rmg-required-source-support-10184",
+      "commands": [
+        "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
+        "python3 tests/town_development_balance_report.py (passed)",
+        "python3 tests/town_development_cost_curve_report.py (passed)",
+        "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+        "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
+        "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
+        "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "scope": "Native RMG generated maps only for source-access balance; authored scenario rare-source breadth paused",
+        "deterministic_scorecard": "15/15",
+        "runtime_inclusive_scorecard": "30/30",
+        "town_development_completion_day_min": 28,
+        "town_development_completion_day_max": 30,
+        "rare_pressure_model": {
+          "signature_rare_total": "28-30",
+          "secondary_rare_total": 14,
+          "remaining_rare_total_each": 9,
+          "all_rare_resources_used_by_each_town": true
+        },
+        "generated_package_source_routes": {
+          "town_case_count": 7,
+          "resource_route_case_count": 56,
+          "reachable_route_case_count": 56,
+          "required_rare_source_route_case_count": 42,
+          "guarded_rare_source_route_case_count": 42,
+          "generated_resource_source_ids": [
+            "aetherglass",
+            "brass_scrip",
+            "embergrain",
+            "gold",
+            "memory_salt",
+            "ore",
+            "peatwax",
+            "verdant_grafts",
+            "wood"
+          ]
+        },
+        "generated_package_breadth": {
+          "case_count": 3,
+          "total_town_count": 15,
+          "total_resource_route_case_count": 120,
+          "total_reachable_route_case_count": 120,
+          "total_guarded_rare_source_route_case_count": 90
+        },
+        "generated_runways": {
+          "player_completion_day": 22,
+          "neutral_completion_day_range": "20-23",
+          "enemy_completion_day_range": "24-24"
+        },
+        "townshell_all_rare_ui": {
+          "faction_case_count": 6,
+          "rare_bottleneck_surface_case_count": 6,
+          "ready_build_plan_surface_case_count": 6,
+          "same_day_build_lockout_case_count": 6
+        },
+        "new_gate_created": false,
+        "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
+      }
     }
   ],
   "currentSlice": {
-    "id": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
-    "title": "Economy Fastest Capstone Rare Pacing Followup",
+    "id": "economy-native-rmg-required-source-support-10184",
+    "title": "Economy Native RMG Required Source Support",
     "status": "completed",
-    "updatedAt": "2026-05-26T10:15:09Z",
-    "notes": "No implementation slice is currently in progress. Latest completed slice is economy-fastest-capstone-rare-pacing-followup-20260525-10184. PLAN.md was compacted back to tactical state/selection rules on 2026-05-26; detailed completed evidence remains in this progress tracker and docs. Next work should select or add a concrete pending slice before implementation.",
-    "completedAt": "2026-05-25T21:23:25Z"
+    "updatedAt": "2026-05-26T14:12:31Z",
+    "notes": "Completed; no implementation slice is currently in progress. Authored rare-source breadth remains paused by owner scope.",
+    "completedAt": "2026-05-26T14:12:31Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-25T21:45:24Z",
-    "sliceId": "economy-fastest-capstone-rare-pacing-followup-20260525-10184",
+    "updatedAt": "2026-05-26T14:12:56Z",
+    "sliceId": "economy-native-rmg-required-source-support-10184",
     "commands": [
-      "python3 tests/town_development_balance_report.py",
-      "python3 tests/town_development_cost_curve_report.py",
-      "python3 tests/faction_town_unit_asymmetry_report.py",
-      "python3 tests/economy_town_goal_scorecard_report.py",
-      "godot --headless --quit-after 300 --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn",
-      "godot --headless --quit-after 300 --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
-      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime",
-      "python3 tests/validate_repo.py",
-      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_balance_report.py tests/town_development_cost_curve_report.py tests/faction_town_unit_asymmetry_report.py",
-      "jq empty ops/progress.json content/buildings.json content/towns.json content/scenarios.json",
-      "git diff --check",
-      "duplicate authored town buildable display-name audit"
+      "python3 -m py_compile tests/economy_town_goal_scorecard_report.py tests/town_development_cost_curve_report.py tests/validate_repo.py (passed)",
+      "python3 tests/town_development_balance_report.py (passed)",
+      "python3 tests/town_development_cost_curve_report.py (passed)",
+      "python3 tests/economy_town_goal_scorecard_report.py (passed; 15/15 deterministic checks)",
+      "godot --headless --quit-after 360 --path . --scene res://tests/native_random_map_package_session_adoption_report.tscn (passed; strict Small Native RMG package source routes and runways)",
+      "godot --headless --quit-after 300 --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn (passed; 6/6 all-rare UI cases)",
+      "python3 tests/economy_town_goal_scorecard_report.py --include-runtime (passed; 30/30 checks)",
+      "python3 tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
     "evidence": {
-      "new_gate_created": false,
-      "authored_completion_day_min": 28,
-      "authored_completion_day_max": 30,
+      "scope": "Native RMG generated maps only for source-access balance; authored scenario rare-source breadth paused",
       "deterministic_scorecard": "15/15",
-      "runtime_inclusive_scorecard": "35/35",
-      "player_source_routes_reachable": "54/54",
-      "enemy_source_routes_reachable": "60/60",
-      "duplicate_display_names_per_authored_town": false,
-      "validate_repo": "pass",
-      "json_empty": "pass",
-      "git_diff_check": "pass",
-      "audit_findings": {
-        "strongest_current_economy_identity": [
-          "faction_brasshollow",
-          "faction_thornwake",
-          "faction_veilmourn"
-        ],
-        "identity_still_too_close_to_renamed_rare_pressure": [
-          "faction_embercourt",
-          "faction_mireclaw",
-          "faction_sunvault"
-        ],
-        "narrow_active_authored_rare_sources": [
-          "verdant_grafts",
+      "runtime_inclusive_scorecard": "30/30",
+      "town_development_completion_day_min": 28,
+      "town_development_completion_day_max": 30,
+      "rare_pressure_model": {
+        "signature_rare_total": "28-30",
+        "secondary_rare_total": 14,
+        "remaining_rare_total_each": 9,
+        "all_rare_resources_used_by_each_town": true
+      },
+      "generated_package_source_routes": {
+        "town_case_count": 7,
+        "resource_route_case_count": 56,
+        "reachable_route_case_count": 56,
+        "required_rare_source_route_case_count": 42,
+        "guarded_rare_source_route_case_count": 42,
+        "generated_resource_source_ids": [
+          "aetherglass",
           "brass_scrip",
-          "memory_salt"
-        ],
-        "generated_small_generalization": "strict Small 36x36 one-level land evidence only; useful but not broad RMG economy approval"
-      }
+          "embergrain",
+          "gold",
+          "memory_salt",
+          "ore",
+          "peatwax",
+          "verdant_grafts",
+          "wood"
+        ]
+      },
+      "generated_package_breadth": {
+        "case_count": 3,
+        "total_town_count": 15,
+        "total_resource_route_case_count": 120,
+        "total_reachable_route_case_count": 120,
+        "total_guarded_rare_source_route_case_count": 90
+      },
+      "generated_runways": {
+        "player_completion_day": 22,
+        "neutral_completion_day_range": "20-23",
+        "enemy_completion_day_range": "24-24"
+      },
+      "townshell_all_rare_ui": {
+        "faction_case_count": 6,
+        "rare_bottleneck_surface_case_count": 6,
+        "ready_build_plan_surface_case_count": 6,
+        "same_day_build_lockout_case_count": 6
+      },
+      "new_gate_created": false,
+      "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
     }
   }
 }
