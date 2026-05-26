@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Fast battle benchmark internals and public output now use side_a/side_b throughout the neutral ordered faction harness; no player/enemy tokens remain in quick JSON output. Fake stalemate remains removed, initiative tie side is seed-varied, and army snapshots do not use authored representative-town build logs. Quick structural gate passes, but balance remains needs_tuning with faction-pair win-rate outliers, so the balance goal is not complete.",
+  "currentSliceNotes": "In progress. Benchmark side labels are side-neutral and the ordered-matchup harness now removes hidden faction/unit-id tie bias: ordered matchup seeds are mirrored by unordered faction pair and equal-score turn/action ties use side slots instead of unit ids. A neutral lower-bound probe with identical armies and disabled faction/commander modifiers produced 0 balance outliers, proving the side/tie surface can represent true 50/50 mirrors. The real 100-seed content matrix remains needs_tuning: 60 balance outliers, side-bias points by week 0.07/1.0/1.87/0.0, average rounds 5.18/5.51/5.94/5.8, so the combat balance goal is not complete.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T19:38:24Z",
+  "updatedAt": "2026-05-26T20:16:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25160,21 +25160,24 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-26T19:38:24Z",
+        "updatedAt": "2026-05-26T20:16:33Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --gate",
+          "jq empty ops/progress.json",
           "git diff --check"
         ],
         "evidence": {
-          "side_neutral_token_check": "quick JSON output contains no player/enemy tokens after internal side rename",
-          "quick_gate": "ok true, structural_failures empty",
-          "balance_status": "needs_tuning; quick week-1 balance_outlier_count 14"
+          "harness_bias_fix": "ordered matchup seeds are keyed by unordered faction pair; equal-score turn/action ties use side slots instead of faction/unit ids",
+          "neutral_lower_bound_probe": "identical armies with disabled faction/commander modifiers produced 0 balance outliers and max dominant rate 50.0",
+          "current_100_seed_status": "needs_tuning; 60 balance outliers; week side-bias points 0.07, 1.0, 1.87, 0.0; average rounds 5.18, 5.51, 5.94, 5.8",
+          "remaining_failure": "all week-pair summaries still need real content/mechanics tuning into the 45-55 target and week 4 pacing must exceed week 3"
         }
       },
-      "notes": "In progress. Fast battle benchmark internals and public output now use side_a/side_b throughout the neutral ordered faction harness; no player/enemy tokens remain in quick JSON output. Fake stalemate remains removed, initiative tie side is seed-varied, and army snapshots do not use authored representative-town build logs. Quick structural gate passes, but balance remains needs_tuning with faction-pair win-rate outliers, so the balance goal is not complete.",
+      "notes": "In progress. Benchmark side labels are side-neutral and the ordered-matchup harness now removes hidden faction/unit-id tie bias: ordered matchup seeds are mirrored by unordered faction pair and equal-score turn/action ties use side slots instead of unit ids. A neutral lower-bound probe with identical armies and disabled faction/commander modifiers produced 0 balance outliers, proving the side/tie surface can represent true 50/50 mirrors. The real 100-seed content matrix remains needs_tuning: 60 balance outliers, side-bias points by week 0.07/1.0/1.87/0.0, average rounds 5.18/5.51/5.94/5.8, so the combat balance goal is not complete.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25194,7 +25197,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T19:38:24Z",
+      "updatedAt": "2026-05-26T20:16:33Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
@@ -34956,7 +34959,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T19:38:24Z",
+  "currentSliceUpdatedAt": "2026-05-26T20:16:33Z",
   "validationHistory": [
     {
       "status": "pass",
