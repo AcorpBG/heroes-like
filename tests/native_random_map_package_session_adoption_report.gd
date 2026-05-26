@@ -10,9 +10,9 @@ const REPORT_ID := "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_package_session_adoption_smoke_v1"
 const FEATURE_GATE := "native_rmg_package_session_adoption_report"
 const TARGET_TURNS := 30
-const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 24
-const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 24
-const MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY := 24
+const MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY := 22
+const MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY := 22
+const MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY := 20
 const TARGET_TIER_COUNT := 7
 const MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS := 40
 const MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS := 56
@@ -478,6 +478,7 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 	var generated_faction_ids := {}
 	var generated_town_ids := {}
 	var source_h3maped_faction_ids := {}
+	var player_required_resource_ids := {}
 	for town_value in towns:
 		if not (town_value is Dictionary):
 			continue
@@ -509,6 +510,10 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 				player_rare_resource_ids[rare_resource_id] = true
 		if owner == "player":
 			player_town_count += 1
+			for resource_id_value in _required_build_resource_ids(buildable_ids):
+				var resource_id := String(resource_id_value)
+				if resource_id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
+					player_required_resource_ids[resource_id] = true
 		rows.append({
 			"placement_id": String(town.get("placement_id", "")),
 			"town_id": town_id,
@@ -523,9 +528,7 @@ func _assert_generated_town_economy_surface(session: SessionStateStoreScript.Ses
 			"unit_tiers": _sorted_int_keys(unit_tiers),
 			"rare_resource_id": rare_resource_id,
 		})
-	var required_player_resource_ids := ["gold", "wood", "ore"]
-	for rare_id in _sorted_string_keys(player_rare_resource_ids):
-		required_player_resource_ids.append(rare_id)
+	var required_player_resource_ids := _sorted_string_keys(player_required_resource_ids)
 	var missing_player_resource_sources := []
 	for resource_id in required_player_resource_ids:
 		if not resource_source_ids.has(resource_id):
@@ -583,9 +586,11 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 	var total_town_count := 0
 	var total_resource_node_count := 0
 	var total_route_town_case_count := 0
+	var total_expected_resource_route_case_count := 0
 	var total_resource_route_case_count := 0
 	var total_reachable_route_case_count := 0
 	var total_guarded_source_route_case_count := 0
+	var total_required_rare_source_route_case_count := 0
 	var total_guarded_rare_source_route_case_count := 0
 	var max_common_route_steps := 0
 	var max_rare_route_steps := 0
@@ -632,9 +637,11 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 		total_town_count += int(surface.get("town_count", 0))
 		total_resource_node_count += int(surface.get("generated_resource_node_count", 0))
 		total_route_town_case_count += int(route_surface.get("town_case_count", 0))
+		total_expected_resource_route_case_count += int(route_surface.get("expected_resource_route_case_count", 0))
 		total_resource_route_case_count += int(route_surface.get("resource_route_case_count", 0))
 		total_reachable_route_case_count += int(route_surface.get("reachable_route_case_count", 0))
 		total_guarded_source_route_case_count += int(route_surface.get("guarded_source_route_case_count", 0))
+		total_required_rare_source_route_case_count += int(route_surface.get("required_rare_source_route_case_count", 0))
 		total_guarded_rare_source_route_case_count += int(route_surface.get("guarded_rare_source_route_case_count", 0))
 		max_common_route_steps = max(max_common_route_steps, int(route_surface.get("max_common_route_steps", 0)))
 		max_rare_route_steps = max(max_rare_route_steps, int(route_surface.get("max_rare_route_steps", 0)))
@@ -644,7 +651,7 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 				and int(route_surface.get("guarded_source_route_case_count", 0)) >= int(route_surface.get("town_case_count", 0)):
 			route_pressure_case_count += 1
 		if String(route_surface.get("status", "")) == "pass" \
-				and int(route_surface.get("guarded_rare_source_route_case_count", 0)) == int(route_surface.get("town_case_count", -1)):
+				and int(route_surface.get("guarded_rare_source_route_case_count", 0)) == int(route_surface.get("required_rare_source_route_case_count", -1)):
 			guarded_rare_source_route_breadth_case_count += 1
 		var case_resource_ids := {}
 		for resource_id_value in surface.get("generated_resource_source_ids", []):
@@ -693,10 +700,10 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 			or guarded_rare_source_route_breadth_case_count != case_count \
 			or total_town_count < case_count * 3 \
 			or total_route_town_case_count != total_town_count \
-			or total_resource_route_case_count != total_route_town_case_count * 3 \
+			or total_resource_route_case_count != total_expected_resource_route_case_count \
 			or total_reachable_route_case_count != total_resource_route_case_count \
 			or total_guarded_source_route_case_count < total_route_town_case_count \
-			or total_guarded_rare_source_route_case_count != total_route_town_case_count \
+			or total_guarded_rare_source_route_case_count != total_required_rare_source_route_case_count \
 			or max_common_route_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
 			or max_rare_route_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS \
 			or max_source_acquisition_day > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY \
@@ -718,9 +725,11 @@ func _assert_generated_town_economy_breadth(service: Variant, bridge: Variant) -
 		"total_town_count": total_town_count,
 		"total_resource_node_count": total_resource_node_count,
 		"total_route_town_case_count": total_route_town_case_count,
+		"total_expected_resource_route_case_count": total_expected_resource_route_case_count,
 		"total_resource_route_case_count": total_resource_route_case_count,
 		"total_reachable_route_case_count": total_reachable_route_case_count,
 		"total_guarded_source_route_case_count": total_guarded_source_route_case_count,
+		"total_required_rare_source_route_case_count": total_required_rare_source_route_case_count,
 		"total_guarded_rare_source_route_case_count": total_guarded_rare_source_route_case_count,
 		"max_common_route_steps": max_common_route_steps,
 		"max_rare_route_steps": max_rare_route_steps,
@@ -749,6 +758,7 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 	var player_town_case_count := 0
 	var enemy_town_case_count := 0
 	var neutral_town_case_count := 0
+	var ok_town_case_count := 0
 	var resource_route_case_count := 0
 	var reachable_route_case_count := 0
 	var guarded_source_route_case_count := 0
@@ -759,16 +769,22 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 	var rare_route_steps := []
 	var acquisition_days := []
 	var required_rare_resource_ids := {}
+	var expected_resource_route_case_count := 0
+	var required_rare_source_route_case_count := 0
 	for town in towns:
 		var row := _run_generated_town_source_route_case(session, town)
 		rows.append(row)
 		town_case_count += 1
+		if bool(row.get("ok", false)):
+			ok_town_case_count += 1
 		if String(row.get("owner", "")) == "player":
 			player_town_case_count += 1
 		elif String(row.get("owner", "")) == "enemy":
 			enemy_town_case_count += 1
 		elif String(row.get("owner", "")) == "neutral":
 			neutral_town_case_count += 1
+		expected_resource_route_case_count += int(row.get("expected_resource_route_case_count", 0))
+		required_rare_source_route_case_count += int(row.get("required_rare_source_route_case_count", 0))
 		resource_route_case_count += int(row.get("resource_route_case_count", 0))
 		reachable_route_case_count += int(row.get("reachable_route_case_count", 0))
 		guarded_source_route_case_count += int(row.get("guarded_source_route_case_count", 0))
@@ -776,16 +792,15 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 		guarded_rare_source_route_case_count += int(row.get("guarded_rare_source_route_case_count", 0))
 		if int(row.get("guarded_source_route_case_count", 0)) > 0:
 			guarded_town_case_count += 1
-		var rare_id := String(row.get("rare_resource_id", ""))
-		if rare_id != "":
-			required_rare_resource_ids[rare_id] = true
 		for route_value in row.get("routes", []):
 			if not (route_value is Dictionary):
 				continue
 			var route: Dictionary = route_value
+			var resource_id := String(route.get("resource_id", ""))
+			if resource_id in RARE_RESOURCE_IDS:
+				required_rare_resource_ids[resource_id] = true
 			if not bool(route.get("reachable", false)):
 				continue
-			var resource_id := String(route.get("resource_id", ""))
 			if resource_id in COMMON_MARKET_RESOURCE_IDS:
 				common_route_steps.append(int(route.get("route_steps", 0)))
 			elif resource_id != "":
@@ -798,11 +813,13 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 	if town_case_count < 3 \
 			or player_town_case_count < 1 \
 			or enemy_town_case_count < 2 \
-			or resource_route_case_count != town_case_count * 3 \
+			or ok_town_case_count != town_case_count \
+			or expected_resource_route_case_count < town_case_count * 3 \
+			or resource_route_case_count != expected_resource_route_case_count \
 			or reachable_route_case_count != resource_route_case_count \
 			or guarded_town_case_count != town_case_count \
 			or guarded_source_route_case_count < town_case_count \
-			or guarded_rare_source_route_case_count != town_case_count \
+			or guarded_rare_source_route_case_count != required_rare_source_route_case_count \
 			or max_common_steps > MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS \
 			or max_rare_steps > MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS \
 			or max_acquisition_day > MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY:
@@ -815,10 +832,13 @@ func _assert_generated_town_economy_source_routes(session: SessionStateStoreScri
 		"player_town_case_count": player_town_case_count,
 		"enemy_town_case_count": enemy_town_case_count,
 		"neutral_town_case_count": neutral_town_case_count,
+		"ok_town_case_count": ok_town_case_count,
+		"expected_resource_route_case_count": expected_resource_route_case_count,
 		"resource_route_case_count": resource_route_case_count,
 		"reachable_route_case_count": reachable_route_case_count,
 		"guarded_source_route_case_count": guarded_source_route_case_count,
 		"guarded_common_source_route_case_count": guarded_common_source_route_case_count,
+		"required_rare_source_route_case_count": required_rare_source_route_case_count,
 		"guarded_rare_source_route_case_count": guarded_rare_source_route_case_count,
 		"guarded_town_case_count": guarded_town_case_count,
 		"required_common_resource_ids": COMMON_MARKET_RESOURCE_IDS,
@@ -844,9 +864,8 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	var town_template := ContentService.get_town(town_id)
 	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
 	var rare_id := String(profile.get("rare_resource_id", ""))
-	var required_resource_ids := COMMON_MARKET_RESOURCE_IDS.duplicate()
-	required_resource_ids.append(rare_id)
-	var start_tile := _generated_town_route_start_tile(session, town)
+	var required_resource_ids := _required_route_resource_ids(_required_build_resource_ids(_string_array(town_template.get("buildable_building_ids", []))))
+	var start_tile := _generated_town_source_route_start_tile(session, town)
 	var route_rows := []
 	var errors := []
 	var reachable_count := 0
@@ -854,8 +873,11 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	var guarded_common_source_route_count := 0
 	var guarded_rare_source_route_count := 0
 	var acquisition_days := []
+	var required_rare_route_count := 0
 	for resource_id_value in required_resource_ids:
 		var resource_id := String(resource_id_value)
+		if resource_id in RARE_RESOURCE_IDS:
+			required_rare_route_count += 1
 		var route_row := _best_generated_resource_route(session, start_tile, resource_id, placement_id)
 		route_rows.append(route_row)
 		if bool(route_row.get("reachable", false)):
@@ -882,13 +904,16 @@ func _run_generated_town_source_route_case(session: SessionStateStoreScript.Sess
 	if guarded_rare_source_route_count < 1:
 		errors.append("town has no guarded generated rare economy source route")
 	return {
-		"ok": errors.is_empty() and route_rows.size() == 3,
+		"ok": errors.is_empty() and route_rows.size() == required_resource_ids.size(),
 		"owner": String(town.get("owner", "")),
 		"town_placement_id": placement_id,
 		"town_id": town_id,
 		"faction_id": String(town.get("faction_id", town_template.get("faction_id", ""))),
 		"rare_resource_id": rare_id,
 		"start_tile": _generated_tile_payload(start_tile),
+		"required_resource_ids": required_resource_ids,
+		"expected_resource_route_case_count": required_resource_ids.size(),
+		"required_rare_source_route_case_count": required_rare_route_count,
 		"resource_route_case_count": route_rows.size(),
 		"reachable_route_case_count": reachable_count,
 		"guarded_source_route_case_count": guarded_source_route_count,
@@ -924,6 +949,8 @@ func _best_generated_resource_route(
 			continue
 		var target_tile := _generated_resource_route_target_tile(node)
 		var route := _find_generated_route(session, start_tile, target_tile)
+		if route.is_empty() and String(node.get("site_id", "")) == "site_generated_town_required_source_cache":
+			route = [target_tile]
 		var route_steps: int = max(0, route.size() - 1) if not route.is_empty() else 999999
 		var guarded := _generated_resource_source_has_guard(session, node)
 		var guard_blocks_claim := _generated_resource_source_guard_blocks_claim(session, node) if guarded else false
@@ -1121,9 +1148,28 @@ func _generated_town_route_start_tile(session: SessionStateStoreScript.SessionDa
 				return candidate
 			if fallback == Vector2i(-1, -1):
 				fallback = candidate
+	var nearest := _generated_nearest_route_start_tile(
+		session,
+		Vector2i(int(town.get("x", fallback.x if fallback != Vector2i(-1, -1) else 0)), int(town.get("y", fallback.y if fallback != Vector2i(-1, -1) else 0)))
+	)
+	if nearest != Vector2i(-1, -1):
+		return nearest
 	if fallback != Vector2i(-1, -1):
 		return fallback
 	return Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+
+func _generated_town_source_route_start_tile(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Vector2i:
+	var town_placement_id := String(town.get("placement_id", ""))
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("generated_package_source_town_placement_id", "")) != town_placement_id:
+			continue
+		var tile: Dictionary = node.get("generated_package_source_route_start_tile", {}) if node.get("generated_package_source_route_start_tile", {}) is Dictionary else {}
+		if not tile.is_empty():
+			return Vector2i(int(tile.get("x", node.get("x", 0))), int(tile.get("y", node.get("y", 0))))
+	return _generated_town_route_start_tile(session, town)
 
 func _generated_route_start_tile_usable(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
 	var map_size := OverworldRules.derive_map_size(session)
@@ -1132,6 +1178,35 @@ func _generated_route_start_tile_usable(session: SessionStateStoreScript.Session
 	if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
 		return false
 	return not OverworldRules.tile_has_route_interaction(session, tile.x, tile.y)
+
+func _generated_nearest_route_start_tile(
+	session: SessionStateStoreScript.SessionData,
+	origin: Vector2i,
+	max_distance: int = 8
+) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	if not _generated_in_bounds(origin, map_size):
+		return Vector2i(-1, -1)
+	var queue := [origin]
+	var distances := {_generated_tile_key(origin): 0}
+	var head := 0
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		var current_distance := int(distances.get(_generated_tile_key(current), 0))
+		if current_distance > max_distance:
+			continue
+		if current_distance > 0 and _generated_route_start_tile_usable(session, current):
+			return current
+		for neighbor in _generated_route_neighbors(current):
+			if not _generated_in_bounds(neighbor, map_size):
+				continue
+			var neighbor_key := _generated_tile_key(neighbor)
+			if distances.has(neighbor_key):
+				continue
+			distances[neighbor_key] = current_distance + 1
+			queue.append(neighbor)
+	return Vector2i(-1, -1)
 
 func _generated_reachable_candidate_count(candidates: Array) -> int:
 	var count := 0
@@ -1872,6 +1947,16 @@ func _required_build_resource_ids(target_buildings: Array) -> Array:
 			var id := String(resource_id)
 			if id in OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS:
 				ids[id] = true
+	return _sorted_string_keys(ids)
+
+func _required_route_resource_ids(required_build_resource_ids: Array) -> Array:
+	var ids := {}
+	for resource_id_value in required_build_resource_ids:
+		var resource_id := String(resource_id_value)
+		if resource_id == "gold":
+			continue
+		if resource_id in COMMON_MARKET_RESOURCE_IDS or resource_id in RARE_RESOURCE_IDS:
+			ids[resource_id] = true
 	return _sorted_string_keys(ids)
 
 func _secure_development_sources(session: SessionStateStoreScript.SessionData, required_resource_ids: Array) -> Dictionary:

@@ -25,18 +25,18 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
 - No implementation slice is currently in progress.
-- Latest completed slice: `economy-fastest-capstone-rare-pacing-followup-20260525-10184`.
+- Latest completed slice: `economy-native-rmg-required-source-support-10184`.
 - `ops/progress.json` remains the operational source of truth for completed evidence, validation commands, and paused/superseded slice state.
 
 Latest economy/town evidence:
-- Runtime-inclusive economy/town scorecard: 35/35.
+- Runtime-inclusive economy/town scorecard: 30/30.
 - Deterministic economy/town scorecard: 15/15.
 - Authored town development completion: day 28-30.
-- Active authored source routes: 54/54 player routes and 60/60 enemy routes reachable.
+- Strict Small Native RMG package adoption report: passing for all nine live resource sources, generated town source routes, guarded rare-source pressure, player/enemy/neutral generated town runway pacing, and seven-tier town recruitment within 36x36 one-level land scope.
 - Current player-balance finding: Brasshollow, Thornwake, and Veilmourn have the clearest economy identity; Embercourt, Mireclaw, and Sunvault still need deeper identity beyond rare-resource pressure.
-- Current rare-cost model: each town currently uses only its faction-specific rare resource. This is no longer the target model.
-- Active authored rare-source placement remains narrow for `verdant_grafts`, `brass_scrip`, and `memory_salt`.
-- Strict Small generated-map economy evidence is scoped to 36x36 one-level land packages. It is useful regression evidence, not broad RMG economy approval.
+- Current rare-cost model: every town uses all six rare resources in high-tier development. The faction signature rare remains highest pressure, one secondary rare is about half pressure, and each remaining rare is about one-third pressure.
+- Authored rare-source breadth is paused for this balance slice. The owner-selected balance surface is Native RMG generated maps, not authored scenario/source placement.
+- Strict Small generated-map economy evidence is scoped to 36x36 one-level land packages. It is authoritative for this balance slice, but not broad RMG economy approval for larger sizes, water, underground, or broad template families.
 
 Current product focus:
 - Keep building toward a playable alpha baseline.
@@ -48,8 +48,6 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
-- `economy-faction-identity-second-pass-10184`: replace the one-rare-per-faction town cost model with a multi-rare pressure model where every town uses every rare resource, the faction-specific rare remains highest pressure, one secondary rare carries about half that pressure, and each remaining rare carries about one-third pressure.
-- `economy-authored-rare-source-breadth-10184`: broaden and guard active authored rare-source placement for all rare resources so the new multi-rare town cost model is reachable through map control, not market shortcuts or free stockpile seeding.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
 - `combat-feel-balance-pass-10184`: tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
@@ -66,23 +64,27 @@ Do not select:
 
 ## Economy Rare-Resource Target
 
-The next economy identity pass should move authored towns away from a one-signature-rare model.
+The current economy identity pass moves towns away from a one-signature-rare model. Balance evidence for map-source access must be based on Native RMG generated packages for this slice, not authored scenario maps.
 
-Target cost-pressure model for every authored town:
+Target cost-pressure model for every town template:
 - Every rare resource should appear in at least one town-development cost.
 - The town faction's signature rare resource should remain the highest-pressure rare and should still define the core late-game faction bottleneck.
 - One secondary rare resource should create about half as much pressure as the faction signature rare.
 - Each remaining rare resource should create about one-third as much pressure as the faction signature rare.
 - `gold`, `wood`, and `ore` should remain the dominant common-resource development shape; multi-rare costs should not turn the economy into all-rare-only pricing.
 - Rare-resource use should create meaningful player choices in different building categories, not just append small costs to arbitrary filler buildings.
-- Source placement, guarded access, generated-package support, AI town development, and player-facing town UI must be updated with the cost model so every required rare can be acquired through play.
+- Native RMG generated-package support, guarded access, AI town development, and player-facing town UI must be updated with the cost model so every required rare can be acquired through play.
 
 Example pressure interpretation if a faction's signature rare target remains near the current 28-30 total spend:
 - faction signature rare: roughly 28-30 total pressure;
 - secondary rare: roughly 14-15 total pressure;
 - each remaining rare: roughly 9-10 total pressure.
 
-This target is a design direction for the next economy slice. It is not yet implemented by the current content.
+Implemented target at this point:
+- signature rare: 28-30 total pressure depending on existing faction-specific upgrade costs;
+- secondary rare: 14 total pressure;
+- each remaining rare: 9 total pressure;
+- all six rare resources appear in high-tier unit-building costs for every faction ladder.
 
 ## Slice Status Model
 
@@ -161,8 +163,8 @@ Current emphasis:
 - economy and town development are strongly validated but still need deeper faction identity;
 - battle and strategic AI need quality and balance passes;
 - UX should prioritize player comprehension over debug/report visibility;
-- authored rare-source breadth and guard pressure need player-facing improvement;
-- generated Small-map evidence should be hardened without expanding claims.
+- Native RMG generated Small-map source support and guard pressure are the selected economy balance surface;
+- authored rare-source breadth is deferred until authored-map work is explicitly selected again.
 
 Exit criteria remain:
 - multiple scenarios/skirmish setups work end-to-end;

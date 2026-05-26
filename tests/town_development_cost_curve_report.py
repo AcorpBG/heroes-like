@@ -26,11 +26,25 @@ MIN_RARE_DEVELOPMENT_SPEND = 24
 MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN = 1
 SIGNATURE_TIER_COUNT = 7
 HIGH_TIER_START = 5
+SIGNATURE_RARE_TIER_CURVE = {5: 4, 6: 8, 7: 10}
+SECONDARY_RARE_TIER_CURVE = {5: 3, 6: 5, 7: 6}
+REMAINING_RARE_TIER_CURVE = {5: 2, 6: 3, 7: 4}
+SECONDARY_RARE_BY_FACTION = {
+    "faction_brasshollow": "aetherglass",
+    "faction_embercourt": "brass_scrip",
+    "faction_mireclaw": "verdant_grafts",
+    "faction_sunvault": "memory_salt",
+    "faction_thornwake": "peatwax",
+    "faction_veilmourn": "embergrain",
+}
 PRICE_BAND_LIMITS = {
     "gold": {"min": 34000, "max": 45000},
     "wood": {"min": 20, "max": 38},
     "ore": {"min": 20, "max": 38},
     "rare": {"min": 24, "max": 32},
+    "secondary_rare": {"min": 12, "max": 16},
+    "remaining_rare_min": {"min": 8, "max": 11},
+    "remaining_rare_max": {"min": 8, "max": 11},
     "target_buildings": {"min": 20, "max": 24},
     "rare_cost_buildings": {"min": 4, "max": 7},
 }
@@ -72,6 +86,39 @@ def prerequisite_closure(building_id: str, buildings: dict[str, dict[str, Any]],
     return seen
 
 
+def expected_high_tier_rare_costs(faction_id: str, signature_rare_id: str, tier: int) -> dict[str, int]:
+    secondary_rare_id = SECONDARY_RARE_BY_FACTION.get(faction_id, "")
+    expected: dict[str, int] = {}
+    for rare_id in sorted(RARE_RESOURCES):
+        if rare_id == signature_rare_id:
+            expected[rare_id] = int(SIGNATURE_RARE_TIER_CURVE[tier])
+        elif rare_id == secondary_rare_id:
+            expected[rare_id] = int(SECONDARY_RARE_TIER_CURVE[tier])
+        else:
+            expected[rare_id] = int(REMAINING_RARE_TIER_CURVE[tier])
+    return expected
+
+
+def rare_pressure_profile(
+    total_costs: dict[str, int],
+    signature_rare_id: str,
+    secondary_rare_id: str,
+) -> dict[str, Any]:
+    remaining = {
+        rare_id: int(total_costs.get(rare_id, 0))
+        for rare_id in sorted(RARE_RESOURCES)
+        if rare_id not in {signature_rare_id, secondary_rare_id}
+    }
+    return {
+        "signature_rare": int(total_costs.get(signature_rare_id, 0)),
+        "secondary_rare": int(total_costs.get(secondary_rare_id, 0)),
+        "remaining_rares": remaining,
+        "remaining_rare_min": min(remaining.values()) if remaining else 0,
+        "remaining_rare_max": max(remaining.values()) if remaining else 0,
+        "all_rare_resources_used": all(int(total_costs.get(rare_id, 0)) > 0 for rare_id in RARE_RESOURCES),
+    }
+
+
 def main() -> int:
     factions = load_items("factions.json")
     towns = load_items("towns.json")
@@ -92,8 +139,11 @@ def main() -> int:
             continue
         seed_town = towns.get(str(faction.get("seed_town_id", "")), {})
         rare_id = str(seed_town.get("development_balance", {}).get("rare_resource_id", "")).strip()
+        secondary_rare_id = SECONDARY_RARE_BY_FACTION.get(faction_id, "")
         if rare_id not in RARE_RESOURCES:
             errors.append(f"{faction_id} seed town must declare a live rare resource")
+        if secondary_rare_id not in RARE_RESOURCES or secondary_rare_id == rare_id:
+            errors.append(f"{faction_id} must declare a distinct secondary rare resource")
         tier_costs: list[dict[str, Any]] = []
         for tier, building_id in enumerate(signature_ids, start=1):
             building = buildings.get(building_id, {})
@@ -112,8 +162,12 @@ def main() -> int:
             if tier < HIGH_TIER_START and rare_ids:
                 errors.append(f"{building_id} tier {tier} must remain common-resource only")
             if tier >= HIGH_TIER_START:
-                if rare_ids != [rare_id]:
-                    errors.append(f"{building_id} tier {tier} must cost only faction rare {rare_id}, got {rare_ids}")
+                expected_rare_costs = expected_high_tier_rare_costs(faction_id, rare_id, tier)
+                actual_rare_costs = {rare: int(cost.get(rare, 0)) for rare in sorted(RARE_RESOURCES) if int(cost.get(rare, 0)) > 0}
+                if actual_rare_costs != expected_rare_costs:
+                    errors.append(
+                        f"{building_id} tier {tier} must use multi-rare costs {expected_rare_costs}, got {actual_rare_costs}"
+                    )
                 if not {"wood", "ore"}.issubset(cost_ids):
                     errors.append(f"{building_id} tier {tier} must pair rare cost with wood and ore")
             tier_costs.append(
@@ -127,12 +181,16 @@ def main() -> int:
             )
         faction_curves[faction_id] = {
             "rare_resource_id": rare_id,
+            "secondary_rare_resource_id": secondary_rare_id,
             "signature_tier_costs": tier_costs,
             "curve_signature": "|".join(
                 "%d:%s:%s" % (
                     row["tier"],
                     ",".join(sorted(row["cost"].keys())),
-                    ",".join(row["rare_cost_ids"]),
+                    ",".join(
+                        "%s=%d" % (rare_id, int(row["cost"].get(rare_id, 0)))
+                        for rare_id in row["rare_cost_ids"]
+                    ),
                 )
                 for row in tier_costs
             ),
@@ -148,6 +206,7 @@ def main() -> int:
         profile = town.get("development_balance", {})
         profile = profile if isinstance(profile, dict) else {}
         town_rare_id = str(profile.get("rare_resource_id", "")).strip()
+        secondary_rare_id = SECONDARY_RARE_BY_FACTION.get(faction_id, "")
         signature_ids = [str(value) for value in faction.get("signature_building_ids", [])]
         high_tier_signature_ids = set(signature_ids[HIGH_TIER_START - 1:])
         high_tier_gate_ids: set[str] = set(high_tier_signature_ids)
@@ -181,8 +240,6 @@ def main() -> int:
                 total_costs[resource_id] = int(total_costs.get(resource_id, 0)) + amount
             if rare_ids:
                 rare_cost_count += 1
-                if rare_ids != [town_rare_id]:
-                    errors.append(f"{town_id}/{building_id} must cost only town rare {town_rare_id}, got {rare_ids}")
                 if not {"gold", "wood", "ore"}.issubset(cost_ids):
                     errors.append(f"{town_id}/{building_id} rare cost must be paired with gold, wood, and ore")
                 allowed_by_signature = building_id in high_tier_signature_ids
@@ -221,6 +278,9 @@ def main() -> int:
             errors.append(f"{town_id} must spend its faction rare resource across development")
         if int(total_costs.get(town_rare_id, 0)) < MIN_RARE_DEVELOPMENT_SPEND:
             errors.append(f"{town_id} must spend at least {MIN_RARE_DEVELOPMENT_SPEND} faction rare resources across development")
+        pressure_profile = rare_pressure_profile(total_costs, town_rare_id, secondary_rare_id)
+        if not bool(pressure_profile["all_rare_resources_used"]):
+            errors.append(f"{town_id} must use every rare resource across development")
         if int(total_costs.get("gold", 0)) <= int(total_costs.get("wood", 0)) + int(total_costs.get("ore", 0)):
             errors.append(f"{town_id} gold must remain the dominant numeric development cost")
         if int(total_costs.get("wood", 0)) <= 0 or int(total_costs.get("ore", 0)) <= 0:
@@ -230,7 +290,10 @@ def main() -> int:
             "gold": int(total_costs.get("gold", 0)),
             "wood": int(total_costs.get("wood", 0)),
             "ore": int(total_costs.get("ore", 0)),
-            "rare": int(total_costs.get(town_rare_id, 0)),
+            "rare": int(pressure_profile["signature_rare"]),
+            "secondary_rare": int(pressure_profile["secondary_rare"]),
+            "remaining_rare_min": int(pressure_profile["remaining_rare_min"]),
+            "remaining_rare_max": int(pressure_profile["remaining_rare_max"]),
             "target_buildings": len(target_ids),
             "rare_cost_buildings": rare_cost_count,
         }
@@ -245,6 +308,7 @@ def main() -> int:
         town_rows[town_id] = {
             "faction_id": faction_id,
             "rare_resource_id": town_rare_id,
+            "secondary_rare_resource_id": secondary_rare_id,
             "target_building_count": len(target_ids),
             "gold_cost_building_count": gold_cost_count,
             "common_only_building_count": common_only_count,
@@ -252,6 +316,7 @@ def main() -> int:
             "rare_upgrade_building_count": rare_upgrade_count,
             "common_only_to_rare_ratio": round(common_only_count / max(1, rare_cost_count), 2),
             "total_costs": {key: value for key, value in sorted(total_costs.items()) if value},
+            "rare_pressure_profile": pressure_profile,
             "rare_buildings": rare_buildings,
             "rare_upgrade_buildings": rare_upgrade_buildings,
             "common_only_buildings": common_only_buildings,
@@ -271,6 +336,10 @@ def main() -> int:
         "min_common_only_to_rare_ratio": MIN_COMMON_ONLY_TO_RARE_RATIO,
         "min_rare_development_spend": MIN_RARE_DEVELOPMENT_SPEND,
         "min_rare_upgrade_buildings_per_town": MIN_RARE_UPGRADE_BUILDINGS_PER_TOWN,
+        "signature_rare_tier_curve": SIGNATURE_RARE_TIER_CURVE,
+        "secondary_rare_tier_curve": SECONDARY_RARE_TIER_CURVE,
+        "remaining_rare_tier_curve": REMAINING_RARE_TIER_CURVE,
+        "secondary_rare_by_faction": SECONDARY_RARE_BY_FACTION,
         "price_band_limits": PRICE_BAND_LIMITS,
         "faction_curves": faction_curves,
         "towns": town_rows,

@@ -13,8 +13,8 @@ The current focus is Phase 5 - Playable Alpha Baseline. Campaign production rema
 ## Economy Balance Target
 
 Current state:
-- Authored town development currently uses a one-signature-rare model.
-- That model made faction-specific bottlenecks visible, but it does not meet the new target.
+- Town development has moved off the one-signature-rare model.
+- The active balance surface for source access is Native RMG generated maps. Authored scenario/source placement is not part of this slice.
 
 Target state:
 - Every authored town uses every rare resource in town-development costs.
@@ -33,7 +33,7 @@ Pressure guide if signature rare totals stay near the current 28-30 spend:
 
 Progress slice: `economy-faction-identity-second-pass-10184`
 
-Implement the new town cost model across authored town development:
+Implement the new town cost model across town development templates:
 - each town uses all six rare resources;
 - each town keeps a clear signature rare bottleneck;
 - each town gains one meaningful secondary rare;
@@ -46,19 +46,19 @@ Evidence required:
 - deterministic and runtime-inclusive economy/town scorecards stay green;
 - changes improve player-readable faction identity rather than just report shape.
 
-## Goal 2 - Rare Source Access And Guarding
+## Goal 2 - Native RMG Rare Source Access And Guarding
 
-Progress slice: `economy-authored-rare-source-breadth-10184`
+Progress slice: `economy-native-rmg-required-source-support-10184`
 
-Make the new rare requirements playable through map control:
-- every rare required by town development is reachable through active authored map play;
-- rare access uses source placement, guarded routes, and controllable map pressure;
-- player and enemy towns both have routes to the rare mix their development requires;
+Make the new rare requirements playable through generated-map control:
+- every non-gold resource required by generated town development is reachable in Native RMG package sessions;
+- generated support sources are guarded and route-checked under exact package movement/blocking rules;
+- player, enemy, and neutral generated towns all have routes to the rare mix their development requires;
 - the economy does not depend on free stockpile seeding or market shortcuts to hide missing sources.
 
 Evidence required:
-- active source-route reports cover all rare resources for player and enemy routes;
-- guard pressure protects meaningful economic expansion points;
+- Native RMG package adoption reports cover all required rare resources for player, enemy, and neutral generated towns;
+- guard pressure protects generated economic expansion points;
 - economy/town scorecards remain green under the new rare-source layout.
 
 ## Goal 3 - Runtime, AI, And UI Adoption
@@ -66,7 +66,7 @@ Evidence required:
 Ensure the new economy model is visible and usable in live play:
 - town UI exposes multi-rare bottlenecks clearly enough for planning;
 - strategic AI can acquire and spend the required rare mix;
-- generated-package support is updated only where strict Small validation proves it is needed;
+- generated-package support is updated only for strict Small Native RMG validation unless a later RMG scope is selected;
 - save/load remains stable unless a separate migration slice is explicitly selected.
 
 Evidence required:
@@ -91,16 +91,17 @@ git diff --check
 ```
 
 Success means:
-- all authored towns use every rare resource;
+- all town templates use every rare resource;
 - rare pressure ratios match the target;
 - day 28-30 development pacing remains stable or any intentional change is documented in `PLAN.md`;
-- active map routes support the required rare economy;
+- Native RMG generated package routes support the required rare economy;
 - runtime, AI, generated Small support, and UI behavior remain coherent.
 
 ## Non-Goals
 
 - Do not start campaign production.
 - Do not claim broad random-map-generator readiness from strict Small evidence.
+- Do not balance this slice against authored scenario maps.
 - Do not replace gold/wood/ore pacing with all-rare pricing.
 - Do not add gates that only make reports pass without improving player-readable economy behavior.
 - Do not use free stockpile or market shortcuts as a substitute for source placement and guard pressure.
