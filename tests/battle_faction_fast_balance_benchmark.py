@@ -327,7 +327,8 @@ class FastBattleBenchmark:
             "week_summaries": week_summaries,
             "structural_failures": structural_failures,
             "balance_outlier_count": len(outliers),
-            "balance_outliers": outliers[:24],
+            "top_balance_outliers": outliers[:24],
+            "balance_outliers": outliers,
         }
 
     def _public_faction_models(self) -> dict[str, Any]:
@@ -538,11 +539,8 @@ class FastBattleBenchmark:
                     score = self._attack_score(active, target, battle, False)
                     candidates.append({"action": "strike", "target_battle_id": target["battle_id"], "score": score})
         if int(battle.get("distance", 0)) > 0 and not bool(active.get("ranged", False)):
-            candidates.append({"action": "advance", "score": 2.8 + float(active.get("speed", 0)) * 0.25})
-        defend_score = 2.0 + ((1.0 - self._health_ratio(active)) * 5.0)
-        if bool(active.get("ranged", False)) and int(active.get("shots_remaining", 0)) > 0:
-            defend_score -= 1.0
-        candidates.append({"action": "defend", "score": defend_score})
+            candidates.append({"action": "advance", "score": self._advance_score(active, battle, targets)})
+        candidates.append({"action": "defend", "score": self._defend_score(active, battle, targets)})
         candidates.sort(key=lambda item: (-float(item.get("score", 0.0)), str(item.get("action", "")), str(item.get("target_battle_id", ""))))
         return candidates[0]
 
@@ -751,14 +749,132 @@ class FastBattleBenchmark:
         attack_distance = int(battle.get("distance", 1)) if is_ranged else (1 if int(battle.get("distance", 1)) == 1 and self._has_ability(attacker, "reach") else 0)
         avg_roll = (int(attacker.get("min_damage", 1)) + int(attacker.get("max_damage", 1))) / 2.0
         avg_damage = max(1.0, float(max(1, self._alive_count(attacker))) * avg_roll * self._damage_modifier(attacker, target, battle, is_ranged, False, attack_distance))
+        target_health = max(1, int(target.get("total_health", 0)))
+        side = str(attacker.get("side", ""))
+        round_number = int(battle.get("round", 1))
         score = avg_damage / float(max(1, int(target.get("unit_hp", 1))))
-        score += float(int(target.get("tier", 1))) * 0.45
-        score += (1.0 - self._health_ratio(target)) * 3.5
-        if avg_damage >= int(target.get("total_health", 0)):
-            score += 4.0
-        if not is_ranged and int(target.get("retaliations_left", 0)) > 0:
-            score -= 0.45 * float(self._alive_count(target))
+        score += min(1.0, avg_damage / float(target_health)) * 8.0
+        if avg_damage >= target_health:
+            score += 6.0
+        if bool(target.get("ranged", False)):
+            score += 2.5
+        if int(target.get("shots_remaining", 0)) > 0:
+            score += 1.0
+        score += (1.0 - self._health_ratio(target)) * 3.0
+        score += (1.0 - (float(self._stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * 3.5
+        score += float(self._stack_momentum_total(attacker, battle)) * 0.6
+        if self._stack_cohesion_total(target, battle) <= 3:
+            score += 2.5
+        if self._stack_is_isolated(battle, target):
+            score += 1.5
+        if self._stack_cohesion_total(attacker, battle) <= 4:
+            score -= 1.5
+        if is_ranged and int(battle.get("distance", 1)) > 0:
+            score += 2.0
+        if is_ranged and int(battle.get("distance", 1)) == 0:
+            score -= 1.5
+        if self._battle_has_tag(battle, "elevated_fire") and is_ranged:
+            score += 2.0
+        if self._battle_has_tag(battle, "fog_bank") and is_ranged and int(battle.get("distance", 1)) > 0:
+            score -= 2.0
+        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not is_ranged:
+            score += 1.5
+        if self._battle_has_tag(battle, "bog_channels") and any(self._has_ability(attacker, ability) for ability in ["harry", "backstab", "bloodrush"]):
+            score += 1.5
+        if self._has_ability(attacker, "harry") and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
+            score += 2.0
+        if self._has_ability(attacker, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+            score += 2.5
+        if is_ranged and self._side_defending_count(battle, side) > 0 and self._side_has_ability(battle, side, "formation_guard"):
+            score += 1.5
+        if self._has_ability(attacker, "formation_guard") and self._has_effect_id(target, battle, STATUS_STAGGERED):
+            score += 1.5
+        bloodrush = self._ability_by_id(attacker, "bloodrush")
+        if bloodrush and self._health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+            score += 2.0
+        if bloodrush and self._has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+            score += 1.5
+        if bloodrush and round_number >= 3:
+            score += 0.75
+        if self._hero_has_trait(battle, side, "artillerist") and is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
+            score += 1.5
+        if self._hero_has_trait(battle, side, "packhunter") and (self._health_ratio(target) <= 0.75 or self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
+            score += 1.25
+        if self._hero_has_trait(battle, side, "vanguard") and not is_ranged and round_number <= 2:
+            score += 1.0
+        if self._hero_has_trait(battle, side, "ambusher") and not is_ranged and (str(battle.get("terrain", "")) == "forest" or self._battle_has_tag(battle, "ambush_cover")) and round_number <= 2:
+            score += 1.0
+        if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and self._alive_count(target) > 0 and self._can_make_retaliation(target, attack_distance):
+            retaliation_damage = self._estimated_damage(target, attacker, battle, False, True, attack_distance)
+            score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
         return score
+
+    def _defend_score(self, active: dict[str, Any], battle: dict[str, Any], targets: list[dict[str, Any]]) -> float:
+        score = 2.0 + ((1.0 - self._health_ratio(active)) * 5.0)
+        score += (1.0 - (float(self._stack_cohesion_total(active, battle)) / float(COHESION_MAX))) * 5.0
+        if bool(active.get("ranged", False)) and int(active.get("shots_remaining", 0)) > 0:
+            score -= 3.0
+        if int(battle.get("distance", 1)) > 0 and not bool(active.get("ranged", False)):
+            score -= 2.0
+        if self._has_ability(active, "brace") and int(battle.get("distance", 1)) <= 1:
+            score += 3.0
+        if self._has_ability(active, "formation_guard") and self._allied_ranged_count(battle, str(active.get("side", ""))) > 0:
+            score += 2.5
+        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(active.get("ranged", False)):
+            score += 1.5
+        if int(battle.get("distance", 1)) == 0 and self._has_hostile_ranged_pressure(targets):
+            score += 1.0
+        if self._stack_is_isolated(battle, active):
+            score += 2.0
+        if self._hero_has_trait(battle, str(active.get("side", "")), "linekeeper"):
+            score += 1.0
+        return score
+
+    def _advance_score(self, active: dict[str, Any], battle: dict[str, Any], targets: list[dict[str, Any]]) -> float:
+        current_distance = int(battle.get("distance", 1))
+        side = str(active.get("side", ""))
+        ranged = bool(active.get("ranged", False))
+        if current_distance <= 0:
+            return -9999.0
+        score = -0.5
+        if self._should_close_distance(active):
+            score += 2.5
+        if not ranged:
+            score += 2.0
+            if not self._can_make_melee_attack(active, battle):
+                score += 4.0
+                if self._has_hostile_ranged_pressure(targets):
+                    score += 1.5
+            if current_distance >= 2:
+                score += 0.75
+        elif int(active.get("shots_remaining", 0)) > 0:
+            score -= 1.5
+        if self._has_hostile_ranged_pressure(targets) and not ranged:
+            score += 1.0
+        score += 0.75
+        if self._stack_cohesion_total(active, battle) <= 4:
+            score -= 1.25
+        if self._stack_is_isolated(battle, active):
+            score -= 0.5
+        round_number = int(battle.get("round", 1))
+        if self._hero_has_trait(battle, side, "vanguard") and not ranged and round_number <= 2:
+            score += 1.0
+        if self._hero_has_trait(battle, side, "packhunter") and self._enemy_wounded_count(battle, side) > 0 and not ranged:
+            score += 0.75
+        return score
+
+    def _estimated_damage(
+        self,
+        attacker: dict[str, Any],
+        defender: dict[str, Any],
+        battle: dict[str, Any],
+        is_ranged: bool,
+        is_retaliation: bool,
+        attack_distance: int,
+    ) -> int:
+        avg_roll = (int(attacker.get("min_damage", 1)) + int(attacker.get("max_damage", 1))) / 2.0
+        base = float(max(1, self._alive_count(attacker))) * avg_roll
+        return max(1, int(round(base * self._damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance))))
 
     def _ability_damage_modifier(self, attacker: dict[str, Any], defender: dict[str, Any], battle: dict[str, Any], is_ranged: bool, is_retaliation: bool, attack_distance: int) -> float:
         modifier = 1.0
@@ -1262,6 +1378,17 @@ class FastBattleBenchmark:
 
     def _side_defending_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("defending", False)))
+
+    def _allied_ranged_count(self, battle: dict[str, Any], side: str) -> int:
+        return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("ranged", False)))
+
+    def _has_hostile_ranged_pressure(self, targets: list[dict[str, Any]]) -> bool:
+        return any(bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0 for target in targets)
+
+    def _should_close_distance(self, stack: dict[str, Any]) -> bool:
+        if stack.get("faction_id") in ["faction_mireclaw", "faction_thornwake", "faction_veilmourn"]:
+            return True
+        return not bool(stack.get("ranged", False))
 
     def _side_has_ability(self, battle: dict[str, Any], side: str, ability_id: str) -> bool:
         return any(self._has_ability(stack, ability_id) for stack in self._alive_stacks_for_side(battle, side))
