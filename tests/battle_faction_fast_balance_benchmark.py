@@ -36,8 +36,8 @@ BALANCE_MAX_WIN_RATE = 55.0
 MAX_SIDE_BIAS_POINTS = 7.0
 MIN_AVERAGE_ROUNDS = 3.0
 MAX_AVERAGE_ROUNDS = 50.0
-INTERNAL_SIDE_A = "player"
-INTERNAL_SIDE_B = "enemy"
+INTERNAL_SIDE_A = "side_a"
+INTERNAL_SIDE_B = "side_b"
 PUBLIC_SIDE_NAMES = {
     INTERNAL_SIDE_A: "side_a",
     INTERNAL_SIDE_B: "side_b",
@@ -424,8 +424,8 @@ class FastBattleBenchmark:
             "distance": 2,
             "terrain": context["terrain"],
             "battlefield_tags": list(context.get("battlefield_tags", [])),
-            "player_hero": dict(side_a_model["hero"]),
-            "enemy_hero": dict(side_b_model["hero"]),
+            "side_a_hero": dict(side_a_model["hero"]),
+            "side_b_hero": dict(side_b_model["hero"]),
             "commander_spell_cast_rounds": {},
             "stacks": (
                 self._build_stacks(side_a_model["army_snapshots"][str(week)], INTERNAL_SIDE_A)
@@ -911,7 +911,7 @@ class FastBattleBenchmark:
         round_number = int(battle.get("round", 1))
         if self._hero_has_trait(battle, side, "vanguard") and not ranged and round_number <= 2:
             score += 1.0
-        if self._hero_has_trait(battle, side, "packhunter") and self._enemy_wounded_count(battle, side) > 0 and not ranged:
+        if self._hero_has_trait(battle, side, "packhunter") and self._opposing_wounded_count(battle, side) > 0 and not ranged:
             score += 0.75
         return score
 
@@ -983,7 +983,7 @@ class FastBattleBenchmark:
             if int(battle.get("round", 1)) >= 3 and self._side_has_role_mix(battle, side):
                 modifier *= 1.06 if self._side_has_ability(battle, side, "formation_guard") else 1.04
         elif faction_id == "faction_mireclaw":
-            wounded_count = self._enemy_wounded_count(battle, side)
+            wounded_count = self._opposing_wounded_count(battle, side)
             if wounded_count > 0:
                 modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
             if self._has_effect_id(defender, battle, STATUS_HARRIED):
@@ -1176,7 +1176,7 @@ class FastBattleBenchmark:
             bonus += 1
         if self._hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", False)) and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
             bonus += 1
-        if self._hero_has_trait(battle, side, "packhunter") and self._enemy_wounded_count(battle, side) > 0:
+        if self._hero_has_trait(battle, side, "packhunter") and self._opposing_wounded_count(battle, side) > 0:
             bonus += 1
         if self._hero_has_trait(battle, side, "vanguard") and not bool(stack.get("ranged", False)) and int(battle.get("round", 1)) <= 2:
             bonus += 1
@@ -1218,7 +1218,7 @@ class FastBattleBenchmark:
             bonus += 1
         if self._hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", False)) and (str(battle.get("terrain", "")) == "forest" or self._battle_has_tag(battle, "ambush_cover")) and int(battle.get("round", 1)) <= 2:
             bonus += 1
-        if self._hero_has_trait(battle, side, "packhunter") and self._enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", False)):
+        if self._hero_has_trait(battle, side, "packhunter") and self._opposing_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", False)):
             bonus += 1
         return bonus
 
@@ -1409,7 +1409,7 @@ class FastBattleBenchmark:
         return INTERNAL_SIDE_B if side == INTERNAL_SIDE_A else INTERNAL_SIDE_A
 
     def _hero_for_side(self, battle: dict[str, Any], side: str) -> dict[str, Any]:
-        return battle["player_hero"] if side == INTERNAL_SIDE_A else battle["enemy_hero"]
+        return battle["side_a_hero"] if side == INTERNAL_SIDE_A else battle["side_b_hero"]
 
     def _hero_has_trait(self, battle: dict[str, Any], side: str, trait: str) -> bool:
         return trait in self._hero_for_side(battle, side).get("battle_traits", [])
@@ -1458,7 +1458,7 @@ class FastBattleBenchmark:
         allies = self._alive_stacks_for_side(battle, side)
         return any(bool(stack.get("ranged", False)) for stack in allies) and any(not bool(stack.get("ranged", False)) for stack in allies)
 
-    def _enemy_wounded_count(self, battle: dict[str, Any], side: str) -> int:
+    def _opposing_wounded_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, self._opposing_side(side)) if self._health_ratio(stack) <= 0.75)
 
     def _side_positive_effect_count(self, battle: dict[str, Any], side: str) -> int:
