@@ -25,7 +25,8 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
 - No implementation slice is currently in progress.
-- Latest completed slice: `economy-native-rmg-required-source-support-10184`.
+- Latest completed slice: `battle-fast-faction-benchmark-10184`.
+- Previous completed slice: `economy-native-rmg-required-source-support-10184`.
 - `ops/progress.json` remains the operational source of truth for completed evidence, validation commands, and paused/superseded slice state.
 
 Latest economy/town evidence:
@@ -41,6 +42,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
+- Use the fast battle-balance benchmark evidence to drive the next combat-feel tuning slice.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -48,8 +50,8 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
+- `combat-feel-balance-pass-10184`: tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact using `tests/battle_faction_fast_balance_benchmark.py` outliers first.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
-- `combat-feel-balance-pass-10184`: tune battle pacing, stack sizes, initiative, AI choices, terrain value, and ability impact through existing harnesses.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
 - `rmg-small-generalization-hardening-10184`: harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.
 - `ux-polish-player-comprehension-10184`: improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and reduce debug-like seams.
@@ -85,6 +87,29 @@ Implemented target at this point:
 - secondary rare: 14 total pressure;
 - each remaining rare: 9 total pressure;
 - all six rare resources appear in high-tier unit-building costs for every faction ladder.
+
+## Battle Balance Benchmark Target
+
+The selected battle-balance slice is a fast Python benchmark, not a final combat tuning claim. It should use current content and port the live battle math closely enough to make faction matchup iteration cheap before wider tactical tuning.
+
+Required benchmark shape:
+- pure Python, no Godot runtime for normal benchmark runs;
+- live `content/*.json` faction, unit, hero, spell, town, and building data;
+- ordered non-self faction matrix for all six factions;
+- deterministic seed count, with `--quick`, `--seeds`, `--weeks`, `--json`, and `--gate` options;
+- week 1 army snapshots: initial starting growth plus one recruited week capped at T1-T3;
+- week 2 snapshots: initial starting growth plus week-one T1-T4 and week-two T1-T5 recruitment;
+- week 3 snapshots: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment;
+- week 4 snapshots: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment with fully developed growth for final full-tier ticks;
+- JSON report rows for win rates, stalemates, average rounds, action mix, casualties by tier, battle consequences, pair summaries, week summaries, and outliers.
+
+Initial target bands:
+- faction-pair dominant win rates should trend toward 45-55%;
+- side bias should stay low;
+- stalemates should stay low;
+- average rounds should remain readable.
+
+The first benchmark should report outliers as tuning evidence. Do not tune away failures blindly just to make the initial benchmark look green.
 
 ## Slice Status Model
 

@@ -10,98 +10,91 @@ This file names the next immediate goals clearly enough for implementation work 
 
 The current focus is Phase 5 - Playable Alpha Baseline. Campaign production remains deferred.
 
-## Economy Balance Target
+## Battle Balance Target
 
 Current state:
-- Town development has moved off the one-signature-rare model.
-- The active balance surface for source access is Native RMG generated maps. Authored scenario/source placement is not part of this slice.
+- The economy/town development slice is complete enough to stop driving immediate work.
+- The next highest-impact balance surface is battle pacing and faction matchup evidence.
+- Full Godot battle runs are too slow for fast iteration, so balance needs a deterministic Python benchmark that uses the same content stats and closely ports the current battle formulas.
 
 Target state:
-- Every authored town uses every rare resource in town-development costs.
-- The faction signature rare remains the highest-pressure rare.
-- One secondary rare carries about half the pressure of the signature rare.
-- Each remaining rare carries about one-third the pressure of the signature rare.
-- `gold`, `wood`, and `ore` remain the dominant common-resource development economy.
-- Rare costs must create meaningful build decisions instead of being appended to arbitrary filler buildings.
+- A fast Python benchmark can simulate faction-vs-faction battles without launching the Godot runtime.
+- The benchmark uses live faction, town, hero, spell, unit, growth, and battle-stat content from `content/*.json`.
+- The benchmark reports week 1, week 2, week 3, and week 4 matchup matrices for every ordered faction pairing.
+- The benchmark exposes win-rate, stalemate, pacing, action-mix, casualty, and consequence outliers as tuning evidence.
+- The benchmark is a balance tool first. It must not hide bad combat results just to make a gate pass.
 
-Pressure guide if signature rare totals stay near the current 28-30 spend:
-- signature rare: roughly 28-30 total pressure;
-- secondary rare: roughly 14-15 total pressure;
-- each remaining rare: roughly 9-10 total pressure.
+## Goal 1 - Fast Faction Battle Benchmark
 
-## Goal 1 - Multi-Rare Town Cost Model
+Progress slice: `battle-fast-faction-benchmark-10184`
 
-Progress slice: `economy-faction-identity-second-pass-10184`
+Implement a pure-Python benchmark for fast tactical balance iteration:
+- load the current unit, faction, hero, spell, town, and building content;
+- reuse town-development output where it helps select representative towns and growth context;
+- construct deterministic faction army snapshots for weeks 1-4;
+- simulate every ordered non-self faction matchup;
+- run multiple deterministic seeds per matchup;
+- emit JSON suitable for quick comparison and future tuning automation.
 
-Implement the new town cost model across town development templates:
-- each town uses all six rare resources;
-- each town keeps a clear signature rare bottleneck;
-- each town gains one meaningful secondary rare;
-- remaining rare costs appear at lighter pressure;
-- common-resource pacing and day 28-30 town-development completion remain stable unless `PLAN.md` is explicitly updated.
+Army snapshot policy:
+- week 1: initial starting growth plus one recruited week capped at T1-T3;
+- week 2: initial starting growth plus week-one T1-T4 and week-two T1-T5 recruitment;
+- week 3: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three T1-T7 recruitment;
+- week 4: initial starting growth plus week-one T1-T4, week-two T1-T5, and week-three/week-four T1-T7 recruitment with fully developed growth for the final full-tier ticks.
 
-Evidence required:
-- town cost-curve reports show every rare resource used by every authored town;
-- pressure totals match the target ratios closely enough to be explainable;
-- deterministic and runtime-inclusive economy/town scorecards stay green;
-- changes improve player-readable faction identity rather than just report shape.
+## Goal 2 - First Balance Evidence
 
-## Goal 2 - Native RMG Rare Source Access And Guarding
+Use the benchmark to produce the first faction matrix evidence:
+- early faction-vs-faction tests for week 1;
+- midgame faction-vs-faction tests for weeks 2 and 3;
+- endgame faction-vs-faction tests for week 4;
+- ordered matchup rows for all six factions;
+- pair summaries that make side bias, stalemates, runaway matchups, and too-short/too-long battle pacing visible.
 
-Progress slice: `economy-native-rmg-required-source-support-10184`
+Initial balance target:
+- faction-pair dominant win rates should trend toward a 45-55% health band over repeated seeds;
+- stalemates should stay low enough to avoid non-decisions;
+- average battle length should usually land in a readable tactical range;
+- failures are tuning evidence for the next combat pass, not a reason to suppress the benchmark.
 
-Make the new rare requirements playable through generated-map control:
-- every non-gold resource required by generated town development is reachable in Native RMG package sessions;
-- generated support sources are guarded and route-checked under exact package movement/blocking rules;
-- player, enemy, and neutral generated towns all have routes to the rare mix their development requires;
-- the economy does not depend on free stockpile seeding or market shortcuts to hide missing sources.
+## Goal 3 - Tune From Evidence, Not Reports
 
-Evidence required:
-- Native RMG package adoption reports cover all required rare resources for player, enemy, and neutral generated towns;
-- guard pressure protects generated economic expansion points;
-- economy/town scorecards remain green under the new rare-source layout.
+After the benchmark exists, use its results to select the next combat tuning slice:
+- unit stat adjustments;
+- growth and stack-size adjustments;
+- initiative and pacing changes;
+- ability power and trigger changes;
+- spell impact and AI casting choices;
+- terrain/tag value changes;
+- battle AI target/action scoring changes.
 
-## Goal 3 - Runtime, AI, And UI Adoption
+Do not tune broadly until the benchmark output identifies the highest-value outliers.
 
-Ensure the new economy model is visible and usable in live play:
-- town UI exposes multi-rare bottlenecks clearly enough for planning;
-- strategic AI can acquire and spend the required rare mix;
-- generated-package support is updated only for strict Small Native RMG validation unless a later RMG scope is selected;
-- save/load remains stable unless a separate migration slice is explicitly selected.
+## Goal 4 - Validation
 
-Evidence required:
-- runtime-inclusive economy scorecard passes;
-- AI town development does not stall on unreachable rare mixes;
-- town planning UI shows costs and shortages without debug-style panels.
-
-## Goal 4 - Validation And Balance Evidence
-
-Use existing reports first. Add new gates only when current reports cannot prove the player-facing behavior.
-
-Required validation for the economy goals:
+Required validation for this slice:
 
 ```bash
+python3 tests/battle_faction_fast_balance_benchmark.py --quick
+python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate
 python3 tests/town_development_balance_report.py
-python3 tests/town_development_cost_curve_report.py
-python3 tests/economy_town_goal_scorecard_report.py
-python3 tests/economy_town_goal_scorecard_report.py --include-runtime
 python3 tests/validate_repo.py
 jq empty ops/progress.json
 git diff --check
 ```
 
 Success means:
-- all town templates use every rare resource;
-- rare pressure ratios match the target;
-- day 28-30 development pacing remains stable or any intentional change is documented in `PLAN.md`;
-- Native RMG generated package routes support the required rare economy;
-- runtime, AI, generated Small support, and UI behavior remain coherent.
+- the fast benchmark runs without Godot;
+- all six factions have valid seven-tier army snapshots;
+- all ordered non-self faction matchups are simulated for weeks 1-4;
+- structural benchmark failures are gated;
+- balance outliers are reported clearly for the next tuning pass;
+- existing town-development and repo validation still pass.
 
 ## Non-Goals
 
 - Do not start campaign production.
-- Do not claim broad random-map-generator readiness from strict Small evidence.
-- Do not balance this slice against authored scenario maps.
-- Do not replace gold/wood/ore pacing with all-rare pricing.
-- Do not add gates that only make reports pass without improving player-readable economy behavior.
-- Do not use free stockpile or market shortcuts as a substitute for source placement and guard pressure.
+- Do not claim final combat balance from the first benchmark.
+- Do not make authored scenario maps the benchmark source of truth.
+- Do not add new gates that only make reports pass without improving playability.
+- Do not replace Godot battle validation; this is a fast balance harness for iteration.
