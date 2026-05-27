@@ -25162,34 +25162,69 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-27T07:32:13Z",
+        "updatedAt": "2026-05-27T08:28:33Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
+          "jq empty content/units.json (passed before benchmark)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --json > tmp/battle_balance_100_seed_veilmourn_init6_week2.json (passed; both T4/T5 initiative 6 what-if overcorrected vs Thornwake)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --json > tmp/battle_balance_100_seed_veilmourn_t5_init6_week2.json (passed; T5-only what-if did not sufficiently reduce spike)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --json > tmp/battle_balance_100_seed_veilmourn_t4_init6_week2.json (passed; selected candidate)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_veilmourn_t4_init6_full.json (passed; needs_tuning)",
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-          "jq empty content/units.json content/spells.json content/heroes.json ops/progress.json (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 2,3 --json > tmp/thornwake_focus_30_seed.json (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --json > tmp/thornwake_all_weeks_30_seed.json (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_after_thornwake.json (passed; needs_tuning)",
-          "python3 tests/town_development_balance_report.py > tmp/town_development_after_thornwake_balance.txt (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_veilmourn_t4_init6.json (passed)",
           "python3 tests/validate_repo.py (passed)",
-          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1 (passed)"
+          "git diff --check (passed)"
         ],
         "evidence": {
-          "thornwake_root_cause": "Thornwake's signature Briar Bind/rooted loop was underrepresented in the fast benchmark control-spell scoring and status_rooted did not drive Thornwake damage payoff; Thornwake also lacked mid-tier brace/screen identity during the week 2-3 ranged pressure window.",
-          "implementation": [
-            "Added STATUS_ROOTED parity to benchmark, BattleRules, and BattleAiRules.",
-            "Ported live control-spell scoring shape into the fast benchmark and added Thornwake/rooted allied status synergy.",
-            "Made Thornwake damage use status_rooted as its primary payoff while preserving harried/staggered secondary payoff.",
-            "Gave Thornwake T2/T4 brace-root identity, T4 bark shielding against ranged pressure, and T5 pinning reach/tempo.",
-            "Improved Graft Mend recovery/defense while leaving Ardren Briar-Marshal's command stats unchanged after the defense-point what-if overbuffed Thornwake."
+          "prior_thornwake_identity_correction": {
+            "summary": "Previous step in the same in-progress slice fixed Thornwake root/control identity without returning to mirrored faction baselines.",
+            "implementation": [
+              "Added STATUS_ROOTED parity to benchmark, BattleRules, and BattleAiRules.",
+              "Ported live control-spell scoring shape into the fast benchmark and added Thornwake/rooted allied status synergy.",
+              "Made Thornwake damage use status_rooted as its primary payoff while preserving harried/staggered secondary payoff.",
+              "Gave Thornwake T2/T4 brace-root identity, T4 bark shielding against ranged pressure, and T5 pinning reach/tempo.",
+              "Improved Graft Mend recovery/defense while leaving Ardren Briar-Marshal command stats unchanged after the defense-point what-if overbuffed Thornwake."
+            ],
+            "after_result": "100-seed matrix after Thornwake step: needs_tuning; 33 balance outliers; Thornwake aggregate 50.88%; week side-bias points 1.00, 2.00, 0.67, 0.73."
+          },
+          "veilmourn_week2_root_cause": "Veilmourn week 2 overperformed through ranged tempo density. T2/T4/T5 ranged stacks at initiative 7 delivered too much safe early damage from the benchmark distance-2 opening before melee-heavy opponents could meaningfully trade.",
+          "what_ifs": {
+            "both_t4_t5_initiative_6": {
+              "week2_outliers": 7,
+              "week2_side_bias_points": 3.0,
+              "decision": "rejected",
+              "reason": "Suppressed most Veilmourn week-2 dominance but overcorrected the Thornwake matchup to Thornwake over Veilmourn 81.5%."
+            },
+            "t5_only_initiative_6": {
+              "week2_outliers": 10,
+              "week2_side_bias_points": 1.2,
+              "decision": "rejected",
+              "reason": "Mireclaw/Sunvault/Embercourt rows remained strongly Veilmourn-favored; the T5 unit was not the primary week-2 tempo cliff."
+            },
+            "t4_only_initiative_6": {
+              "week2_outliers": 8,
+              "week2_side_bias_points": 0.07,
+              "decision": "kept",
+              "reason": "Best small change tested: reduces the week-2 Veilmourn spike without flipping the Thornwake row or changing damage/growth identity."
+            }
+          },
+          "implemented_tuning": [
+            "unit_veilmourn_undertow_harpooners initiative 7 -> 6",
+            "unit_veilmourn_obituary_scribes kept at initiative 7 after the T5-lowered test proved worse than T4-only"
           ],
-          "previous_100_seed_status_after_revert": "needs_tuning; 43 balance outliers; Thornwake aggregate 36.70%; week summaries average rounds 5.40, 5.90, 6.68, 7.26",
-          "current_100_seed_status": "needs_tuning; 33 balance outliers; no structural failures; Thornwake aggregate 50.88%; week side-bias points 1.00, 2.00, 0.67, 0.73; average rounds 5.29, 6.12, 6.66, 7.09",
-          "thornwake_pair_summary": "Thornwake week averages are 53.90, 52.30, 54.60, 42.70; the global collapse is fixed, but week 2 Veilmourn over Thornwake 73.0 and week 3 Thornwake over Sunvault 74.5 remain matchup outliers.",
-          "remaining_failure": "Full faction matrix is still needs_tuning; Veilmourn week 2 remains overtuned across several matchups and some Thornwake pair spikes remain outside 45-55."
+          "comparison_to_after_thornwake_100_seed": {
+            "total_balance_outliers": "33 -> 32",
+            "week2_balance_outliers": "10 -> 8",
+            "week2_side_bias_points": "2.0 -> 0.07",
+            "week2_average_rounds": "6.12 -> 6.11",
+            "week3_side_bias_points": "0.67 -> 0.2",
+            "week4_side_bias_points": "0.73 -> 0.13"
+          },
+          "remaining_failure": "Full matrix is still needs_tuning. Veilmourn remains high in week 2 against Sunvault 75.0 and Mireclaw 70.0, while other non-Veilmourn pair outliers remain. This is a partial tuning slice, not a final balance claim."
         }
       },
-      "notes": "In progress. Thornwake identity correction is implemented without returning to mirrored faction baselines. Root/control parity and mid-tier brace/screen/pinning tools move Thornwake from 36.70% aggregate to 50.88% in the 100-seed week 1-4 matrix, while preserving asymmetric unit identities. The full matrix remains needs_tuning with 33 outliers, so this slice is not complete as a final balance claim; next tuning should address Veilmourn's week-2 ranged spike and remaining pair-specific outliers.",
+      "notes": "In progress. Veilmourn week-2 ranged-tempo experiment showed that lowering both T4/T5 initiative overcorrects, and lowering only T5 is insufficient. Kept the T4 Undertow Harpooners initiative 7->6 as the highest-value small change: full 100-seed matrix improves from 33 to 32 outliers and week-2 outliers from 10 to 8 while preserving Veilmourn identity. Remaining matrix still needs tuning.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25209,7 +25244,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-27T07:32:13Z",
+      "updatedAt": "2026-05-27T08:28:33Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
