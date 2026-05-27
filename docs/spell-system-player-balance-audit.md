@@ -2,7 +2,7 @@
 
 Date: 2026-05-27
 Task: #10184
-Status: audit findings for the active combat-balance slice
+Status: baseline audit findings; catalog counts were updated by `magic-school-availability-strategic-influence-10184`
 
 ## Scope
 
@@ -18,7 +18,7 @@ This is not a new validation gate and does not claim final spell balance.
 
 ## Catalog Reality
 
-Current spell catalog:
+Baseline spell catalog before `magic-school-availability-strategic-influence-10184`:
 
 - 20 total spells.
 - 17 battle spells.
@@ -35,6 +35,14 @@ Current spell catalog:
   - 3 `restore_movement`
 
 This is still a narrow early catalog. It has basic damage, buffs, one control spell, one recovery spell, one cleanse spell, and movement restoration. It does not yet have enough breadth for production magic balance: no mass spells, terrain spells, summons, displacement, anti-ranged wards, spell resistance, dispel variants, school counters, economy/map tradeoffs beyond movement, or high-tier spell identity.
+
+Post-slice update:
+
+- 23 total spells.
+- 17 battle spells.
+- 6 overworld spells.
+- Old Measure now has one live field-survey spell.
+- Overworld effects now include 5 `restore_movement` spells and 1 `reveal_radius` scouting spell.
 
 ## Main Findings
 

@@ -213,7 +213,7 @@
       "id": "rmg_object_reward_reference_v1",
       "generated_kind": "reward_reference",
       "stable_original_object_id": "object_waystone_cache",
-      "supported_runtime_object_ids": ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "object_reedscript_vow_shrine", "object_moss_oath_cache", "object_glassbound_eyrie", "artifact_trailsinger_boots", "artifact_quarry_tally_rod", "artifact_waymark_compass", "artifact_milepost_lantern", "artifact_bastion_gorget", "artifact_warcrest_pennon", "spell_beacon_path"],
+      "supported_runtime_object_ids": ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "object_reedscript_vow_shrine", "object_moss_oath_cache", "object_glassbound_eyrie", "artifact_trailsinger_boots", "artifact_quarry_tally_rod", "artifact_waymark_compass", "artifact_milepost_lantern", "artifact_bastion_gorget", "artifact_warcrest_pennon", "spell_beacon_path", "spell_survey_chain", "spell_rootway_tangle", "spell_fogline_drift"],
       "content_domain": "map_object",
       "category": "reward",
       "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},

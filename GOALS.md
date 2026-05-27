@@ -10,6 +10,27 @@ This file names the next immediate goals clearly enough for implementation work 
 
 The current focus is Phase 5 - Playable Alpha Baseline. Campaign production remains deferred.
 
+## Current Immediate Goal - Magic Availability
+
+Progress slice: `magic-school-availability-strategic-influence-10184`
+
+Improve spell availability, magic-school variety, and strategic influence before trying to balance magic-focused heroes against raw-combat heroes.
+
+Target state:
+- broaden field-magic content beyond Beacon route spells;
+- activate Old Measure with a first real strategic spell;
+- make town study expose more strategic choices without changing hero combat stat balance;
+- add generated-map spell-reward variety so Native RMG evidence is not locked to one spell-access candidate;
+- keep battle-spell behavior stable while this slice improves strategic magic access;
+- validate through existing magic reports, repo validation, and the fast battle benchmark quick smoke.
+
+Non-goals:
+- do not claim final magic-vs-might hero balance;
+- do not add caster units yet;
+- do not add rare-resource spell-cast costs;
+- do not start campaign production;
+- do not add new gates just to make a report pass.
+
 ## Battle Balance Target
 
 Current state:
@@ -73,9 +94,8 @@ After the benchmark exists, use its results to select the next combat tuning sli
 Do not tune broadly until the benchmark output identifies the highest-value outliers.
 
 Immediate focus update:
-- The current highest-value battle-balance issue is spell-system correctness, not another broad unit-stat pass.
-- Use `docs/spell-system-player-balance-audit.md` as the next source document.
-- Fix benchmark/live spell valuation parity, spell decision tracing, ally spell targeting, and Sunvault counterplay before accepting further faction-pair stat tuning as meaningful.
+- Broad unit-stat tuning is paused while magic availability and strategic influence are improved.
+- `docs/spell-system-player-balance-audit.md` remains the source for later spell parity/counterplay work, but the current slice is broader than one faction matchup.
 
 ## Goal 4 - Validation
 

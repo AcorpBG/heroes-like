@@ -127,6 +127,57 @@
       }
     },
     {
+      "id": "spell_rootway_tangle",
+      "name": "Rootway Tangle",
+      "school_id": "root",
+      "tier": 1,
+      "accord_family": "rootway_path",
+      "primary_role": "movement_support",
+      "role_categories": ["economy_map_utility"],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "description": "Living roots knot into a short hidden lane and pull the column over broken ground.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 4
+      }
+    },
+    {
+      "id": "spell_fogline_drift",
+      "name": "Fogline Drift",
+      "school_id": "veil",
+      "tier": 1,
+      "accord_family": "fogwake_step",
+      "primary_role": "movement_support",
+      "role_categories": ["economy_map_utility"],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A folded fogline hides the march and lets the column slip farther along uncertain roads.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_survey_chain",
+      "name": "Survey Chain",
+      "school_id": "old_measure",
+      "tier": 1,
+      "accord_family": "old_measure_survey",
+      "primary_role": "scouting_support",
+      "role_categories": ["economy_map_utility"],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "description": "Old boundary math snaps into a measured ring and exposes nearby routes before the army commits.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 4
+      }
+    },
+    {
       "id": "spell_coal_rain",
       "name": "Coal Rain",
       "school_id": "mire",

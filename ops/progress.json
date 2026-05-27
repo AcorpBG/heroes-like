@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-faction-pair-stat-tuning-10184",
-  "currentSliceTitle": "Combat Faction Pair Stat Tuning",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Full spell-system player-balance audit is now the selected next focus before further broad unit-stat nudges. Audit found Sunvault is polarized rather than globally weak, benchmark/live spell valuation parity is materially divergent, ally spell targeting is active-stack-only, and Sunvault counterplay does not reliably answer Veilmourn tempo or Thornwake root/control. See docs/spell-system-player-balance-audit.md.",
+  "currentSliceId": "magic-school-availability-strategic-influence-10184",
+  "currentSliceTitle": "Magic School Availability Strategic Influence",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-27T21:20:00Z",
+  "updatedAt": "2026-05-27T22:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25149,7 +25149,7 @@
     {
       "id": "combat-faction-pair-stat-tuning-10184",
       "title": "Combat Faction Pair Stat Tuning",
-      "status": "in_progress",
+      "status": "paused",
       "phase": "phase-5-playable-alpha-baseline",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
@@ -25161,8 +25161,8 @@
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "validation": {
-        "status": "partial",
-        "updatedAt": "2026-05-27T21:20:00Z",
+        "status": "partial_paused",
+        "updatedAt": "2026-05-27T22:25:00Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -25383,7 +25383,7 @@
           }
         }
       },
-      "notes": "In progress. Full spell-system player-balance audit is now the selected next focus before further broad unit-stat nudges. Audit found Sunvault is polarized rather than globally weak, benchmark/live spell valuation parity is materially divergent, ally spell targeting is active-stack-only, and Sunvault counterplay does not reliably answer Veilmourn tempo or Thornwake root/control. See docs/spell-system-player-balance-audit.md.",
+      "notes": "Paused by owner direction. Broad unit-stat tuning remains needs-tuning, but immediate work moved to magic availability, school variety, and strategic influence before magic-vs-might hero balance.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25403,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-27T10:59:26Z",
+      "updatedAt": "2026-05-27T22:25:00Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
@@ -25610,6 +25610,100 @@
       "updatedAt": "2026-05-26T18:18:00Z",
       "startedAt": "2026-05-26T18:18:00Z",
       "completedAt": "2026-05-26T18:18:00Z"
+    },
+    {
+      "id": "magic-school-availability-strategic-influence-10184",
+      "title": "Magic School Availability Strategic Influence",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "source": "owner direction after full spell-system audit",
+      "planRef": "PLAN.md Magic Availability And Strategic Influence Target / GOALS.md Current Immediate Goal - Magic Availability",
+      "classification": "implementation_slice",
+      "purpose": "Broaden live spell availability, school variety, and strategic influence without claiming magic-vs-might hero balance.",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "docs/spell-system-player-balance-audit.md",
+        "docs/magic-school-availability-strategic-influence-report.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "content/towns.json",
+        "content/resource_sites.json",
+        "content/random_map_generator_data_model.json",
+        "scripts/core/SpellRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scripts/persistence/MapPackageService.gd",
+        "scripts/autoload/ContentService.gd",
+        "tests/magic_spell_schema_report.gd",
+        "tests/magic_adventure_spell_hooks_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn",
+        "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn",
+        "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn",
+        "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Spell catalog and access are broadened with live bounded strategic field magic; validation reports pass; no final magic-vs-might balance or caster-unit claim is made.",
+      "nonGoals": [
+        "final magic-vs-might hero balance",
+        "caster units",
+        "rare-resource spell-cast costs",
+        "campaign production",
+        "new report-only gates"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-27T22:25:00Z",
+        "sliceId": "magic-school-availability-strategic-influence-10184",
+        "commands": [
+          "jq empty content/spells.json content/towns.json content/resource_sites.json content/random_map_generator_data_model.json ops/progress.json (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 23 spells, 6 overworld, 17 battle, Old Measure live)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement and reveal-radius hooks, Survey Chain revealed 5 new tiles in fixture)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; existing battle behavior unchanged)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_availability.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "catalog": {
+            "before_total": 20,
+            "after_total": 23,
+            "battle_spells": 17,
+            "overworld_spells": 6,
+            "school_counts": {
+              "beacon": 6,
+              "furnace": 4,
+              "lens": 3,
+              "mire": 3,
+              "root": 3,
+              "veil": 3,
+              "old_measure": 1
+            }
+          },
+          "implemented": [
+            "Added Rootway Tangle and Fogline Drift as non-Beacon field route spells.",
+            "Added Survey Chain as the first live Old Measure spell.",
+            "Added reveal_radius overworld spell support and live fog exploration mutation.",
+            "Expanded all town tier-2 study libraries with Survey Chain; Thornwake tier-1 with Rootway Tangle; Veilmourn tier-1 with Fogline Drift.",
+            "Added frontier shrine content for the new field spells.",
+            "Expanded Native RMG/generated spell-access reward candidates beyond Beacon Path."
+          ],
+          "boundaries": "No hero combat stats, unit stats, battle-spell payloads, caster-unit system, rare-resource casting costs, or final magic-vs-might balance claim changed."
+        }
+      },
+      "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
+      "startedAt": "2026-05-27T22:25:00Z",
+      "completedAt": "2026-05-27T22:25:00Z",
+      "updatedAt": "2026-05-27T22:25:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35145,27 +35239,29 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T18:18:00Z",
+    "updatedAt": "2026-05-27T22:25:00Z",
+    "sliceId": "magic-school-availability-strategic-influence-10184",
     "commands": [
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
-      "python3 tests/town_development_balance_report.py (passed; ok=true)",
+      "jq empty content/spells.json content/towns.json content/resource_sites.json content/random_map_generator_data_model.json ops/progress.json (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 23 spells, 6 overworld, 17 battle, Old Measure live)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement and reveal-radius hooks, Survey Chain revealed 5 new tiles in fixture)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; existing battle behavior unchanged)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_availability.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
       "git diff --check (passed)"
-    ],
-    "summary": "Fast benchmark no-round-cap correction passed quick, full 100-seed matrix, town balance, repo validation, JSON, and diff checks."
+    ]
   },
   "active_slice": {
-    "id": "battle-benchmark-no-round-cap-10184",
-    "title": "Battle Benchmark No Round Cap Outcome",
+    "id": "magic-school-availability-strategic-influence-10184",
+    "title": "Magic School Availability Strategic Influence",
     "status": "completed",
-    "updatedAt": "2026-05-26T18:18:00Z",
-    "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
-    "completedAt": "2026-05-26T18:18:00Z"
+    "updatedAt": "2026-05-27T22:25:00Z",
+    "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
+    "completedAt": "2026-05-27T22:25:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-27T21:20:00Z",
+  "currentSliceUpdatedAt": "2026-05-27T22:25:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37163,157 +37259,53 @@
     }
   ],
   "currentSlice": {
-    "id": "battle-benchmark-no-round-cap-10184",
-    "title": "Battle Benchmark No Round Cap Outcome",
+    "id": "magic-school-availability-strategic-influence-10184",
+    "title": "Magic School Availability Strategic Influence",
     "status": "completed",
-    "updatedAt": "2026-05-26T18:18:00Z",
-    "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
-    "completedAt": "2026-05-26T18:18:00Z"
+    "updatedAt": "2026-05-27T22:25:00Z",
+    "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
+    "completedAt": "2026-05-27T22:25:00Z"
   },
   "validation": {
-    "status": "partial",
-    "updatedAt": "2026-05-27T21:20:00Z",
-    "sliceId": "combat-faction-pair-stat-tuning-10184",
+    "status": "pass",
+    "updatedAt": "2026-05-27T22:25:00Z",
+    "sliceId": "magic-school-availability-strategic-influence-10184",
     "commands": [
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
-      "python3 tests/town_development_balance_report.py (passed; ok=true)",
+      "jq empty content/spells.json content/towns.json content/resource_sites.json content/random_map_generator_data_model.json ops/progress.json (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 23 spells, 6 overworld, 17 battle, Old Measure live)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement and reveal-radius hooks, Survey Chain revealed 5 new tiles in fixture)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; existing battle behavior unchanged)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_availability.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/spells.json ops/progress.json (passed)",
-      "Created docs/spell-system-player-balance-audit.md (audit-only; no gameplay code changes)"
+      "git diff --check (passed)"
     ],
     "evidence": {
-      "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
-      "implementation": {
-        "removed": [
-          "MAX_ROUNDS normal battle cap",
-          "max_rounds battle payload",
-          "stalemate outcome",
-          "stalemate_rate report fields",
-          "stalemate balance outlier type"
-        ],
-        "added": [
-          "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
-          "engaged melee-only attack forcing to prevent defend loops",
-          "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
-        ]
+      "catalog": {
+        "before_total": 20,
+        "after_total": 23,
+        "battle_spells": 17,
+        "overworld_spells": 6,
+        "school_counts": {
+          "beacon": 6,
+          "furnace": 4,
+          "lens": 3,
+          "mire": 3,
+          "root": 3,
+          "veil": 3,
+          "old_measure": 1
+        }
       },
-      "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
-      "reproduced_case_after_fix": {
-        "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
-        "outcome": "side_b",
-        "rounds": 8
-      },
-      "full_100_seed_matrix": {
-        "ok": true,
-        "ordered_matchup_count": 120,
-        "faction_count": 6,
-        "seeds_per_ordered_matchup": 100,
-        "balance_status": "needs_tuning",
-        "balance_outlier_count": 64,
-        "outcomes": [
-          "side_a",
-          "side_b"
-        ],
-        "has_stalemate_rate": false,
-        "week_summaries": [
-          {
-            "week": 1,
-            "ordered_matchup_count": 30,
-            "sample_count": 3000,
-            "side_a_win_rate": 48.77,
-            "side_b_win_rate": 51.23,
-            "side_bias_points": 2.47,
-            "average_rounds": 3.76
-          },
-          {
-            "week": 2,
-            "ordered_matchup_count": 30,
-            "sample_count": 3000,
-            "side_a_win_rate": 50.4,
-            "side_b_win_rate": 49.6,
-            "side_bias_points": 0.8,
-            "average_rounds": 3.83
-          },
-          {
-            "week": 3,
-            "ordered_matchup_count": 30,
-            "sample_count": 3000,
-            "side_a_win_rate": 53.13,
-            "side_b_win_rate": 46.87,
-            "side_bias_points": 6.27,
-            "average_rounds": 4.45
-          },
-          {
-            "week": 4,
-            "ordered_matchup_count": 30,
-            "sample_count": 3000,
-            "side_a_win_rate": 52.87,
-            "side_b_win_rate": 47.13,
-            "side_bias_points": 5.73,
-            "average_rounds": 4.86
-          }
-        ]
-      },
-      "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
-      "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes.",
-      "severe_65plus_outlier_tuning_20260527": {
-        "decision": "selected_partial_improvement_keep_slice_in_progress",
-        "implemented_changes": [
-          "Veilmourn Obituary Scribes max_damage 10 -> 9 to reduce week-2 ranged burst without lowering initiative.",
-          "Veilmourn Mirrorkeel Reavers HP 50 -> 52 and Fogbound Leviathan HP 102 -> 105 to keep late Veilmourn identity durable after ranged burst trim.",
-          "Thornwake Worldroot Bastion HP 104 -> 102 to slightly soften the week-3 Sunvault/Thornwake severe row without touching Thornwake root-control identity."
-        ],
-        "selected_artifact": "tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json",
-        "baseline_artifact": "tmp/battle_balance_100_seed_owner_requested_brass_late_veil.json",
-        "baseline_100_seed_result": {
-          "balance_status": "needs_tuning",
-          "balance_outlier_count": 32,
-          "rows_at_or_above_65_pct": 10,
-          "severity_above_55_pct": 232.0,
-          "severity_above_65_pct": 29.0,
-          "week_side_bias_points": [
-            0.27,
-            0.93,
-            2.13,
-            0.6
-          ]
-        },
-        "selected_100_seed_result": {
-          "balance_status": "needs_tuning",
-          "balance_outlier_count": 34,
-          "rows_at_or_above_65_pct": 8,
-          "severity_above_55_pct": 215.5,
-          "severity_above_65_pct": 21.5,
-          "week_side_bias_points": [
-            0.27,
-            2.53,
-            1.27,
-            0.6
-          ]
-        },
-        "rejected_what_ifs": [
-          "Fogwake Step +2 and/or Obituary Scribes initiative 6 over-nerfed Veilmourn and created severe late anti-Veilmourn rows.",
-          "Thornwake root initiative/payoff nerfs were effectively no-op or worsened the full 100-seed matrix.",
-          "Veilmourn T4 pressure trims overcorrected late Veilmourn matchups.",
-          "Thornwake T5 initiative 6 produced severe week-4 anti-Thornwake outliers.",
-          "Veilmourn T5 HP 30 plus damage trim reduced 65%+ rows in smoke but regressed total 100-seed outliers."
-        ],
-        "remaining_risk": "The severe-outlier profile improved, but total 55%+ outlier count remains needs_tuning at 34. Continue tuning from the remaining Sunvault/Thornwake, Sunvault/Veilmourn, Embercourt/Mireclaw, and Brasshollow/Sunvault rows; do not mark final combat balance complete."
-      },
-      "spell_system_player_balance_audit_20260527": {
-        "report": "docs/spell-system-player-balance-audit.md",
-        "decision": "pause broad stat-only tuning; prioritize spell parity and counterplay",
-        "summary": "Audit found the current 20-spell catalog is narrow, Sunvault is matchup-polarized rather than globally weak, benchmark spell valuation differs from live BattleAiRules, ally spells are active-stack-only, Prism Bastion does not function as a Thornwake root counter, and generic damage-spell scoring fixes overcorrect Sunvault.",
-        "recommended_next_slice": "battle-spell-parity-counterplay-10184",
-        "remaining_risk": "No spell behavior implementation changed in this audit. The active combat balance slice remains needs_tuning until spell parity/counterplay is implemented and the 100-seed matrix improves without increasing total outliers."
-      }
+      "implemented": [
+        "Added Rootway Tangle and Fogline Drift as non-Beacon field route spells.",
+        "Added Survey Chain as the first live Old Measure spell.",
+        "Added reveal_radius overworld spell support and live fog exploration mutation.",
+        "Expanded all town tier-2 study libraries with Survey Chain; Thornwake tier-1 with Rootway Tangle; Veilmourn tier-1 with Fogline Drift.",
+        "Added frontier shrine content for the new field spells.",
+        "Expanded Native RMG/generated spell-access reward candidates beyond Beacon Path."
+      ],
+      "boundaries": "No hero combat stats, unit stats, battle-spell payloads, caster-unit system, rare-resource casting costs, or final magic-vs-might balance claim changed."
     }
   }
 }

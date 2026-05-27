@@ -2373,6 +2373,73 @@
       }
     },
     {
+      "id": "site_old_measure_marker",
+      "name": "Old Measure Marker",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {
+        "experience": 120
+      },
+      "learn_spell_id": "spell_survey_chain",
+      "response_profile": {
+        "action_label": "Rehang Markers",
+        "summary": "Surveyors rehang old boundary chains so scouts can read nearby routes before the army commits.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 110
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_rootway_marker",
+      "name": "Rootway Marker",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {
+        "experience": 110
+      },
+      "learn_spell_id": "spell_rootway_tangle",
+      "response_profile": {
+        "action_label": "Wake Rootway",
+        "summary": "Wardens wake old root paths and keep rough-ground relief lanes open.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "pressure_bonus": 1,
+        "recovery_relief": 2
+      }
+    },
+    {
+      "id": "site_fogline_marker",
+      "name": "Fogline Marker",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {
+        "experience": 110
+      },
+      "learn_spell_id": "spell_fogline_drift",
+      "response_profile": {
+        "action_label": "Chart Fogline",
+        "summary": "Pilots chart the fogline and reopen hidden march lanes through uncertain country.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_bonus": 2,
+        "recovery_relief": 1
+      }
+    },
+    {
       "id": "site_brightwood_sawmill",
       "name": "Brightwood Sawmill",
       "family": "mine",

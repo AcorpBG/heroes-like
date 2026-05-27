@@ -1030,14 +1030,15 @@ func _object_family_record(kind: String, ordinal: int, terrain_id: String) -> Di
 			var index := ordinal % objects.size()
 			return {"family_id": "neutral_dwelling", "object_family_id": "neutral_dwelling", "type_id": "neutral_dwelling", "site_id": "site_native_foundation_dwelling_%d" % (index + 1), "object_id": objects[index], "category_id": "dwelling", "neutral_dwelling_family_id": families[index], "guard_pressure": "high" if index == 4 else ("low" if index in [0, 5] else "medium"), "purpose": "neutral_weekly_muster_foundation"}
 		"reward_reference":
-			var objects := ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "object_reedscript_vow_shrine"]
-			var families := ["reward_cache_small", "reward_cache_small", "guarded_reward_cache", "artifact_cache", "artifact_cache", "spell_shrine", "skill_shrine"]
-			var categories := ["resource_cache", "build_resource_cache", "guarded_cache", "artifact", "artifact", "spell_access", "skill_equivalent"]
+			var objects := ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "spell_survey_chain", "spell_rootway_tangle", "spell_fogline_drift", "object_reedscript_vow_shrine"]
+			var families := ["reward_cache_small", "reward_cache_small", "guarded_reward_cache", "artifact_cache", "artifact_cache", "spell_shrine", "spell_shrine", "spell_shrine", "spell_shrine", "skill_shrine"]
+			var categories := ["resource_cache", "build_resource_cache", "guarded_cache", "artifact", "artifact", "spell_access", "spell_access", "spell_access", "spell_access", "skill_equivalent"]
 			var index := ordinal % objects.size()
-			var record := {"family_id": families[index], "object_family_id": families[index], "type_id": "reward_reference", "site_id": "site_reedscript_vow_shrine" if index == 6 else ("site_ore_crates" if index == 1 else "site_waystone_cache"), "object_id": objects[index], "category_id": categories[index], "reward_category": categories[index], "reward_value": 450 + index * 175, "purpose": "zone_reward_foundation"}
+			var site_ids := ["site_waystone_cache", "site_ore_crates", "site_waystone_cache", "site_waystone_cache", "site_waystone_cache", "site_starlens_sanctum", "site_old_measure_marker", "site_rootway_marker", "site_fogline_marker", "site_reedscript_vow_shrine"]
+			var record := {"family_id": families[index], "object_family_id": families[index], "type_id": "reward_reference", "site_id": site_ids[index], "object_id": objects[index], "category_id": categories[index], "reward_category": categories[index], "reward_value": 450 + index * 175, "purpose": "zone_reward_foundation"}
 			if index in [3, 4]:
 				record["artifact_id"] = objects[index]
-			if index == 5:
+			if index in [5, 6, 7, 8]:
 				record["spell_id"] = objects[index]
 			return record
 		_:

@@ -12,6 +12,7 @@ const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", 
 const SPELL_ROLE_CATEGORIES := ["damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"]
 const SPELL_PRIMARY_ROLES := [
 	"movement_support",
+	"scouting_support",
 	"priority_damage",
 	"harry_damage",
 	"control_damage",
@@ -172,6 +173,8 @@ static func spell_category_label(spell: Dictionary) -> String:
 		match effect_type:
 			"restore_movement":
 				return "Field Route"
+			"reveal_radius":
+				return "Field Survey"
 			_:
 				return "Field Utility"
 	if context == CONTEXT_BATTLE:
@@ -381,6 +384,13 @@ static func adventure_spell_behavior(spell: Dictionary) -> Dictionary:
 			hooks.append("mana_spend")
 			hooks.append("movement_clamp")
 			public_effect = "active hero movement recovery"
+		"reveal_radius":
+			resolution_type = "fog_reveal"
+			target_policy = "self_hero_reveal_radius"
+			hooks.append("overworld_fog_reveal")
+			hooks.append("mana_spend")
+			hooks.append("exploration_clamp")
+			public_effect = "active hero scouting reveal"
 		_:
 			resolution_type = "unsupported"
 			target_policy = "unsupported"
@@ -398,7 +408,7 @@ static func adventure_spell_behavior(spell: Dictionary) -> Dictionary:
 		"resolution_type": resolution_type,
 		"runtime_hooks": hooks,
 		"public_effect": public_effect,
-		"map_mutation": "movement_only" if effect_type == "restore_movement" else "none",
+		"map_mutation": "movement_only" if effect_type == "restore_movement" else ("fog_exploration" if effect_type == "reveal_radius" else "none"),
 	}
 
 static func adventure_spell_target_contract(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
@@ -451,13 +461,19 @@ static func adventure_spell_consequence_preview(hero_state: Dictionary, movement
 	var effect = spell_dict.get("effect", {})
 	var effect_type := String(effect.get("type", "")) if effect is Dictionary else ""
 	var preview := _movement_restore_preview(movement_state, spell_dict, hero)
-	var supported := String(spell_dict.get("context", "")) == CONTEXT_OVERWORLD and effect_type == "restore_movement"
+	var supported := String(spell_dict.get("context", "")) == CONTEXT_OVERWORLD and effect_type in ["restore_movement", "reveal_radius"]
 	var public_text := ""
-	if supported:
+	if supported and effect_type == "restore_movement":
 		public_text = "%s restores %d movement now, capped at %d, and spends %d mana." % [
 			String(spell_dict.get("name", "Spell")),
 			int(preview.get("restored", 0)),
 			int(preview.get("movement_max", 0)),
+			mana_cost,
+		]
+	elif supported and effect_type == "reveal_radius":
+		public_text = "%s reveals a scouting ring of radius %d around the active hero and spends %d mana." % [
+			String(spell_dict.get("name", "Spell")),
+			max(1, int(effect.get("amount", effect.get("radius", 0)))),
 			mana_cost,
 		]
 	else:
@@ -471,9 +487,10 @@ static func adventure_spell_consequence_preview(hero_state: Dictionary, movement
 		"movement_after": int(preview.get("movement_after", int(movement_state.get("current", 0)))),
 		"movement_restored": int(preview.get("restored", 0)),
 		"movement_max": int(preview.get("movement_max", int(movement_state.get("max", 0)))),
+		"reveal_radius": max(0, int(effect.get("amount", effect.get("radius", 0)))) if effect_type == "reveal_radius" else 0,
 		"mana_cost": mana_cost,
 		"public_text": public_text,
-		"changes_fog": false,
+		"changes_fog": effect_type == "reveal_radius",
 		"changes_site_state": false,
 		"changes_resources": false,
 	}
@@ -510,6 +527,10 @@ static func adventure_spell_behavior_report(spells: Array) -> Dictionary:
 		errors.append("Missing adventure spell restore_movement behavior.")
 	if int(target_policy_counts.get("self_hero_movement_gap", 0)) <= 0:
 		errors.append("Missing self-hero movement-gap target policy.")
+	if int(effect_type_counts.get("reveal_radius", 0)) <= 0:
+		errors.append("Missing adventure spell reveal_radius behavior.")
+	if int(target_policy_counts.get("self_hero_reveal_radius", 0)) <= 0:
+		errors.append("Missing self-hero reveal-radius target policy.")
 	for record in records:
 		var encoded := JSON.stringify(record).to_lower()
 		for leak_token in ["debug", "score", "internal"]:
@@ -817,6 +838,8 @@ static func _best_use_line(
 				if current >= max_movement:
 					return "save until movement has room"
 			return "recover route tempo after spending movement"
+		"reveal_radius":
+			return "open nearby fog before committing movement or choosing a guarded route"
 		"damage_enemy":
 			var damage_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
 			return damage_timing.trim_prefix("Best ").trim_suffix(".") if damage_timing != "" else "soften the selected enemy before a trade"
@@ -939,6 +962,25 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 					restored,
 					current,
 					int(movement.get("current", 0)),
+					mana_cost,
+				],
+			}
+		"reveal_radius":
+			var preview := adventure_spell_consequence_preview(hero, movement, spell)
+			var target_contract := adventure_spell_target_contract(hero, movement, spell)
+			hero = _consume_mana(hero, mana_cost)
+			return {
+				"ok": true,
+				"hero": hero,
+				"movement": movement,
+				"spell_id": spell_id,
+				"spell_name": String(spell.get("name", spell_id)),
+				"fog_reveal_radius": int(preview.get("reveal_radius", 0)),
+				"target_contract": target_contract,
+				"consequence_preview": preview,
+				"message": "%s reveals a scouting ring of radius %d and spends %d mana." % [
+					String(spell.get("name", spell_id)),
+					int(preview.get("reveal_radius", 0)),
 					mana_cost,
 				],
 			}
@@ -1087,6 +1129,12 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 				return {"ok": false, "message": "That field spell target is not supported yet."}
 			if int(movement_state.get("current", 0)) >= int(movement_state.get("max", 0)):
 				return {"ok": false, "message": "Movement is already full."}
+			return {"ok": true}
+		"reveal_radius":
+			if String(spell_dict.get("target_mode", "self")) != "self":
+				return {"ok": false, "message": "That field spell target is not supported yet."}
+			if max(0, int(effect.get("amount", effect.get("radius", 0)))) <= 0:
+				return {"ok": false, "message": "That scouting spell has no reveal radius."}
 			return {"ok": true}
 		_:
 			return {"ok": false, "message": "That overworld spell effect is unsupported."}
@@ -1465,6 +1513,8 @@ static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: D
 			if int(preview.get("restored", 0)) > 0:
 				return "Restores up to %d movement; %d can fit now" % [amount, int(preview.get("restored", 0))]
 			return "Restores up to %d movement" % amount
+		"reveal_radius":
+			return "Reveals unexplored tiles in radius %d around the active hero" % max(1, int(effect.get("amount", effect.get("radius", 0))))
 		_:
 			return "No supported overworld effect"
 
@@ -1535,6 +1585,13 @@ static func _validate_spell_schema_record(
 			errors.append("Spell %s restore_movement metadata must use movement_support primary_role." % spell_id)
 		if "economy_map_utility" not in role_categories:
 			errors.append("Spell %s restore_movement metadata must include economy_map_utility." % spell_id)
+	elif String(effect_type) == "reveal_radius":
+		if context != CONTEXT_OVERWORLD:
+			errors.append("Spell %s reveal_radius metadata must use overworld context." % spell_id)
+		if primary_role != "scouting_support":
+			errors.append("Spell %s reveal_radius metadata must use scouting_support primary_role." % spell_id)
+		if "economy_map_utility" not in role_categories:
+			errors.append("Spell %s reveal_radius metadata must include economy_map_utility." % spell_id)
 	elif String(effect_type) == "damage_enemy":
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s damage metadata must use battle context." % spell_id)

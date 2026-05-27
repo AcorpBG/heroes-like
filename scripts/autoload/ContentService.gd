@@ -1172,6 +1172,9 @@ func _validate_spell(spell: Dictionary) -> void:
 		"restore_movement":
 			if int(effect.get("amount", 0)) <= 0:
 				push_warning("Spell %s must define restore_movement amount > 0." % spell_id)
+		"reveal_radius":
+			if int(effect.get("amount", effect.get("radius", 0))) <= 0:
+				push_warning("Spell %s must define reveal_radius amount > 0." % spell_id)
 		"damage_enemy":
 			if int(effect.get("base_damage", 0)) <= 0:
 				push_warning("Spell %s must define damage base_damage > 0." % spell_id)

@@ -12,10 +12,10 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail(String(report.get("errors", [])))
 		return
-	if int(report.get("adventure_spell_count", 0)) != 3:
-		_fail("Expected the current authored overworld spell set to contain 3 spells.")
+	if int(report.get("adventure_spell_count", 0)) != 6:
+		_fail("Expected the current authored overworld spell set to contain 6 spells.")
 		return
-	for required_hook in ["overworld_movement_restore", "mana_spend", "movement_clamp"]:
+	for required_hook in ["overworld_movement_restore", "overworld_fog_reveal", "mana_spend", "movement_clamp", "exploration_clamp"]:
 		if int(report.get("runtime_hook_counts", {}).get(required_hook, 0)) <= 0:
 			_fail("Missing adventure runtime hook %s." % required_hook)
 			return
@@ -29,6 +29,9 @@ func _run() -> void:
 					"spell_waystride",
 					"spell_trailglyph",
 					"spell_beacon_path",
+					"spell_rootway_tangle",
+					"spell_fogline_drift",
+					"spell_survey_chain",
 				],
 				"mana": {"current": 40, "max": 40},
 			},
@@ -46,6 +49,14 @@ func _run() -> void:
 		return
 	if bool(consequence.get("changes_fog", true)) or bool(consequence.get("changes_site_state", true)) or bool(consequence.get("changes_resources", true)):
 		_fail("Trailglyph consequence preview claimed unsupported map/resource mutation: %s" % consequence)
+		return
+	var survey_chain := ContentService.get_spell("spell_survey_chain")
+	var survey_consequence := SpellRules.adventure_spell_consequence_preview(hero, movement, survey_chain)
+	if not bool(survey_consequence.get("ok", false)) or int(survey_consequence.get("reveal_radius", 0)) != 4:
+		_fail("Survey Chain did not expose a valid reveal-radius consequence: %s" % survey_consequence)
+		return
+	if not bool(survey_consequence.get("changes_fog", false)) or bool(survey_consequence.get("changes_site_state", true)) or bool(survey_consequence.get("changes_resources", true)):
+		_fail("Survey Chain consequence preview did not stay bounded to fog exploration: %s" % survey_consequence)
 		return
 
 	var actions := SpellRules.get_overworld_actions(hero, movement)
@@ -73,7 +84,7 @@ func _run() -> void:
 	var session_hero: Dictionary = session.overworld.get("hero", {})
 	session_hero = SpellRules.ensure_hero_spellbook(session_hero)
 	var spellbook: Dictionary = session_hero.get("spellbook", {})
-	spellbook["known_spell_ids"] = ["spell_waystride", "spell_trailglyph", "spell_beacon_path"]
+	spellbook["known_spell_ids"] = ["spell_waystride", "spell_trailglyph", "spell_beacon_path", "spell_survey_chain"]
 	spellbook["mana"] = {"current": 40, "max": 40}
 	session_hero["spellbook"] = spellbook
 	session_hero["movement"] = {"current": 1, "max": 10}
@@ -99,6 +110,21 @@ func _run() -> void:
 		return
 	if not _assert_public_payload("OverworldRules live result", live_result):
 		return
+	var explored_before := int(session.overworld.get("fog", {}).get("explored_count", 0))
+	var survey_live_result := OverworldRules.cast_overworld_spell(session, "spell_survey_chain")
+	if not bool(survey_live_result.get("ok", false)):
+		_fail("OverworldRules Survey Chain cast failed: %s" % survey_live_result)
+		return
+	var explored_after := int(session.overworld.get("fog", {}).get("explored_count", 0))
+	if explored_after <= explored_before:
+		_fail("OverworldRules Survey Chain did not reveal additional fog: before=%d after=%d result=%s" % [explored_before, explored_after, survey_live_result])
+		return
+	var survey_recap: Dictionary = survey_live_result.get("post_action_recap", {}) if survey_live_result.get("post_action_recap", {}) is Dictionary else {}
+	if not String(survey_recap.get("affected", "")).contains("reveals"):
+		_fail("Survey Chain recap did not expose the fog reveal consequence: %s" % survey_recap)
+		return
+	if not _assert_public_payload("OverworldRules survey result", survey_live_result):
+		return
 
 	var payload := {
 		"ok": true,
@@ -119,14 +145,25 @@ func _run() -> void:
 				"movement_after": int(consequence.get("movement_after", 0)),
 				"movement_restored": int(consequence.get("movement_restored", 0)),
 			},
+			"survey_preview": {
+				"spell_id": String(survey_consequence.get("spell_id", "")),
+				"reveal_radius": int(survey_consequence.get("reveal_radius", 0)),
+				"changes_fog": bool(survey_consequence.get("changes_fog", false)),
+			},
 			"live_overworld_cast": {
 				"spell_id": "spell_beacon_path",
 				"movement_after": int(session.overworld.get("movement", {}).get("current", 0)),
 				"recap_kind": String(recap.get("kind", "")),
 			},
+			"live_survey_cast": {
+				"spell_id": "spell_survey_chain",
+				"explored_before": explored_before,
+				"explored_after": explored_after,
+				"recap_kind": String(survey_recap.get("kind", "")),
+			},
 		},
 		"caveats": [
-			"This report proves bounded adventure-map movement spell hooks only; scouting, site state, resources, artifacts, AI casting, and save migration remain outside this slice.",
+			"This report proves bounded adventure-map movement and scouting-reveal spell hooks only; site state, resources, artifacts, AI casting, and save migration remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
