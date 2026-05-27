@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Latest severe-outlier combat tuning reduced 65%+ rows from 10 to 8 and severity-above-65 from 29.0 to 21.5 using scoped Veilmourn T5/T6/T7 and Thornwake T7 stat changes. Full 100-seed matrix remains needs_tuning with 34 total 55%+ outliers, so this is a partial balance improvement, not final combat balance.",
+  "currentSliceNotes": "In progress. Full spell-system player-balance audit is now the selected next focus before further broad unit-stat nudges. Audit found Sunvault is polarized rather than globally weak, benchmark/live spell valuation parity is materially divergent, ally spell targeting is active-stack-only, and Sunvault counterplay does not reliably answer Veilmourn tempo or Thornwake root/control. See docs/spell-system-player-balance-audit.md.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-27T20:55:00Z",
+  "updatedAt": "2026-05-27T21:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25162,7 +25162,7 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-27T20:55:00Z",
+        "updatedAt": "2026-05-27T21:20:00Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -25194,7 +25194,8 @@
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_owner_requested_brass_late_veil.json (passed)",
           "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
-          "jq empty content/units.json content/spells.json ops/progress.json (passed)"
+          "jq empty content/units.json content/spells.json ops/progress.json (passed)",
+          "Created docs/spell-system-player-balance-audit.md (audit-only; no gameplay code changes)"
         ],
         "evidence": {
           "prior_thornwake_identity_correction": {
@@ -25372,10 +25373,17 @@
               "Veilmourn T5 HP 30 plus damage trim reduced 65%+ rows in smoke but regressed total 100-seed outliers."
             ],
             "remaining_risk": "The severe-outlier profile improved, but total 55%+ outlier count remains needs_tuning at 34. Continue tuning from the remaining Sunvault/Thornwake, Sunvault/Veilmourn, Embercourt/Mireclaw, and Brasshollow/Sunvault rows; do not mark final combat balance complete."
+          },
+          "spell_system_player_balance_audit_20260527": {
+            "report": "docs/spell-system-player-balance-audit.md",
+            "decision": "pause broad stat-only tuning; prioritize spell parity and counterplay",
+            "summary": "Audit found the current 20-spell catalog is narrow, Sunvault is matchup-polarized rather than globally weak, benchmark spell valuation differs from live BattleAiRules, ally spells are active-stack-only, Prism Bastion does not function as a Thornwake root counter, and generic damage-spell scoring fixes overcorrect Sunvault.",
+            "recommended_next_slice": "battle-spell-parity-counterplay-10184",
+            "remaining_risk": "No spell behavior implementation changed in this audit. The active combat balance slice remains needs_tuning until spell parity/counterplay is implemented and the 100-seed matrix improves without increasing total outliers."
           }
         }
       },
-      "notes": "In progress. Latest severe-outlier combat tuning reduced 65%+ rows from 10 to 8 and severity-above-65 from 29.0 to 21.5 using scoped Veilmourn T5/T6/T7 and Thornwake T7 stat changes. Full 100-seed matrix remains needs_tuning with 34 total 55%+ outliers, so this is a partial balance improvement, not final combat balance.",
+      "notes": "In progress. Full spell-system player-balance audit is now the selected next focus before further broad unit-stat nudges. Audit found Sunvault is polarized rather than globally weak, benchmark/live spell valuation parity is materially divergent, ally spell targeting is active-stack-only, and Sunvault counterplay does not reliably answer Veilmourn tempo or Thornwake root/control. See docs/spell-system-player-balance-audit.md.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -35157,7 +35165,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-27T20:55:00Z",
+  "currentSliceUpdatedAt": "2026-05-27T21:20:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37164,7 +37172,7 @@
   },
   "validation": {
     "status": "partial",
-    "updatedAt": "2026-05-27T20:55:00Z",
+    "updatedAt": "2026-05-27T21:20:00Z",
     "sliceId": "combat-faction-pair-stat-tuning-10184",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
@@ -37177,7 +37185,8 @@
       "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
       "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/spells.json ops/progress.json (passed)"
+      "jq empty content/units.json content/spells.json ops/progress.json (passed)",
+      "Created docs/spell-system-player-balance-audit.md (audit-only; no gameplay code changes)"
     ],
     "evidence": {
       "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
@@ -37297,6 +37306,13 @@
           "Veilmourn T5 HP 30 plus damage trim reduced 65%+ rows in smoke but regressed total 100-seed outliers."
         ],
         "remaining_risk": "The severe-outlier profile improved, but total 55%+ outlier count remains needs_tuning at 34. Continue tuning from the remaining Sunvault/Thornwake, Sunvault/Veilmourn, Embercourt/Mireclaw, and Brasshollow/Sunvault rows; do not mark final combat balance complete."
+      },
+      "spell_system_player_balance_audit_20260527": {
+        "report": "docs/spell-system-player-balance-audit.md",
+        "decision": "pause broad stat-only tuning; prioritize spell parity and counterplay",
+        "summary": "Audit found the current 20-spell catalog is narrow, Sunvault is matchup-polarized rather than globally weak, benchmark spell valuation differs from live BattleAiRules, ally spells are active-stack-only, Prism Bastion does not function as a Thornwake root counter, and generic damage-spell scoring fixes overcorrect Sunvault.",
+        "recommended_next_slice": "battle-spell-parity-counterplay-10184",
+        "remaining_risk": "No spell behavior implementation changed in this audit. The active combat balance slice remains needs_tuning until spell parity/counterplay is implemented and the 100-seed matrix improves without increasing total outliers."
       }
     }
   }
