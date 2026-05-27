@@ -25162,7 +25162,7 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-27T08:28:33Z",
+        "updatedAt": "2026-05-27T10:59:26Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -25174,7 +25174,13 @@
           "jq empty content/units.json ops/progress.json (passed)",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_veilmourn_t4_init6.json (passed)",
           "python3 tests/validate_repo.py (passed)",
-          "git diff --check (passed)"
+          "git diff --check (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --json > tmp/battle_balance_30_seed_shield_micro_tuning.json (passed; rejected broad shield/non-shield cluster)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_shield_only.json (passed; rejected broad shield-only candidate, 37 outliers)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_narrow_micro_tuning.json (passed; safe but no outlier-count improvement)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --json > tmp/battle_balance_30_seed_t4_damage_micro_tuning.json (passed; selected candidate)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_t4_damage_micro_tuning.json (passed; needs_tuning)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_t4_damage_micro_tuning.json (passed)"
         ],
         "evidence": {
           "prior_thornwake_identity_correction": {
@@ -25221,10 +25227,42 @@
             "week3_side_bias_points": "0.67 -> 0.2",
             "week4_side_bias_points": "0.73 -> 0.13"
           },
-          "remaining_failure": "Full matrix is still needs_tuning. Veilmourn remains high in week 2 against Sunvault 75.0 and Mireclaw 70.0, while other non-Veilmourn pair outliers remain. This is a partial tuning slice, not a final balance claim."
+          "remaining_failure": "Full matrix is still needs_tuning. Veilmourn remains high in week 2 against Sunvault 75.0 and Mireclaw 70.0, while other non-Veilmourn pair outliers remain. This is a partial tuning slice, not a final balance claim.",
+          "shield_and_micro_tuning_pass": {
+            "scope": "Conservative content-only stat tuning after the 32-outlier post-Veilmourn-T4-initiative baseline. Tested shielding first, then narrow damage ceilings where shield-only did not affect the ranged spike.",
+            "rejected_candidates": [
+              "Broad shield/non-shield cluster: worsened or flipped several rows in 30-seed smoke.",
+              "Shield-only broad buffs: full 100-seed matrix worsened from 32 to 37 outliers; it fixed some Thornwake rows but created larger Embercourt exposure and did not move Veilmourn over Sunvault/Mireclaw.",
+              "Narrow shield plus Veilmourn T5 shots: full 100-seed matrix stayed at 32 outliers and did not move the top Veilmourn rows because shots were not the binding constraint."
+            ],
+            "implemented_tuning": [
+              "unit_bog_brute shielding ranged_damage_multiplier 0.80 -> 0.79",
+              "unit_shard_guard shielding ranged_damage_multiplier 0.85 -> 0.84",
+              "unit_embercourt_ash_oath_bailiffs defense 8 -> 9",
+              "unit_thornwake_sporeglass_menders max_damage 6 -> 5",
+              "unit_veilmourn_undertow_harpooners max_damage 8 -> 7"
+            ],
+            "comparison_to_previous_100_seed": {
+              "total_balance_outliers": "32 -> 31",
+              "week1_outliers": "9 -> 7",
+              "week2_outliers": "8 -> 9",
+              "week3_outliers": "8 -> 8",
+              "week4_outliers": "7 -> 7",
+              "week1_side_bias_points": "1.00 -> 0.47",
+              "week2_side_bias_points": "0.07 -> 0.33",
+              "week3_side_bias_points": "0.20 -> 0.40",
+              "week4_side_bias_points": "0.13 -> 0.47",
+              "worst_veilmourn_over_sunvault": "75.0 -> 72.5",
+              "veilmourn_over_mireclaw_week2": "70.0 -> 58.0",
+              "thornwake_over_mireclaw_week1": "74.0 -> removed from outlier list",
+              "thornwake_over_mireclaw_week2": "71.0 -> 66.0",
+              "thornwake_over_sunvault_week3": "74.5 -> 71.5"
+            },
+            "remaining_failure": "Full matrix remains needs_tuning. Added Brasshollow over Veilmourn week 2 at 62.5 and Brasshollow over Thornwake week 3 at 58.5, so the pass improves severity but does not complete the combat-balance slice."
+          }
         }
       },
-      "notes": "In progress. Veilmourn week-2 ranged-tempo experiment showed that lowering both T4/T5 initiative overcorrects, and lowering only T5 is insufficient. Kept the T4 Undertow Harpooners initiative 7->6 as the highest-value small change: full 100-seed matrix improves from 33 to 32 outliers and week-2 outliers from 10 to 8 while preserving Veilmourn identity. Remaining matrix still needs tuning.",
+      "notes": "In progress. Shield-only tuning was tested and rejected as too broad. Kept a narrower micro-tuning pass: tiny Mireclaw/Sunvault shielding buffs, Embercourt T4 defense +1, Thornwake T3 max damage -1, and Veilmourn T4 max damage -1. The full 100-seed matrix improves from 32 to 31 outliers and reduces several severe rows, but still needs tuning.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25244,7 +25282,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-27T08:28:33Z",
+      "updatedAt": "2026-05-27T10:59:26Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
