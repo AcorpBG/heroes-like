@@ -292,6 +292,7 @@ REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "ve
 SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
 SUPPORTED_SPELL_PRIMARY_ROLES = {
     "movement_support",
+    "scouting_support",
     "priority_damage",
     "harry_damage",
     "control_damage",
@@ -10532,6 +10533,11 @@ def validate_content(errors: list[str]) -> None:
             ensure(primary_role == "movement_support", errors, f"Spell {spell_id} restore_movement effect must use movement_support primary_role")
             ensure("economy_map_utility" in normalized_role_categories, errors, f"Spell {spell_id} restore_movement effect must include economy_map_utility role category")
             ensure(int(effect.get("amount", 0)) > 0, errors, f"Spell {spell_id} must define restore movement amount > 0")
+        elif effect_type == "reveal_radius":
+            ensure(context == "overworld", errors, f"Spell {spell_id} reveal_radius effect must use overworld context")
+            ensure(primary_role == "scouting_support", errors, f"Spell {spell_id} reveal_radius effect must use scouting_support primary_role")
+            ensure("economy_map_utility" in normalized_role_categories, errors, f"Spell {spell_id} reveal_radius effect must include economy_map_utility role category")
+            ensure(int(effect.get("amount", effect.get("radius", 0))) > 0, errors, f"Spell {spell_id} must define reveal radius amount > 0")
         elif effect_type == "damage_enemy":
             ensure(context == "battle", errors, f"Spell {spell_id} damage_enemy effect must use battle context")
             ensure("damage" in normalized_role_categories, errors, f"Spell {spell_id} damage_enemy effect must include damage role category")

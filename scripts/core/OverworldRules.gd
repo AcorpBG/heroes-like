@@ -1560,6 +1560,10 @@ static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, s
 
 	session.overworld["hero"] = result.get("hero", hero)
 	session.overworld["movement"] = result.get("movement", movement)
+	var revealed_tiles := _reveal_spell_fog(session, int(result.get("fog_reveal_radius", 0)))
+	var consequence_preview: Dictionary = result.get("consequence_preview", {}) if result.get("consequence_preview", {}) is Dictionary else {}
+	if revealed_tiles > 0:
+		consequence_preview["revealed_tiles"] = revealed_tiles
 	return _attach_post_action_recap(
 		_finalize_action_result(session, true, String(result.get("message", ""))),
 		session,
@@ -1568,7 +1572,7 @@ static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, s
 			"spell_id": String(result.get("spell_id", spell_id)),
 			"spell_name": String(result.get("spell_name", spell_id)),
 			"target_contract": result.get("target_contract", {}),
-			"consequence_preview": result.get("consequence_preview", {}),
+			"consequence_preview": consequence_preview,
 		}
 	)
 
@@ -10859,6 +10863,29 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 		_rules_profile_set("fog", "changed_cells", max(0, int(payload.get("explored_count", before_explored_count)) - before_explored_count))
 	session.overworld[FOG_KEY] = payload
 
+static func _reveal_spell_fog(session: SessionStateStoreScript.SessionData, radius: int) -> int:
+	if session == null or radius <= 0:
+		return 0
+	if not _fog_state_ready(session):
+		_normalize_fog_of_war(session)
+	var map_size := derive_map_size(session)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var before_count := int(fog.get("explored_count", 0))
+	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	var position = hero.get("position", {})
+	var position_dict: Dictionary = position if position is Dictionary else {}
+	_apply_site_reveal(
+		explored_tiles,
+		{"x": int(position_dict.get("x", 0)), "y": int(position_dict.get("y", 0))},
+		radius,
+		map_size
+	)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+	session.overworld[FOG_KEY] = payload
+	return max(0, int(payload.get("explored_count", before_count)) - before_count)
+
 static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i) -> void:
 	var source_count := 0
 	var heroes = session.overworld.get("player_heroes", [])
@@ -11190,7 +11217,7 @@ static func _spell_post_action_recap(
 		"spell",
 		happened,
 		affected,
-		"Field magic converts mana into bounded route tempo without changing resources, sites, or scouting unless a later spell contract explicitly says so.",
+		"Field magic converts mana into bounded route tempo or scouting reveal without changing resources or site state.",
 		_post_action_next_step(session),
 		"%s cast | Move %d/%d" % [
 			spell_name,

@@ -13,13 +13,13 @@ func _run() -> void:
 		_fail(String(report.get("errors", [])))
 		return
 
-	if not _assert_count(report, "spell_count", 20):
+	if not _assert_count(report, "spell_count", 23):
 		return
-	if not _assert_count(report.get("context_counts", {}), SpellRules.CONTEXT_OVERWORLD, 3):
+	if not _assert_count(report.get("context_counts", {}), SpellRules.CONTEXT_OVERWORLD, 6):
 		return
 	if not _assert_count(report.get("context_counts", {}), SpellRules.CONTEXT_BATTLE, 17):
 		return
-	for school in ["beacon", "mire", "lens", "root", "furnace", "veil"]:
+	for school in ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]:
 		if int(report.get("school_counts", {}).get(school, 0)) <= 0:
 			_fail("Missing classified spell for school %s." % school)
 			return
@@ -41,6 +41,13 @@ func _run() -> void:
 	if not SpellRules.spell_metadata_summary(beacon_path).contains("Beacon T2"):
 		_fail("Beacon Path metadata summary is missing school/tier evidence.")
 		return
+	var survey_chain := ContentService.get_spell("spell_survey_chain")
+	if SpellRules.spell_school_id(survey_chain) != "old_measure":
+		_fail("Survey Chain did not expose Old Measure school metadata through SpellRules.")
+		return
+	if SpellRules.spell_primary_role(survey_chain) != "scouting_support":
+		_fail("Survey Chain did not expose scouting_support metadata through SpellRules.")
+		return
 
 	var payload := {
 		"ok": true,
@@ -52,14 +59,14 @@ func _run() -> void:
 		"context_counts": report.get("context_counts", {}),
 		"role_category_counts": report.get("role_category_counts", {}),
 		"sample": {
-			"spell_id": "spell_beacon_path",
-			"metadata_summary": SpellRules.spell_metadata_summary(beacon_path),
-			"primary_role": SpellRules.spell_primary_role(beacon_path),
-			"role_categories": SpellRules.spell_role_categories(beacon_path),
+			"spell_id": "spell_survey_chain",
+			"metadata_summary": SpellRules.spell_metadata_summary(survey_chain),
+			"primary_role": SpellRules.spell_primary_role(survey_chain),
+			"role_categories": SpellRules.spell_role_categories(survey_chain),
 		},
 		"caveats": [
 			"This report proves spell school/category/tier metadata loads through SpellRules; it does not add new spell balance, save data, AI casting, or adventure targeting behavior.",
-			"Old Measure remains rare and scenario-gated; no normal Old Measure spell ladder is activated by this slice.",
+			"Old Measure has a first live field-survey spell, but not a full normal spell ladder yet.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

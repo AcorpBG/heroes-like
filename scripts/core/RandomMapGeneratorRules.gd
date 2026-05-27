@@ -246,6 +246,9 @@ const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "value": 1700, "weight": 2, "categories": ["ore", "gold", "ember_salt"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "value": 1900, "weight": 1, "categories": ["gold", "ember_salt", "lens_crystal"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "spell_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_survey_chain", "spell_id": "spell_survey_chain", "value": 1300, "weight": 1, "categories": ["timber", "ore", "gold", "cut_gems"], "guarded_policy": "guarded_or_frontier"},
+	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_rootway_tangle", "spell_id": "spell_rootway_tangle", "value": 1200, "weight": 1, "categories": ["timber", "quicksilver", "cut_gems"], "guarded_policy": "guarded_or_frontier"},
+	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_fogline_drift", "spell_id": "spell_fogline_drift", "value": 1500, "weight": 1, "categories": ["gold", "lens_crystal", "cut_gems"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "skill_equivalent", "object_family_id": "skill_shrine", "object_id": "object_reedscript_vow_shrine", "site_id": "site_reedscript_vow_shrine", "skill_equivalent_id": "route_vow_shrine_contract", "value": 1300, "weight": 2, "categories": ["timber", "ore", "quicksilver"], "guarded_policy": "guarded_or_frontier"},
 ]
 const DECORATION_OBJECT_FAMILIES := [
@@ -340,7 +343,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"display_name": "Generated Reward Object",
 		"placement_kinds": ["reward_reference"],
 		"family_ids": ["reward_cache_small", "guarded_reward_cache", "artifact_cache", "spell_shrine", "skill_shrine"],
-		"object_ids": ["object_waystone_cache", "object_wood_wagon", "object_ore_crates", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "object_reedscript_vow_shrine"],
+		"object_ids": ["object_waystone_cache", "object_wood_wagon", "object_ore_crates", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "spell_survey_chain", "spell_rootway_tangle", "spell_fogline_drift", "object_reedscript_vow_shrine"],
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],

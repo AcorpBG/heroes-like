@@ -24,8 +24,10 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
-- Current implementation slice in progress: `combat-faction-pair-stat-tuning-10184`.
-- Latest completed slice: `battle-benchmark-no-round-cap-10184`.
+- Current implementation slice: `magic-school-availability-strategic-influence-10184`.
+- Latest completed slice: `magic-school-availability-strategic-influence-10184`.
+- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
+- Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
 - Earlier completed slice: `economy-native-rmg-required-source-support-10184`.
@@ -45,7 +47,7 @@ Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed and the public benchmark report uses side-neutral `side_a`/`side_b` terminology.
-- Before more broad unit-stat nudges, resolve the spell-system audit findings: benchmark/live spell valuation parity, ally spell targeting, and Sunvault counterplay against Veilmourn tempo and Thornwake root/control.
+- Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -53,6 +55,7 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
+- `magic-school-availability-strategic-influence-10184`: broaden live spell availability and school identity without claiming magic-vs-might hero balance; add field-magic variety, a first Old Measure scouting spell, town study access, generated spell-reward access, and focused magic validation evidence.
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
 - `battle-spell-parity-counterplay-10184`: use `docs/spell-system-player-balance-audit.md` to fix benchmark/live spell valuation parity, spell decision traces, ally spell targeting, and targeted counterplay before further broad stat tuning.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
@@ -67,6 +70,18 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Magic Availability And Strategic Influence Target
+
+The immediate magic slice should improve what players can learn and do with magic without pretending that magic-focused heroes and raw-combat heroes are balanced yet.
+
+Target shape:
+- keep the existing 17 battle spells stable while broadening field magic;
+- every live magic school should have meaningful authored spell presence, with Old Measure no longer purely dormant;
+- town study should expose more than faction-flavored battle buffs/damage, especially field scouting and route tools;
+- Native RMG/generated reward pools should include multiple spell-access candidates instead of only Beacon Path;
+- new field effects must mutate bounded strategic state directly, not just add another report surface;
+- no rare-resource spell-cast costs, caster-unit system, school mastery, or final magic-vs-might balance claim is part of this slice.
 
 ## Economy Rare-Resource Target
 
