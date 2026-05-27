@@ -49,10 +49,9 @@
         "gold": 1100
       },
       "starting_spell_ids": [
-        "spell_sunlance_arc",
+        "spell_trailglyph",
         "spell_stone_veil",
-        "spell_lantern_phalanx",
-        "spell_bulwark_litany"
+        "spell_lantern_phalanx"
       ],
       "starting_specialties": [
         "borderwarden"
@@ -69,8 +68,7 @@
         "attack": 0,
         "defense": 0,
         "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "knowledge": 1
       },
       "command_path": "might",
       "roster_state": "live"
@@ -305,10 +303,10 @@
         "gold": 1100
       },
       "starting_spell_ids": [
-        "spell_sunlance_arc",
-        "spell_stone_veil",
-        "spell_lantern_phalanx",
-        "spell_bulwark_litany"
+        "spell_relay_drum",
+        "spell_bulwark_litany",
+        "spell_bloodwake_drum",
+        "spell_stone_veil"
       ],
       "starting_specialties": [
         "mustercaptain"
@@ -324,9 +322,8 @@
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "power": 1,
+        "knowledge": 0
       },
       "command_path": "might",
       "roster_state": "live"
@@ -380,9 +377,8 @@
       },
       "starting_spell_ids": [
         "spell_sunlance_arc",
-        "spell_stone_veil",
-        "spell_lantern_phalanx",
-        "spell_bulwark_litany"
+        "spell_prism_bastion",
+        "spell_trailglyph"
       ],
       "starting_specialties": [
         "spellwright"
@@ -398,9 +394,8 @@
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "power": 2,
+        "knowledge": 1
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -1104,9 +1099,8 @@
         "gold": 1200
       },
       "starting_spell_ids": [
-        "spell_sunlance_arc",
-        "spell_stone_veil",
-        "spell_lantern_phalanx",
+        "spell_briar_bind",
+        "spell_graft_mend",
         "spell_bulwark_litany"
       ],
       "starting_specialties": [
@@ -1124,8 +1118,7 @@
         "attack": 0,
         "defense": 0,
         "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "knowledge": 1
       }
     },
     {
@@ -1610,10 +1603,9 @@
         "gold": 1250
       },
       "starting_spell_ids": [
-        "spell_sunlance_arc",
-        "spell_stone_veil",
-        "spell_lantern_phalanx",
-        "spell_bulwark_litany"
+        "spell_heat_rite",
+        "spell_bulwark_litany",
+        "spell_stone_veil"
       ],
       "starting_specialties": [
         "armsmaster"
@@ -1630,8 +1622,7 @@
         "attack": 0,
         "defense": 0,
         "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "knowledge": 0
       }
     },
     {
@@ -1900,10 +1891,9 @@
         "gold": 1250
       },
       "starting_spell_ids": [
-        "spell_sunlance_arc",
-        "spell_stone_veil",
-        "spell_lantern_phalanx",
-        "spell_bulwark_litany"
+        "spell_fogwake_step",
+        "spell_waystride",
+        "spell_obituary_mark"
       ],
       "starting_specialties": [
         "wayfinder"
@@ -1920,8 +1910,7 @@
         "attack": 0,
         "defense": 0,
         "power": 0,
-        "knowledge": 0,
-        "initiative": 0
+        "knowledge": 2
       }
     },
     {
