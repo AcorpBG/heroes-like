@@ -304,6 +304,27 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
     "tempo_buff",
     "assault_buff",
 }
+SPELL_TIER_MANA = {1: 3, 2: 5, 3: 7, 4: 9, 5: 12}
+SPELL_TIER_COST_BONUS_EFFECTS = {"control_enemy", "recover_ally", "cleanse_ally"}
+SPELL_TIER_MOVEMENT_AMOUNT = {1: 3, 2: 5, 3: 7, 4: 10, 5: 14}
+SPELL_TIER_REVEAL_AMOUNT = {1: 4, 2: 6, 3: 8, 4: 11, 5: 15}
+SPELL_TIER_DAMAGE_BASE_BANDS = {1: (14, 18), 2: (24, 30), 3: (36, 44), 4: (50, 60), 5: (68, 82)}
+SPELL_TIER_DAMAGE_POWER_BANDS = {1: (4, 5), 2: (6, 7), 3: (8, 9), 4: (10, 12), 5: (13, 15)}
+SPELL_TIER_WOUNDED_BONUS = {1: 4, 2: 8, 3: 12, 4: 16, 5: 22}
+SPELL_TIER_RECOVERY_BASE = {1: 18, 2: 28, 3: 40, 4: 56, 5: 76}
+SPELL_TIER_RECOVERY_POWER = {1: 4, 2: 6, 3: 8, 4: 11, 5: 14}
+SPELL_TIER_DURATION = {1: 1, 2: 2, 3: 2, 4: 3, 5: 3}
+SPELL_TIER_STATUS_DURATION = {1: 1, 2: 1, 3: 2, 4: 2, 5: 3}
+SPELL_TIER_PRIMARY_MOD = {1: 2, 2: 2, 3: 3, 4: 4, 5: 5}
+SPELL_TIER_RIDER_MOD = {1: 1, 2: 1, 3: 2, 4: 2, 5: 3}
+SPELL_TIER_NEGATIVE_MOD = {1: 1, 2: 1, 3: 2, 4: 2, 5: 3}
+SPELL_PRIMARY_MOD_BY_EFFECT = {
+    "defense_buff": "defense",
+    "initiative_buff": "initiative",
+    "attack_buff": "attack",
+    "recover_ally": "defense",
+    "cleanse_ally": "defense",
+}
 ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
 ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
@@ -1479,6 +1500,110 @@ def fail(errors: list[str], message: str) -> None:
 def ensure(condition: bool, errors: list[str], message: str) -> None:
     if not condition:
         fail(errors, message)
+
+
+def ensure_between(value: int, low: int, high: int, errors: list[str], message: str) -> None:
+    ensure(low <= value <= high, errors, f"{message}: expected {low}-{high}, got {value}")
+
+
+def spell_tier_power_issues(spell_id: str, spell: dict) -> list[str]:
+    issues: list[str] = []
+    tier = int(spell.get("tier", 0))
+    if tier not in SPELL_TIER_MANA:
+        return issues
+    effect = spell.get("effect", {})
+    if not isinstance(effect, dict):
+        return issues
+    effect_type = str(effect.get("type", ""))
+    expected_mana = SPELL_TIER_MANA[tier] + (1 if effect_type in SPELL_TIER_COST_BONUS_EFFECTS else 0)
+    ensure(
+        int(spell.get("mana_cost", 0)) == expected_mana,
+        issues,
+        f"Spell {spell_id} tier {tier} must use tiered mana cost {expected_mana}",
+    )
+    if effect_type == "restore_movement":
+        expected_amount = SPELL_TIER_MOVEMENT_AMOUNT[tier]
+        ensure(
+            int(effect.get("amount", effect.get("radius", 0))) == expected_amount,
+            issues,
+            f"Spell {spell_id} tier {tier} must use movement amount {expected_amount}",
+        )
+    elif effect_type == "reveal_radius":
+        expected_amount = SPELL_TIER_REVEAL_AMOUNT[tier]
+        ensure(
+            int(effect.get("amount", effect.get("radius", 0))) == expected_amount,
+            issues,
+            f"Spell {spell_id} tier {tier} must use reveal radius {expected_amount}",
+        )
+    elif effect_type == "damage_enemy":
+        base_low, base_high = SPELL_TIER_DAMAGE_BASE_BANDS[tier]
+        power_low, power_high = SPELL_TIER_DAMAGE_POWER_BANDS[tier]
+        ensure_between(int(effect.get("base_damage", 0)), base_low, base_high, issues, f"Spell {spell_id} tier {tier} base_damage band")
+        ensure_between(int(effect.get("power_scale", -1)), power_low, power_high, issues, f"Spell {spell_id} tier {tier} power_scale band")
+        if "wounded_bonus_damage" in effect:
+            expected_bonus = SPELL_TIER_WOUNDED_BONUS[tier]
+            ensure(
+                int(effect.get("wounded_bonus_damage", 0)) == expected_bonus,
+                issues,
+                f"Spell {spell_id} tier {tier} wounded bonus must be {expected_bonus}",
+            )
+        status = effect.get("status_effect", {})
+        if isinstance(status, dict) and status:
+            _validate_spell_status_tier(spell_id, tier, status, issues)
+    elif effect_type in {"defense_buff", "initiative_buff", "attack_buff", "recover_ally", "cleanse_ally"}:
+        primary_key = SPELL_PRIMARY_MOD_BY_EFFECT.get(effect_type, "")
+        expected_amount = SPELL_TIER_PRIMARY_MOD[tier]
+        ensure(
+            int(effect.get("amount", 0)) == expected_amount,
+            issues,
+            f"Spell {spell_id} tier {tier} {effect_type} amount must be {expected_amount}",
+        )
+        expected_duration = SPELL_TIER_DURATION[tier]
+        ensure(
+            int(effect.get("duration_rounds", 0)) == expected_duration,
+            issues,
+            f"Spell {spell_id} tier {tier} {effect_type} duration must be {expected_duration}",
+        )
+        if effect_type == "recover_ally":
+            ensure(
+                int(effect.get("base_restore", 0)) == SPELL_TIER_RECOVERY_BASE[tier],
+                issues,
+                f"Spell {spell_id} tier {tier} recovery base_restore must be {SPELL_TIER_RECOVERY_BASE[tier]}",
+            )
+            ensure(
+                int(effect.get("power_scale", -1)) == SPELL_TIER_RECOVERY_POWER[tier],
+                issues,
+                f"Spell {spell_id} tier {tier} recovery power_scale must be {SPELL_TIER_RECOVERY_POWER[tier]}",
+            )
+        _validate_spell_modifier_tier(spell_id, tier, effect.get("modifiers", {}), primary_key, issues)
+    elif effect_type == "control_enemy":
+        status = effect.get("status_effect", {})
+        if isinstance(status, dict):
+            _validate_spell_status_tier(spell_id, tier, status, issues)
+    return issues
+
+
+def _validate_spell_status_tier(spell_id: str, tier: int, status: dict, issues: list[str]) -> None:
+    expected_duration = SPELL_TIER_STATUS_DURATION[tier]
+    ensure(
+        int(status.get("duration_rounds", 0)) == expected_duration,
+        issues,
+        f"Spell {spell_id} tier {tier} status duration must be {expected_duration}",
+    )
+    _validate_spell_modifier_tier(spell_id, tier, status.get("modifiers", {}), "", issues)
+
+
+def _validate_spell_modifier_tier(spell_id: str, tier: int, modifiers: object, primary_key: str, issues: list[str]) -> None:
+    if not isinstance(modifiers, dict):
+        return
+    for modifier_id, raw_value in modifiers.items():
+        value = int(raw_value)
+        if value < 0:
+            expected = -SPELL_TIER_NEGATIVE_MOD[tier]
+            ensure(value == expected, issues, f"Spell {spell_id} tier {tier} modifier {modifier_id} must be {expected}")
+        elif value > 0:
+            expected = SPELL_TIER_PRIMARY_MOD[tier] if str(modifier_id) == primary_key else SPELL_TIER_RIDER_MOD[tier]
+            ensure(value == expected, issues, f"Spell {spell_id} tier {tier} modifier {modifier_id} must be {expected}")
 
 
 def append_unique(values: list[str], value: str) -> None:
@@ -10592,6 +10717,7 @@ def validate_content(errors: list[str]) -> None:
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
         else:
             fail(errors, f"Spell {spell_id} uses unsupported effect type {effect_type}")
+        errors.extend(spell_tier_power_issues(spell_id, spell))
 
     ensure(REQUIRED_MAJOR_SPELL_SCHOOLS.issubset(set(spell_school_counts.keys())), errors, "Spell catalog must classify at least one spell in each major accord school")
     ensure(int(spell_context_counts.get("overworld", 0)) > 0, errors, "Spell catalog must keep at least one overworld spell for adventure-map magic")

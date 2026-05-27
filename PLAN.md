@@ -24,8 +24,8 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
-- Current implementation slice: `magic-spell-catalog-breadth-100-10184`.
-- Latest completed slice: `magic-school-availability-strategic-influence-10184`.
+- Current implementation slice: `magic-spell-tier-power-bands-10184`.
+- Latest completed slice: `magic-spell-catalog-breadth-100-10184`.
 - Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
@@ -55,6 +55,7 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
+- `magic-spell-tier-power-bands-10184`: normalize the 100+ spell catalog into explicit tier power bands so tier 1 is weak/cheap and tier 5 is very strong/expensive across battle and overworld effects.
 - `magic-spell-catalog-breadth-100-10184`: raise the live spell catalog above 100 spells, keep every live school broadly represented, keep at least 20 overworld spells, and make town study pull the expanded school catalog by faction/tier.
 - `magic-school-availability-strategic-influence-10184`: broaden live spell availability and school identity without claiming magic-vs-might hero balance; add field-magic variety, a first Old Measure scouting spell, town study access, generated spell-reward access, and focused magic validation evidence.
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
@@ -80,6 +81,8 @@ Target shape:
 - the live authored spell catalog should stay above a 100-spell floor before balance work treats magic variety as credible;
 - every live magic school should have broad authored spell presence, with at least a dozen schema-valid spells per school;
 - overworld magic should have at least 20 authored spells across movement and scouting support;
+- spell tiers must carry real numeric meaning: tier 1 spells are cheap and limited, tiers 2-3 are useful/strong midgame tools, tier 4 spells are major swings, and tier 5 spells are expensive very-strong effects;
+- tier scaling should apply to mana costs, damage and power scaling, wounded bonuses, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius;
 - town study should expose faction school access plus Old Measure access by spell tier instead of relying only on short hand-authored per-town lists;
 - town study should expose more than faction-flavored battle buffs/damage, especially field scouting and route tools;
 - Native RMG/generated reward pools should include multiple spell-access candidates instead of only Beacon Path;

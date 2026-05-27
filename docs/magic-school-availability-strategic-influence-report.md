@@ -21,6 +21,13 @@ This slice improves spell availability, magic-school variety, and strategic infl
   - Furnace
   - Veil
   - Old Measure
+- Added numeric tier power bands:
+  - tier 1: cheap, limited early spells;
+  - tier 2: useful early-mid spells;
+  - tier 3: strong midgame spells;
+  - tier 4: major high-impact spells;
+  - tier 5: expensive very-strong capstone spells.
+- Tier bands now scale mana cost, damage, power scaling, wounded bonuses, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius.
 - Added first live Old Measure spell:
   - `spell_survey_chain` / Survey Chain
   - school: `old_measure`

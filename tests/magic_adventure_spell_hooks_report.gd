@@ -44,7 +44,7 @@ func _run() -> void:
 	if not bool(target_contract.get("ok", false)) or String(target_contract.get("target_kind", "")) != "self_hero":
 		_fail("Trailglyph did not expose a valid self-hero adventure target contract: %s" % target_contract)
 		return
-	if int(consequence.get("movement_before", -1)) != 2 or int(consequence.get("movement_after", -1)) != 8:
+	if int(consequence.get("movement_before", -1)) != 2 or int(consequence.get("movement_after", -1)) != 5:
 		_fail("Trailglyph consequence preview did not clamp movement correctly: %s" % consequence)
 		return
 	if bool(consequence.get("changes_fog", true)) or bool(consequence.get("changes_site_state", true)) or bool(consequence.get("changes_resources", true)):
@@ -70,10 +70,10 @@ func _run() -> void:
 	if not bool(cast_result.get("ok", false)):
 		_fail("SpellRules Trailglyph cast failed: %s" % cast_result)
 		return
-	if int(cast_result.get("movement", {}).get("current", 0)) != 8:
+	if int(cast_result.get("movement", {}).get("current", 0)) != 5:
 		_fail("SpellRules Trailglyph cast did not restore the expected movement: %s" % cast_result)
 		return
-	if int(cast_result.get("hero", {}).get("spellbook", {}).get("mana", {}).get("current", 0)) != 36:
+	if int(cast_result.get("hero", {}).get("spellbook", {}).get("mana", {}).get("current", 0)) != 37:
 		_fail("SpellRules Trailglyph cast did not spend the expected mana: %s" % cast_result)
 		return
 	if not _assert_public_payload("SpellRules cast result", cast_result):
