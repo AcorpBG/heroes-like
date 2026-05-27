@@ -10231,7 +10231,8 @@ def validate_content(errors: list[str]) -> None:
                 elif ability_id == "shielding":
                     multiplier = float(ability.get("ranged_damage_multiplier", 0.0))
                     ensure(0.0 < multiplier <= 1.0, errors, f"Unit {unit_id} shielding must define ranged_damage_multiplier between 0 and 1")
-                    ensure(int(ability.get("cohesion_hold_bonus", 0)) > 0, errors, f"Unit {unit_id} shielding must define cohesion_hold_bonus > 0")
+                    ensure("cohesion_hold_bonus" in ability, errors, f"Unit {unit_id} shielding must define cohesion_hold_bonus")
+                    ensure(int(ability.get("cohesion_hold_bonus", 0)) >= 0, errors, f"Unit {unit_id} shielding cohesion_hold_bonus must be >= 0")
                     if "engaged_damage_multiplier" in ability:
                         ensure(float(ability.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding engaged_damage_multiplier must be > 1")
                     if "harried_damage_multiplier" in ability:
