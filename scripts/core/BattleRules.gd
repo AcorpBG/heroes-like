@@ -15,6 +15,7 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
+const STATUS_ROOTED := "status_rooted"
 const RECENT_EVENT_LIMIT := 6
 const TACTICAL_BRIEFING_KEY := "tactical_briefing"
 const FIELD_OBJECTIVES_KEY := "field_objectives"
@@ -8269,6 +8270,8 @@ static func _faction_damage_modifier(
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
 		"faction_thornwake":
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_ROOTED):
+				modifier *= 1.10
 			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 				modifier *= 1.07
 			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:

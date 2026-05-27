@@ -508,6 +508,22 @@
         "gold": 95,
         "wood": 1
       },
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Root Brace",
+          "description": "Defensive retaliations lash attackers into root-bound rhythm.",
+          "retaliation_multiplier": 1.15,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_rooted",
+          "status_label": "Root-Bound",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -1
+          }
+        }
+      ],
       "content_status": "six_faction_scaffold"
     },
     {
@@ -1029,6 +1045,31 @@
         "wood": 2,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Barkmantle Brace",
+          "description": "A rooted wall stance that punishes attacks with binding counterforce.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_rooted",
+          "status_label": "Root-Bound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        },
+        {
+          "id": "shielding",
+          "name": "Barkmantle Screens",
+          "description": "Layered living bark shields blunt missile pressure while the root line closes.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.06
+        }
+      ],
       "content_status": "six_faction_scaffold"
     },
     {
@@ -1042,8 +1083,8 @@
       "defense": 9,
       "min_damage": 7,
       "max_damage": 11,
-      "speed": 4,
-      "initiative": 6,
+      "speed": 5,
+      "initiative": 7,
       "retaliations": 1,
       "ranged": false,
       "growth": 2,
@@ -1051,6 +1092,14 @@
         "gold": 410,
         "wood": 2
       },
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Pinning Reach",
+          "description": "Can engage from a step away to pin ranged lines before they reset.",
+          "distance_one_multiplier": 0.95
+        }
+      ],
       "content_status": "six_faction_scaffold"
     },
     {

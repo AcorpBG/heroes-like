@@ -360,12 +360,12 @@
       "description": "Living splints and seedglass resin harden the acting stack for a long exchange.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 16,
-        "power_scale": 5,
+        "base_restore": 24,
+        "power_scale": 6,
         "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "defense": 2,
+          "defense": 3,
           "cohesion": 2
         }
       }
