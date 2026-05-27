@@ -5,10 +5,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Full 100-seed week 1-4 faction matrix is within 45-55 with later battles taking more turns.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T21:35:00Z",
+  "updatedAt": "2026-05-26T20:46:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25149,7 +25149,7 @@
     {
       "id": "combat-faction-pair-stat-tuning-10184",
       "title": "Combat Faction Pair Stat Tuning",
-      "status": "completed",
+      "status": "in_progress",
       "phase": "phase-5-playable-alpha-baseline",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
@@ -25159,80 +25159,27 @@
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "validation": {
-        "status": "pass",
-        "updatedAt": "2026-05-26T21:35:00Z",
+        "status": "partial",
+        "updatedAt": "2026-05-26T20:46:57Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json (passed; balance_status=within_target; balance_outlier_count=0)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; balance_outlier_count=0)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed structurally; low-seed side-bias warning remains report noise, not full-gate evidence)",
-          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-          "python3 tests/town_development_balance_report.py (passed; ok=true)",
-          "python3 tests/validate_repo.py (passed)",
-          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1 (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --gate",
+          "python3 tests/town_development_balance_report.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
         ],
         "evidence": {
-          "implementation": [
-            "Mirrored the active six-faction unit ladders onto a shared tier-by-tier combat baseline while preserving unique ids, names, towns, economy, and art references.",
-            "Normalized the six benchmark-selected commanders to the same direct battle command baseline and shared battle spellbook while preserving Neral Sunlance Arc identity coverage.",
-            "Removed faction-label tactical damage/preference bonuses from the fast benchmark and gated matching live BattleRules/BattleAiRules faction tactical modifiers off for the balanced baseline."
-          ],
-          "full_100_seed_matrix": {
-            "ok": true,
-            "balance_status": "within_target",
-            "balance_outlier_count": 0,
-            "seeds_per_ordered_matchup": 100,
-            "ordered_matchup_count": 120,
-            "faction_count": 6,
-            "weeks": [
-              1,
-              2,
-              3,
-              4
-            ],
-            "week_summaries": [
-              {
-                "week": 1,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.6,
-                "side_b_win_rate": 49.4,
-                "side_bias_points": 1.2,
-                "average_rounds": 5.06
-              },
-              {
-                "week": 2,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.07,
-                "side_b_win_rate": 49.93,
-                "side_bias_points": 0.13,
-                "average_rounds": 6.48
-              },
-              {
-                "week": 3,
-                "sample_count": 3000,
-                "side_a_win_rate": 48.8,
-                "side_b_win_rate": 51.2,
-                "side_bias_points": 2.4,
-                "average_rounds": 6.78
-              },
-              {
-                "week": 4,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.07,
-                "side_b_win_rate": 49.93,
-                "side_bias_points": 0.13,
-                "average_rounds": 8.28
-              }
-            ],
-            "pair_result": "All 60 unordered faction-pair week rows are at dominant_win_rate=50.0, inside the required 45-55 band.",
-            "pacing_result": "Average rounds increase from week 1 to week 4: 5.06 -> 6.48 -> 6.78 -> 8.28."
-          },
-          "policy": "This completes the selected fast faction-vs-faction balance target. Deeper tactical faction asymmetry should be reintroduced only through future measured slices that preserve the 45-55 matrix."
+          "content_tuning_scope": "normalized active six-faction ladder tier stats/growth, removed active-ladder ability payloads, uniform T1 growth bonus, normalized direct hero combat command/trait spikes, and extended T6/T7 pacing",
+          "previous_100_seed_baseline": "needs_tuning; 60 balance outliers; average rounds 5.18, 5.51, 5.94, 5.8",
+          "current_100_seed_status": "needs_tuning; 43 balance outliers; week side-bias points 0.8, 1.6, 3.2, 1.4; average rounds 5.4, 5.92, 6.76, 7.13",
+          "current_worst_remaining": "week 1 Brasshollow over Veilmourn 88.5; week 2 Embercourt over Mireclaw and Veilmourn over Thornwake 93.0; week 3 Embercourt over Thornwake 79.0; week 4 Brasshollow over Thornwake 71.5",
+          "remaining_failure": "dominant win rates are not yet all within 45-55, so the active goal is not complete"
         }
       },
-      "notes": "Completed. Full 100-seed week 1-4 faction matrix is within target with zero outliers and later-week pacing growth.",
+      "notes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25252,9 +25199,8 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T21:35:00Z",
-      "startedAt": "2026-05-26T19:02:51Z",
-      "completedAt": "2026-05-26T21:35:00Z"
+      "updatedAt": "2026-05-26T20:46:57Z",
+      "startedAt": "2026-05-26T19:02:51Z"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -32873,7 +32819,7 @@
     {
       "id": "combat-faction-pair-stat-tuning-10184",
       "title": "Combat Faction Pair Stat Tuning",
-      "status": "completed",
+      "status": "pending",
       "phase": "phase-5-playable-alpha-baseline",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
@@ -32883,82 +32829,13 @@
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "validation": {
-        "status": "pass",
-        "updatedAt": "2026-05-26T21:35:00Z",
+        "status": "pending",
+        "updatedAt": "2026-05-26T18:18:00Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
-        "commands": [
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json (passed; balance_status=within_target; balance_outlier_count=0)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; balance_outlier_count=0)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed structurally; low-seed side-bias warning remains report noise, not full-gate evidence)",
-          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-          "python3 tests/town_development_balance_report.py (passed; ok=true)",
-          "python3 tests/validate_repo.py (passed)",
-          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1 (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
-        ],
-        "evidence": {
-          "implementation": [
-            "Mirrored the active six-faction unit ladders onto a shared tier-by-tier combat baseline while preserving unique ids, names, towns, economy, and art references.",
-            "Normalized the six benchmark-selected commanders to the same direct battle command baseline and shared battle spellbook while preserving Neral Sunlance Arc identity coverage.",
-            "Removed faction-label tactical damage/preference bonuses from the fast benchmark and gated matching live BattleRules/BattleAiRules faction tactical modifiers off for the balanced baseline."
-          ],
-          "full_100_seed_matrix": {
-            "ok": true,
-            "balance_status": "within_target",
-            "balance_outlier_count": 0,
-            "seeds_per_ordered_matchup": 100,
-            "ordered_matchup_count": 120,
-            "faction_count": 6,
-            "weeks": [
-              1,
-              2,
-              3,
-              4
-            ],
-            "week_summaries": [
-              {
-                "week": 1,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.6,
-                "side_b_win_rate": 49.4,
-                "side_bias_points": 1.2,
-                "average_rounds": 5.06
-              },
-              {
-                "week": 2,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.07,
-                "side_b_win_rate": 49.93,
-                "side_bias_points": 0.13,
-                "average_rounds": 6.48
-              },
-              {
-                "week": 3,
-                "sample_count": 3000,
-                "side_a_win_rate": 48.8,
-                "side_b_win_rate": 51.2,
-                "side_bias_points": 2.4,
-                "average_rounds": 6.78
-              },
-              {
-                "week": 4,
-                "sample_count": 3000,
-                "side_a_win_rate": 50.07,
-                "side_b_win_rate": 49.93,
-                "side_bias_points": 0.13,
-                "average_rounds": 8.28
-              }
-            ],
-            "pair_result": "All 60 unordered faction-pair week rows are at dominant_win_rate=50.0, inside the required 45-55 band.",
-            "pacing_result": "Average rounds increase from week 1 to week 4: 5.06 -> 6.48 -> 6.78 -> 8.28."
-          },
-          "policy": "This completes the selected fast faction-vs-faction balance target. Deeper tactical faction asymmetry should be reintroduced only through future measured slices that preserve the 45-55 matrix."
-        }
+        "commands": [],
+        "evidence": {}
       },
-      "notes": "Completed. Full 100-seed week 1-4 faction matrix is within target with zero outliers and later-week pacing growth.",
-      "updatedAt": "2026-05-26T21:35:00Z",
-      "completedAt": "2026-05-26T21:35:00Z"
+      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that fake round-cap outcomes have been removed."
     },
     {
       "id": "battle-fast-faction-benchmark-10184",
@@ -35084,7 +34961,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T21:35:00Z",
+  "currentSliceUpdatedAt": "2026-05-26T20:46:57Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37082,85 +36959,101 @@
     }
   ],
   "currentSlice": {
-    "id": "combat-faction-pair-stat-tuning-10184",
-    "title": "Combat Faction Pair Stat Tuning",
+    "id": "battle-benchmark-no-round-cap-10184",
+    "title": "Battle Benchmark No Round Cap Outcome",
     "status": "completed",
-    "updatedAt": "2026-05-26T21:35:00Z",
-    "completedAt": "2026-05-26T21:35:00Z",
-    "notes": "Completed. Full 100-seed week 1-4 faction matrix is within 45-55 with later battles taking more turns."
+    "updatedAt": "2026-05-26T18:18:00Z",
+    "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
+    "completedAt": "2026-05-26T18:18:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-26T21:35:00Z",
-    "sliceId": "combat-faction-pair-stat-tuning-10184",
+    "updatedAt": "2026-05-26T18:18:00Z",
+    "sliceId": "battle-benchmark-no-round-cap-10184",
     "commands": [
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json (passed; balance_status=within_target; balance_outlier_count=0)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; balance_outlier_count=0)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick (passed structurally; low-seed side-bias warning remains report noise, not full-gate evidence)",
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate (passed; 120 ordered rows; no stalemate_rate fields; outcomes only side_a/side_b)",
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1 (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "implementation": [
-        "Mirrored the active six-faction unit ladders onto a shared tier-by-tier combat baseline while preserving unique ids, names, towns, economy, and art references.",
-        "Normalized the six benchmark-selected commanders to the same direct battle command baseline and shared battle spellbook while preserving Neral Sunlance Arc identity coverage.",
-        "Removed faction-label tactical damage/preference bonuses from the fast benchmark and gated matching live BattleRules/BattleAiRules faction tactical modifiers off for the balanced baseline."
-      ],
+      "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
+      "implementation": {
+        "removed": [
+          "MAX_ROUNDS normal battle cap",
+          "max_rounds battle payload",
+          "stalemate outcome",
+          "stalemate_rate report fields",
+          "stalemate balance outlier type"
+        ],
+        "added": [
+          "SIMULATION_GUARD_MAX_ROUNDS emergency guard that raises on broken non-resolution",
+          "engaged melee-only attack forcing to prevent defend loops",
+          "GOALS.md and PLAN.md wording that unresolved simulations are structural failures, not balance data"
+        ]
+      },
+      "previous_guard_failure_reproduced": "week 3 faction_brasshollow vs faction_thornwake seed 25 exceeded the emergency guard before the engaged melee-only attack fix",
+      "reproduced_case_after_fix": {
+        "matchup": "week 3 faction_brasshollow vs faction_thornwake seed 25",
+        "outcome": "side_b",
+        "rounds": 8
+      },
       "full_100_seed_matrix": {
         "ok": true,
-        "balance_status": "within_target",
-        "balance_outlier_count": 0,
-        "seeds_per_ordered_matchup": 100,
         "ordered_matchup_count": 120,
         "faction_count": 6,
-        "weeks": [
-          1,
-          2,
-          3,
-          4
+        "seeds_per_ordered_matchup": 100,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 64,
+        "outcomes": [
+          "side_a",
+          "side_b"
         ],
+        "has_stalemate_rate": false,
         "week_summaries": [
           {
             "week": 1,
+            "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "side_a_win_rate": 50.6,
-            "side_b_win_rate": 49.4,
-            "side_bias_points": 1.2,
-            "average_rounds": 5.06
+            "side_a_win_rate": 48.77,
+            "side_b_win_rate": 51.23,
+            "side_bias_points": 2.47,
+            "average_rounds": 3.76
           },
           {
             "week": 2,
+            "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "side_a_win_rate": 50.07,
-            "side_b_win_rate": 49.93,
-            "side_bias_points": 0.13,
-            "average_rounds": 6.48
+            "side_a_win_rate": 50.4,
+            "side_b_win_rate": 49.6,
+            "side_bias_points": 0.8,
+            "average_rounds": 3.83
           },
           {
             "week": 3,
+            "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "side_a_win_rate": 48.8,
-            "side_b_win_rate": 51.2,
-            "side_bias_points": 2.4,
-            "average_rounds": 6.78
+            "side_a_win_rate": 53.13,
+            "side_b_win_rate": 46.87,
+            "side_bias_points": 6.27,
+            "average_rounds": 4.45
           },
           {
             "week": 4,
+            "ordered_matchup_count": 30,
             "sample_count": 3000,
-            "side_a_win_rate": 50.07,
-            "side_b_win_rate": 49.93,
-            "side_bias_points": 0.13,
-            "average_rounds": 8.28
+            "side_a_win_rate": 52.87,
+            "side_b_win_rate": 47.13,
+            "side_bias_points": 5.73,
+            "average_rounds": 4.86
           }
-        ],
-        "pair_result": "All 60 unordered faction-pair week rows are at dominant_win_rate=50.0, inside the required 45-55 band.",
-        "pacing_result": "Average rounds increase from week 1 to week 4: 5.06 -> 6.48 -> 6.78 -> 8.28."
+        ]
       },
-      "policy": "This completes the selected fast faction-vs-faction balance target. Deeper tactical faction asymmetry should be reintroduced only through future measured slices that preserve the 45-55 matrix."
+      "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
+      "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
     }
   }
 }
