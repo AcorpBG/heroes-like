@@ -13,15 +13,15 @@ func _run() -> void:
 		_fail(String(report.get("errors", [])))
 		return
 
-	if not _assert_count(report, "spell_count", 23):
+	if not _assert_min_count(report, "spell_count", 100):
 		return
-	if not _assert_count(report.get("context_counts", {}), SpellRules.CONTEXT_OVERWORLD, 6):
+	if not _assert_min_count(report.get("context_counts", {}), SpellRules.CONTEXT_OVERWORLD, 20):
 		return
-	if not _assert_count(report.get("context_counts", {}), SpellRules.CONTEXT_BATTLE, 17):
+	if not _assert_min_count(report.get("context_counts", {}), SpellRules.CONTEXT_BATTLE, 80):
 		return
 	for school in ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]:
-		if int(report.get("school_counts", {}).get(school, 0)) <= 0:
-			_fail("Missing classified spell for school %s." % school)
+		if int(report.get("school_counts", {}).get(school, 0)) < 12:
+			_fail("School %s has fewer than 12 classified spells." % school)
 			return
 	for category in ["damage", "buff", "debuff", "recovery", "economy_map_utility"]:
 		if int(report.get("role_category_counts", {}).get(category, 0)) <= 0:
@@ -66,7 +66,7 @@ func _run() -> void:
 		},
 		"caveats": [
 			"This report proves spell school/category/tier metadata loads through SpellRules; it does not add new spell balance, save data, AI casting, or adventure targeting behavior.",
-			"Old Measure has a first live field-survey spell, but not a full normal spell ladder yet.",
+			"Old Measure now has a broad live catalog for study access, but rare scenario-scale Old Measure effects remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -75,6 +75,12 @@ func _run() -> void:
 func _assert_count(container: Variant, key: String, expected: int) -> bool:
 	if int(container.get(key, -1)) != expected:
 		_fail("Expected %s to be %d, got %s." % [key, expected, container.get(key, null)])
+		return false
+	return true
+
+func _assert_min_count(container: Variant, key: String, minimum: int) -> bool:
+	if int(container.get(key, -1)) < minimum:
+		_fail("Expected %s to be at least %d, got %s." % [key, minimum, container.get(key, null)])
 		return false
 	return true
 

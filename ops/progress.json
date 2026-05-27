@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "magic-school-availability-strategic-influence-10184",
-  "currentSliceTitle": "Magic School Availability Strategic Influence",
+  "currentSliceId": "magic-spell-catalog-breadth-100-10184",
+  "currentSliceTitle": "Magic Spell Catalog Breadth 100",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
+  "currentSliceNotes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-27T22:25:00Z",
   "statusTaxonomy": {
@@ -25704,6 +25704,83 @@
       "startedAt": "2026-05-27T22:25:00Z",
       "completedAt": "2026-05-27T22:25:00Z",
       "updatedAt": "2026-05-27T22:25:00Z"
+    },
+    {
+      "id": "magic-spell-catalog-breadth-100-10184",
+      "title": "Magic Spell Catalog Breadth 100",
+      "status": "completed",
+      "source": "owner direction that the live spell catalog must be at least 100 spells, not a starvation catalog",
+      "planRef": "PLAN.md Magic Availability And Strategic Influence Target / GOALS.md Current Immediate Goal - Magic Availability",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "docs/spell-system-player-balance-audit.md",
+        "docs/magic-school-availability-strategic-influence-report.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "scripts/core/TownRules.gd",
+        "tests/magic_spell_schema_report.gd",
+        "tests/magic_adventure_spell_hooks_report.gd",
+        "GOALS.md",
+        "PLAN.md",
+        "docs/magic-school-availability-strategic-influence-report.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "completionCriteria": "Spell catalog contains at least 100 schema-valid spells with each live school represented broadly, at least 20 overworld spells, town study access reaches the expanded school catalog by faction/tier, and existing magic/repo/battle smoke validation still passes.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-27T19:22:01Z",
+        "sliceId": "magic-spell-catalog-breadth-100-10184",
+        "commands": [
+          "jq empty content/spells.json ops/progress.json (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld, 16 per school)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; 22 adventure spells, movement and reveal hooks)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; battle effect hook counts cover expanded catalog)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
+          "godot4 --headless --path . --quit-after 30 tests/town_development_runtime_balance_report.tscn (passed; ok=true, 15 towns, target_turns=30)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_100_spell_catalog.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "catalog": {
+            "total_spells": 112,
+            "battle_spells": 90,
+            "overworld_spells": 22,
+            "schools": {
+              "beacon": 16,
+              "mire": 16,
+              "lens": 16,
+              "root": 16,
+              "furnace": 16,
+              "veil": 16,
+              "old_measure": 16
+            },
+            "effect_counts": {
+              "damage_enemy": 21,
+              "defense_buff": 15,
+              "attack_buff": 15,
+              "restore_movement": 14,
+              "initiative_buff": 14,
+              "control_enemy": 13,
+              "reveal_radius": 8,
+              "cleanse_ally": 7,
+              "recover_ally": 5
+            }
+          },
+          "implemented": [
+            "Raised the authored spell catalog above the owner-requested 100-spell floor.",
+            "Kept every live school at 16 spells instead of leaving most schools starved.",
+            "Raised overworld spell coverage to 22 spells across movement and scouting effects.",
+            "Added town school access so study exposes faction-school lanes plus Old Measure by magic tier while preserving explicit town spell-library entries.",
+            "Raised magic schema/adventure report floors to prevent regression to a starvation catalog."
+          ],
+          "boundaries": "No final spell balance, caster-unit system, rare-resource casting costs, school mastery/resistance, or magic-vs-might hero parity claim is made."
+        }
+      },
+      "notes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work."
     }
   ],
   "completedImplementationEvidence": [
@@ -35261,7 +35338,7 @@
     "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
     "completedAt": "2026-05-27T22:25:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-27T22:25:00Z",
+  "currentSliceUpdatedAt": "2026-05-27T19:22:01Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37259,11 +37336,11 @@
     }
   ],
   "currentSlice": {
-    "id": "magic-school-availability-strategic-influence-10184",
-    "title": "Magic School Availability Strategic Influence",
+    "id": "magic-spell-catalog-breadth-100-10184",
+    "title": "Magic Spell Catalog Breadth 100",
     "status": "completed",
-    "updatedAt": "2026-05-27T22:25:00Z",
-    "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
+    "updatedAt": "2026-05-27T19:22:01Z",
+    "notes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work.",
     "completedAt": "2026-05-27T22:25:00Z"
   },
   "validation": {

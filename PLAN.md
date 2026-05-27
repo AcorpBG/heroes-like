@@ -24,7 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
-- Current implementation slice: `magic-school-availability-strategic-influence-10184`.
+- Current implementation slice: `magic-spell-catalog-breadth-100-10184`.
 - Latest completed slice: `magic-school-availability-strategic-influence-10184`.
 - Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
@@ -55,6 +55,7 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
+- `magic-spell-catalog-breadth-100-10184`: raise the live spell catalog above 100 spells, keep every live school broadly represented, keep at least 20 overworld spells, and make town study pull the expanded school catalog by faction/tier.
 - `magic-school-availability-strategic-influence-10184`: broaden live spell availability and school identity without claiming magic-vs-might hero balance; add field-magic variety, a first Old Measure scouting spell, town study access, generated spell-reward access, and focused magic validation evidence.
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
 - `battle-spell-parity-counterplay-10184`: use `docs/spell-system-player-balance-audit.md` to fix benchmark/live spell valuation parity, spell decision traces, ally spell targeting, and targeted counterplay before further broad stat tuning.
@@ -76,12 +77,14 @@ Do not select:
 The immediate magic slice should improve what players can learn and do with magic without pretending that magic-focused heroes and raw-combat heroes are balanced yet.
 
 Target shape:
-- keep the existing 17 battle spells stable while broadening field magic;
-- every live magic school should have meaningful authored spell presence, with Old Measure no longer purely dormant;
+- the live authored spell catalog should stay above a 100-spell floor before balance work treats magic variety as credible;
+- every live magic school should have broad authored spell presence, with at least a dozen schema-valid spells per school;
+- overworld magic should have at least 20 authored spells across movement and scouting support;
+- town study should expose faction school access plus Old Measure access by spell tier instead of relying only on short hand-authored per-town lists;
 - town study should expose more than faction-flavored battle buffs/damage, especially field scouting and route tools;
 - Native RMG/generated reward pools should include multiple spell-access candidates instead of only Beacon Path;
 - new field effects must mutate bounded strategic state directly, not just add another report surface;
-- no rare-resource spell-cast costs, caster-unit system, school mastery, or final magic-vs-might balance claim is part of this slice.
+- no rare-resource spell-cast costs, caster-unit system, school mastery, or final magic-vs-might balance claim is part of this work.
 
 ## Economy Rare-Resource Target
 

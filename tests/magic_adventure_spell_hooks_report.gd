@@ -12,8 +12,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail(String(report.get("errors", [])))
 		return
-	if int(report.get("adventure_spell_count", 0)) != 6:
-		_fail("Expected the current authored overworld spell set to contain 6 spells.")
+	if int(report.get("adventure_spell_count", 0)) < 20:
+		_fail("Expected the current authored overworld spell set to contain at least 20 spells.")
 		return
 	for required_hook in ["overworld_movement_restore", "overworld_fog_reveal", "mana_spend", "movement_clamp", "exploration_clamp"]:
 		if int(report.get("runtime_hook_counts", {}).get(required_hook, 0)) <= 0:
