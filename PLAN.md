@@ -45,6 +45,7 @@ Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed and the public benchmark report uses side-neutral `side_a`/`side_b` terminology.
+- Before more broad unit-stat nudges, resolve the spell-system audit findings: benchmark/live spell valuation parity, ally spell targeting, and Sunvault counterplay against Veilmourn tempo and Thornwake root/control.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -53,6 +54,7 @@ Before starting any item, add or select a concrete slice in `ops/progress.json`,
 
 Recommended next slices:
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
+- `battle-spell-parity-counterplay-10184`: use `docs/spell-system-player-balance-audit.md` to fix benchmark/live spell valuation parity, spell decision traces, ally spell targeting, and targeted counterplay before further broad stat tuning.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
 - `rmg-small-generalization-hardening-10184`: harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.

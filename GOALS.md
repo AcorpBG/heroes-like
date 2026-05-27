@@ -72,6 +72,11 @@ After the benchmark exists, use its results to select the next combat tuning sli
 
 Do not tune broadly until the benchmark output identifies the highest-value outliers.
 
+Immediate focus update:
+- The current highest-value battle-balance issue is spell-system correctness, not another broad unit-stat pass.
+- Use `docs/spell-system-player-balance-audit.md` as the next source document.
+- Fix benchmark/live spell valuation parity, spell decision tracing, ally spell targeting, and Sunvault counterplay before accepting further faction-pair stat tuning as meaningful.
+
 ## Goal 4 - Validation
 
 Required validation for this slice:
