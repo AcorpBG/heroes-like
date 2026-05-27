@@ -43,20 +43,20 @@ func _run() -> void:
 	)
 	var base_preview := SpellRules.adventure_spell_consequence_preview(base_hero, movement, trailglyph)
 	var relic_preview := SpellRules.adventure_spell_consequence_preview(hero, movement, trailglyph)
-	if int(base_preview.get("mana_cost", 0)) != 4 or int(relic_preview.get("mana_cost", 0)) != 3:
+	if int(base_preview.get("mana_cost", 0)) != 3 or int(relic_preview.get("mana_cost", 0)) != 2:
 		_fail("Artifact mana bridge did not lower Trailglyph mana cost by 1: base=%s relic=%s" % [base_preview, relic_preview])
 		return
-	if int(base_preview.get("movement_after", 0)) != 7 or int(relic_preview.get("movement_after", 0)) != 8:
+	if int(base_preview.get("movement_after", 0)) != 4 or int(relic_preview.get("movement_after", 0)) != 5:
 		_fail("Artifact effect bridge did not improve Trailglyph movement preview by 1: base=%s relic=%s" % [base_preview, relic_preview])
 		return
 	var cast_result := SpellRules.cast_overworld_spell(hero, movement, "spell_trailglyph")
 	if not bool(cast_result.get("ok", false)):
 		_fail("Artifact-adjusted Trailglyph cast failed: %s" % cast_result)
 		return
-	if int(cast_result.get("movement", {}).get("current", 0)) != 8:
+	if int(cast_result.get("movement", {}).get("current", 0)) != 5:
 		_fail("Artifact-adjusted Trailglyph cast did not apply the movement preview: %s" % cast_result)
 		return
-	if int(cast_result.get("hero", {}).get("spellbook", {}).get("mana", {}).get("current", 0)) != 7:
+	if int(cast_result.get("hero", {}).get("spellbook", {}).get("mana", {}).get("current", 0)) != 8:
 		_fail("Artifact-adjusted Trailglyph cast did not spend the adjusted mana cost: %s" % cast_result)
 		return
 

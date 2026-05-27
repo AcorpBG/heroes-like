@@ -23,6 +23,10 @@ func _run() -> void:
 		if int(report.get("school_counts", {}).get(school, 0)) < 12:
 			_fail("School %s has fewer than 12 classified spells." % school)
 			return
+	for tier in ["1", "2", "3", "4", "5"]:
+		if int(report.get("tier_counts", {}).get(tier, 0)) <= 0:
+			_fail("Spell catalog has no tier %s spells." % tier)
+			return
 	for category in ["damage", "buff", "debuff", "recovery", "economy_map_utility"]:
 		if int(report.get("role_category_counts", {}).get(category, 0)) <= 0:
 			_fail("Missing role category coverage for %s." % category)
@@ -65,7 +69,7 @@ func _run() -> void:
 			"role_categories": SpellRules.spell_role_categories(survey_chain),
 		},
 		"caveats": [
-			"This report proves spell school/category/tier metadata loads through SpellRules; it does not add new spell balance, save data, AI casting, or adventure targeting behavior.",
+			"This report proves spell school/category/tier metadata loads through SpellRules; numeric tier power-band validation lives in validate_repo.py.",
 			"Old Measure now has a broad live catalog for study access, but rare scenario-scale Old Measure effects remain outside this slice.",
 		],
 	}

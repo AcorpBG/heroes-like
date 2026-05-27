@@ -46,6 +46,14 @@ Post-slice update:
 - Overworld effects now include movement restoration and `reveal_radius` scouting spells.
 - Town study now supplements explicit town spell-library entries with faction school access plus Old Measure access by town magic tier.
 
+Tier-band update after catalog breadth:
+
+- Tier 1 spells are now cheap, limited early tools.
+- Tiers 2 and 3 now carry clear early-mid and strong-midgame payloads.
+- Tier 4 spells are major high-impact tools.
+- Tier 5 spells are expensive very-strong effects.
+- Validation now enforces tiered mana, damage, power scaling, wounded bonus, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius bands.
+
 ## Main Findings
 
 ### 1. Sunvault Is Not Simply Weak

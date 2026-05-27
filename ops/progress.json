@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "magic-spell-catalog-breadth-100-10184",
-  "currentSliceTitle": "Magic Spell Catalog Breadth 100",
+  "currentSliceId": "magic-spell-tier-power-bands-10184",
+  "currentSliceTitle": "Magic Spell Tier Power Bands",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work.",
+  "currentSliceNotes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "updatedAt": "2026-05-27T22:25:00Z",
   "statusTaxonomy": {
@@ -25781,6 +25781,121 @@
         }
       },
       "notes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work."
+    },
+    {
+      "id": "magic-spell-tier-power-bands-10184",
+      "title": "Magic Spell Tier Power Bands",
+      "status": "completed",
+      "source": "owner direction that the 100+ spell catalog must be broken into clear tiers from weaker to very strong",
+      "planRef": "PLAN.md Magic Availability And Strategic Influence Target / GOALS.md Current Immediate Goal - Magic Availability",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "docs/magic-school-availability-strategic-influence-report.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "tests/validate_repo.py",
+        "tests/magic_spell_schema_report.gd",
+        "tests/magic_adventure_spell_hooks_report.gd",
+        "tests/magic_artifact_economy_integration_report.gd",
+        "GOALS.md",
+        "PLAN.md",
+        "docs/magic-school-availability-strategic-influence-report.md"
+      ],
+      "completionCriteria": "Every spell tier has explicit weaker-to-stronger power bands for mana and effect payloads across battle and overworld effects; validation prevents tier-1 spells from exceeding higher-tier power bands; existing magic/runtime smokes pass.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-27T19:49:26Z",
+        "sliceId": "magic-spell-tier-power-bands-10184",
+        "commands": [
+          "jq empty content/spells.json ops/progress.json (passed)",
+          "python3 tests/validate_repo.py (passed; includes spell tier power-band validation)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells across tiers 1-5)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; tiered Trailglyph and Survey Chain live hooks)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; tiered battle spell hooks)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed; tiered Trailglyph artifact bridge)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_spell_tiers.json (passed; ok=true, 30 ordered rows, needs_tuning, 5 outliers)",
+          "python3 -m py_compile tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "tier_bands": {
+            "mana": {
+              "tier_1": "3-4",
+              "tier_2": "5-6",
+              "tier_3": "7-8",
+              "tier_4": "9-10",
+              "tier_5": "12-13"
+            },
+            "movement_restore": {
+              "1": 3,
+              "2": 5,
+              "3": 7,
+              "4": 10,
+              "5": 14
+            },
+            "reveal_radius": {
+              "1": 4,
+              "2": 6,
+              "3": 8,
+              "4": 11,
+              "5": 15
+            },
+            "damage_base": {
+              "1": "14-18",
+              "2": "24-30",
+              "3": "36-44",
+              "4": "50-60",
+              "5": "68-82"
+            },
+            "damage_power_scale": {
+              "1": "4-5",
+              "2": "6-7",
+              "3": "8-9",
+              "4": "10-12",
+              "5": "13-15"
+            },
+            "buff_primary_modifier": {
+              "1": 2,
+              "2": 2,
+              "3": 3,
+              "4": 4,
+              "5": 5
+            },
+            "status_duration": {
+              "1": 1,
+              "2": 1,
+              "3": 2,
+              "4": 2,
+              "5": 3
+            },
+            "buff_duration": {
+              "1": 1,
+              "2": 2,
+              "3": 2,
+              "4": 3,
+              "5": 3
+            }
+          },
+          "implemented": [
+            "Normalized spell payloads so tier 1 is cheap/limited and tier 5 is expensive/very strong.",
+            "Preserved spell ids, names, schools, role categories, and faction/town access while changing numeric strength bands.",
+            "Added validate_repo tier-band checks covering mana, damage, power scaling, wounded bonus, buffs, control, recovery, movement, and scouting.",
+            "Adjusted magic runtime reports for the new tier-1 Trailglyph movement amount and artifact bridge."
+          ],
+          "benchmark_smoke": {
+            "ok": true,
+            "ordered_rows": 30,
+            "balance_status": "needs_tuning",
+            "outliers": 5
+          },
+          "boundaries": "This tier curve makes spell strength readable by tier; it is not final spell balance, school mastery, caster-unit implementation, or magic-vs-might parity."
+        }
+      },
+      "notes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning."
     }
   ],
   "completedImplementationEvidence": [
@@ -35338,7 +35453,7 @@
     "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
     "completedAt": "2026-05-27T22:25:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-27T19:22:01Z",
+  "currentSliceUpdatedAt": "2026-05-27T19:49:26Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37336,11 +37451,11 @@
     }
   ],
   "currentSlice": {
-    "id": "magic-spell-catalog-breadth-100-10184",
-    "title": "Magic Spell Catalog Breadth 100",
+    "id": "magic-spell-tier-power-bands-10184",
+    "title": "Magic Spell Tier Power Bands",
     "status": "completed",
-    "updatedAt": "2026-05-27T19:22:01Z",
-    "notes": "Completed 100+ spell catalog breadth/access slice. Combat balance still needs later spell parity, targeting, school progression, and tuning work.",
+    "updatedAt": "2026-05-27T19:49:26Z",
+    "notes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning.",
     "completedAt": "2026-05-27T22:25:00Z"
   },
   "validation": {

@@ -16,7 +16,7 @@
       "description": "Pulls the marching line into a sharp, tireless cadence.",
       "effect": {
         "type": "restore_movement",
-        "amount": 4
+        "amount": 3
       }
     },
     {
@@ -31,19 +31,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 5,
       "target_mode": "enemy_selected",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 18,
-        "power_scale": 8,
+        "base_damage": 30,
+        "power_scale": 7,
         "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 10,
+        "wounded_bonus_damage": 8,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "initiative": -1,
             "cohesion": -1
@@ -68,12 +68,12 @@
       "description": "Wraps the acting stack in a gravel-thick ward that blunts incoming blows.",
       "effect": {
         "type": "defense_buff",
-        "amount": 3,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
+          "defense": 2,
           "initiative": 1,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -94,7 +94,7 @@
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "initiative": 2,
           "attack": 1,
@@ -113,12 +113,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "self",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 6
+        "amount": 3
       }
     },
     {
@@ -151,12 +151,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "self",
       "description": "Living roots knot into a short hidden lane and pull the column over broken ground.",
       "effect": {
         "type": "restore_movement",
-        "amount": 4
+        "amount": 3
       }
     },
     {
@@ -170,12 +170,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 5,
+      "mana_cost": 3,
       "target_mode": "self",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 5
+        "amount": 3
       }
     },
     {
@@ -189,7 +189,7 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "self",
       "description": "Old boundary math snaps into a measured ring and exposes nearby routes before the army commits.",
       "effect": {
@@ -209,21 +209,21 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 24,
-        "power_scale": 10,
+        "base_damage": 14,
+        "power_scale": 4,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
             "initiative": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -239,17 +239,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "An ironbound oath that thickens shields and closes the line.",
       "effect": {
         "type": "defense_buff",
-        "amount": 4,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 4,
+          "defense": 2,
           "attack": 1,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -264,16 +264,16 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 3,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "initiative": 3,
-          "attack": 2,
+          "initiative": 2,
+          "attack": 1,
           "momentum": 1
         }
       }
@@ -289,7 +289,7 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 5,
       "target_mode": "ally_active",
       "description": "Signal-lantern commands tighten the acting stack into a pike-backed fighting line.",
       "effect": {
@@ -300,7 +300,7 @@
           "attack": 2,
           "defense": 1,
           "initiative": 1,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -315,17 +315,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 5,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 3,
+        "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "attack": 3,
-          "initiative": 2,
-          "momentum": 2
+          "attack": 2,
+          "initiative": 1,
+          "momentum": 1
         }
       }
     },
@@ -346,15 +346,15 @@
       "description": "Facet wards lock around the acting stack, hardening the line and preserving its rhythm.",
       "effect": {
         "type": "cleanse_ally",
-        "amount": 3,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "cleanse_effect_ids": [
           "status_harried",
           "status_staggered"
         ],
         "modifiers": {
-          "defense": 3,
-          "cohesion": 2
+          "defense": 2,
+          "cohesion": 1
         }
       }
     },
@@ -374,10 +374,10 @@
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 3,
+        "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 3,
+          "initiative": 2,
           "attack": 1,
           "cohesion": 1,
           "momentum": 1
@@ -401,17 +401,19 @@
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 22,
-        "power_scale": 9,
+        "base_damage": 28,
+        "power_scale": 6,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Dazzled",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -2
+            "initiative": -1,
+            "cohesion": -1
           }
-        }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 8
       }
     },
     {
@@ -434,10 +436,10 @@
         "status_effect": {
           "effect_id": "status_rooted",
           "label": "Root-Bound",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
-            "initiative": -3,
-            "cohesion": -2
+            "initiative": -1,
+            "cohesion": -1
           }
         }
       }
@@ -459,13 +461,13 @@
       "description": "Living splints and seedglass resin harden the acting stack for a long exchange.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 24,
-        "power_scale": 6,
+        "base_restore": 18,
+        "power_scale": 4,
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
-          "cohesion": 2
+          "defense": 2,
+          "cohesion": 1
         }
       }
     },
@@ -480,15 +482,15 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 3,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "attack": 3,
+          "attack": 2,
           "defense": 1,
           "momentum": 1
         }
@@ -506,22 +508,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "Stamped pressure seals hammer a chosen stack and leave its formation counting broken clauses.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 20,
-        "power_scale": 9,
+        "base_damage": 18,
+        "power_scale": 5,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Overpressured",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
-        }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 4
       }
     },
     {
@@ -536,15 +540,15 @@
         "control"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 3,
-        "duration_rounds": 2,
+        "amount": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "initiative": 3,
+          "initiative": 2,
           "defense": 1,
           "momentum": 1
         }
@@ -562,21 +566,21 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "Ink from an unfinished obituary marks a chosen stack for isolation and faltering answers.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 18,
-        "power_scale": 8,
+        "base_damage": 15,
+        "power_scale": 4,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Marked",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
             "initiative": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -600,7 +604,7 @@
         "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 3,
+          "initiative": 2,
           "cohesion": 1
         }
       }
@@ -617,15 +621,15 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 3,
+          "defense": 4,
           "cohesion": 2
         }
       }
@@ -641,13 +645,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "attack": 2,
           "defense": 1,
@@ -667,22 +671,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "enemy_selected",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 28,
-        "power_scale": 8,
+        "base_damage": 42,
+        "power_scale": 9,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -1,
+            "initiative": -2,
             "cohesion": -2
           }
-        }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 12
       }
     },
     {
@@ -696,12 +702,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "self",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 8
+        "amount": 14
       }
     },
     {
@@ -730,7 +736,7 @@
         ],
         "modifiers": {
           "defense": 2,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -745,16 +751,16 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "initiative": 3,
-          "cohesion": 1
+          "initiative": 4,
+          "cohesion": 2
         }
       }
     },
@@ -770,16 +776,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
-          "cohesion": 2
+          "defense": 2,
+          "cohesion": 1
         }
       }
     },
@@ -794,17 +800,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 3,
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
@@ -820,24 +826,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "enemy_selected",
       "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 36,
-        "power_scale": 10,
+        "base_damage": 77,
+        "power_scale": 15,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "initiative": -1,
-            "cohesion": -2
+            "initiative": -3,
+            "cohesion": -3
           }
         },
         "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 11
+        "wounded_bonus_damage": 22
       }
     },
     {
@@ -852,19 +858,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "enemy_selected",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 32,
-        "power_scale": 9,
+        "base_damage": 51,
+        "power_scale": 11,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -1,
+            "initiative": -2,
             "cohesion": -2
           }
         }
@@ -881,13 +887,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "initiative": 2,
           "attack": 1,
@@ -906,17 +912,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 3,
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
@@ -932,7 +938,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 9,
+      "mana_cost": 13,
       "target_mode": "enemy_selected",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -940,10 +946,10 @@
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Snare",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "defense": -1,
-            "initiative": -2
+            "defense": -3,
+            "initiative": -3
           }
         }
       }
@@ -964,7 +970,7 @@
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 5
+        "amount": 6
       }
     },
     {
@@ -979,18 +985,18 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 10,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 38,
-        "power_scale": 8,
-        "amount": 2,
-        "duration_rounds": 2,
+        "base_restore": 56,
+        "power_scale": 11,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 2,
-          "cohesion": 1
+          "defense": 4,
+          "cohesion": 2
         }
       }
     },
@@ -1006,20 +1012,20 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 20,
-        "power_scale": 6,
+        "base_damage": 14,
+        "power_scale": 4,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "initiative": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -1035,17 +1041,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 2,
-          "attack": 1,
-          "momentum": 1
+          "initiative": 3,
+          "attack": 2,
+          "momentum": 2
         }
       }
     },
@@ -1060,17 +1066,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 5,
+          "defense": 3,
+          "cohesion": 3
         }
       }
     },
@@ -1094,10 +1100,10 @@
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Snare",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
-            "initiative": -2
+            "initiative": -1
           }
         }
       }
@@ -1113,12 +1119,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 7
+        "amount": 11
       }
     },
     {
@@ -1133,17 +1139,17 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 4,
       "target_mode": "ally_active",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 23,
-        "power_scale": 5,
+        "base_restore": 18,
+        "power_scale": 4,
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
+          "defense": 2,
           "cohesion": 1
         }
       }
@@ -1160,19 +1166,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "enemy_selected",
       "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 28,
+        "base_damage": 36,
         "power_scale": 8,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -1,
+            "initiative": -2,
             "cohesion": -2
           }
         }
@@ -1190,20 +1196,20 @@
         "countermagic"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 10,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "cleanse_effect_ids": [
           "status_harried",
           "status_staggered",
           "status_rooted"
         ],
         "modifiers": {
-          "defense": 2,
+          "defense": 4,
           "cohesion": 2
         }
       }
@@ -1220,20 +1226,20 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 18,
-        "power_scale": 6,
+        "base_damage": 14,
+        "power_scale": 4,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -1250,16 +1256,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "defense": 4,
-          "attack": 1
+          "defense": 3,
+          "attack": 2
         }
       }
     },
@@ -1274,16 +1280,16 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "modifiers": {
-          "initiative": 3,
-          "cohesion": 1
+          "initiative": 5,
+          "cohesion": 3
         }
       }
     },
@@ -1303,7 +1309,7 @@
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 5
+        "amount": 6
       }
     },
     {
@@ -1317,17 +1323,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 4,
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
@@ -1343,13 +1349,13 @@
         "countermagic"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 4,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "cleanse_ally",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "cleanse_effect_ids": [
           "status_harried",
           "status_staggered",
@@ -1357,7 +1363,7 @@
         ],
         "modifiers": {
           "defense": 2,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -1373,19 +1379,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "enemy_selected",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 26,
+        "base_damage": 37,
         "power_scale": 8,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "defense": -1,
+            "defense": -2,
             "cohesion": -2
           }
         }
@@ -1403,16 +1409,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 4,
-          "attack": 1
+          "defense": 5,
+          "attack": 3
         }
       }
     },
@@ -1435,7 +1441,7 @@
         "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 3,
+          "initiative": 2,
           "cohesion": 1
         }
       }
@@ -1451,12 +1457,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 7
+        "amount": 11
       }
     },
     {
@@ -1470,13 +1476,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "attack": 2,
           "defense": 1,
@@ -1496,12 +1502,12 @@
         "countermagic"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 8,
       "target_mode": "ally_active",
       "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "cleanse_ally",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "cleanse_effect_ids": [
           "status_harried",
@@ -1509,7 +1515,7 @@
           "status_rooted"
         ],
         "modifiers": {
-          "defense": 2,
+          "defense": 3,
           "cohesion": 2
         }
       }
@@ -1526,7 +1532,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 10,
       "target_mode": "enemy_selected",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -1536,7 +1542,7 @@
           "label": "Briar",
           "duration_rounds": 2,
           "modifiers": {
-            "defense": -1,
+            "defense": -2,
             "initiative": -2
           }
         }
@@ -1554,17 +1560,17 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 4,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 23,
-        "power_scale": 5,
+        "base_restore": 18,
+        "power_scale": 4,
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
+          "defense": 2,
           "cohesion": 1
         }
       }
@@ -1581,16 +1587,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "defense": 4,
-          "attack": 1
+          "defense": 3,
+          "attack": 2
         }
       }
     },
@@ -1606,24 +1612,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "enemy_selected",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 36,
-        "power_scale": 10,
+        "base_damage": 73,
+        "power_scale": 14,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "initiative": -1,
-            "cohesion": -2
+            "initiative": -3,
+            "cohesion": -3
           }
         },
         "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 11
+        "wounded_bonus_damage": 22
       }
     },
     {
@@ -1656,17 +1662,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 4,
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
@@ -1682,7 +1688,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 4,
       "target_mode": "enemy_selected",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -1690,10 +1696,10 @@
         "status_effect": {
           "effect_id": "status_rooted",
           "label": "Briar",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
-            "initiative": -2
+            "initiative": -1
           }
         }
       }
@@ -1710,18 +1716,18 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 8,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "recover_ally",
-        "base_restore": 33,
-        "power_scale": 7,
-        "amount": 2,
+        "base_restore": 40,
+        "power_scale": 8,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
           "defense": 3,
-          "cohesion": 1
+          "cohesion": 2
         }
       }
     },
@@ -1737,16 +1743,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 4,
-          "attack": 1
+          "defense": 5,
+          "attack": 3
         }
       }
     },
@@ -1767,15 +1773,15 @@
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 24,
-        "power_scale": 7,
+        "base_damage": 25,
+        "power_scale": 6,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "initiative": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -1791,12 +1797,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 7
+        "amount": 10
       }
     },
     {
@@ -1810,13 +1816,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "attack": 2,
           "defense": 1,
@@ -1836,7 +1842,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 8,
       "target_mode": "enemy_selected",
       "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -1846,7 +1852,7 @@
           "label": "Briar",
           "duration_rounds": 2,
           "modifiers": {
-            "defense": -1,
+            "defense": -2,
             "initiative": -2
           }
         }
@@ -1864,24 +1870,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "enemy_selected",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 38,
-        "power_scale": 10,
+        "base_damage": 79,
+        "power_scale": 15,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "defense": -1,
-            "initiative": -1
+            "defense": -3,
+            "initiative": -3
           }
         },
         "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 11
+        "wounded_bonus_damage": 22
       }
     },
     {
@@ -1903,7 +1909,7 @@
         "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "attack": 3,
+          "attack": 2,
           "cohesion": 1
         }
       }
@@ -1920,15 +1926,15 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 3,
+          "defense": 4,
           "cohesion": 2
         }
       }
@@ -1944,13 +1950,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "initiative": 2,
           "defense": 1,
@@ -1969,12 +1975,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "self",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 6
+        "amount": 7
       }
     },
     {
@@ -1989,7 +1995,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 9,
+      "mana_cost": 13,
       "target_mode": "enemy_selected",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -1997,10 +2003,10 @@
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Clamp",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -2
+            "initiative": -3,
+            "cohesion": -3
           }
         }
       }
@@ -2022,17 +2028,19 @@
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 26,
+        "base_damage": 30,
         "power_scale": 7,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "defense": -1,
             "initiative": -1
           }
-        }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 8
       }
     },
     {
@@ -2046,16 +2054,16 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "attack": 3,
-          "cohesion": 1
+          "attack": 4,
+          "cohesion": 2
         }
       }
     },
@@ -2071,16 +2079,16 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
-          "defense": 3,
-          "cohesion": 2
+          "defense": 2,
+          "cohesion": 1
         }
       }
     },
@@ -2095,17 +2103,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 2,
-          "defense": 1,
-          "momentum": 1
+          "initiative": 3,
+          "defense": 2,
+          "momentum": 2
         }
       }
     },
@@ -2120,12 +2128,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "self",
       "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 8
+        "amount": 14
       }
     },
     {
@@ -2148,10 +2156,10 @@
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Clamp",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -2
+            "initiative": -1,
+            "cohesion": -1
           }
         }
       }
@@ -2168,19 +2176,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "enemy_selected",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 32,
-        "power_scale": 9,
+        "base_damage": 52,
+        "power_scale": 11,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -1,
+            "initiative": -2,
             "cohesion": -2
           }
         }
@@ -2197,13 +2205,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "initiative": 2,
           "attack": 1,
@@ -2223,7 +2231,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 8,
       "target_mode": "enemy_selected",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2233,8 +2241,8 @@
           "label": "Fogbind",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -3,
-            "cohesion": -1
+            "initiative": -2,
+            "cohesion": -2
           }
         }
       }
@@ -2251,17 +2259,17 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 2,
-          "initiative": 1,
-          "cohesion": 1
+          "defense": 5,
+          "initiative": 3,
+          "cohesion": 3
         }
       }
     },
@@ -2295,17 +2303,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "attack": 2,
-          "defense": 1,
-          "cohesion": 1
+          "attack": 4,
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
@@ -2321,20 +2329,20 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "enemy_selected",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 20,
-        "power_scale": 6,
+        "base_damage": 14,
+        "power_scale": 4,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
             "initiative": -1,
-            "cohesion": -2
+            "cohesion": -1
           }
         }
       }
@@ -2350,17 +2358,17 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "initiative": 2,
-          "attack": 1,
-          "momentum": 1
+          "initiative": 3,
+          "attack": 2,
+          "momentum": 2
         }
       }
     },
@@ -2376,7 +2384,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 9,
+      "mana_cost": 13,
       "target_mode": "enemy_selected",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2384,10 +2392,10 @@
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Fogbind",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
             "initiative": -3,
-            "cohesion": -1
+            "cohesion": -3
           }
         }
       }
@@ -2429,12 +2437,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 7
+        "amount": 10
       }
     },
     {
@@ -2448,13 +2456,13 @@
         "buff"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "attack": 2,
           "defense": 1,
@@ -2474,19 +2482,19 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "enemy_selected",
       "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 28,
+        "base_damage": 37,
         "power_scale": 8,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -1,
+            "initiative": -2,
             "cohesion": -2
           }
         }
@@ -2508,7 +2516,7 @@
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 5
+        "amount": 6
       }
     },
     {
@@ -2523,17 +2531,17 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "ally_active",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 4,
+        "duration_rounds": 3,
         "modifiers": {
-          "defense": 2,
-          "initiative": 1,
-          "cohesion": 1
+          "defense": 4,
+          "initiative": 2,
+          "cohesion": 2
         }
       }
     },
@@ -2549,7 +2557,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 5,
+      "mana_cost": 4,
       "target_mode": "enemy_selected",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2557,10 +2565,10 @@
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Boundary",
-          "duration_rounds": 2,
+          "duration_rounds": 1,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -2
+            "initiative": -1,
+            "cohesion": -1
           }
         }
       }
@@ -2577,20 +2585,20 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "enemy_selected",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 30,
+        "base_damage": 39,
         "power_scale": 8,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
           "modifiers": {
-            "defense": -1,
-            "initiative": -1
+            "defense": -2,
+            "initiative": -2
           }
         }
       }
@@ -2607,21 +2615,21 @@
         "countermagic"
       ],
       "context": "battle",
-      "mana_cost": 9,
+      "mana_cost": 13,
       "target_mode": "ally_active",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "cleanse_ally",
-        "amount": 2,
-        "duration_rounds": 2,
+        "amount": 5,
+        "duration_rounds": 3,
         "cleanse_effect_ids": [
           "status_harried",
           "status_staggered",
           "status_rooted"
         ],
         "modifiers": {
-          "defense": 2,
-          "cohesion": 2
+          "defense": 5,
+          "cohesion": 3
         }
       }
     },
@@ -2655,12 +2663,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 7
+        "amount": 11
       }
     },
     {
@@ -2675,13 +2683,13 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "ally_active",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
         "amount": 2,
-        "duration_rounds": 2,
+        "duration_rounds": 1,
         "modifiers": {
           "defense": 2,
           "initiative": 1,
@@ -2701,7 +2709,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 7,
+      "mana_cost": 8,
       "target_mode": "enemy_selected",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2729,24 +2737,24 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 8,
+      "mana_cost": 12,
       "target_mode": "enemy_selected",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
-        "base_damage": 38,
-        "power_scale": 10,
+        "base_damage": 74,
+        "power_scale": 14,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "defense": -1,
-            "initiative": -1
+            "defense": -3,
+            "initiative": -3
           }
         },
         "wounded_threshold_ratio": 0.5,
-        "wounded_bonus_damage": 11
+        "wounded_bonus_damage": 22
       }
     },
     {
@@ -2775,7 +2783,7 @@
         ],
         "modifiers": {
           "defense": 2,
-          "cohesion": 2
+          "cohesion": 1
         }
       }
     },
@@ -2790,12 +2798,12 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 7,
+      "mana_cost": 9,
       "target_mode": "self",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
-        "amount": 7
+        "amount": 10
       }
     },
     {
@@ -2809,7 +2817,7 @@
         "economy_map_utility"
       ],
       "context": "overworld",
-      "mana_cost": 4,
+      "mana_cost": 3,
       "target_mode": "self",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2829,17 +2837,17 @@
         "recovery"
       ],
       "context": "battle",
-      "mana_cost": 6,
+      "mana_cost": 7,
       "target_mode": "ally_active",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "defense_buff",
-        "amount": 2,
+        "amount": 3,
         "duration_rounds": 2,
         "modifiers": {
-          "defense": 2,
-          "initiative": 1,
-          "cohesion": 1
+          "defense": 3,
+          "initiative": 2,
+          "cohesion": 2
         }
       }
     },
@@ -2855,7 +2863,7 @@
         "debuff"
       ],
       "context": "battle",
-      "mana_cost": 9,
+      "mana_cost": 13,
       "target_mode": "enemy_selected",
       "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
@@ -2863,10 +2871,10 @@
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Boundary",
-          "duration_rounds": 2,
+          "duration_rounds": 3,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -2
+            "initiative": -3,
+            "cohesion": -3
           }
         }
       }
