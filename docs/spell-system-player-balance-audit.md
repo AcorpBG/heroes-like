@@ -38,11 +38,13 @@ This is still a narrow early catalog. It has basic damage, buffs, one control sp
 
 Post-slice update:
 
-- 23 total spells.
-- 17 battle spells.
-- 6 overworld spells.
-- Old Measure now has one live field-survey spell.
-- Overworld effects now include 5 `restore_movement` spells and 1 `reveal_radius` scouting spell.
+- 112 total spells.
+- 90 battle spells.
+- 22 overworld spells.
+- 16 spells in each live school: Beacon, Mire, Lens, Root, Furnace, Veil, and Old Measure.
+- Old Measure now has a broad live study catalog plus Survey Chain as the first validated field-survey spell.
+- Overworld effects now include movement restoration and `reveal_radius` scouting spells.
+- Town study now supplements explicit town spell-library entries with faction school access plus Old Measure access by town magic tier.
 
 ## Main Findings
 

@@ -10,8 +10,17 @@ This slice improves spell availability, magic-school variety, and strategic infl
 
 ## Implemented
 
-- Spell catalog increased from 20 to 23 spells.
-- Overworld spell count increased from 3 to 6.
+- Spell catalog increased from 20 to 112 spells.
+- Battle spell count increased to 90.
+- Overworld spell count increased from 3 to 22.
+- Every live school now has 16 spells:
+  - Beacon
+  - Mire
+  - Lens
+  - Root
+  - Furnace
+  - Veil
+  - Old Measure
 - Added first live Old Measure spell:
   - `spell_survey_chain` / Survey Chain
   - school: `old_measure`
@@ -25,12 +34,16 @@ This slice improves spell availability, magic-school variety, and strategic infl
   - all towns now expose Survey Chain at tier 2 study access;
   - Thornwake towns expose Rootway Tangle at tier 1;
   - Veilmourn towns expose Fogline Drift at tier 1.
+- Added dynamic town school access:
+  - each faction exposes two faction-school lanes through town study;
+  - Old Measure is available to every town as the shared ancient/support lane;
+  - spell access is still gated by town magic tier.
 - Added frontier shrine content for the new field spells.
 - Expanded Native RMG/generated reward spell-access candidates beyond Beacon Path.
 
 ## Boundaries
 
-- Existing 17 battle spells are unchanged.
+- Existing manually authored battle spells are preserved.
 - Hero combat stats are unchanged.
 - Unit stats and unit spellcasting are unchanged.
 - No rare-resource spell-cast costs were added.

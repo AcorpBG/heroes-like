@@ -14,6 +14,15 @@ static var _read_scope_session_id := ""
 static var _read_scope_depth := 0
 static var _read_scope_cache := {}
 
+const FACTION_SPELL_SCHOOL_ACCESS := {
+	"faction_embercourt": ["beacon", "furnace"],
+	"faction_mireclaw": ["mire", "root"],
+	"faction_sunvault": ["lens", "beacon"],
+	"faction_thornwake": ["root", "mire"],
+	"faction_brasshollow": ["furnace", "old_measure"],
+	"faction_veilmourn": ["veil", "old_measure"],
+}
+
 static func begin_read_scope(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
@@ -1274,7 +1283,41 @@ static func accessible_spell_ids(town: Dictionary) -> Array:
 			var spell_id := String(spell_id_value)
 			if spell_id != "" and spell_id not in spell_ids:
 				spell_ids.append(spell_id)
+	for spell_id in _school_spell_ids_for_town(town_template, tier):
+		if spell_id != "" and spell_id not in spell_ids:
+			spell_ids.append(spell_id)
 	return spell_ids
+
+static func _school_spell_ids_for_town(town_template: Dictionary, tier: int) -> Array:
+	var allowed_schools := _town_spell_school_access(town_template)
+	if allowed_schools.is_empty():
+		return []
+	var results := []
+	var raw := ContentService.load_json(ContentService.SPELLS_PATH)
+	var spells: Array = raw.get("items", []) if raw.get("items", []) is Array else []
+	for spell_value in spells:
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		var spell_id := String(spell.get("id", ""))
+		if spell_id == "":
+			continue
+		if int(spell.get("tier", 0)) > tier:
+			continue
+		if String(spell.get("school_id", "")) in allowed_schools and spell_id not in results:
+			results.append(spell_id)
+	return results
+
+static func _town_spell_school_access(town_template: Dictionary) -> Array:
+	var schools := []
+	var faction_id := String(town_template.get("faction_id", ""))
+	for school_id_value in FACTION_SPELL_SCHOOL_ACCESS.get(faction_id, []):
+		var school_id := String(school_id_value)
+		if school_id != "" and school_id not in schools:
+			schools.append(school_id)
+	if "old_measure" not in schools:
+		schools.append("old_measure")
+	return schools
 
 static func _build_order_ledger_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var build_actions := get_build_actions(session)

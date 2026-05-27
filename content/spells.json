@@ -7,7 +7,9 @@
       "tier": 1,
       "accord_family": "beacon_path",
       "primary_role": "movement_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 3,
       "target_mode": "self",
@@ -24,11 +26,14 @@
       "tier": 2,
       "accord_family": "pressure_clause",
       "primary_role": "priority_damage",
-      "role_categories": ["damage", "debuff"],
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
-      "description": "A compressed flare of embers that tears through the chosen enemy stack.",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 18,
@@ -53,7 +58,10 @@
       "tier": 1,
       "accord_family": "slag_mantle",
       "primary_role": "ally_defense",
-      "role_categories": ["buff", "recovery"],
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
@@ -76,11 +84,13 @@
       "tier": 1,
       "accord_family": "rally_bell",
       "primary_role": "tempo_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 3,
       "target_mode": "ally_active",
-      "description": "A clipped command-chant that hurls the acting stack forward in the initiative order.",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 2,
@@ -99,11 +109,13 @@
       "tier": 1,
       "accord_family": "beacon_path",
       "primary_role": "movement_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
-      "description": "A brisk sigil-line that pulls a road back under the column's boots.",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
         "amount": 6
@@ -116,11 +128,13 @@
       "tier": 2,
       "accord_family": "beacon_path",
       "primary_role": "movement_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A lantern-line of fixed bearings that keeps the column moving through broken frontier routes.",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -133,7 +147,9 @@
       "tier": 1,
       "accord_family": "rootway_path",
       "primary_role": "movement_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
@@ -150,11 +166,13 @@
       "tier": 1,
       "accord_family": "fogwake_step",
       "primary_role": "movement_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 5,
       "target_mode": "self",
-      "description": "A folded fogline hides the march and lets the column slip farther along uncertain roads.",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "restore_movement",
         "amount": 5
@@ -167,7 +185,9 @@
       "tier": 1,
       "accord_family": "old_measure_survey",
       "primary_role": "scouting_support",
-      "role_categories": ["economy_map_utility"],
+      "role_categories": [
+        "economy_map_utility"
+      ],
       "context": "overworld",
       "mana_cost": 4,
       "target_mode": "self",
@@ -184,11 +204,14 @@
       "tier": 1,
       "accord_family": "rot_bloom",
       "primary_role": "harry_damage",
-      "role_categories": ["damage", "debuff"],
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A black volley of furnace-bright cinders that crashes into a chosen stack.",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 24,
@@ -212,7 +235,9 @@
       "tier": 1,
       "accord_family": "rally_bell",
       "primary_role": "ally_defense",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
@@ -235,11 +260,13 @@
       "tier": 1,
       "accord_family": "wounded_prey_drum",
       "primary_role": "tempo_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A pulse-beat cast through the ranks that snaps a stack into motion.",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -258,7 +285,9 @@
       "tier": 2,
       "accord_family": "rally_bell",
       "primary_role": "assault_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
@@ -282,11 +311,13 @@
       "tier": 2,
       "accord_family": "wounded_prey_drum",
       "primary_role": "assault_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A killing-beat that drives the acting stack toward an already-softened breach.",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 3,
@@ -305,7 +336,10 @@
       "tier": 1,
       "accord_family": "prism_ward",
       "primary_role": "countermagic_ward",
-      "role_categories": ["buff", "countermagic"],
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
@@ -314,7 +348,10 @@
         "type": "cleanse_ally",
         "amount": 3,
         "duration_rounds": 2,
-        "cleanse_effect_ids": ["status_harried", "status_staggered"],
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered"
+        ],
         "modifiers": {
           "defense": 3,
           "cohesion": 2
@@ -328,11 +365,13 @@
       "tier": 2,
       "accord_family": "resonant_chorus",
       "primary_role": "tempo_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "ally_active",
-      "description": "A relay chant snaps the acting stack into the wider array and feeds both tempo and discipline.",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -352,11 +391,14 @@
       "tier": 2,
       "accord_family": "sunlance",
       "primary_role": "priority_damage",
-      "role_categories": ["damage", "debuff"],
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
-      "description": "A refracted lance of heat and glare rips through the chosen stack and leaves its formation reeling.",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 22,
@@ -379,7 +421,10 @@
       "tier": 1,
       "accord_family": "briar_bind",
       "primary_role": "control_enemy",
-      "role_categories": ["control", "debuff"],
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
@@ -404,7 +449,10 @@
       "tier": 1,
       "accord_family": "graft_mend",
       "primary_role": "ally_recovery",
-      "role_categories": ["buff", "recovery"],
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
@@ -428,11 +476,13 @@
       "tier": 1,
       "accord_family": "heat_rite",
       "primary_role": "assault_buff",
-      "role_categories": ["buff"],
+      "role_categories": [
+        "buff"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A furnace clause opens the vents and turns stored pressure into a timed attack surge.",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "attack_buff",
         "amount": 3,
@@ -451,7 +501,10 @@
       "tier": 1,
       "accord_family": "pressure_clause",
       "primary_role": "priority_damage",
-      "role_categories": ["damage", "debuff"],
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
@@ -478,11 +531,14 @@
       "tier": 1,
       "accord_family": "fogwake_step",
       "primary_role": "tempo_buff",
-      "role_categories": ["buff", "control"],
+      "role_categories": [
+        "buff",
+        "control"
+      ],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
-      "description": "A stolen chart folds mist around the acting stack and lets it slip into the next opening.",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
       "effect": {
         "type": "initiative_buff",
         "amount": 3,
@@ -501,7 +557,10 @@
       "tier": 1,
       "accord_family": "obituary_mark",
       "primary_role": "isolation_damage",
-      "role_categories": ["damage", "debuff"],
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
       "context": "battle",
       "mana_cost": 5,
       "target_mode": "enemy_selected",
@@ -517,6 +576,2296 @@
           "modifiers": {
             "defense": -1,
             "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_roadward_signal_07",
+      "name": "Roadward Signal",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_signal",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_bell_ward_09",
+      "name": "Bell Ward",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_ward",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_column_charge_11",
+      "name": "Column Charge",
+      "school_id": "beacon",
+      "tier": 1,
+      "accord_family": "beacon_charge",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_writ_lance_13",
+      "name": "Writ Lance",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_lance",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 28,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_waymark_road_15",
+      "name": "Waymark Road",
+      "school_id": "beacon",
+      "tier": 5,
+      "accord_family": "beacon_road",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 8,
+      "target_mode": "self",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 8
+      }
+    },
+    {
+      "id": "spell_beacon_lantern_oath_17",
+      "name": "Lantern Oath",
+      "school_id": "beacon",
+      "tier": 2,
+      "accord_family": "beacon_oath",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_crown_signal_19",
+      "name": "Crown Signal",
+      "school_id": "beacon",
+      "tier": 4,
+      "accord_family": "beacon_signal",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_dawn_ward_21",
+      "name": "Dawn Ward",
+      "school_id": "beacon",
+      "tier": 1,
+      "accord_family": "beacon_ward",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_roadward_charge_23",
+      "name": "Roadward Charge",
+      "school_id": "beacon",
+      "tier": 3,
+      "accord_family": "beacon_charge",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_beacon_bell_lance_25",
+      "name": "Bell Lance",
+      "school_id": "beacon",
+      "tier": 5,
+      "accord_family": "beacon_lance",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 36,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 11
+      }
+    },
+    {
+      "id": "spell_mire_silt_rot_04",
+      "name": "Silt Rot",
+      "school_id": "mire",
+      "tier": 4,
+      "accord_family": "mire_rot",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 32,
+        "power_scale": 9,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_mire_dusk_drum_06",
+      "name": "Dusk Drum",
+      "school_id": "mire",
+      "tier": 1,
+      "accord_family": "mire_drum",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "attack": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_brine_frenzy_08",
+      "name": "Brine Frenzy",
+      "school_id": "mire",
+      "tier": 3,
+      "accord_family": "mire_frenzy",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_leech_snare_10",
+      "name": "Leech Snare",
+      "school_id": "mire",
+      "tier": 5,
+      "accord_family": "mire_snare",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Snare",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_mire_flood_fenlight_12",
+      "name": "Flood Fenlight",
+      "school_id": "mire",
+      "tier": 2,
+      "accord_family": "mire_fenlight",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_mire_sluice_poultice_14",
+      "name": "Sluice Poultice",
+      "school_id": "mire",
+      "tier": 4,
+      "accord_family": "mire_poultice",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 38,
+        "power_scale": 8,
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_lowtide_rot_16",
+      "name": "Lowtide Rot",
+      "school_id": "mire",
+      "tier": 1,
+      "accord_family": "mire_rot",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 20,
+        "power_scale": 6,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_mire_bog_drum_18",
+      "name": "Bog Drum",
+      "school_id": "mire",
+      "tier": 3,
+      "accord_family": "mire_drum",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "attack": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_silt_frenzy_20",
+      "name": "Silt Frenzy",
+      "school_id": "mire",
+      "tier": 5,
+      "accord_family": "mire_frenzy",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_dusk_snare_22",
+      "name": "Dusk Snare",
+      "school_id": "mire",
+      "tier": 2,
+      "accord_family": "mire_snare",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Snare",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_mire_brine_fenlight_24",
+      "name": "Brine Fenlight",
+      "school_id": "mire",
+      "tier": 4,
+      "accord_family": "mire_fenlight",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_mire_leech_poultice_26",
+      "name": "Leech Poultice",
+      "school_id": "mire",
+      "tier": 1,
+      "accord_family": "mire_poultice",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 23,
+        "power_scale": 5,
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_mire_flood_rot_28",
+      "name": "Flood Rot",
+      "school_id": "mire",
+      "tier": 3,
+      "accord_family": "mire_rot",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 28,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_lens_mirror_prism_04",
+      "name": "Mirror Prism",
+      "school_id": "lens",
+      "tier": 4,
+      "accord_family": "lens_prism",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_lens_array_ray_06",
+      "name": "Array Ray",
+      "school_id": "lens",
+      "tier": 1,
+      "accord_family": "lens_ray",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 18,
+        "power_scale": 6,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_lens_glass_facet_08",
+      "name": "Glass Facet",
+      "school_id": "lens",
+      "tier": 3,
+      "accord_family": "lens_facet",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 4,
+          "attack": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_aurora_chorus_10",
+      "name": "Aurora Chorus",
+      "school_id": "lens",
+      "tier": 5,
+      "accord_family": "lens_chorus",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_starlens_survey_12",
+      "name": "Starlens Survey",
+      "school_id": "lens",
+      "tier": 2,
+      "accord_family": "lens_survey",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_lens_focus_array_14",
+      "name": "Focus Array",
+      "school_id": "lens",
+      "tier": 4,
+      "accord_family": "lens_array",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_crown_prism_16",
+      "name": "Crown Prism",
+      "school_id": "lens",
+      "tier": 1,
+      "accord_family": "lens_prism",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_lens_halo_ray_18",
+      "name": "Halo Ray",
+      "school_id": "lens",
+      "tier": 3,
+      "accord_family": "lens_ray",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 26,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_lens_mirror_facet_20",
+      "name": "Mirror Facet",
+      "school_id": "lens",
+      "tier": 5,
+      "accord_family": "lens_facet",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 4,
+          "attack": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_array_chorus_22",
+      "name": "Array Chorus",
+      "school_id": "lens",
+      "tier": 2,
+      "accord_family": "lens_chorus",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_glass_survey_24",
+      "name": "Glass Survey",
+      "school_id": "lens",
+      "tier": 4,
+      "accord_family": "lens_survey",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_lens_aurora_array_26",
+      "name": "Aurora Array",
+      "school_id": "lens",
+      "tier": 1,
+      "accord_family": "lens_array",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_lens_starlens_prism_28",
+      "name": "Starlens Prism",
+      "school_id": "lens",
+      "tier": 3,
+      "accord_family": "lens_prism",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_root_bloom_briar_04",
+      "name": "Bloom Briar",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_briar",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Briar",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_root_canopy_graft_06",
+      "name": "Canopy Graft",
+      "school_id": "root",
+      "tier": 1,
+      "accord_family": "root_graft",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 23,
+        "power_scale": 5,
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_bark_bark_08",
+      "name": "Bark Mantle",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_bark",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 4,
+          "attack": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_loam_thorn_10",
+      "name": "Loam Thorn",
+      "school_id": "root",
+      "tier": 5,
+      "accord_family": "root_thorn",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 36,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 11
+      }
+    },
+    {
+      "id": "spell_root_green_rootway_12",
+      "name": "Green Rootway",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_rootway",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_root_branch_bloom_14",
+      "name": "Branch Bloom",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_bloom",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_wild_briar_16",
+      "name": "Wild Briar",
+      "school_id": "root",
+      "tier": 1,
+      "accord_family": "root_briar",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Briar",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_root_graft_graft_18",
+      "name": "Graft Ward",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_graft",
+      "primary_role": "ally_recovery",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "recover_ally",
+        "base_restore": 33,
+        "power_scale": 7,
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_bloom_bark_20",
+      "name": "Bloom Bark",
+      "school_id": "root",
+      "tier": 5,
+      "accord_family": "root_bark",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 4,
+          "attack": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_canopy_thorn_22",
+      "name": "Canopy Thorn",
+      "school_id": "root",
+      "tier": 2,
+      "accord_family": "root_thorn",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 24,
+        "power_scale": 7,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_root_bark_rootway_24",
+      "name": "Bark Rootway",
+      "school_id": "root",
+      "tier": 4,
+      "accord_family": "root_rootway",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_root_loam_bloom_26",
+      "name": "Loam Bloom",
+      "school_id": "root",
+      "tier": 1,
+      "accord_family": "root_bloom",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_root_green_briar_28",
+      "name": "Green Briar",
+      "school_id": "root",
+      "tier": 3,
+      "accord_family": "root_briar",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_rooted",
+          "label": "Briar",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_rivet_clause_05",
+      "name": "Rivet Clause",
+      "school_id": "furnace",
+      "tier": 5,
+      "accord_family": "furnace_clause",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 38,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 11
+      }
+    },
+    {
+      "id": "spell_furnace_brass_rite_07",
+      "name": "Brass Rite",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_rite",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_ash_mantle_09",
+      "name": "Ash Mantle",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_mantle",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_foundry_bellows_11",
+      "name": "Foundry Bellows",
+      "school_id": "furnace",
+      "tier": 1,
+      "accord_family": "furnace_bellows",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "defense": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_hammer_rail_13",
+      "name": "Hammer Rail",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_rail",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 6,
+      "target_mode": "self",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 6
+      }
+    },
+    {
+      "id": "spell_furnace_slag_clamp_15",
+      "name": "Slag Clamp",
+      "school_id": "furnace",
+      "tier": 5,
+      "accord_family": "furnace_clamp",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Clamp",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_coal_clause_17",
+      "name": "Coal Clause",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_clause",
+      "primary_role": "priority_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 26,
+        "power_scale": 7,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_kiln_rite_19",
+      "name": "Kiln Rite",
+      "school_id": "furnace",
+      "tier": 4,
+      "accord_family": "furnace_rite",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 3,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_rivet_mantle_21",
+      "name": "Rivet Mantle",
+      "school_id": "furnace",
+      "tier": 1,
+      "accord_family": "furnace_mantle",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 3,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_brass_bellows_23",
+      "name": "Brass Bellows",
+      "school_id": "furnace",
+      "tier": 3,
+      "accord_family": "furnace_bellows",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "defense": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_furnace_ash_rail_25",
+      "name": "Ash Rail",
+      "school_id": "furnace",
+      "tier": 5,
+      "accord_family": "furnace_rail",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 8,
+      "target_mode": "self",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 8
+      }
+    },
+    {
+      "id": "spell_furnace_foundry_clamp_27",
+      "name": "Foundry Clamp",
+      "school_id": "furnace",
+      "tier": 2,
+      "accord_family": "furnace_clamp",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Clamp",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_veil_mourning_mark_04",
+      "name": "Mourning Mark",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_mark",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 32,
+        "power_scale": 9,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_veil_salt_step_06",
+      "name": "Salt Step",
+      "school_id": "veil",
+      "tier": 1,
+      "accord_family": "veil_step",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "attack": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_tide_fogbind_08",
+      "name": "Tide Fogbind",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_fogbind",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Fogbind",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -3,
+            "cohesion": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_veil_mist_shroud_10",
+      "name": "Mist Shroud",
+      "school_id": "veil",
+      "tier": 5,
+      "accord_family": "veil_shroud",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "initiative": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_moon_drift_12",
+      "name": "Moon Drift",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_drift",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_veil_wraith_duel_14",
+      "name": "Wraith Duel",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_duel",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_lantern_mark_16",
+      "name": "Lantern Mark",
+      "school_id": "veil",
+      "tier": 1,
+      "accord_family": "veil_mark",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 20,
+        "power_scale": 6,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_veil_obituary_step_18",
+      "name": "Obituary Step",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_step",
+      "primary_role": "tempo_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 2,
+          "attack": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_mourning_fogbind_20",
+      "name": "Mourning Fogbind",
+      "school_id": "veil",
+      "tier": 5,
+      "accord_family": "veil_fogbind",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Fogbind",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -3,
+            "cohesion": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_veil_salt_shroud_22",
+      "name": "Salt Shroud",
+      "school_id": "veil",
+      "tier": 2,
+      "accord_family": "veil_shroud",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "initiative": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_tide_drift_24",
+      "name": "Tide Drift",
+      "school_id": "veil",
+      "tier": 4,
+      "accord_family": "veil_drift",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_veil_mist_duel_26",
+      "name": "Mist Duel",
+      "school_id": "veil",
+      "tier": 1,
+      "accord_family": "veil_duel",
+      "primary_role": "assault_buff",
+      "role_categories": [
+        "buff"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_veil_moon_mark_28",
+      "name": "Moon Mark",
+      "school_id": "veil",
+      "tier": 3,
+      "accord_family": "veil_mark",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 28,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_survey_survey_02",
+      "name": "Survey Ring",
+      "school_id": "old_measure",
+      "tier": 2,
+      "accord_family": "old_measure_survey",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_old_measure_tally_axiom_04",
+      "name": "Tally Axiom",
+      "school_id": "old_measure",
+      "tier": 4,
+      "accord_family": "old_measure_axiom",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "ally_active",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "initiative": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_compass_boundary_06",
+      "name": "Compass Boundary",
+      "school_id": "old_measure",
+      "tier": 1,
+      "accord_family": "old_measure_boundary",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Boundary",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_marker_tally_08",
+      "name": "Marker Tally",
+      "school_id": "old_measure",
+      "tier": 3,
+      "accord_family": "old_measure_tally",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "enemy_selected",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 30,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_index_correction_10",
+      "name": "Index Correction",
+      "school_id": "old_measure",
+      "tier": 5,
+      "accord_family": "old_measure_correction",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "ally_active",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_proof_pace_12",
+      "name": "Proof Pace",
+      "school_id": "old_measure",
+      "tier": 2,
+      "accord_family": "old_measure_pace",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_old_measure_count_survey_14",
+      "name": "Count Survey",
+      "school_id": "old_measure",
+      "tier": 4,
+      "accord_family": "old_measure_survey",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_old_measure_measure_axiom_16",
+      "name": "Measure Axiom",
+      "school_id": "old_measure",
+      "tier": 1,
+      "accord_family": "old_measure_axiom",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "initiative": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_survey_boundary_18",
+      "name": "Survey Boundary",
+      "school_id": "old_measure",
+      "tier": 3,
+      "accord_family": "old_measure_boundary",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 7,
+      "target_mode": "enemy_selected",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Boundary",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_tally_tally_20",
+      "name": "Tally Verdict",
+      "school_id": "old_measure",
+      "tier": 5,
+      "accord_family": "old_measure_tally",
+      "primary_role": "harry_damage",
+      "role_categories": [
+        "damage",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 8,
+      "target_mode": "enemy_selected",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 38,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          }
+        },
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 11
+      }
+    },
+    {
+      "id": "spell_old_measure_compass_correction_22",
+      "name": "Compass Correction",
+      "school_id": "old_measure",
+      "tier": 2,
+      "accord_family": "old_measure_correction",
+      "primary_role": "countermagic_ward",
+      "role_categories": [
+        "buff",
+        "countermagic"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "cleanse_ally",
+        "amount": 2,
+        "duration_rounds": 2,
+        "cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "modifiers": {
+          "defense": 2,
+          "cohesion": 2
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_marker_pace_24",
+      "name": "Marker Pace",
+      "school_id": "old_measure",
+      "tier": 4,
+      "accord_family": "old_measure_pace",
+      "primary_role": "movement_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 7,
+      "target_mode": "self",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 7
+      }
+    },
+    {
+      "id": "spell_old_measure_index_survey_26",
+      "name": "Index Survey",
+      "school_id": "old_measure",
+      "tier": 1,
+      "accord_family": "old_measure_survey",
+      "primary_role": "scouting_support",
+      "role_categories": [
+        "economy_map_utility"
+      ],
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "reveal_radius",
+        "amount": 4
+      }
+    },
+    {
+      "id": "spell_old_measure_proof_axiom_28",
+      "name": "Proof Axiom",
+      "school_id": "old_measure",
+      "tier": 3,
+      "accord_family": "old_measure_axiom",
+      "primary_role": "ally_defense",
+      "role_categories": [
+        "buff",
+        "recovery"
+      ],
+      "context": "battle",
+      "mana_cost": 6,
+      "target_mode": "ally_active",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 2,
+          "initiative": 1,
+          "cohesion": 1
+        }
+      }
+    },
+    {
+      "id": "spell_old_measure_count_boundary_30",
+      "name": "Count Boundary",
+      "school_id": "old_measure",
+      "tier": 5,
+      "accord_family": "old_measure_boundary",
+      "primary_role": "control_enemy",
+      "role_categories": [
+        "control",
+        "debuff"
+      ],
+      "context": "battle",
+      "mana_cost": 9,
+      "target_mode": "enemy_selected",
+      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "effect": {
+        "type": "control_enemy",
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Boundary",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
             "cohesion": -2
           }
         }
