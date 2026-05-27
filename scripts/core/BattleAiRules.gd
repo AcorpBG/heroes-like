@@ -5,6 +5,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
+const STATUS_ROOTED := "status_rooted"
 const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
@@ -1686,6 +1687,8 @@ static func _faction_damage_modifier(
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
 		"faction_thornwake":
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_ROOTED):
+				modifier *= 1.10
 			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 				modifier *= 1.07
 			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
@@ -1815,6 +1818,8 @@ static func _allied_status_synergy_score(battle: Dictionary, side: String, statu
 			score += 0.8
 		if _has_ability(stack, "shielding") and status_id == STATUS_HARRIED:
 			score += 0.6
+		if String(stack.get("faction_id", "")) == "faction_thornwake" and status_id == STATUS_ROOTED:
+			score += 0.8
 	return min(score, 3.0)
 
 static func _side_defending_count(battle: Dictionary, side: String) -> int:

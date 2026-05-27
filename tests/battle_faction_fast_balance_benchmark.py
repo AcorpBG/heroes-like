@@ -18,6 +18,7 @@ CONTENT = ROOT / "content"
 
 STATUS_HARRIED = "status_harried"
 STATUS_STAGGERED = "status_staggered"
+STATUS_ROOTED = "status_rooted"
 COHESION_MIN = 0
 COHESION_MAX = 10
 MOMENTUM_MAX = 4
@@ -661,7 +662,19 @@ class FastBattleBenchmark:
             damage = self._spell_damage(hero, target, effect)
             return (float(damage) / float(max(1, target.get("unit_hp", 1)))) + (1.0 - self._health_ratio(target)) * 3.0 - (mana_cost * 0.25)
         if effect_type == "control_enemy":
-            return 5.0 + (1.0 - self._health_ratio(target)) * 2.0 - (mana_cost * 0.2)
+            status_effect = effect.get("status_effect", {}) if isinstance(effect.get("status_effect", {}), dict) else {}
+            status_id = str(status_effect.get("effect_id", ""))
+            score = 3.0 + (self._attack_score(active, target, battle, True) * 0.35)
+            if status_id and not self._has_effect_id(target, battle, status_id):
+                score += 3.0
+                score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id)
+            if self._health_ratio(target) > 0.5:
+                score += 1.25
+            if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
+                score += 1.0
+            if self._stack_cohesion_total(target, battle) <= 4:
+                score += 1.0
+            return score - (mana_cost * 0.2)
         if effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
             if self._stack_has_positive_effect(active, battle):
                 return 0.0
@@ -1016,6 +1029,8 @@ class FastBattleBenchmark:
             if is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_count > 0:
                 modifier *= 1.04
         elif faction_id == "faction_thornwake":
+            if self._has_effect_id(defender, battle, STATUS_ROOTED):
+                modifier *= 1.10
             if self._has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
                 modifier *= 1.07
             if self._battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
@@ -1466,6 +1481,25 @@ class FastBattleBenchmark:
             if ability:
                 result = max(result, float(ability.get(key, default)))
         return result
+
+    def _allied_status_synergy_score(self, battle: dict[str, Any], side: str, status_id: str) -> float:
+        if not status_id:
+            return 0.0
+        score = 0.0
+        for stack in self._alive_stacks_for_side(battle, side):
+            if self._has_ability(stack, "backstab") and status_id in self._ability_by_id(stack, "backstab").get("status_ids", []):
+                score += 1.2
+            if self._has_ability(stack, "bloodrush") and status_id in self._ability_by_id(stack, "bloodrush").get("status_ids", []):
+                score += 1.0
+            if bool(stack.get("ranged", False)) and self._has_ability(stack, "volley") and status_id in self._ability_by_id(stack, "volley").get("status_ids", []):
+                score += 0.9
+            if self._has_ability(stack, "formation_guard") and status_id == STATUS_STAGGERED:
+                score += 0.8
+            if self._has_ability(stack, "shielding") and status_id == STATUS_HARRIED:
+                score += 0.6
+            if str(stack.get("faction_id", "")) == "faction_thornwake" and status_id == STATUS_ROOTED:
+                score += 0.8
+        return min(score, 3.0)
 
     def _side_has_role_mix(self, battle: dict[str, Any], side: str) -> bool:
         allies = self._alive_stacks_for_side(battle, side)

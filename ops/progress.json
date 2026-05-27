@@ -25155,31 +25155,41 @@
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
       "implementationTargets": [
         "content/units.json",
-        "content/factions.json",
+        "content/spells.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-26T20:46:57Z",
+        "updatedAt": "2026-05-27T07:32:13Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
-          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --gate",
-          "python3 tests/town_development_balance_report.py",
-          "python3 tests/validate_repo.py",
-          "jq empty ops/progress.json",
-          "git diff --check"
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "jq empty content/units.json content/spells.json content/heroes.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 2,3 --json > tmp/thornwake_focus_30_seed.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --json > tmp/thornwake_all_weeks_30_seed.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_after_thornwake.json (passed; needs_tuning)",
+          "python3 tests/town_development_balance_report.py > tmp/town_development_after_thornwake_balance.txt (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1 (passed)"
         ],
         "evidence": {
-          "content_tuning_scope": "normalized active six-faction ladder tier stats/growth, removed active-ladder ability payloads, uniform T1 growth bonus, normalized direct hero combat command/trait spikes, and extended T6/T7 pacing",
-          "previous_100_seed_baseline": "needs_tuning; 60 balance outliers; average rounds 5.18, 5.51, 5.94, 5.8",
-          "current_100_seed_status": "needs_tuning; 43 balance outliers; week side-bias points 0.8, 1.6, 3.2, 1.4; average rounds 5.4, 5.92, 6.76, 7.13",
-          "current_worst_remaining": "week 1 Brasshollow over Veilmourn 88.5; week 2 Embercourt over Mireclaw and Veilmourn over Thornwake 93.0; week 3 Embercourt over Thornwake 79.0; week 4 Brasshollow over Thornwake 71.5",
-          "remaining_failure": "dominant win rates are not yet all within 45-55, so the active goal is not complete"
+          "thornwake_root_cause": "Thornwake's signature Briar Bind/rooted loop was underrepresented in the fast benchmark control-spell scoring and status_rooted did not drive Thornwake damage payoff; Thornwake also lacked mid-tier brace/screen identity during the week 2-3 ranged pressure window.",
+          "implementation": [
+            "Added STATUS_ROOTED parity to benchmark, BattleRules, and BattleAiRules.",
+            "Ported live control-spell scoring shape into the fast benchmark and added Thornwake/rooted allied status synergy.",
+            "Made Thornwake damage use status_rooted as its primary payoff while preserving harried/staggered secondary payoff.",
+            "Gave Thornwake T2/T4 brace-root identity, T4 bark shielding against ranged pressure, and T5 pinning reach/tempo.",
+            "Improved Graft Mend recovery/defense while leaving Ardren Briar-Marshal's command stats unchanged after the defense-point what-if overbuffed Thornwake."
+          ],
+          "previous_100_seed_status_after_revert": "needs_tuning; 43 balance outliers; Thornwake aggregate 36.70%; week summaries average rounds 5.40, 5.90, 6.68, 7.26",
+          "current_100_seed_status": "needs_tuning; 33 balance outliers; no structural failures; Thornwake aggregate 50.88%; week side-bias points 1.00, 2.00, 0.67, 0.73; average rounds 5.29, 6.12, 6.66, 7.09",
+          "thornwake_pair_summary": "Thornwake week averages are 53.90, 52.30, 54.60, 42.70; the global collapse is fixed, but week 2 Veilmourn over Thornwake 73.0 and week 3 Thornwake over Sunvault 74.5 remain matchup outliers.",
+          "remaining_failure": "Full faction matrix is still needs_tuning; Veilmourn week 2 remains overtuned across several matchups and some Thornwake pair spikes remain outside 45-55."
         }
       },
-      "notes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
+      "notes": "In progress. Thornwake identity correction is implemented without returning to mirrored faction baselines. Root/control parity and mid-tier brace/screen/pinning tools move Thornwake from 36.70% aggregate to 50.88% in the 100-seed week 1-4 matrix, while preserving asymmetric unit identities. The full matrix remains needs_tuning with 33 outliers, so this slice is not complete as a final balance claim; next tuning should address Veilmourn's week-2 ranged spike and remaining pair-specific outliers.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25199,7 +25209,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-26T20:46:57Z",
+      "updatedAt": "2026-05-27T07:32:13Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
