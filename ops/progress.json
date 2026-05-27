@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "In progress. Applied a real combat content tuning slice after the side-neutral/tie-bias harness fixes: active six-faction ladder units now use normalized tier growth/stat bands, active ladder ability payloads are removed while legacy ability coverage remains for validation, faction growth bonuses are uniform T1 +1, direct hero attack/defense/initiative command modifiers are zeroed, battle traits are normalized to linekeeper, and T6/T7 health/damage pacing was adjusted for longer late-game battles. 100-seed benchmark improved from the prior 60 outliers to 43 outliers, side-bias points are 0.8/1.6/3.2/1.4, and average rounds now rise 5.4/5.92/6.76/7.13 so week 4 is longer than week 3. Balance remains needs_tuning because many faction pairs still exceed 55% dominant win rate.",
+  "currentSliceNotes": "In progress. Latest severe-outlier combat tuning reduced 65%+ rows from 10 to 8 and severity-above-65 from 29.0 to 21.5 using scoped Veilmourn T5/T6/T7 and Thornwake T7 stat changes. Full 100-seed matrix remains needs_tuning with 34 total 55%+ outliers, so this is a partial balance improvement, not final combat balance.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-26T20:46:57Z",
+  "updatedAt": "2026-05-27T20:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25162,7 +25162,7 @@
       ],
       "validation": {
         "status": "partial",
-        "updatedAt": "2026-05-27T13:12:24Z",
+        "updatedAt": "2026-05-27T20:55:00Z",
         "sliceId": "combat-faction-pair-stat-tuning-10184",
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -25191,7 +25191,10 @@
           "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --json > tmp/battle_balance_30_seed_owner_requested_brass_t2_def.json (passed; rejected 30-seed-only improvement after full run)",
           "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_owner_requested_brass_t2_def.json (passed; rejected, 33 outliers)",
           "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_owner_requested_brass_late_veil.json (passed)"
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_owner_requested_brass_late_veil.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
+          "jq empty content/units.json content/spells.json ops/progress.json (passed)"
         ],
         "evidence": {
           "prior_thornwake_identity_correction": {
@@ -25325,10 +25328,54 @@
               ]
             },
             "remaining_risk": "This is a directional owner-requested micro-tuning pass, not final balance. It keeps side bias low but leaves 32 pair outliers and deliberately rejects the tested Mireclaw early buffs for now."
+          },
+          "severe_65plus_outlier_tuning_20260527": {
+            "decision": "selected_partial_improvement_keep_slice_in_progress",
+            "implemented_changes": [
+              "Veilmourn Obituary Scribes max_damage 10 -> 9 to reduce week-2 ranged burst without lowering initiative.",
+              "Veilmourn Mirrorkeel Reavers HP 50 -> 52 and Fogbound Leviathan HP 102 -> 105 to keep late Veilmourn identity durable after ranged burst trim.",
+              "Thornwake Worldroot Bastion HP 104 -> 102 to slightly soften the week-3 Sunvault/Thornwake severe row without touching Thornwake root-control identity."
+            ],
+            "selected_artifact": "tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json",
+            "baseline_artifact": "tmp/battle_balance_100_seed_owner_requested_brass_late_veil.json",
+            "baseline_100_seed_result": {
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 32,
+              "rows_at_or_above_65_pct": 10,
+              "severity_above_55_pct": 232.0,
+              "severity_above_65_pct": 29.0,
+              "week_side_bias_points": [
+                0.27,
+                0.93,
+                2.13,
+                0.6
+              ]
+            },
+            "selected_100_seed_result": {
+              "balance_status": "needs_tuning",
+              "balance_outlier_count": 34,
+              "rows_at_or_above_65_pct": 8,
+              "severity_above_55_pct": 215.5,
+              "severity_above_65_pct": 21.5,
+              "week_side_bias_points": [
+                0.27,
+                2.53,
+                1.27,
+                0.6
+              ]
+            },
+            "rejected_what_ifs": [
+              "Fogwake Step +2 and/or Obituary Scribes initiative 6 over-nerfed Veilmourn and created severe late anti-Veilmourn rows.",
+              "Thornwake root initiative/payoff nerfs were effectively no-op or worsened the full 100-seed matrix.",
+              "Veilmourn T4 pressure trims overcorrected late Veilmourn matchups.",
+              "Thornwake T5 initiative 6 produced severe week-4 anti-Thornwake outliers.",
+              "Veilmourn T5 HP 30 plus damage trim reduced 65%+ rows in smoke but regressed total 100-seed outliers."
+            ],
+            "remaining_risk": "The severe-outlier profile improved, but total 55%+ outlier count remains needs_tuning at 34. Continue tuning from the remaining Sunvault/Thornwake, Sunvault/Veilmourn, Embercourt/Mireclaw, and Brasshollow/Sunvault rows; do not mark final combat balance complete."
           }
         }
       },
-      "notes": "In progress. Owner-requested Brasshollow/Thornwake/Veilmourn micro-tuning landed as a directional pass; tested Mireclaw early buffs were rejected because they widened the matrix. Full 100-seed selected artifact remains needs_tuning with 32 outliers.",
+      "notes": "In progress. Latest severe-outlier combat tuning reduced 65%+ rows from 10 to 8 and severity-above-65 from 29.0 to 21.5 using scoped Veilmourn T5/T6/T7 and Thornwake T7 stat changes. Full 100-seed matrix remains needs_tuning with 34 total 55%+ outliers, so this is a partial balance improvement, not final combat balance.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -35110,7 +35157,7 @@
     "notes": "Completed. Fast battle benchmark no longer has a round-cap/stalemate outcome; non-resolution is an emergency structural failure.",
     "completedAt": "2026-05-26T18:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-26T20:46:57Z",
+  "currentSliceUpdatedAt": "2026-05-27T20:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37116,9 +37163,9 @@
     "completedAt": "2026-05-26T18:18:00Z"
   },
   "validation": {
-    "status": "pass",
-    "updatedAt": "2026-05-26T18:18:00Z",
-    "sliceId": "battle-benchmark-no-round-cap-10184",
+    "status": "partial",
+    "updatedAt": "2026-05-27T20:55:00Z",
+    "sliceId": "combat-faction-pair-stat-tuning-10184",
     "commands": [
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
       "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json (passed; no stalemate_rate fields; outcomes only side_a/side_b)",
@@ -37126,7 +37173,11 @@
       "python3 tests/town_development_balance_report.py (passed; ok=true)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "git diff --check (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+      "jq empty content/units.json content/spells.json ops/progress.json (passed)"
     ],
     "evidence": {
       "scope": "Correct fast battle benchmark semantics so battles resolve like real battles instead of reporting fake round-cap stalemates.",
@@ -37202,7 +37253,51 @@
         ]
       },
       "remaining_tuning_target": "Faction-pair win-rate spread remains unbalanced; continue with combat-faction-pair-stat-tuning-10184.",
-      "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes."
+      "policy": "No benchmark round cap outcome exists. Emergency guard failures are benchmark/model bugs, not combat balance outcomes.",
+      "severe_65plus_outlier_tuning_20260527": {
+        "decision": "selected_partial_improvement_keep_slice_in_progress",
+        "implemented_changes": [
+          "Veilmourn Obituary Scribes max_damage 10 -> 9 to reduce week-2 ranged burst without lowering initiative.",
+          "Veilmourn Mirrorkeel Reavers HP 50 -> 52 and Fogbound Leviathan HP 102 -> 105 to keep late Veilmourn identity durable after ranged burst trim.",
+          "Thornwake Worldroot Bastion HP 104 -> 102 to slightly soften the week-3 Sunvault/Thornwake severe row without touching Thornwake root-control identity."
+        ],
+        "selected_artifact": "tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json",
+        "baseline_artifact": "tmp/battle_balance_100_seed_owner_requested_brass_late_veil.json",
+        "baseline_100_seed_result": {
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 32,
+          "rows_at_or_above_65_pct": 10,
+          "severity_above_55_pct": 232.0,
+          "severity_above_65_pct": 29.0,
+          "week_side_bias_points": [
+            0.27,
+            0.93,
+            2.13,
+            0.6
+          ]
+        },
+        "selected_100_seed_result": {
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 34,
+          "rows_at_or_above_65_pct": 8,
+          "severity_above_55_pct": 215.5,
+          "severity_above_65_pct": 21.5,
+          "week_side_bias_points": [
+            0.27,
+            2.53,
+            1.27,
+            0.6
+          ]
+        },
+        "rejected_what_ifs": [
+          "Fogwake Step +2 and/or Obituary Scribes initiative 6 over-nerfed Veilmourn and created severe late anti-Veilmourn rows.",
+          "Thornwake root initiative/payoff nerfs were effectively no-op or worsened the full 100-seed matrix.",
+          "Veilmourn T4 pressure trims overcorrected late Veilmourn matchups.",
+          "Thornwake T5 initiative 6 produced severe week-4 anti-Thornwake outliers.",
+          "Veilmourn T5 HP 30 plus damage trim reduced 65%+ rows in smoke but regressed total 100-seed outliers."
+        ],
+        "remaining_risk": "The severe-outlier profile improved, but total 55%+ outlier count remains needs_tuning at 34. Continue tuning from the remaining Sunvault/Thornwake, Sunvault/Veilmourn, Embercourt/Mireclaw, and Brasshollow/Sunvault rows; do not mark final combat balance complete."
+      }
     }
   }
 }
