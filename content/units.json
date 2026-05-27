@@ -1108,7 +1108,7 @@
       "faction_id": "faction_thornwake",
       "role": "melee",
       "tier": 6,
-      "hp": 50,
+      "hp": 51,
       "attack": 13,
       "defense": 11,
       "min_damage": 9,
@@ -1131,7 +1131,7 @@
       "faction_id": "faction_thornwake",
       "role": "melee",
       "tier": 7,
-      "hp": 102,
+      "hp": 104,
       "attack": 17,
       "defense": 18,
       "min_damage": 16,
@@ -1163,6 +1163,15 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Ledger Plate",
+          "description": "Cheap riveted plates blunt incoming ranged fire without adding battle-line punch.",
+          "cohesion_hold_bonus": 0,
+          "ranged_damage_multiplier": 0.95
+        }
+      ],
       "growth": 8,
       "cost": {
         "gold": 70,
@@ -1176,7 +1185,7 @@
       "faction_id": "faction_brasshollow",
       "role": "melee",
       "tier": 2,
-      "hp": 10,
+      "hp": 9,
       "attack": 5,
       "defense": 4,
       "min_damage": 3,
@@ -1185,6 +1194,15 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Rivet Hide",
+          "description": "Low-slung plating screens the pack from arrows but does not improve its bite.",
+          "cohesion_hold_bonus": 0,
+          "ranged_damage_multiplier": 0.92
+        }
+      ],
       "growth": 5,
       "cost": {
         "gold": 115,
@@ -1402,11 +1420,11 @@
       "faction_id": "faction_veilmourn",
       "role": "ranged",
       "tier": 5,
-      "hp": 25,
+      "hp": 28,
       "attack": 10,
       "defense": 8,
       "min_damage": 7,
-      "max_damage": 11,
+      "max_damage": 10,
       "speed": 3,
       "initiative": 7,
       "retaliations": 1,

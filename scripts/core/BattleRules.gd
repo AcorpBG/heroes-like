@@ -8283,8 +8283,15 @@ static func _faction_damage_modifier(
 				modifier *= 1.05
 			if is_ranged and attack_distance >= 2:
 				modifier *= 1.04
-			if _side_has_ability(battle, side, "shielding") and int(battle.get("round", 1)) >= 3:
-				modifier *= 1.04
+			var pressure_multiplier = _side_max_ability_float(
+				battle,
+				side,
+				"shielding",
+				"brasshollow_pressure_damage_multiplier",
+				1.0
+			)
+			if pressure_multiplier > 1.0 and int(battle.get("round", 1)) >= 3:
+				modifier *= pressure_multiplier
 		"faction_veilmourn":
 			if _stack_is_isolated(battle, defender):
 				modifier *= 1.08
@@ -9394,7 +9401,7 @@ static func _cohesion_base_for_unit(unit: Dictionary) -> int:
 		if not (ability is Dictionary):
 			continue
 		var ability_id = String(ability.get("id", ""))
-		if ability_id in ["brace", "formation_guard", "shielding"]:
+		if ability_id in ["brace", "formation_guard"] or (ability_id == "shielding" and int(ability.get("cohesion_hold_bonus", 0)) > 0):
 			base += 1
 			break
 	if bool(unit.get("ranged", false)) and int(unit.get("hp", 1)) <= 6:
