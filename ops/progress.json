@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "magic-town-study-full-tier-access-10184",
-  "currentSliceTitle": "Magic Town Study Full Tier Access",
+  "currentSliceId": "battle-spell-parity-counterplay-10184",
+  "currentSliceTitle": "Battle Spell Parity Counterplay",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed full town study and generated reward access for the 112-spell catalog; validation evidence recorded in the slice entry.",
+  "currentSliceNotes": "Completed fast battle benchmark town-study spellbook integration; full 100-seed all-week gate passed with spell cast evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T06:52:52Z",
+  "updatedAt": "2026-05-28T07:43:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25976,6 +25976,123 @@
       "notes": "Completed full town study and generated reward access for the 112-spell catalog; validation evidence recorded in the slice entry.",
       "updatedAt": "2026-05-28T06:52:52Z",
       "completedAt": "2026-05-28T06:52:52Z"
+    },
+    {
+      "id": "battle-spell-parity-counterplay-10184",
+      "title": "Battle Spell Parity Counterplay",
+      "status": "completed",
+      "source": "owner direction to add spells into the fast battle simulator after town-study spell availability was completed",
+      "planRef": "PLAN.md Selectable Near-Term Work / Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md",
+        "docs/spell-system-player-balance-audit.md",
+        "docs/magic-school-availability-strategic-influence-report.md"
+      ],
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "GOALS.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "The fast faction battle benchmark must grant week-appropriate town-study battle spells from the same town/faction/tier rules used by the live game, report spellbook and cast evidence, and keep no-round-cap structural behavior green.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T07:43:50Z",
+        "sliceId": "battle-spell-parity-counterplay-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_spells_in_sim.json (passed; ok=true, spell casts reported)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_30_seed_spells_in_sim.json (passed; 120 ordered rows, no structural failures)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_spells_in_sim.json (passed; 120 ordered rows, no structural failures)",
+          "python3 tests/validate_repo.py (passed; includes benchmark town-study spellbook guards)",
+          "jq empty ops/progress.json content/spells.json content/towns.json content/buildings.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Fast battle benchmark hero spellbooks now include starting battle spells plus week-appropriate representative-town study battle spells.",
+            "Town-study benchmark access mirrors faction school access, Old Measure access, town spell libraries, and unlocked spell tier by week.",
+            "Benchmark JSON now reports per-week hero spellbook counts/tiers and spell casts by school, tier, effect, and faction.",
+            "Repo validation now guards against removing town-study spellbook wiring or spell-cast reporting from the benchmark."
+          ],
+          "quick_smoke": {
+            "ok": true,
+            "ordered_rows": 30,
+            "total_spell_casts": 596
+          },
+          "full_100_seed_matrix": {
+            "ok": true,
+            "ordered_rows": 120,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 52,
+            "total_spell_casts": 42979,
+            "week_summaries": [
+              {"week": 1, "side_bias_points": 0.4, "average_rounds": 5.12},
+              {"week": 2, "side_bias_points": 1.6, "average_rounds": 6.35},
+              {"week": 3, "side_bias_points": 1.27, "average_rounds": 6.68},
+              {"week": 4, "side_bias_points": 0.0, "average_rounds": 7.57}
+            ],
+            "spell_casts_by_effect": {
+              "attack_buff": 2470,
+              "control_enemy": 33681,
+              "damage_enemy": 115,
+              "defense_buff": 3433,
+              "initiative_buff": 449,
+              "recover_ally": 2831
+            },
+            "spell_casts_by_school": {
+              "beacon": 2667,
+              "furnace": 76,
+              "lens": 134,
+              "mire": 163,
+              "old_measure": 21122,
+              "root": 15692,
+              "veil": 3125
+            },
+            "spell_casts_by_tier": {
+              "1": 37211,
+              "2": 338,
+              "3": 1993,
+              "4": 420,
+              "5": 3017
+            }
+          },
+          "remaining_balance_note": "The simulator now uses battle spells but still reports needs_tuning; spell AI over-prefers control-heavy Old Measure/Root casts, so next tuning should address spell valuation and counterplay rather than reverting to raw unit-only math.",
+          "performance_note": "Full 100-seed all-week matrix is slower after adding full learned spellbooks because each caster action evaluates many more spells."
+        }
+      },
+      "notes": "Completed fast battle benchmark town-study spellbook integration; full 100-seed all-week gate passed with spell cast evidence.",
+      "updatedAt": "2026-05-28T07:43:50Z",
+      "completedAt": "2026-05-28T07:43:50Z"
+    },
+    {
+      "id": "battle-spell-valuation-counterplay-followup-10184",
+      "title": "Battle Spell Valuation Counterplay Followup",
+      "status": "pending",
+      "source": "spell-enabled 100-seed benchmark evidence shows heavy control preference after adding full town-study spellbooks",
+      "planRef": "PLAN.md Selectable Near-Term Work / Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "scripts/core/BattleAiRules.gd as needed for parity",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Spell-enabled benchmark valuation should preserve real spell casts while reducing pathological over-selection of one control school/effect before broad unit-stat tuning treats remaining outliers as faction combat imbalance.",
+      "validation": {
+        "status": "pending",
+        "updatedAt": "2026-05-28T07:43:50Z",
+        "sliceId": "battle-spell-valuation-counterplay-followup-10184",
+        "commands": [],
+        "evidence": {}
+      },
+      "notes": "Pending. Use the spell-enabled benchmark reports; do not revert to raw unit-only combat math."
     }
   ],
   "completedImplementationEvidence": [
@@ -37534,69 +37651,47 @@
       "status": "pass",
       "updatedAt": "2026-05-28T06:52:52Z",
       "summary": "Full town study access passed: all 15 authored towns reach spell tier 5, all 112 authored spells are reachable through fully developed town study, and generated spell rewards cover tiers 1-5 across every school."
+    },
+    {
+      "sliceId": "battle-spell-parity-counterplay-10184",
+      "status": "pass",
+      "updatedAt": "2026-05-28T07:43:50Z",
+      "summary": "Fast battle benchmark spell integration passed: week-appropriate town-study battle spells are simulated and the full 100-seed all-week matrix completed with 42,979 spell casts and no structural failures."
     }
   ],
   "currentSlice": {
-    "id": "magic-town-study-full-tier-access-10184",
-    "title": "Magic Town Study Full Tier Access",
+    "id": "battle-spell-parity-counterplay-10184",
+    "title": "Battle Spell Parity Counterplay",
     "status": "completed",
-    "updatedAt": "2026-05-28T06:52:52Z",
-    "notes": "Completed full town study and generated reward access for the 112-spell catalog. This does not claim final spell balance, school mastery, rare-resource casting costs, or caster units.",
-    "completedAt": "2026-05-28T06:52:52Z"
+    "updatedAt": "2026-05-28T07:43:50Z",
+    "notes": "Completed fast battle benchmark town-study spellbook integration; full 100-seed all-week gate passed with spell cast evidence.",
+    "completedAt": "2026-05-28T07:43:50Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T06:52:52Z",
-    "sliceId": "magic-town-study-full-tier-access-10184",
+    "updatedAt": "2026-05-28T07:43:50Z",
+    "sliceId": "battle-spell-parity-counterplay-10184",
     "commands": [
-      "python3 tests/validate_repo.py (passed; includes full spell catalog town-study and RMG reward gates)",
-      "jq empty ops/progress.json content/buildings.json content/random_map_generator_data_model.json content/spells.json (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld, 16 per school)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "godot4 --headless --path . --quit-after 30 tests/town_development_runtime_balance_report.tscn (passed; all 15 authored towns within target 30)",
-      "godot4 --headless --path . --quit-after 20 tests/random_map_object_pool_value_weighting_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_full_town_spell_access.json (passed; ok=true quick smoke)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_spells_in_sim.json (passed; ok=true, 596 spell casts)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_30_seed_spells_in_sim.json (passed; 120 ordered rows, 12,868 spell casts)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_spells_in_sim.json (passed; 120 ordered rows, 42,979 spell casts)",
+      "python3 tests/validate_repo.py (passed; includes benchmark town-study spellbook guards)",
+      "jq empty ops/progress.json content/spells.json content/towns.json content/buildings.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
-      "catalog": {
-        "spell_count": 112,
-        "battle_spells": 90,
-        "overworld_spells": 22,
-        "school_counts": {
-          "beacon": 16,
-          "furnace": 16,
-          "lens": 16,
-          "mire": 16,
-          "old_measure": 16,
-          "root": 16,
-          "veil": 16
-        }
-      },
-      "town_access": {
-        "authored_town_count": 15,
-        "minimum_max_spell_tier": 5,
-        "town_study_reachable_spell_count": 112,
-        "missing_town_study_spell_count": 0
-      },
-      "rmg_spell_rewards": {
-        "spell_reward_candidate_count": 38,
-        "tier_counts": {
-          "1": 9,
-          "2": 8,
-          "3": 7,
-          "4": 7,
-          "5": 7
-        }
-      },
       "implemented": [
-        "Promoted existing town magic/support buildings to tiers 3-5 so every authored town reaches tier 5 study.",
-        "Broadened generated spell-access reward candidates to tier 1-5 representatives across every school.",
-        "Added repo validation for full town-study reachability and generated spell reward coverage."
+        "Fast benchmark hero spellbooks now combine starting battle spells with week-appropriate town-study battle spells.",
+        "Benchmark reports per-week spellbook tiers/counts and spell casts by school, tier, effect, and faction.",
+        "Full 100-seed all-week matrix completed without structural failures."
       ],
-      "boundaries": "No hero combat stats, unit stats, final spell balance, school mastery, caster-unit system, or rare-resource spell-cast costs changed."
+      "full_100_seed_matrix": {
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 52,
+        "total_spell_casts": 42979
+      },
+      "boundaries": "This adds spell simulation to the fast benchmark. It does not claim final spell valuation, spell counterplay, caster-unit design, or final faction balance."
     }
   }
 }

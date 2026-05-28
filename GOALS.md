@@ -12,7 +12,7 @@ The current focus is Phase 5 - Playable Alpha Baseline. Campaign production rema
 
 ## Current Immediate Goal - Magic Availability
 
-Latest completed progress slice: `magic-town-study-full-tier-access-10184`
+Latest completed progress slice: `battle-spell-parity-counterplay-10184`
 
 Improve spell availability, magic-school variety, and strategic influence before trying to balance magic-focused heroes against raw-combat heroes.
 
@@ -25,6 +25,8 @@ Target state:
 - make every authored town reach tier 5 spell study through normal town development;
 - prove all 112 authored spells are reachable through fully developed town study access;
 - broaden generated-map spell rewards with tier 1-5 school coverage instead of only a few low-tier spell shrines;
+- make the fast battle simulator use starting battle spells plus week-appropriate town-study battle spells before more faction stat tuning;
+- report battle-simulator spell casts by school, tier, effect, and faction so magic influence is visible in balance evidence;
 - make town study expose the expanded school catalog by faction/tier, while preserving explicit town spell-library entries;
 - broaden field-magic content beyond Beacon route spells;
 - activate Old Measure with a first real strategic spell;

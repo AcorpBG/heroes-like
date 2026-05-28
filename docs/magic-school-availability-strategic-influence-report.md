@@ -31,6 +31,7 @@ This slice improves spell availability, magic-school variety, and strategic infl
 - Fully developed authored towns now reach tier 5 spell study through existing faction magic/support buildings.
 - All 112 authored spells are reachable through town study after full town development.
 - Native RMG spell-access rewards now include tier 1-5 representatives across every school.
+- The fast battle benchmark now consumes the town-study spellbook model by week, so combat balance evidence is no longer limited to each hero's starting spells.
 - Added first live Old Measure spell:
   - `spell_survey_chain` / Survey Chain
   - school: `old_measure`

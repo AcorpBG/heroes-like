@@ -23,9 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-Current implementation status:
-- Current implementation slice: none selected after completing `magic-town-study-full-tier-access-10184`.
-- Latest completed slice: `magic-town-study-full-tier-access-10184`.
+- Current implementation slice: none selected after completing `battle-spell-parity-counterplay-10184`.
+- Latest completed slice: `battle-spell-parity-counterplay-10184`.
+- Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
 - Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
@@ -56,8 +56,8 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
-- `battle-spell-parity-counterplay-10184`: use `docs/spell-system-player-balance-audit.md` to fix benchmark/live spell valuation parity, spell decision traces, ally spell targeting, and targeted counterplay before further broad stat tuning.
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
+- `battle-spell-valuation-counterplay-followup-10184`: tune spell AI valuation and counterplay from the spell-enabled benchmark evidence, especially heavy control preference, before treating the new outlier set as pure unit-stat imbalance.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
 - `rmg-small-generalization-hardening-10184`: harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.
@@ -121,6 +121,8 @@ The selected battle-balance slice is a fast Python benchmark, not a final combat
 Required benchmark shape:
 - pure Python, no Godot runtime for normal benchmark runs;
 - live `content/*.json` faction, unit, hero, spell, town, and building data;
+- hero spellbooks should include starting battle spells plus week-appropriate town-study battle spells from faction school access and unlocked town spell tier;
+- reports should expose per-week spellbook coverage and actual spell-cast summaries by school, tier, effect, and faction;
 - ordered non-self faction matrix for all six factions;
 - deterministic seed count, with `--quick`, `--seeds`, `--weeks`, `--json`, and `--gate` options;
 - week 1 army snapshots: initial starting growth plus one recruited week capped at T1-T3;
