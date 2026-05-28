@@ -54,6 +54,12 @@ Tier-band update after catalog breadth:
 - Tier 5 spells are expensive very-strong effects.
 - Validation now enforces tiered mana, damage, power scaling, wounded bonus, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius bands.
 
+Town/RMG access update:
+
+- Every authored town now reaches tier 5 spell study through its development tree.
+- All 112 authored spells are reachable through fully developed town study access.
+- Generated spell rewards include tier 1-5 candidates across every school, while town development remains the full-catalog access path.
+
 ## Main Findings
 
 ### 1. Sunvault Is Not Simply Weak

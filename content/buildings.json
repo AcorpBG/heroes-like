@@ -911,7 +911,7 @@
       "id": "building_embercourt_beacon_court",
       "name": "Beacon Court",
       "category": "magic",
-      "description": "Signal courts train lectors to read beacon law across the battlefield.",
+      "description": "Signal courts train lectors to read beacon law across the battlefield. It opens tier 3 town spell study.",
       "cost": {
         "gold": 2250,
         "wood": 1,
@@ -936,7 +936,7 @@
         "unit_embercourt_beacon_lectors": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_embercourt_drake_sluice",
@@ -1075,7 +1075,7 @@
       "id": "building_mireclaw_sporewake_shrine",
       "name": "Sporewake Shrine",
       "category": "magic",
-      "description": "Rot-lit shrines call chanters who deny recovery and mark wounded prey.",
+      "description": "Rot-lit shrines call chanters who deny recovery and mark wounded prey. It opens tier 3 town spell study.",
       "cost": {
         "gold": 2250,
         "wood": 1,
@@ -1100,7 +1100,7 @@
         "unit_mireclaw_sporewake_chanters": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_mireclaw_floodtide_forge",
@@ -1280,7 +1280,7 @@
       "id": "building_sunvault_zenith_observatory",
       "name": "Zenith Observatory",
       "category": "magic",
-      "description": "Zenith instruments map solar stride routes and firing geometry.",
+      "description": "Zenith instruments map solar stride routes and firing geometry. It opens tier 3 town spell study.",
       "cost": {
         "gold": 2250,
         "wood": 1,
@@ -1305,7 +1305,7 @@
         "unit_sunvault_solar_array_striders": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_sunvault_aurora_spire",
@@ -1341,7 +1341,7 @@
       "id": "building_sunvault_daybreak_matrix",
       "name": "Daybreak Colossus Matrix",
       "category": "magic",
-      "description": "A grand matrix that carries the Daybreak Colossus blueprint.",
+      "description": "A grand matrix that carries the Daybreak Colossus blueprint. It opens tier 5 town spell study.",
       "cost": {
         "gold": 3290,
         "wood": 4,
@@ -1366,7 +1366,7 @@
         "unit_sunvault_daybreak_colossus": 4
       },
       "readiness_bonus": 10,
-      "spell_tier": 2
+      "spell_tier": 5
     },
     {
       "id": "building_thornwake_seed_vault",
@@ -1418,7 +1418,7 @@
       "id": "building_thornwake_sporeglass_hothouse",
       "name": "Sporeglass Hothouse",
       "category": "magic",
-      "description": "Warm seedglass houses raise menders for recovery work.",
+      "description": "Warm seedglass houses raise menders for recovery work. It opens tier 3 town spell study.",
       "cost": {
         "gold": 1610,
         "wood": 1
@@ -1436,7 +1436,7 @@
         "unit_thornwake_sporeglass_menders": 6
       },
       "readiness_bonus": 6,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_thornwake_barkmantle_run",
@@ -1605,7 +1605,7 @@
       "id": "building_thornwake_pollen_litany",
       "name": "Pollen Litany",
       "category": "magic",
-      "description": "Choirs of grafted pollen turn Thornwake spell study toward recovery and bind rites.",
+      "description": "Choirs of grafted pollen turn Thornwake spell study toward recovery and bind rites. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 2
@@ -1616,7 +1616,7 @@
         "building_thornwake_sporeglass_hothouse"
       ],
       "readiness_bonus": 4,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_thornwake_bramblewall_coppice",
@@ -1733,7 +1733,7 @@
       "id": "building_brasshollow_boiler_cathedral",
       "name": "Boiler Cathedral",
       "category": "magic",
-      "description": "Furnace chapels consecrate Boiler Rivetcasters and heat rites.",
+      "description": "Furnace chapels consecrate Boiler Rivetcasters and heat rites. It opens tier 3 town spell study.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -1752,7 +1752,7 @@
         "unit_brasshollow_boiler_rivetcasters": 6
       },
       "readiness_bonus": 7,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_brasshollow_pressure_rail",
@@ -1895,7 +1895,7 @@
       "id": "building_brasshollow_heatwright_vestry",
       "name": "Heatwright Vestry",
       "category": "magic",
-      "description": "Heatwright vestries formalize pressure rites and safe boiler miracles.",
+      "description": "Heatwright vestries formalize pressure rites and safe boiler miracles. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1700,
         "wood": 1,
@@ -1907,7 +1907,7 @@
         "building_brasshollow_boiler_cathedral"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_brasshollow_gauge_arsenal",
@@ -2049,7 +2049,7 @@
       "id": "building_veilmourn_obituary_vault",
       "name": "Obituary Vault",
       "category": "magic",
-      "description": "Obituary vaults train scribes to mark and weaken the doomed.",
+      "description": "Obituary vaults train scribes to mark and weaken the doomed. It opens tier 3 town spell study.",
       "cost": {
         "gold": 2250,
         "wood": 1,
@@ -2075,7 +2075,7 @@
         "unit_veilmourn_obituary_scribes": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 1
+      "spell_tier": 3
     },
     {
       "id": "building_veilmourn_mistgate_slip",
@@ -2183,7 +2183,7 @@
       "id": "building_veilmourn_wake_oratory",
       "name": "Wake Oratory",
       "category": "magic",
-      "description": "Wake speakers rehearse obituary charms, fog steps, and morale-draining bell rites.",
+      "description": "Wake speakers rehearse obituary charms, fog steps, and morale-draining bell rites. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 1,
@@ -2195,7 +2195,7 @@
         "building_veilmourn_obituary_vault"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_veilmourn_black_sail_loft",
@@ -2281,7 +2281,7 @@
       "id": "building_thornwake_spore_oath_chantry",
       "name": "Spore-Oath Chantry",
       "category": "magic",
-      "description": "Chantries bind pollen vows, mender rites, and root whispers into a slower but tougher spell discipline.",
+      "description": "Chantries bind pollen vows, mender rites, and root whispers into a slower but tougher spell discipline. It opens tier 5 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 2
@@ -2293,7 +2293,7 @@
         "building_thornwake_bramble_marshal_moot"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 5
     },
     {
       "id": "building_thornwake_thornwarden_husk_yard",
@@ -2380,7 +2380,7 @@
       "id": "building_brasshollow_caliper_sanctum",
       "name": "Caliper Sanctum",
       "category": "magic",
-      "description": "Measured sanctums teach heat rites, stone clauses, and furnace prayers with exacting contract cadence.",
+      "description": "Measured sanctums teach heat rites, stone clauses, and furnace prayers with exacting contract cadence. It opens tier 5 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 1,
@@ -2393,7 +2393,7 @@
         "building_brasshollow_foreman_clausehouse"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 5
     },
     {
       "id": "building_brasshollow_redline_assembly_yard",
@@ -2480,7 +2480,7 @@
       "id": "building_veilmourn_tideglass_chapel",
       "name": "Tideglass Chapel",
       "category": "magic",
-      "description": "Tideglass chapels rehearse obituary marks, fog steps, and memory bells for disciplined raiding magic.",
+      "description": "Tideglass chapels rehearse obituary marks, fog steps, and memory bells for disciplined raiding magic. It opens tier 5 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 1,
@@ -2493,7 +2493,7 @@
         "building_veilmourn_mourner_pilot_guild"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 5
     },
     {
       "id": "building_veilmourn_drowned_map_room",
@@ -2797,7 +2797,7 @@
       "id": "building_embercourt_lantern_court",
       "name": "Lantern Court",
       "category": "magic",
-      "description": "Civic lantern judges rehearse warding oaths and battlefield injunctions beside the town archive.",
+      "description": "Civic lantern judges rehearse warding oaths and battlefield injunctions beside the town archive. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 1,
@@ -2810,13 +2810,13 @@
         "building_embercourt_beacon_writs"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_embercourt_relief_quay",
       "name": "Relief Quay",
       "category": "support",
-      "description": "A chartered quay stages barges, spare bows, and flood-pike crews for disciplined counterpressure.",
+      "description": "A chartered quay stages barges, spare bows, and flood-pike crews for disciplined counterpressure. It opens tier 5 town spell study.",
       "cost": {
         "gold": 2150,
         "wood": 2,
@@ -2832,7 +2832,8 @@
         "gold": 160
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "spell_tier": 5
     },
     {
       "id": "building_embercourt_charter_flame",
@@ -2901,7 +2902,7 @@
       "id": "building_mireclaw_bog_oracle_nest",
       "name": "Bog Oracle Nest",
       "category": "magic",
-      "description": "Mud-sunk oracle nests teach drum signs, rot wards, and bloodwake omens to the town shamans.",
+      "description": "Mud-sunk oracle nests teach drum signs, rot wards, and bloodwake omens to the town shamans. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 2
@@ -2913,13 +2914,13 @@
         "building_mireclaw_silt_watch"
       ],
       "readiness_bonus": 4,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_mireclaw_boneboom_palisade",
       "name": "Boneboom Palisade",
       "category": "support",
-      "description": "Hollow-bone booms and sinking palisades make every assault path louder, slower, and bloodier.",
+      "description": "Hollow-bone booms and sinking palisades make every assault path louder, slower, and bloodier. It opens tier 5 town spell study.",
       "cost": {
         "gold": 2150,
         "wood": 2,
@@ -2932,7 +2933,8 @@
         "building_mireclaw_bog_oracle_nest"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "spell_tier": 5
     },
     {
       "id": "building_mireclaw_oathmire_court",
@@ -3000,7 +3002,7 @@
       "id": "building_sunvault_prism_oratory",
       "name": "Prism Oratory",
       "category": "magic",
-      "description": "Orators tune light-chants through duel mirrors and teach relay mages to hold formation under fire.",
+      "description": "Orators tune light-chants through duel mirrors and teach relay mages to hold formation under fire. It opens tier 4 town spell study.",
       "cost": {
         "gold": 1650,
         "wood": 1,
@@ -3013,7 +3015,7 @@
         "building_sunvault_relay_scribes"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 2
+      "spell_tier": 4
     },
     {
       "id": "building_sunvault_halo_battery_yard",
