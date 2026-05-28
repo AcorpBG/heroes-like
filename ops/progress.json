@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-thornwake-week2-buff-10184",
-  "currentSliceTitle": "Combat Thornwake Week 2 Buff",
+  "currentSliceId": "combat-mireclaw-late-tank-buff-10184",
+  "currentSliceTitle": "Combat Mireclaw Late Tank Buff",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Thornwake week 2 is no longer catastrophically weak; remaining faction-pair outliers are tracked as balance debt rather than structural benchmark failures.",
+  "currentSliceNotes": "Completed. Mireclaw T6/T7 HP tankiness was increased by about 10%; Week 4 benchmark passed but Veilmourn remains dominant in that pair.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T13:33:00Z",
+  "updatedAt": "2026-05-28T14:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26588,6 +26588,69 @@
       "startedAt": "2026-05-28T12:30:00Z",
       "updatedAt": "2026-05-28T13:33:00Z",
       "completedAt": "2026-05-28T13:33:00Z"
+    },
+    {
+      "id": "combat-mireclaw-late-tank-buff-10184",
+      "title": "Combat Mireclaw Late Tank Buff",
+      "status": "completed",
+      "source": "owner direction to make Mireclaw T6 and T7 stacks 10% more tanky after Week 4 Veilmourn dominance analysis",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Mireclaw T6/T7 durability must be increased by about 10% without changing lower-tier economy or faction identity; repo validation and Week 4 fast benchmark evidence must pass and show the impact.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T14:00:00Z",
+        "sliceId": "combat-mireclaw-late-tank-buff-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+            "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+          ],
+          "unit_after": {
+            "unit_mireclaw_gorefen_rippers": {
+              "tier": 6,
+              "hp": 55,
+              "role": "melee"
+            },
+            "unit_mireclaw_drowned_antler_sovereign": {
+              "tier": 7,
+              "hp": 112,
+              "role": "melee"
+            }
+          },
+          "benchmark_impact": {
+            "week4_balance_status": "needs_tuning",
+            "week4_outliers": 8,
+            "week4_side_bias_points": 1.2,
+            "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+            "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+            "ordered_rows_after": [
+              "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+              "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+            ],
+            "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+          }
+        }
+      },
+      "notes": "Completed. Mireclaw T6/T7 HP tankiness was increased by about 10%; Week 4 benchmark passed but Veilmourn remains dominant in that pair.",
+      "startedAt": "2026-05-28T13:50:00Z",
+      "updatedAt": "2026-05-28T14:00:00Z",
+      "completedAt": "2026-05-28T14:00:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -33434,6 +33497,61 @@
           }
         }
       }
+    },
+    {
+      "id": "combat-mireclaw-late-tank-buff-10184",
+      "title": "Combat Mireclaw Late Tank Buff",
+      "completedAt": "2026-05-28T14:00:00Z",
+      "summary": "Completed. Mireclaw T6/T7 stacks are about 10% more tanky via HP increases. Focused Week 4 benchmark passed structurally; Mireclaw vs Veilmourn moved from 92.5% Veilmourn to 90.5% Veilmourn, so the remaining outlier is not solved by HP alone.",
+      "sourceRefs": [
+        "PLAN.md",
+        "GOALS.md",
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T14:00:00Z",
+        "sliceId": "combat-mireclaw-late-tank-buff-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+            "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+          ],
+          "unit_after": {
+            "unit_mireclaw_gorefen_rippers": {
+              "tier": 6,
+              "hp": 55,
+              "role": "melee"
+            },
+            "unit_mireclaw_drowned_antler_sovereign": {
+              "tier": 7,
+              "hp": 112,
+              "role": "melee"
+            }
+          },
+          "benchmark_impact": {
+            "week4_balance_status": "needs_tuning",
+            "week4_outliers": 8,
+            "week4_side_bias_points": 1.2,
+            "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+            "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+            "ordered_rows_after": [
+              "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+              "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+            ],
+            "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+          }
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -36236,106 +36354,48 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T13:33:00Z",
-    "sliceId": "combat-thornwake-week2-buff-10184",
+    "updatedAt": "2026-05-28T14:00:00Z",
+    "sliceId": "combat-mireclaw-late-tank-buff-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
       "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
-        "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
-        "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+        "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+        "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
       ],
       "unit_after": {
-        "unit_thornwake_barkmantle_rams": {
-          "tier": 4,
-          "hp": 26,
-          "defense": 10,
-          "ranged_damage_multiplier": 0.62,
-          "engaged_damage_multiplier": 1.12,
-          "harried_damage_multiplier": 1.12
-        },
-        "unit_thornwake_stagknot_runners": {
-          "tier": 5,
-          "hp": 36,
-          "attack": 11,
-          "defense": 11,
-          "min_damage": 8,
-          "max_damage": 13,
-          "speed": 6,
-          "initiative": 8,
-          "distance_one_multiplier": 1.14
-        },
-        "unit_thornwake_graft_matriarchs": {
+        "unit_mireclaw_gorefen_rippers": {
           "tier": 6,
-          "role": "ranged",
-          "hp": 40,
-          "attack": 12,
-          "defense": 9,
-          "min_damage": 8,
-          "max_damage": 12,
-          "initiative": 6,
-          "shots": 4
+          "hp": 55,
+          "role": "melee"
         },
-        "unit_thornwake_worldroot_bastion": {
+        "unit_mireclaw_drowned_antler_sovereign": {
           "tier": 7,
-          "hp": 92,
-          "attack": 16,
-          "defense": 16,
-          "min_damage": 14,
-          "max_damage": 23
+          "hp": 112,
+          "role": "melee"
         }
       },
       "benchmark_impact": {
-        "before_outliers": 43,
-        "after_outliers": 40,
-        "after_balance_status": "needs_tuning",
-        "after_week_summaries": [
-          {
-            "week": 1,
-            "side_bias_points": 0.07,
-            "average_rounds": 5.54
-          },
-          {
-            "week": 2,
-            "side_bias_points": 1.93,
-            "average_rounds": 6.17
-          },
-          {
-            "week": 3,
-            "side_bias_points": 1.27,
-            "average_rounds": 6.69
-          },
-          {
-            "week": 4,
-            "side_bias_points": 1.47,
-            "average_rounds": 7.44
-          }
+        "week4_balance_status": "needs_tuning",
+        "week4_outliers": 8,
+        "week4_side_bias_points": 1.2,
+        "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+        "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+        "ordered_rows_after": [
+          "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+          "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
         ],
-        "thornwake_week2_changes": [
-          "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
-          "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
-          "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
-          "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
-          "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
-        ],
-        "late_side_effects": [
-          "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
-          "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
-          "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
-          "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
-        ]
+        "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
       }
     }
   },
-  "active_slice": "combat-thornwake-week2-buff-10184",
-  "currentSliceUpdatedAt": "2026-05-28T13:33:00Z",
+  "active_slice": "combat-mireclaw-late-tank-buff-10184",
+  "currentSliceUpdatedAt": "2026-05-28T14:00:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38604,13 +38664,55 @@
           ]
         }
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-28T14:00:00Z",
+      "sliceId": "combat-mireclaw-late-tank-buff-10184",
+      "commands": [
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+          "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+        ],
+        "unit_after": {
+          "unit_mireclaw_gorefen_rippers": {
+            "tier": 6,
+            "hp": 55,
+            "role": "melee"
+          },
+          "unit_mireclaw_drowned_antler_sovereign": {
+            "tier": 7,
+            "hp": 112,
+            "role": "melee"
+          }
+        },
+        "benchmark_impact": {
+          "week4_balance_status": "needs_tuning",
+          "week4_outliers": 8,
+          "week4_side_bias_points": 1.2,
+          "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+          "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+          "ordered_rows_after": [
+            "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+            "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+          ],
+          "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+        }
+      }
     }
   ],
   "currentSlice": {
-    "id": "combat-thornwake-week2-buff-10184",
-    "title": "Combat Thornwake Week 2 Buff",
+    "id": "combat-mireclaw-late-tank-buff-10184",
+    "title": "Combat Mireclaw Late Tank Buff",
     "status": "completed",
-    "source": "owner direction to buff Thornwake week 2 after the T6 ranged correction left week 2 unchanged and still severely weak",
+    "source": "owner direction to make Mireclaw T6 and T7 stacks 10% more tanky after Week 4 Veilmourn dominance analysis",
     "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
     "sourceDocs": [
       "PLAN.md",
@@ -38621,209 +38723,93 @@
       "tests/battle_faction_fast_balance_benchmark.py as validation surface",
       "ops/progress.json"
     ],
-    "completionCriteria": "Thornwake week-2 army profile must receive a narrow T4/T5 buff without changing week-1 or T6/T7 units; repo validation and fast battle benchmark evidence must pass and show the week-2 impact.",
+    "completionCriteria": "Mireclaw T6/T7 durability must be increased by about 10% without changing lower-tier economy or faction identity; repo validation and Week 4 fast benchmark evidence must pass and show the impact.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T13:33:00Z",
-      "sliceId": "combat-thornwake-week2-buff-10184",
+      "updatedAt": "2026-05-28T14:00:00Z",
+      "sliceId": "combat-mireclaw-late-tank-buff-10184",
       "commands": [
         "python3 tests/validate_repo.py (passed)",
         "jq empty content/units.json ops/progress.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
-          "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
-          "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+          "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+          "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
         ],
         "unit_after": {
-          "unit_thornwake_barkmantle_rams": {
-            "tier": 4,
-            "hp": 26,
-            "defense": 10,
-            "ranged_damage_multiplier": 0.62,
-            "engaged_damage_multiplier": 1.12,
-            "harried_damage_multiplier": 1.12
-          },
-          "unit_thornwake_stagknot_runners": {
-            "tier": 5,
-            "hp": 36,
-            "attack": 11,
-            "defense": 11,
-            "min_damage": 8,
-            "max_damage": 13,
-            "speed": 6,
-            "initiative": 8,
-            "distance_one_multiplier": 1.14
-          },
-          "unit_thornwake_graft_matriarchs": {
+          "unit_mireclaw_gorefen_rippers": {
             "tier": 6,
-            "role": "ranged",
-            "hp": 40,
-            "attack": 12,
-            "defense": 9,
-            "min_damage": 8,
-            "max_damage": 12,
-            "initiative": 6,
-            "shots": 4
+            "hp": 55,
+            "role": "melee"
           },
-          "unit_thornwake_worldroot_bastion": {
+          "unit_mireclaw_drowned_antler_sovereign": {
             "tier": 7,
-            "hp": 92,
-            "attack": 16,
-            "defense": 16,
-            "min_damage": 14,
-            "max_damage": 23
+            "hp": 112,
+            "role": "melee"
           }
         },
         "benchmark_impact": {
-          "before_outliers": 43,
-          "after_outliers": 40,
-          "after_balance_status": "needs_tuning",
-          "after_week_summaries": [
-            {
-              "week": 1,
-              "side_bias_points": 0.07,
-              "average_rounds": 5.54
-            },
-            {
-              "week": 2,
-              "side_bias_points": 1.93,
-              "average_rounds": 6.17
-            },
-            {
-              "week": 3,
-              "side_bias_points": 1.27,
-              "average_rounds": 6.69
-            },
-            {
-              "week": 4,
-              "side_bias_points": 1.47,
-              "average_rounds": 7.44
-            }
+          "week4_balance_status": "needs_tuning",
+          "week4_outliers": 8,
+          "week4_side_bias_points": 1.2,
+          "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+          "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+          "ordered_rows_after": [
+            "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+            "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
           ],
-          "thornwake_week2_changes": [
-            "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
-            "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
-            "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
-            "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
-            "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
-          ],
-          "late_side_effects": [
-            "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
-            "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
-            "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
-            "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
-          ]
+          "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
         }
       }
     },
-    "notes": "Completed. Thornwake week 2 is no longer catastrophically weak; remaining faction-pair outliers are tracked as balance debt rather than structural benchmark failures.",
-    "startedAt": "2026-05-28T12:30:00Z",
-    "updatedAt": "2026-05-28T13:33:00Z",
-    "completedAt": "2026-05-28T13:33:00Z"
+    "notes": "Completed. Mireclaw T6/T7 HP tankiness was increased by about 10%; Week 4 benchmark passed but Veilmourn remains dominant in that pair.",
+    "startedAt": "2026-05-28T13:50:00Z",
+    "updatedAt": "2026-05-28T14:00:00Z",
+    "completedAt": "2026-05-28T14:00:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T13:33:00Z",
-    "sliceId": "combat-thornwake-week2-buff-10184",
+    "updatedAt": "2026-05-28T14:00:00Z",
+    "sliceId": "combat-mireclaw-late-tank-buff-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
       "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
-        "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
-        "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+        "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
+        "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
       ],
       "unit_after": {
-        "unit_thornwake_barkmantle_rams": {
-          "tier": 4,
-          "hp": 26,
-          "defense": 10,
-          "ranged_damage_multiplier": 0.62,
-          "engaged_damage_multiplier": 1.12,
-          "harried_damage_multiplier": 1.12
-        },
-        "unit_thornwake_stagknot_runners": {
-          "tier": 5,
-          "hp": 36,
-          "attack": 11,
-          "defense": 11,
-          "min_damage": 8,
-          "max_damage": 13,
-          "speed": 6,
-          "initiative": 8,
-          "distance_one_multiplier": 1.14
-        },
-        "unit_thornwake_graft_matriarchs": {
+        "unit_mireclaw_gorefen_rippers": {
           "tier": 6,
-          "role": "ranged",
-          "hp": 40,
-          "attack": 12,
-          "defense": 9,
-          "min_damage": 8,
-          "max_damage": 12,
-          "initiative": 6,
-          "shots": 4
+          "hp": 55,
+          "role": "melee"
         },
-        "unit_thornwake_worldroot_bastion": {
+        "unit_mireclaw_drowned_antler_sovereign": {
           "tier": 7,
-          "hp": 92,
-          "attack": 16,
-          "defense": 16,
-          "min_damage": 14,
-          "max_damage": 23
+          "hp": 112,
+          "role": "melee"
         }
       },
       "benchmark_impact": {
-        "before_outliers": 43,
-        "after_outliers": 40,
-        "after_balance_status": "needs_tuning",
-        "after_week_summaries": [
-          {
-            "week": 1,
-            "side_bias_points": 0.07,
-            "average_rounds": 5.54
-          },
-          {
-            "week": 2,
-            "side_bias_points": 1.93,
-            "average_rounds": 6.17
-          },
-          {
-            "week": 3,
-            "side_bias_points": 1.27,
-            "average_rounds": 6.69
-          },
-          {
-            "week": 4,
-            "side_bias_points": 1.47,
-            "average_rounds": 7.44
-          }
+        "week4_balance_status": "needs_tuning",
+        "week4_outliers": 8,
+        "week4_side_bias_points": 1.2,
+        "mireclaw_veilmourn_before": "Veilmourn 92.5%",
+        "mireclaw_veilmourn_after": "Veilmourn 90.5%",
+        "ordered_rows_after": [
+          "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
+          "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
         ],
-        "thornwake_week2_changes": [
-          "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
-          "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
-          "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
-          "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
-          "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
-        ],
-        "late_side_effects": [
-          "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
-          "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
-          "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
-          "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
-        ]
+        "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
       }
     }
   }
