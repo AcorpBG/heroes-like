@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
-  "currentSliceTitle": "Combat Mireclaw Late Anti-Ranged Counter",
+  "currentSliceId": "hero-roster-live-diversity-10184",
+  "currentSliceTitle": "Hero Roster Live Diversity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Mireclaw T6/T7 gained targeted anti-ranged shielding; full benchmark outliers improved 40 to 39 and Week 4 Veilmourn hard-counter dropped to 66.0%. Remaining tuning debt is recorded.",
+  "currentSliceNotes": "Completed. All six factions now have ten live validated heroes, diverse supported command/trait/specialty profiles, and curated-order benchmark representative selection; focused roster, repo, JSON, diff, and 100-seed benchmark validation passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T14:55:00Z",
+  "updatedAt": "2026-05-28T19:37:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26732,6 +26732,135 @@
       "startedAt": "2026-05-28T14:20:00Z",
       "updatedAt": "2026-05-28T14:55:00Z",
       "completedAt": "2026-05-28T14:55:00Z"
+    },
+    {
+      "id": "hero-roster-live-diversity-10184",
+      "title": "Hero Roster Live Diversity",
+      "status": "completed",
+      "source": "owner direction that all 10 heroes per faction should be live, diverse, and fully working",
+      "planRef": "PLAN.md Playable Alpha Hero Roster Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "content/heroes.json",
+        "tests/hero_roster_readiness_report.py",
+        "ops/progress.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": "Every faction must have 10 live heroes with valid spells, specialties, command paths, command stat variety, and supported battle traits; focused roster report and repo validation must pass.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T19:37:12Z",
+        "sliceId": "hero-roster-live-diversity-10184",
+        "commands": [
+          "python3 -m py_compile tests/hero_roster_readiness_report.py tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/hero_roster_readiness_report.py (passed; 60/60 live heroes, 5 might and 5 magic heroes per faction)",
+          "python3 tests/faction_town_unit_asymmetry_report.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_hero_roster_live.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_hero_roster_live.json (passed; ok=true, 12000 samples, outliers=0)",
+          "jq empty content/heroes.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Converted all six-faction hero records to roster_state=live so every faction has ten recruitable/live roster heroes.",
+            "Diversified command stat profiles, supported battle-trait packages, starting specialties, and spell packages while keeping each faction at five might-path and five magic-path heroes.",
+            "Added a focused hero roster readiness report for live count, command-path balance, spell references, specialty references, supported battle traits, and diversity floors.",
+            "Updated repository validation so six-faction heroes are expected to be live while retaining older scenario scaffold opt-in code validation.",
+            "Changed the fast battle benchmark representative hero selector to use authored faction hero_ids order before alphabetic fallback, preventing all-live rosters from changing representative heroes by id sorting artifact."
+          ],
+          "roster_summary": {
+            "total_live_heroes": 60,
+            "per_faction_live_heroes": 10,
+            "per_faction_command_paths": {
+              "might": 5,
+              "magic": 5
+            },
+            "command_profile_counts": {
+              "faction_brasshollow": 9,
+              "faction_embercourt": 8,
+              "faction_mireclaw": 8,
+              "faction_sunvault": 9,
+              "faction_thornwake": 10,
+              "faction_veilmourn": 8
+            },
+            "battle_trait_profile_counts": {
+              "faction_brasshollow": 6,
+              "faction_embercourt": 7,
+              "faction_mireclaw": 6,
+              "faction_sunvault": 5,
+              "faction_thornwake": 6,
+              "faction_veilmourn": 6
+            },
+            "starting_specialty_lane_counts": {
+              "faction_brasshollow": 6,
+              "faction_embercourt": 7,
+              "faction_mireclaw": 6,
+              "faction_sunvault": 6,
+              "faction_thornwake": 5,
+              "faction_veilmourn": 5
+            }
+          },
+          "battle_benchmark": {
+            "artifact": "tmp/battle_balance_100_seed_hero_roster_live.json",
+            "ok": true,
+            "balance_status": "needs_tuning",
+            "sample_count": 12000,
+            "outlier_count": 0,
+            "representative_heroes": {
+              "faction_brasshollow": "hero_brasshollow_marka_ironclause",
+              "faction_embercourt": "hero_lyra",
+              "faction_mireclaw": "hero_vaska",
+              "faction_sunvault": "hero_solera",
+              "faction_thornwake": "hero_thornwake_ardren_briarmarshal",
+              "faction_veilmourn": "hero_veilmourn_ivara_blacktide"
+            },
+            "week_summaries": [
+              {
+                "week": 1,
+                "sample_count": 3000,
+                "average_rounds": 5.39,
+                "side_a_win_rate": 48.97,
+                "side_b_win_rate": 51.03,
+                "side_bias_points": 2.07
+              },
+              {
+                "week": 2,
+                "sample_count": 3000,
+                "average_rounds": 5.89,
+                "side_a_win_rate": 49.9,
+                "side_b_win_rate": 50.1,
+                "side_bias_points": 0.2
+              },
+              {
+                "week": 3,
+                "sample_count": 3000,
+                "average_rounds": 6.19,
+                "side_a_win_rate": 49.17,
+                "side_b_win_rate": 50.83,
+                "side_bias_points": 1.67
+              },
+              {
+                "week": 4,
+                "sample_count": 3000,
+                "average_rounds": 7.02,
+                "side_a_win_rate": 50.47,
+                "side_b_win_rate": 49.53,
+                "side_bias_points": 0.93
+              }
+            ],
+            "interpretation": "Hero activation did not create benchmark outliers once representative heroes use authored faction order. The benchmark still reports needs_tuning as the broader balance target remains active, not because this roster slice failed."
+          }
+        }
+      },
+      "notes": "Completed. All six factions now have ten live validated heroes, diverse supported command/trait/specialty profiles, and curated-order benchmark representative selection; focused roster, repo, JSON, diff, and 100-seed benchmark validation passed.",
+      "startedAt": "2026-05-28T15:10:00Z",
+      "updatedAt": "2026-05-28T19:37:12Z",
+      "completedAt": "2026-05-28T19:37:12Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36566,8 +36695,8 @@
       }
     }
   },
-  "active_slice": "combat-mireclaw-late-anti-ranged-counter-10184",
-  "currentSliceUpdatedAt": "2026-05-28T14:55:00Z",
+  "active_slice": "hero-roster-live-diversity-10184",
+  "currentSliceUpdatedAt": "2026-05-28T19:37:12Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38941,143 +39070,237 @@
     }
   ],
   "currentSlice": {
-    "id": "combat-mireclaw-late-anti-ranged-counter-10184",
-    "title": "Combat Mireclaw Late Anti-Ranged Counter",
+    "id": "hero-roster-live-diversity-10184",
+    "title": "Hero Roster Live Diversity",
     "status": "completed",
-    "source": "owner direction to give Mireclaw a counter to Veilmourn ranged hard-counter pressure rather than nerfing underperforming Veilmourn broadly",
-    "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+    "source": "owner direction that all 10 heroes per faction should be live, diverse, and fully working",
+    "planRef": "PLAN.md Playable Alpha Hero Roster Target",
     "sourceDocs": [
       "PLAN.md",
-      "GOALS.md"
+      "project.md"
     ],
     "implementationTargets": [
-      "content/units.json",
-      "tests/battle_faction_fast_balance_benchmark.py as validation surface",
-      "ops/progress.json"
+      "content/heroes.json",
+      "tests/hero_roster_readiness_report.py",
+      "ops/progress.json",
+      "tests/battle_faction_fast_balance_benchmark.py",
+      "tests/validate_repo.py"
     ],
-    "completionCriteria": "Mireclaw late-game stacks must gain a targeted anti-ranged counter using live battle mechanics; repo validation and Week 4 benchmark evidence must pass and show matchup impact.",
+    "completionCriteria": "Every faction must have 10 live heroes with valid spells, specialties, command paths, command stat variety, and supported battle traits; focused roster report and repo validation must pass.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T14:55:00Z",
-      "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+      "updatedAt": "2026-05-28T19:37:12Z",
+      "sliceId": "hero-roster-live-diversity-10184",
       "commands": [
+        "python3 -m py_compile tests/hero_roster_readiness_report.py tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
+        "python3 tests/hero_roster_readiness_report.py (passed; 60/60 live heroes, 5 might and 5 magic heroes per faction)",
+        "python3 tests/faction_town_unit_asymmetry_report.py (passed)",
         "python3 tests/validate_repo.py (passed)",
-        "jq empty content/units.json ops/progress.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_hero_roster_live.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_hero_roster_live.json (passed; ok=true, 12000 samples, outliers=0)",
+        "jq empty content/heroes.json ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
-          "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
-          "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+          "Converted all six-faction hero records to roster_state=live so every faction has ten recruitable/live roster heroes.",
+          "Diversified command stat profiles, supported battle-trait packages, starting specialties, and spell packages while keeping each faction at five might-path and five magic-path heroes.",
+          "Added a focused hero roster readiness report for live count, command-path balance, spell references, specialty references, supported battle traits, and diversity floors.",
+          "Updated repository validation so six-faction heroes are expected to be live while retaining older scenario scaffold opt-in code validation.",
+          "Changed the fast battle benchmark representative hero selector to use authored faction hero_ids order before alphabetic fallback, preventing all-live rosters from changing representative heroes by id sorting artifact."
         ],
-        "unit_after": {
-          "unit_mireclaw_gorefen_rippers": {
-            "tier": 6,
-            "hp": 55,
-            "shielding": {
-              "ranged_damage_multiplier": 0.78,
-              "engaged_damage_multiplier": 1.05,
-              "harried_damage_multiplier": 1.05
-            }
+        "roster_summary": {
+          "total_live_heroes": 60,
+          "per_faction_live_heroes": 10,
+          "per_faction_command_paths": {
+            "might": 5,
+            "magic": 5
           },
-          "unit_mireclaw_drowned_antler_sovereign": {
-            "tier": 7,
-            "hp": 112,
-            "shielding": {
-              "ranged_damage_multiplier": 0.68,
-              "engaged_damage_multiplier": 1.06,
-              "harried_damage_multiplier": 1.06
-            }
+          "command_profile_counts": {
+            "faction_brasshollow": 9,
+            "faction_embercourt": 8,
+            "faction_mireclaw": 8,
+            "faction_sunvault": 9,
+            "faction_thornwake": 10,
+            "faction_veilmourn": 8
+          },
+          "battle_trait_profile_counts": {
+            "faction_brasshollow": 6,
+            "faction_embercourt": 7,
+            "faction_mireclaw": 6,
+            "faction_sunvault": 5,
+            "faction_thornwake": 6,
+            "faction_veilmourn": 6
+          },
+          "starting_specialty_lane_counts": {
+            "faction_brasshollow": 6,
+            "faction_embercourt": 7,
+            "faction_mireclaw": 6,
+            "faction_sunvault": 6,
+            "faction_thornwake": 5,
+            "faction_veilmourn": 5
           }
         },
-        "benchmark_impact": {
-          "full_matrix_before_outliers": 40,
-          "full_matrix_after_outliers": 39,
-          "after_balance_status": "needs_tuning",
-          "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
-          "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
-          "affected_week4_pairs_after": [
-            "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
-            "Embercourt vs Mireclaw: Mireclaw 53.0%",
-            "Mireclaw vs Sunvault: Mireclaw 50.5%",
-            "Mireclaw vs Thornwake: Mireclaw 53.5%",
-            "Mireclaw vs Veilmourn: Veilmourn 66.0%"
+        "battle_benchmark": {
+          "artifact": "tmp/battle_balance_100_seed_hero_roster_live.json",
+          "ok": true,
+          "balance_status": "needs_tuning",
+          "sample_count": 12000,
+          "outlier_count": 0,
+          "representative_heroes": {
+            "faction_brasshollow": "hero_brasshollow_marka_ironclause",
+            "faction_embercourt": "hero_lyra",
+            "faction_mireclaw": "hero_vaska",
+            "faction_sunvault": "hero_solera",
+            "faction_thornwake": "hero_thornwake_ardren_briarmarshal",
+            "faction_veilmourn": "hero_veilmourn_ivara_blacktide"
+          },
+          "week_summaries": [
+            {
+              "week": 1,
+              "sample_count": 3000,
+              "average_rounds": 5.39,
+              "side_a_win_rate": 48.97,
+              "side_b_win_rate": 51.03,
+              "side_bias_points": 2.07
+            },
+            {
+              "week": 2,
+              "sample_count": 3000,
+              "average_rounds": 5.89,
+              "side_a_win_rate": 49.9,
+              "side_b_win_rate": 50.1,
+              "side_bias_points": 0.2
+            },
+            {
+              "week": 3,
+              "sample_count": 3000,
+              "average_rounds": 6.19,
+              "side_a_win_rate": 49.17,
+              "side_b_win_rate": 50.83,
+              "side_bias_points": 1.67
+            },
+            {
+              "week": 4,
+              "sample_count": 3000,
+              "average_rounds": 7.02,
+              "side_a_win_rate": 50.47,
+              "side_b_win_rate": 49.53,
+              "side_bias_points": 0.93
+            }
           ],
-          "affected_week3_pairs_after": [
-            "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
-            "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
-            "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
-          ],
-          "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
+          "interpretation": "Hero activation did not create benchmark outliers once representative heroes use authored faction order. The benchmark still reports needs_tuning as the broader balance target remains active, not because this roster slice failed."
         }
       }
     },
-    "notes": "Completed. Mireclaw T6/T7 gained targeted anti-ranged shielding; full benchmark outliers improved 40 to 39 and Week 4 Veilmourn hard-counter dropped to 66.0%. Remaining tuning debt is recorded.",
-    "startedAt": "2026-05-28T14:20:00Z",
-    "updatedAt": "2026-05-28T14:55:00Z",
-    "completedAt": "2026-05-28T14:55:00Z"
+    "notes": "Completed. All six factions now have ten live validated heroes, diverse supported command/trait/specialty profiles, and curated-order benchmark representative selection; focused roster, repo, JSON, diff, and 100-seed benchmark validation passed.",
+    "startedAt": "2026-05-28T15:10:00Z",
+    "updatedAt": "2026-05-28T19:37:12Z",
+    "completedAt": "2026-05-28T19:37:12Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T14:55:00Z",
-    "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+    "updatedAt": "2026-05-28T19:37:12Z",
+    "sliceId": "hero-roster-live-diversity-10184",
     "commands": [
+      "python3 -m py_compile tests/hero_roster_readiness_report.py tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/hero_roster_readiness_report.py (passed; 60/60 live heroes, 5 might and 5 magic heroes per faction)",
+      "python3 tests/faction_town_unit_asymmetry_report.py (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_hero_roster_live.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_hero_roster_live.json (passed; ok=true, 12000 samples, outliers=0)",
+      "jq empty content/heroes.json ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
-        "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
-        "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+        "Converted all six-faction hero records to roster_state=live so every faction has ten recruitable/live roster heroes.",
+        "Diversified command stat profiles, supported battle-trait packages, starting specialties, and spell packages while keeping each faction at five might-path and five magic-path heroes.",
+        "Added a focused hero roster readiness report for live count, command-path balance, spell references, specialty references, supported battle traits, and diversity floors.",
+        "Updated repository validation so six-faction heroes are expected to be live while retaining older scenario scaffold opt-in code validation.",
+        "Changed the fast battle benchmark representative hero selector to use authored faction hero_ids order before alphabetic fallback, preventing all-live rosters from changing representative heroes by id sorting artifact."
       ],
-      "unit_after": {
-        "unit_mireclaw_gorefen_rippers": {
-          "tier": 6,
-          "hp": 55,
-          "shielding": {
-            "ranged_damage_multiplier": 0.78,
-            "engaged_damage_multiplier": 1.05,
-            "harried_damage_multiplier": 1.05
-          }
+      "roster_summary": {
+        "total_live_heroes": 60,
+        "per_faction_live_heroes": 10,
+        "per_faction_command_paths": {
+          "might": 5,
+          "magic": 5
         },
-        "unit_mireclaw_drowned_antler_sovereign": {
-          "tier": 7,
-          "hp": 112,
-          "shielding": {
-            "ranged_damage_multiplier": 0.68,
-            "engaged_damage_multiplier": 1.06,
-            "harried_damage_multiplier": 1.06
-          }
+        "command_profile_counts": {
+          "faction_brasshollow": 9,
+          "faction_embercourt": 8,
+          "faction_mireclaw": 8,
+          "faction_sunvault": 9,
+          "faction_thornwake": 10,
+          "faction_veilmourn": 8
+        },
+        "battle_trait_profile_counts": {
+          "faction_brasshollow": 6,
+          "faction_embercourt": 7,
+          "faction_mireclaw": 6,
+          "faction_sunvault": 5,
+          "faction_thornwake": 6,
+          "faction_veilmourn": 6
+        },
+        "starting_specialty_lane_counts": {
+          "faction_brasshollow": 6,
+          "faction_embercourt": 7,
+          "faction_mireclaw": 6,
+          "faction_sunvault": 6,
+          "faction_thornwake": 5,
+          "faction_veilmourn": 5
         }
       },
-      "benchmark_impact": {
-        "full_matrix_before_outliers": 40,
-        "full_matrix_after_outliers": 39,
-        "after_balance_status": "needs_tuning",
-        "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
-        "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
-        "affected_week4_pairs_after": [
-          "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
-          "Embercourt vs Mireclaw: Mireclaw 53.0%",
-          "Mireclaw vs Sunvault: Mireclaw 50.5%",
-          "Mireclaw vs Thornwake: Mireclaw 53.5%",
-          "Mireclaw vs Veilmourn: Veilmourn 66.0%"
+      "battle_benchmark": {
+        "artifact": "tmp/battle_balance_100_seed_hero_roster_live.json",
+        "ok": true,
+        "balance_status": "needs_tuning",
+        "sample_count": 12000,
+        "outlier_count": 0,
+        "representative_heroes": {
+          "faction_brasshollow": "hero_brasshollow_marka_ironclause",
+          "faction_embercourt": "hero_lyra",
+          "faction_mireclaw": "hero_vaska",
+          "faction_sunvault": "hero_solera",
+          "faction_thornwake": "hero_thornwake_ardren_briarmarshal",
+          "faction_veilmourn": "hero_veilmourn_ivara_blacktide"
+        },
+        "week_summaries": [
+          {
+            "week": 1,
+            "sample_count": 3000,
+            "average_rounds": 5.39,
+            "side_a_win_rate": 48.97,
+            "side_b_win_rate": 51.03,
+            "side_bias_points": 2.07
+          },
+          {
+            "week": 2,
+            "sample_count": 3000,
+            "average_rounds": 5.89,
+            "side_a_win_rate": 49.9,
+            "side_b_win_rate": 50.1,
+            "side_bias_points": 0.2
+          },
+          {
+            "week": 3,
+            "sample_count": 3000,
+            "average_rounds": 6.19,
+            "side_a_win_rate": 49.17,
+            "side_b_win_rate": 50.83,
+            "side_bias_points": 1.67
+          },
+          {
+            "week": 4,
+            "sample_count": 3000,
+            "average_rounds": 7.02,
+            "side_a_win_rate": 50.47,
+            "side_b_win_rate": 49.53,
+            "side_bias_points": 0.93
+          }
         ],
-        "affected_week3_pairs_after": [
-          "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
-          "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
-          "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
-        ],
-        "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
+        "interpretation": "Hero activation did not create benchmark outliers once representative heroes use authored faction order. The benchmark still reports needs_tuning as the broader balance target remains active, not because this roster slice failed."
       }
     }
   }

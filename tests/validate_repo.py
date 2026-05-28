@@ -11379,8 +11379,12 @@ def validate_six_faction_content_scaffold(errors: list[str]) -> None:
                 town_buildings = [str(value) for value in seed_town.get("starting_building_ids", [])] + [str(value) for value in seed_town.get("buildable_building_ids", [])]
                 ensure(set(signature_building_ids).issubset(set(town_buildings)), errors, f"New bible faction {faction_id} seed town must carry all signature buildings")
 
-    scaffold_heroes = [hero_id for hero_id, hero in heroes.items() if str(hero.get("roster_state", "")) == "scaffold"]
-    ensure(bool(scaffold_heroes), errors, "Six-faction scaffold heroes must be marked with roster_state=scaffold")
+    non_live_heroes = [
+        hero_id
+        for hero_id, hero in heroes.items()
+        if str(hero.get("faction_id", "")) in SIX_FACTION_BIBLE_IDS and str(hero.get("roster_state", "")) != "live"
+    ]
+    ensure(not non_live_heroes, errors, "Six-faction heroes must all be marked with roster_state=live")
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
     ensure("func _hero_recruitable_for_scenario" in hero_command_text, errors, "HeroCommandRules.gd must gate scaffold heroes before tavern recruitment")
     ensure('"allow_scaffold_roster"' in hero_command_text, errors, "HeroCommandRules.gd must support explicit scenario opt-in for scaffold hero rosters")
@@ -21367,7 +21371,7 @@ def main() -> int:
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
-    print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
+    print("- six-faction hero rosters now keep ten live, validated heroes per faction with retained scaffold opt-in support for older scenarios")
     print("- unit art manifests now cover every authored unit with portrait, battle-icon, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")

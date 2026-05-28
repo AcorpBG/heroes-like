@@ -23,8 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `combat-mireclaw-late-anti-ranged-counter-10184`.
-- Latest completed slice: `combat-mireclaw-late-anti-ranged-counter-10184`.
+- Current implementation slice: none selected after completing `hero-roster-live-diversity-10184`.
+- Latest completed slice: `hero-roster-live-diversity-10184`.
+- Previous completed slice: `combat-mireclaw-late-anti-ranged-counter-10184`.
 - Previous completed slice: `combat-mireclaw-late-tank-buff-10184`.
 - Previous completed slice: `combat-thornwake-week2-buff-10184`.
 - Previous completed slice: `combat-thornwake-t6-ranged-balance-10184`.
