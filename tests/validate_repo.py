@@ -10768,6 +10768,11 @@ def validate_content(errors: list[str]) -> None:
     random_map_data_model_text = (CONTENT_DIR / "random_map_generator_data_model.json").read_text(encoding="utf-8")
     for spell_id in rmg_spell_ids:
         ensure(spell_id in random_map_data_model_text, errors, f"RMG data model reward support list must include spell reward {spell_id}")
+    battle_benchmark_text = (ROOT / "tests" / "battle_faction_fast_balance_benchmark.py").read_text(encoding="utf-8")
+    ensure("FACTION_SPELL_SCHOOL_ACCESS" in battle_benchmark_text, errors, "Fast battle benchmark must mirror faction spell-school access for town-study spellbooks")
+    ensure("_town_study_spell_ids_for_week" in battle_benchmark_text, errors, "Fast battle benchmark must add week-appropriate town-study spells to battle spellbooks")
+    ensure("hero_snapshots" in battle_benchmark_text and "spellbook_spell_tier" in battle_benchmark_text, errors, "Fast battle benchmark must expose per-week spellbook tier evidence")
+    ensure("spell_cast_summary" in battle_benchmark_text, errors, "Fast battle benchmark must report spell cast coverage")
 
     cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
     ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")

@@ -60,6 +60,11 @@ Town/RMG access update:
 - All 112 authored spells are reachable through fully developed town study access.
 - Generated spell rewards include tier 1-5 candidates across every school, while town development remains the full-catalog access path.
 
+Fast battle benchmark update:
+
+- The Python faction battle benchmark now builds per-week hero spellbooks from starting battle spells plus representative-town study spells unlocked by faction school access and spell tier.
+- Benchmark reports now expose per-week spellbook tier/count evidence and actual spell casts by school, tier, effect, and faction.
+
 ## Main Findings
 
 ### 1. Sunvault Is Not Simply Weak
