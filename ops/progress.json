@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-thornwake-t6-ranged-balance-10184",
-  "currentSliceTitle": "Combat Thornwake T6 Ranged Balance",
+  "currentSliceId": "combat-thornwake-week2-buff-10184",
+  "currentSliceTitle": "Combat Thornwake Week 2 Buff",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Thornwake T6 is now ranged; full benchmark passed and late Thornwake collapse improved, with remaining matchup overcorrections tracked as tuning evidence.",
+  "currentSliceNotes": "Completed. Thornwake week 2 is no longer catastrophically weak; remaining faction-pair outliers are tracked as balance debt rather than structural benchmark failures.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T12:17:30Z",
+  "updatedAt": "2026-05-28T13:33:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26467,6 +26467,127 @@
       "startedAt": "2026-05-28T12:03:00Z",
       "updatedAt": "2026-05-28T12:17:30Z",
       "completedAt": "2026-05-28T12:17:30Z"
+    },
+    {
+      "id": "combat-thornwake-week2-buff-10184",
+      "title": "Combat Thornwake Week 2 Buff",
+      "status": "completed",
+      "source": "owner direction to buff Thornwake week 2 after the T6 ranged correction left week 2 unchanged and still severely weak",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Thornwake week-2 army profile must receive a narrow T4/T5 buff without changing week-1 or T6/T7 units; repo validation and fast battle benchmark evidence must pass and show the week-2 impact.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T13:33:00Z",
+        "sliceId": "combat-thornwake-week2-buff-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+            "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+            "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+          ],
+          "unit_after": {
+            "unit_thornwake_barkmantle_rams": {
+              "tier": 4,
+              "hp": 26,
+              "defense": 10,
+              "ranged_damage_multiplier": 0.62,
+              "engaged_damage_multiplier": 1.12,
+              "harried_damage_multiplier": 1.12
+            },
+            "unit_thornwake_stagknot_runners": {
+              "tier": 5,
+              "hp": 36,
+              "attack": 11,
+              "defense": 11,
+              "min_damage": 8,
+              "max_damage": 13,
+              "speed": 6,
+              "initiative": 8,
+              "distance_one_multiplier": 1.14
+            },
+            "unit_thornwake_graft_matriarchs": {
+              "tier": 6,
+              "role": "ranged",
+              "hp": 40,
+              "attack": 12,
+              "defense": 9,
+              "min_damage": 8,
+              "max_damage": 12,
+              "initiative": 6,
+              "shots": 4
+            },
+            "unit_thornwake_worldroot_bastion": {
+              "tier": 7,
+              "hp": 92,
+              "attack": 16,
+              "defense": 16,
+              "min_damage": 14,
+              "max_damage": 23
+            }
+          },
+          "benchmark_impact": {
+            "before_outliers": 43,
+            "after_outliers": 40,
+            "after_balance_status": "needs_tuning",
+            "after_week_summaries": [
+              {
+                "week": 1,
+                "side_bias_points": 0.07,
+                "average_rounds": 5.54
+              },
+              {
+                "week": 2,
+                "side_bias_points": 1.93,
+                "average_rounds": 6.17
+              },
+              {
+                "week": 3,
+                "side_bias_points": 1.27,
+                "average_rounds": 6.69
+              },
+              {
+                "week": 4,
+                "side_bias_points": 1.47,
+                "average_rounds": 7.44
+              }
+            ],
+            "thornwake_week2_changes": [
+              "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+              "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+              "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+              "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+              "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
+            ],
+            "late_side_effects": [
+              "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+              "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+              "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+              "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+            ]
+          }
+        }
+      },
+      "notes": "Completed. Thornwake week 2 is no longer catastrophically weak; remaining faction-pair outliers are tracked as balance debt rather than structural benchmark failures.",
+      "startedAt": "2026-05-28T12:30:00Z",
+      "updatedAt": "2026-05-28T13:33:00Z",
+      "completedAt": "2026-05-28T13:33:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -33200,6 +33321,119 @@
           "policy": "balance source access from Native RMG generated package reports; do not balance this slice against authored maps"
         }
       }
+    },
+    {
+      "id": "combat-thornwake-week2-buff-10184",
+      "title": "Combat Thornwake Week 2 Buff",
+      "completedAt": "2026-05-28T13:33:00Z",
+      "summary": "Completed. Thornwake week-2 battle balance now gets meaningful help from T4 Barkmantle Rams and T5 Stag-Knot Runners, while T6/T7 were trimmed to avoid turning the midgame buff into a late-game sweep. The 100-seed full battle matrix passed structurally and total outliers moved from 43 to 40; balance_status remains needs_tuning because several faction-pair outliers remain.",
+      "sourceRefs": [
+        "PLAN.md",
+        "GOALS.md",
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T13:33:00Z",
+        "sliceId": "combat-thornwake-week2-buff-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+            "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+            "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+          ],
+          "unit_after": {
+            "unit_thornwake_barkmantle_rams": {
+              "tier": 4,
+              "hp": 26,
+              "defense": 10,
+              "ranged_damage_multiplier": 0.62,
+              "engaged_damage_multiplier": 1.12,
+              "harried_damage_multiplier": 1.12
+            },
+            "unit_thornwake_stagknot_runners": {
+              "tier": 5,
+              "hp": 36,
+              "attack": 11,
+              "defense": 11,
+              "min_damage": 8,
+              "max_damage": 13,
+              "speed": 6,
+              "initiative": 8,
+              "distance_one_multiplier": 1.14
+            },
+            "unit_thornwake_graft_matriarchs": {
+              "tier": 6,
+              "role": "ranged",
+              "hp": 40,
+              "attack": 12,
+              "defense": 9,
+              "min_damage": 8,
+              "max_damage": 12,
+              "initiative": 6,
+              "shots": 4
+            },
+            "unit_thornwake_worldroot_bastion": {
+              "tier": 7,
+              "hp": 92,
+              "attack": 16,
+              "defense": 16,
+              "min_damage": 14,
+              "max_damage": 23
+            }
+          },
+          "benchmark_impact": {
+            "before_outliers": 43,
+            "after_outliers": 40,
+            "after_balance_status": "needs_tuning",
+            "after_week_summaries": [
+              {
+                "week": 1,
+                "side_bias_points": 0.07,
+                "average_rounds": 5.54
+              },
+              {
+                "week": 2,
+                "side_bias_points": 1.93,
+                "average_rounds": 6.17
+              },
+              {
+                "week": 3,
+                "side_bias_points": 1.27,
+                "average_rounds": 6.69
+              },
+              {
+                "week": 4,
+                "side_bias_points": 1.47,
+                "average_rounds": 7.44
+              }
+            ],
+            "thornwake_week2_changes": [
+              "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+              "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+              "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+              "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+              "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
+            ],
+            "late_side_effects": [
+              "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+              "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+              "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+              "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+            ]
+          }
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -36002,39 +36236,66 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T12:17:30Z",
-    "sliceId": "combat-thornwake-t6-ranged-balance-10184",
+    "updatedAt": "2026-05-28T13:33:00Z",
+    "sliceId": "combat-thornwake-week2-buff-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
+      "jq empty content/units.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
-        "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
-        "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
+        "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+        "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+        "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
       ],
       "unit_after": {
-        "unit_id": "unit_thornwake_graft_matriarchs",
-        "name": "Graft Matriarchs",
-        "role": "ranged",
-        "tier": 6,
-        "hp": 45,
-        "attack": 13,
-        "defense": 10,
-        "min_damage": 9,
-        "max_damage": 14,
-        "speed": 3,
-        "initiative": 7,
-        "ranged": true,
-        "shots": 5
+        "unit_thornwake_barkmantle_rams": {
+          "tier": 4,
+          "hp": 26,
+          "defense": 10,
+          "ranged_damage_multiplier": 0.62,
+          "engaged_damage_multiplier": 1.12,
+          "harried_damage_multiplier": 1.12
+        },
+        "unit_thornwake_stagknot_runners": {
+          "tier": 5,
+          "hp": 36,
+          "attack": 11,
+          "defense": 11,
+          "min_damage": 8,
+          "max_damage": 13,
+          "speed": 6,
+          "initiative": 8,
+          "distance_one_multiplier": 1.14
+        },
+        "unit_thornwake_graft_matriarchs": {
+          "tier": 6,
+          "role": "ranged",
+          "hp": 40,
+          "attack": 12,
+          "defense": 9,
+          "min_damage": 8,
+          "max_damage": 12,
+          "initiative": 6,
+          "shots": 4
+        },
+        "unit_thornwake_worldroot_bastion": {
+          "tier": 7,
+          "hp": 92,
+          "attack": 16,
+          "defense": 16,
+          "min_damage": 14,
+          "max_damage": 23
+        }
       },
       "benchmark_impact": {
-        "before_outliers": 44,
-        "after_outliers": 43,
+        "before_outliers": 43,
+        "after_outliers": 40,
+        "after_balance_status": "needs_tuning",
         "after_week_summaries": [
           {
             "week": 1,
@@ -36043,33 +36304,38 @@
           },
           {
             "week": 2,
-            "side_bias_points": 0.93,
-            "average_rounds": 5.8
+            "side_bias_points": 1.93,
+            "average_rounds": 6.17
           },
           {
             "week": 3,
-            "side_bias_points": 1.13,
-            "average_rounds": 6.64
+            "side_bias_points": 1.27,
+            "average_rounds": 6.69
           },
           {
             "week": 4,
-            "side_bias_points": 0.07,
-            "average_rounds": 7.46
+            "side_bias_points": 1.47,
+            "average_rounds": 7.44
           }
         ],
-        "thornwake_changes": [
-          "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
-          "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
-          "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
-          "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
-          "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
+        "thornwake_week2_changes": [
+          "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+          "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+          "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+          "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+          "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
         ],
-        "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
+        "late_side_effects": [
+          "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+          "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+          "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+          "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+        ]
       }
     }
   },
-  "active_slice": "combat-thornwake-t6-ranged-balance-10184",
-  "currentSliceUpdatedAt": "2026-05-28T12:17:30Z",
+  "active_slice": "combat-thornwake-week2-buff-10184",
+  "currentSliceUpdatedAt": "2026-05-28T13:33:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38238,62 +38504,69 @@
           "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
         }
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "combat-thornwake-t6-ranged-balance-10184",
-    "title": "Combat Thornwake T6 Ranged Balance",
-    "status": "completed",
-    "source": "owner direction to give Thornwake a T6 ranged unit after benchmark showed Thornwake has only one ranged unit and severe week 2-4 weakness",
-    "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
-    "sourceDocs": [
-      "PLAN.md",
-      "GOALS.md"
-    ],
-    "implementationTargets": [
-      "content/units.json",
-      "content/unit_art_manifest.json",
-      "content/unit_animation_manifest.json",
-      "docs/factions-content-bible.md",
-      "tests/battle_faction_fast_balance_benchmark.py as validation surface",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Thornwake T6 unit must become a ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-28T12:17:30Z",
-      "sliceId": "combat-thornwake-t6-ranged-balance-10184",
+      "updatedAt": "2026-05-28T13:33:00Z",
+      "sliceId": "combat-thornwake-week2-buff-10184",
       "commands": [
         "python3 tests/validate_repo.py (passed)",
-        "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
-          "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
-          "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
+          "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+          "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+          "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
         ],
         "unit_after": {
-          "unit_id": "unit_thornwake_graft_matriarchs",
-          "name": "Graft Matriarchs",
-          "role": "ranged",
-          "tier": 6,
-          "hp": 45,
-          "attack": 13,
-          "defense": 10,
-          "min_damage": 9,
-          "max_damage": 14,
-          "speed": 3,
-          "initiative": 7,
-          "ranged": true,
-          "shots": 5
+          "unit_thornwake_barkmantle_rams": {
+            "tier": 4,
+            "hp": 26,
+            "defense": 10,
+            "ranged_damage_multiplier": 0.62,
+            "engaged_damage_multiplier": 1.12,
+            "harried_damage_multiplier": 1.12
+          },
+          "unit_thornwake_stagknot_runners": {
+            "tier": 5,
+            "hp": 36,
+            "attack": 11,
+            "defense": 11,
+            "min_damage": 8,
+            "max_damage": 13,
+            "speed": 6,
+            "initiative": 8,
+            "distance_one_multiplier": 1.14
+          },
+          "unit_thornwake_graft_matriarchs": {
+            "tier": 6,
+            "role": "ranged",
+            "hp": 40,
+            "attack": 12,
+            "defense": 9,
+            "min_damage": 8,
+            "max_damage": 12,
+            "initiative": 6,
+            "shots": 4
+          },
+          "unit_thornwake_worldroot_bastion": {
+            "tier": 7,
+            "hp": 92,
+            "attack": 16,
+            "defense": 16,
+            "min_damage": 14,
+            "max_damage": 23
+          }
         },
         "benchmark_impact": {
-          "before_outliers": 44,
-          "after_outliers": 43,
+          "before_outliers": 43,
+          "after_outliers": 40,
+          "after_balance_status": "needs_tuning",
           "after_week_summaries": [
             {
               "week": 1,
@@ -38302,71 +38575,220 @@
             },
             {
               "week": 2,
-              "side_bias_points": 0.93,
-              "average_rounds": 5.8
+              "side_bias_points": 1.93,
+              "average_rounds": 6.17
             },
             {
               "week": 3,
-              "side_bias_points": 1.13,
-              "average_rounds": 6.64
+              "side_bias_points": 1.27,
+              "average_rounds": 6.69
             },
             {
               "week": 4,
-              "side_bias_points": 0.07,
-              "average_rounds": 7.46
+              "side_bias_points": 1.47,
+              "average_rounds": 7.44
             }
           ],
-          "thornwake_changes": [
-            "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
-            "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
-            "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
-            "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
-            "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
+          "thornwake_week2_changes": [
+            "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+            "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+            "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+            "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+            "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
           ],
-          "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
+          "late_side_effects": [
+            "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+            "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+            "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+            "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+          ]
+        }
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "combat-thornwake-week2-buff-10184",
+    "title": "Combat Thornwake Week 2 Buff",
+    "status": "completed",
+    "source": "owner direction to buff Thornwake week 2 after the T6 ranged correction left week 2 unchanged and still severely weak",
+    "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+    "sourceDocs": [
+      "PLAN.md",
+      "GOALS.md"
+    ],
+    "implementationTargets": [
+      "content/units.json",
+      "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Thornwake week-2 army profile must receive a narrow T4/T5 buff without changing week-1 or T6/T7 units; repo validation and fast battle benchmark evidence must pass and show the week-2 impact.",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-28T13:33:00Z",
+      "sliceId": "combat-thornwake-week2-buff-10184",
+      "commands": [
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+          "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+          "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
+        ],
+        "unit_after": {
+          "unit_thornwake_barkmantle_rams": {
+            "tier": 4,
+            "hp": 26,
+            "defense": 10,
+            "ranged_damage_multiplier": 0.62,
+            "engaged_damage_multiplier": 1.12,
+            "harried_damage_multiplier": 1.12
+          },
+          "unit_thornwake_stagknot_runners": {
+            "tier": 5,
+            "hp": 36,
+            "attack": 11,
+            "defense": 11,
+            "min_damage": 8,
+            "max_damage": 13,
+            "speed": 6,
+            "initiative": 8,
+            "distance_one_multiplier": 1.14
+          },
+          "unit_thornwake_graft_matriarchs": {
+            "tier": 6,
+            "role": "ranged",
+            "hp": 40,
+            "attack": 12,
+            "defense": 9,
+            "min_damage": 8,
+            "max_damage": 12,
+            "initiative": 6,
+            "shots": 4
+          },
+          "unit_thornwake_worldroot_bastion": {
+            "tier": 7,
+            "hp": 92,
+            "attack": 16,
+            "defense": 16,
+            "min_damage": 14,
+            "max_damage": 23
+          }
+        },
+        "benchmark_impact": {
+          "before_outliers": 43,
+          "after_outliers": 40,
+          "after_balance_status": "needs_tuning",
+          "after_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.07,
+              "average_rounds": 5.54
+            },
+            {
+              "week": 2,
+              "side_bias_points": 1.93,
+              "average_rounds": 6.17
+            },
+            {
+              "week": 3,
+              "side_bias_points": 1.27,
+              "average_rounds": 6.69
+            },
+            {
+              "week": 4,
+              "side_bias_points": 1.47,
+              "average_rounds": 7.44
+            }
+          ],
+          "thornwake_week2_changes": [
+            "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+            "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+            "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+            "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+            "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
+          ],
+          "late_side_effects": [
+            "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+            "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+            "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+            "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+          ]
         }
       }
     },
-    "notes": "Completed. Thornwake T6 is now ranged; full benchmark passed and late Thornwake collapse improved, with remaining matchup overcorrections tracked as tuning evidence.",
-    "startedAt": "2026-05-28T12:03:00Z",
-    "updatedAt": "2026-05-28T12:17:30Z",
-    "completedAt": "2026-05-28T12:17:30Z"
+    "notes": "Completed. Thornwake week 2 is no longer catastrophically weak; remaining faction-pair outliers are tracked as balance debt rather than structural benchmark failures.",
+    "startedAt": "2026-05-28T12:30:00Z",
+    "updatedAt": "2026-05-28T13:33:00Z",
+    "completedAt": "2026-05-28T13:33:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T12:17:30Z",
-    "sliceId": "combat-thornwake-t6-ranged-balance-10184",
+    "updatedAt": "2026-05-28T13:33:00Z",
+    "sliceId": "combat-thornwake-week2-buff-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
+      "jq empty content/units.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_week2_buff.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 2 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff_week2.json (passed; ok=true, 30 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_week2_buff.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
-        "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
-        "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
+        "Buffed Thornwake T4 Barkmantle Rams as the week-2 wall: hp 21->26, defense 8->10, ranged damage taken multiplier 0.82->0.62, engaged/harried payoff 1.06->1.12.",
+        "Buffed Thornwake T5 Stag-Knot Runners as the week-2 pinning unit: hp 28->36, attack 10->11, defense 9->11, damage 7-11->8-13, speed 5->6, initiative 7->8, reach multiplier 0.95->1.14.",
+        "Trimmed late Thornwake T6/T7 power so the week-2 T4/T5 buff does not become a week-4 sweep: Graft Matriarchs hp/attack/defense/damage/init/shots reduced; Worldroot Bastion hp/attack/defense/damage reduced."
       ],
       "unit_after": {
-        "unit_id": "unit_thornwake_graft_matriarchs",
-        "name": "Graft Matriarchs",
-        "role": "ranged",
-        "tier": 6,
-        "hp": 45,
-        "attack": 13,
-        "defense": 10,
-        "min_damage": 9,
-        "max_damage": 14,
-        "speed": 3,
-        "initiative": 7,
-        "ranged": true,
-        "shots": 5
+        "unit_thornwake_barkmantle_rams": {
+          "tier": 4,
+          "hp": 26,
+          "defense": 10,
+          "ranged_damage_multiplier": 0.62,
+          "engaged_damage_multiplier": 1.12,
+          "harried_damage_multiplier": 1.12
+        },
+        "unit_thornwake_stagknot_runners": {
+          "tier": 5,
+          "hp": 36,
+          "attack": 11,
+          "defense": 11,
+          "min_damage": 8,
+          "max_damage": 13,
+          "speed": 6,
+          "initiative": 8,
+          "distance_one_multiplier": 1.14
+        },
+        "unit_thornwake_graft_matriarchs": {
+          "tier": 6,
+          "role": "ranged",
+          "hp": 40,
+          "attack": 12,
+          "defense": 9,
+          "min_damage": 8,
+          "max_damage": 12,
+          "initiative": 6,
+          "shots": 4
+        },
+        "unit_thornwake_worldroot_bastion": {
+          "tier": 7,
+          "hp": 92,
+          "attack": 16,
+          "defense": 16,
+          "min_damage": 14,
+          "max_damage": 23
+        }
       },
       "benchmark_impact": {
-        "before_outliers": 44,
-        "after_outliers": 43,
+        "before_outliers": 43,
+        "after_outliers": 40,
+        "after_balance_status": "needs_tuning",
         "after_week_summaries": [
           {
             "week": 1,
@@ -38375,28 +38797,33 @@
           },
           {
             "week": 2,
-            "side_bias_points": 0.93,
-            "average_rounds": 5.8
+            "side_bias_points": 1.93,
+            "average_rounds": 6.17
           },
           {
             "week": 3,
-            "side_bias_points": 1.13,
-            "average_rounds": 6.64
+            "side_bias_points": 1.27,
+            "average_rounds": 6.69
           },
           {
             "week": 4,
-            "side_bias_points": 0.07,
-            "average_rounds": 7.46
+            "side_bias_points": 1.47,
+            "average_rounds": 7.44
           }
         ],
-        "thornwake_changes": [
-          "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
-          "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
-          "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
-          "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
-          "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
+        "thornwake_week2_changes": [
+          "Brasshollow vs Thornwake improved from 88.0% Brasshollow to 63.5%.",
+          "Embercourt vs Thornwake improved from 98.0% Embercourt to 61.0%.",
+          "Mireclaw vs Thornwake improved from 85.5% Mireclaw to 70.0%.",
+          "Sunvault vs Thornwake improved from 92.0% Sunvault to 50.0%.",
+          "Veilmourn vs Thornwake flipped from 67.0% Veilmourn to 67.5% Thornwake."
         ],
-        "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
+        "late_side_effects": [
+          "Week 3 Brasshollow vs Thornwake improved from 78.0% Brasshollow to 50.5%.",
+          "Week 3 Sunvault vs Thornwake improved from 82.5% Sunvault to 72.0%.",
+          "Week 3 Veilmourn remains a Thornwake overperformance at 84.5%.",
+          "Week 4 Thornwake pairs stayed mostly controlled: Brasshollow 53.5% Thornwake, Mireclaw 55.5% Thornwake, Sunvault 51.5% Sunvault; Embercourt still beats Thornwake at 69.5%, Veilmourn remains 65.5% Thornwake."
+        ]
       }
     }
   }
