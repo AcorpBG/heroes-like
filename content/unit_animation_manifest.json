@@ -868,10 +868,10 @@
     {
       "id": "unit_sunvault_aurora_ballistae",
       "unit_id": "unit_sunvault_aurora_ballistae",
-      "name": "Aurora Ballistae",
+      "name": "Aurora Bastions",
       "faction_id": "faction_sunvault",
       "tier": 6,
-      "role": "ranged",
+      "role": "melee",
       "motif": "engine",
       "sprite_sheet": "res://art/animation/runtime/units/unit_sunvault_aurora_ballistae.png",
       "states": [
