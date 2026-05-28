@@ -325,6 +325,14 @@ SPELL_PRIMARY_MOD_BY_EFFECT = {
     "recover_ally": "defense",
     "cleanse_ally": "defense",
 }
+FACTION_SPELL_SCHOOL_ACCESS = {
+    "faction_embercourt": {"beacon", "furnace", "old_measure"},
+    "faction_mireclaw": {"mire", "root", "old_measure"},
+    "faction_sunvault": {"lens", "beacon", "old_measure"},
+    "faction_thornwake": {"root", "mire", "old_measure"},
+    "faction_brasshollow": {"furnace", "old_measure"},
+    "faction_veilmourn": {"veil", "old_measure"},
+}
 ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
 ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
@@ -10723,6 +10731,43 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(spell_context_counts.get("overworld", 0)) > 0, errors, "Spell catalog must keep at least one overworld spell for adventure-map magic")
     ensure(int(spell_context_counts.get("battle", 0)) > 0, errors, "Spell catalog must keep at least one battle spell")
     ensure("damage" in spell_role_category_counts and "buff" in spell_role_category_counts and "economy_map_utility" in spell_role_category_counts, errors, "Spell catalog must keep damage, buff, and economy/map role category coverage")
+    ensure(len(spells) >= 100, errors, "Spell catalog must keep at least 100 authored spells")
+    ensure(int(spell_context_counts.get("overworld", 0)) >= 20, errors, "Spell catalog must keep at least 20 overworld spells")
+    ensure(int(spell_context_counts.get("battle", 0)) >= 80, errors, "Spell catalog must keep at least 80 battle spells")
+    for school_id in SUPPORTED_SPELL_SCHOOLS:
+        ensure(int(spell_school_counts.get(school_id, 0)) >= 12, errors, f"Spell catalog must keep broad school coverage for {school_id}")
+
+    town_spell_reachable_ids: set[str] = set()
+    for town_id, town in towns.items():
+        town_building_ids = [str(value) for value in town.get("starting_building_ids", [])] + [str(value) for value in town.get("buildable_building_ids", [])]
+        max_spell_tier = max([int(buildings.get(building_id, {}).get("spell_tier", 0)) for building_id in town_building_ids] or [0])
+        ensure(max_spell_tier >= 5, errors, f"Town {town_id} must reach spell tier 5 through its development tree")
+        allowed_schools = FACTION_SPELL_SCHOOL_ACCESS.get(str(town.get("faction_id", "")), {"old_measure"})
+        for spell_id, spell in spells.items():
+            if str(spell.get("school_id", "")) in allowed_schools and int(spell.get("tier", 0)) <= max_spell_tier:
+                town_spell_reachable_ids.add(spell_id)
+        for entry in town.get("spell_library", []):
+            if not isinstance(entry, dict) or int(entry.get("tier", 0)) > max_spell_tier:
+                continue
+            for spell_id_value in entry.get("spell_ids", []):
+                town_spell_reachable_ids.add(str(spell_id_value))
+    missing_town_spell_ids = sorted(set(spells.keys()) - town_spell_reachable_ids)
+    ensure(
+        not missing_town_spell_ids,
+        errors,
+        f"All authored spells must be reachable through fully developed town study access; missing {missing_town_spell_ids[:12]}",
+    )
+
+    random_map_rules_text = (ROOT / "scripts" / "core" / "RandomMapGeneratorRules.gd").read_text(encoding="utf-8")
+    rmg_spell_ids = set(re.findall(r'"spell_id": "([^"]+)"', random_map_rules_text))
+    ensure(rmg_spell_ids.issubset(set(spells.keys())), errors, f"RMG spell reward pool references missing spells: {sorted(rmg_spell_ids - set(spells.keys()))}")
+    rmg_spell_tiers = {int(spells[spell_id].get("tier", 0)) for spell_id in rmg_spell_ids if spell_id in spells}
+    rmg_spell_schools = {str(spells[spell_id].get("school_id", "")) for spell_id in rmg_spell_ids if spell_id in spells}
+    ensure(set(range(1, 6)).issubset(rmg_spell_tiers), errors, "RMG spell reward pool must include tier 1-5 spell-access candidates")
+    ensure(SUPPORTED_SPELL_SCHOOLS.issubset(rmg_spell_schools), errors, "RMG spell reward pool must include every spell school")
+    random_map_data_model_text = (CONTENT_DIR / "random_map_generator_data_model.json").read_text(encoding="utf-8")
+    for spell_id in rmg_spell_ids:
+        ensure(spell_id in random_map_data_model_text, errors, f"RMG data model reward support list must include spell reward {spell_id}")
 
     cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
     ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")

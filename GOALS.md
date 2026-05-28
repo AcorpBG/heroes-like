@@ -12,7 +12,7 @@ The current focus is Phase 5 - Playable Alpha Baseline. Campaign production rema
 
 ## Current Immediate Goal - Magic Availability
 
-Progress slice: `magic-spell-tier-power-bands-10184`
+Latest completed progress slice: `magic-town-study-full-tier-access-10184`
 
 Improve spell availability, magic-school variety, and strategic influence before trying to balance magic-focused heroes against raw-combat heroes.
 
@@ -22,6 +22,9 @@ Target state:
 - keep at least 20 overworld spells so strategic magic is not only battle math;
 - split the catalog into real power tiers, from weak/cheap tier-1 spells to expensive very-strong tier-5 spells;
 - keep tier power bands enforced in validation for mana, damage, buffs, control, recovery, movement, and scouting;
+- make every authored town reach tier 5 spell study through normal town development;
+- prove all 112 authored spells are reachable through fully developed town study access;
+- broaden generated-map spell rewards with tier 1-5 school coverage instead of only a few low-tier spell shrines;
 - make town study expose the expanded school catalog by faction/tier, while preserving explicit town spell-library entries;
 - broaden field-magic content beyond Beacon route spells;
 - activate Old Measure with a first real strategic spell;

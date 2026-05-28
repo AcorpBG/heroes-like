@@ -24,8 +24,9 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 Current implementation status:
-- Current implementation slice: `magic-spell-tier-power-bands-10184`.
-- Latest completed slice: `magic-spell-catalog-breadth-100-10184`.
+- Current implementation slice: none selected after completing `magic-town-study-full-tier-access-10184`.
+- Latest completed slice: `magic-town-study-full-tier-access-10184`.
+- Previous completed slice: `magic-spell-tier-power-bands-10184`.
 - Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
@@ -55,11 +56,8 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
-- `magic-spell-tier-power-bands-10184`: normalize the 100+ spell catalog into explicit tier power bands so tier 1 is weak/cheap and tier 5 is very strong/expensive across battle and overworld effects.
-- `magic-spell-catalog-breadth-100-10184`: raise the live spell catalog above 100 spells, keep every live school broadly represented, keep at least 20 overworld spells, and make town study pull the expanded school catalog by faction/tier.
-- `magic-school-availability-strategic-influence-10184`: broaden live spell availability and school identity without claiming magic-vs-might hero balance; add field-magic variety, a first Old Measure scouting spell, town study access, generated spell-reward access, and focused magic validation evidence.
-- `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
 - `battle-spell-parity-counterplay-10184`: use `docs/spell-system-player-balance-audit.md` to fix benchmark/live spell valuation parity, spell decision traces, ally spell targeting, and targeted counterplay before further broad stat tuning.
+- `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
 - `battle-layout-smoke-followup-10184`: continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.
 - `strategic-ai-quality-pass-10184`: improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.
 - `rmg-small-generalization-hardening-10184`: harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.
@@ -83,6 +81,9 @@ Target shape:
 - overworld magic should have at least 20 authored spells across movement and scouting support;
 - spell tiers must carry real numeric meaning: tier 1 spells are cheap and limited, tiers 2-3 are useful/strong midgame tools, tier 4 spells are major swings, and tier 5 spells are expensive very-strong effects;
 - tier scaling should apply to mana costs, damage and power scaling, wounded bonuses, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius;
+- every authored town should reach tier 5 spell study through its full development tree without extending the existing town-development day target;
+- every authored spell should be reachable through fully developed town study access, not left as catalog-only content;
+- Native RMG/generated spell rewards should include tier 1-5 candidates across all schools, even though town development remains the primary full-catalog access path;
 - town study should expose faction school access plus Old Measure access by spell tier instead of relying only on short hand-authored per-town lists;
 - town study should expose more than faction-flavored battle buffs/damage, especially field scouting and route tools;
 - Native RMG/generated reward pools should include multiple spell-access candidates instead of only Beacon Path;

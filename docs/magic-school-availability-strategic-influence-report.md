@@ -28,6 +28,9 @@ This slice improves spell availability, magic-school variety, and strategic infl
   - tier 4: major high-impact spells;
   - tier 5: expensive very-strong capstone spells.
 - Tier bands now scale mana cost, damage, power scaling, wounded bonuses, buff/control duration, modifier magnitude, recovery, movement restoration, and scouting radius.
+- Fully developed authored towns now reach tier 5 spell study through existing faction magic/support buildings.
+- All 112 authored spells are reachable through town study after full town development.
+- Native RMG spell-access rewards now include tier 1-5 representatives across every school.
 - Added first live Old Measure spell:
   - `spell_survey_chain` / Survey Chain
   - school: `old_measure`

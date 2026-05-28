@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "magic-spell-tier-power-bands-10184",
-  "currentSliceTitle": "Magic Spell Tier Power Bands",
+  "currentSliceId": "magic-town-study-full-tier-access-10184",
+  "currentSliceTitle": "Magic Town Study Full Tier Access",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning.",
+  "currentSliceNotes": "Completed full town study and generated reward access for the 112-spell catalog; validation evidence recorded in the slice entry.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-27T22:25:00Z",
+  "updatedAt": "2026-05-28T06:52:52Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25896,6 +25896,86 @@
         }
       },
       "notes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning."
+    },
+    {
+      "id": "magic-town-study-full-tier-access-10184",
+      "title": "Magic Town Study Full Tier Access",
+      "status": "completed",
+      "source": "owner direction to fully wire the 100+ spell catalog into town magic guild/development access instead of leaving T3-T5 catalog-only",
+      "planRef": "PLAN.md Magic Availability And Strategic Influence Target / GOALS.md Current Immediate Goal - Magic Availability",
+      "sourceDocs": [
+        "GOALS.md",
+        "PLAN.md",
+        "docs/magic-school-availability-strategic-influence-report.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/buildings.json",
+        "content/random_map_generator_data_model.json",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/validate_repo.py",
+        "GOALS.md",
+        "PLAN.md",
+        "docs/magic-school-availability-strategic-influence-report.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "All 112 spells are reachable through fully developed town study access or generated spell rewards; every authored town can reach spell tier 5 through its development tree; validation proves no T3-T5 spells remain catalog-only.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T06:52:52Z",
+        "sliceId": "magic-town-study-full-tier-access-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed; includes 112-spell catalog, full town-study reachability, tier-5 town study, and RMG spell reward coverage gates)",
+          "jq empty ops/progress.json content/buildings.json content/random_map_generator_data_model.json content/spells.json (passed)",
+          "git diff --check (passed)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld, 16 per school)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement/scouting hooks)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; battle spell hooks)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed; battle and adventure spell valuation hooks)",
+          "godot4 --headless --path . --quit-after 30 tests/town_development_runtime_balance_report.tscn (passed; 15 authored towns complete within target 30 and 105 recruitment cases remain covered)",
+          "godot4 --headless --path . --quit-after 20 tests/random_map_object_pool_value_weighting_report.tscn (passed; generated reward pool still selects spell_access rewards)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_full_town_spell_access.json (passed; ok=true quick smoke)"
+        ],
+        "evidence": {
+          "town_access": {
+            "authored_town_count": 15,
+            "minimum_max_spell_tier": 5,
+            "towns_at_spell_tier_5": 15,
+            "authored_spell_count": 112,
+            "town_study_reachable_spell_count": 112,
+            "missing_town_study_spell_count": 0
+          },
+          "rmg_spell_rewards": {
+            "spell_reward_candidate_count": 38,
+            "tier_counts": {
+              "1": 9,
+              "2": 8,
+              "3": 7,
+              "4": 7,
+              "5": 7
+            },
+            "school_counts": {
+              "beacon": 6,
+              "furnace": 5,
+              "lens": 5,
+              "mire": 5,
+              "old_measure": 6,
+              "root": 6,
+              "veil": 5
+            }
+          },
+          "implemented": [
+            "Promoted existing faction magic/support buildings so every authored town reaches tier 5 spell study without adding extra build steps.",
+            "Preserved faction school identity through town study school access while ensuring Old Measure remains broadly available.",
+            "Broadened generated-map spell rewards from a few low-tier shrines to tier 1-5 representatives across every school.",
+            "Added repo validation gates for full-catalog town reachability, tier-5 town study access, and generated reward coverage."
+          ],
+          "boundaries": "This wires availability. It does not claim final spell balance, school mastery, rare-resource spell casting costs, caster-unit implementation, or magic-vs-might parity."
+        }
+      },
+      "notes": "Completed full town study and generated reward access for the 112-spell catalog; validation evidence recorded in the slice entry.",
+      "updatedAt": "2026-05-28T06:52:52Z",
+      "completedAt": "2026-05-28T06:52:52Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35453,7 +35533,7 @@
     "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
     "completedAt": "2026-05-27T22:25:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-27T19:49:26Z",
+  "currentSliceUpdatedAt": "2026-05-28T06:52:52Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37448,56 +37528,75 @@
       "status": "pass",
       "updatedAt": "2026-05-26T18:18:00Z",
       "summary": "Fast benchmark no-round-cap correction passed quick, full 100-seed matrix, town balance, repo validation, JSON, and diff checks."
+    },
+    {
+      "sliceId": "magic-town-study-full-tier-access-10184",
+      "status": "pass",
+      "updatedAt": "2026-05-28T06:52:52Z",
+      "summary": "Full town study access passed: all 15 authored towns reach spell tier 5, all 112 authored spells are reachable through fully developed town study, and generated spell rewards cover tiers 1-5 across every school."
     }
   ],
   "currentSlice": {
-    "id": "magic-spell-tier-power-bands-10184",
-    "title": "Magic Spell Tier Power Bands",
+    "id": "magic-town-study-full-tier-access-10184",
+    "title": "Magic Town Study Full Tier Access",
     "status": "completed",
-    "updatedAt": "2026-05-27T19:49:26Z",
-    "notes": "Completed spell tier power-band normalization and validation. Combat balance remains needs-tuning.",
-    "completedAt": "2026-05-27T22:25:00Z"
+    "updatedAt": "2026-05-28T06:52:52Z",
+    "notes": "Completed full town study and generated reward access for the 112-spell catalog. This does not claim final spell balance, school mastery, rare-resource casting costs, or caster units.",
+    "completedAt": "2026-05-28T06:52:52Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-27T22:25:00Z",
-    "sliceId": "magic-school-availability-strategic-influence-10184",
+    "updatedAt": "2026-05-28T06:52:52Z",
+    "sliceId": "magic-town-study-full-tier-access-10184",
     "commands": [
-      "jq empty content/spells.json content/towns.json content/resource_sites.json content/random_map_generator_data_model.json ops/progress.json (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 23 spells, 6 overworld, 17 battle, Old Measure live)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement and reveal-radius hooks, Survey Chain revealed 5 new tiles in fixture)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; existing battle behavior unchanged)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_availability.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+      "python3 tests/validate_repo.py (passed; includes full spell catalog town-study and RMG reward gates)",
+      "jq empty ops/progress.json content/buildings.json content/random_map_generator_data_model.json content/spells.json (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld, 16 per school)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "godot4 --headless --path . --quit-after 30 tests/town_development_runtime_balance_report.tscn (passed; all 15 authored towns within target 30)",
+      "godot4 --headless --path . --quit-after 20 tests/random_map_object_pool_value_weighting_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_full_town_spell_access.json (passed; ok=true quick smoke)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "catalog": {
-        "before_total": 20,
-        "after_total": 23,
-        "battle_spells": 17,
-        "overworld_spells": 6,
+        "spell_count": 112,
+        "battle_spells": 90,
+        "overworld_spells": 22,
         "school_counts": {
-          "beacon": 6,
-          "furnace": 4,
-          "lens": 3,
-          "mire": 3,
-          "root": 3,
-          "veil": 3,
-          "old_measure": 1
+          "beacon": 16,
+          "furnace": 16,
+          "lens": 16,
+          "mire": 16,
+          "old_measure": 16,
+          "root": 16,
+          "veil": 16
+        }
+      },
+      "town_access": {
+        "authored_town_count": 15,
+        "minimum_max_spell_tier": 5,
+        "town_study_reachable_spell_count": 112,
+        "missing_town_study_spell_count": 0
+      },
+      "rmg_spell_rewards": {
+        "spell_reward_candidate_count": 38,
+        "tier_counts": {
+          "1": 9,
+          "2": 8,
+          "3": 7,
+          "4": 7,
+          "5": 7
         }
       },
       "implemented": [
-        "Added Rootway Tangle and Fogline Drift as non-Beacon field route spells.",
-        "Added Survey Chain as the first live Old Measure spell.",
-        "Added reveal_radius overworld spell support and live fog exploration mutation.",
-        "Expanded all town tier-2 study libraries with Survey Chain; Thornwake tier-1 with Rootway Tangle; Veilmourn tier-1 with Fogline Drift.",
-        "Added frontier shrine content for the new field spells.",
-        "Expanded Native RMG/generated spell-access reward candidates beyond Beacon Path."
+        "Promoted existing town magic/support buildings to tiers 3-5 so every authored town reaches tier 5 study.",
+        "Broadened generated spell-access reward candidates to tier 1-5 representatives across every school.",
+        "Added repo validation for full town-study reachability and generated spell reward coverage."
       ],
-      "boundaries": "No hero combat stats, unit stats, battle-spell payloads, caster-unit system, rare-resource casting costs, or final magic-vs-might balance claim changed."
+      "boundaries": "No hero combat stats, unit stats, final spell balance, school mastery, caster-unit system, or rare-resource spell-cast costs changed."
     }
   }
 }
