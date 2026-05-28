@@ -185,20 +185,32 @@ class FastBattleBenchmark:
         return {unit_id: amount for unit_id, amount in sorted(recruits.items()) if amount > 0}
 
     def _select_hero(self, faction_id: str) -> dict[str, Any]:
+        heroes = self._live_heroes_for_faction(faction_id)
+        return heroes[0] if heroes else {}
+
+    def _live_heroes_for_faction(self, faction_id: str) -> list[dict[str, Any]]:
         faction = self.factions.get(faction_id, {})
+        ordered: list[dict[str, Any]] = []
+        seen: set[str] = set()
         for hero_id_value in faction.get("hero_ids", []):
             hero_id = str(hero_id_value)
             hero = self.heroes.get(hero_id, {})
             if str(hero.get("faction_id", "")) == faction_id and str(hero.get("roster_state", "live")) == "live":
-                return hero
-        candidates = [
+                ordered.append(hero)
+                seen.add(hero_id)
+        extra_live = [
             hero for hero in self.heroes.values()
-            if str(hero.get("faction_id", "")) == faction_id and str(hero.get("roster_state", "live")) == "live"
+            if str(hero.get("id", "")) not in seen
+            and str(hero.get("faction_id", "")) == faction_id
+            and str(hero.get("roster_state", "live")) == "live"
         ]
-        if not candidates:
-            candidates = [hero for hero in self.heroes.values() if str(hero.get("faction_id", "")) == faction_id]
-        candidates.sort(key=lambda hero: str(hero.get("id", "")))
-        return candidates[0] if candidates else {}
+        extra_live.sort(key=lambda hero: str(hero.get("id", "")))
+        ordered.extend(extra_live)
+        if ordered:
+            return ordered
+        fallback = [hero for hero in self.heroes.values() if str(hero.get("faction_id", "")) == faction_id]
+        fallback.sort(key=lambda hero: str(hero.get("id", "")))
+        return fallback
 
     def _build_faction_models(self) -> dict[str, dict[str, Any]]:
         models: dict[str, dict[str, Any]] = {}
@@ -222,10 +234,18 @@ class FastBattleBenchmark:
                 if best_score is None or candidate < best_score:
                     best_score = candidate
                     representative_town = town_id
-            hero = self._select_hero(faction_id)
+            roster_heroes = self._live_heroes_for_faction(faction_id)
+            hero = roster_heroes[0] if roster_heroes else {}
             hero_snapshots = {
                 str(week): self._hero_payload(hero, faction_id, representative_town, week)
                 for week in DEFAULT_WEEKS
+            }
+            roster_hero_snapshots = {
+                str(hero_entry.get("id", "")): {
+                    str(week): self._hero_payload(hero_entry, faction_id, representative_town, week)
+                    for week in DEFAULT_WEEKS
+                }
+                for hero_entry in roster_heroes
             }
             models[faction_id] = {
                 "faction_id": faction_id,
@@ -241,6 +261,8 @@ class FastBattleBenchmark:
                 "town_unlocks": town_unlocks,
                 "hero": hero_snapshots[str(max(DEFAULT_WEEKS))],
                 "hero_snapshots": hero_snapshots,
+                "roster_hero_ids": [str(hero_entry.get("id", "")) for hero_entry in roster_heroes],
+                "roster_hero_snapshots": roster_hero_snapshots,
                 "army_snapshots": {},
             }
             for week in DEFAULT_WEEKS:
@@ -375,7 +397,7 @@ class FastBattleBenchmark:
                 amount += max(0, int(bonus.get(unit_id, 0)))
         return max(0, int(amount))
 
-    def run(self, weeks: list[int], seeds: int, include_contexts: bool = False) -> dict[str, Any]:
+    def run(self, weeks: list[int], seeds: int, include_contexts: bool = False, hero_policy: str = "curated-lead") -> dict[str, Any]:
         contexts = [{"id": "neutral_plains", "terrain": "plains", "battlefield_tags": []}]
         if include_contexts:
             contexts.extend([
@@ -393,14 +415,14 @@ class FastBattleBenchmark:
                     for side_b_faction in faction_ids:
                         if side_a_faction == side_b_faction:
                             continue
-                        row = self._run_ordered_matchup(side_a_faction, side_b_faction, week, seeds, context)
+                        row = self._run_ordered_matchup(side_a_faction, side_b_faction, week, seeds, context, hero_policy)
                         ordered_rows.append(row)
                         if context["id"] == "neutral_plains":
                             primary_rows.append(row)
         pair_summaries = self._pair_summaries(primary_rows)
         week_summaries = self._week_summaries(primary_rows)
         outliers = self._balance_outliers(pair_summaries, week_summaries)
-        structural_failures = self._structural_failures(weeks, seeds, primary_rows)
+        structural_failures = self._structural_failures(weeks, seeds, primary_rows, hero_policy)
         return {
             "schema": "battle_faction_fast_balance_benchmark_v2",
             "ok": not structural_failures,
@@ -420,6 +442,7 @@ class FastBattleBenchmark:
             },
             "seeds_per_ordered_matchup": seeds,
             "weeks": weeks,
+            "hero_policy": hero_policy,
             "faction_count": len(faction_ids),
             "factions": self._public_faction_models(),
             "ordered_matchup_count": len(primary_rows),
@@ -443,6 +466,8 @@ class FastBattleBenchmark:
                 "representative_town_name": model["representative_town_name"],
                 "hero_id": model["hero"]["id"],
                 "hero_name": model["hero"]["name"],
+                "live_hero_count": len(model.get("roster_hero_ids", [])),
+                "live_hero_ids": list(model.get("roster_hero_ids", [])),
                 "unlock_curve_by_tier": model["unlock_curve_by_tier"],
                 "hero_spellbooks": {
                     week: {
@@ -514,6 +539,7 @@ class FastBattleBenchmark:
         week: int,
         seeds: int,
         context: dict[str, Any],
+        hero_policy: str,
     ) -> dict[str, Any]:
         outcomes: Counter[str] = Counter()
         rounds: list[int] = []
@@ -528,8 +554,12 @@ class FastBattleBenchmark:
         spell_casts_by_id: Counter[str] = Counter()
         spell_resists_by_faction: Counter[str] = Counter()
         spell_resists_by_id: Counter[str] = Counter()
+        hero_pair_samples: Counter[str] = Counter()
         for seed_index in range(seeds):
-            battle = self._create_battle(side_a_faction, side_b_faction, week, context)
+            battle = self._create_battle(side_a_faction, side_b_faction, week, context, hero_policy, seed_index)
+            hero_pair_samples[
+                f"{battle['side_a_hero'].get('id', '')}|{battle['side_b_hero'].get('id', '')}"
+            ] += 1
             matchup_seed_parts = sorted([side_a_faction, side_b_faction])
             result = self._simulate_battle(
                 battle,
@@ -555,9 +585,11 @@ class FastBattleBenchmark:
         return {
             "week": week,
             "context_id": context["id"],
+            "hero_policy": hero_policy,
             "side_a_faction_id": side_a_faction,
             "side_b_faction_id": side_b_faction,
             "sample_count": seeds,
+            "hero_pair_sample_count": len(hero_pair_samples),
             "side_a_win_rate": round(side_a_win_rate, 2),
             "side_b_win_rate": round(side_b_win_rate, 2),
             "outcomes": dict(sorted(outcomes.items())),
@@ -581,16 +613,26 @@ class FastBattleBenchmark:
             "consequence_counts": dict(sorted(consequence_counts.items())),
         }
 
-    def _create_battle(self, side_a_faction: str, side_b_faction: str, week: int, context: dict[str, Any]) -> dict[str, Any]:
+    def _hero_snapshot_for_sample(self, model: dict[str, Any], week: int, seed_index: int, stride: int, hero_policy: str) -> dict[str, Any]:
+        if hero_policy != "all-live":
+            return dict(model["hero_snapshots"][str(week)])
+        hero_ids = list(model.get("roster_hero_ids", []))
+        if not hero_ids:
+            return dict(model["hero_snapshots"][str(week)])
+        hero_id = hero_ids[(seed_index // max(1, stride)) % len(hero_ids)]
+        return dict(model.get("roster_hero_snapshots", {}).get(hero_id, {}).get(str(week), model["hero_snapshots"][str(week)]))
+
+    def _create_battle(self, side_a_faction: str, side_b_faction: str, week: int, context: dict[str, Any], hero_policy: str, seed_index: int) -> dict[str, Any]:
         side_a_model = self.faction_models[side_a_faction]
         side_b_model = self.faction_models[side_b_faction]
+        side_a_hero_count = max(1, len(side_a_model.get("roster_hero_ids", [])))
         return {
             "round": 1,
             "distance": 2,
             "terrain": context["terrain"],
             "battlefield_tags": list(context.get("battlefield_tags", [])),
-            "side_a_hero": dict(side_a_model["hero_snapshots"][str(week)]),
-            "side_b_hero": dict(side_b_model["hero_snapshots"][str(week)]),
+            "side_a_hero": self._hero_snapshot_for_sample(side_a_model, week, seed_index, 1, hero_policy),
+            "side_b_hero": self._hero_snapshot_for_sample(side_b_model, week, seed_index, side_a_hero_count, hero_policy),
             "commander_spell_cast_rounds": {},
             "stacks": (
                 self._build_stacks(side_a_model["army_snapshots"][str(week)], INTERNAL_SIDE_A)
@@ -1971,13 +2013,15 @@ class FastBattleBenchmark:
         outliers.sort(key=lambda item: (str(item["kind"]), int(item.get("week", 0)), -float(item.get("value", 0.0))))
         return outliers
 
-    def _structural_failures(self, weeks: list[int], seeds: int, rows: list[dict[str, Any]]) -> list[str]:
+    def _structural_failures(self, weeks: list[int], seeds: int, rows: list[dict[str, Any]], hero_policy: str) -> list[str]:
         failures: list[str] = []
         if len(self.faction_models) != 6:
             failures.append(f"expected_6_factions_got_{len(self.faction_models)}")
         for faction_id, model in self.faction_models.items():
             if len(model.get("ladder", [])) != 7:
                 failures.append(f"{faction_id}_missing_seven_tier_ladder")
+            if hero_policy == "all-live" and len(model.get("roster_hero_ids", [])) != 10:
+                failures.append(f"{faction_id}_all_live_hero_policy_expected_10_heroes_got_{len(model.get('roster_hero_ids', []))}")
             for week in weeks:
                 if not model.get("army_snapshots", {}).get(str(week)):
                     failures.append(f"{faction_id}_week_{week}_empty_army_snapshot")
@@ -2032,11 +2076,22 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="Emit raw JSON without the report prefix.")
     parser.add_argument("--gate", action="store_true", help="Return non-zero on structural benchmark failure.")
     parser.add_argument("--include-contexts", action="store_true", help="Add report-only terrain/tag context rows.")
+    parser.add_argument(
+        "--hero-policy",
+        choices=["curated-lead", "all-live"],
+        default="curated-lead",
+        help="Use one curated lead hero per faction or cycle all live heroes across seeds.",
+    )
     args = parser.parse_args()
 
     seeds = 10 if args.quick else max(1, int(args.seeds))
     weeks = [1] if args.quick else args.weeks
-    report = FastBattleBenchmark().run(weeks=weeks, seeds=seeds, include_contexts=bool(args.include_contexts))
+    report = FastBattleBenchmark().run(
+        weeks=weeks,
+        seeds=seeds,
+        include_contexts=bool(args.include_contexts),
+        hero_policy=str(args.hero_policy),
+    )
     payload = json.dumps(report, sort_keys=True)
     if args.json:
         print(payload)
