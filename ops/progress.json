@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "magic-resistance-countercontrol-10184",
-  "currentSliceTitle": "Magic Resistance Countercontrol",
+  "currentSliceId": "combat-sunvault-t6-melee-balance-10184",
+  "currentSliceTitle": "Combat Sunvault T6 Melee Balance",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Magic resistance, control resistance, temporary status immunity, and artifact-backed resistance now run in live battle and the fast benchmark. Remaining benchmark outliers are tuning evidence.",
+  "currentSliceNotes": "Completed. Sunvault T6 is now a melee Aurora Bastions unit; full benchmark passed and late Sunvault dominance was materially reduced, though balance remains needs_tuning.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T10:24:30Z",
+  "updatedAt": "2026-05-28T11:50:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26283,6 +26283,98 @@
       "startedAt": "2026-05-28T10:05:01Z",
       "updatedAt": "2026-05-28T10:24:30Z",
       "completedAt": "2026-05-28T10:24:30Z"
+    },
+    {
+      "id": "combat-sunvault-t6-melee-balance-10184",
+      "title": "Combat Sunvault T6 Melee Balance",
+      "status": "completed",
+      "source": "owner direction to completely change Sunvault T6 unit from ranged to non-ranged after benchmark showed late Sunvault ranged dominance",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "content/buildings.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "docs/factions-content-bible.md",
+        "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Sunvault T6 six-faction unit must be a melee/non-ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T11:50:45Z",
+        "sliceId": "combat-sunvault-t6-melee-balance-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
+            "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
+            "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
+          ],
+          "unit_after": {
+            "unit_id": "unit_sunvault_aurora_ballistae",
+            "name": "Aurora Bastions",
+            "role": "melee",
+            "tier": 6,
+            "hp": 50,
+            "attack": 13,
+            "defense": 11,
+            "min_damage": 9,
+            "max_damage": 14,
+            "speed": 4,
+            "initiative": 6,
+            "ranged": false,
+            "shots": "absent"
+          },
+          "benchmark_impact": {
+            "before_outliers": 47,
+            "after_outliers": 44,
+            "after_week_summaries": [
+              {
+                "week": 1,
+                "side_bias_points": 0.07,
+                "average_rounds": 5.54
+              },
+              {
+                "week": 2,
+                "side_bias_points": 0.93,
+                "average_rounds": 5.8
+              },
+              {
+                "week": 3,
+                "side_bias_points": 0.2,
+                "average_rounds": 6.48
+              },
+              {
+                "week": 4,
+                "side_bias_points": 0.2,
+                "average_rounds": 7.18
+              }
+            ],
+            "sunvault_late_changes": [
+              "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
+              "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
+              "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
+              "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+            ],
+            "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+          }
+        }
+      },
+      "notes": "Completed. Sunvault T6 is now a melee Aurora Bastions unit; full benchmark passed and late Sunvault dominance was materially reduced, though balance remains needs_tuning.",
+      "startedAt": "2026-05-28T11:37:28Z",
+      "updatedAt": "2026-05-28T11:50:45Z",
+      "completedAt": "2026-05-28T11:50:45Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35818,67 +35910,40 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T10:24:30Z",
-    "sliceId": "magic-resistance-countercontrol-10184",
+    "updatedAt": "2026-05-28T11:50:45Z",
+    "sliceId": "combat-sunvault-t6-melee-balance-10184",
     "commands": [
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
       "python3 tests/validate_repo.py (passed)",
+      "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
-        "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
-        "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
-        "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
-        "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
-        "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
-        "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
-        "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+        "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
+        "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
+        "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
       ],
-      "runtime_report": {
-        "damage_resistance": {
-          "raw_damage": 44,
-          "final_damage": 22,
-          "resistance_pct": 50
-        },
-        "control_resistance": {
-          "control_resistance_pct": 80,
-          "roll": 41,
-          "blocked_status_id": "status_rooted"
-        },
-        "control_immunity": {
-          "blocked_status_id": "status_rooted"
-        },
-        "cleanse_immunity": {
-          "status_immunity_ids": [
-            "status_harried",
-            "status_staggered"
-          ]
-        },
-        "artifact_resistance": {
-          "spell_resistance_pct": 8,
-          "control_resistance_pct": 8,
-          "lens_resistance_pct": 10
-        }
+      "unit_after": {
+        "unit_id": "unit_sunvault_aurora_ballistae",
+        "name": "Aurora Bastions",
+        "role": "melee",
+        "tier": 6,
+        "hp": 50,
+        "attack": 13,
+        "defense": 11,
+        "min_damage": 9,
+        "max_damage": 14,
+        "speed": 4,
+        "initiative": 6,
+        "ranged": false,
+        "shots": "absent"
       },
-      "full_100_seed_matrix": {
-        "ok": true,
-        "ordered_rows": 120,
-        "balance_status": "needs_tuning",
-        "balance_outlier_count": 47,
-        "spell_casts": 23216,
-        "spell_resisted_count": 1416,
-        "spell_immune_count": 0,
-        "spell_resisted_damage_prevented": 3344,
-        "week_summaries": [
+      "benchmark_impact": {
+        "before_outliers": 47,
+        "after_outliers": 44,
+        "after_week_summaries": [
           {
             "week": 1,
             "side_bias_points": 0.07,
@@ -35891,28 +35956,27 @@
           },
           {
             "week": 3,
-            "side_bias_points": 0.27,
-            "average_rounds": 6.43
+            "side_bias_points": 0.2,
+            "average_rounds": 6.48
           },
           {
             "week": 4,
-            "side_bias_points": 0.13,
+            "side_bias_points": 0.2,
             "average_rounds": 7.18
           }
         ],
-        "top_resisted_spell_ids": {
-          "spell_beacon_writ_lance_13": 393,
-          "spell_beacon_bell_lance_25": 374,
-          "spell_sunlance_arc": 229,
-          "spell_furnace_rivet_clause_05": 209,
-          "spell_old_measure_tally_tally_20": 154
-        }
-      },
-      "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+        "sunvault_late_changes": [
+          "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
+          "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
+          "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
+          "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+        ],
+        "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+      }
     }
   },
-  "active_slice": "magic-resistance-countercontrol-10184",
-  "currentSliceUpdatedAt": "2026-05-28T10:24:30Z",
+  "active_slice": "combat-sunvault-t6-melee-balance-10184",
+  "currentSliceUpdatedAt": "2026-05-28T11:50:45Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38014,99 +38078,43 @@
         },
         "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "magic-resistance-countercontrol-10184",
-    "title": "Magic Resistance Countercontrol",
-    "status": "completed",
-    "source": "owner direction to plan and implement missing spell resistance, natural magic resistance, counter-control immunity, and artifact-backed resistance mechanics before further battle balance tuning",
-    "planRef": "PLAN.md Magic Resistance And Counter-Control Target / GOALS.md Current Immediate Goal - Magic Resistance And Counter-Control",
-    "sourceDocs": [
-      "PLAN.md",
-      "GOALS.md",
-      "docs/spell-system-player-balance-audit.md"
-    ],
-    "implementationTargets": [
-      "content/units.json",
-      "content/spells.json",
-      "content/artifacts.json",
-      "scripts/core/SpellRules.gd",
-      "scripts/core/BattleRules.gd",
-      "scripts/core/BattleAiRules.gd",
-      "scripts/core/ArtifactRules.gd",
-      "tests/battle_faction_fast_balance_benchmark.py",
-      "tests/magic_resistance_countercontrol_report.gd",
-      "tests/magic_resistance_countercontrol_report.tscn",
-      "tests/validate_repo.py",
-      "PLAN.md",
-      "GOALS.md",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Live battle spell resolution and the fast battle benchmark must apply unit, hero, school, immunity, and artifact resistance consistently; cleanse spells must grant temporary immunity; AI valuation must account for expected resisted damage/control success; validation must prove content bounds, runtime behavior, benchmark execution, and JSON/diff hygiene.",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-28T10:24:30Z",
-      "sliceId": "magic-resistance-countercontrol-10184",
+      "updatedAt": "2026-05-28T11:50:45Z",
+      "sliceId": "combat-sunvault-t6-melee-balance-10184",
       "commands": [
-        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-        "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
-        "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
-        "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
-        "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
-        "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
         "python3 tests/validate_repo.py (passed)",
+        "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
-          "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
-          "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
-          "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
-          "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
-          "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
-          "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
-          "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+          "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
+          "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
+          "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
         ],
-        "runtime_report": {
-          "damage_resistance": {
-            "raw_damage": 44,
-            "final_damage": 22,
-            "resistance_pct": 50
-          },
-          "control_resistance": {
-            "control_resistance_pct": 80,
-            "roll": 41,
-            "blocked_status_id": "status_rooted"
-          },
-          "control_immunity": {
-            "blocked_status_id": "status_rooted"
-          },
-          "cleanse_immunity": {
-            "status_immunity_ids": [
-              "status_harried",
-              "status_staggered"
-            ]
-          },
-          "artifact_resistance": {
-            "spell_resistance_pct": 8,
-            "control_resistance_pct": 8,
-            "lens_resistance_pct": 10
-          }
+        "unit_after": {
+          "unit_id": "unit_sunvault_aurora_ballistae",
+          "name": "Aurora Bastions",
+          "role": "melee",
+          "tier": 6,
+          "hp": 50,
+          "attack": 13,
+          "defense": 11,
+          "min_damage": 9,
+          "max_damage": 14,
+          "speed": 4,
+          "initiative": 6,
+          "ranged": false,
+          "shots": "absent"
         },
-        "full_100_seed_matrix": {
-          "ok": true,
-          "ordered_rows": 120,
-          "balance_status": "needs_tuning",
-          "balance_outlier_count": 47,
-          "spell_casts": 23216,
-          "spell_resisted_count": 1416,
-          "spell_immune_count": 0,
-          "spell_resisted_damage_prevented": 3344,
-          "week_summaries": [
+        "benchmark_impact": {
+          "before_outliers": 47,
+          "after_outliers": 44,
+          "after_week_summaries": [
             {
               "week": 1,
               "side_bias_points": 0.07,
@@ -38119,99 +38127,154 @@
             },
             {
               "week": 3,
-              "side_bias_points": 0.27,
-              "average_rounds": 6.43
+              "side_bias_points": 0.2,
+              "average_rounds": 6.48
             },
             {
               "week": 4,
-              "side_bias_points": 0.13,
+              "side_bias_points": 0.2,
               "average_rounds": 7.18
             }
           ],
-          "top_resisted_spell_ids": {
-            "spell_beacon_writ_lance_13": 393,
-            "spell_beacon_bell_lance_25": 374,
-            "spell_sunlance_arc": 229,
-            "spell_furnace_rivet_clause_05": 209,
-            "spell_old_measure_tally_tally_20": 154
-          }
+          "sunvault_late_changes": [
+            "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
+            "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
+            "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
+            "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+          ],
+          "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+        }
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "combat-sunvault-t6-melee-balance-10184",
+    "title": "Combat Sunvault T6 Melee Balance",
+    "status": "completed",
+    "source": "owner direction to completely change Sunvault T6 unit from ranged to non-ranged after benchmark showed late Sunvault ranged dominance",
+    "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+    "sourceDocs": [
+      "PLAN.md",
+      "GOALS.md"
+    ],
+    "implementationTargets": [
+      "content/units.json",
+      "content/buildings.json",
+      "content/unit_art_manifest.json",
+      "content/unit_animation_manifest.json",
+      "docs/factions-content-bible.md",
+      "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Sunvault T6 six-faction unit must be a melee/non-ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-28T11:50:45Z",
+      "sliceId": "combat-sunvault-t6-melee-balance-10184",
+      "commands": [
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
+          "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
+          "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
+        ],
+        "unit_after": {
+          "unit_id": "unit_sunvault_aurora_ballistae",
+          "name": "Aurora Bastions",
+          "role": "melee",
+          "tier": 6,
+          "hp": 50,
+          "attack": 13,
+          "defense": 11,
+          "min_damage": 9,
+          "max_damage": 14,
+          "speed": 4,
+          "initiative": 6,
+          "ranged": false,
+          "shots": "absent"
         },
-        "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+        "benchmark_impact": {
+          "before_outliers": 47,
+          "after_outliers": 44,
+          "after_week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.07,
+              "average_rounds": 5.54
+            },
+            {
+              "week": 2,
+              "side_bias_points": 0.93,
+              "average_rounds": 5.8
+            },
+            {
+              "week": 3,
+              "side_bias_points": 0.2,
+              "average_rounds": 6.48
+            },
+            {
+              "week": 4,
+              "side_bias_points": 0.2,
+              "average_rounds": 7.18
+            }
+          ],
+          "sunvault_late_changes": [
+            "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
+            "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
+            "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
+            "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+          ],
+          "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+        }
       }
     },
-    "nonGoals": [
-      "Do not claim final magic-vs-might or faction battle balance from this slice.",
-      "Do not add caster-unit spellbooks, rare-resource spell-cast costs, or artifact save-schema migrations.",
-      "Do not add broad new report gates beyond one focused resistance/counter-control report."
-    ],
-    "notes": "Completed. Magic resistance, control resistance, temporary status immunity, and artifact-backed resistance now run in live battle and the fast benchmark. Remaining benchmark outliers are tuning evidence.",
-    "startedAt": "2026-05-28T10:05:01Z",
-    "updatedAt": "2026-05-28T10:24:30Z",
-    "completedAt": "2026-05-28T10:24:30Z"
+    "notes": "Completed. Sunvault T6 is now a melee Aurora Bastions unit; full benchmark passed and late Sunvault dominance was materially reduced, though balance remains needs_tuning.",
+    "startedAt": "2026-05-28T11:37:28Z",
+    "updatedAt": "2026-05-28T11:50:45Z",
+    "completedAt": "2026-05-28T11:50:45Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T10:24:30Z",
-    "sliceId": "magic-resistance-countercontrol-10184",
+    "updatedAt": "2026-05-28T11:50:45Z",
+    "sliceId": "combat-sunvault-t6-melee-balance-10184",
     "commands": [
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
       "python3 tests/validate_repo.py (passed)",
+      "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
-        "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
-        "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
-        "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
-        "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
-        "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
-        "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
-        "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+        "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
+        "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
+        "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
       ],
-      "runtime_report": {
-        "damage_resistance": {
-          "raw_damage": 44,
-          "final_damage": 22,
-          "resistance_pct": 50
-        },
-        "control_resistance": {
-          "control_resistance_pct": 80,
-          "roll": 41,
-          "blocked_status_id": "status_rooted"
-        },
-        "control_immunity": {
-          "blocked_status_id": "status_rooted"
-        },
-        "cleanse_immunity": {
-          "status_immunity_ids": [
-            "status_harried",
-            "status_staggered"
-          ]
-        },
-        "artifact_resistance": {
-          "spell_resistance_pct": 8,
-          "control_resistance_pct": 8,
-          "lens_resistance_pct": 10
-        }
+      "unit_after": {
+        "unit_id": "unit_sunvault_aurora_ballistae",
+        "name": "Aurora Bastions",
+        "role": "melee",
+        "tier": 6,
+        "hp": 50,
+        "attack": 13,
+        "defense": 11,
+        "min_damage": 9,
+        "max_damage": 14,
+        "speed": 4,
+        "initiative": 6,
+        "ranged": false,
+        "shots": "absent"
       },
-      "full_100_seed_matrix": {
-        "ok": true,
-        "ordered_rows": 120,
-        "balance_status": "needs_tuning",
-        "balance_outlier_count": 47,
-        "spell_casts": 23216,
-        "spell_resisted_count": 1416,
-        "spell_immune_count": 0,
-        "spell_resisted_damage_prevented": 3344,
-        "week_summaries": [
+      "benchmark_impact": {
+        "before_outliers": 47,
+        "after_outliers": 44,
+        "after_week_summaries": [
           {
             "week": 1,
             "side_bias_points": 0.07,
@@ -38224,24 +38287,23 @@
           },
           {
             "week": 3,
-            "side_bias_points": 0.27,
-            "average_rounds": 6.43
+            "side_bias_points": 0.2,
+            "average_rounds": 6.48
           },
           {
             "week": 4,
-            "side_bias_points": 0.13,
+            "side_bias_points": 0.2,
             "average_rounds": 7.18
           }
         ],
-        "top_resisted_spell_ids": {
-          "spell_beacon_writ_lance_13": 393,
-          "spell_beacon_bell_lance_25": 374,
-          "spell_sunlance_arc": 229,
-          "spell_furnace_rivet_clause_05": 209,
-          "spell_old_measure_tally_tally_20": 154
-        }
-      },
-      "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+        "sunvault_late_changes": [
+          "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
+          "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
+          "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
+          "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+        ],
+        "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+      }
     }
   }
 }

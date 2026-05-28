@@ -741,7 +741,7 @@
       "id": "building_aurora_spire",
       "name": "Aurora Spire",
       "category": "dwelling",
-      "description": "A relay crown tower where the Compact can field Aurora Ballistae to dominate prepared sightlines.",
+      "description": "A relay crown tower where the Compact can field Aurora Ballista batteries to dominate prepared sightlines.",
       "cost": {
         "gold": 2400,
         "wood": 2,
@@ -1309,9 +1309,9 @@
     },
     {
       "id": "building_sunvault_aurora_spire",
-      "name": "Aurora Ballista Spire",
+      "name": "Aurora Bastion Spire",
       "category": "dwelling",
-      "description": "Relay spires assemble the heavy Aurora Ballistae.",
+      "description": "Relay spires assemble heavy Aurora Bastions for close-line prism defense.",
       "cost": {
         "gold": 2570,
         "wood": 2,

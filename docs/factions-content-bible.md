@@ -315,7 +315,7 @@ Sunvault is not a holy light faction. Its ladder is calibration warfare: shield 
 | 3 | `unit_sunvault_mirror_duelists` | Mirror Duelists | Reposition melee that exploits broken timing and reflected lanes. |
 | 4 | `unit_sunvault_resonant_choristers` | Resonant Choristers | Support for spell cycling, cohesion, and focused marks. |
 | 5 | `unit_sunvault_solar_array_striders` | Solar Array Striders | Construct walkers that project small firing lanes and resist disruption. |
-| 6 | `unit_sunvault_aurora_ballistae` | Aurora Ballistae | Heavy battery, excellent when protected and weak when rushed. |
+| 6 | `unit_sunvault_aurora_ballistae` | Aurora Bastions | Heavy close-line prism defenders that hold relay fronts instead of adding another ranged battery. |
 | 7 | `unit_sunvault_daybreak_colossus` | Daybreak Colossus | Prepared-front amplifier and resonance capstone. |
 
 ### Economy Preferences And Resources
