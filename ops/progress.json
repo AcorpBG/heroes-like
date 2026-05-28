@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-spell-parity-counterplay-10184",
-  "currentSliceTitle": "Battle Spell Parity Counterplay",
+  "currentSliceId": "battle-spell-valuation-counterplay-followup-10184",
+  "currentSliceTitle": "Battle Spell Valuation Counterplay Followup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed fast battle benchmark town-study spellbook integration; full 100-seed all-week gate passed with spell cast evidence.",
+  "currentSliceNotes": "Completed spell valuation/counterplay follow-up. The fast benchmark now reports exact spell ids, devalues repeated control loops, keeps control as bounded opener pressure, and uses Native-RMG week-tier spell study instead of authored representative-town magic timing.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T07:43:50Z",
+  "updatedAt": "2026-05-28T08:53:39Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26029,10 +26029,26 @@
             "balance_outlier_count": 52,
             "total_spell_casts": 42979,
             "week_summaries": [
-              {"week": 1, "side_bias_points": 0.4, "average_rounds": 5.12},
-              {"week": 2, "side_bias_points": 1.6, "average_rounds": 6.35},
-              {"week": 3, "side_bias_points": 1.27, "average_rounds": 6.68},
-              {"week": 4, "side_bias_points": 0.0, "average_rounds": 7.57}
+              {
+                "week": 1,
+                "side_bias_points": 0.4,
+                "average_rounds": 5.12
+              },
+              {
+                "week": 2,
+                "side_bias_points": 1.6,
+                "average_rounds": 6.35
+              },
+              {
+                "week": 3,
+                "side_bias_points": 1.27,
+                "average_rounds": 6.68
+              },
+              {
+                "week": 4,
+                "side_bias_points": 0.0,
+                "average_rounds": 7.57
+              }
             ],
             "spell_casts_by_effect": {
               "attack_buff": 2470,
@@ -26070,7 +26086,7 @@
     {
       "id": "battle-spell-valuation-counterplay-followup-10184",
       "title": "Battle Spell Valuation Counterplay Followup",
-      "status": "pending",
+      "status": "completed",
       "source": "spell-enabled 100-seed benchmark evidence shows heavy control preference after adding full town-study spellbooks",
       "planRef": "PLAN.md Selectable Near-Term Work / Battle Balance Benchmark Target",
       "sourceDocs": [
@@ -26086,13 +26102,54 @@
       ],
       "completionCriteria": "Spell-enabled benchmark valuation should preserve real spell casts while reducing pathological over-selection of one control school/effect before broad unit-stat tuning treats remaining outliers as faction combat imbalance.",
       "validation": {
-        "status": "pending",
-        "updatedAt": "2026-05-28T07:43:50Z",
+        "status": "passed",
+        "updatedAt": "2026-05-28T08:53:39Z",
         "sliceId": "battle-spell-valuation-counterplay-followup-10184",
-        "commands": [],
-        "evidence": {}
+        "commands": [
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_spell_native_week_final_v3.json",
+          "python3 tests/town_development_balance_report.py > tmp/town_development_balance_report_after_spell_valuation.txt",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "benchmarkStructuralStatus": "ok_true_no_structural_failures",
+          "spellAvailabilityPolicy": "starting battle spells plus Native-RMG week-tier town study caps {1:1, 2:2, 3:4, 4:5}; authored representative-town magic-building timing ignored",
+          "spellCastAttribution": {
+            "totalSpellCasts": 23386,
+            "byEffect": {
+              "attack_buff": 2491,
+              "control_enemy": 2966,
+              "damage_enemy": 2978,
+              "defense_buff": 6668,
+              "initiative_buff": 2980,
+              "recover_ally": 5303
+            },
+            "topSpellIds": {
+              "spell_graft_mend": 5303,
+              "spell_old_measure_tally_axiom_04": 2857,
+              "spell_bulwark_litany": 2635,
+              "spell_briar_bind": 2192,
+              "spell_lantern_phalanx": 1607
+            }
+          },
+          "controlLoopResult": "control_enemy fell from the previous pathological majority to 2966/23386 casts while remaining present as opener pressure",
+          "remainingBalanceStatus": {
+            "balanceStatus": "needs_tuning",
+            "balanceOutlierCount": 47,
+            "topRemainingIssues": [
+              "week 2 Thornwake loses heavily into Embercourt, Sunvault, Brasshollow, and Mireclaw",
+              "week 3 Thornwake remains heavily weak into Sunvault, Embercourt, and Mireclaw",
+              "week 1 Sunvault remains very strong into Embercourt"
+            ]
+          }
+        }
       },
-      "notes": "Pending. Use the spell-enabled benchmark reports; do not revert to raw unit-only combat math."
+      "notes": "Completed. This slice corrected benchmark spell decision behavior and Native-RMG spell availability evidence; it did not claim final faction balance. Remaining 47 outliers are now combat/content tuning evidence, not the old control-loop artifact.",
+      "updatedAt": "2026-05-28T08:53:39Z",
+      "startedAt": "2026-05-28T08:17:37Z",
+      "completedAt": "2026-05-28T08:53:39Z"
     }
   ],
   "completedImplementationEvidence": [

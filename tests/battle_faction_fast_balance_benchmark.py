@@ -26,7 +26,7 @@ SIMULATION_GUARD_MAX_ROUNDS = 200
 DEFAULT_SEEDS = 100
 DEFAULT_WEEKS = [1, 2, 3, 4]
 WEEK_BOUNDARY_DAYS = {1: 7, 2: 14, 3: 21, 4: 28}
-SPELL_STUDY_WEEK_DAYS = {1: 7, 2: 14, 3: 21, 4: 30}
+SPELL_STUDY_WEEK_TIER_CAPS = {1: 1, 2: 2, 3: 4, 4: 5}
 BATTLE_RECRUITMENT_TIER_CAPS = {
     1: [3],
     2: [4, 5],
@@ -259,10 +259,7 @@ class FastBattleBenchmark:
             "town_study_spell_count": len([spell_id for spell_id in spell_ids if spell_id not in starting_spell_ids]),
             "spellbook_week": week,
             "spellbook_town_id": town_id,
-            "spellbook_spell_tier": self._town_spell_tier_by_day(
-                town_id,
-                SPELL_STUDY_WEEK_DAYS.get(week, max(SPELL_STUDY_WEEK_DAYS.values())),
-            ) if town_id else 0,
+            "spellbook_spell_tier": self._benchmark_spell_tier_for_week(week),
             "mana_current": mana,
             "mana_max": mana,
         }
@@ -281,8 +278,10 @@ class FastBattleBenchmark:
     def _town_study_spell_ids_for_week(self, faction_id: str, town_id: str, week: int) -> list[str]:
         if town_id not in self.towns:
             return []
-        day = SPELL_STUDY_WEEK_DAYS.get(week, max(SPELL_STUDY_WEEK_DAYS.values()))
-        tier = self._town_spell_tier_by_day(town_id, day)
+        # Native-RMG balance surface: armies already ignore authored town build
+        # logs, so spell study uses the same week-based benchmark surface instead
+        # of representative-town magic-building timing.
+        tier = self._benchmark_spell_tier_for_week(week)
         if tier <= 0:
             return []
         town = self.towns[town_id]
@@ -301,13 +300,8 @@ class FastBattleBenchmark:
                 spell_ids.append(spell_id)
         return spell_ids
 
-    def _town_spell_tier_by_day(self, town_id: str, day: int) -> int:
-        if town_id not in self.towns:
-            return 0
-        highest = 0
-        for building_id in self._built_buildings_by_day(town_id, day):
-            highest = max(highest, int(self.buildings.get(building_id, {}).get("spell_tier", 0)))
-        return highest
+    def _benchmark_spell_tier_for_week(self, week: int) -> int:
+        return int(SPELL_STUDY_WEEK_TIER_CAPS.get(week, max(SPELL_STUDY_WEEK_TIER_CAPS.values())))
 
     def _army_snapshot(self, faction_id: str, week: int, ladder: list[str]) -> list[dict[str, Any]]:
         counts: dict[str, int] = defaultdict(int)
@@ -401,7 +395,10 @@ class FastBattleBenchmark:
             "balance_status": "needs_tuning" if outliers else "within_target",
             "policy": "python_fast_faction_battle_benchmark",
             "parity_scope": "ported BattleRules/BattleAiRules tactical math without Godot runtime",
-            "spellbook_policy": "heroes use starting battle spells plus week-appropriate representative-town study battle spells from faction school access and spell tier",
+            "spellbook_policy": (
+                "heroes use starting battle spells plus Native-RMG week-tier town study spells "
+                "from faction school access; authored representative-town build timing is ignored"
+            ),
             "army_snapshot_policy": {
                 "initial": "one Native RMG-suitable faction/unit T1 growth tick",
                 "week_1": "initial plus one recruited week capped at T1-T3",
@@ -465,12 +462,14 @@ class FastBattleBenchmark:
         by_school: Counter[str] = Counter()
         by_tier: Counter[str] = Counter()
         by_faction: Counter[str] = Counter()
+        by_id: Counter[str] = Counter()
         total = 0
         for row in rows:
             by_effect.update(row.get("spell_casts_by_effect", {}))
             by_school.update(row.get("spell_casts_by_school", {}))
             by_tier.update(row.get("spell_casts_by_tier", {}))
             by_faction.update(row.get("spell_casts_by_faction", {}))
+            by_id.update(row.get("spell_casts_by_id", {}))
             total += int(row.get("action_mix", {}).get("cast_spell", 0))
         return {
             "total_spell_casts": total,
@@ -478,6 +477,7 @@ class FastBattleBenchmark:
             "by_school": dict(sorted(by_school.items())),
             "by_tier": dict(sorted(by_tier.items())),
             "by_faction": dict(sorted(by_faction.items())),
+            "top_spell_ids": dict(by_id.most_common(16)),
         }
 
     def _run_ordered_matchup(
@@ -498,6 +498,7 @@ class FastBattleBenchmark:
         spell_casts_by_tier: Counter[str] = Counter()
         spell_casts_by_effect: Counter[str] = Counter()
         spell_casts_by_faction: Counter[str] = Counter()
+        spell_casts_by_id: Counter[str] = Counter()
         for seed_index in range(seeds):
             battle = self._create_battle(side_a_faction, side_b_faction, week, context)
             matchup_seed_parts = sorted([side_a_faction, side_b_faction])
@@ -513,6 +514,7 @@ class FastBattleBenchmark:
             spell_casts_by_tier.update(result.get("spell_casts_by_tier", {}))
             spell_casts_by_effect.update(result.get("spell_casts_by_effect", {}))
             spell_casts_by_faction.update(result.get("spell_casts_by_faction", {}))
+            spell_casts_by_id.update(result.get("spell_casts_by_id", {}))
             for internal_side in [INTERNAL_SIDE_A, INTERNAL_SIDE_B]:
                 public_side = self._public_side(internal_side)
                 casualties_by_tier[public_side].update(result["casualties_by_tier"].get(internal_side, {}))
@@ -535,6 +537,7 @@ class FastBattleBenchmark:
             "spell_casts_by_tier": dict(sorted(spell_casts_by_tier.items())),
             "spell_casts_by_effect": dict(sorted(spell_casts_by_effect.items())),
             "spell_casts_by_faction": dict(sorted(spell_casts_by_faction.items())),
+            "spell_casts_by_id": dict(sorted(spell_casts_by_id.items())),
             "casualties_by_tier": {
                 side: dict(sorted(counter.items()))
                 for side, counter in casualties_by_tier.items()
@@ -608,6 +611,7 @@ class FastBattleBenchmark:
         spell_casts_by_tier: Counter[str] = Counter()
         spell_casts_by_effect: Counter[str] = Counter()
         spell_casts_by_faction: Counter[str] = Counter()
+        spell_casts_by_id: Counter[str] = Counter()
         self._prepare_round(battle, 1)
         while True:
             if int(battle["round"]) > SIMULATION_GUARD_MAX_ROUNDS:
@@ -635,6 +639,7 @@ class FastBattleBenchmark:
                     spell_casts_by_tier,
                     spell_casts_by_effect,
                     spell_casts_by_faction,
+                    spell_casts_by_id,
                 )
                 action_mix["cast_spell"] += 1
                 self._advance_turn(battle)
@@ -659,6 +664,7 @@ class FastBattleBenchmark:
             "spell_casts_by_tier": spell_casts_by_tier,
             "spell_casts_by_effect": spell_casts_by_effect,
             "spell_casts_by_faction": spell_casts_by_faction,
+            "spell_casts_by_id": spell_casts_by_id,
         }
 
     def _prepare_round(self, battle: dict[str, Any], round_number: int) -> None:
@@ -798,21 +804,33 @@ class FastBattleBenchmark:
         mana_cost = int(spell.get("mana_cost", 0))
         if effect_type == "damage_enemy":
             damage = self._spell_damage(hero, target, effect)
-            return (float(damage) / float(max(1, target.get("unit_hp", 1)))) + (1.0 - self._health_ratio(target)) * 3.0 - (mana_cost * 0.25)
+            alive_before = self._alive_count(target)
+            killed_units = min(alive_before, int(damage / max(1, int(target.get("unit_hp", 1)))))
+            score = (float(damage) / float(max(1, target.get("unit_hp", 1)))) + (1.0 - self._health_ratio(target)) * 3.0
+            if damage >= int(target.get("total_health", 0)):
+                score += 5.0
+            elif killed_units > 0:
+                score += min(3.0, float(killed_units) * 0.45)
+            return score - (mana_cost * 0.22)
         if effect_type == "control_enemy":
             status_effect = effect.get("status_effect", {}) if isinstance(effect.get("status_effect", {}), dict) else {}
             status_id = str(status_effect.get("effect_id", ""))
-            score = 3.0 + (self._attack_score(active, target, battle, True) * 0.35)
+            target_already_controlled = self._stack_has_control_effect(target, battle)
+            score = 1.7 + (self._attack_score(active, target, battle, True) * 0.22)
             if status_id and not self._has_effect_id(target, battle, status_id):
-                score += 3.0
-                score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id)
-            if self._health_ratio(target) > 0.5:
-                score += 1.25
+                score += 1.8 + self._control_spell_pressure(status_effect)
+                score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id) * 0.65
+            if target_already_controlled:
+                score -= 5.0
+            if self._health_ratio(target) > 0.65:
+                score += 1.0
+            else:
+                score -= 1.2
             if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
                 score += 1.0
             if self._stack_cohesion_total(target, battle) <= 4:
-                score += 1.0
-            return score - (mana_cost * 0.2)
+                score += 0.4
+            return score - (mana_cost * 0.28)
         if effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
             if self._stack_has_positive_effect(active, battle):
                 return 0.0
@@ -835,6 +853,7 @@ class FastBattleBenchmark:
         spell_casts_by_tier: Counter[str],
         spell_casts_by_effect: Counter[str],
         spell_casts_by_faction: Counter[str],
+        spell_casts_by_id: Counter[str],
     ) -> None:
         side = active["side"]
         hero = self._hero_for_side(battle, side)
@@ -851,6 +870,7 @@ class FastBattleBenchmark:
         spell_casts_by_tier[str(int(spell.get("tier", 0)))] += 1
         spell_casts_by_effect[effect_type] += 1
         spell_casts_by_faction[str(active.get("faction_id", ""))] += 1
+        spell_casts_by_id[str(spell.get("id", ""))] += 1
         if effect_type == "damage_enemy":
             before = dict(target)
             self._apply_damage(target, self._spell_damage(hero, target, effect))
@@ -1454,6 +1474,15 @@ class FastBattleBenchmark:
         ids = {str(value) for value in effect_ids} if isinstance(effect_ids, list) else set()
         return any(self._has_effect_id(stack, battle, effect_id) for effect_id in ids)
 
+    def _stack_has_control_effect(self, stack: dict[str, Any], battle: dict[str, Any]) -> bool:
+        return self._has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED, STATUS_ROOTED])
+
+    def _control_spell_pressure(self, status_effect: dict[str, Any]) -> float:
+        modifiers = status_effect.get("modifiers", {}) if isinstance(status_effect.get("modifiers", {}), dict) else {}
+        negative_pressure = sum(abs(min(0, int(value))) for value in modifiers.values())
+        duration = max(1, int(status_effect.get("duration_rounds", 1)))
+        return min(2.0, float(duration) * 0.35 + float(negative_pressure) * 0.2)
+
     def _stack_has_positive_effect(self, stack: dict[str, Any], battle: dict[str, Any]) -> bool:
         for effect in stack.get("effects", []):
             if int(effect.get("expires_after_round", 0)) < int(battle.get("round", 1)):
@@ -1781,6 +1810,12 @@ class FastBattleBenchmark:
                 hero = model.get("hero_snapshots", {}).get(str(week), {})
                 if not hero.get("spell_ids", []):
                     failures.append(f"{faction_id}_week_{week}_empty_battle_spellbook")
+                expected_spell_tier = self._benchmark_spell_tier_for_week(week)
+                if int(hero.get("spellbook_spell_tier", 0)) != expected_spell_tier:
+                    failures.append(
+                        f"{faction_id}_week_{week}_spell_tier_"
+                        f"{int(hero.get('spellbook_spell_tier', 0))}_expected_{expected_spell_tier}"
+                    )
                 if week >= 4 and int(hero.get("spellbook_spell_tier", 0)) < 5:
                     failures.append(f"{faction_id}_week_{week}_missing_tier_5_town_study_spells")
         expected_rows = len(weeks) * len(self.faction_models) * max(0, len(self.faction_models) - 1)

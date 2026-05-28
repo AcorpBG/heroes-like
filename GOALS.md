@@ -10,30 +10,21 @@ This file names the next immediate goals clearly enough for implementation work 
 
 The current focus is Phase 5 - Playable Alpha Baseline. Campaign production remains deferred.
 
-## Current Immediate Goal - Magic Availability
+## Latest Immediate Goal - Battle Spell Valuation
 
-Latest completed progress slice: `battle-spell-parity-counterplay-10184`
+Latest completed progress slice: `battle-spell-valuation-counterplay-followup-10184`
 
-Improve spell availability, magic-school variety, and strategic influence before trying to balance magic-focused heroes against raw-combat heroes.
+The spell-enabled fast battle benchmark has been corrected before more broad unit-stat tuning. Spell AI valuation and spell availability now produce player-readable battle evidence instead of letting cheap control loops or authored-town magic timing distort the Native RMG faction matrix.
 
 Target state:
-- raise the live authored spell catalog to at least 100 spells;
-- keep every live school broadly represented instead of starving most schools behind a few named spells;
-- keep at least 20 overworld spells so strategic magic is not only battle math;
-- split the catalog into real power tiers, from weak/cheap tier-1 spells to expensive very-strong tier-5 spells;
-- keep tier power bands enforced in validation for mana, damage, buffs, control, recovery, movement, and scouting;
-- make every authored town reach tier 5 spell study through normal town development;
-- prove all 112 authored spells are reachable through fully developed town study access;
-- broaden generated-map spell rewards with tier 1-5 school coverage instead of only a few low-tier spell shrines;
-- make the fast battle simulator use starting battle spells plus week-appropriate town-study battle spells before more faction stat tuning;
-- report battle-simulator spell casts by school, tier, effect, and faction so magic influence is visible in balance evidence;
-- make town study expose the expanded school catalog by faction/tier, while preserving explicit town spell-library entries;
-- broaden field-magic content beyond Beacon route spells;
-- activate Old Measure with a first real strategic spell;
-- make town study expose more strategic choices without changing hero combat stat balance;
-- add generated-map spell-reward variety so Native RMG evidence is not locked to one spell-access candidate;
-- keep battle-spell behavior stable while this slice improves strategic magic access;
-- validate through existing magic reports, repo validation, and the fast battle benchmark quick smoke.
+- keep the 100+ spell catalog and town-study access from the completed magic slice;
+- make the benchmark report spell casts by exact spell id as well as school, tier, effect, and faction;
+- stop cheap tier-1 control spells from crowding out damage, buffs, recovery, and faction-school choices;
+- keep control useful as opener/counterplay pressure, but strongly devalue repeat control on already-controlled stacks;
+- make damage spells compete when they finish or materially reduce a stack;
+- use Native-RMG week-tier spell study in the benchmark, matching the army snapshot surface instead of authored representative-town build timing;
+- keep structural guards proving all benchmark weeks use the expected spell tier caps;
+- validate with the fast benchmark, repo validation, JSON validity, and diff hygiene.
 
 Non-goals:
 - do not claim final magic-vs-might hero balance;

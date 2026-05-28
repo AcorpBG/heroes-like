@@ -23,8 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `battle-spell-parity-counterplay-10184`.
-- Latest completed slice: `battle-spell-parity-counterplay-10184`.
+- Current implementation slice: none selected after completing `battle-spell-valuation-counterplay-followup-10184`.
+- Latest completed slice: `battle-spell-valuation-counterplay-followup-10184`.
+- Previous completed slice: `battle-spell-parity-counterplay-10184`.
 - Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
 - Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
@@ -47,7 +48,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
-- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed and the public benchmark report uses side-neutral `side_a`/`side_b` terminology.
+- Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
@@ -121,7 +122,7 @@ The selected battle-balance slice is a fast Python benchmark, not a final combat
 Required benchmark shape:
 - pure Python, no Godot runtime for normal benchmark runs;
 - live `content/*.json` faction, unit, hero, spell, town, and building data;
-- hero spellbooks should include starting battle spells plus week-appropriate town-study battle spells from faction school access and unlocked town spell tier;
+- hero spellbooks should include starting battle spells plus Native-RMG week-tier town-study battle spells from faction school access; authored representative-town build timing must not shape the faction matrix;
 - reports should expose per-week spellbook coverage and actual spell-cast summaries by school, tier, effect, and faction;
 - ordered non-self faction matrix for all six factions;
 - deterministic seed count, with `--quick`, `--seeds`, `--weeks`, `--json`, and `--gate` options;
