@@ -124,6 +124,9 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		"battle_attack": 0,
 		"battle_defense": 0,
 		"battle_initiative": 0,
+		"battle_spell_resistance_pct": 0,
+		"battle_control_resistance_pct": 0,
+		"battle_school_resistance_pct": {},
 		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
 		"spell_modifiers": [],
 	}
@@ -140,6 +143,9 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		totals["battle_attack"] = int(totals.get("battle_attack", 0)) + int(bonuses.get("battle_attack", 0))
 		totals["battle_defense"] = int(totals.get("battle_defense", 0)) + int(bonuses.get("battle_defense", 0))
 		totals["battle_initiative"] = int(totals.get("battle_initiative", 0)) + int(bonuses.get("battle_initiative", 0))
+		totals["battle_spell_resistance_pct"] = int(totals.get("battle_spell_resistance_pct", 0)) + int(bonuses.get("battle_spell_resistance_pct", 0))
+		totals["battle_control_resistance_pct"] = int(totals.get("battle_control_resistance_pct", 0)) + int(bonuses.get("battle_control_resistance_pct", 0))
+		totals["battle_school_resistance_pct"] = _merge_school_resistance(totals.get("battle_school_resistance_pct", {}), bonuses.get("battle_school_resistance_pct", {}))
 		totals["daily_income"] = _merge_resources(totals.get("daily_income", {}), bonuses.get("daily_income", {}))
 		totals["spell_modifiers"].append_array(_artifact_spell_modifier_records(artifact, artifact_id))
 
@@ -1301,6 +1307,16 @@ static func _artifact_effect_summary(artifact: Dictionary) -> String:
 		parts.append("+%d defense" % int(bonuses.get("battle_defense", 0)))
 	if int(bonuses.get("battle_initiative", 0)) > 0:
 		parts.append("+%d initiative" % int(bonuses.get("battle_initiative", 0)))
+	if int(bonuses.get("battle_spell_resistance_pct", 0)) > 0:
+		parts.append("+%d%% spell resist" % int(bonuses.get("battle_spell_resistance_pct", 0)))
+	if int(bonuses.get("battle_control_resistance_pct", 0)) > 0:
+		parts.append("+%d%% control resist" % int(bonuses.get("battle_control_resistance_pct", 0)))
+	var school_resistance = bonuses.get("battle_school_resistance_pct", {})
+	if school_resistance is Dictionary:
+		for school_id in school_resistance.keys():
+			var amount := int(school_resistance[school_id])
+			if amount > 0:
+				parts.append("+%d%% %s resist" % [amount, String(school_id).capitalize()])
 
 	var income = bonuses.get("daily_income", {})
 	var income_parts := []
@@ -1325,6 +1341,9 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 		"battle_attack": 0,
 		"battle_defense": 0,
 		"battle_initiative": 0,
+		"battle_spell_resistance_pct": 0,
+		"battle_control_resistance_pct": 0,
+		"battle_school_resistance_pct": {},
 		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
 		"spell_modifiers": [],
 	}
@@ -1335,6 +1354,9 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 	totals["battle_attack"] = int(bonuses.get("battle_attack", 0))
 	totals["battle_defense"] = int(bonuses.get("battle_defense", 0))
 	totals["battle_initiative"] = int(bonuses.get("battle_initiative", 0))
+	totals["battle_spell_resistance_pct"] = int(bonuses.get("battle_spell_resistance_pct", 0))
+	totals["battle_control_resistance_pct"] = int(bonuses.get("battle_control_resistance_pct", 0))
+	totals["battle_school_resistance_pct"] = _merge_school_resistance({}, bonuses.get("battle_school_resistance_pct", {}))
 	totals["daily_income"] = _merge_resources({}, bonuses.get("daily_income", {}))
 	totals["spell_modifiers"] = _artifact_spell_modifier_records(artifact, String(artifact.get("id", "")))
 	return totals
@@ -1358,6 +1380,16 @@ static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: b
 		command_parts.append("Defense +%d" % int(totals.get("battle_defense", 0)))
 	if int(totals.get("battle_initiative", 0)) > 0:
 		command_parts.append("Initiative +%d" % int(totals.get("battle_initiative", 0)))
+	if int(totals.get("battle_spell_resistance_pct", 0)) > 0:
+		command_parts.append("Spell resist +%d%%" % int(totals.get("battle_spell_resistance_pct", 0)))
+	if int(totals.get("battle_control_resistance_pct", 0)) > 0:
+		command_parts.append("Control resist +%d%%" % int(totals.get("battle_control_resistance_pct", 0)))
+	var school_resistance = totals.get("battle_school_resistance_pct", {})
+	if school_resistance is Dictionary:
+		for school_id in school_resistance.keys():
+			var amount := int(school_resistance[school_id])
+			if amount > 0:
+				command_parts.append("%s resist +%d%%" % [String(school_id).capitalize(), amount])
 	if not command_parts.is_empty():
 		sections.append("Command %s" % ", ".join(command_parts))
 	elif include_empty_sections:
@@ -1857,4 +1889,20 @@ static func _merge_resources(base: Variant, delta: Variant) -> Dictionary:
 	if delta is Dictionary:
 		for key in delta.keys():
 			merged[String(key)] = int(merged.get(String(key), 0)) + int(delta[key])
+	return merged
+
+static func _merge_school_resistance(base: Variant, delta: Variant) -> Dictionary:
+	var merged := {}
+	if base is Dictionary:
+		for key in base.keys():
+			var school_id := String(key)
+			var amount: int = int(clamp(int(base[key]), 0, 75))
+			if amount > 0:
+				merged[school_id] = amount
+	if delta is Dictionary:
+		for key in delta.keys():
+			var school_id := String(key)
+			var delta_amount: int = int(clamp(int(delta[key]), 0, 75))
+			if delta_amount > 0:
+				merged[school_id] = int(clamp(int(merged.get(school_id, 0)) + delta_amount, 0, 75))
 	return merged

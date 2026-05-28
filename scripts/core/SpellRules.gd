@@ -9,6 +9,9 @@ const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
 const RARE_RESOURCE_IDS := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
+const STATUS_EFFECT_IDS := ["status_harried", "status_staggered", "status_rooted"]
+const MAX_SPELL_RESISTANCE_PCT := 75
+const MAX_CONTROL_RESISTANCE_PCT := 80
 const SPELL_ROLE_CATEGORIES := ["damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"]
 const SPELL_PRIMARY_ROLES := [
 	"movement_support",
@@ -1045,29 +1048,66 @@ static func resolve_battle_spell(
 	var caster_name := String(hero.get("name", "The hero"))
 	match effect_type:
 		"damage_enemy":
-			var damage := _battle_spell_damage(hero, spell, target_stack)
+			var damage_projection := battle_spell_damage_projection(hero, battle, target_stack, spell)
+			var post_damage_effect := _status_effect_from_spell_effect(spell, battle)
+			var status_resolution := battle_spell_status_resolution(battle, active_stack, target_stack, spell, post_damage_effect)
+			var resolved_post_damage_effect := post_damage_effect
+			if bool(status_resolution.get("blocked", false)):
+				resolved_post_damage_effect = {}
+			var message := "%s casts %s on %s for %d damage." % [
+				caster_name,
+				String(spell.get("name", spell_id)),
+				String(target_stack.get("name", "the enemy")),
+				int(damage_projection.get("final_damage", 0)),
+			]
+			if int(damage_projection.get("prevented_damage", 0)) > 0:
+				message += " %s resists %d damage." % [
+					String(target_stack.get("name", "The target")),
+					int(damage_projection.get("prevented_damage", 0)),
+				]
+			message = _append_status_resolution_message(message, target_stack, post_damage_effect, status_resolution)
 			return {
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "damage",
 				"target_battle_id": String(target_stack.get("battle_id", "")),
-				"damage": damage,
-				"post_damage_effect": _status_effect_from_spell_effect(spell, battle),
-				"message": "%s casts %s on %s for %d damage." % [
-					caster_name,
-					String(spell.get("name", spell_id)),
-					String(target_stack.get("name", "the enemy")),
-					damage,
-				],
+				"damage": int(damage_projection.get("final_damage", 0)),
+				"raw_damage": int(damage_projection.get("raw_damage", 0)),
+				"final_damage": int(damage_projection.get("final_damage", 0)),
+				"resistance_pct": int(damage_projection.get("resistance_pct", 0)),
+				"prevented_damage": int(damage_projection.get("prevented_damage", 0)),
+				"post_damage_effect": resolved_post_damage_effect,
+				"post_damage_resisted": bool(status_resolution.get("resisted", false)),
+				"post_damage_immune": bool(status_resolution.get("immune", false)),
+				"blocked_status_id": String(status_resolution.get("blocked_status_id", "")),
+				"control_resistance_pct": int(status_resolution.get("control_resistance_pct", 0)),
+				"resistance_roll": int(status_resolution.get("resistance_roll", -1)),
+				"message": message,
 			}
 		"control_enemy":
+			var control_effect := _status_effect_from_spell_effect(spell, battle)
+			var control_resolution := battle_spell_status_resolution(battle, active_stack, target_stack, spell, control_effect)
+			var resolved_control_effect := control_effect
+			if bool(control_resolution.get("blocked", false)):
+				resolved_control_effect = {}
+			var control_message := "%s casts %s on %s." % [
+				caster_name,
+				String(spell.get("name", spell_id)),
+				String(target_stack.get("name", "the enemy")),
+			]
+			control_message = _append_status_resolution_message(control_message, target_stack, control_effect, control_resolution)
 			return {
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "effect",
 				"target_battle_id": String(target_stack.get("battle_id", "")),
-				"effect": _status_effect_from_spell_effect(spell, battle),
-				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(target_stack.get("name", "the enemy"))],
+				"effect": resolved_control_effect,
+				"resisted": bool(control_resolution.get("resisted", false)),
+				"immune": bool(control_resolution.get("immune", false)),
+				"blocked_status_id": String(control_resolution.get("blocked_status_id", "")),
+				"control_resistance_pct": int(control_resolution.get("control_resistance_pct", 0)),
+				"resistance_roll": int(control_resolution.get("resistance_roll", -1)),
+				"message": control_message,
 			}
 		"recover_ally":
 			return {
@@ -1086,7 +1126,7 @@ static func resolve_battle_spell(
 				"resolution_type": "cleanse_effect",
 				"target_battle_id": String(active_stack.get("battle_id", "")),
 				"cleanse_effect_ids": _normalize_string_array(effect.get("cleanse_effect_ids", [])),
-				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() else {},
+				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() or not normalize_status_immunity_ids(effect.get("status_immunity_ids", [])).is_empty() else {},
 				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
 			}
 		"defense_buff":
@@ -1210,6 +1250,112 @@ static func has_any_effect_ids(stack: Dictionary, battle: Dictionary, effect_ids
 			return true
 	return false
 
+static func normalize_status_immunity_ids(value: Variant) -> Array:
+	var ids := []
+	if value is Array:
+		for status_id_value in value:
+			var status_id := String(status_id_value)
+			if status_id in STATUS_EFFECT_IDS and status_id not in ids:
+				ids.append(status_id)
+	return ids
+
+static func normalize_school_resistance(value: Variant) -> Dictionary:
+	var result := {}
+	if value is Dictionary:
+		for school_id_value in value.keys():
+			var school_id := String(school_id_value)
+			if school_id not in SPELL_SCHOOL_IDS:
+				continue
+			var amount: int = clamp(int(value[school_id_value]), 0, MAX_SPELL_RESISTANCE_PCT)
+			if amount > 0:
+				result[school_id] = amount
+	return result
+
+static func stack_status_immunity_ids(stack: Dictionary, battle: Dictionary) -> Array:
+	var ids := normalize_status_immunity_ids(stack.get("status_immunity_ids", []))
+	var current_round := int(battle.get("round", 1))
+	for effect in active_effects_for_round(stack, current_round):
+		for status_id in normalize_status_immunity_ids(effect.get("status_immunity_ids", [])):
+			if status_id not in ids:
+				ids.append(status_id)
+	return ids
+
+static func target_is_immune_to_status(target_stack: Dictionary, battle: Dictionary, status_id: String) -> bool:
+	return status_id != "" and status_id in stack_status_immunity_ids(target_stack, battle)
+
+static func spell_damage_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
+	var school_id := String(spell.get("school_id", ""))
+	var total := int(target_stack.get("spell_resistance_pct", 0))
+	total += int(normalize_school_resistance(target_stack.get("spell_school_resistance_pct", {})).get(school_id, 0))
+	var hero := _hero_payload_for_target_side(battle, target_stack)
+	total += int(hero.get("battle_spell_resistance_pct", 0))
+	total += int(normalize_school_resistance(hero.get("battle_school_resistance_pct", {})).get(school_id, 0))
+	return clamp(total, 0, MAX_SPELL_RESISTANCE_PCT)
+
+static func control_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
+	var school_id := String(spell.get("school_id", ""))
+	var total := int(target_stack.get("control_resistance_pct", 0))
+	total += int(normalize_school_resistance(target_stack.get("spell_school_resistance_pct", {})).get(school_id, 0))
+	var hero := _hero_payload_for_target_side(battle, target_stack)
+	total += int(hero.get("battle_control_resistance_pct", 0))
+	total += int(normalize_school_resistance(hero.get("battle_school_resistance_pct", {})).get(school_id, 0))
+	return clamp(total, 0, MAX_CONTROL_RESISTANCE_PCT)
+
+static func battle_spell_damage_projection(
+	hero_state: Dictionary,
+	battle: Dictionary,
+	target_stack: Dictionary,
+	spell: Dictionary
+) -> Dictionary:
+	var raw_damage := _battle_spell_damage(hero_state, spell, target_stack)
+	var resistance_pct := spell_damage_resistance_pct(battle, target_stack, spell)
+	var final_damage: int = max(1, int(round(float(raw_damage) * float(100 - resistance_pct) / 100.0)))
+	return {
+		"raw_damage": raw_damage,
+		"final_damage": final_damage,
+		"damage": final_damage,
+		"resistance_pct": resistance_pct,
+		"prevented_damage": max(0, raw_damage - final_damage),
+	}
+
+static func battle_spell_status_resolution(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	spell: Dictionary,
+	effect_payload: Dictionary
+) -> Dictionary:
+	var status_id := String(effect_payload.get("effect_id", ""))
+	if status_id == "":
+		return {
+			"blocked": false,
+			"immune": false,
+			"resisted": false,
+			"blocked_status_id": "",
+			"control_resistance_pct": 0,
+			"resistance_roll": -1,
+		}
+	if target_is_immune_to_status(target_stack, battle, status_id):
+		return {
+			"blocked": true,
+			"immune": true,
+			"resisted": false,
+			"blocked_status_id": status_id,
+			"control_resistance_pct": control_resistance_pct(battle, target_stack, spell),
+			"resistance_roll": -1,
+		}
+	var resistance_pct := control_resistance_pct(battle, target_stack, spell)
+	var roll := _status_resistance_roll(battle, active_stack, target_stack, spell, status_id)
+	var resisted := resistance_pct > 0 and roll < resistance_pct
+	return {
+		"blocked": resisted,
+		"immune": false,
+		"resisted": resisted,
+		"blocked_status_id": status_id if resisted else "",
+		"control_resistance_pct": resistance_pct,
+		"resistance_roll": roll,
+	}
+
 static func active_effects_for_round(stack: Dictionary, round_number: int) -> Array:
 	var results := []
 	for effect in _normalize_effects(stack.get("effects", [])):
@@ -1244,7 +1390,8 @@ static func build_battle_effect(
 	duration_rounds: int,
 	battle: Dictionary,
 	source_type: String = "status",
-	source_id: String = ""
+	source_id: String = "",
+	status_immunity_ids: Variant = []
 ) -> Dictionary:
 	var normalized_modifiers := _normalize_effect_modifiers(modifiers)
 	var fallback_kind := ""
@@ -1262,6 +1409,7 @@ static func build_battle_effect(
 		"kind": fallback_kind,
 		"amount": fallback_amount,
 		"modifiers": normalized_modifiers,
+		"status_immunity_ids": normalize_status_immunity_ids(status_immunity_ids),
 		"expires_after_round": max(1, int(battle.get("round", 1))) + max(1, duration_rounds) - 1,
 	}
 
@@ -1290,7 +1438,8 @@ static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dicti
 		int(effect.get("duration_rounds", 1)),
 		battle,
 		"spell",
-		String(spell.get("id", ""))
+		String(spell.get("id", "")),
+		effect.get("status_immunity_ids", [])
 	)
 
 static func _battle_spell_action_summary(
@@ -1304,17 +1453,28 @@ static func _battle_spell_action_summary(
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"damage_enemy":
-			var damage := _battle_spell_damage(hero_state, spell, target_stack)
+			var damage_projection := battle_spell_damage_projection(hero_state, battle, target_stack, spell)
 			var summary := "Projected %d damage to %s." % [
-				damage,
+				int(damage_projection.get("final_damage", 0)),
 				String(target_stack.get("name", "the selected enemy")),
 			]
+			if int(damage_projection.get("resistance_pct", 0)) > 0:
+				summary += " Resistance reduces raw %d by %d%%." % [
+					int(damage_projection.get("raw_damage", 0)),
+					int(damage_projection.get("resistance_pct", 0)),
+				]
 			var status_effect: Dictionary = effect.get("status_effect", {})
 			if status_effect is Dictionary and not status_effect.is_empty():
+				var status_payload := _status_effect_from_spell_effect(spell, battle)
+				var control_pct := control_resistance_pct(battle, target_stack, spell)
 				summary += " Applies %s for %d rounds." % [
 					String(status_effect.get("label", "a battle effect")),
 					max(1, int(status_effect.get("duration_rounds", 1))),
 				]
+				if target_is_immune_to_status(target_stack, battle, String(status_payload.get("effect_id", ""))):
+					summary += " Target is immune to that rider."
+				elif control_pct > 0:
+					summary += " Rider success chance %d%%." % max(0, 100 - control_pct)
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
 			return summary
@@ -1325,6 +1485,12 @@ static func _battle_spell_action_summary(
 				String(target_stack.get("name", "the selected enemy")),
 				max(1, int(control_effect.get("duration_rounds", 1))),
 			]
+			var control_payload := _status_effect_from_spell_effect(spell, battle)
+			var control_pct := control_resistance_pct(battle, target_stack, spell)
+			if target_is_immune_to_status(target_stack, battle, String(control_payload.get("effect_id", ""))):
+				summary += " Target is immune."
+			elif control_pct > 0:
+				summary += " Success chance %d%%." % max(0, 100 - control_pct)
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
 			return summary
@@ -1680,10 +1846,73 @@ static func _normalize_effects(value: Variant) -> Array:
 					"kind": String(effect.get("kind", "")),
 					"amount": int(effect.get("amount", 0)),
 					"modifiers": _normalize_effect_modifiers(modifiers),
+					"status_immunity_ids": normalize_status_immunity_ids(effect.get("status_immunity_ids", [])),
 					"expires_after_round": int(effect.get("expires_after_round", 0)),
 				}
 			)
 	return effects
+
+static func _hero_payload_for_target_side(battle: Dictionary, target_stack: Dictionary) -> Dictionary:
+	var side := String(target_stack.get("side", ""))
+	match side:
+		"player":
+			var player_hero = battle.get("player_hero", {})
+			return player_hero if player_hero is Dictionary else {}
+		"enemy":
+			var enemy_payload = battle.get("enemy_hero_payload", battle.get("enemy_hero", {}))
+			return enemy_payload if enemy_payload is Dictionary else {}
+		"side_a":
+			var side_a_hero = battle.get("side_a_hero", {})
+			return side_a_hero if side_a_hero is Dictionary else {}
+		"side_b":
+			var side_b_hero = battle.get("side_b_hero", {})
+			return side_b_hero if side_b_hero is Dictionary else {}
+		_:
+			return {}
+
+static func _status_resistance_roll(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	spell: Dictionary,
+	status_id: String
+) -> int:
+	return _stable_percent(
+		[
+			int(battle.get("round", 1)),
+			String(active_stack.get("battle_id", "")),
+			String(target_stack.get("battle_id", "")),
+			String(spell.get("id", "")),
+			status_id,
+			str(battle.get("resistance_seed", "")),
+		]
+	)
+
+static func _stable_percent(parts: Array) -> int:
+	var text_parts := []
+	for part in parts:
+		text_parts.append(str(part))
+	var text := "|".join(text_parts)
+	var hash_value := 2166136261
+	for index in range(text.length()):
+		hash_value = int((hash_value + text.unicode_at(index) * 16777619 + 1013904223) % 1000003)
+	return int(hash_value % 100)
+
+static func _append_status_resolution_message(
+	message: String,
+	target_stack: Dictionary,
+	effect_payload: Dictionary,
+	status_resolution: Dictionary
+) -> String:
+	if effect_payload.is_empty() or not bool(status_resolution.get("blocked", false)):
+		return message
+	var label := String(effect_payload.get("label", effect_payload.get("effect_id", "the effect"))).to_lower()
+	var target_name := String(target_stack.get("name", "The target"))
+	if bool(status_resolution.get("immune", false)):
+		return "%s %s is immune to %s." % [message, target_name, label]
+	if bool(status_resolution.get("resisted", false)):
+		return "%s %s resists %s." % [message, target_name, label]
+	return message
 
 static func _normalize_effect_modifiers(value: Variant) -> Dictionary:
 	var modifiers := {}
@@ -1715,7 +1944,8 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 		int(status_effect.get("duration_rounds", 1)),
 		battle,
 		"spell",
-		String(spell.get("id", ""))
+		String(spell.get("id", "")),
+		status_effect.get("status_immunity_ids", [])
 	)
 
 static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:

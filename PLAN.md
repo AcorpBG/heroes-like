@@ -23,8 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `battle-spell-valuation-counterplay-followup-10184`.
-- Latest completed slice: `battle-spell-valuation-counterplay-followup-10184`.
+- Current implementation slice: none selected after completing `magic-resistance-countercontrol-10184`.
+- Latest completed slice: `magic-resistance-countercontrol-10184`.
+- Previous completed slice: `battle-spell-valuation-counterplay-followup-10184`.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.
 - Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
@@ -50,6 +51,7 @@ Current product focus:
 - Prefer player-readable, live-loop improvements over adding new report gates.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
+- Latest magic follow-up: resistance and counter-control mechanics now run in live battle and in the fast benchmark before remaining spell-enabled benchmark outliers are treated as pure faction/unit imbalance.
 - Campaign production remains deferred until explicitly selected in a later phase.
 
 ## Selectable Near-Term Work
@@ -141,6 +143,27 @@ Initial target bands:
 - average rounds should remain readable, and later-week battles should take more turns on average than early battles.
 
 The first benchmark should report outliers as tuning evidence. Do not tune away failures blindly just to make the initial benchmark look green.
+
+## Magic Resistance And Counter-Control Target
+
+The current magic slice turns resistance and counter-control from artifact/theme metadata into live battle mechanics.
+
+Target shape:
+- units define bounded `spell_resistance_pct`, `control_resistance_pct`, `spell_school_resistance_pct`, and `status_immunity_ids`;
+- T1-T3 units have no general natural resistance, T4-T5 gain light spell resistance, T6-T7 gain stronger spell and control resistance, and faction-school units gain modest own-school resistance;
+- hero knowledge contributes bounded incoming spell/control resistance through battle payloads;
+- artifacts can add live spell, control, and school resistance bonuses, starting with Choir Tuning Fork;
+- cleanse/countermagic spells grant temporary immunity to the statuses they cleanse;
+- spell damage is mitigated but still lands for at least one damage, while status/control riders can be resisted or blocked by immunity;
+- mana is consumed even when the target resists or is immune;
+- guard/status control tiles and tactical status effects remain engagement metadata, not a replacement for body blocking or damage resolution;
+- Battle AI and the fast benchmark value expected resisted damage and control success chance instead of assuming all spells land fully;
+- the fast benchmark reports resisted spells, immunity blocks, prevented damage, and top resisted spell ids.
+
+Non-goals:
+- do not claim final magic-vs-might or faction battle balance from this slice;
+- do not add caster-unit spellbooks, rare-resource spell-cast costs, or school mastery;
+- do not add broad new report gates beyond one focused resistance/counter-control runtime report.
 
 ## Slice Status Model
 

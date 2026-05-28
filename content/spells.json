@@ -355,7 +355,11 @@
         "modifiers": {
           "defense": 2,
           "cohesion": 1
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered"
+        ]
       }
     },
     {
@@ -737,7 +741,12 @@
         "modifiers": {
           "defense": 2,
           "cohesion": 1
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {
@@ -1211,7 +1220,12 @@
         "modifiers": {
           "defense": 4,
           "cohesion": 2
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {
@@ -1364,7 +1378,12 @@
         "modifiers": {
           "defense": 2,
           "cohesion": 1
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {
@@ -1517,7 +1536,12 @@
         "modifiers": {
           "defense": 3,
           "cohesion": 2
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {
@@ -2630,7 +2654,12 @@
         "modifiers": {
           "defense": 5,
           "cohesion": 3
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {
@@ -2784,7 +2813,12 @@
         "modifiers": {
           "defense": 2,
           "cohesion": 1
-        }
+        },
+        "status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ]
       }
     },
     {

@@ -5010,11 +5010,13 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
 				message += " %s is destroyed." % _stack_label(target_after)
 		"effect":
-			_apply_stack_effect(
-				session.battle,
-				String(resolution.get("target_battle_id", "")),
-				resolution.get("effect", {})
-			)
+			var effect_payload = resolution.get("effect", {})
+			if effect_payload is Dictionary and not effect_payload.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					effect_payload
+				)
 		"recover_effect":
 			var recovered := _restore_stack_health(
 				session.battle,
@@ -5671,11 +5673,13 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
 				message += " %s is destroyed." % _stack_label(target_after)
 		"effect":
-			_apply_stack_effect(
-				session.battle,
-				String(resolution.get("target_battle_id", "")),
-				resolution.get("effect", {})
-			)
+			var effect_payload = resolution.get("effect", {})
+			if effect_payload is Dictionary and not effect_payload.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					effect_payload
+				)
 		"recover_effect":
 			var recovered := _restore_stack_health(
 				session.battle,
@@ -6890,6 +6894,10 @@ static func _build_battle_stack(
 		"retaliations": max(0, int(unit.get("retaliations", 1))),
 		"retaliations_left": max(0, int(unit.get("retaliations", 1))),
 		"shots_remaining": int(unit.get("shots", 0)),
+		"spell_resistance_pct": clamp(int(unit.get("spell_resistance_pct", 0)), 0, SpellRulesScript.MAX_SPELL_RESISTANCE_PCT),
+		"control_resistance_pct": clamp(int(unit.get("control_resistance_pct", 0)), 0, SpellRulesScript.MAX_CONTROL_RESISTANCE_PCT),
+		"spell_school_resistance_pct": SpellRulesScript.normalize_school_resistance(unit.get("spell_school_resistance_pct", {})),
+		"status_immunity_ids": SpellRulesScript.normalize_status_immunity_ids(unit.get("status_immunity_ids", [])),
 		"defending": false,
 		"cohesion_base": cohesion_base,
 		"cohesion": cohesion_base,
@@ -6939,6 +6947,10 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"retaliations": max(0, int(stack.get("retaliations", unit.get("retaliations", 1)))),
 		"retaliations_left": max(0, int(stack.get("retaliations_left", unit.get("retaliations", 1)))),
 		"shots_remaining": max(0, int(stack.get("shots_remaining", unit.get("shots", 0)))),
+		"spell_resistance_pct": clamp(int(stack.get("spell_resistance_pct", unit.get("spell_resistance_pct", 0))), 0, SpellRulesScript.MAX_SPELL_RESISTANCE_PCT),
+		"control_resistance_pct": clamp(int(stack.get("control_resistance_pct", unit.get("control_resistance_pct", 0))), 0, SpellRulesScript.MAX_CONTROL_RESISTANCE_PCT),
+		"spell_school_resistance_pct": SpellRulesScript.normalize_school_resistance(stack.get("spell_school_resistance_pct", unit.get("spell_school_resistance_pct", {}))),
+		"status_immunity_ids": SpellRulesScript.normalize_status_immunity_ids(stack.get("status_immunity_ids", unit.get("status_immunity_ids", []))),
 		"defending": bool(stack.get("defending", false)),
 		"cohesion_base": clamp(int(stack.get("cohesion_base", cohesion_base)), COHESION_MIN, COHESION_MAX),
 		"cohesion": clamp(int(stack.get("cohesion", stack.get("cohesion_base", cohesion_base))), COHESION_MIN, COHESION_MAX),
@@ -10058,19 +10070,36 @@ static func _hero_payload_from_state(
 	var resolved_bonuses = bonuses.duplicate(true) if bonuses is Dictionary else {}
 	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	var battle_traits = _normalized_battle_traits(hero_state)
+	var knowledge: int = max(0, int(command.get("knowledge", 0)))
 	resolved_bonuses["battle_attack"] = int(resolved_bonuses.get("battle_attack", 0)) + int(specialty_bonuses.get("battle_attack", 0))
 	resolved_bonuses["battle_defense"] = int(resolved_bonuses.get("battle_defense", 0)) + int(specialty_bonuses.get("battle_defense", 0))
 	resolved_bonuses["battle_initiative"] = int(resolved_bonuses.get("battle_initiative", 0)) + int(specialty_bonuses.get("battle_initiative", 0))
+	resolved_bonuses["battle_spell_resistance_pct"] = int(resolved_bonuses.get("battle_spell_resistance_pct", 0)) + int(specialty_bonuses.get("battle_spell_resistance_pct", 0))
+	resolved_bonuses["battle_control_resistance_pct"] = int(resolved_bonuses.get("battle_control_resistance_pct", 0)) + int(specialty_bonuses.get("battle_control_resistance_pct", 0))
+	resolved_bonuses["battle_school_resistance_pct"] = _merge_spell_school_resistance(
+		resolved_bonuses.get("battle_school_resistance_pct", {}),
+		specialty_bonuses.get("battle_school_resistance_pct", {})
+	)
 	var mana = hero_state.get("spellbook", {}).get("mana", {})
 	return {
 		"attack": int(command.get("attack", 0)) + int(resolved_bonuses.get("battle_attack", 0)),
 		"defense": int(command.get("defense", 0)) + int(resolved_bonuses.get("battle_defense", 0)),
 		"initiative": int(resolved_bonuses.get("battle_initiative", 0)) + DifficultyRulesScript.initiative_bonus_for_side(session, side),
 		"damage_multiplier": DifficultyRulesScript.damage_multiplier_for_side(session, side),
+		"battle_spell_resistance_pct": clamp(int(resolved_bonuses.get("battle_spell_resistance_pct", 0)) + min(20, knowledge * 2), 0, SpellRulesScript.MAX_SPELL_RESISTANCE_PCT),
+		"battle_control_resistance_pct": clamp(int(resolved_bonuses.get("battle_control_resistance_pct", 0)) + min(15, knowledge), 0, SpellRulesScript.MAX_CONTROL_RESISTANCE_PCT),
+		"battle_school_resistance_pct": SpellRulesScript.normalize_school_resistance(resolved_bonuses.get("battle_school_resistance_pct", {})),
 		"mana_current": int(mana.get("current", 0)),
 		"mana_max": int(mana.get("max", 0)),
 		"battle_traits": battle_traits,
 	}
+
+static func _merge_spell_school_resistance(left: Variant, right: Variant) -> Dictionary:
+	var merged := SpellRulesScript.normalize_school_resistance(left)
+	var right_normalized := SpellRulesScript.normalize_school_resistance(right)
+	for school_id in right_normalized.keys():
+		merged[school_id] = clamp(int(merged.get(school_id, 0)) + int(right_normalized[school_id]), 0, SpellRulesScript.MAX_SPELL_RESISTANCE_PCT)
+	return merged
 
 static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictionary:
 	if side == "player":
