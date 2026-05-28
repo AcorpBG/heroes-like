@@ -23,8 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `combat-sunvault-t6-melee-balance-10184`.
-- Latest completed slice: `combat-sunvault-t6-melee-balance-10184`.
+- Current implementation slice: none selected after completing `combat-thornwake-t6-ranged-balance-10184`.
+- Latest completed slice: `combat-thornwake-t6-ranged-balance-10184`.
+- Previous completed slice: `combat-sunvault-t6-melee-balance-10184`.
 - Previous completed slice: `magic-resistance-countercontrol-10184`.
 - Previous completed slice: `battle-spell-valuation-counterplay-followup-10184`.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.

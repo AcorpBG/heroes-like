@@ -415,7 +415,7 @@ Thornwake is not elves, druids, or tree people. Its ladder is living infrastruct
 | 3 | `unit_thornwake_sporeglass_menders` | Sporeglass Menders | Healing, cleanse, and rooted-status support. |
 | 4 | `unit_thornwake_barkmantle_rams` | Barkmantle Rams | Durable living siege and fortified-line breakers. |
 | 5 | `unit_thornwake_stagknot_runners` | Stag-Knot Runners | Mobile flankers through allied bramble lanes and anti-ranged pins. |
-| 6 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Regeneration leaders and stronger bramble creators. |
+| 6 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Ranged graft leaders that seed bramble pressure and give Thornwake a late backline threat. |
 | 7 | `unit_thornwake_worldroot_bastion` | Worldroot Bastion | Living fortress that roots battlefield zones and enables attrition walls. |
 
 ### Economy Preferences And Resources
