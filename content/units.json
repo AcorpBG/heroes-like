@@ -910,6 +910,17 @@
         "gold": 660,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Gorefen Screen",
+          "description": "Boghide plates and reed-slick feints let the ripper pack cross killing lanes under missile pressure.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.78,
+          "engaged_damage_multiplier": 1.05,
+          "harried_damage_multiplier": 1.05
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 10,
       "control_resistance_pct": 5,
@@ -939,6 +950,17 @@
         "wood": 2,
         "ore": 2
       },
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Drowned Sovereign Screen",
+          "description": "A drowned antler canopy breaks volleys and keeps the Mireclaw apex stack alive through ranged tempo.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.68,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.06
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 15,
       "control_resistance_pct": 10,
