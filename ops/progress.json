@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-mireclaw-late-tank-buff-10184",
-  "currentSliceTitle": "Combat Mireclaw Late Tank Buff",
+  "currentSliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+  "currentSliceTitle": "Combat Mireclaw Late Anti-Ranged Counter",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Mireclaw T6/T7 HP tankiness was increased by about 10%; Week 4 benchmark passed but Veilmourn remains dominant in that pair.",
+  "currentSliceNotes": "Completed. Mireclaw T6/T7 gained targeted anti-ranged shielding; full benchmark outliers improved 40 to 39 and Week 4 Veilmourn hard-counter dropped to 66.0%. Remaining tuning debt is recorded.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T14:00:00Z",
+  "updatedAt": "2026-05-28T14:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26651,6 +26651,87 @@
       "startedAt": "2026-05-28T13:50:00Z",
       "updatedAt": "2026-05-28T14:00:00Z",
       "completedAt": "2026-05-28T14:00:00Z"
+    },
+    {
+      "id": "combat-mireclaw-late-anti-ranged-counter-10184",
+      "title": "Combat Mireclaw Late Anti-Ranged Counter",
+      "status": "completed",
+      "source": "owner direction to give Mireclaw a counter to Veilmourn ranged hard-counter pressure rather than nerfing underperforming Veilmourn broadly",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Mireclaw late-game stacks must gain a targeted anti-ranged counter using live battle mechanics; repo validation and Week 4 benchmark evidence must pass and show matchup impact.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T14:55:00Z",
+        "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+            "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+            "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+          ],
+          "unit_after": {
+            "unit_mireclaw_gorefen_rippers": {
+              "tier": 6,
+              "hp": 55,
+              "shielding": {
+                "ranged_damage_multiplier": 0.78,
+                "engaged_damage_multiplier": 1.05,
+                "harried_damage_multiplier": 1.05
+              }
+            },
+            "unit_mireclaw_drowned_antler_sovereign": {
+              "tier": 7,
+              "hp": 112,
+              "shielding": {
+                "ranged_damage_multiplier": 0.68,
+                "engaged_damage_multiplier": 1.06,
+                "harried_damage_multiplier": 1.06
+              }
+            }
+          },
+          "benchmark_impact": {
+            "full_matrix_before_outliers": 40,
+            "full_matrix_after_outliers": 39,
+            "after_balance_status": "needs_tuning",
+            "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+            "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+            "affected_week4_pairs_after": [
+              "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+              "Embercourt vs Mireclaw: Mireclaw 53.0%",
+              "Mireclaw vs Sunvault: Mireclaw 50.5%",
+              "Mireclaw vs Thornwake: Mireclaw 53.5%",
+              "Mireclaw vs Veilmourn: Veilmourn 66.0%"
+            ],
+            "affected_week3_pairs_after": [
+              "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+              "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+              "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+            ],
+            "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
+          }
+        }
+      },
+      "notes": "Completed. Mireclaw T6/T7 gained targeted anti-ranged shielding; full benchmark outliers improved 40 to 39 and Week 4 Veilmourn hard-counter dropped to 66.0%. Remaining tuning debt is recorded.",
+      "startedAt": "2026-05-28T14:20:00Z",
+      "updatedAt": "2026-05-28T14:55:00Z",
+      "completedAt": "2026-05-28T14:55:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -33552,6 +33633,79 @@
           }
         }
       }
+    },
+    {
+      "id": "combat-mireclaw-late-anti-ranged-counter-10184",
+      "title": "Combat Mireclaw Late Anti-Ranged Counter",
+      "completedAt": "2026-05-28T14:55:00Z",
+      "summary": "Completed. Mireclaw T6/T7 now have live anti-ranged shielding to counter Veilmourn ranged tempo without nerfing Veilmourn. Full 100-seed matrix passed and total outliers moved from 40 to 39; Week 4 Veilmourn over Mireclaw dropped from 90.5% to 66.0%, with remaining Week 3/4 Mireclaw tuning debt documented.",
+      "sourceRefs": [
+        "PLAN.md",
+        "GOALS.md",
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T14:55:00Z",
+        "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+            "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+            "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+          ],
+          "unit_after": {
+            "unit_mireclaw_gorefen_rippers": {
+              "tier": 6,
+              "hp": 55,
+              "shielding": {
+                "ranged_damage_multiplier": 0.78,
+                "engaged_damage_multiplier": 1.05,
+                "harried_damage_multiplier": 1.05
+              }
+            },
+            "unit_mireclaw_drowned_antler_sovereign": {
+              "tier": 7,
+              "hp": 112,
+              "shielding": {
+                "ranged_damage_multiplier": 0.68,
+                "engaged_damage_multiplier": 1.06,
+                "harried_damage_multiplier": 1.06
+              }
+            }
+          },
+          "benchmark_impact": {
+            "full_matrix_before_outliers": 40,
+            "full_matrix_after_outliers": 39,
+            "after_balance_status": "needs_tuning",
+            "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+            "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+            "affected_week4_pairs_after": [
+              "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+              "Embercourt vs Mireclaw: Mireclaw 53.0%",
+              "Mireclaw vs Sunvault: Mireclaw 50.5%",
+              "Mireclaw vs Thornwake: Mireclaw 53.5%",
+              "Mireclaw vs Veilmourn: Veilmourn 66.0%"
+            ],
+            "affected_week3_pairs_after": [
+              "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+              "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+              "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+            ],
+            "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
+          }
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -36354,48 +36508,66 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T14:00:00Z",
-    "sliceId": "combat-mireclaw-late-tank-buff-10184",
+    "updatedAt": "2026-05-28T14:55:00Z",
+    "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
       "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
-        "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+        "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+        "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+        "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
       ],
       "unit_after": {
         "unit_mireclaw_gorefen_rippers": {
           "tier": 6,
           "hp": 55,
-          "role": "melee"
+          "shielding": {
+            "ranged_damage_multiplier": 0.78,
+            "engaged_damage_multiplier": 1.05,
+            "harried_damage_multiplier": 1.05
+          }
         },
         "unit_mireclaw_drowned_antler_sovereign": {
           "tier": 7,
           "hp": 112,
-          "role": "melee"
+          "shielding": {
+            "ranged_damage_multiplier": 0.68,
+            "engaged_damage_multiplier": 1.06,
+            "harried_damage_multiplier": 1.06
+          }
         }
       },
       "benchmark_impact": {
-        "week4_balance_status": "needs_tuning",
-        "week4_outliers": 8,
-        "week4_side_bias_points": 1.2,
-        "mireclaw_veilmourn_before": "Veilmourn 92.5%",
-        "mireclaw_veilmourn_after": "Veilmourn 90.5%",
-        "ordered_rows_after": [
-          "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
-          "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+        "full_matrix_before_outliers": 40,
+        "full_matrix_after_outliers": 39,
+        "after_balance_status": "needs_tuning",
+        "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+        "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+        "affected_week4_pairs_after": [
+          "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+          "Embercourt vs Mireclaw: Mireclaw 53.0%",
+          "Mireclaw vs Sunvault: Mireclaw 50.5%",
+          "Mireclaw vs Thornwake: Mireclaw 53.5%",
+          "Mireclaw vs Veilmourn: Veilmourn 66.0%"
         ],
-        "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+        "affected_week3_pairs_after": [
+          "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+          "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+          "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+        ],
+        "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
       }
     }
   },
-  "active_slice": "combat-mireclaw-late-tank-buff-10184",
-  "currentSliceUpdatedAt": "2026-05-28T14:00:00Z",
+  "active_slice": "combat-mireclaw-late-anti-ranged-counter-10184",
+  "currentSliceUpdatedAt": "2026-05-28T14:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38706,13 +38878,73 @@
           "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
         }
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-28T14:55:00Z",
+      "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+      "commands": [
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+          "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+          "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+        ],
+        "unit_after": {
+          "unit_mireclaw_gorefen_rippers": {
+            "tier": 6,
+            "hp": 55,
+            "shielding": {
+              "ranged_damage_multiplier": 0.78,
+              "engaged_damage_multiplier": 1.05,
+              "harried_damage_multiplier": 1.05
+            }
+          },
+          "unit_mireclaw_drowned_antler_sovereign": {
+            "tier": 7,
+            "hp": 112,
+            "shielding": {
+              "ranged_damage_multiplier": 0.68,
+              "engaged_damage_multiplier": 1.06,
+              "harried_damage_multiplier": 1.06
+            }
+          }
+        },
+        "benchmark_impact": {
+          "full_matrix_before_outliers": 40,
+          "full_matrix_after_outliers": 39,
+          "after_balance_status": "needs_tuning",
+          "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+          "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+          "affected_week4_pairs_after": [
+            "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+            "Embercourt vs Mireclaw: Mireclaw 53.0%",
+            "Mireclaw vs Sunvault: Mireclaw 50.5%",
+            "Mireclaw vs Thornwake: Mireclaw 53.5%",
+            "Mireclaw vs Veilmourn: Veilmourn 66.0%"
+          ],
+          "affected_week3_pairs_after": [
+            "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+            "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+            "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+          ],
+          "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
+        }
+      }
     }
   ],
   "currentSlice": {
-    "id": "combat-mireclaw-late-tank-buff-10184",
-    "title": "Combat Mireclaw Late Tank Buff",
+    "id": "combat-mireclaw-late-anti-ranged-counter-10184",
+    "title": "Combat Mireclaw Late Anti-Ranged Counter",
     "status": "completed",
-    "source": "owner direction to make Mireclaw T6 and T7 stacks 10% more tanky after Week 4 Veilmourn dominance analysis",
+    "source": "owner direction to give Mireclaw a counter to Veilmourn ranged hard-counter pressure rather than nerfing underperforming Veilmourn broadly",
     "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
     "sourceDocs": [
       "PLAN.md",
@@ -38723,93 +38955,129 @@
       "tests/battle_faction_fast_balance_benchmark.py as validation surface",
       "ops/progress.json"
     ],
-    "completionCriteria": "Mireclaw T6/T7 durability must be increased by about 10% without changing lower-tier economy or faction identity; repo validation and Week 4 fast benchmark evidence must pass and show the impact.",
+    "completionCriteria": "Mireclaw late-game stacks must gain a targeted anti-ranged counter using live battle mechanics; repo validation and Week 4 benchmark evidence must pass and show matchup impact.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T14:00:00Z",
-      "sliceId": "combat-mireclaw-late-tank-buff-10184",
+      "updatedAt": "2026-05-28T14:55:00Z",
+      "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
       "commands": [
         "python3 tests/validate_repo.py (passed)",
         "jq empty content/units.json ops/progress.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
-          "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+          "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+          "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+          "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
         ],
         "unit_after": {
           "unit_mireclaw_gorefen_rippers": {
             "tier": 6,
             "hp": 55,
-            "role": "melee"
+            "shielding": {
+              "ranged_damage_multiplier": 0.78,
+              "engaged_damage_multiplier": 1.05,
+              "harried_damage_multiplier": 1.05
+            }
           },
           "unit_mireclaw_drowned_antler_sovereign": {
             "tier": 7,
             "hp": 112,
-            "role": "melee"
+            "shielding": {
+              "ranged_damage_multiplier": 0.68,
+              "engaged_damage_multiplier": 1.06,
+              "harried_damage_multiplier": 1.06
+            }
           }
         },
         "benchmark_impact": {
-          "week4_balance_status": "needs_tuning",
-          "week4_outliers": 8,
-          "week4_side_bias_points": 1.2,
-          "mireclaw_veilmourn_before": "Veilmourn 92.5%",
-          "mireclaw_veilmourn_after": "Veilmourn 90.5%",
-          "ordered_rows_after": [
-            "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
-            "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+          "full_matrix_before_outliers": 40,
+          "full_matrix_after_outliers": 39,
+          "after_balance_status": "needs_tuning",
+          "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+          "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+          "affected_week4_pairs_after": [
+            "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+            "Embercourt vs Mireclaw: Mireclaw 53.0%",
+            "Mireclaw vs Sunvault: Mireclaw 50.5%",
+            "Mireclaw vs Thornwake: Mireclaw 53.5%",
+            "Mireclaw vs Veilmourn: Veilmourn 66.0%"
           ],
-          "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+          "affected_week3_pairs_after": [
+            "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+            "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+            "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+          ],
+          "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
         }
       }
     },
-    "notes": "Completed. Mireclaw T6/T7 HP tankiness was increased by about 10%; Week 4 benchmark passed but Veilmourn remains dominant in that pair.",
-    "startedAt": "2026-05-28T13:50:00Z",
-    "updatedAt": "2026-05-28T14:00:00Z",
-    "completedAt": "2026-05-28T14:00:00Z"
+    "notes": "Completed. Mireclaw T6/T7 gained targeted anti-ranged shielding; full benchmark outliers improved 40 to 39 and Week 4 Veilmourn hard-counter dropped to 66.0%. Remaining tuning debt is recorded.",
+    "startedAt": "2026-05-28T14:20:00Z",
+    "updatedAt": "2026-05-28T14:55:00Z",
+    "completedAt": "2026-05-28T14:55:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T14:00:00Z",
-    "sliceId": "combat-mireclaw-late-tank-buff-10184",
+    "updatedAt": "2026-05-28T14:55:00Z",
+    "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
       "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_late_tank.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_late_tank_week4.json (passed; ok=true, 30 rows)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Increased Mireclaw T6 Gorefen Rippers HP from 50 to 55.",
-        "Increased Mireclaw T7 Drowned Antler Sovereign HP from 102 to 112."
+        "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
+        "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
+        "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
       ],
       "unit_after": {
         "unit_mireclaw_gorefen_rippers": {
           "tier": 6,
           "hp": 55,
-          "role": "melee"
+          "shielding": {
+            "ranged_damage_multiplier": 0.78,
+            "engaged_damage_multiplier": 1.05,
+            "harried_damage_multiplier": 1.05
+          }
         },
         "unit_mireclaw_drowned_antler_sovereign": {
           "tier": 7,
           "hp": 112,
-          "role": "melee"
+          "shielding": {
+            "ranged_damage_multiplier": 0.68,
+            "engaged_damage_multiplier": 1.06,
+            "harried_damage_multiplier": 1.06
+          }
         }
       },
       "benchmark_impact": {
-        "week4_balance_status": "needs_tuning",
-        "week4_outliers": 8,
-        "week4_side_bias_points": 1.2,
-        "mireclaw_veilmourn_before": "Veilmourn 92.5%",
-        "mireclaw_veilmourn_after": "Veilmourn 90.5%",
-        "ordered_rows_after": [
-          "Mireclaw side_a vs Veilmourn side_b: Mireclaw 13.0%, Veilmourn 87.0%",
-          "Veilmourn side_a vs Mireclaw side_b: Veilmourn 94.0%, Mireclaw 6.0%"
+        "full_matrix_before_outliers": 40,
+        "full_matrix_after_outliers": 39,
+        "after_balance_status": "needs_tuning",
+        "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
+        "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
+        "affected_week4_pairs_after": [
+          "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
+          "Embercourt vs Mireclaw: Mireclaw 53.0%",
+          "Mireclaw vs Sunvault: Mireclaw 50.5%",
+          "Mireclaw vs Thornwake: Mireclaw 53.5%",
+          "Mireclaw vs Veilmourn: Veilmourn 66.0%"
         ],
-        "interpretation": "The requested 10% T6/T7 HP buff is implemented and validated, but it only modestly improves the Week 4 Veilmourn outlier; the root cause remains Veilmourn ranged pressure and defensive/initiative spell tempo."
+        "affected_week3_pairs_after": [
+          "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
+          "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
+          "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
+        ],
+        "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
       }
     }
   }
