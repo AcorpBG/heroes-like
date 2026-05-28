@@ -288,6 +288,7 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
 }
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
 SUPPORTED_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"}
+SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted"}
 REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil"}
 SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
 SUPPORTED_SPELL_PRIMARY_ROLES = {
@@ -10312,6 +10313,19 @@ def validate_content(errors: list[str]) -> None:
             ensure(str(unit.get("faction_id", "")) in factions, errors, f"Unit {unit_id} references missing faction")
         ensure(int(unit.get("hp", 0)) > 0, errors, f"Unit {unit_id} must define hp > 0")
         ensure(int(unit.get("max_damage", 0)) >= int(unit.get("min_damage", 0)) > 0, errors, f"Unit {unit_id} has invalid damage range")
+        ensure(0 <= int(unit.get("spell_resistance_pct", 0)) <= 75, errors, f"Unit {unit_id} spell_resistance_pct must be between 0 and 75")
+        ensure(0 <= int(unit.get("control_resistance_pct", 0)) <= 80, errors, f"Unit {unit_id} control_resistance_pct must be between 0 and 80")
+        school_resistance = unit.get("spell_school_resistance_pct", {})
+        ensure(isinstance(school_resistance, dict), errors, f"Unit {unit_id} spell_school_resistance_pct must be a dictionary")
+        if isinstance(school_resistance, dict):
+            for school_id, amount in school_resistance.items():
+                ensure(str(school_id) in SUPPORTED_SPELL_SCHOOLS, errors, f"Unit {unit_id} uses unsupported school resistance {school_id}")
+                ensure(0 <= int(amount) <= 75, errors, f"Unit {unit_id} school resistance for {school_id} must be between 0 and 75")
+        status_immunity_ids = unit.get("status_immunity_ids", [])
+        ensure(isinstance(status_immunity_ids, list), errors, f"Unit {unit_id} status_immunity_ids must be a list")
+        if isinstance(status_immunity_ids, list):
+            for status_id in status_immunity_ids:
+                ensure(str(status_id) in SUPPORTED_STATUS_EFFECT_IDS, errors, f"Unit {unit_id} uses unsupported status immunity {status_id}")
         role = str(unit.get("role", ""))
         ensure(role in {"melee", "ranged"}, errors, f"Unit {unit_id} uses unsupported role {role}")
         if bool(unit.get("ranged", False)):
@@ -10602,6 +10616,20 @@ def validate_content(errors: list[str]) -> None:
         ensure(slot in SUPPORTED_ARTIFACT_SLOTS, errors, f"Artifact {artifact_id} uses unsupported slot {slot}")
         bonuses = artifact.get("bonuses", {})
         ensure(isinstance(bonuses, dict) and bool(bonuses), errors, f"Artifact {artifact_id} must define at least one bonus")
+        if isinstance(bonuses, dict):
+            for field, maximum in {
+                "battle_spell_resistance_pct": 75,
+                "battle_control_resistance_pct": 80,
+            }.items():
+                if field in bonuses:
+                    ensure(0 <= int(bonuses.get(field, 0)) <= maximum, errors, f"Artifact {artifact_id} {field} must be between 0 and {maximum}")
+            school_resistance = bonuses.get("battle_school_resistance_pct", {})
+            if "battle_school_resistance_pct" in bonuses:
+                ensure(isinstance(school_resistance, dict), errors, f"Artifact {artifact_id} battle_school_resistance_pct must be a dictionary")
+            if isinstance(school_resistance, dict):
+                for school_id, amount in school_resistance.items():
+                    ensure(str(school_id) in SUPPORTED_SPELL_SCHOOLS, errors, f"Artifact {artifact_id} uses unsupported school resistance {school_id}")
+                    ensure(0 <= int(amount) <= 75, errors, f"Artifact {artifact_id} school resistance for {school_id} must be between 0 and 75")
         taxonomy_issues = artifact_taxonomy_issues(artifact_id, artifact, factions, artifact_sets)
         ensure(not taxonomy_issues, errors, f"Artifact {artifact_id} has incomplete taxonomy metadata: {taxonomy_issues}")
     ensure(
@@ -10684,7 +10712,9 @@ def validate_content(errors: list[str]) -> None:
             if "status_effect" in effect:
                 ensure(isinstance(status_effect, dict) and bool(status_effect), errors, f"Spell {spell_id} status_effect must be a non-empty dictionary when present")
             if isinstance(status_effect, dict) and status_effect:
-                ensure(bool(str(status_effect.get("effect_id", status_effect.get("status_id", "")))), errors, f"Spell {spell_id} status_effect must define effect_id")
+                status_effect_id = str(status_effect.get("effect_id", status_effect.get("status_id", "")))
+                ensure(bool(status_effect_id), errors, f"Spell {spell_id} status_effect must define effect_id")
+                ensure(status_effect_id in SUPPORTED_STATUS_EFFECT_IDS, errors, f"Spell {spell_id} status_effect uses unsupported effect_id {status_effect_id}")
                 ensure(int(status_effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} status_effect must define duration_rounds > 0")
                 modifiers = status_effect.get("modifiers", {})
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} status_effect must define modifiers")
@@ -10702,7 +10732,9 @@ def validate_content(errors: list[str]) -> None:
             status_effect = effect.get("status_effect", {})
             ensure(isinstance(status_effect, dict) and bool(status_effect), errors, f"Spell {spell_id} control_enemy must define status_effect")
             if isinstance(status_effect, dict):
-                ensure(bool(str(status_effect.get("effect_id", status_effect.get("status_id", "")))), errors, f"Spell {spell_id} control_enemy status_effect must define effect_id")
+                status_effect_id = str(status_effect.get("effect_id", status_effect.get("status_id", "")))
+                ensure(bool(status_effect_id), errors, f"Spell {spell_id} control_enemy status_effect must define effect_id")
+                ensure(status_effect_id in SUPPORTED_STATUS_EFFECT_IDS, errors, f"Spell {spell_id} control_enemy status_effect uses unsupported effect_id {status_effect_id}")
                 ensure(int(status_effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} control_enemy status_effect must define duration_rounds > 0")
                 modifiers = status_effect.get("modifiers", {})
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} control_enemy status_effect must define modifiers")
@@ -10719,6 +10751,11 @@ def validate_content(errors: list[str]) -> None:
             ensure("countermagic" in normalized_role_categories, errors, f"Spell {spell_id} cleanse_ally effect must include countermagic role category")
             cleanse_effect_ids = effect.get("cleanse_effect_ids", [])
             ensure(isinstance(cleanse_effect_ids, list) and bool(cleanse_effect_ids), errors, f"Spell {spell_id} must define cleanse_effect_ids")
+            if isinstance(cleanse_effect_ids, list):
+                for status_id in cleanse_effect_ids:
+                    ensure(str(status_id) in SUPPORTED_STATUS_EFFECT_IDS, errors, f"Spell {spell_id} cleanse references unsupported status {status_id}")
+            status_immunity_ids = effect.get("status_immunity_ids", [])
+            ensure(isinstance(status_immunity_ids, list) and set(map(str, status_immunity_ids)) == set(map(str, cleanse_effect_ids)), errors, f"Spell {spell_id} cleanse status_immunity_ids must match cleanse_effect_ids")
             ensure(int(effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} must define duration_rounds > 0")
             modifiers = effect.get("modifiers", {})
             if "modifiers" in effect:
@@ -10773,6 +10810,13 @@ def validate_content(errors: list[str]) -> None:
     ensure("_town_study_spell_ids_for_week" in battle_benchmark_text, errors, "Fast battle benchmark must add week-appropriate town-study spells to battle spellbooks")
     ensure("hero_snapshots" in battle_benchmark_text and "spellbook_spell_tier" in battle_benchmark_text, errors, "Fast battle benchmark must expose per-week spellbook tier evidence")
     ensure("spell_cast_summary" in battle_benchmark_text, errors, "Fast battle benchmark must report spell cast coverage")
+    ensure("spell_resisted_count" in battle_benchmark_text and "spell_resisted_damage_prevented" in battle_benchmark_text, errors, "Fast battle benchmark must report resisted spell and prevented damage evidence")
+    ensure((ROOT / "tests" / "magic_resistance_countercontrol_report.tscn").exists(), errors, "Magic resistance counter-control report scene must exist")
+
+    choir_bonuses = artifacts.get("artifact_choir_tuning_fork", {}).get("bonuses", {})
+    ensure(int(choir_bonuses.get("battle_spell_resistance_pct", 0)) > 0, errors, "Choir Tuning Fork must wire live spell resistance")
+    ensure(int(choir_bonuses.get("battle_control_resistance_pct", 0)) > 0, errors, "Choir Tuning Fork must wire live control resistance")
+    ensure(int(choir_bonuses.get("battle_school_resistance_pct", {}).get("lens", 0)) > 0, errors, "Choir Tuning Fork must wire live Lens resistance")
 
     cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
     ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")

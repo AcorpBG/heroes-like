@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-spell-valuation-counterplay-followup-10184",
-  "currentSliceTitle": "Battle Spell Valuation Counterplay Followup",
+  "currentSliceId": "magic-resistance-countercontrol-10184",
+  "currentSliceTitle": "Magic Resistance Countercontrol",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed spell valuation/counterplay follow-up. The fast benchmark now reports exact spell ids, devalues repeated control loops, keeps control as bounded opener pressure, and uses Native-RMG week-tier spell study instead of authored representative-town magic timing.",
+  "currentSliceNotes": "Completed. Magic resistance, control resistance, temporary status immunity, and artifact-backed resistance now run in live battle and the fast benchmark. Remaining benchmark outliers are tuning evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T08:53:39Z",
+  "updatedAt": "2026-05-28T10:24:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26150,6 +26150,139 @@
       "updatedAt": "2026-05-28T08:53:39Z",
       "startedAt": "2026-05-28T08:17:37Z",
       "completedAt": "2026-05-28T08:53:39Z"
+    },
+    {
+      "id": "magic-resistance-countercontrol-10184",
+      "title": "Magic Resistance Countercontrol",
+      "status": "completed",
+      "source": "owner direction to plan and implement missing spell resistance, natural magic resistance, counter-control immunity, and artifact-backed resistance mechanics before further battle balance tuning",
+      "planRef": "PLAN.md Magic Resistance And Counter-Control Target / GOALS.md Current Immediate Goal - Magic Resistance And Counter-Control",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "content/spells.json",
+        "content/artifacts.json",
+        "scripts/core/SpellRules.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/ArtifactRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/magic_resistance_countercontrol_report.gd",
+        "tests/magic_resistance_countercontrol_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "GOALS.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Live battle spell resolution and the fast battle benchmark must apply unit, hero, school, immunity, and artifact resistance consistently; cleanse spells must grant temporary immunity; AI valuation must account for expected resisted damage/control success; validation must prove content bounds, runtime behavior, benchmark execution, and JSON/diff hygiene.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T10:24:30Z",
+        "sliceId": "magic-resistance-countercontrol-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+          "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+          "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
+          "python3 tests/validate_repo.py (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
+            "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
+            "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
+            "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
+            "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
+            "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
+            "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
+            "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+          ],
+          "runtime_report": {
+            "damage_resistance": {
+              "raw_damage": 44,
+              "final_damage": 22,
+              "resistance_pct": 50
+            },
+            "control_resistance": {
+              "control_resistance_pct": 80,
+              "roll": 41,
+              "blocked_status_id": "status_rooted"
+            },
+            "control_immunity": {
+              "blocked_status_id": "status_rooted"
+            },
+            "cleanse_immunity": {
+              "status_immunity_ids": [
+                "status_harried",
+                "status_staggered"
+              ]
+            },
+            "artifact_resistance": {
+              "spell_resistance_pct": 8,
+              "control_resistance_pct": 8,
+              "lens_resistance_pct": 10
+            }
+          },
+          "full_100_seed_matrix": {
+            "ok": true,
+            "ordered_rows": 120,
+            "balance_status": "needs_tuning",
+            "balance_outlier_count": 47,
+            "spell_casts": 23216,
+            "spell_resisted_count": 1416,
+            "spell_immune_count": 0,
+            "spell_resisted_damage_prevented": 3344,
+            "week_summaries": [
+              {
+                "week": 1,
+                "side_bias_points": 0.07,
+                "average_rounds": 5.54
+              },
+              {
+                "week": 2,
+                "side_bias_points": 0.93,
+                "average_rounds": 5.8
+              },
+              {
+                "week": 3,
+                "side_bias_points": 0.27,
+                "average_rounds": 6.43
+              },
+              {
+                "week": 4,
+                "side_bias_points": 0.13,
+                "average_rounds": 7.18
+              }
+            ],
+            "top_resisted_spell_ids": {
+              "spell_beacon_writ_lance_13": 393,
+              "spell_beacon_bell_lance_25": 374,
+              "spell_sunlance_arc": 229,
+              "spell_furnace_rivet_clause_05": 209,
+              "spell_old_measure_tally_tally_20": 154
+            }
+          },
+          "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+        }
+      },
+      "nonGoals": [
+        "Do not claim final magic-vs-might or faction battle balance from this slice.",
+        "Do not add caster-unit spellbooks, rare-resource spell-cast costs, or artifact save-schema migrations.",
+        "Do not add broad new report gates beyond one focused resistance/counter-control report."
+      ],
+      "notes": "Completed. Magic resistance, control resistance, temporary status immunity, and artifact-backed resistance now run in live battle and the fast benchmark. Remaining benchmark outliers are tuning evidence.",
+      "startedAt": "2026-05-28T10:05:01Z",
+      "updatedAt": "2026-05-28T10:24:30Z",
+      "completedAt": "2026-05-28T10:24:30Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35685,29 +35818,101 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-27T22:25:00Z",
-    "sliceId": "magic-school-availability-strategic-influence-10184",
+    "updatedAt": "2026-05-28T10:24:30Z",
+    "sliceId": "magic-resistance-countercontrol-10184",
     "commands": [
-      "jq empty content/spells.json content/towns.json content/resource_sites.json content/random_map_generator_data_model.json ops/progress.json (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 23 spells, 6 overworld, 17 battle, Old Measure live)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_adventure_spell_hooks_report.tscn (passed; movement and reveal-radius hooks, Survey Chain revealed 5 new tiles in fixture)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed; existing battle behavior unchanged)",
-      "godot4 --headless --path . --quit-after 20 tests/magic_artifact_economy_integration_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_availability.json (passed; ok=true, 30 ordered rows, needs_tuning, 4 outliers)",
       "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+      "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
+      "python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)"
-    ]
+    ],
+    "evidence": {
+      "implemented": [
+        "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
+        "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
+        "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
+        "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
+        "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
+        "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
+        "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
+        "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+      ],
+      "runtime_report": {
+        "damage_resistance": {
+          "raw_damage": 44,
+          "final_damage": 22,
+          "resistance_pct": 50
+        },
+        "control_resistance": {
+          "control_resistance_pct": 80,
+          "roll": 41,
+          "blocked_status_id": "status_rooted"
+        },
+        "control_immunity": {
+          "blocked_status_id": "status_rooted"
+        },
+        "cleanse_immunity": {
+          "status_immunity_ids": [
+            "status_harried",
+            "status_staggered"
+          ]
+        },
+        "artifact_resistance": {
+          "spell_resistance_pct": 8,
+          "control_resistance_pct": 8,
+          "lens_resistance_pct": 10
+        }
+      },
+      "full_100_seed_matrix": {
+        "ok": true,
+        "ordered_rows": 120,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 47,
+        "spell_casts": 23216,
+        "spell_resisted_count": 1416,
+        "spell_immune_count": 0,
+        "spell_resisted_damage_prevented": 3344,
+        "week_summaries": [
+          {
+            "week": 1,
+            "side_bias_points": 0.07,
+            "average_rounds": 5.54
+          },
+          {
+            "week": 2,
+            "side_bias_points": 0.93,
+            "average_rounds": 5.8
+          },
+          {
+            "week": 3,
+            "side_bias_points": 0.27,
+            "average_rounds": 6.43
+          },
+          {
+            "week": 4,
+            "side_bias_points": 0.13,
+            "average_rounds": 7.18
+          }
+        ],
+        "top_resisted_spell_ids": {
+          "spell_beacon_writ_lance_13": 393,
+          "spell_beacon_bell_lance_25": 374,
+          "spell_sunlance_arc": 229,
+          "spell_furnace_rivet_clause_05": 209,
+          "spell_old_measure_tally_tally_20": 154
+        }
+      },
+      "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+    }
   },
-  "active_slice": {
-    "id": "magic-school-availability-strategic-influence-10184",
-    "title": "Magic School Availability Strategic Influence",
-    "status": "completed",
-    "updatedAt": "2026-05-27T22:25:00Z",
-    "notes": "Completed bounded strategic magic access pass. Combat stat tuning remains paused/needs-tuning; next magic work should address spell valuation parity, targeting, school progression, or caster units as separate slices.",
-    "completedAt": "2026-05-27T22:25:00Z"
-  },
-  "currentSliceUpdatedAt": "2026-05-28T06:52:52Z",
+  "active_slice": "magic-resistance-countercontrol-10184",
+  "currentSliceUpdatedAt": "2026-05-28T10:24:30Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -37714,41 +37919,329 @@
       "status": "pass",
       "updatedAt": "2026-05-28T07:43:50Z",
       "summary": "Fast battle benchmark spell integration passed: week-appropriate town-study battle spells are simulated and the full 100-seed all-week matrix completed with 42,979 spell casts and no structural failures."
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-28T10:24:30Z",
+      "sliceId": "magic-resistance-countercontrol-10184",
+      "commands": [
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
+        "python3 tests/validate_repo.py (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
+          "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
+          "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
+          "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
+          "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
+          "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
+          "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
+          "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+        ],
+        "runtime_report": {
+          "damage_resistance": {
+            "raw_damage": 44,
+            "final_damage": 22,
+            "resistance_pct": 50
+          },
+          "control_resistance": {
+            "control_resistance_pct": 80,
+            "roll": 41,
+            "blocked_status_id": "status_rooted"
+          },
+          "control_immunity": {
+            "blocked_status_id": "status_rooted"
+          },
+          "cleanse_immunity": {
+            "status_immunity_ids": [
+              "status_harried",
+              "status_staggered"
+            ]
+          },
+          "artifact_resistance": {
+            "spell_resistance_pct": 8,
+            "control_resistance_pct": 8,
+            "lens_resistance_pct": 10
+          }
+        },
+        "full_100_seed_matrix": {
+          "ok": true,
+          "ordered_rows": 120,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 47,
+          "spell_casts": 23216,
+          "spell_resisted_count": 1416,
+          "spell_immune_count": 0,
+          "spell_resisted_damage_prevented": 3344,
+          "week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.07,
+              "average_rounds": 5.54
+            },
+            {
+              "week": 2,
+              "side_bias_points": 0.93,
+              "average_rounds": 5.8
+            },
+            {
+              "week": 3,
+              "side_bias_points": 0.27,
+              "average_rounds": 6.43
+            },
+            {
+              "week": 4,
+              "side_bias_points": 0.13,
+              "average_rounds": 7.18
+            }
+          ],
+          "top_resisted_spell_ids": {
+            "spell_beacon_writ_lance_13": 393,
+            "spell_beacon_bell_lance_25": 374,
+            "spell_sunlance_arc": 229,
+            "spell_furnace_rivet_clause_05": 209,
+            "spell_old_measure_tally_tally_20": 154
+          }
+        },
+        "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+      }
     }
   ],
   "currentSlice": {
-    "id": "battle-spell-parity-counterplay-10184",
-    "title": "Battle Spell Parity Counterplay",
+    "id": "magic-resistance-countercontrol-10184",
+    "title": "Magic Resistance Countercontrol",
     "status": "completed",
-    "updatedAt": "2026-05-28T07:43:50Z",
-    "notes": "Completed fast battle benchmark town-study spellbook integration; full 100-seed all-week gate passed with spell cast evidence.",
-    "completedAt": "2026-05-28T07:43:50Z"
+    "source": "owner direction to plan and implement missing spell resistance, natural magic resistance, counter-control immunity, and artifact-backed resistance mechanics before further battle balance tuning",
+    "planRef": "PLAN.md Magic Resistance And Counter-Control Target / GOALS.md Current Immediate Goal - Magic Resistance And Counter-Control",
+    "sourceDocs": [
+      "PLAN.md",
+      "GOALS.md",
+      "docs/spell-system-player-balance-audit.md"
+    ],
+    "implementationTargets": [
+      "content/units.json",
+      "content/spells.json",
+      "content/artifacts.json",
+      "scripts/core/SpellRules.gd",
+      "scripts/core/BattleRules.gd",
+      "scripts/core/BattleAiRules.gd",
+      "scripts/core/ArtifactRules.gd",
+      "tests/battle_faction_fast_balance_benchmark.py",
+      "tests/magic_resistance_countercontrol_report.gd",
+      "tests/magic_resistance_countercontrol_report.tscn",
+      "tests/validate_repo.py",
+      "PLAN.md",
+      "GOALS.md",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Live battle spell resolution and the fast battle benchmark must apply unit, hero, school, immunity, and artifact resistance consistently; cleanse spells must grant temporary immunity; AI valuation must account for expected resisted damage/control success; validation must prove content bounds, runtime behavior, benchmark execution, and JSON/diff hygiene.",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-28T10:24:30Z",
+      "sliceId": "magic-resistance-countercontrol-10184",
+      "commands": [
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+        "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
+        "python3 tests/validate_repo.py (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
+          "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
+          "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
+          "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
+          "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
+          "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
+          "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
+          "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
+        ],
+        "runtime_report": {
+          "damage_resistance": {
+            "raw_damage": 44,
+            "final_damage": 22,
+            "resistance_pct": 50
+          },
+          "control_resistance": {
+            "control_resistance_pct": 80,
+            "roll": 41,
+            "blocked_status_id": "status_rooted"
+          },
+          "control_immunity": {
+            "blocked_status_id": "status_rooted"
+          },
+          "cleanse_immunity": {
+            "status_immunity_ids": [
+              "status_harried",
+              "status_staggered"
+            ]
+          },
+          "artifact_resistance": {
+            "spell_resistance_pct": 8,
+            "control_resistance_pct": 8,
+            "lens_resistance_pct": 10
+          }
+        },
+        "full_100_seed_matrix": {
+          "ok": true,
+          "ordered_rows": 120,
+          "balance_status": "needs_tuning",
+          "balance_outlier_count": 47,
+          "spell_casts": 23216,
+          "spell_resisted_count": 1416,
+          "spell_immune_count": 0,
+          "spell_resisted_damage_prevented": 3344,
+          "week_summaries": [
+            {
+              "week": 1,
+              "side_bias_points": 0.07,
+              "average_rounds": 5.54
+            },
+            {
+              "week": 2,
+              "side_bias_points": 0.93,
+              "average_rounds": 5.8
+            },
+            {
+              "week": 3,
+              "side_bias_points": 0.27,
+              "average_rounds": 6.43
+            },
+            {
+              "week": 4,
+              "side_bias_points": 0.13,
+              "average_rounds": 7.18
+            }
+          ],
+          "top_resisted_spell_ids": {
+            "spell_beacon_writ_lance_13": 393,
+            "spell_beacon_bell_lance_25": 374,
+            "spell_sunlance_arc": 229,
+            "spell_furnace_rivet_clause_05": 209,
+            "spell_old_measure_tally_tally_20": 154
+          }
+        },
+        "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
+      }
+    },
+    "nonGoals": [
+      "Do not claim final magic-vs-might or faction battle balance from this slice.",
+      "Do not add caster-unit spellbooks, rare-resource spell-cast costs, or artifact save-schema migrations.",
+      "Do not add broad new report gates beyond one focused resistance/counter-control report."
+    ],
+    "notes": "Completed. Magic resistance, control resistance, temporary status immunity, and artifact-backed resistance now run in live battle and the fast benchmark. Remaining benchmark outliers are tuning evidence.",
+    "startedAt": "2026-05-28T10:05:01Z",
+    "updatedAt": "2026-05-28T10:24:30Z",
+    "completedAt": "2026-05-28T10:24:30Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T07:43:50Z",
-    "sliceId": "battle-spell-parity-counterplay-10184",
+    "updatedAt": "2026-05-28T10:24:30Z",
+    "sliceId": "magic-resistance-countercontrol-10184",
     "commands": [
-      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_spells_in_sim.json (passed; ok=true, 596 spell casts)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 30 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_30_seed_spells_in_sim.json (passed; 120 ordered rows, 12,868 spell casts)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_spells_in_sim.json (passed; 120 ordered rows, 42,979 spell casts)",
-      "python3 tests/validate_repo.py (passed; includes benchmark town-study spellbook guards)",
-      "jq empty ops/progress.json content/spells.json content/towns.json content/buildings.json (passed)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+      "jq empty content/units.json content/spells.json content/artifacts.json ops/progress.json (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_resistance_countercontrol_report.tscn (passed; damage mitigation, control immunity/resistance, cleanse immunity, artifact resistance)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_spell_schema_report.tscn (passed; 112 spells, 90 battle, 22 overworld)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_battle_spell_behavior_report.tscn (passed)",
+      "godot4 --headless --path . --quit-after 20 tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_magic_resistance_v2.json (passed; ok=true, 30 rows, resistance counters emitted)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_magic_resistance.json (passed; ok=true, 120 rows, 47 tuning outliers remain)",
+      "python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Fast benchmark hero spellbooks now combine starting battle spells with week-appropriate town-study battle spells.",
-        "Benchmark reports per-week spellbook tiers/counts and spell casts by school, tier, effect, and faction.",
-        "Full 100-seed all-week matrix completed without structural failures."
+        "Added unit spell/control/school resistance and status-immunity fields with tier and faction-school defaults across authored units.",
+        "Added cleanse spell status_immunity_ids mirroring cleanse_effect_ids so countermagic creates temporary status immunity.",
+        "Wired live battle spell damage mitigation, pure-control/status-rider resistance rolls, immunity blocks, and result metadata in SpellRules/BattleRules.",
+        "Added hero battle resistance payloads from knowledge plus artifact/specialty bonus fields.",
+        "Wired Choir Tuning Fork to live spell, control, and Lens-school resistance bonuses through ArtifactRules.",
+        "Updated Battle AI and the fast faction benchmark to value expected resisted damage and control success chance.",
+        "Added benchmark resistance output: resisted spell counts, immunity counts, prevented damage, resisted-by-faction, and top resisted spell ids.",
+        "Added focused Godot runtime report for magic resistance/counter-control behavior and repo validation guards for resistance content bounds."
       ],
-      "full_100_seed_matrix": {
-        "balance_status": "needs_tuning",
-        "balance_outlier_count": 52,
-        "total_spell_casts": 42979
+      "runtime_report": {
+        "damage_resistance": {
+          "raw_damage": 44,
+          "final_damage": 22,
+          "resistance_pct": 50
+        },
+        "control_resistance": {
+          "control_resistance_pct": 80,
+          "roll": 41,
+          "blocked_status_id": "status_rooted"
+        },
+        "control_immunity": {
+          "blocked_status_id": "status_rooted"
+        },
+        "cleanse_immunity": {
+          "status_immunity_ids": [
+            "status_harried",
+            "status_staggered"
+          ]
+        },
+        "artifact_resistance": {
+          "spell_resistance_pct": 8,
+          "control_resistance_pct": 8,
+          "lens_resistance_pct": 10
+        }
       },
-      "boundaries": "This adds spell simulation to the fast benchmark. It does not claim final spell valuation, spell counterplay, caster-unit design, or final faction balance."
+      "full_100_seed_matrix": {
+        "ok": true,
+        "ordered_rows": 120,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 47,
+        "spell_casts": 23216,
+        "spell_resisted_count": 1416,
+        "spell_immune_count": 0,
+        "spell_resisted_damage_prevented": 3344,
+        "week_summaries": [
+          {
+            "week": 1,
+            "side_bias_points": 0.07,
+            "average_rounds": 5.54
+          },
+          {
+            "week": 2,
+            "side_bias_points": 0.93,
+            "average_rounds": 5.8
+          },
+          {
+            "week": 3,
+            "side_bias_points": 0.27,
+            "average_rounds": 6.43
+          },
+          {
+            "week": 4,
+            "side_bias_points": 0.13,
+            "average_rounds": 7.18
+          }
+        ],
+        "top_resisted_spell_ids": {
+          "spell_beacon_writ_lance_13": 393,
+          "spell_beacon_bell_lance_25": 374,
+          "spell_sunlance_arc": 229,
+          "spell_furnace_rivet_clause_05": 209,
+          "spell_old_measure_tally_tally_20": 154
+        }
+      },
+      "remaining_balance_status": "47 faction-pair/timing outliers remain and should be handled as later battle tuning evidence, not as resistance system failure."
     }
   }
 }

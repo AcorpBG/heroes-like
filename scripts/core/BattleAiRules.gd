@@ -753,19 +753,19 @@ static func _damage_spell_score(
 	target: Dictionary,
 	spell: Dictionary
 ) -> float:
-	var effect = spell.get("effect", {})
-	var power := int(enemy_hero.get("command", {}).get("power", 0))
-	var damage: int = max(
-		1,
-		int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))
-	)
+	var damage_projection := SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell)
+	var damage := int(damage_projection.get("final_damage", 0))
 	var score := _attack_score(active_stack, target, battle, true) + 1.5
 	score += min(1.0, float(damage) / float(max(1, int(target.get("total_health", 0))))) * 6.0
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
-		score += 2.0
-		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id)
+		if SpellRulesScript.target_is_immune_to_status(target, battle, status_id):
+			score -= 2.0
+		else:
+			var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
+			score += 2.0 * success_chance
+			score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
 		if status_id == STATUS_HARRIED and _health_ratio(target) <= 0.75:
 			score += 1.0
 	var status_modifiers = status_effect.get("modifiers", {})
@@ -817,10 +817,13 @@ static func _spell_candidate_score(
 static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
+	if status_id != "" and SpellRulesScript.target_is_immune_to_status(target, battle, status_id):
+		return -9999.0
+	var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
 	var score := 3.0 + (_attack_score(active_stack, target, battle, true) * 0.35)
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
-		score += 3.0
-		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id)
+		score += 3.0 * success_chance
+		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
 	if _health_ratio(target) > 0.5:
 		score += 1.25
 	if bool(target.get("ranged", false)) and int(target.get("shots_remaining", 0)) > 0:
@@ -829,7 +832,7 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 		score += 1.0
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
-	return score
+	return score * max(0.15, success_chance)
 
 static func _recovery_spell_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
 	var missing_health := _stack_missing_health(active_stack)

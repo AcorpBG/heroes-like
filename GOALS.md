@@ -10,28 +10,31 @@ This file names the next immediate goals clearly enough for implementation work 
 
 The current focus is Phase 5 - Playable Alpha Baseline. Campaign production remains deferred.
 
-## Latest Immediate Goal - Battle Spell Valuation
+## Latest Immediate Goal - Magic Resistance And Counter-Control
 
-Latest completed progress slice: `battle-spell-valuation-counterplay-followup-10184`
+Latest completed progress slice: `magic-resistance-countercontrol-10184`
 
-The spell-enabled fast battle benchmark has been corrected before more broad unit-stat tuning. Spell AI valuation and spell availability now produce player-readable battle evidence instead of letting cheap control loops or authored-town magic timing distort the Native RMG faction matrix.
+The spell catalog and fast battle benchmark now expose enough magic pressure that battle balance cannot be read honestly without resistance and counter-control. This completed slice wires natural unit resistance, hero knowledge resistance, school resistance, cleanse-granted immunity, and artifact resistance into live battle resolution and mirrors the same rules in the fast benchmark.
 
 Target state:
-- keep the 100+ spell catalog and town-study access from the completed magic slice;
-- make the benchmark report spell casts by exact spell id as well as school, tier, effect, and faction;
-- stop cheap tier-1 control spells from crowding out damage, buffs, recovery, and faction-school choices;
-- keep control useful as opener/counterplay pressure, but strongly devalue repeat control on already-controlled stacks;
-- make damage spells compete when they finish or materially reduce a stack;
-- use Native-RMG week-tier spell study in the benchmark, matching the army snapshot surface instead of authored representative-town build timing;
-- keep structural guards proving all benchmark weeks use the expected spell tier caps;
-- validate with the fast benchmark, repo validation, JSON validity, and diff hygiene.
+- units carry bounded spell, control, school, and immunity fields;
+- higher-tier units have modest natural resistance without flattening faction identity;
+- faction-school units resist their own school slightly;
+- hero knowledge and resistance artifacts reduce incoming spell pressure through the live battle payload;
+- Choir Tuning Fork's resistance role has live mechanics, not just taxonomy metadata;
+- cleanse/countermagic spells grant temporary immunity to the status ids they cleanse;
+- damage spells deal resisted damage, while status riders and pure control can be resisted or blocked by immunity;
+- mana is still consumed when a target resists or is immune;
+- Battle AI and the fast benchmark score expected resisted damage and control success chance;
+- benchmark output reports resistance/immunity counts, prevented damage, and top resisted spell ids.
 
 Non-goals:
 - do not claim final magic-vs-might hero balance;
 - do not add caster units yet;
 - do not add rare-resource spell-cast costs;
+- do not add school mastery or a new artifact save migration;
 - do not start campaign production;
-- do not add new gates just to make a report pass.
+- do not add broad new gates beyond one focused resistance/counter-control runtime report.
 
 ## Battle Balance Target
 

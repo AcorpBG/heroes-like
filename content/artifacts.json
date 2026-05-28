@@ -1048,6 +1048,24 @@
           "scope": "equipped",
           "stat": "battle_defense",
           "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_spell_resistance_pct",
+          "public_summary": "Reduces incoming spell damage."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_control_resistance_pct",
+          "public_summary": "Improves resistance to control magic."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_school_resistance_pct:lens",
+          "public_summary": "Improves resistance to Lens school magic."
         }
       ],
       "risk": {
@@ -1056,17 +1074,22 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Sunvault-aligned tuning tool for calibrated sight and defensive command.",
+        "summary": "Sunvault-aligned tuning tool for calibrated sight, defensive command, and spell resistance.",
         "icon_id": "artifact_tuning_fork_placeholder",
         "effect_tags": [
           "scouting",
           "defense",
-          "sunvault"
+          "sunvault",
+          "resistance",
+          "countermagic"
         ],
         "comparison_priority": [
           "scouting_radius",
           "battle_defense",
-          "faction_affinity"
+          "faction_affinity",
+          "battle_spell_resistance_pct",
+          "battle_control_resistance_pct",
+          "battle_school_resistance_pct"
         ]
       },
       "ai_hints": {
@@ -1098,7 +1121,12 @@
       "description": "A split crystal fork that steadies relay crews by pitch instead of command. In silence it points toward glare.",
       "bonuses": {
         "scouting_radius": 1,
-        "battle_defense": 1
+        "battle_defense": 1,
+        "battle_spell_resistance_pct": 8,
+        "battle_control_resistance_pct": 8,
+        "battle_school_resistance_pct": {
+          "lens": 10
+        }
       }
     },
     {

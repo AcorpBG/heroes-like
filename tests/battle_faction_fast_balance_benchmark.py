@@ -19,6 +19,9 @@ CONTENT = ROOT / "content"
 STATUS_HARRIED = "status_harried"
 STATUS_STAGGERED = "status_staggered"
 STATUS_ROOTED = "status_rooted"
+STATUS_EFFECT_IDS = {STATUS_HARRIED, STATUS_STAGGERED, STATUS_ROOTED}
+MAX_SPELL_RESISTANCE_PCT = 75
+MAX_CONTROL_RESISTANCE_PCT = 80
 COHESION_MIN = 0
 COHESION_MAX = 10
 MOMENTUM_MAX = 4
@@ -253,6 +256,9 @@ class FastBattleBenchmark:
             "knowledge": knowledge,
             "initiative": int(command.get("initiative", 0)),
             "damage_multiplier": 1.0,
+            "battle_spell_resistance_pct": min(MAX_SPELL_RESISTANCE_PCT, knowledge * 2),
+            "battle_control_resistance_pct": min(MAX_CONTROL_RESISTANCE_PCT, knowledge),
+            "battle_school_resistance_pct": {},
             "battle_traits": [str(value) for value in hero.get("battle_traits", [])],
             "spell_ids": spell_ids,
             "starting_spell_count": len(starting_spell_ids),
@@ -463,21 +469,36 @@ class FastBattleBenchmark:
         by_tier: Counter[str] = Counter()
         by_faction: Counter[str] = Counter()
         by_id: Counter[str] = Counter()
+        resisted_by_faction: Counter[str] = Counter()
+        resisted_by_id: Counter[str] = Counter()
         total = 0
+        resisted_total = 0
+        immune_total = 0
+        prevented_damage = 0
         for row in rows:
             by_effect.update(row.get("spell_casts_by_effect", {}))
             by_school.update(row.get("spell_casts_by_school", {}))
             by_tier.update(row.get("spell_casts_by_tier", {}))
             by_faction.update(row.get("spell_casts_by_faction", {}))
             by_id.update(row.get("spell_casts_by_id", {}))
+            resisted_by_faction.update(row.get("spell_resists_by_faction", {}))
+            resisted_by_id.update(row.get("spell_resists_by_id", {}))
             total += int(row.get("action_mix", {}).get("cast_spell", 0))
+            resisted_total += int(row.get("spell_resisted_count", 0))
+            immune_total += int(row.get("spell_immune_count", 0))
+            prevented_damage += int(row.get("spell_resisted_damage_prevented", 0))
         return {
             "total_spell_casts": total,
+            "spell_resisted_count": resisted_total,
+            "spell_immune_count": immune_total,
+            "spell_resisted_damage_prevented": prevented_damage,
             "by_effect": dict(sorted(by_effect.items())),
             "by_school": dict(sorted(by_school.items())),
             "by_tier": dict(sorted(by_tier.items())),
             "by_faction": dict(sorted(by_faction.items())),
             "top_spell_ids": dict(by_id.most_common(16)),
+            "resisted_by_faction": dict(sorted(resisted_by_faction.items())),
+            "top_resisted_spell_ids": dict(resisted_by_id.most_common(16)),
         }
 
     def _run_ordered_matchup(
@@ -499,6 +520,8 @@ class FastBattleBenchmark:
         spell_casts_by_effect: Counter[str] = Counter()
         spell_casts_by_faction: Counter[str] = Counter()
         spell_casts_by_id: Counter[str] = Counter()
+        spell_resists_by_faction: Counter[str] = Counter()
+        spell_resists_by_id: Counter[str] = Counter()
         for seed_index in range(seeds):
             battle = self._create_battle(side_a_faction, side_b_faction, week, context)
             matchup_seed_parts = sorted([side_a_faction, side_b_faction])
@@ -515,6 +538,8 @@ class FastBattleBenchmark:
             spell_casts_by_effect.update(result.get("spell_casts_by_effect", {}))
             spell_casts_by_faction.update(result.get("spell_casts_by_faction", {}))
             spell_casts_by_id.update(result.get("spell_casts_by_id", {}))
+            spell_resists_by_faction.update(result.get("spell_resists_by_faction", {}))
+            spell_resists_by_id.update(result.get("spell_resists_by_id", {}))
             for internal_side in [INTERNAL_SIDE_A, INTERNAL_SIDE_B]:
                 public_side = self._public_side(internal_side)
                 casualties_by_tier[public_side].update(result["casualties_by_tier"].get(internal_side, {}))
@@ -538,6 +563,11 @@ class FastBattleBenchmark:
             "spell_casts_by_effect": dict(sorted(spell_casts_by_effect.items())),
             "spell_casts_by_faction": dict(sorted(spell_casts_by_faction.items())),
             "spell_casts_by_id": dict(sorted(spell_casts_by_id.items())),
+            "spell_resisted_count": int(consequence_counts.get("spell_resisted", 0)),
+            "spell_immune_count": int(consequence_counts.get("spell_immune", 0)),
+            "spell_resisted_damage_prevented": int(consequence_counts.get("spell_prevented_damage", 0)),
+            "spell_resists_by_faction": dict(sorted(spell_resists_by_faction.items())),
+            "spell_resists_by_id": dict(sorted(spell_resists_by_id.items())),
             "casualties_by_tier": {
                 side: dict(sorted(counter.items()))
                 for side, counter in casualties_by_tier.items()
@@ -591,6 +621,13 @@ class FastBattleBenchmark:
                 "retaliations": max(0, int(unit.get("retaliations", 1))),
                 "retaliations_left": max(0, int(unit.get("retaliations", 1))),
                 "shots_remaining": int(unit.get("shots", 0)),
+                "spell_resistance_pct": int(clamp(int(unit.get("spell_resistance_pct", 0)), 0, MAX_SPELL_RESISTANCE_PCT)),
+                "control_resistance_pct": int(clamp(int(unit.get("control_resistance_pct", 0)), 0, MAX_CONTROL_RESISTANCE_PCT)),
+                "spell_school_resistance_pct": self._normalize_school_resistance(unit.get("spell_school_resistance_pct", {})),
+                "status_immunity_ids": [
+                    str(value) for value in unit.get("status_immunity_ids", [])
+                    if str(value) in STATUS_EFFECT_IDS
+                ] if isinstance(unit.get("status_immunity_ids", []), list) else [],
                 "defending": False,
                 "cohesion_base": self._cohesion_base_for_unit(unit),
                 "cohesion": self._cohesion_base_for_unit(unit),
@@ -604,6 +641,7 @@ class FastBattleBenchmark:
     def _simulate_battle(self, battle: dict[str, Any], seed: int) -> dict[str, Any]:
         rng = random.Random(seed)
         battle["initiative_tie_side"] = INTERNAL_SIDE_A if rng.getrandbits(1) == 0 else INTERNAL_SIDE_B
+        battle["resistance_seed"] = seed
         initial_health = self._side_healths(battle)
         action_mix: Counter[str] = Counter()
         consequence_counts: Counter[str] = Counter()
@@ -612,6 +650,8 @@ class FastBattleBenchmark:
         spell_casts_by_effect: Counter[str] = Counter()
         spell_casts_by_faction: Counter[str] = Counter()
         spell_casts_by_id: Counter[str] = Counter()
+        spell_resists_by_faction: Counter[str] = Counter()
+        spell_resists_by_id: Counter[str] = Counter()
         self._prepare_round(battle, 1)
         while True:
             if int(battle["round"]) > SIMULATION_GUARD_MAX_ROUNDS:
@@ -640,6 +680,8 @@ class FastBattleBenchmark:
                     spell_casts_by_effect,
                     spell_casts_by_faction,
                     spell_casts_by_id,
+                    spell_resists_by_faction,
+                    spell_resists_by_id,
                 )
                 action_mix["cast_spell"] += 1
                 self._advance_turn(battle)
@@ -665,6 +707,8 @@ class FastBattleBenchmark:
             "spell_casts_by_effect": spell_casts_by_effect,
             "spell_casts_by_faction": spell_casts_by_faction,
             "spell_casts_by_id": spell_casts_by_id,
+            "spell_resists_by_faction": spell_resists_by_faction,
+            "spell_resists_by_id": spell_resists_by_id,
         }
 
     def _prepare_round(self, battle: dict[str, Any], round_number: int) -> None:
@@ -799,11 +843,12 @@ class FastBattleBenchmark:
         target: dict[str, Any],
         spell: dict[str, Any],
     ) -> float:
+        target["_battle_context"] = battle
         effect = spell.get("effect", {})
         effect_type = str(effect.get("type", ""))
         mana_cost = int(spell.get("mana_cost", 0))
         if effect_type == "damage_enemy":
-            damage = self._spell_damage(hero, target, effect)
+            damage = int(self._spell_damage_projection(hero, target, spell).get("final_damage", 0))
             alive_before = self._alive_count(target)
             killed_units = min(alive_before, int(damage / max(1, int(target.get("unit_hp", 1)))))
             score = (float(damage) / float(max(1, target.get("unit_hp", 1)))) + (1.0 - self._health_ratio(target)) * 3.0
@@ -816,10 +861,13 @@ class FastBattleBenchmark:
             status_effect = effect.get("status_effect", {}) if isinstance(effect.get("status_effect", {}), dict) else {}
             status_id = str(status_effect.get("effect_id", ""))
             target_already_controlled = self._stack_has_control_effect(target, battle)
+            if status_id and self._target_immune_to_status(target, battle, status_id):
+                return 0.0
+            control_success = (100.0 - float(self._control_resistance_pct(target, spell))) / 100.0
             score = 1.7 + (self._attack_score(active, target, battle, True) * 0.22)
             if status_id and not self._has_effect_id(target, battle, status_id):
-                score += 1.8 + self._control_spell_pressure(status_effect)
-                score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id) * 0.65
+                score += (1.8 + self._control_spell_pressure(status_effect)) * control_success
+                score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id) * 0.65 * control_success
             if target_already_controlled:
                 score -= 5.0
             if self._health_ratio(target) > 0.65:
@@ -830,7 +878,7 @@ class FastBattleBenchmark:
                 score += 1.0
             if self._stack_cohesion_total(target, battle) <= 4:
                 score += 0.4
-            return score - (mana_cost * 0.28)
+            return (score * max(0.15, control_success)) - (mana_cost * 0.28)
         if effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
             if self._stack_has_positive_effect(active, battle):
                 return 0.0
@@ -854,6 +902,8 @@ class FastBattleBenchmark:
         spell_casts_by_effect: Counter[str],
         spell_casts_by_faction: Counter[str],
         spell_casts_by_id: Counter[str],
+        spell_resists_by_faction: Counter[str],
+        spell_resists_by_id: Counter[str],
     ) -> None:
         side = active["side"]
         hero = self._hero_for_side(battle, side)
@@ -873,15 +923,31 @@ class FastBattleBenchmark:
         spell_casts_by_id[str(spell.get("id", ""))] += 1
         if effect_type == "damage_enemy":
             before = dict(target)
-            self._apply_damage(target, self._spell_damage(hero, target, effect))
+            target["_battle_context"] = battle
+            projection = self._spell_damage_projection(hero, target, spell)
+            prevented = int(projection.get("prevented_damage", 0))
+            if prevented > 0:
+                consequence_counts["spell_prevented_damage"] += prevented
+                consequence_counts["spell_resisted"] += 1
+                spell_resists_by_faction[str(active.get("faction_id", ""))] += 1
+                spell_resists_by_id[str(spell.get("id", ""))] += 1
+            self._apply_damage(target, int(projection.get("final_damage", 0)))
             consequence_counts["spell_damage"] += 1
             if isinstance(effect.get("status_effect", {}), dict) and self._alive_count(target) > 0:
-                self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
-                consequence_counts["status_applied"] += 1
+                status_block = self._status_block_result(battle, active, target, spell, effect["status_effect"])
+                if status_block["blocked"]:
+                    self._record_spell_resist(status_block, active, spell, consequence_counts, spell_resists_by_faction, spell_resists_by_id)
+                else:
+                    self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
+                    consequence_counts["status_applied"] += 1
             self._apply_damage_pressure(battle, active, before, target, True, "spell", consequence_counts)
         elif effect_type == "control_enemy" and isinstance(effect.get("status_effect", {}), dict):
-            self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
-            consequence_counts["status_applied"] += 1
+            status_block = self._status_block_result(battle, active, target, spell, effect["status_effect"])
+            if status_block["blocked"]:
+                self._record_spell_resist(status_block, active, spell, consequence_counts, spell_resists_by_faction, spell_resists_by_id)
+            else:
+                self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
+                consequence_counts["status_applied"] += 1
         elif effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
             self._apply_effect(target, effect, battle, "spell", str(spell["id"]))
             consequence_counts["buff_applied"] += 1
@@ -902,6 +968,104 @@ class FastBattleBenchmark:
         if self._health_ratio(target) <= float(effect.get("wounded_threshold_ratio", -1.0)):
             damage += int(effect.get("wounded_bonus_damage", 0))
         return max(1, damage)
+
+    def _spell_damage_projection(self, hero: dict[str, Any], target: dict[str, Any], spell: dict[str, Any]) -> dict[str, int]:
+        effect = spell.get("effect", {}) if isinstance(spell.get("effect", {}), dict) else {}
+        raw_damage = self._spell_damage(hero, target, effect)
+        resistance_pct = self._spell_damage_resistance_pct(target, spell)
+        final_damage = max(1, int(round(raw_damage * (100 - resistance_pct) / 100.0)))
+        return {
+            "raw_damage": raw_damage,
+            "final_damage": final_damage,
+            "resistance_pct": resistance_pct,
+            "prevented_damage": max(0, raw_damage - final_damage),
+        }
+
+    def _normalize_school_resistance(self, value: Any) -> dict[str, int]:
+        if not isinstance(value, dict):
+            return {}
+        result: dict[str, int] = {}
+        for school_id, amount in value.items():
+            amount_int = int(clamp(int(amount), 0, MAX_SPELL_RESISTANCE_PCT))
+            if amount_int > 0:
+                result[str(school_id)] = amount_int
+        return result
+
+    def _school_resistance(self, payload: dict[str, Any], school_id: str) -> int:
+        return int(self._normalize_school_resistance(payload.get("spell_school_resistance_pct", {})).get(school_id, 0))
+
+    def _spell_damage_resistance_pct(self, target: dict[str, Any], spell: dict[str, Any]) -> int:
+        school_id = str(spell.get("school_id", ""))
+        total = int(target.get("spell_resistance_pct", 0)) + self._school_resistance(target, school_id)
+        battle = target.get("_battle_context", {})
+        if isinstance(battle, dict) and battle:
+            hero = self._hero_for_side(battle, str(target.get("side", "")))
+            total += int(hero.get("battle_spell_resistance_pct", 0)) + self._school_resistance(hero, school_id)
+        return int(clamp(total, 0, MAX_SPELL_RESISTANCE_PCT))
+
+    def _control_resistance_pct(self, target: dict[str, Any], spell: dict[str, Any]) -> int:
+        school_id = str(spell.get("school_id", ""))
+        total = int(target.get("control_resistance_pct", 0)) + self._school_resistance(target, school_id)
+        battle = target.get("_battle_context", {})
+        if isinstance(battle, dict) and battle:
+            hero = self._hero_for_side(battle, str(target.get("side", "")))
+            total += int(hero.get("battle_control_resistance_pct", 0)) + self._school_resistance(hero, school_id)
+        return int(clamp(total, 0, MAX_CONTROL_RESISTANCE_PCT))
+
+    def _status_immunity_ids(self, target: dict[str, Any], battle: dict[str, Any]) -> set[str]:
+        ids = {str(value) for value in target.get("status_immunity_ids", []) if str(value) in STATUS_EFFECT_IDS}
+        for effect in target.get("effects", []):
+            if int(effect.get("expires_after_round", 0)) < int(battle.get("round", 1)):
+                continue
+            for status_id in effect.get("status_immunity_ids", []):
+                if str(status_id) in STATUS_EFFECT_IDS:
+                    ids.add(str(status_id))
+        return ids
+
+    def _target_immune_to_status(self, target: dict[str, Any], battle: dict[str, Any], status_id: str) -> bool:
+        return bool(status_id) and status_id in self._status_immunity_ids(target, battle)
+
+    def _status_block_result(
+        self,
+        battle: dict[str, Any],
+        active: dict[str, Any],
+        target: dict[str, Any],
+        spell: dict[str, Any],
+        status_effect: dict[str, Any],
+    ) -> dict[str, Any]:
+        target["_battle_context"] = battle
+        status_id = str(status_effect.get("effect_id", status_effect.get("status_id", "")))
+        if not status_id:
+            return {"blocked": False, "immune": False, "resisted": False, "status_id": "", "roll": -1, "resistance_pct": 0}
+        if self._target_immune_to_status(target, battle, status_id):
+            return {"blocked": True, "immune": True, "resisted": False, "status_id": status_id, "roll": -1, "resistance_pct": self._control_resistance_pct(target, spell)}
+        resistance_pct = self._control_resistance_pct(target, spell)
+        roll = stable_seed(
+            int(battle.get("round", 1)),
+            int(battle.get("resistance_seed", 0)),
+            str(active.get("battle_id", "")),
+            str(target.get("battle_id", "")),
+            str(spell.get("id", "")),
+            status_id,
+        ) % 100
+        resisted = resistance_pct > 0 and roll < resistance_pct
+        return {"blocked": resisted, "immune": False, "resisted": resisted, "status_id": status_id, "roll": roll, "resistance_pct": resistance_pct}
+
+    def _record_spell_resist(
+        self,
+        status_block: dict[str, Any],
+        active: dict[str, Any],
+        spell: dict[str, Any],
+        consequence_counts: Counter[str],
+        spell_resists_by_faction: Counter[str],
+        spell_resists_by_id: Counter[str],
+    ) -> None:
+        if bool(status_block.get("immune", False)):
+            consequence_counts["spell_immune"] += 1
+        else:
+            consequence_counts["spell_resisted"] += 1
+        spell_resists_by_faction[str(active.get("faction_id", ""))] += 1
+        spell_resists_by_id[str(spell.get("id", ""))] += 1
 
     def _resolve_action(
         self,
@@ -1352,6 +1516,10 @@ class FastBattleBenchmark:
             "source_id": source_id,
             "label": str(effect.get("label", source_id)),
             "modifiers": {str(key): int(value) for key, value in modifiers.items()},
+            "status_immunity_ids": [
+                str(value) for value in effect.get("status_immunity_ids", [])
+                if str(value) in STATUS_EFFECT_IDS
+            ] if isinstance(effect.get("status_immunity_ids", []), list) else [],
             "expires_after_round": max(1, int(battle.get("round", 1))) + max(1, int(effect.get("duration_rounds", 1))) - 1,
         })
 
