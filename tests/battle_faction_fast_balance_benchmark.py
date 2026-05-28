@@ -185,6 +185,12 @@ class FastBattleBenchmark:
         return {unit_id: amount for unit_id, amount in sorted(recruits.items()) if amount > 0}
 
     def _select_hero(self, faction_id: str) -> dict[str, Any]:
+        faction = self.factions.get(faction_id, {})
+        for hero_id_value in faction.get("hero_ids", []):
+            hero_id = str(hero_id_value)
+            hero = self.heroes.get(hero_id, {})
+            if str(hero.get("faction_id", "")) == faction_id and str(hero.get("roster_state", "live")) == "live":
+                return hero
         candidates = [
             hero for hero in self.heroes.values()
             if str(hero.get("faction_id", "")) == faction_id and str(hero.get("roster_state", "live")) == "live"

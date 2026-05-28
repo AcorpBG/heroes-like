@@ -26,13 +26,14 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
+        "attack": 1,
         "defense": 0,
         "power": 1,
-        "knowledge": 1
+        "knowledge": 2
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -62,11 +63,12 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 2,
         "power": 0,
         "knowledge": 1
       },
@@ -98,12 +100,13 @@
         "armsmaster"
       ],
       "battle_traits": [
+        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
         "knowledge": 0
       },
       "command_path": "might",
@@ -135,13 +138,14 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -171,11 +175,12 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 2,
         "power": 0,
         "knowledge": 1
       },
@@ -208,10 +213,11 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -244,13 +250,14 @@
         "borderwarden"
       ],
       "battle_traits": [
+        "bogwise",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -280,10 +287,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "ambusher",
+        "bogwise"
       ],
       "command": {
-        "attack": 0,
+        "attack": 1,
         "defense": 0,
         "power": 0,
         "knowledge": 2
@@ -317,12 +325,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
         "knowledge": 0
       },
       "command_path": "might",
@@ -353,12 +362,13 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
         "knowledge": 0
       },
       "command_path": "might",
@@ -389,13 +399,14 @@
         "armsmaster"
       ],
       "battle_traits": [
+        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -425,12 +436,13 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "artillerist"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
-        "power": 1,
+        "power": 0,
         "knowledge": 1
       },
       "command_path": "might",
@@ -462,13 +474,14 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
+        "defense": 1,
         "power": 1,
-        "knowledge": 0
+        "knowledge": 2
       },
       "command_path": "magic",
       "roster_state": "live"
@@ -479,7 +492,7 @@
       "faction_id": "faction_embercourt",
       "archetype": "roadwarden",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Road-crossing hunter",
       "identity_summary": "A toll-road commander who gains value from controlled crossings and overextended enemies.",
       "base_movement": 12,
@@ -500,13 +513,14 @@
         "drillmaster"
       ],
       "battle_traits": [
+        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 1,
         "power": 0,
-        "knowledge": 1
+        "knowledge": 2
       }
     },
     {
@@ -515,7 +529,7 @@
       "faction_id": "faction_embercourt",
       "archetype": "siegelock",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Sapper and bargebow commander",
       "identity_summary": "A lockworks captain who improves controlled assaults, sappers, and bargebow timing.",
       "base_movement": 10,
@@ -536,11 +550,12 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "vanguard"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 2,
+        "defense": 2,
         "power": 0,
         "knowledge": 0
       }
@@ -551,7 +566,7 @@
       "faction_id": "faction_embercourt",
       "archetype": "ashwrit",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Fire-control writ mage",
       "identity_summary": "An ash writ specialist who strengthens fire-control spells and reveal effects against ambushes.",
       "base_movement": 11,
@@ -572,12 +587,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "ambusher"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -587,7 +603,7 @@
       "faction_id": "faction_embercourt",
       "archetype": "granary",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Civic economy mage",
       "identity_summary": "A granary economist who converts civic works into smoother recovery and spell tempo.",
       "base_movement": 10,
@@ -608,11 +624,12 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
+        "defense": 1,
         "power": 1,
         "knowledge": 2
       }
@@ -623,7 +640,7 @@
       "faction_id": "faction_embercourt",
       "archetype": "beaconscribe",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Compact formation signal mage",
       "identity_summary": "A signal court lector who rewards compact formations with cleaner initiative windows.",
       "base_movement": 11,
@@ -644,13 +661,14 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       }
     },
     {
@@ -659,7 +677,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "chainbreaker",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Ferrychain control captain",
       "identity_summary": "A crossing breaker who improves chain units and fights around bridges and ferry lanes.",
       "base_movement": 11,
@@ -680,11 +698,12 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 2,
+        "defense": 1,
         "power": 0,
         "knowledge": 1
       }
@@ -695,7 +714,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "bogplate",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Bogplate handler",
       "identity_summary": "A brute handler who makes bogplate lines cheaper and harder to dislodge.",
       "base_movement": 10,
@@ -716,12 +735,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
         "knowledge": 0
       }
     },
@@ -731,7 +751,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "shrinebiter",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Kill-tempo shrine mage",
       "identity_summary": "A shrine-biter who converts battlefield kills into temporary pressure and spell tempo.",
       "base_movement": 11,
@@ -752,10 +772,11 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "packhunter",
+        "bogwise"
       ],
       "command": {
-        "attack": 0,
+        "attack": 1,
         "defense": 0,
         "power": 2,
         "knowledge": 1
@@ -767,7 +788,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "sporewake",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Rot and blind mystic",
       "identity_summary": "A sporewake mystic who strengthens rot, blind, and recovery-denial effects.",
       "base_movement": 10,
@@ -788,11 +809,12 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "bogwise",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
+        "defense": 1,
         "power": 2,
         "knowledge": 1
       }
@@ -803,7 +825,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "denaugur",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Linked-den growth augur",
       "identity_summary": "A den augur who improves dwelling growth when map sites stay linked.",
       "base_movement": 10,
@@ -824,13 +846,14 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
+        "defense": 1,
         "power": 1,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -839,7 +862,7 @@
       "faction_id": "faction_mireclaw",
       "archetype": "drumoracle",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Harried-prey tempo oracle",
       "identity_summary": "A drum oracle who accelerates units after enemies become harried or wounded.",
       "base_movement": 11,
@@ -860,12 +883,13 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper"
+        "bogwise",
+        "packhunter"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 1,
+        "power": 2,
         "knowledge": 2
       }
     },
@@ -875,7 +899,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "batterycaptain",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Aurora battery captain",
       "identity_summary": "A battery captain who improves protected-lane setup and heavy array fire.",
       "base_movement": 10,
@@ -896,12 +920,13 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "vanguard"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
         "knowledge": 0
       }
     },
@@ -911,7 +936,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "relaysurveyor",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Relay surveyor",
       "identity_summary": "A lens captain who improves watch sites and ranged combat near relay lines.",
       "base_movement": 12,
@@ -932,13 +957,14 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
-        "knowledge": 1
+        "attack": 1,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 2
       }
     },
     {
@@ -947,7 +973,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "duelline",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Focus-after-delay tactician",
       "identity_summary": "A duel-line tactician who improves focus after enemy timing breaks.",
       "base_movement": 11,
@@ -968,10 +994,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
         "power": 0,
         "knowledge": 1
@@ -983,7 +1010,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "harmonicscholar",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Resonance stack scholar",
       "identity_summary": "A harmonic scholar who improves the generation and payoff of resonance cycles.",
       "base_movement": 10,
@@ -1004,12 +1031,13 @@
         "drillmaster"
       ],
       "battle_traits": [
+        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -1019,7 +1047,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "solarphysician",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Light-shield physician",
       "identity_summary": "A solar physician who turns light spells into shields and damage smoothing.",
       "base_movement": 10,
@@ -1040,12 +1068,13 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "defense": 1,
+        "power": 2,
         "knowledge": 1
       }
     },
@@ -1055,7 +1084,7 @@
       "faction_id": "faction_sunvault",
       "archetype": "calibration",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Accuracy and relay mage",
       "identity_summary": "A calibration mage who improves spell accuracy, dispel resistance, and relay building value.",
       "base_movement": 11,
@@ -1076,13 +1105,14 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "packhunter"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -1091,7 +1121,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "briarmarshal",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Root-ground front commander",
       "identity_summary": "Improves binds and retaliation on rooted ground.",
       "base_movement": 10,
@@ -1112,11 +1142,12 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 2,
+        "defense": 1,
         "power": 0,
         "knowledge": 1
       }
@@ -1127,7 +1158,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "rootwright",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Siege grower",
       "identity_summary": "Improves Barkmantle Rams and town assault bramble creation.",
       "base_movement": 10,
@@ -1148,12 +1179,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
         "knowledge": 0
       }
     },
@@ -1163,7 +1195,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "pilgrimcaptain",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Root-road pilgrim captain",
       "identity_summary": "Improves map movement between rooted sites and low-tier growth.",
       "base_movement": 10,
@@ -1184,10 +1216,11 @@
         "borderwarden"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
+        "attack": 1,
         "defense": 0,
         "power": 0,
         "knowledge": 2
@@ -1199,7 +1232,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "recoverywarden",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Controlled-region recovery warden",
       "identity_summary": "Improves post-battle wounded recovery in controlled regions.",
       "base_movement": 10,
@@ -1220,13 +1253,14 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 2,
         "power": 1,
-        "knowledge": 1
+        "knowledge": 0
       }
     },
     {
@@ -1235,7 +1269,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "huntleader",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Anti-ranged beast-knot leader",
       "identity_summary": "Improves Stag-Knot Runners and anti-ranged pinning.",
       "base_movement": 10,
@@ -1256,10 +1290,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -1271,7 +1306,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "rootoracle",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Rooted-terrain oracle",
       "identity_summary": "Creates rooted terrain faster and improves rooted-site rewards.",
       "base_movement": 11,
@@ -1292,13 +1327,14 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "bogwise",
+        "ambusher"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       }
     },
     {
@@ -1307,7 +1343,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "sporedoctor",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Healing and cleanse doctor",
       "identity_summary": "Improves healing, cleanse, and debuff resistance.",
       "base_movement": 11,
@@ -1328,13 +1364,14 @@
         "borderwarden"
       ],
       "battle_traits": [
+        "bogwise",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
+        "defense": 1,
         "power": 1,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -1343,7 +1380,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "loamsinger",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Bind duration mage",
       "identity_summary": "Strengthens bind spells and bramble duration.",
       "base_movement": 11,
@@ -1364,13 +1401,14 @@
         "borderwarden"
       ],
       "battle_traits": [
+        "bogwise",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -1379,7 +1417,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "mossmemory",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Long-fight recovery mage",
       "identity_summary": "Converts long fights into spell power and recovery.",
       "base_movement": 11,
@@ -1400,12 +1438,13 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper"
+        "bogwise",
+        "packhunter"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -1415,7 +1454,7 @@
       "faction_id": "faction_thornwake",
       "archetype": "graftprophet",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "High-tier graft prophet",
       "identity_summary": "Improves high-tier support units and growth chains.",
       "base_movement": 11,
@@ -1436,12 +1475,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "defense": 1,
+        "power": 2,
         "knowledge": 2
       }
     },
@@ -1451,7 +1491,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "contractmarshal",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Attrition contract marshal",
       "identity_summary": "Improves armored units and morale under attrition.",
       "base_movement": 10,
@@ -1472,11 +1512,12 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "vanguard"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 2,
+        "defense": 2,
         "power": 0,
         "knowledge": 0
       }
@@ -1487,7 +1528,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "siegecaptain",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Artillery setup captain",
       "identity_summary": "Improves artillery setup and town assault pressure.",
       "base_movement": 10,
@@ -1508,10 +1549,11 @@
         "spellwright"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "vanguard"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 0
@@ -1523,7 +1565,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "railhead",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Mine-road enforcer",
       "identity_summary": "Improves movement between owned mines and towns.",
       "base_movement": 10,
@@ -1544,13 +1586,14 @@
         "armsmaster"
       ],
       "battle_traits": [
+        "vanguard",
         "linekeeper"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 1,
         "power": 0,
-        "knowledge": 1
+        "knowledge": 2
       }
     },
     {
@@ -1559,7 +1602,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "pitmarshal",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Ore-site defense marshal",
       "identity_summary": "Improves ore-site defense and machine replacement.",
       "base_movement": 10,
@@ -1580,12 +1623,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
         "knowledge": 0
       }
     },
@@ -1595,7 +1639,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "pavisforeman",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Bodyguard armor foreman",
       "identity_summary": "Improves bodyguard rules and frontline armor.",
       "base_movement": 10,
@@ -1616,11 +1660,12 @@
         "mustercaptain"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 2,
         "power": 0,
         "knowledge": 0
       }
@@ -1631,7 +1676,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "heatrice",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Cooldown smoothing engineer",
       "identity_summary": "Improves overheat spells and cooldown smoothing.",
       "base_movement": 10,
@@ -1652,12 +1697,13 @@
         "armsmaster"
       ],
       "battle_traits": [
+        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -1667,7 +1713,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "furnacechaplain",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Damage-to-armor chaplain",
       "identity_summary": "Converts damage taken into temporary armor or spell power.",
       "base_movement": 10,
@@ -1688,12 +1734,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
-        "defense": 0,
-        "power": 1,
+        "defense": 1,
+        "power": 2,
         "knowledge": 1
       }
     },
@@ -1703,7 +1750,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "pressuremath",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Machine accuracy savant",
       "identity_summary": "Improves machine accuracy and heat thresholds.",
       "base_movement": 10,
@@ -1724,13 +1771,14 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
+        "artillerist",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -1739,7 +1787,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "clausemage",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Binding clause mage",
       "identity_summary": "Specializes in binding, slowing, and punishing broken formations.",
       "base_movement": 10,
@@ -1760,13 +1808,14 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "bogwise"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 1
+        "knowledge": 2
       }
     },
     {
@@ -1775,7 +1824,7 @@
       "faction_id": "faction_brasshollow",
       "archetype": "slagalchemist",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Burn terrain alchemist",
       "identity_summary": "Improves burn terrain and resource conversion.",
       "base_movement": 10,
@@ -1796,12 +1845,13 @@
         "wayfinder"
       ],
       "battle_traits": [
-        "linekeeper"
+        "artillerist",
+        "ambusher"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 2
       }
     },
@@ -1811,7 +1861,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "admiral",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Isolated-target admiral",
       "identity_summary": "Improves isolated-target damage and retreat control.",
       "base_movement": 12,
@@ -1832,10 +1882,11 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "packhunter"
       ],
       "command": {
-        "attack": 0,
+        "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 1
@@ -1847,7 +1898,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "harpooncaptain",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Displacement harpoon captain",
       "identity_summary": "Improves pulls, formation breaks, and anti-large tactics.",
       "base_movement": 12,
@@ -1868,13 +1919,14 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "vanguard",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 2,
+        "defense": 1,
         "power": 0,
-        "knowledge": 1
+        "knowledge": 0
       }
     },
     {
@@ -1883,7 +1935,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "backlineraider",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Fog-lane backline raider",
       "identity_summary": "Improves phase movement and fog-lane attacks.",
       "base_movement": 12,
@@ -1904,13 +1956,14 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "ambusher",
+        "vanguard"
       ],
       "command": {
-        "attack": 0,
+        "attack": 1,
         "defense": 0,
         "power": 0,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -1919,7 +1972,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "signalthief",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Scouting disruption thief",
       "identity_summary": "Improves scouting raids and enemy movement disruption.",
       "base_movement": 12,
@@ -1940,11 +1993,12 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
+        "ambusher",
         "linekeeper"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 1,
         "power": 0,
         "knowledge": 2
       }
@@ -1955,7 +2009,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "fleetdefender",
       "command_path": "might",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Fragile-stack survival warden",
       "identity_summary": "Improves fragile-stack survival and controlled withdrawals.",
       "base_movement": 12,
@@ -1976,11 +2030,12 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "linekeeper",
+        "ambusher"
       ],
       "command": {
-        "attack": 0,
-        "defense": 0,
+        "attack": 1,
+        "defense": 2,
         "power": 0,
         "knowledge": 1
       }
@@ -1991,7 +2046,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "fogprophet",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Fog-lane prophet",
       "identity_summary": "Creates fog lanes and improves vision manipulation.",
       "base_movement": 11,
@@ -2012,13 +2067,14 @@
         "borderwarden"
       ],
       "battle_traits": [
+        "ambusher",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -2027,7 +2083,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "memoryscribe",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Salvage spell scribe",
       "identity_summary": "Turns kills, artifacts, and salvage into spell tempo.",
       "base_movement": 11,
@@ -2048,12 +2104,13 @@
         "armsmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "ambusher",
+        "packhunter"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -2063,7 +2120,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "mirrornavigator",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Displacement navigator",
       "identity_summary": "Improves displacement spells and decoy effects.",
       "base_movement": 11,
@@ -2084,13 +2141,14 @@
         "drillmaster"
       ],
       "battle_traits": [
-        "linekeeper"
+        "ambusher",
+        "artillerist"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 2,
-        "knowledge": 2
+        "knowledge": 3
       }
     },
     {
@@ -2099,7 +2157,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "funeralhexer",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Retaliation and morale hexer",
       "identity_summary": "Weakens enemy retaliation and morale-style momentum.",
       "base_movement": 11,
@@ -2120,12 +2178,13 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
-        "linekeeper"
+        "ambusher",
+        "bogwise"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
-        "power": 2,
+        "power": 3,
         "knowledge": 1
       }
     },
@@ -2135,7 +2194,7 @@
       "faction_id": "faction_veilmourn",
       "archetype": "routediviner",
       "command_path": "magic",
-      "roster_state": "scaffold",
+      "roster_state": "live",
       "roster_summary": "Hidden-route diviner",
       "identity_summary": "Improves scouting rewards and hidden-route map pressure.",
       "base_movement": 11,
@@ -2156,13 +2215,14 @@
         "ledgerkeeper"
       ],
       "battle_traits": [
+        "ambusher",
         "linekeeper"
       ],
       "command": {
         "attack": 0,
         "defense": 0,
         "power": 1,
-        "knowledge": 3
+        "knowledge": 4
       }
     }
   ]
