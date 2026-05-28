@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "hero-roster-live-diversity-10184",
-  "currentSliceTitle": "Hero Roster Live Diversity",
+  "currentSliceId": "battle-benchmark-all-live-hero-matrix-10184",
+  "currentSliceTitle": "Battle Benchmark All-Live Hero Matrix",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. All six factions now have ten live validated heroes, diverse supported command/trait/specialty profiles, and curated-order benchmark representative selection; focused roster, repo, JSON, diff, and 100-seed benchmark validation passed.",
+  "currentSliceNotes": "Completed. The fast battle benchmark now supports --hero-policy all-live, cycling each ordered faction matchup across all 10x10 live hero pairings with 100 seeds; the all-live matrix reports 43 current balance outliers.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T19:37:12Z",
+  "updatedAt": "2026-05-28T19:59:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26861,6 +26861,81 @@
       "startedAt": "2026-05-28T15:10:00Z",
       "updatedAt": "2026-05-28T19:37:12Z",
       "completedAt": "2026-05-28T19:37:12Z"
+    },
+    {
+      "id": "battle-benchmark-all-live-hero-matrix-10184",
+      "title": "Battle Benchmark All-Live Hero Matrix",
+      "status": "completed",
+      "source": "owner request to run the balance matrix updated to utilize all 10 heroes per faction",
+      "planRef": "PLAN.md Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Fast benchmark can run either curated lead heroes or all 10 live heroes per faction, and the 100-seed all-live matrix completes with structural gates passing.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T19:59:07Z",
+        "sliceId": "battle-benchmark-all-live-hero-matrix-10184",
+        "commands": [
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_heroes.json (passed; ok=true, live_hero_count=10 per faction)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_heroes.json (passed; ok=true, 12000 samples, 100 hero-pair samples per ordered matchup)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added --hero-policy all-live to the fast battle benchmark.",
+            "Built per-faction live hero rosters from authored faction hero_ids order with fallback for live extras.",
+            "Stored per-week payloads for every live hero and sampled the 10x10 hero-pair grid across 100 seeds per ordered matchup.",
+            "Kept curated-lead as the default benchmark policy for backwards-compatible existing gates."
+          ],
+          "all_live_matrix": {
+            "artifact": "tmp/battle_balance_100_seed_all_live_heroes.json",
+            "ok": true,
+            "balance_status": "needs_tuning",
+            "sample_count": 12000,
+            "hero_policy": "all-live",
+            "live_hero_count_per_faction": 10,
+            "hero_pair_sample_count_per_ordered_matchup": 100,
+            "balance_outlier_count": 43,
+            "week_summaries": [
+              {
+                "week": 1,
+                "sample_count": 3000,
+                "average_rounds": 5.44,
+                "side_bias_points": 1.53
+              },
+              {
+                "week": 2,
+                "sample_count": 3000,
+                "average_rounds": 5.95,
+                "side_bias_points": 0.87
+              },
+              {
+                "week": 3,
+                "sample_count": 3000,
+                "average_rounds": 6.56,
+                "side_bias_points": 2.6
+              },
+              {
+                "week": 4,
+                "sample_count": 3000,
+                "average_rounds": 7.39,
+                "side_bias_points": 0.27
+              }
+            ],
+            "interpretation": "All-live roster coverage reveals real hero-roster balance spread that was hidden by curated-lead-only representative sampling."
+          }
+        }
+      },
+      "notes": "Completed. The fast battle benchmark now supports --hero-policy all-live, cycling each ordered faction matchup across all 10x10 live hero pairings with 100 seeds; the all-live matrix reports 43 current balance outliers.",
+      "startedAt": "2026-05-28T19:59:07Z",
+      "updatedAt": "2026-05-28T19:59:07Z",
+      "completedAt": "2026-05-28T19:59:07Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36695,8 +36770,8 @@
       }
     }
   },
-  "active_slice": "hero-roster-live-diversity-10184",
-  "currentSliceUpdatedAt": "2026-05-28T19:37:12Z",
+  "active_slice": "battle-benchmark-all-live-hero-matrix-10184",
+  "currentSliceUpdatedAt": "2026-05-28T19:59:07Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39070,237 +39145,132 @@
     }
   ],
   "currentSlice": {
-    "id": "hero-roster-live-diversity-10184",
-    "title": "Hero Roster Live Diversity",
+    "id": "battle-benchmark-all-live-hero-matrix-10184",
+    "title": "Battle Benchmark All-Live Hero Matrix",
     "status": "completed",
-    "source": "owner direction that all 10 heroes per faction should be live, diverse, and fully working",
-    "planRef": "PLAN.md Playable Alpha Hero Roster Target",
+    "source": "owner request to run the balance matrix updated to utilize all 10 heroes per faction",
+    "planRef": "PLAN.md Battle Balance Benchmark Target",
     "sourceDocs": [
       "PLAN.md",
       "project.md"
     ],
     "implementationTargets": [
-      "content/heroes.json",
-      "tests/hero_roster_readiness_report.py",
-      "ops/progress.json",
       "tests/battle_faction_fast_balance_benchmark.py",
-      "tests/validate_repo.py"
+      "ops/progress.json"
     ],
-    "completionCriteria": "Every faction must have 10 live heroes with valid spells, specialties, command paths, command stat variety, and supported battle traits; focused roster report and repo validation must pass.",
+    "completionCriteria": "Fast benchmark can run either curated lead heroes or all 10 live heroes per faction, and the 100-seed all-live matrix completes with structural gates passing.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T19:37:12Z",
-      "sliceId": "hero-roster-live-diversity-10184",
+      "updatedAt": "2026-05-28T19:59:07Z",
+      "sliceId": "battle-benchmark-all-live-hero-matrix-10184",
       "commands": [
-        "python3 -m py_compile tests/hero_roster_readiness_report.py tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
-        "python3 tests/hero_roster_readiness_report.py (passed; 60/60 live heroes, 5 might and 5 magic heroes per faction)",
-        "python3 tests/faction_town_unit_asymmetry_report.py (passed)",
-        "python3 tests/validate_repo.py (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_hero_roster_live.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_hero_roster_live.json (passed; ok=true, 12000 samples, outliers=0)",
-        "jq empty content/heroes.json ops/progress.json (passed)",
-        "git diff --check (passed)"
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_heroes.json (passed; ok=true, live_hero_count=10 per faction)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_heroes.json (passed; ok=true, 12000 samples, 100 hero-pair samples per ordered matchup)"
       ],
       "evidence": {
         "implemented": [
-          "Converted all six-faction hero records to roster_state=live so every faction has ten recruitable/live roster heroes.",
-          "Diversified command stat profiles, supported battle-trait packages, starting specialties, and spell packages while keeping each faction at five might-path and five magic-path heroes.",
-          "Added a focused hero roster readiness report for live count, command-path balance, spell references, specialty references, supported battle traits, and diversity floors.",
-          "Updated repository validation so six-faction heroes are expected to be live while retaining older scenario scaffold opt-in code validation.",
-          "Changed the fast battle benchmark representative hero selector to use authored faction hero_ids order before alphabetic fallback, preventing all-live rosters from changing representative heroes by id sorting artifact."
+          "Added --hero-policy all-live to the fast battle benchmark.",
+          "Built per-faction live hero rosters from authored faction hero_ids order with fallback for live extras.",
+          "Stored per-week payloads for every live hero and sampled the 10x10 hero-pair grid across 100 seeds per ordered matchup.",
+          "Kept curated-lead as the default benchmark policy for backwards-compatible existing gates."
         ],
-        "roster_summary": {
-          "total_live_heroes": 60,
-          "per_faction_live_heroes": 10,
-          "per_faction_command_paths": {
-            "might": 5,
-            "magic": 5
-          },
-          "command_profile_counts": {
-            "faction_brasshollow": 9,
-            "faction_embercourt": 8,
-            "faction_mireclaw": 8,
-            "faction_sunvault": 9,
-            "faction_thornwake": 10,
-            "faction_veilmourn": 8
-          },
-          "battle_trait_profile_counts": {
-            "faction_brasshollow": 6,
-            "faction_embercourt": 7,
-            "faction_mireclaw": 6,
-            "faction_sunvault": 5,
-            "faction_thornwake": 6,
-            "faction_veilmourn": 6
-          },
-          "starting_specialty_lane_counts": {
-            "faction_brasshollow": 6,
-            "faction_embercourt": 7,
-            "faction_mireclaw": 6,
-            "faction_sunvault": 6,
-            "faction_thornwake": 5,
-            "faction_veilmourn": 5
-          }
-        },
-        "battle_benchmark": {
-          "artifact": "tmp/battle_balance_100_seed_hero_roster_live.json",
+        "all_live_matrix": {
+          "artifact": "tmp/battle_balance_100_seed_all_live_heroes.json",
           "ok": true,
           "balance_status": "needs_tuning",
           "sample_count": 12000,
-          "outlier_count": 0,
-          "representative_heroes": {
-            "faction_brasshollow": "hero_brasshollow_marka_ironclause",
-            "faction_embercourt": "hero_lyra",
-            "faction_mireclaw": "hero_vaska",
-            "faction_sunvault": "hero_solera",
-            "faction_thornwake": "hero_thornwake_ardren_briarmarshal",
-            "faction_veilmourn": "hero_veilmourn_ivara_blacktide"
-          },
+          "hero_policy": "all-live",
+          "live_hero_count_per_faction": 10,
+          "hero_pair_sample_count_per_ordered_matchup": 100,
+          "balance_outlier_count": 43,
           "week_summaries": [
             {
               "week": 1,
               "sample_count": 3000,
-              "average_rounds": 5.39,
-              "side_a_win_rate": 48.97,
-              "side_b_win_rate": 51.03,
-              "side_bias_points": 2.07
+              "average_rounds": 5.44,
+              "side_bias_points": 1.53
             },
             {
               "week": 2,
               "sample_count": 3000,
-              "average_rounds": 5.89,
-              "side_a_win_rate": 49.9,
-              "side_b_win_rate": 50.1,
-              "side_bias_points": 0.2
+              "average_rounds": 5.95,
+              "side_bias_points": 0.87
             },
             {
               "week": 3,
               "sample_count": 3000,
-              "average_rounds": 6.19,
-              "side_a_win_rate": 49.17,
-              "side_b_win_rate": 50.83,
-              "side_bias_points": 1.67
+              "average_rounds": 6.56,
+              "side_bias_points": 2.6
             },
             {
               "week": 4,
               "sample_count": 3000,
-              "average_rounds": 7.02,
-              "side_a_win_rate": 50.47,
-              "side_b_win_rate": 49.53,
-              "side_bias_points": 0.93
+              "average_rounds": 7.39,
+              "side_bias_points": 0.27
             }
           ],
-          "interpretation": "Hero activation did not create benchmark outliers once representative heroes use authored faction order. The benchmark still reports needs_tuning as the broader balance target remains active, not because this roster slice failed."
+          "interpretation": "All-live roster coverage reveals real hero-roster balance spread that was hidden by curated-lead-only representative sampling."
         }
       }
     },
-    "notes": "Completed. All six factions now have ten live validated heroes, diverse supported command/trait/specialty profiles, and curated-order benchmark representative selection; focused roster, repo, JSON, diff, and 100-seed benchmark validation passed.",
-    "startedAt": "2026-05-28T15:10:00Z",
-    "updatedAt": "2026-05-28T19:37:12Z",
-    "completedAt": "2026-05-28T19:37:12Z"
+    "notes": "Completed. The fast battle benchmark now supports --hero-policy all-live, cycling each ordered faction matchup across all 10x10 live hero pairings with 100 seeds; the all-live matrix reports 43 current balance outliers.",
+    "startedAt": "2026-05-28T19:59:07Z",
+    "updatedAt": "2026-05-28T19:59:07Z",
+    "completedAt": "2026-05-28T19:59:07Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T19:37:12Z",
-    "sliceId": "hero-roster-live-diversity-10184",
+    "updatedAt": "2026-05-28T19:59:07Z",
+    "sliceId": "battle-benchmark-all-live-hero-matrix-10184",
     "commands": [
-      "python3 -m py_compile tests/hero_roster_readiness_report.py tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py (passed)",
-      "python3 tests/hero_roster_readiness_report.py (passed; 60/60 live heroes, 5 might and 5 magic heroes per faction)",
-      "python3 tests/faction_town_unit_asymmetry_report.py (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_hero_roster_live.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_hero_roster_live.json (passed; ok=true, 12000 samples, outliers=0)",
-      "jq empty content/heroes.json ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_heroes.json (passed; ok=true, live_hero_count=10 per faction)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_heroes.json (passed; ok=true, 12000 samples, 100 hero-pair samples per ordered matchup)"
     ],
     "evidence": {
       "implemented": [
-        "Converted all six-faction hero records to roster_state=live so every faction has ten recruitable/live roster heroes.",
-        "Diversified command stat profiles, supported battle-trait packages, starting specialties, and spell packages while keeping each faction at five might-path and five magic-path heroes.",
-        "Added a focused hero roster readiness report for live count, command-path balance, spell references, specialty references, supported battle traits, and diversity floors.",
-        "Updated repository validation so six-faction heroes are expected to be live while retaining older scenario scaffold opt-in code validation.",
-        "Changed the fast battle benchmark representative hero selector to use authored faction hero_ids order before alphabetic fallback, preventing all-live rosters from changing representative heroes by id sorting artifact."
+        "Added --hero-policy all-live to the fast battle benchmark.",
+        "Built per-faction live hero rosters from authored faction hero_ids order with fallback for live extras.",
+        "Stored per-week payloads for every live hero and sampled the 10x10 hero-pair grid across 100 seeds per ordered matchup.",
+        "Kept curated-lead as the default benchmark policy for backwards-compatible existing gates."
       ],
-      "roster_summary": {
-        "total_live_heroes": 60,
-        "per_faction_live_heroes": 10,
-        "per_faction_command_paths": {
-          "might": 5,
-          "magic": 5
-        },
-        "command_profile_counts": {
-          "faction_brasshollow": 9,
-          "faction_embercourt": 8,
-          "faction_mireclaw": 8,
-          "faction_sunvault": 9,
-          "faction_thornwake": 10,
-          "faction_veilmourn": 8
-        },
-        "battle_trait_profile_counts": {
-          "faction_brasshollow": 6,
-          "faction_embercourt": 7,
-          "faction_mireclaw": 6,
-          "faction_sunvault": 5,
-          "faction_thornwake": 6,
-          "faction_veilmourn": 6
-        },
-        "starting_specialty_lane_counts": {
-          "faction_brasshollow": 6,
-          "faction_embercourt": 7,
-          "faction_mireclaw": 6,
-          "faction_sunvault": 6,
-          "faction_thornwake": 5,
-          "faction_veilmourn": 5
-        }
-      },
-      "battle_benchmark": {
-        "artifact": "tmp/battle_balance_100_seed_hero_roster_live.json",
+      "all_live_matrix": {
+        "artifact": "tmp/battle_balance_100_seed_all_live_heroes.json",
         "ok": true,
         "balance_status": "needs_tuning",
         "sample_count": 12000,
-        "outlier_count": 0,
-        "representative_heroes": {
-          "faction_brasshollow": "hero_brasshollow_marka_ironclause",
-          "faction_embercourt": "hero_lyra",
-          "faction_mireclaw": "hero_vaska",
-          "faction_sunvault": "hero_solera",
-          "faction_thornwake": "hero_thornwake_ardren_briarmarshal",
-          "faction_veilmourn": "hero_veilmourn_ivara_blacktide"
-        },
+        "hero_policy": "all-live",
+        "live_hero_count_per_faction": 10,
+        "hero_pair_sample_count_per_ordered_matchup": 100,
+        "balance_outlier_count": 43,
         "week_summaries": [
           {
             "week": 1,
             "sample_count": 3000,
-            "average_rounds": 5.39,
-            "side_a_win_rate": 48.97,
-            "side_b_win_rate": 51.03,
-            "side_bias_points": 2.07
+            "average_rounds": 5.44,
+            "side_bias_points": 1.53
           },
           {
             "week": 2,
             "sample_count": 3000,
-            "average_rounds": 5.89,
-            "side_a_win_rate": 49.9,
-            "side_b_win_rate": 50.1,
-            "side_bias_points": 0.2
+            "average_rounds": 5.95,
+            "side_bias_points": 0.87
           },
           {
             "week": 3,
             "sample_count": 3000,
-            "average_rounds": 6.19,
-            "side_a_win_rate": 49.17,
-            "side_b_win_rate": 50.83,
-            "side_bias_points": 1.67
+            "average_rounds": 6.56,
+            "side_bias_points": 2.6
           },
           {
             "week": 4,
             "sample_count": 3000,
-            "average_rounds": 7.02,
-            "side_a_win_rate": 50.47,
-            "side_b_win_rate": 49.53,
-            "side_bias_points": 0.93
+            "average_rounds": 7.39,
+            "side_bias_points": 0.27
           }
         ],
-        "interpretation": "Hero activation did not create benchmark outliers once representative heroes use authored faction order. The benchmark still reports needs_tuning as the broader balance target remains active, not because this roster slice failed."
+        "interpretation": "All-live roster coverage reveals real hero-roster balance spread that was hidden by curated-lead-only representative sampling."
       }
     }
   }
