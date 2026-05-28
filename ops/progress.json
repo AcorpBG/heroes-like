@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-sunvault-t6-melee-balance-10184",
-  "currentSliceTitle": "Combat Sunvault T6 Melee Balance",
+  "currentSliceId": "combat-thornwake-t6-ranged-balance-10184",
+  "currentSliceTitle": "Combat Thornwake T6 Ranged Balance",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Sunvault T6 is now a melee Aurora Bastions unit; full benchmark passed and late Sunvault dominance was materially reduced, though balance remains needs_tuning.",
+  "currentSliceNotes": "Completed. Thornwake T6 is now ranged; full benchmark passed and late Thornwake collapse improved, with remaining matchup overcorrections tracked as tuning evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T11:50:45Z",
+  "updatedAt": "2026-05-28T12:17:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26375,6 +26375,98 @@
       "startedAt": "2026-05-28T11:37:28Z",
       "updatedAt": "2026-05-28T11:50:45Z",
       "completedAt": "2026-05-28T11:50:45Z"
+    },
+    {
+      "id": "combat-thornwake-t6-ranged-balance-10184",
+      "title": "Combat Thornwake T6 Ranged Balance",
+      "status": "completed",
+      "source": "owner direction to give Thornwake a T6 ranged unit after benchmark showed Thornwake has only one ranged unit and severe week 2-4 weakness",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "GOALS.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "docs/factions-content-bible.md",
+        "tests/battle_faction_fast_balance_benchmark.py as validation surface",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Thornwake T6 unit must become a ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-28T12:17:30Z",
+        "sliceId": "combat-thornwake-t6-ranged-balance-10184",
+        "commands": [
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
+            "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
+            "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
+          ],
+          "unit_after": {
+            "unit_id": "unit_thornwake_graft_matriarchs",
+            "name": "Graft Matriarchs",
+            "role": "ranged",
+            "tier": 6,
+            "hp": 45,
+            "attack": 13,
+            "defense": 10,
+            "min_damage": 9,
+            "max_damage": 14,
+            "speed": 3,
+            "initiative": 7,
+            "ranged": true,
+            "shots": 5
+          },
+          "benchmark_impact": {
+            "before_outliers": 44,
+            "after_outliers": 43,
+            "after_week_summaries": [
+              {
+                "week": 1,
+                "side_bias_points": 0.07,
+                "average_rounds": 5.54
+              },
+              {
+                "week": 2,
+                "side_bias_points": 0.93,
+                "average_rounds": 5.8
+              },
+              {
+                "week": 3,
+                "side_bias_points": 1.13,
+                "average_rounds": 6.64
+              },
+              {
+                "week": 4,
+                "side_bias_points": 0.07,
+                "average_rounds": 7.46
+              }
+            ],
+            "thornwake_changes": [
+              "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
+              "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
+              "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
+              "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
+              "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
+            ],
+            "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
+          }
+        }
+      },
+      "notes": "Completed. Thornwake T6 is now ranged; full benchmark passed and late Thornwake collapse improved, with remaining matchup overcorrections tracked as tuning evidence.",
+      "startedAt": "2026-05-28T12:03:00Z",
+      "updatedAt": "2026-05-28T12:17:30Z",
+      "completedAt": "2026-05-28T12:17:30Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35910,39 +36002,39 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T11:50:45Z",
-    "sliceId": "combat-sunvault-t6-melee-balance-10184",
+    "updatedAt": "2026-05-28T12:17:30Z",
+    "sliceId": "combat-thornwake-t6-ranged-balance-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
+      "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
-        "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
-        "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
+        "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
+        "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
+        "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
       ],
       "unit_after": {
-        "unit_id": "unit_sunvault_aurora_ballistae",
-        "name": "Aurora Bastions",
-        "role": "melee",
+        "unit_id": "unit_thornwake_graft_matriarchs",
+        "name": "Graft Matriarchs",
+        "role": "ranged",
         "tier": 6,
-        "hp": 50,
+        "hp": 45,
         "attack": 13,
-        "defense": 11,
+        "defense": 10,
         "min_damage": 9,
         "max_damage": 14,
-        "speed": 4,
-        "initiative": 6,
-        "ranged": false,
-        "shots": "absent"
+        "speed": 3,
+        "initiative": 7,
+        "ranged": true,
+        "shots": 5
       },
       "benchmark_impact": {
-        "before_outliers": 47,
-        "after_outliers": 44,
+        "before_outliers": 44,
+        "after_outliers": 43,
         "after_week_summaries": [
           {
             "week": 1,
@@ -35956,27 +36048,28 @@
           },
           {
             "week": 3,
-            "side_bias_points": 0.2,
-            "average_rounds": 6.48
+            "side_bias_points": 1.13,
+            "average_rounds": 6.64
           },
           {
             "week": 4,
-            "side_bias_points": 0.2,
-            "average_rounds": 7.18
+            "side_bias_points": 0.07,
+            "average_rounds": 7.46
           }
         ],
-        "sunvault_late_changes": [
-          "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
-          "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
-          "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
-          "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+        "thornwake_changes": [
+          "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
+          "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
+          "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
+          "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
+          "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
         ],
-        "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+        "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
       }
     }
   },
-  "active_slice": "combat-sunvault-t6-melee-balance-10184",
-  "currentSliceUpdatedAt": "2026-05-28T11:50:45Z",
+  "active_slice": "combat-thornwake-t6-ranged-balance-10184",
+  "currentSliceUpdatedAt": "2026-05-28T12:17:30Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -38148,10 +38241,10 @@
     }
   ],
   "currentSlice": {
-    "id": "combat-sunvault-t6-melee-balance-10184",
-    "title": "Combat Sunvault T6 Melee Balance",
+    "id": "combat-thornwake-t6-ranged-balance-10184",
+    "title": "Combat Thornwake T6 Ranged Balance",
     "status": "completed",
-    "source": "owner direction to completely change Sunvault T6 unit from ranged to non-ranged after benchmark showed late Sunvault ranged dominance",
+    "source": "owner direction to give Thornwake a T6 ranged unit after benchmark showed Thornwake has only one ranged unit and severe week 2-4 weakness",
     "planRef": "PLAN.md Battle Balance Benchmark Target / GOALS.md Battle Balance Target",
     "sourceDocs": [
       "PLAN.md",
@@ -38159,49 +38252,48 @@
     ],
     "implementationTargets": [
       "content/units.json",
-      "content/buildings.json",
       "content/unit_art_manifest.json",
       "content/unit_animation_manifest.json",
       "docs/factions-content-bible.md",
       "tests/battle_faction_fast_balance_benchmark.py as validation surface",
       "ops/progress.json"
     ],
-    "completionCriteria": "Sunvault T6 six-faction unit must be a melee/non-ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
+    "completionCriteria": "Thornwake T6 unit must become a ranged unit in content and player-facing manifests/docs; repo validation and fast battle benchmark evidence must pass and show the resulting balance impact.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T11:50:45Z",
-      "sliceId": "combat-sunvault-t6-melee-balance-10184",
+      "updatedAt": "2026-05-28T12:17:30Z",
+      "sliceId": "combat-thornwake-t6-ranged-balance-10184",
       "commands": [
         "python3 tests/validate_repo.py (passed)",
-        "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
+        "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
-          "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
-          "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
+          "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
+          "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
+          "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
         ],
         "unit_after": {
-          "unit_id": "unit_sunvault_aurora_ballistae",
-          "name": "Aurora Bastions",
-          "role": "melee",
+          "unit_id": "unit_thornwake_graft_matriarchs",
+          "name": "Graft Matriarchs",
+          "role": "ranged",
           "tier": 6,
-          "hp": 50,
+          "hp": 45,
           "attack": 13,
-          "defense": 11,
+          "defense": 10,
           "min_damage": 9,
           "max_damage": 14,
-          "speed": 4,
-          "initiative": 6,
-          "ranged": false,
-          "shots": "absent"
+          "speed": 3,
+          "initiative": 7,
+          "ranged": true,
+          "shots": 5
         },
         "benchmark_impact": {
-          "before_outliers": 47,
-          "after_outliers": 44,
+          "before_outliers": 44,
+          "after_outliers": 43,
           "after_week_summaries": [
             {
               "week": 1,
@@ -38215,65 +38307,66 @@
             },
             {
               "week": 3,
-              "side_bias_points": 0.2,
-              "average_rounds": 6.48
+              "side_bias_points": 1.13,
+              "average_rounds": 6.64
             },
             {
               "week": 4,
-              "side_bias_points": 0.2,
-              "average_rounds": 7.18
+              "side_bias_points": 0.07,
+              "average_rounds": 7.46
             }
           ],
-          "sunvault_late_changes": [
-            "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
-            "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
-            "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
-            "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+          "thornwake_changes": [
+            "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
+            "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
+            "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
+            "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
+            "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
           ],
-          "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+          "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
         }
       }
     },
-    "notes": "Completed. Sunvault T6 is now a melee Aurora Bastions unit; full benchmark passed and late Sunvault dominance was materially reduced, though balance remains needs_tuning.",
-    "startedAt": "2026-05-28T11:37:28Z",
-    "updatedAt": "2026-05-28T11:50:45Z",
-    "completedAt": "2026-05-28T11:50:45Z"
+    "notes": "Completed. Thornwake T6 is now ranged; full benchmark passed and late Thornwake collapse improved, with remaining matchup overcorrections tracked as tuning evidence.",
+    "startedAt": "2026-05-28T12:03:00Z",
+    "updatedAt": "2026-05-28T12:17:30Z",
+    "completedAt": "2026-05-28T12:17:30Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T11:50:45Z",
-    "sliceId": "combat-sunvault-t6-melee-balance-10184",
+    "updatedAt": "2026-05-28T12:17:30Z",
+    "sliceId": "combat-thornwake-t6-ranged-balance-10184",
     "commands": [
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json content/buildings.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_sunvault_t6_melee.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_sunvault_t6_melee.json (passed; ok=true, 120 rows)",
+      "jq empty content/units.json content/unit_art_manifest.json content/unit_animation_manifest.json ops/progress.json (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_thornwake_t6_ranged.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_thornwake_t6_ranged.json (passed; ok=true, 120 rows)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Changed Sunvault six-faction T6 stable unit id unit_sunvault_aurora_ballistae from ranged Aurora Ballistae into melee Aurora Bastions.",
-        "Updated role/ranged/shots plus T6 melee durability profile: role=melee, ranged=false, no shots, hp 50, defense 11, speed 4, initiative 6.",
-        "Updated player-facing building text, unit art manifest name/role, animation manifest name/role, and faction bible description."
+        "Changed Thornwake T6 unit_thornwake_graft_matriarchs from melee to ranged while preserving stable unit id/name.",
+        "Applied ranged T6 profile: role=ranged, ranged=true, shots=5, hp 45, defense 10, speed 3, initiative 7.",
+        "Updated unit art manifest role/motif, animation manifest role/motif, and faction bible intent text."
       ],
       "unit_after": {
-        "unit_id": "unit_sunvault_aurora_ballistae",
-        "name": "Aurora Bastions",
-        "role": "melee",
+        "unit_id": "unit_thornwake_graft_matriarchs",
+        "name": "Graft Matriarchs",
+        "role": "ranged",
         "tier": 6,
-        "hp": 50,
+        "hp": 45,
         "attack": 13,
-        "defense": 11,
+        "defense": 10,
         "min_damage": 9,
         "max_damage": 14,
-        "speed": 4,
-        "initiative": 6,
-        "ranged": false,
-        "shots": "absent"
+        "speed": 3,
+        "initiative": 7,
+        "ranged": true,
+        "shots": 5
       },
       "benchmark_impact": {
-        "before_outliers": 47,
-        "after_outliers": 44,
+        "before_outliers": 44,
+        "after_outliers": 43,
         "after_week_summaries": [
           {
             "week": 1,
@@ -38287,22 +38380,23 @@
           },
           {
             "week": 3,
-            "side_bias_points": 0.2,
-            "average_rounds": 6.48
+            "side_bias_points": 1.13,
+            "average_rounds": 6.64
           },
           {
             "week": 4,
-            "side_bias_points": 0.2,
-            "average_rounds": 7.18
+            "side_bias_points": 0.07,
+            "average_rounds": 7.46
           }
         ],
-        "sunvault_late_changes": [
-          "week 4 Sunvault vs Veilmourn dropped from 99.5% Sunvault dominance to no Sunvault outlier",
-          "week 4 Sunvault vs Thornwake dropped from 96.5% to 75.0%",
-          "week 4 Mireclaw vs Sunvault dropped from 96.0% Sunvault dominance to no Sunvault outlier",
-          "week 4 Brasshollow vs Sunvault dropped from 94.0% to 65.0%"
+        "thornwake_changes": [
+          "week 3 Embercourt vs Thornwake improved from 91.0% Embercourt to 61.0%",
+          "week 3 Mireclaw vs Thornwake flipped from 90.5% Mireclaw to 69.5% Thornwake",
+          "week 4 Brasshollow vs Thornwake improved from 83.0% Brasshollow to 51.5%",
+          "week 4 Sunvault vs Thornwake improved from 75.0% Sunvault to 51.5%",
+          "week 4 Mireclaw vs Thornwake flipped from 64.5% Mireclaw to 61.5% Thornwake"
         ],
-        "remaining_status": "Balance still needs tuning. Thornwake weakness and some Sunvault matchups remain; this slice only removed the T6 ranged identity/power problem."
+        "remaining_status": "Balance still needs tuning. Thornwake no longer collapses late, but now overperforms into Veilmourn and Mireclaw in some late matchups; week 2 remains unchanged because T6 is not yet present."
       }
     }
   }
