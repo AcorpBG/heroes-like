@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
-  "currentSliceTitle": "Combat Mireclaw Half Anti-Ranged Shielding",
+  "currentSliceId": "combat-mireclaw-packhunter-trait-trim-10184",
+  "currentSliceTitle": "Combat Mireclaw Packhunter Trait Trim",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Mireclaw T6/T7 anti-ranged shielding was halved while HP stayed reverted; full all-live matrix stayed at 43 outliers with no rounded matchup movement, so further Mireclaw tuning needs non-shielding levers or deeper hero/unit analysis.",
+  "currentSliceNotes": "Completed. Packhunter was removed from the five overperforming Mireclaw heroes; all-live outliers dropped 43 to 38 and no Mireclaw W3/W4 matchup remains above 65%, so the planned spell trim was not applied. W4 Veilmourn over Mireclaw at 66% remains specific follow-up debt.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T05:21:59Z",
+  "updatedAt": "2026-05-29T09:07:43Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27061,6 +27061,76 @@
       "startedAt": "2026-05-29T05:21:59Z",
       "updatedAt": "2026-05-29T05:21:59Z",
       "completedAt": "2026-05-29T05:21:59Z"
+    },
+    {
+      "id": "combat-mireclaw-packhunter-trait-trim-10184",
+      "title": "Combat Mireclaw Packhunter Trait Trim",
+      "status": "completed",
+      "source": "owner direction to balance Mireclaw dominance after all-live hero matrix showed top Mireclaw heroes overconverting W3/W4 matchups",
+      "planRef": "PLAN.md Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "content/heroes.json",
+        "content/spells.json if second-stage trim is needed",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Overperforming Mireclaw hero trait packages are trimmed, validation passes, and all-live benchmark evidence shows whether W3/W4 Mireclaw matchups fall below the 65% escalation threshold; apply the exact spell trim only if required.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-29T09:07:43Z",
+        "sliceId": "combat-mireclaw-packhunter-trait-trim-10184",
+        "commands": [
+          "jq empty content/heroes.json ops/progress.json (passed)",
+          "python3 tests/hero_roster_readiness_report.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_trait_trim.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json (passed; ok=true, 12000 samples)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Removed Packhunter from the five overperforming Mireclaw W3/W4 heroes identified by all-live replay evidence.",
+            "Nix Votivejaw now uses linekeeper + bogwise.",
+            "Vaska Reedmaw now uses vanguard + linekeeper.",
+            "Kessa Chainboom now uses vanguard + bogwise.",
+            "Zhorra Fenwake now uses bogwise + linekeeper.",
+            "Orrik Tollreaver now uses linekeeper + bogwise.",
+            "Did not apply the planned Mire spell trim because no Mireclaw W3/W4 matchup remained above 65% after the trait pass."
+          ],
+          "benchmark_impact": {
+            "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json",
+            "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
+            "ok": true,
+            "balance_status": "needs_tuning",
+            "outliers_before": 43,
+            "outliers_after": 38,
+            "mireclaw_w3_w4_deltas": [
+              "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 55.0%",
+              "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 61.0%",
+              "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 60.0%",
+              "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 53.5%",
+              "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 53.5%",
+              "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Brasshollow 53.5%",
+              "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 51.5%",
+              "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 56.0%",
+              "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Thornwake 54.5%",
+              "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 66.0%"
+            ],
+            "acceptance": {
+              "mireclaw_w3_w4_pairs_above_65_after": 0,
+              "mireclaw_w3_average_before": 65.6,
+              "mireclaw_w3_average_after": 56.6,
+              "remaining_new_debt": "W4 Veilmourn now dominates Mireclaw 66.0%; this is recorded as next specific matchup debt rather than applying unrelated Mire spell trims."
+            }
+          }
+        }
+      },
+      "notes": "Completed. Packhunter was removed from the five overperforming Mireclaw heroes; all-live outliers dropped 43 to 38 and no Mireclaw W3/W4 matchup remains above 65%, so the planned spell trim was not applied. W4 Veilmourn over Mireclaw at 66% remains specific follow-up debt.",
+      "startedAt": "2026-05-29T08:44:55Z",
+      "updatedAt": "2026-05-29T09:07:43Z",
+      "completedAt": "2026-05-29T09:07:43Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36895,8 +36965,8 @@
       }
     }
   },
-  "active_slice": "combat-mireclaw-half-anti-ranged-shielding-10184",
-  "currentSliceUpdatedAt": "2026-05-29T05:21:59Z",
+  "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
+  "currentSliceUpdatedAt": "2026-05-29T09:07:43Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39270,114 +39340,121 @@
     }
   ],
   "currentSlice": {
-    "id": "combat-mireclaw-half-anti-ranged-shielding-10184",
-    "title": "Combat Mireclaw Half Anti-Ranged Shielding",
+    "id": "combat-mireclaw-packhunter-trait-trim-10184",
+    "title": "Combat Mireclaw Packhunter Trait Trim",
     "status": "completed",
-    "source": "owner request to halve Mireclaw anti-ranged shielding as a balance probe because Mireclaw remains stronger after the HP revert",
+    "source": "owner direction to balance Mireclaw dominance after all-live hero matrix showed top Mireclaw heroes overconverting W3/W4 matchups",
     "planRef": "PLAN.md Battle Balance Benchmark Target",
     "sourceDocs": [
       "PLAN.md",
       "project.md"
     ],
     "implementationTargets": [
-      "content/units.json",
+      "content/heroes.json",
+      "content/spells.json if second-stage trim is needed",
       "ops/progress.json"
     ],
-    "completionCriteria": "Mireclaw T6/T7 ranged shielding mitigation is halved, validation passes, and all-live matrix evidence records whether the probe changes W3/W4 matchup outcomes.",
+    "completionCriteria": "Overperforming Mireclaw hero trait packages are trimmed, validation passes, and all-live benchmark evidence shows whether W3/W4 Mireclaw matchups fall below the 65% escalation threshold; apply the exact spell trim only if required.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-29T05:21:59Z",
-      "sliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
+      "updatedAt": "2026-05-29T09:07:43Z",
+      "sliceId": "combat-mireclaw-packhunter-trait-trim-10184",
       "commands": [
-        "jq empty content/units.json (passed)",
+        "jq empty content/heroes.json ops/progress.json (passed)",
+        "python3 tests/hero_roster_readiness_report.py (passed)",
         "python3 tests/validate_repo.py (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_half_shield.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json (passed; ok=true, 12000 samples)"
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_trait_trim.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json (passed; ok=true, 12000 samples)"
       ],
       "evidence": {
         "implemented": [
-          "Reduced unit_mireclaw_gorefen_rippers Gorefen Screen ranged_damage_multiplier from 0.78 to 0.89, halving the mitigation from 22% to 11%.",
-          "Reduced unit_mireclaw_drowned_antler_sovereign Drowned Sovereign Screen ranged_damage_multiplier from 0.68 to 0.84, halving the mitigation from 32% to 16%.",
-          "Kept HP at reverted values: T6 50, T7 102.",
-          "Kept engaged and harried shielding drawbacks unchanged."
+          "Removed Packhunter from the five overperforming Mireclaw W3/W4 heroes identified by all-live replay evidence.",
+          "Nix Votivejaw now uses linekeeper + bogwise.",
+          "Vaska Reedmaw now uses vanguard + linekeeper.",
+          "Kessa Chainboom now uses vanguard + bogwise.",
+          "Zhorra Fenwake now uses bogwise + linekeeper.",
+          "Orrik Tollreaver now uses linekeeper + bogwise.",
+          "Did not apply the planned Mire spell trim because no Mireclaw W3/W4 matchup remained above 65% after the trait pass."
         ],
         "benchmark_impact": {
-          "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
-          "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
+          "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json",
+          "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
           "ok": true,
           "balance_status": "needs_tuning",
           "outliers_before": 43,
-          "outliers_after": 43,
-          "week_summary_delta": [
-            "W1 rounds 5.44 -> 5.44, side bias 1.53 -> 1.53",
-            "W2 rounds 5.95 -> 5.95, side bias 0.87 -> 0.87",
-            "W3 rounds 6.54 -> 6.54, side bias 3.07 -> 3.07",
-            "W4 rounds 7.34 -> 7.34, side bias 0.13 -> 0.13"
+          "outliers_after": 38,
+          "mireclaw_w3_w4_deltas": [
+            "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 55.0%",
+            "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 61.0%",
+            "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 60.0%",
+            "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 53.5%",
+            "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 53.5%",
+            "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Brasshollow 53.5%",
+            "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 51.5%",
+            "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 56.0%",
+            "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Thornwake 54.5%",
+            "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 66.0%"
           ],
-          "targeted_mireclaw_w3_w4_deltas": [
-            "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 64.5%",
-            "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 70.0%",
-            "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
-            "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 65.0%",
-            "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 61.5%",
-            "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Mireclaw 58.0%",
-            "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 60.5%",
-            "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
-            "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Mireclaw 60.0%",
-            "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 53.0%"
-          ],
-          "interpretation": "Halving the ranged shielding changes live damage math but did not move rounded 100-seed all-live matchup outcomes. Mireclaw overperformance is likely driven more by broader army/hero/spell tempo than this defensive ranged-mitigation field alone."
+          "acceptance": {
+            "mireclaw_w3_w4_pairs_above_65_after": 0,
+            "mireclaw_w3_average_before": 65.6,
+            "mireclaw_w3_average_after": 56.6,
+            "remaining_new_debt": "W4 Veilmourn now dominates Mireclaw 66.0%; this is recorded as next specific matchup debt rather than applying unrelated Mire spell trims."
+          }
         }
       }
     },
-    "notes": "Completed. Mireclaw T6/T7 anti-ranged shielding was halved while HP stayed reverted; full all-live matrix stayed at 43 outliers with no rounded matchup movement, so further Mireclaw tuning needs non-shielding levers or deeper hero/unit analysis.",
-    "startedAt": "2026-05-29T05:21:59Z",
-    "updatedAt": "2026-05-29T05:21:59Z",
-    "completedAt": "2026-05-29T05:21:59Z"
+    "notes": "Completed. Packhunter was removed from the five overperforming Mireclaw heroes; all-live outliers dropped 43 to 38 and no Mireclaw W3/W4 matchup remains above 65%, so the planned spell trim was not applied. W4 Veilmourn over Mireclaw at 66% remains specific follow-up debt.",
+    "startedAt": "2026-05-29T08:44:55Z",
+    "updatedAt": "2026-05-29T09:07:43Z",
+    "completedAt": "2026-05-29T09:07:43Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-29T05:21:59Z",
-    "sliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
+    "updatedAt": "2026-05-29T09:07:43Z",
+    "sliceId": "combat-mireclaw-packhunter-trait-trim-10184",
     "commands": [
-      "jq empty content/units.json (passed)",
+      "jq empty content/heroes.json ops/progress.json (passed)",
+      "python3 tests/hero_roster_readiness_report.py (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_half_shield.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json (passed; ok=true, 12000 samples)"
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_trait_trim.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json (passed; ok=true, 12000 samples)"
     ],
     "evidence": {
       "implemented": [
-        "Reduced unit_mireclaw_gorefen_rippers Gorefen Screen ranged_damage_multiplier from 0.78 to 0.89, halving the mitigation from 22% to 11%.",
-        "Reduced unit_mireclaw_drowned_antler_sovereign Drowned Sovereign Screen ranged_damage_multiplier from 0.68 to 0.84, halving the mitigation from 32% to 16%.",
-        "Kept HP at reverted values: T6 50, T7 102.",
-        "Kept engaged and harried shielding drawbacks unchanged."
+        "Removed Packhunter from the five overperforming Mireclaw W3/W4 heroes identified by all-live replay evidence.",
+        "Nix Votivejaw now uses linekeeper + bogwise.",
+        "Vaska Reedmaw now uses vanguard + linekeeper.",
+        "Kessa Chainboom now uses vanguard + bogwise.",
+        "Zhorra Fenwake now uses bogwise + linekeeper.",
+        "Orrik Tollreaver now uses linekeeper + bogwise.",
+        "Did not apply the planned Mire spell trim because no Mireclaw W3/W4 matchup remained above 65% after the trait pass."
       ],
       "benchmark_impact": {
-        "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
-        "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
+        "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json",
+        "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
         "ok": true,
         "balance_status": "needs_tuning",
         "outliers_before": 43,
-        "outliers_after": 43,
-        "week_summary_delta": [
-          "W1 rounds 5.44 -> 5.44, side bias 1.53 -> 1.53",
-          "W2 rounds 5.95 -> 5.95, side bias 0.87 -> 0.87",
-          "W3 rounds 6.54 -> 6.54, side bias 3.07 -> 3.07",
-          "W4 rounds 7.34 -> 7.34, side bias 0.13 -> 0.13"
+        "outliers_after": 38,
+        "mireclaw_w3_w4_deltas": [
+          "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 55.0%",
+          "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 61.0%",
+          "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 60.0%",
+          "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 53.5%",
+          "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 53.5%",
+          "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Brasshollow 53.5%",
+          "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 51.5%",
+          "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 56.0%",
+          "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Thornwake 54.5%",
+          "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 66.0%"
         ],
-        "targeted_mireclaw_w3_w4_deltas": [
-          "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 64.5%",
-          "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 70.0%",
-          "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
-          "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 65.0%",
-          "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 61.5%",
-          "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Mireclaw 58.0%",
-          "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 60.5%",
-          "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
-          "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Mireclaw 60.0%",
-          "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 53.0%"
-        ],
-        "interpretation": "Halving the ranged shielding changes live damage math but did not move rounded 100-seed all-live matchup outcomes. Mireclaw overperformance is likely driven more by broader army/hero/spell tempo than this defensive ranged-mitigation field alone."
+        "acceptance": {
+          "mireclaw_w3_w4_pairs_above_65_after": 0,
+          "mireclaw_w3_average_before": 65.6,
+          "mireclaw_w3_average_after": 56.6,
+          "remaining_new_debt": "W4 Veilmourn now dominates Mireclaw 66.0%; this is recorded as next specific matchup debt rather than applying unrelated Mire spell trims."
+        }
       }
     }
   }
