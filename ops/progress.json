@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Implemented allied spell-target selection/resolution and benchmark parity for Brasshollow vs Embercourt W4 investigation. Focused 100-seed all-live result shows spell targeting was a real bug but not the main matchup cause: Brass remains roughly 73-74% after off-active buff spam is constrained. Next tuning should address Brass late-stack preservation versus Ember T5/T7 collapse.",
+  "currentSliceNotes": "Landed conservative Embercourt Beacon Lectors HP tuning candidate after what-if testing. HP 25->28 improves Brasshollow vs Embercourt W4 from 73.5% Brass to 69.5% Brass in 100-seed all-live evidence; HP 29/stronger packages had worse Ember/Mireclaw side effects. Full 100-seed all-live weeks 1-4 remains needs_tuning with 38 outliers, low side bias, and no completion claim.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T09:40:57Z",
+  "updatedAt": "2026-05-29T10:34:19Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25383,7 +25383,7 @@
           }
         }
       },
-      "notes": "Implemented allied spell-target selection/resolution and benchmark parity for Brasshollow vs Embercourt W4 investigation. Focused 100-seed all-live result shows spell targeting was a real bug but not the main matchup cause: Brass remains roughly 73-74% after off-active buff spam is constrained. Next tuning should address Brass late-stack preservation versus Ember T5/T7 collapse.",
+      "notes": "Landed conservative Embercourt Beacon Lectors HP tuning candidate after what-if testing. HP 25->28 improves Brasshollow vs Embercourt W4 from 73.5% Brass to 69.5% Brass in 100-seed all-live evidence; HP 29/stronger packages had worse Ember/Mireclaw side effects. Full 100-seed all-live weeks 1-4 remains needs_tuning with 38 outliers, low side bias, and no completion claim.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25403,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-29T09:40:57Z",
+      "updatedAt": "2026-05-29T10:34:19Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
