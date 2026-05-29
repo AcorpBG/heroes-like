@@ -1046,6 +1046,7 @@ static func resolve_battle_spell(
 	var effect_type := String(effect.get("type", ""))
 	hero = _consume_mana(hero, mana_cost)
 	var caster_name := String(hero.get("name", "The hero"))
+	var ally_target := _battle_spell_ally_target(active_stack, target_stack, acting_side)
 	match effect_type:
 		"damage_enemy":
 			var damage_projection := battle_spell_damage_projection(hero, battle, target_stack, spell)
@@ -1114,41 +1115,46 @@ static func resolve_battle_spell(
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "recover_effect",
-				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"recovery_amount": _battle_spell_recovery_amount(hero, spell),
 				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() else {},
-				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"cleanse_ally":
 			return {
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "cleanse_effect",
-				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"cleanse_effect_ids": _normalize_string_array(effect.get("cleanse_effect_ids", [])),
 				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() or not normalize_status_immunity_ids(effect.get("status_immunity_ids", [])).is_empty() else {},
-				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"defense_buff":
 			return {
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "effect",
-				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"effect": _effect_payload(spell, effect, battle),
-				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"initiative_buff", "attack_buff":
 			return {
 				"ok": true,
 				"hero": hero,
 				"resolution_type": "effect",
-				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"effect": _effect_payload(spell, effect, battle),
-				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		_:
 			return {"ok": false, "hero": hero, "message": "That battle spell has no supported effect."}
+
+static func _battle_spell_ally_target(active_stack: Dictionary, target_stack: Dictionary, acting_side: String) -> Dictionary:
+	if not target_stack.is_empty() and String(target_stack.get("side", "")) == acting_side:
+		return target_stack
+	return active_stack
 
 static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
@@ -1211,15 +1217,24 @@ static func validate_battle_spell(
 				return {"ok": false, "message": "That control spell has no authored status effect."}
 			return {"ok": true}
 		"recover_ally":
+			var recover_target := _battle_spell_ally_target(active_stack, target_stack, acting_side)
+			if recover_target.is_empty() or String(recover_target.get("side", "")) != acting_side:
+				return {"ok": false, "message": "Select an allied target first."}
 			return {"ok": true}
 		"cleanse_ally":
+			var cleanse_target := _battle_spell_ally_target(active_stack, target_stack, acting_side)
+			if cleanse_target.is_empty() or String(cleanse_target.get("side", "")) != acting_side:
+				return {"ok": false, "message": "Select an allied target first."}
 			var cleanse_effect_ids := _normalize_string_array(effect.get("cleanse_effect_ids", []))
 			if cleanse_effect_ids.is_empty():
 				return {"ok": false, "message": "That cleanse spell has no authored cleanse target."}
-			if not has_any_effect_ids(active_stack, battle, cleanse_effect_ids) and battle_spell_modifiers(spell_dict).is_empty():
+			if not has_any_effect_ids(cleanse_target, battle, cleanse_effect_ids) and battle_spell_modifiers(spell_dict).is_empty():
 				return {"ok": false, "message": "No matching battle pressure is active on this stack."}
 			return {"ok": true}
 		"defense_buff", "initiative_buff", "attack_buff":
+			var buff_target := _battle_spell_ally_target(active_stack, target_stack, acting_side)
+			if buff_target.is_empty() or String(buff_target.get("side", "")) != acting_side:
+				return {"ok": false, "message": "Select an allied target first."}
 			return {"ok": true}
 		_:
 			return {"ok": false, "message": "That battle spell effect is unsupported."}

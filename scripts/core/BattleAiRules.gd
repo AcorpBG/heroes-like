@@ -555,6 +555,7 @@ static func _battle_spell_candidates(
 	targets: Array
 ) -> Array:
 	var candidates := []
+	var allies := _alive_stacks_for_side(battle, String(active_stack.get("side", "")))
 	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
 			continue
@@ -584,45 +585,51 @@ static func _battle_spell_candidates(
 					}
 					candidates.append(candidate)
 			"defense_buff", "recover_ally", "cleanse_ally":
-				if _spell_buff_already_active(active_stack, battle, spell):
-					continue
-				var validation := SpellRulesScript.validate_battle_spell(
-					enemy_hero,
-					battle,
-					active_stack,
-					{},
-					spell,
-					"enemy"
-				)
-				if not bool(validation.get("ok", false)):
-					continue
-				var defense_candidate := {
-					"action": "cast_spell",
-					"spell_id": String(spell.get("id", "")),
-					"target_battle_id": String(active_stack.get("battle_id", "")),
-					"score": _spell_candidate_score(enemy_hero, battle, active_stack, active_stack, spell, behavior),
-				}
-				candidates.append(defense_candidate)
+				for ally in allies:
+					if not (ally is Dictionary):
+						continue
+					if _spell_buff_already_active(ally, battle, spell):
+						continue
+					var validation := SpellRulesScript.validate_battle_spell(
+						enemy_hero,
+						battle,
+						active_stack,
+						ally,
+						spell,
+						"enemy"
+					)
+					if not bool(validation.get("ok", false)):
+						continue
+					var defense_candidate := {
+						"action": "cast_spell",
+						"spell_id": String(spell.get("id", "")),
+						"target_battle_id": String(ally.get("battle_id", "")),
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior),
+					}
+					candidates.append(defense_candidate)
 			"initiative_buff", "attack_buff":
-				if _spell_buff_already_active(active_stack, battle, spell):
-					continue
-				var validation := SpellRulesScript.validate_battle_spell(
-					enemy_hero,
-					battle,
-					active_stack,
-					{},
-					spell,
-					"enemy"
-				)
-				if not bool(validation.get("ok", false)):
-					continue
-				var initiative_candidate := {
-					"action": "cast_spell",
-					"spell_id": String(spell.get("id", "")),
-					"target_battle_id": String(active_stack.get("battle_id", "")),
-					"score": _spell_candidate_score(enemy_hero, battle, active_stack, active_stack, spell, behavior),
-				}
-				candidates.append(initiative_candidate)
+				for ally in allies:
+					if not (ally is Dictionary):
+						continue
+					if _spell_buff_already_active(ally, battle, spell):
+						continue
+					var validation := SpellRulesScript.validate_battle_spell(
+						enemy_hero,
+						battle,
+						active_stack,
+						ally,
+						spell,
+						"enemy"
+					)
+					if not bool(validation.get("ok", false)):
+						continue
+					var initiative_candidate := {
+						"action": "cast_spell",
+						"spell_id": String(spell.get("id", "")),
+						"target_battle_id": String(ally.get("battle_id", "")),
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior),
+					}
+					candidates.append(initiative_candidate)
 	return candidates
 
 static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
@@ -805,11 +812,13 @@ static func _spell_candidate_score(
 		"control_enemy":
 			score = _control_spell_score(battle, active_stack, target, spell)
 		"recover_ally":
-			score = _recovery_spell_score(enemy_hero, battle, active_stack, spell)
+			score = _recovery_spell_score_for_target(enemy_hero, battle, active_stack, target, spell)
 		"cleanse_ally":
-			score = _cleanse_spell_score(battle, active_stack, spell)
+			score = _cleanse_spell_score_for_target(battle, active_stack, target, spell)
 		"defense_buff", "initiative_buff", "attack_buff":
-			score = _buff_spell_score(battle, active_stack, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
+			score = _buff_spell_score(battle, active_stack, target, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
+			if String(target.get("battle_id", "")) != String(active_stack.get("battle_id", "")):
+				score -= 4.5
 		_:
 			score = -9999.0
 	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior)
@@ -835,32 +844,51 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 	return score * max(0.15, success_chance)
 
 static func _recovery_spell_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
-	var missing_health := _stack_missing_health(active_stack)
-	var unit_hp: int = max(1, int(active_stack.get("unit_hp", 1)))
+	return _recovery_spell_score_for_target(enemy_hero, battle, active_stack, active_stack, spell)
+
+static func _recovery_spell_score_for_target(
+	enemy_hero: Dictionary,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	spell: Dictionary
+) -> float:
+	var missing_health := _stack_missing_health(target_stack)
+	var unit_hp: int = max(1, int(target_stack.get("unit_hp", 1)))
 	var restore_amount := _battle_recovery_amount(enemy_hero, spell)
 	var useful_restore: int = min(missing_health, restore_amount)
 	var score := 1.5 + (float(useful_restore) / float(unit_hp)) * 1.15
-	score += (1.0 - _health_ratio(active_stack)) * 5.0
+	score += (1.0 - _health_ratio(target_stack)) * 5.0
 	if int(battle.get("distance", 1)) <= 0:
 		score += 1.0
-	if _stack_is_anchor_side(active_stack, battle) or _stack_is_assault_side(active_stack, battle):
+	if _stack_is_anchor_side(target_stack, battle) or _stack_is_assault_side(target_stack, battle):
 		score += 0.75
-	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, active_stack)
+	score += _stack_spell_target_value(target_stack)
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target_stack)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score
 
 static func _cleanse_spell_score(battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
+	return _cleanse_spell_score_for_target(battle, active_stack, active_stack, spell)
+
+static func _cleanse_spell_score_for_target(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	spell: Dictionary
+) -> float:
 	var effect = spell.get("effect", {})
 	var cleanse_effect_ids := _normalize_string_array(effect.get("cleanse_effect_ids", []))
 	var matching_effects := 0
 	for effect_id in cleanse_effect_ids:
-		if SpellRulesScript.has_effect_id(active_stack, battle, String(effect_id)):
+		if SpellRulesScript.has_effect_id(target_stack, battle, String(effect_id)):
 			matching_effects += 1
 	var score := 1.25 + float(matching_effects) * 4.0
-	if SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if SpellRulesScript.has_any_effect_ids(target_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 1.5
-	score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * 2.0
-	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, active_stack)
+	score += (1.0 - (float(_stack_cohesion_total(target_stack, battle)) / float(COHESION_MAX))) * 2.0
+	score += _stack_spell_target_value(target_stack)
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target_stack)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score
 
@@ -872,23 +900,26 @@ static func _spell_metadata_value_modifier(
 	behavior: Dictionary
 ) -> float:
 	var modifier := 0.0
+	var allied_target := active_stack
+	if not target.is_empty() and String(target.get("side", "")) == String(active_stack.get("side", "")):
+		allied_target = target
 	var role_categories: Array = behavior.get("role_categories", [])
 	var primary_role := String(behavior.get("primary_role", ""))
 	if role_categories.has("damage") and _health_ratio(target) <= 0.5:
 		modifier += 0.8
 	if role_categories.has("control") and not target.is_empty() and _health_ratio(target) > 0.5:
 		modifier += 0.7
-	if role_categories.has("recovery") and _health_ratio(active_stack) <= 0.65:
+	if role_categories.has("recovery") and _health_ratio(allied_target) <= 0.65:
 		modifier += 0.7
-	if role_categories.has("countermagic") and SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if role_categories.has("countermagic") and SpellRulesScript.has_any_effect_ids(allied_target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		modifier += 0.9
 	if primary_role == "priority_damage" and _health_ratio(target) <= 0.5:
 		modifier += 0.7
 	elif primary_role == "control_enemy" and not target.is_empty() and _stack_cohesion_total(target, battle) >= 5:
 		modifier += 0.6
-	elif primary_role == "ally_recovery" and _stack_missing_health(active_stack) > 0:
+	elif primary_role == "ally_recovery" and _stack_missing_health(allied_target) > 0:
 		modifier += 0.6
-	elif primary_role == "countermagic_ward" and SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	elif primary_role == "countermagic_ward" and SpellRulesScript.has_any_effect_ids(allied_target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		modifier += 0.6
 	return modifier
 
@@ -925,17 +956,18 @@ static func _spell_candidate_reason(spell: Dictionary, behavior: Dictionary) -> 
 		"control_enemy":
 			return "deny a selected enemy stack using authored control metadata"
 		"recover_ally":
-			return "stabilize the active stack using authored recovery metadata"
+			return "stabilize an allied stack using authored recovery metadata"
 		"cleanse_ally":
-			return "clear dangerous pressure from the active stack using authored countermagic metadata"
+			return "clear dangerous pressure from an allied stack using authored countermagic metadata"
 		"defense_buff", "initiative_buff", "attack_buff":
-			return "improve the active stack using authored buff metadata"
+			return "improve an allied stack using authored buff metadata"
 		_:
 			return String(spell.get("description", "Use when the board state supports it."))
 
 static func _buff_spell_score(
 	battle: Dictionary,
 	active_stack: Dictionary,
+	target_stack: Dictionary,
 	targets: Array,
 	spell: Dictionary
 ) -> float:
@@ -945,96 +977,107 @@ static func _buff_spell_score(
 	var defense_bonus := int(modifiers.get("defense", 0))
 	if defense_bonus > 0:
 		score += float(defense_bonus) * 1.2
-		score += (1.0 - _health_ratio(active_stack)) * 4.0
+		score += (1.0 - _health_ratio(target_stack)) * 4.0
 		if int(battle.get("distance", 1)) == 0:
 			score += 2.5
-		elif not bool(active_stack.get("ranged", false)):
+		elif not bool(target_stack.get("ranged", false)):
 			score += 1.5
 		if _has_hostile_ranged_pressure(targets):
 			score += 1.0
 		if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]):
 			score += 1.5
-		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(active_stack, battle):
+		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(target_stack, battle):
 			score += 1.5
-		if _reserve_wave_is_active_for_side(battle, String(active_stack.get("side", ""))) and _stack_is_anchor_side(active_stack, battle):
+		if _reserve_wave_is_active_for_side(battle, String(target_stack.get("side", ""))) and _stack_is_anchor_side(target_stack, battle):
 			score += 1.0
 		if _hero_has_trait(battle, String(active_stack.get("side", "")), "linekeeper"):
 			score += 1.0
-		if String(active_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
 			score += 1.0
 	var initiative_bonus := int(modifiers.get("initiative", 0))
 	if initiative_bonus > 0:
 		score += float(initiative_bonus) * 1.1
 		if int(battle.get("round", 1)) <= 2:
 			score += 1.5
-		if int(battle.get("distance", 1)) > 0 and not bool(active_stack.get("ranged", false)):
+		if int(battle.get("distance", 1)) > 0 and not bool(target_stack.get("ranged", false)):
 			score += 2.0
 		if _battle_has_any_tags(battle, ["ambush_cover", "open_lane"]) and int(battle.get("round", 1)) <= 2:
 			score += 1.0
-		if _reserve_wave_is_active_for_side(battle, String(active_stack.get("side", ""))) and _stack_is_anchor_side(active_stack, battle):
+		if _reserve_wave_is_active_for_side(battle, String(target_stack.get("side", ""))) and _stack_is_anchor_side(target_stack, battle):
 			score += 1.5
-		if String(active_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 			score += 1.0
 	var attack_bonus := int(modifiers.get("attack", 0))
 	if attack_bonus > 0:
 		score += float(attack_bonus) * 1.35
-		if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
+		if bool(target_stack.get("ranged", false)) and int(target_stack.get("shots_remaining", 0)) > 0:
 			score += 1.0
-		if _can_make_melee_attack(active_stack, battle):
+		if _can_make_melee_attack(target_stack, battle):
 			score += 1.5
-		if String(active_stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, String(active_stack.get("side", ""))) > 0:
+		if String(target_stack.get("faction_id", "")) == "faction_mireclaw" and _enemy_wounded_count(battle, String(target_stack.get("side", ""))) > 0:
 			score += 1.0
-			if _side_has_ability(battle, String(active_stack.get("side", "")), "bloodrush"):
+			if _side_has_ability(battle, String(target_stack.get("side", "")), "bloodrush"):
 				score += 1.5
-		if String(active_stack.get("faction_id", "")) == "faction_embercourt" and _side_defending_count(battle, String(active_stack.get("side", ""))) > 0:
+		if String(target_stack.get("faction_id", "")) == "faction_embercourt" and _side_defending_count(battle, String(target_stack.get("side", ""))) > 0:
 			score += 1.0
-			if _side_has_ability(battle, String(active_stack.get("side", "")), "formation_guard"):
+			if _side_has_ability(battle, String(target_stack.get("side", "")), "formation_guard"):
 				score += 1.5
-		if String(spell.get("effect", {}).get("type", "")) == "attack_buff" and not bool(active_stack.get("ranged", false)) and int(battle.get("round", 1)) >= 3:
+		if String(spell.get("effect", {}).get("type", "")) == "attack_buff" and not bool(target_stack.get("ranged", false)) and int(battle.get("round", 1)) >= 3:
 			score += 0.75
-		if _battle_has_tag(battle, "elevated_fire") and bool(active_stack.get("ranged", false)):
+		if _battle_has_tag(battle, "elevated_fire") and bool(target_stack.get("ranged", false)):
 			score += 1.25
-		if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side(active_stack, battle) and bool(active_stack.get("ranged", false)):
+		if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side(target_stack, battle) and bool(target_stack.get("ranged", false)):
 			score += 1.75
-		if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(active_stack, battle) and not bool(active_stack.get("ranged", false)) and round_number >= 3:
+		if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(target_stack, battle) and not bool(target_stack.get("ranged", false)) and round_number >= 3:
 			score += 1.25
-		if _battle_has_tag(battle, "bog_channels") and (_has_ability(active_stack, "harry") or _has_ability(active_stack, "backstab") or _has_ability(active_stack, "bloodrush")):
+		if _battle_has_tag(battle, "bog_channels") and (_has_ability(target_stack, "harry") or _has_ability(target_stack, "backstab") or _has_ability(target_stack, "bloodrush")):
 			score += 1.25
-		if String(active_stack.get("faction_id", "")) == "faction_sunvault" and _side_positive_effect_count(battle, String(active_stack.get("side", ""))) > 0:
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _side_positive_effect_count(battle, String(target_stack.get("side", ""))) > 0:
 			score += 1.25
 	var cohesion_bonus := int(modifiers.get("cohesion", 0))
 	if cohesion_bonus > 0:
 		score += float(cohesion_bonus) * 1.25
-		score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * 4.5
-		if _stack_is_isolated(battle, active_stack):
+		score += (1.0 - (float(_stack_cohesion_total(target_stack, battle)) / float(COHESION_MAX))) * 4.5
+		if _stack_is_isolated(battle, target_stack):
 			score += 1.5
-		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(active_stack, battle):
+		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(target_stack, battle):
 			score += 1.0
-		if _reserve_wave_is_active_for_side(battle, String(active_stack.get("side", ""))) and _stack_is_anchor_side(active_stack, battle):
+		if _reserve_wave_is_active_for_side(battle, String(target_stack.get("side", ""))) and _stack_is_anchor_side(target_stack, battle):
 			score += 1.5
 		if _hero_has_trait(battle, String(active_stack.get("side", "")), "linekeeper"):
 			score += 1.0
-		if String(active_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["fortified_line", "elevated_fire"]):
 			score += 1.0
 	var momentum_bonus := int(modifiers.get("momentum", 0))
 	if momentum_bonus > 0:
 		score += float(momentum_bonus) * 1.4
-		if _can_make_melee_attack(active_stack, battle) or (bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0):
+		if _can_make_melee_attack(target_stack, battle) or (bool(target_stack.get("ranged", false)) and int(target_stack.get("shots_remaining", 0)) > 0):
 			score += 1.5
 		if _hero_has_trait(battle, String(active_stack.get("side", "")), "vanguard") or _hero_has_trait(battle, String(active_stack.get("side", "")), "packhunter"):
 			score += 1.0
-		if _reserve_wave_is_active_for_side(battle, String(active_stack.get("side", ""))) and _stack_is_anchor_side(active_stack, battle):
+		if _reserve_wave_is_active_for_side(battle, String(target_stack.get("side", ""))) and _stack_is_anchor_side(target_stack, battle):
 			score += 1.25
-		if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(active_stack, battle) and not bool(active_stack.get("ranged", false)) and round_number >= 3:
+		if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(target_stack, battle) and not bool(target_stack.get("ranged", false)) and round_number >= 3:
 			score += 1.5
-		if String(active_stack.get("faction_id", "")) == "faction_sunvault" and _side_positive_effect_count(battle, String(active_stack.get("side", ""))) >= 2:
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _side_positive_effect_count(battle, String(target_stack.get("side", ""))) >= 2:
 			score += 1.0
-	if String(active_stack.get("faction_id", "")) == "faction_sunvault" and not _stack_has_positive_effect(active_stack, battle):
+	if String(target_stack.get("faction_id", "")) == "faction_sunvault" and not _stack_has_positive_effect(target_stack, battle):
 		score += 1.5
-	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, active_stack)
-	score += float(_alive_count(active_stack)) * 0.2
+	score += _stack_spell_target_value(target_stack)
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target_stack)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score
+
+static func _stack_spell_target_value(stack: Dictionary) -> float:
+	var tier_value := float(max(1, int(stack.get("tier", 1)))) * 0.15
+	var average_damage := (float(int(stack.get("min_damage", 1))) + float(int(stack.get("max_damage", 1)))) / 2.0
+	var offense_value = min(1.5, (float(_alive_count(stack)) * average_damage) / 160.0)
+	var role_value := 0.0
+	if bool(stack.get("ranged", false)) and int(stack.get("shots_remaining", 0)) > 0:
+		role_value += 0.3
+	if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace"):
+		role_value += 0.2
+	return tier_value + offense_value + role_value
 
 static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
 	var score := 2.0 + ((1.0 - _health_ratio(active_stack)) * 5.0)
