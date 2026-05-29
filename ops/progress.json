@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Veilmourn W2 pressure follow-up: selected harpoon-harry candidate after the owner-selected raw T4/T5 HP/def bump improved Brass/Veil but failed Thorn/Veil and over-buffed Sun/Ember. Undertow Harpooners now apply harry but deal slightly less max damage; Obituary Scribes lose a small amount of attack/max damage. Full all-live 100-seed weeks 1-4 artifact tmp/battle_balance_100_all_live_veil_harpoon_harry.json: ok=true, outliers 36 vs 37 prior, total outlier severity 211 vs 250.5 prior. W2 Thorn/Veil 80.0->75.0, Brass/Veil 77.5->60.0, Sun/Veil 51.0->55.0.",
+  "currentSliceNotes": "Thornwake W1/W2 early trim with late compensation: Sporeglass Menders max damage 5->4, Barkmantle Rams HP 26->25, Stag-Knot Runners HP 36->34, Graft Matriarchs HP 40->42 and max damage 12->13, Worldroot Bastion HP 92->96. Full 100-seed all-live weeks 1-4 artifact tmp/battle_balance_100_all_live_thorn_early_trim_late_comp.json: ok=true, outliers=36, severity=197 vs prior 211. Key requested movement: W1 Thornwake over Veilmourn 70.5->67.0, W2 Thornwake over Veilmourn 75.0->71.5, W2 Thornwake over Brasshollow 65.0->58.5; no week 4 severe outlier remains.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T13:50:08Z",
+  "updatedAt": "2026-05-29T15:06:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25383,7 +25383,7 @@
           }
         }
       },
-      "notes": "Veilmourn W2 pressure follow-up: selected harpoon-harry candidate after the owner-selected raw T4/T5 HP/def bump improved Brass/Veil but failed Thorn/Veil and over-buffed Sun/Ember. Undertow Harpooners now apply harry but deal slightly less max damage; Obituary Scribes lose a small amount of attack/max damage. Full all-live 100-seed weeks 1-4 artifact tmp/battle_balance_100_all_live_veil_harpoon_harry.json: ok=true, outliers 36 vs 37 prior, total outlier severity 211 vs 250.5 prior. W2 Thorn/Veil 80.0->75.0, Brass/Veil 77.5->60.0, Sun/Veil 51.0->55.0.",
+      "notes": "Thornwake W1/W2 early trim with late compensation: Sporeglass Menders max damage 5->4, Barkmantle Rams HP 26->25, Stag-Knot Runners HP 36->34, Graft Matriarchs HP 40->42 and max damage 12->13, Worldroot Bastion HP 92->96. Full 100-seed all-live weeks 1-4 artifact tmp/battle_balance_100_all_live_thorn_early_trim_late_comp.json: ok=true, outliers=36, severity=197 vs prior 211. Key requested movement: W1 Thornwake over Veilmourn 70.5->67.0, W2 Thornwake over Veilmourn 75.0->71.5, W2 Thornwake over Brasshollow 65.0->58.5; no week 4 severe outlier remains.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25403,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-29T13:50:08Z",
+      "updatedAt": "2026-05-29T15:06:25Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
