@@ -872,9 +872,13 @@ class FastBattleBenchmark:
                     score = self._spell_score(hero, battle, active, target, spell)
                     candidates.append({"spell_id": spell_id, "target_battle_id": target["battle_id"], "score": score})
             elif effect_type in ["defense_buff", "initiative_buff", "attack_buff", "recover_ally", "cleanse_ally"] and allies:
-                target = active
-                score = self._spell_score(hero, battle, active, target, spell)
-                candidates.append({"spell_id": spell_id, "target_battle_id": target["battle_id"], "score": score})
+                for target in allies:
+                    if effect_type in ["defense_buff", "initiative_buff", "attack_buff"] and self._stack_has_positive_effect(target, battle):
+                        continue
+                    if effect_type == "cleanse_ally" and not self._cleanse_spell_has_value(target, battle, spell):
+                        continue
+                    score = self._spell_score(hero, battle, active, target, spell)
+                    candidates.append({"spell_id": spell_id, "target_battle_id": target["battle_id"], "score": score})
         if not candidates:
             return None
         best = sorted(candidates, key=lambda item: (-float(item.get("score", 0.0)), str(item.get("spell_id", ""))))[0]
@@ -928,16 +932,56 @@ class FastBattleBenchmark:
                 score += 0.4
             return (score * max(0.15, control_success)) - (mana_cost * 0.28)
         if effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
-            if self._stack_has_positive_effect(active, battle):
+            if self._stack_has_positive_effect(target, battle):
                 return 0.0
             modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
-            return 3.2 + sum(max(0, int(value)) for value in modifiers.values()) * 0.9 - (mana_cost * 0.2)
+            score = 3.2 + sum(max(0, int(value)) for value in modifiers.values()) * 0.9
+            score += self._spell_ally_target_value(target)
+            if int(modifiers.get("defense", 0)) > 0:
+                score += (1.0 - self._health_ratio(target)) * 4.0
+                if not bool(target.get("ranged", False)):
+                    score += 0.8
+            if int(modifiers.get("attack", 0)) > 0:
+                if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
+                    score += 1.0
+                if self._can_make_melee_attack(target, battle):
+                    score += 1.0
+            if int(modifiers.get("initiative", 0)) > 0:
+                if int(battle.get("round", 1)) <= 2:
+                    score += 1.0
+                if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
+                    score += 0.6
+            if str(target.get("battle_id", "")) != str(active.get("battle_id", "")):
+                score -= 4.5
+            return score - (mana_cost * 0.2)
         if effect_type == "recover_ally":
-            missing = max(0, int(active.get("base_count", 0)) * int(active.get("unit_hp", 1)) - int(active.get("total_health", 0)))
-            return (float(missing) / float(max(1, active.get("unit_hp", 1)))) + 2.5 - (mana_cost * 0.2)
+            missing = max(0, int(target.get("base_count", 0)) * int(target.get("unit_hp", 1)) - int(target.get("total_health", 0)))
+            return (float(missing) / float(max(1, target.get("unit_hp", 1)))) + 2.5 + self._spell_ally_target_value(target) - (mana_cost * 0.2)
         if effect_type == "cleanse_ally":
-            return (4.0 if active.get("effects") else 0.0) - (mana_cost * 0.2)
+            return (4.0 if target.get("effects") else 0.0) + self._spell_ally_target_value(target) - (mana_cost * 0.2)
         return 0.0
+
+    def _cleanse_spell_has_value(self, target: dict[str, Any], battle: dict[str, Any], spell: dict[str, Any]) -> bool:
+        effect = spell.get("effect", {}) if isinstance(spell.get("effect", {}), dict) else {}
+        cleanse_ids = {str(value) for value in effect.get("cleanse_effect_ids", []) if str(value)}
+        if not cleanse_ids:
+            return False
+        if self._has_any_effect_ids(target, battle, list(cleanse_ids)):
+            return True
+        effect = spell.get("effect", {}) if isinstance(spell.get("effect", {}), dict) else {}
+        modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
+        return bool(modifiers)
+
+    def _spell_ally_target_value(self, target: dict[str, Any]) -> float:
+        tier_value = max(1, int(target.get("tier", 1))) * 0.15
+        average_damage = (int(target.get("min_damage", 1)) + int(target.get("max_damage", 1))) / 2.0
+        offense_value = min(1.5, (self._alive_count(target) * average_damage) / 160.0)
+        role_value = 0.0
+        if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
+            role_value += 0.3
+        if self._has_ability(target, "formation_guard") or self._has_ability(target, "brace"):
+            role_value += 0.2
+        return tier_value + offense_value + role_value
 
     def _resolve_spell(
         self,
