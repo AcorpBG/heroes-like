@@ -1716,7 +1716,7 @@
       "attack": 8,
       "defense": 7,
       "min_damage": 5,
-      "max_damage": 7,
+      "max_damage": 6,
       "speed": 3,
       "initiative": 6,
       "retaliations": 1,
@@ -1729,6 +1729,22 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 6,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Mourning Nets",
+          "description": "Black-salt nets and bellwire shots foul advancing lines before they can cleanly board the Veilmourn range.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ],
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {
@@ -1743,10 +1759,10 @@
       "role": "ranged",
       "tier": 5,
       "hp": 28,
-      "attack": 10,
+      "attack": 9,
       "defense": 8,
       "min_damage": 7,
-      "max_damage": 9,
+      "max_damage": 8,
       "speed": 3,
       "initiative": 7,
       "retaliations": 1,
