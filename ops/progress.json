@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Landed conservative Embercourt Beacon Lectors HP tuning candidate after what-if testing. HP 25->28 improves Brasshollow vs Embercourt W4 from 73.5% Brass to 69.5% Brass in 100-seed all-live evidence; HP 29/stronger packages had worse Ember/Mireclaw side effects. Full 100-seed all-live weeks 1-4 remains needs_tuning with 38 outliers, low side bias, and no completion claim.",
+  "currentSliceNotes": "Applied Brasshollow W4 broad nerf candidate after owner request. Crucible Crawlers HP 45->43 and max damage 14->13; Foundry Saint HP 102->98 and defense 18->17. Full 100-seed all-live weeks 1-4 remains needs_tuning with 37 outliers and low side bias. W4 Brass pairs now: Ember 60.5, Mire 71.0, Sun 55.0, Thorn loses to Thorn 55.5, Veil 51.5. Brass/Mire remains a specific follow-up target.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T10:34:19Z",
+  "updatedAt": "2026-05-29T11:11:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25383,7 +25383,7 @@
           }
         }
       },
-      "notes": "Landed conservative Embercourt Beacon Lectors HP tuning candidate after what-if testing. HP 25->28 improves Brasshollow vs Embercourt W4 from 73.5% Brass to 69.5% Brass in 100-seed all-live evidence; HP 29/stronger packages had worse Ember/Mireclaw side effects. Full 100-seed all-live weeks 1-4 remains needs_tuning with 38 outliers, low side bias, and no completion claim.",
+      "notes": "Applied Brasshollow W4 broad nerf candidate after owner request. Crucible Crawlers HP 45->43 and max damage 14->13; Foundry Saint HP 102->98 and defense 18->17. Full 100-seed all-live weeks 1-4 remains needs_tuning with 37 outliers and low side bias. W4 Brass pairs now: Ember 60.5, Mire 71.0, Sun 55.0, Thorn loses to Thorn 55.5, Veil 51.5. Brass/Mire remains a specific follow-up target.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25403,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-29T10:34:19Z",
+      "updatedAt": "2026-05-29T11:11:50Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
