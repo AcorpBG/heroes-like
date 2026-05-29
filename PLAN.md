@@ -23,8 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `combat-mireclaw-t6-t7-hp-revert-10184`.
-- Latest completed slice: `combat-mireclaw-t6-t7-hp-revert-10184`.
+- Current implementation slice: none selected after completing `combat-mireclaw-half-anti-ranged-shielding-10184`.
+- Latest completed slice: `combat-mireclaw-half-anti-ranged-shielding-10184`.
+- Previous completed slice: `combat-mireclaw-t6-t7-hp-revert-10184`.
 - Previous completed slice: `battle-benchmark-all-live-hero-matrix-10184`.
 - Previous completed slice: `hero-roster-live-diversity-10184`.
 - Previous completed slice: `combat-mireclaw-late-anti-ranged-counter-10184`.

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-mireclaw-t6-t7-hp-revert-10184",
-  "currentSliceTitle": "Combat Mireclaw T6 T7 HP Revert",
+  "currentSliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
+  "currentSliceTitle": "Combat Mireclaw Half Anti-Ranged Shielding",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Reverted the earlier Mireclaw T6/T7 10% HP buff while keeping the later anti-ranged shielding intact; W3/W4 Mireclaw all-live matrix severity dropped across the targeted matchups, though total outlier count remains 43.",
+  "currentSliceNotes": "Completed. Mireclaw T6/T7 anti-ranged shielding was halved while HP stayed reverted; full all-live matrix stayed at 43 outliers with no rounded matchup movement, so further Mireclaw tuning needs non-shielding levers or deeper hero/unit analysis.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-28T20:32:24Z",
+  "updatedAt": "2026-05-29T05:21:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -26995,6 +26995,72 @@
       "startedAt": "2026-05-28T20:32:24Z",
       "updatedAt": "2026-05-28T20:32:24Z",
       "completedAt": "2026-05-28T20:32:24Z"
+    },
+    {
+      "id": "combat-mireclaw-half-anti-ranged-shielding-10184",
+      "title": "Combat Mireclaw Half Anti-Ranged Shielding",
+      "status": "completed",
+      "source": "owner request to halve Mireclaw anti-ranged shielding as a balance probe because Mireclaw remains stronger after the HP revert",
+      "planRef": "PLAN.md Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Mireclaw T6/T7 ranged shielding mitigation is halved, validation passes, and all-live matrix evidence records whether the probe changes W3/W4 matchup outcomes.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-29T05:21:59Z",
+        "sliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
+        "commands": [
+          "jq empty content/units.json (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_half_shield.json (passed; ok=true)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json (passed; ok=true, 12000 samples)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Reduced unit_mireclaw_gorefen_rippers Gorefen Screen ranged_damage_multiplier from 0.78 to 0.89, halving the mitigation from 22% to 11%.",
+            "Reduced unit_mireclaw_drowned_antler_sovereign Drowned Sovereign Screen ranged_damage_multiplier from 0.68 to 0.84, halving the mitigation from 32% to 16%.",
+            "Kept HP at reverted values: T6 50, T7 102.",
+            "Kept engaged and harried shielding drawbacks unchanged."
+          ],
+          "benchmark_impact": {
+            "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
+            "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
+            "ok": true,
+            "balance_status": "needs_tuning",
+            "outliers_before": 43,
+            "outliers_after": 43,
+            "week_summary_delta": [
+              "W1 rounds 5.44 -> 5.44, side bias 1.53 -> 1.53",
+              "W2 rounds 5.95 -> 5.95, side bias 0.87 -> 0.87",
+              "W3 rounds 6.54 -> 6.54, side bias 3.07 -> 3.07",
+              "W4 rounds 7.34 -> 7.34, side bias 0.13 -> 0.13"
+            ],
+            "targeted_mireclaw_w3_w4_deltas": [
+              "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 64.5%",
+              "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 70.0%",
+              "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+              "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 65.0%",
+              "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 61.5%",
+              "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Mireclaw 58.0%",
+              "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 60.5%",
+              "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+              "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Mireclaw 60.0%",
+              "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 53.0%"
+            ],
+            "interpretation": "Halving the ranged shielding changes live damage math but did not move rounded 100-seed all-live matchup outcomes. Mireclaw overperformance is likely driven more by broader army/hero/spell tempo than this defensive ranged-mitigation field alone."
+          }
+        }
+      },
+      "notes": "Completed. Mireclaw T6/T7 anti-ranged shielding was halved while HP stayed reverted; full all-live matrix stayed at 43 outliers with no rounded matchup movement, so further Mireclaw tuning needs non-shielding levers or deeper hero/unit analysis.",
+      "startedAt": "2026-05-29T05:21:59Z",
+      "updatedAt": "2026-05-29T05:21:59Z",
+      "completedAt": "2026-05-29T05:21:59Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36829,8 +36895,8 @@
       }
     }
   },
-  "active_slice": "combat-mireclaw-t6-t7-hp-revert-10184",
-  "currentSliceUpdatedAt": "2026-05-28T20:32:24Z",
+  "active_slice": "combat-mireclaw-half-anti-ranged-shielding-10184",
+  "currentSliceUpdatedAt": "2026-05-29T05:21:59Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39204,10 +39270,10 @@
     }
   ],
   "currentSlice": {
-    "id": "combat-mireclaw-t6-t7-hp-revert-10184",
-    "title": "Combat Mireclaw T6 T7 HP Revert",
+    "id": "combat-mireclaw-half-anti-ranged-shielding-10184",
+    "title": "Combat Mireclaw Half Anti-Ranged Shielding",
     "status": "completed",
-    "source": "owner direction to revert the earlier Mireclaw T6/T7 10% HP buff because Mireclaw is overperforming in W3/W4 all-live hero matrix evidence",
+    "source": "owner request to halve Mireclaw anti-ranged shielding as a balance probe because Mireclaw remains stronger after the HP revert",
     "planRef": "PLAN.md Battle Balance Benchmark Target",
     "sourceDocs": [
       "PLAN.md",
@@ -39217,87 +39283,101 @@
       "content/units.json",
       "ops/progress.json"
     ],
-    "completionCriteria": "Mireclaw T6/T7 HP returns to the pre-10%-buff values, anti-ranged shielding remains intact, repo validation passes, and the all-live battle matrix records the resulting W3/W4 impact.",
+    "completionCriteria": "Mireclaw T6/T7 ranged shielding mitigation is halved, validation passes, and all-live matrix evidence records whether the probe changes W3/W4 matchup outcomes.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-28T20:32:24Z",
-      "sliceId": "combat-mireclaw-t6-t7-hp-revert-10184",
+      "updatedAt": "2026-05-29T05:21:59Z",
+      "sliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
       "commands": [
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_hp_revert.json (passed; ok=true)",
-        "python3 tests/validate_repo.py (passed)",
         "jq empty content/units.json (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json (passed; ok=true, 12000 samples)"
+        "python3 tests/validate_repo.py (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_half_shield.json (passed; ok=true)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json (passed; ok=true, 12000 samples)"
       ],
       "evidence": {
         "implemented": [
-          "Reverted unit_mireclaw_gorefen_rippers hp from 55 back to 50.",
-          "Reverted unit_mireclaw_drowned_antler_sovereign hp from 112 back to 102.",
-          "Left Gorefen Screen and Drowned Sovereign Screen anti-ranged shielding intact because that was a separate later counterplay slice."
+          "Reduced unit_mireclaw_gorefen_rippers Gorefen Screen ranged_damage_multiplier from 0.78 to 0.89, halving the mitigation from 22% to 11%.",
+          "Reduced unit_mireclaw_drowned_antler_sovereign Drowned Sovereign Screen ranged_damage_multiplier from 0.68 to 0.84, halving the mitigation from 32% to 16%.",
+          "Kept HP at reverted values: T6 50, T7 102.",
+          "Kept engaged and harried shielding drawbacks unchanged."
         ],
         "benchmark_impact": {
-          "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
-          "before_artifact": "tmp/battle_balance_100_seed_all_live_heroes.json",
+          "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
+          "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
           "ok": true,
           "balance_status": "needs_tuning",
           "outliers_before": 43,
           "outliers_after": 43,
-          "targeted_mireclaw_w3_w4_deltas": [
-            "W3 Brasshollow vs Mireclaw: Mireclaw 68.5% -> Mireclaw 64.5%",
-            "W3 Embercourt vs Mireclaw: Mireclaw 71.0% -> Mireclaw 70.0%",
-            "W3 Mireclaw vs Sunvault: Mireclaw 72.0% -> Mireclaw 67.0%",
-            "W3 Mireclaw vs Thornwake: Mireclaw 70.5% -> Mireclaw 65.0%",
-            "W3 Mireclaw vs Veilmourn: Mireclaw 67.5% -> Mireclaw 61.5%",
-            "W4 Brasshollow vs Mireclaw: Mireclaw 64.0% -> Mireclaw 58.0%",
-            "W4 Embercourt vs Mireclaw: Mireclaw 63.0% -> Mireclaw 60.5%",
-            "W4 Mireclaw vs Sunvault: Mireclaw 69.0% -> Mireclaw 67.0%",
-            "W4 Mireclaw vs Thornwake: Mireclaw 68.0% -> Mireclaw 60.0%",
-            "W4 Mireclaw vs Veilmourn: Mireclaw 53.5% -> Veilmourn 53.0%"
+          "week_summary_delta": [
+            "W1 rounds 5.44 -> 5.44, side bias 1.53 -> 1.53",
+            "W2 rounds 5.95 -> 5.95, side bias 0.87 -> 0.87",
+            "W3 rounds 6.54 -> 6.54, side bias 3.07 -> 3.07",
+            "W4 rounds 7.34 -> 7.34, side bias 0.13 -> 0.13"
           ],
-          "interpretation": "The HP revert meaningfully reduces Mireclaw W3/W4 dominance, especially into Thornwake, Brasshollow, Veilmourn, and Sunvault, but broader battle tuning is still needed because total outlier count did not fall."
+          "targeted_mireclaw_w3_w4_deltas": [
+            "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 64.5%",
+            "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 70.0%",
+            "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+            "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 65.0%",
+            "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 61.5%",
+            "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Mireclaw 58.0%",
+            "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 60.5%",
+            "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+            "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Mireclaw 60.0%",
+            "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 53.0%"
+          ],
+          "interpretation": "Halving the ranged shielding changes live damage math but did not move rounded 100-seed all-live matchup outcomes. Mireclaw overperformance is likely driven more by broader army/hero/spell tempo than this defensive ranged-mitigation field alone."
         }
       }
     },
-    "notes": "Completed. Reverted the earlier Mireclaw T6/T7 10% HP buff while keeping the later anti-ranged shielding intact; W3/W4 Mireclaw all-live matrix severity dropped across the targeted matchups, though total outlier count remains 43.",
-    "startedAt": "2026-05-28T20:32:24Z",
-    "updatedAt": "2026-05-28T20:32:24Z",
-    "completedAt": "2026-05-28T20:32:24Z"
+    "notes": "Completed. Mireclaw T6/T7 anti-ranged shielding was halved while HP stayed reverted; full all-live matrix stayed at 43 outliers with no rounded matchup movement, so further Mireclaw tuning needs non-shielding levers or deeper hero/unit analysis.",
+    "startedAt": "2026-05-29T05:21:59Z",
+    "updatedAt": "2026-05-29T05:21:59Z",
+    "completedAt": "2026-05-29T05:21:59Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T20:32:24Z",
-    "sliceId": "combat-mireclaw-t6-t7-hp-revert-10184",
+    "updatedAt": "2026-05-29T05:21:59Z",
+    "sliceId": "combat-mireclaw-half-anti-ranged-shielding-10184",
     "commands": [
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_hp_revert.json (passed; ok=true)",
-      "python3 tests/validate_repo.py (passed)",
       "jq empty content/units.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json (passed; ok=true, 12000 samples)"
+      "python3 tests/validate_repo.py (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_half_shield.json (passed; ok=true)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json (passed; ok=true, 12000 samples)"
     ],
     "evidence": {
       "implemented": [
-        "Reverted unit_mireclaw_gorefen_rippers hp from 55 back to 50.",
-        "Reverted unit_mireclaw_drowned_antler_sovereign hp from 112 back to 102.",
-        "Left Gorefen Screen and Drowned Sovereign Screen anti-ranged shielding intact because that was a separate later counterplay slice."
+        "Reduced unit_mireclaw_gorefen_rippers Gorefen Screen ranged_damage_multiplier from 0.78 to 0.89, halving the mitigation from 22% to 11%.",
+        "Reduced unit_mireclaw_drowned_antler_sovereign Drowned Sovereign Screen ranged_damage_multiplier from 0.68 to 0.84, halving the mitigation from 32% to 16%.",
+        "Kept HP at reverted values: T6 50, T7 102.",
+        "Kept engaged and harried shielding drawbacks unchanged."
       ],
       "benchmark_impact": {
-        "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
-        "before_artifact": "tmp/battle_balance_100_seed_all_live_heroes.json",
+        "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
+        "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_hp_revert.json",
         "ok": true,
         "balance_status": "needs_tuning",
         "outliers_before": 43,
         "outliers_after": 43,
-        "targeted_mireclaw_w3_w4_deltas": [
-          "W3 Brasshollow vs Mireclaw: Mireclaw 68.5% -> Mireclaw 64.5%",
-          "W3 Embercourt vs Mireclaw: Mireclaw 71.0% -> Mireclaw 70.0%",
-          "W3 Mireclaw vs Sunvault: Mireclaw 72.0% -> Mireclaw 67.0%",
-          "W3 Mireclaw vs Thornwake: Mireclaw 70.5% -> Mireclaw 65.0%",
-          "W3 Mireclaw vs Veilmourn: Mireclaw 67.5% -> Mireclaw 61.5%",
-          "W4 Brasshollow vs Mireclaw: Mireclaw 64.0% -> Mireclaw 58.0%",
-          "W4 Embercourt vs Mireclaw: Mireclaw 63.0% -> Mireclaw 60.5%",
-          "W4 Mireclaw vs Sunvault: Mireclaw 69.0% -> Mireclaw 67.0%",
-          "W4 Mireclaw vs Thornwake: Mireclaw 68.0% -> Mireclaw 60.0%",
-          "W4 Mireclaw vs Veilmourn: Mireclaw 53.5% -> Veilmourn 53.0%"
+        "week_summary_delta": [
+          "W1 rounds 5.44 -> 5.44, side bias 1.53 -> 1.53",
+          "W2 rounds 5.95 -> 5.95, side bias 0.87 -> 0.87",
+          "W3 rounds 6.54 -> 6.54, side bias 3.07 -> 3.07",
+          "W4 rounds 7.34 -> 7.34, side bias 0.13 -> 0.13"
         ],
-        "interpretation": "The HP revert meaningfully reduces Mireclaw W3/W4 dominance, especially into Thornwake, Brasshollow, Veilmourn, and Sunvault, but broader battle tuning is still needed because total outlier count did not fall."
+        "targeted_mireclaw_w3_w4_deltas": [
+          "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 64.5%",
+          "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 70.0%",
+          "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+          "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 65.0%",
+          "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 61.5%",
+          "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Mireclaw 58.0%",
+          "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 60.5%",
+          "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 67.0%",
+          "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Mireclaw 60.0%",
+          "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 53.0%"
+        ],
+        "interpretation": "Halving the ranged shielding changes live damage math but did not move rounded 100-seed all-live matchup outcomes. Mireclaw overperformance is likely driven more by broader army/hero/spell tempo than this defensive ranged-mitigation field alone."
       }
     }
   }
