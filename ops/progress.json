@@ -6,9 +6,9 @@
   "currentSliceId": "combat-faction-pair-stat-tuning-10184",
   "currentSliceTitle": "Combat Faction Pair Stat Tuning",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Applied Brasshollow W4 broad nerf candidate after owner request. Crucible Crawlers HP 45->43 and max damage 14->13; Foundry Saint HP 102->98 and defense 18->17. Full 100-seed all-live weeks 1-4 remains needs_tuning with 37 outliers and low side bias. W4 Brass pairs now: Ember 60.5, Mire 71.0, Sun 55.0, Thorn loses to Thorn 55.5, Veil 51.5. Brass/Mire remains a specific follow-up target.",
+  "currentSliceNotes": "Targeted Brass/Mire W4 tuning slice: raised Mireclaw Sporewake Chanters HP 25->30 after testing narrower resistance/screen and Brass T6-only candidates. Full all-live 100-seed weeks 1-4 artifact tmp/battle_balance_100_all_live_mire_t5_hp30.json stayed structurally ok with outlier count 37 and total outlier severity 250.5 vs prior 262; W4 Brass/Mire improved 71.0->60.5 while remaining tuning outliers persist.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T11:11:50Z",
+  "updatedAt": "2026-05-29T12:22:38Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -25383,7 +25383,7 @@
           }
         }
       },
-      "notes": "Applied Brasshollow W4 broad nerf candidate after owner request. Crucible Crawlers HP 45->43 and max damage 14->13; Foundry Saint HP 102->98 and defense 18->17. Full 100-seed all-live weeks 1-4 remains needs_tuning with 37 outliers and low side bias. W4 Brass pairs now: Ember 60.5, Mire 71.0, Sun 55.0, Thorn loses to Thorn 55.5, Veil 51.5. Brass/Mire remains a specific follow-up target.",
+      "notes": "Targeted Brass/Mire W4 tuning slice: raised Mireclaw Sporewake Chanters HP 25->30 after testing narrower resistance/screen and Brass T6-only candidates. Full all-live 100-seed weeks 1-4 artifact tmp/battle_balance_100_all_live_mire_t5_hp30.json stayed structurally ok with outlier count 37 and total outlier severity 250.5 vs prior 262; W4 Brass/Mire improved 71.0->60.5 while remaining tuning outliers persist.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25403,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-29T11:11:50Z",
+      "updatedAt": "2026-05-29T12:22:38Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
