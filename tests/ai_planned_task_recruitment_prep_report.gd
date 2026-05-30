@@ -49,7 +49,7 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_recruitment_prepares_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
+		"behavior_policy": "town_building_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"cases": [live_turn_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
@@ -76,15 +76,26 @@ func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 	var result := EnemyTurnRules.run_enemy_turn(session)
 	var events: Array = result.get("events", []) if result.get("events", []) is Array else []
 	var planned_index := _event_index(events, "ai_commander_task_planned")
+	var build_index := _event_index(events, "ai_town_built")
 	var prepared_index := _event_index(events, "ai_commander_prepared")
 	if planned_index < 0:
 		_fail("Live turn did not emit same-turn task planning: %s" % JSON.stringify(_event_types(events)))
 		return {}
+	if build_index < 0:
+		_fail("Live turn did not build after same-turn task planning: %s" % JSON.stringify(_event_types(events)))
+		return {}
 	if prepared_index < 0:
 		_fail("Live turn did not prepare a commander from newly planned tasks: %s" % JSON.stringify(_event_types(events)))
 		return {}
-	if planned_index > prepared_index:
-		_fail("Live turn prepared a commander before planning tasks: %s" % JSON.stringify(_event_types(events)))
+	if planned_index > build_index or build_index > prepared_index:
+		_fail("Live turn should plan before build and build before recruitment prep: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	var build_event: Dictionary = events[build_index]
+	var build_reason_codes: Array = _string_array(build_event.get("target_reason_codes", []))
+	if build_reason_codes.is_empty():
+		build_reason_codes = _string_array(build_event.get("reason_codes", []))
+	if "prepares_commander_task" not in build_reason_codes:
+		_fail("Same-turn build did not expose planned-task preparation reason codes: %s" % JSON.stringify(build_event))
 		return {}
 	var prepared_event: Dictionary = events[prepared_index]
 	var actor_id := String(prepared_event.get("target_id", ""))
@@ -104,7 +115,9 @@ func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 		"prepared_actor_id": actor_id,
 		"prepared_strength": int(continuity.get("current_strength", 0)),
 		"planned_event_index": planned_index,
+		"build_event_index": build_index,
 		"prepared_event_index": prepared_index,
+		"build_reason_codes": build_reason_codes,
 		"event_types": _event_types(events),
 	}
 
@@ -579,6 +592,16 @@ func _event_types(events: Array) -> Array:
 		if event_type != "":
 			types.append(event_type)
 	return types
+
+func _string_array(value: Variant) -> Array:
+	var output := []
+	if not (value is Array):
+		return output
+	for entry in value:
+		var text := String(entry)
+		if text != "" and text not in output:
+			output.append(text)
+	return output
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}

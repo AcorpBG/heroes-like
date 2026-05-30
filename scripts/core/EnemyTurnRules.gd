@@ -817,16 +817,16 @@ static func _run_empire_cycle(
 			messages.append(muster_message)
 		session.overworld["towns"] = towns
 
+	var pre_build_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
+	state = pre_build_task_plan_result.get("state", state)
+	_append_event_records(events, pre_build_task_plan_result.get("events", []))
+
 	var build_result := _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
 	var build_messages: Array = build_result.get("messages", [])
 	if not build_messages.is_empty():
 		messages.append_array(build_messages)
 	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
-
-	var pre_recruit_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
-	state = pre_recruit_task_plan_result.get("state", state)
-	_append_event_records(events, pre_recruit_task_plan_result.get("events", []))
 
 	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
 	var reinforcement_message = String(reinforcement_result.get("message", ""))
@@ -2563,6 +2563,18 @@ static func _build_candidate_score_breakdown(
 		elif category == "economy":
 			front_bonus = 35.0
 			score += front_bonus
+	var planned_task_build_bonus: float = _planned_task_build_preparation_bonus(
+		session,
+		config,
+		faction_id,
+		town,
+		building,
+		category,
+		growth_value,
+		quality_value,
+		readiness_value
+	)
+	score += planned_task_build_bonus
 	var project_bonus := 0.0
 	var role_bonus := 0.0
 	if capital_project is Dictionary and not capital_project.is_empty():
@@ -2598,6 +2610,7 @@ static func _build_candidate_score_breakdown(
 		market_value,
 		garrison_need_bonus,
 		raid_need_bonus,
+		planned_task_build_bonus,
 		project_bonus,
 		category
 	)
@@ -2620,6 +2633,7 @@ static func _build_candidate_score_breakdown(
 		"garrison_need_bonus": garrison_need_bonus,
 		"raid_need_bonus": raid_need_bonus,
 		"front_bonus": front_bonus,
+		"planned_task_build_bonus": planned_task_build_bonus,
 		"project_bonus": project_bonus,
 		"role_bonus": role_bonus,
 		"cost_value": _resource_value(cost),
@@ -2629,6 +2643,49 @@ static func _build_candidate_score_breakdown(
 		"public_reason": _town_build_public_reason(reason_codes),
 		"debug_reason": _town_build_debug_reason(reason_codes, category),
 	}
+
+static func _planned_task_build_preparation_bonus(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	building: Dictionary,
+	category: String,
+	growth_value: float,
+	quality_value: float,
+	readiness_value: float
+) -> float:
+	if session == null or faction_id == "" or town.is_empty() or building.is_empty():
+		return 0.0
+	var planned_target := _best_planned_task_recruitment_target(session, config, faction_id, town)
+	if planned_target.is_empty() or int(planned_target.get("need", 0)) <= 0:
+		return 0.0
+	var target_kind := String(planned_target.get("target_kind", ""))
+	var fit_profile := String(planned_target.get("commander_fit_profile", ""))
+	var need: int = max(0, int(planned_target.get("need", 0)))
+	var bonus: float = min(240.0, 80.0 + (float(need) * 0.45))
+	match category:
+		"dwelling":
+			bonus += 110.0
+			if growth_value > 0.0:
+				bonus += min(160.0, growth_value * 0.25)
+			if target_kind in ["town", "hero", "resource"]:
+				bonus += 45.0
+		"support":
+			bonus += 70.0
+			bonus += min(130.0, (quality_value * 0.75) + (readiness_value * 0.45))
+		"magic":
+			if "magic" in fit_profile or target_kind in ["artifact", "encounter"]:
+				bonus += 95.0
+			else:
+				bonus += 35.0
+		"civic":
+			bonus += 35.0
+		_:
+			bonus += 18.0
+	if int(planned_target.get("commander_fit_bonus", 0)) > 0:
+		bonus += min(70.0, float(int(planned_target.get("commander_fit_bonus", 0))) * 0.55)
+	return max(0.0, bonus)
 
 static func _town_build_reason_codes(
 	income_value: float,
@@ -2640,12 +2697,15 @@ static func _town_build_reason_codes(
 	market_value: float,
 	garrison_need_bonus: float,
 	raid_need_bonus: float,
+	planned_task_build_bonus: float,
 	project_bonus: float,
 	category: String
 ) -> Array:
 	var codes := []
 	if pressure_value > 0.0 or project_bonus > 0.0:
 		codes.append("builds_pressure")
+	if planned_task_build_bonus > 0.0:
+		codes.append("prepares_commander_task")
 	if growth_value > 0.0 or category == "dwelling":
 		codes.append("unlocks_recruits")
 	if raid_need_bonus > 0.0:
@@ -2664,6 +2724,8 @@ static func _town_build_reason_codes(
 
 static func _town_build_public_reason(reason_codes: Array) -> String:
 	var codes := _normalize_string_array(reason_codes)
+	if "prepares_commander_task" in codes:
+		return "prepares command"
 	if "feeds_raid_hosts" in codes:
 		return "feeds raid hosts"
 	if "builds_pressure" in codes:

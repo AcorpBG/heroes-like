@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-recruitment-market-coverage-10184",
-  "currentSliceTitle": "Strategic AI Recruitment Market Coverage",
+  "currentSliceId": "strategic-ai-planned-task-build-prep-10184",
+  "currentSliceTitle": "Strategic AI Planned Task Build Prep",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy recruitment now uses live town market coverage for wood/ore unit costs and consumes market usage caps when automatic recruitment buys missing materials.",
+  "currentSliceNotes": "Completed. Same-turn commander task planning now happens before town construction, and town build scoring explicitly rewards objective-supporting infrastructure for planned commander tasks.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T02:35:00Z",
+  "updatedAt": "2026-05-31T03:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,84 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-planned-task-build-prep-10184",
+      "title": "Strategic AI Planned Task Build Prep",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / planned task construction preparation",
+      "purpose": "Make enemy towns plan commander objectives before same-turn construction and bias builds toward dwellings, support, and magic infrastructure that prepare those planned objectives.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Live enemy turns plan commander tasks before town construction; town build scoring exposes a planned-task preparation bonus and reason code for objective-supporting infrastructure; focused live coverage proves planning happens before both build and recruitment prep in one enemy turn.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "broad balance retuning",
+        "new report-only gates",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-31T03:02:00Z",
+      "updatedAt": "2026-05-31T03:25:00Z",
+      "completedAt": "2026-05-31T03:25:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Live planned-task prep now proves same-turn planning happens before build, the selected build exposes prepares_commander_task reason codes, and recruitment then prepares the planned commander."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner still seeds distinct commander tasks, preserves multi-origin planning, and scores targets by commander identity."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution still seizes reserved resource fronts and persists task-board outcomes after planning-before-build order changes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded-claim, resource-front support, route recovery, and failed-regroup rebuild behavior still pass."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. run_enemy_turn now plans commander tasks before construction, and build scoring adds a planned-task preparation bonus/reason code for dwellings, support, and magic infrastructure that can support a waiting commander objective."
+      ]
+    },
     {
       "id": "strategic-ai-recruitment-market-coverage-10184",
       "title": "Strategic AI Recruitment Market Coverage",
@@ -40460,12 +40538,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-recruitment-market-coverage-10184",
+    "sliceId": "strategic-ai-planned-task-build-prep-10184",
     "status": "completed",
-    "updatedAt": "2026-05-31T02:35:00Z",
-    "summary": "Completed. Enemy recruitment now uses live town market coverage for wood/ore unit costs and consumes market usage caps when automatic recruitment buys missing materials; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-31T03:25:00Z",
+    "summary": "Completed. Same-turn commander task planning now happens before town construction, and town build scoring explicitly rewards objective-supporting infrastructure for planned commander tasks; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:35:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:25:00Z",
   "validationHistory": [
     {
       "status": "pass",
