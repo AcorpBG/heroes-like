@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-persistent-hero-task-board-10184",
-  "currentSliceTitle": "Strategic AI Persistent Hero Task Board",
+  "currentSliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+  "currentSliceTitle": "Strategic AI Task Lifecycle Reconciliation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused production slice. Strategic AI now has a real persistent hero task board for live target assignments, saved-task reuse, reservation continuity, and resource-task completion. Full shared headless harness was attempted but not claimed because it remained silent and was killed.",
+  "currentSliceNotes": "Completed. Saved strategic AI tasks are reconciled before reuse so stale, missing, already-complete, or expired work no longer drives commander target selection.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T11:58:00Z",
+  "updatedAt": "2026-05-30T12:24:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27256,6 +27256,58 @@
       "startedAt": "2026-05-30T11:58:00Z",
       "updatedAt": "2026-05-30T11:58:00Z",
       "completedAt": "2026-05-30T11:58:00Z"
+    },
+    {
+      "id": "strategic-ai-task-lifecycle-reconciliation-10184",
+      "title": "Strategic AI Task Lifecycle Reconciliation",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after persistent task board adoption",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd if validation enum expansion is required",
+        "focused strategic AI Godot report",
+        "docs strategic AI task lifecycle report",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Saved strategic AI hero tasks are reconciled against current resources/towns before reuse: missing targets are invalidated, already-owned targets are completed, expired active work is not reused, exclusive reservations ignore completed/invalid tasks, focused runtime tests prove saved-task reuse plus stale-task invalidation, validation passes, and no save-version migration is introduced.",
+      "startedAt": "2026-05-30T12:10:00Z",
+      "updatedAt": "2026-05-30T12:24:00Z",
+      "notes": "Completed. Saved strategic AI tasks are reconciled before reuse so stale, missing, already-complete, or expired work no longer drives commander target selection.",
+      "completedAt": "2026-05-30T12:24:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T12:24:00Z",
+        "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
+            "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
+            "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
+            "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
+            "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -37032,41 +37084,35 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T11:58:00Z",
-    "sliceId": "strategic-ai-persistent-hero-task-board-10184",
+    "updatedAt": "2026-05-30T12:24:00Z",
+    "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
-        "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
-        "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
-        "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
-        "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
+        "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
+        "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
+        "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
+        "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
+        "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-live-target-selection-report.md",
-        "docs/strategic-ai-live-turn-execution-report.md",
-        "docs/headless-strategic-ai-live-turn-harness-report.md"
+        "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
+      "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T11:58:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T12:24:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39472,101 +39518,116 @@
         "saveVersion": 9,
         "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-30T12:24:00Z",
+      "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
+          "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
+          "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
+          "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
+          "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
+      }
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-persistent-hero-task-board-10184",
-    "title": "Strategic AI Persistent Hero Task Board",
+    "id": "strategic-ai-task-lifecycle-reconciliation-10184",
+    "title": "Strategic AI Task Lifecycle Reconciliation",
     "status": "completed",
-    "source": "owner direction to move strategic AI work beyond superficial reporting into production-ready behavior state",
-    "planRef": "PLAN.md Selectable Near-Term Work",
+    "source": "continuation of owner strategic AI production-readiness goal after persistent task board adoption",
+    "planRef": "PLAN.md Current strategic AI target",
     "sourceDocs": [
       "PLAN.md",
       "project.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
-      "scripts/core/HeadlessSimulationHarnessRules.gd",
-      "tests/ai_hero_task_live_target_selection_report.gd",
-      "tests/ai_hero_task_live_turn_execution_report.gd",
-      "strategic AI focused reports and validation tokens",
-      "docs/strategic-ai-live-target-selection-report.md",
-      "docs/strategic-ai-live-turn-execution-report.md",
+      "scripts/core/EnemyTurnRules.gd if validation enum expansion is required",
+      "focused strategic AI Godot report",
+      "docs strategic AI task lifecycle report",
       "ops/progress.json"
     ],
-    "completionCriteria": "Live enemy commander/raid target assignments persist to normalized hero_task_state, saved tasks are reused for target continuity, exclusive reservations use the persisted board, completed resource captures close their tasks, focused Godot reports pass, static validation passes, and no save-version migration is introduced.",
+    "completionCriteria": "Saved strategic AI hero tasks are reconciled against current resources/towns before reuse: missing targets are invalidated, already-owned targets are completed, expired active work is not reused, exclusive reservations ignore completed/invalid tasks, focused runtime tests prove saved-task reuse plus stale-task invalidation, validation passes, and no save-version migration is introduced.",
+    "startedAt": "2026-05-30T12:10:00Z",
+    "updatedAt": "2026-05-30T12:24:00Z",
+    "notes": "Completed. Saved strategic AI tasks are reconciled before reuse so stale, missing, already-complete, or expired work no longer drives commander target selection.",
+    "completedAt": "2026-05-30T12:24:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T11:58:00Z",
-      "sliceId": "strategic-ai-persistent-hero-task-board-10184",
+      "updatedAt": "2026-05-30T12:24:00Z",
+      "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
-      "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
       "evidence": {
         "implemented": [
-          "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
-          "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
-          "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
-          "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
-          "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
+          "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
+          "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
+          "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
+          "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
+          "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-live-target-selection-report.md",
-          "docs/strategic-ai-live-turn-execution-report.md",
-          "docs/headless-strategic-ai-live-turn-harness-report.md"
+          "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
+        "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
       }
-    },
-    "notes": "Completed focused production slice. Strategic AI now has a real persistent hero task board for live target assignments, saved-task reuse, reservation continuity, and resource-task completion. Full shared headless harness was attempted but not claimed because it remained silent and was killed.",
-    "startedAt": "2026-05-30T11:58:00Z",
-    "updatedAt": "2026-05-30T11:58:00Z",
-    "completedAt": "2026-05-30T11:58:00Z"
+    }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T11:58:00Z",
-    "sliceId": "strategic-ai-persistent-hero-task-board-10184",
+    "updatedAt": "2026-05-30T12:24:00Z",
+    "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
-        "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
-        "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
-        "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
-        "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
+        "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
+        "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
+        "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
+        "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
+        "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-live-target-selection-report.md",
-        "docs/strategic-ai-live-turn-execution-report.md",
-        "docs/headless-strategic-ai-live-turn-harness-report.md"
+        "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
+      "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
     }
   }
 }
