@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-task-retask-cancellation-10184",
-  "currentSliceTitle": "Strategic AI Task Retask Cancellation",
+  "currentSliceId": "strategic-ai-encounter-objective-task-board-10184",
+  "currentSliceTitle": "Strategic AI Encounter Objective Task Board",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Started. This slice makes task-board history explicit for live retasks instead of silently dropping the previous open task.",
+  "currentSliceNotes": "Completed. Objective-front encounter targets now persist as strategic AI hero tasks and reconcile through saved-task continuity.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T14:30:00Z",
+  "updatedAt": "2026-05-30T12:49:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27525,9 +27525,126 @@
           "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
         }
       }
+    },
+    {
+      "id": "strategic-ai-encounter-objective-task-board-10184",
+      "title": "Strategic AI Encounter Objective Task Board",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after task retask cancellation; close the objective-front encounter gap in durable task-board continuity",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused strategic AI encounter objective Godot report",
+        "docs strategic AI encounter objective task-board report",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Objective-front encounter assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable encounter tasks, resolved or missing encounters complete/invalidate through lifecycle reconciliation, normalized task state accepts target_kind encounter, focused runtime tests prove assignment/reuse/resolution behavior, validation passes, and no save-version migration is introduced.",
+      "startedAt": "2026-05-30T12:43:08Z",
+      "updatedAt": "2026-05-30T12:49:30Z",
+      "notes": "Completed. Objective-front encounter targets now persist as strategic AI hero tasks, can be reused by saved-task selection, and complete/invalidate through lifecycle reconciliation.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T12:49:30Z",
+        "sliceId": "strategic-ai-encounter-objective-task-board-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Task-state normalization now accepts target_kind encounter.",
+            "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+            "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+            "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+            "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+            "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-encounter-objective-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
+        }
+      },
+      "completedAt": "2026-05-30T12:49:30Z"
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "strategic-ai-encounter-objective-task-board-10184",
+      "title": "Strategic AI Encounter Objective Task Board",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-30T12:49:30Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_encounter_objective_report.gd",
+        "docs/strategic-ai-encounter-objective-task-board-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T12:49:30Z",
+        "sliceId": "strategic-ai-encounter-objective-task-board-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Task-state normalization now accepts target_kind encounter.",
+            "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+            "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+            "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+            "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+            "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-encounter-objective-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
+        }
+      },
+      "summary": "Completed. Objective-front encounter targets are now first-class durable strategic AI tasks with assignment persistence, saved-task reuse, normalization support, lifecycle invalidation, and task completion on encounter resolution."
+    },
     {
       "id": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
       "title": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",
@@ -35818,6 +35935,28 @@
           "jq empty ops/progress.json",
           "git diff --check"
         ]
+      },
+      {
+        "sliceId": "strategic-ai-encounter-objective-task-board-10184",
+        "updatedAt": "2026-05-30T12:49:30Z",
+        "evidence": {
+          "implemented": [
+            "Task-state normalization now accepts target_kind encounter.",
+            "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+            "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+            "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+            "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+            "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-encounter-objective-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
+        }
       }
     ],
     "native-rmg-generalized-policy-regate-10184": [
@@ -37440,38 +37579,44 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T14:30:00Z",
-    "sliceId": "strategic-ai-task-retask-cancellation-10184",
+    "updatedAt": "2026-05-30T12:49:30Z",
+    "sliceId": "strategic-ai-encounter-objective-task-board-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
-        "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
-        "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
-        "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
-        "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+        "Task-state normalization now accepts target_kind encounter.",
+        "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+        "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+        "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+        "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+        "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-task-retask-cancellation-report.md"
+        "docs/strategic-ai-encounter-objective-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+      "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+      "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T14:30:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T12:49:30Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -40031,13 +40176,51 @@
         "saveVersion": 9,
         "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-30T12:49:30Z",
+      "sliceId": "strategic-ai-encounter-objective-task-board-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Task-state normalization now accepts target_kind encounter.",
+          "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+          "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+          "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+          "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+          "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-encounter-objective-task-board-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+        "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
+      }
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-task-retask-cancellation-10184",
-    "title": "Strategic AI Task Retask Cancellation",
+    "id": "strategic-ai-encounter-objective-task-board-10184",
+    "title": "Strategic AI Encounter Objective Task Board",
     "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after saved-task commander deployment; close stale task-board history when live commanders are redirected",
+    "source": "continuation of owner strategic AI production-readiness goal after task retask cancellation; close the objective-front encounter gap in durable task-board continuity",
     "planRef": "PLAN.md Current strategic AI target",
     "sourceDocs": [
       "PLAN.md",
@@ -40046,79 +40229,91 @@
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
       "scripts/core/EnemyTurnRules.gd",
-      "focused strategic AI retask Godot report",
-      "docs strategic AI task retask cancellation report",
+      "focused strategic AI encounter objective Godot report",
+      "docs strategic AI encounter objective task-board report",
       "tests/validate_repo.py",
       "ops/progress.json"
     ],
-    "completionCriteria": "When a live commander/raid is retasked to a different objective, the previous open task for that actor is preserved as cancelled with an explicit retask validation code and invalidated_by_task_id pointing at the replacement task. Reassigning the same actor to the same objective still replaces/refreshes the active task without false cancellation. Focused runtime tests prove a town-defense retask cancels the old resource task, creates the new defense task, preserves public-event safety, and validation passes without a save-version migration.",
-    "startedAt": "2026-05-30T14:14:00Z",
-    "updatedAt": "2026-05-30T14:30:00Z",
-    "notes": "Completed. Live retasks now cancel the actor previous open task explicitly and town-defense retasks persist as defend_front tasks.",
-    "completedAt": "2026-05-30T14:30:00Z",
+    "completionCriteria": "Objective-front encounter assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable encounter tasks, resolved or missing encounters complete/invalidate through lifecycle reconciliation, normalized task state accepts target_kind encounter, focused runtime tests prove assignment/reuse/resolution behavior, validation passes, and no save-version migration is introduced.",
+    "startedAt": "2026-05-30T12:43:08Z",
+    "updatedAt": "2026-05-30T12:49:30Z",
+    "notes": "Completed. Objective-front encounter targets now persist as strategic AI hero tasks and reconcile through saved-task continuity.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T14:30:00Z",
-      "sliceId": "strategic-ai-task-retask-cancellation-10184",
+      "updatedAt": "2026-05-30T12:49:30Z",
+      "sliceId": "strategic-ai-encounter-objective-task-board-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
-          "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
-          "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
-          "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
-          "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+          "Task-state normalization now accepts target_kind encounter.",
+          "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+          "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+          "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+          "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+          "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-task-retask-cancellation-report.md"
+          "docs/strategic-ai-encounter-objective-task-board-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+        "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+        "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
       }
-    }
+    },
+    "completedAt": "2026-05-30T12:49:30Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T14:30:00Z",
-    "sliceId": "strategic-ai-task-retask-cancellation-10184",
+    "updatedAt": "2026-05-30T12:49:30Z",
+    "sliceId": "strategic-ai-encounter-objective-task-board-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
-        "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
-        "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
-        "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
-        "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+        "Task-state normalization now accepts target_kind encounter.",
+        "Live encounter target assignments now persist into normalized enemy_states[].hero_task_state.",
+        "Saved strategic AI task selection can rebuild encounter plans from live encounter placements and staging tiles.",
+        "Encounter tasks reconcile against live placement state: missing targets invalidate, resolved external targets invalidate, and already-contested-by-faction targets complete.",
+        "Enemy encounter arrival resolution completes matching active encounter tasks when the AI contests or clears the encounter.",
+        "Focused runtime coverage proves Causeway objective-front encounter assignment, saved-task reuse, normalization preservation, missing-target invalidation, and completed task closure after resolution."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-task-retask-cancellation-report.md"
+        "docs/strategic-ai-encounter-objective-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+      "focusedReport": "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+      "residualRisk": "This slice closes objective-front encounter task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, and live-client pacing review."
     }
   }
 }
