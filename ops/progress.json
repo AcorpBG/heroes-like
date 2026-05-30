@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-multi-origin-task-planner-10184",
-  "currentSliceTitle": "Strategic AI Multi-Origin Task Planner",
+  "currentSliceId": "strategic-ai-resource-front-support-10184",
+  "currentSliceTitle": "Strategic AI Resource Front Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Coordinated task-board planning now evaluates all owned towns and configured spawn origins instead of a single faction origin.",
+  "currentSliceNotes": "Completed. Contested resource fronts now use proactive strength checks and active-front support, with fragile hosts regrouping or staging around the original resource objective instead of solo-claiming high-value fronts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T20:04:00Z",
+  "updatedAt": "2026-05-30T20:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-resource-front-support-10184",
+      "title": "Strategic AI Resource Front Support",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / resource-front support behavior",
+      "purpose": "Make contested resource-front commanders use proactive strength checks and active-front support so they regroup, stage, or receive support instead of solo-claiming high-value resource fronts with fragile hosts.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-coordinated-task-planner-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Resource targets participate in active-front support, regrouped resource fronts preserve their original resource objective for support assignment, fragile contested resource claims are proactively regrouped or staged before seizure, and focused strategic AI regressions remain green.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding a broad report-only gate",
+        "running the full 100-seed eight-week generated-map matrix in this slice",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T20:10:00Z",
+      "updatedAt": "2026-05-30T20:28:00Z",
+      "completedAt": "2026-05-30T20:28:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed; resource-front risk case regrouped and produced active-front resource support)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Resource targets now participate in active-front support, regrouped resource fronts preserve their original resource objective for support assignment, and fragile contested resource claims are proactively risk-gated before seizure.",
+      "notes": [
+        "Selected after finding active-front support and proactive risk gating handled towns, encounters, and heroes but not contested resource objectives.",
+        "No production-ready strategic AI claim. Full generated-map matrix coverage, broader retreat/personality tuning, and live-client pacing remain open."
+      ]
+    },
     {
       "id": "strategic-ai-multi-origin-task-planner-10184",
       "title": "Strategic AI Multi-Origin Task Planner",

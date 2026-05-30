@@ -16,6 +16,9 @@ func _run() -> void:
 	var guarded_claim_case := _guarded_resource_claim_retargets_to_guard()
 	if guarded_claim_case.is_empty():
 		return
+	var resource_support_case := _resource_front_risk_requests_support()
+	if resource_support_case.is_empty():
+		return
 	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
 	if unreachable_route_case.is_empty():
 		return
@@ -29,9 +32,10 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_and_failed_regroups_rebuild",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_support_and_failed_regroups_rebuild",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
+		"resource_support_case": resource_support_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
 		"failed_regroup_case": failed_regroup_case,
@@ -238,6 +242,62 @@ func _guarded_resource_claim_retargets_to_guard() -> Dictionary:
 		"claim_event_types": claim_event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
+func _resource_front_risk_requests_support() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	_set_resource_controller(session, "river_free_company", "player")
+	var weak_raid := _fragile_resource_claim_raid(session)
+	if EnemyAdventureRules.raid_regroup_needed(weak_raid):
+		_fail("Resource-front risk fixture should be above the generic regroup floor: %s" % JSON.stringify(weak_raid))
+		return {}
+	var risk_report := EnemyAdventureRules.resource_arrival_ready_report(session, weak_raid, MIRECLAW)
+	if bool(risk_report.get("ready", true)):
+		_fail("Resource-front risk fixture was unexpectedly ready: %s" % JSON.stringify(risk_report))
+		return {}
+	var redirected := EnemyAdventureRules.redirect_resource_objective_for_risk(session, config, weak_raid, MIRECLAW, risk_report)
+	if String(redirected.get("target_kind", "")) != "regroup":
+		_fail("Fragile resource-front raid did not regroup for support: %s" % JSON.stringify(redirected))
+		return {}
+	if String(redirected.get("previous_target_kind", "")) != "resource" or String(redirected.get("previous_target_placement_id", "")) != "river_free_company":
+		_fail("Resource-front regroup did not preserve previous resource target: %s" % JSON.stringify(redirected))
+		return {}
+	var redirected_reason_codes := _string_array(redirected.get("target_reason_codes", []))
+	if "resource_risk_regroup" not in redirected_reason_codes or "site_contested" not in redirected_reason_codes:
+		_fail("Resource-front regroup missed risk/site reason codes: %s" % JSON.stringify(redirected))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(redirected)
+	session.overworld["encounters"] = encounters
+	var support_raid := _regroup_probe_raid(session, "hero_sable", "resource_support_sable_probe", {"x": 8, "y": 1})
+	var support_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(session, config, support_raid)
+	if String(support_plan.get("target_kind", "")) != "resource" or String(support_plan.get("target_placement_id", "")) != "river_free_company":
+		_fail("Active front support did not resolve regrouped resource target: %s" % JSON.stringify(support_plan))
+		return {}
+	var support_reason_codes := _string_array(support_plan.get("target_reason_codes", []))
+	if "active_front_support" not in support_reason_codes or "site_contested" not in support_reason_codes:
+		_fail("Resource-front support plan missed active/support reason codes: %s" % JSON.stringify(support_plan))
+		return {}
+	if String(support_plan.get("supporting_front_placement_id", "")) != "resource_risk_vaska":
+		_fail("Resource-front support plan linked the wrong active front: %s" % JSON.stringify(support_plan))
+		return {}
+	if int(support_plan.get("support_strength_gap", 0)) <= 0:
+		_fail("Resource-front support plan did not expose an open support gap: %s" % JSON.stringify(support_plan))
+		return {}
+	return {
+		"case_id": "resource_front_risk_requests_active_support",
+		"host_strength": int(risk_report.get("host_strength", 0)),
+		"required_strength": int(risk_report.get("required_strength", 0)),
+		"redirect_target_kind": String(redirected.get("target_kind", "")),
+		"redirect_target_id": String(redirected.get("target_placement_id", "")),
+		"previous_target_id": String(redirected.get("previous_target_placement_id", "")),
+		"redirect_reason_codes": redirected_reason_codes,
+		"support_target_kind": String(support_plan.get("target_kind", "")),
+		"support_target_id": String(support_plan.get("target_placement_id", "")),
+		"support_reason_codes": support_reason_codes,
+		"support_strength_gap": int(support_plan.get("support_strength_gap", 0)),
 	}
 
 func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:
@@ -503,6 +563,44 @@ func _guarded_resource_claim_raid(session) -> Dictionary:
 			"id": "guarded_resource_claim_host",
 			"name": "Guarded Claim Host",
 			"stacks": [{"unit_id": "unit_bog_brute", "count": 12}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _fragile_resource_claim_raid(session) -> Dictionary:
+	var raid := {
+		"placement_id": "resource_risk_vaska",
+		"encounter_id": "encounter_mire_raid",
+		"x": 8,
+		"y": 1,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:resource_risk_vaska" % String(session.scenario_id)),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_reason_codes": ["persistent_income_denial", "site_contested"],
+		"target_public_reason": "site denial pressure",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "resource_risk_host",
+			"name": "Fragile Resource Front Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 5}],
 		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
