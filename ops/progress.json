@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-post-regroup-target-resumption-10184. Strategic AI production readiness remains open.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-planned-launch-host-template-lock-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization and full long-run generated-map matrix remain explicit gaps.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:22:14Z",
+  "updatedAt": "2026-05-30T22:33:11Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30477,6 +30477,81 @@
         "If the prior objective no longer exists, is no longer valid, or has no reachable route, regroup falls back to the existing cleared-target behavior instead of looping into an impossible objective.",
         "No save-version bump and no full strategic AI production-readiness claim."
       ]
+    },
+    {
+      "id": "strategic-ai-planned-launch-host-template-lock-10184",
+      "title": "Strategic AI Planned Launch Host Template Lock",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "purpose": "Keep launch-ready planned commander tasks on the same raid host template that recruitment preparation filled, instead of letting raid-counter rotation spawn a different encounter template at launch time.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Ready planned-task launch reports expose the prepared base encounter id, spawn-point candidates carry it, spawned raids use that locked host template even when raid_counter rotation would pick another template, and focused strategic-AI regressions pass.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding a broad report-only gate",
+        "changing combat balance",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T22:26:33Z",
+      "updatedAt": "2026-05-30T22:33:11Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Ready planned-task launch now preserves the prepared host template: rotation would select encounter_blackbranch_reavers, but the spawned prepared raid uses locked encounter_mire_raid."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "pass",
+          "summary": "Saved-task commander and spawn-point selection remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live task execution still completes resource-front objectives and commander progress."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid before final tracker update."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors before final tracker update."
+        }
+      ],
+      "completedAt": "2026-05-30T22:33:11Z",
+      "summary": "Completed. Launch-ready planned commander tasks now carry the prepared base encounter id through readiness, spawn-point scoring, and raid creation so raid-counter rotation cannot swap the host template at launch.",
+      "notes": [
+        "This is a live behavior correction in the planned-task launch path, not a broad production-readiness claim.",
+        "The rerun of strategic_ai_baseline_kpi_report.tscn hung beyond its --quit-after 120 window and was killed; an earlier same-turn baseline run still reported production_ready=false with Medium RMG generalization and full 100-seed matrix as remaining gaps."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -40865,21 +40940,20 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T22:22:14Z",
-    "sliceId": "strategic-ai-post-regroup-target-resumption-10184",
+    "updatedAt": "2026-05-30T22:33:11Z",
+    "sliceId": "strategic-ai-planned-launch-host-template-lock-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
       "python3 tests/validate_repo.py (pass)",
       "jq empty ops/progress.json (pass)",
       "git diff --check (pass)"
     ],
-    "summary": "Post-regroup target resumption implementation and focused strategic-AI regressions passed."
+    "summary": "Planned launch host-template lock and focused strategic-AI regressions passed; broad KPI rerun was killed after hanging beyond --quit-after."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-30T22:22:14Z",
+  "currentSliceUpdatedAt": "2026-05-30T22:33:11Z",
   "validationHistory": [
     {
       "status": "pass",
