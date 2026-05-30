@@ -19,9 +19,9 @@ func _run() -> void:
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_target_selection_no_save",
+		"schema_status": "live_target_selection_persists_task_board",
 		"behavior_policy": "commander_candidate_tasks_drive_new_raid_targets",
-		"save_policy": "no_hero_task_state_write_no_save_migration",
+		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"cases": [primary_case, companion_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -40,7 +40,7 @@ func _river_pass_primary_target_case() -> Dictionary:
 	_assert_target(live_plan, "river_free_company", "primary live plan")
 	var assigned := EnemyAdventureRules.assign_target(session, config, raid)
 	_assert_target(assigned, "river_free_company", "assigned raid")
-	_assert_no_saved_task_state(session)
+	_assert_saved_task_state(session, "hero_vaska", "river_free_company")
 	var event := EnemyAdventureRules.ai_target_assignment_event(session, config, assigned, {})
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report([event], 1)
 	if not bool(public_log.get("ok", false)):
@@ -64,7 +64,7 @@ func _river_pass_companion_reservation_case() -> Dictionary:
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_resource_controller(session, "river_signal_post", "player")
 	var vaska := _raid_seed(session, config, "hero_vaska", "live_target_vaska_active", {"x": 1, "y": 4})
-	vaska.merge(EnemyAdventureRules.ai_hero_task_live_target_selection_plan(session, config, vaska), true)
+	vaska = EnemyAdventureRules.assign_target(session, config, vaska)
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(vaska)
 	session.overworld["encounters"] = encounters
@@ -74,7 +74,8 @@ func _river_pass_companion_reservation_case() -> Dictionary:
 	_assert_target(live_plan, "river_signal_post", "companion live plan")
 	var assigned := EnemyAdventureRules.assign_target(session, config, sable)
 	_assert_target(assigned, "river_signal_post", "companion assigned raid")
-	_assert_no_saved_task_state(session)
+	_assert_saved_task_state(session, "hero_vaska", "river_free_company")
+	_assert_saved_task_state(session, "hero_sable", "river_signal_post")
 	return {
 		"case_id": "river_pass_sable_respects_free_company_reservation",
 		"reserved_target_id": String(vaska.get("target_placement_id", "")),
@@ -146,11 +147,21 @@ func _assert_target(plan: Dictionary, expected_target_id: String, label: String)
 	if String(plan.get("target_kind", "")) != "resource" or String(plan.get("target_placement_id", "")) != expected_target_id:
 		_fail("%s expected resource %s, got %s" % [label, expected_target_id, JSON.stringify(plan)])
 
-func _assert_no_saved_task_state(session) -> void:
+func _assert_saved_task_state(session, actor_id: String, target_id: String) -> void:
 	for state in session.overworld.get("enemy_states", []):
-		if state is Dictionary and state.has("hero_task_state"):
-			_fail("Live target selection wrote forbidden hero_task_state: %s" % JSON.stringify(state.get("hero_task_state", {})))
-			return
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != MIRECLAW:
+			continue
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		for task_value in tasks:
+			if task_value is Dictionary \
+					and String(task_value.get("actor_id", "")) == actor_id \
+					and String(task_value.get("target_id", "")) == target_id \
+					and String(task_value.get("task_status", "")) in ["planned", "reserved", "active", "completed"]:
+				return
+		_fail("Live target selection did not persist task %s -> %s: %s" % [actor_id, target_id, JSON.stringify(task_state)])
+		return
+	_fail("Live target selection could not find Mireclaw enemy task state.")
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}

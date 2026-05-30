@@ -16,9 +16,9 @@ func _run() -> void:
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_target_selection_turn_execution_no_save",
-		"behavior_policy": "run_enemy_turn_executes_live_commander_resource_targets",
-		"save_policy": "no_hero_task_state_write_no_save_migration",
+		"schema_status": "live_target_selection_turn_execution_persists_task_board",
+		"behavior_policy": "run_enemy_turn_executes_and_completes_live_commander_resource_tasks",
+		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -67,7 +67,13 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	_assert_event(result.get("events", []), "ai_site_seized", "river_signal_post")
 	if _failed:
 		return {}
-	_assert_no_saved_task_state(session)
+	var task_board := _assert_live_task_board(session)
+	if _failed:
+		return {}
+	EnemyTurnRules.normalize_enemy_states(session)
+	var normalized_task_board := _assert_live_task_board(session)
+	if _failed:
+		return {}
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
 	if not bool(public_log.get("ok", false)):
 		_fail("Live turn public event boundary failed: %s" % JSON.stringify(public_log))
@@ -86,6 +92,8 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		"sable_arrived": bool(sable.get("arrived", false)),
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"task_board": task_board,
+		"normalized_task_board": normalized_task_board,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -205,11 +213,61 @@ func _event_types(events: Variant) -> Array:
 	types.sort()
 	return types
 
-func _assert_no_saved_task_state(session) -> void:
+func _assert_live_task_board(session) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):
-		if state is Dictionary and state.has("hero_task_state"):
-			_fail("Live turn execution wrote forbidden hero_task_state: %s" % JSON.stringify(state.get("hero_task_state", {})))
-			return
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != MIRECLAW:
+			continue
+		if not state.has("hero_task_state"):
+			_fail("Live turn execution did not persist hero_task_state.")
+			return {}
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		var completed := {}
+		var active_count := 0
+		for task_value in tasks:
+			if not (task_value is Dictionary):
+				continue
+			var task: Dictionary = task_value
+			if _task_record_leaks(task):
+				return {}
+			if String(task.get("task_status", "")) == "active":
+				active_count += 1
+			if String(task.get("task_status", "")) == "completed":
+				completed[String(task.get("actor_id", ""))] = String(task.get("target_id", ""))
+		if String(completed.get("hero_vaska", "")) != "river_free_company":
+			_fail("Vaska's completed live task was not persisted: %s" % JSON.stringify(task_state))
+			return {}
+		if String(completed.get("hero_sable", "")) != "river_signal_post":
+			_fail("Sable's completed live task was not persisted: %s" % JSON.stringify(task_state))
+			return {}
+		return {
+			"schema_version": int(task_state.get("schema_version", 0)),
+			"planner_epoch": int(task_state.get("planner_epoch", 0)),
+			"task_count": tasks.size(),
+			"active_task_count": active_count,
+			"completed_tasks": completed,
+		}
+	_fail("Could not find Mireclaw enemy state for live task board inspection.")
+	return {}
+
+func _task_record_leaks(task: Dictionary) -> bool:
+	var forbidden_tokens := [
+		"actor_label",
+		"target_label",
+		"target_x",
+		"target_y",
+		"target_score",
+		"target_debug_reason",
+		"resource_score_breakdown",
+		"final_priority",
+		"actor_active_placement_id",
+		"last_seen_day",
+	]
+	for token in forbidden_tokens:
+		if task.has(token):
+			_fail("Persisted live task kept report-only field %s: %s" % [token, JSON.stringify(task)])
+			return true
+	return false
 
 func _public_event_leaks(public_events: Variant) -> bool:
 	if not (public_events is Array):

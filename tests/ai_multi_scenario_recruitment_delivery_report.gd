@@ -49,7 +49,7 @@ func _assert_case(simulation_case: Dictionary) -> void:
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
 	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
 		_error("Event type coverage missing recruitment/reinforcement events: %s" % [event_types])
-	if String(evidence.get("save_policy", "")) != "no_hero_task_state_write_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
 		_error("Save policy changed: %s" % evidence)
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():

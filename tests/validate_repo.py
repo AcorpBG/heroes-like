@@ -14658,13 +14658,14 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
         report_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
-            "run_enemy_turn_executes_live_commander_resource_targets",
+            "run_enemy_turn_executes_and_completes_live_commander_resource_tasks",
             "river_pass_live_target_turn_seizes_reserved_resource_fronts",
             "river_free_company",
             "river_signal_post",
             "ai_target_assigned",
             "ai_site_seized",
-            "no_hero_task_state_write_no_save_migration",
+            "hero_task_state_live_persist_no_save_migration",
+            "live_target_selection_turn_execution_persists_task_board",
             "resource_score_breakdown",
             "reservation_key",
             "save_version_before",
@@ -14678,7 +14679,7 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
             "implementation evidence",
             "run_enemy_turn",
             "river_pass_live_target_turn_seizes_reserved_resource_fronts",
-            "No persistent task board",
+            "hero_task_state",
             "No save migration",
             "Public event output",
         ):
@@ -14861,7 +14862,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "raid_target_id_after",
         "strategic_ai_recruitment_coverage_scenario_ids",
         "public_event_leak_tokens",
-        "no_hero_task_state_write_no_save_migration",
+        "hero_task_state_live_persist_no_save_migration",
         "EnemyTurnRules.run_enemy_turn(session)",
         "OverworldRules.end_turn(session)",
         "BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report",
@@ -14959,7 +14960,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "site_seizure_event_count",
         "reserved_unique_targets",
         "public_event_leak_tokens",
-        "no_hero_task_state_write_no_save_migration",
+        "hero_task_state_live_persist_no_save_migration",
         "battle_autoplay_difficulty_sweep_v1",
         "report_only_launch_difficulty_balance_probe",
         "no_observed_effect",
@@ -15065,7 +15066,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "raid_reinforcement_event_count",
             "ai_town_recruited",
             "ai_raid_reinforced",
-            "no_hero_task_state_write_no_save_migration",
+            "hero_task_state_live_persist_no_save_migration",
         ):
             ensure(required_token in multi_recruitment_text, errors, f"Strategic AI multi-scenario recruitment report is missing token: {required_token}")
     if AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_DOC_PATH.exists():
@@ -15192,7 +15193,7 @@ def validate_ai_town_defense_retask(errors: list[str]) -> None:
             "town_defense",
             "front_stabilization",
             "ai_target_assigned",
-            "no_hero_task_state_write_no_save_migration",
+            "hero_task_state_live_persist_no_save_migration",
             "save_version_before",
             "save_version_after",
         ):
@@ -15235,7 +15236,7 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         "battle_context_type",
         "battle_town_id",
         "town_defense",
-        "no_hero_task_state_write_no_save_migration",
+        "hero_task_state_live_persist_no_save_migration",
     ):
         ensure(required_token in harness_text, errors, f"Headless harness is missing town retake assault token: {required_token}")
     if AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH.exists():
@@ -15250,7 +15251,7 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
             "EnemyAdventureRules.ai_live_town_retake_target_selection_plan",
             "live_selector_target_id",
             "EnemyTurnRules.run_enemy_turn",
-            "no_hero_task_state_write_no_save_migration",
+            "hero_task_state_live_persist_no_save_migration",
             "save_version_before",
             "save_version_after",
         ):
@@ -15297,7 +15298,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         "active_after",
         "leader_strength_after",
         "support_strength_before",
-        "no_hero_task_state_write_no_save_migration",
+        "hero_task_state_live_persist_no_save_migration",
     ):
         ensure(required_token in harness_text, errors, f"Headless harness is missing raid assault grouping token: {required_token}")
     if AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH.exists():
@@ -15311,7 +15312,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "ai_raid_grouped",
             "commanderless_support_column",
             "EnemyTurnRules.run_enemy_turn",
-            "no_hero_task_state_write_no_save_migration",
+            "hero_task_state_live_persist_no_save_migration",
             "save_version_before",
             "save_version_after",
         ):

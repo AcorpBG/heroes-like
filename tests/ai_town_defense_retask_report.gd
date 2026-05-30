@@ -18,7 +18,7 @@ func _run() -> void:
 		"report_id": REPORT_ID,
 		"schema_status": "live_town_defense_retask_no_save_migration",
 		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts",
-		"save_policy": "no_hero_task_state_write_no_save_migration",
+		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -74,7 +74,7 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		return {}
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
-	_assert_no_saved_task_state(session)
+	_assert_saved_task_state(session)
 	if _failed:
 		return {}
 	return {
@@ -243,11 +243,11 @@ func _string_array(value: Variant) -> Array:
 			output.append(text)
 	return output
 
-func _assert_no_saved_task_state(session) -> void:
+func _assert_saved_task_state(session) -> void:
 	for state in session.overworld.get("enemy_states", []):
-		if state is Dictionary and state.has("hero_task_state"):
-			_fail("Defense retask wrote forbidden hero_task_state.")
+		if state is Dictionary and String(state.get("faction_id", "")) == MIRECLAW and state.has("hero_task_state"):
 			return
+	_fail("Defense retask did not persist hero_task_state.")
 
 func _public_event_leaks(public_events: Variant) -> bool:
 	var forbidden_tokens := ["target_debug_reason", "hero_task_state", "task_id", "reservation_key", "garrison_score", "raid_score"]

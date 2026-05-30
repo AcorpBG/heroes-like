@@ -141,7 +141,7 @@ Validation evidence:
 - `_town_controller_faction_id`
 - `target_assignment_event_count >= 2`
 - `site_seizure_event_count >= 2`
-- `save_policy = no_hero_task_state_write_no_save_migration`
+- `save_policy = hero_task_state_live_persist_no_save_migration`
 
 Remaining gaps:
 - This is a deterministic harness fixture for one strategic AI behavior, not a full AI quality claim.
