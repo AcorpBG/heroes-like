@@ -6,6 +6,7 @@ Follow-up slice: `strategic-ai-hero-intercept-risk-gating-10184`
 Follow-up slice: `strategic-ai-hero-hunt-support-grouping-10184`
 Follow-up slice: `strategic-ai-risk-stall-withdrawal-10184`
 Follow-up slice: `strategic-ai-battle-task-outcome-lifecycle-10184`
+Follow-up slice: `strategic-ai-threat-arbitration-10184`
 
 ## Purpose
 
@@ -26,6 +27,7 @@ Make exposed player-hero hunt targets durable strategic AI tasks instead of tran
 - Risk-gated hero-hunt fronts now have a terminal preservation decision: if no regroup town exists, no support is committed, and the commander has waited past the support timeout, the active raid withdraws into commander rebuild instead of looping forever as `awaiting_support`.
 - The follow-up report case `stale_unsupported_hero_hunt_retires_to_rebuild` proves a stale unsupported hunter does not start `hero_intercept`, emits `ai_target_assigned`, resolves the active raid, marks `risk_support_timeout`, suspends the hero task as `invalid_actor_rebuilding`, and preserves commander army continuity for rebuild.
 - The follow-up report case `hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome` proves battle queueing does not mark a hunt successful, and the task only transitions after the resolved combat outcome.
+- The follow-up report case `hero_intercept_arbitration_prefers_ready_high_value_hunt` proves competing live hero hunts are selected by readiness and strategic value instead of nearest-only ordering. A weak nearby decoy hunt no longer consumes the battle queue ahead of a ready high-value intercept.
 
 Focused runtime report:
 
@@ -41,4 +43,4 @@ No save migration is introduced. Existing saves without `hero_task_state` still 
 
 ## Residual risk
 
-This closes hero-hunt task-board continuity, intercept risk gating, same-front support grouping, stale unsupported hero-hunt withdrawal, and battle-outcome task lifecycle for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, broader retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.
+This closes hero-hunt task-board continuity, intercept risk gating, same-front support grouping, stale unsupported hero-hunt withdrawal, battle-outcome task lifecycle, and ready/high-value intercept arbitration for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, broader retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.

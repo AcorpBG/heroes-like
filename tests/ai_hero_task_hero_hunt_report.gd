@@ -17,6 +17,9 @@ func _run() -> void:
 	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
 	if risk_case_report.is_empty():
 		return
+	var arbitration_case_report := _hero_intercept_arbitration_prefers_ready_high_value_hunt()
+	if arbitration_case_report.is_empty():
+		return
 	var support_case_report := _hero_hunt_support_groups_before_intercept_case()
 	if support_case_report.is_empty():
 		return
@@ -33,6 +36,7 @@ func _run() -> void:
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
+		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
 		"stall_case": stall_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
@@ -214,6 +218,70 @@ func _weak_hero_hunt_regroups_before_intercept_case() -> Dictionary:
 		"reason_codes": reason_codes,
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _hero_intercept_arbitration_prefers_ready_high_value_hunt() -> Dictionary:
+	var session = _base_session()
+	session.day = 3
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for arbitration fixture.")
+		return {}
+	var high_value_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var decoy_tile := _nearest_open_non_town_tile_excluding(session, Vector2i(high_value_tile.x + 1, high_value_tile.y), high_value_tile)
+	_move_player_hero(session, hero_id, high_value_tile)
+	_add_player_hero_decoy(session, "hero_decoy_arbitration", "Decoy Captain", decoy_tile)
+	_remove_mireclaw_hero_hunt_encounters(session)
+
+	var weak_near := _raid_seed(session, "hero_vaska", "near_weak_decoy_vaska", decoy_tile)
+	weak_near["target_kind"] = "hero"
+	weak_near["target_placement_id"] = "hero_decoy_arbitration"
+	weak_near["target_label"] = "Decoy Captain"
+	weak_near["target_x"] = decoy_tile.x
+	weak_near["target_y"] = decoy_tile.y
+	weak_near["goal_x"] = decoy_tile.x
+	weak_near["goal_y"] = decoy_tile.y
+	weak_near["goal_distance"] = 0
+	weak_near["arrived"] = true
+	weak_near["target_reason_codes"] = ["hero_hunt", "near_decoy_probe"]
+	weak_near["target_public_reason"] = "exposed hero"
+	weak_near = _set_raid_bog_brutes(weak_near, 1)
+
+	var ready_hunt := _raid_seed(session, "hero_sable", "ready_high_value_hero_sable", high_value_tile)
+	ready_hunt["target_kind"] = "hero"
+	ready_hunt["target_placement_id"] = hero_id
+	ready_hunt["target_label"] = _hero_name(session, hero_id)
+	ready_hunt["target_x"] = high_value_tile.x
+	ready_hunt["target_y"] = high_value_tile.y
+	ready_hunt["goal_x"] = high_value_tile.x
+	ready_hunt["goal_y"] = high_value_tile.y
+	ready_hunt["goal_distance"] = 1
+	ready_hunt["arrived"] = true
+	ready_hunt["target_reason_codes"] = ["hero_hunt", "exposed_hero", "high_value_commander"]
+	ready_hunt["target_public_reason"] = "exposed hero"
+	ready_hunt = _set_raid_bog_brutes(ready_hunt, 14)
+
+	_append_encounter(session, weak_near)
+	_append_encounter(session, ready_hunt)
+	var intercept_result := EnemyTurnRules._queue_hero_intercept_battle(session, config, MIRECLAW)
+	if not bool(intercept_result.get("battle_started", false)):
+		_fail("Hero intercept arbitration should have queued the ready high-value hunt: %s" % JSON.stringify(intercept_result))
+		return {}
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(battle_context.get("target_hero_id", "")) != hero_id:
+		_fail("Hero intercept arbitration chose wrong hero: %s" % JSON.stringify(battle_context))
+		return {}
+	if String(session.battle.get("resolved_key", "")) != "ready_high_value_hero_sable":
+		_fail("Hero intercept arbitration chose wrong raid: %s" % JSON.stringify(session.battle))
+		return {}
+	return {
+		"case_id": "hero_intercept_arbitration_prefers_ready_high_value_hunt",
+		"selected_raid_id": String(session.battle.get("resolved_key", "")),
+		"selected_hero_id": String(battle_context.get("target_hero_id", "")),
+		"near_decoy_id": "near_weak_decoy_vaska",
+		"battle_started": true,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -553,6 +621,22 @@ func _move_player_hero(session, hero_id: String, tile: Vector2i) -> void:
 			session.overworld["army"] = hero.get("army", {}).duplicate(true) if hero.get("army", {}) is Dictionary else {}
 		return
 	_fail("Could not move player hero %s." % hero_id)
+
+func _add_player_hero_decoy(session, hero_id: String, hero_name: String, tile: Vector2i) -> void:
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	var active_hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	var decoy := active_hero.duplicate(true)
+	decoy["id"] = hero_id
+	decoy["name"] = hero_name
+	decoy["is_primary"] = false
+	decoy["position"] = {"x": tile.x, "y": tile.y}
+	decoy["army"] = {
+		"id": "%s_army" % hero_id,
+		"name": "%s Guard" % hero_name,
+		"stacks": [{"unit_id": "unit_ember_squire", "count": 30}],
+	}
+	heroes.append(decoy)
+	session.overworld["player_heroes"] = heroes
 
 func _hero_name(session, hero_id: String) -> String:
 	for hero in session.overworld.get("player_heroes", []):

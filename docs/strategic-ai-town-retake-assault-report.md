@@ -5,6 +5,7 @@ Status: implementation evidence.
 Slice: `strategic-ai-live-town-retake-assault-harness-20260523-10184`.
 Follow-up slice: `strategic-ai-town-assault-risk-gating-10184`.
 Related follow-up slice: `strategic-ai-proactive-risk-regroup-10184`.
+Related follow-up slice: `strategic-ai-threat-arbitration-10184`.
 
 This slice adds focused live evidence for the enemy town-retake path. A player-captured Duskfen Bastion retake front is seeded in River Pass, a no-target Mireclaw raid starts at battle range, and the normal enemy turn must assign Duskfen through strategic target selection and queue a real `town_defense` battle.
 
@@ -18,6 +19,7 @@ Implemented evidence:
 - The follow-up risk-gating fixture proves `weak_retake_front_stages_before_town_battle`: an underpowered Mireclaw retake host reaches Duskfen but does not queue `town_defense`.
 - Weak assault hosts record `assault_risk_regroup` when a regroup town exists or `assault_risk_staging` when they must stage briefly for support, while keeping public output to player-readable "staging stronger assault" language.
 - The proactive risk fixture proves `weak_retake_front_regroups_before_marching`: a host that is deployable before target assignment but too weak for the selected Duskfen retake does not march into the town. It preserves the risky town as previous-target metadata, retargets to the nearby regroup redoubt, and moves toward that regroup point instead.
+- The threat arbitration fixture proves `town_assault_arbitration_prefers_ready_strategic_target`: when competing live town assaults are both in battle range, the AI chooses the ready strategic Duskfen retake instead of letting a weak nearer probe consume the battle queue.
 
 Boundaries:
 - No save migration.
