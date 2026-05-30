@@ -17,14 +17,18 @@ func _run() -> void:
 	var risk_case_report := _weak_encounter_objective_regroups_before_clear_case()
 	if risk_case_report.is_empty():
 		return
+	var support_case_report := _active_front_supports_and_groups_for_encounter_case()
+	if support_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "encounter_objective_tasks_are_durable",
-		"behavior_policy": "objective_front_encounters_use_saved_task_continuity_and_arrival_risk_gating",
+		"behavior_policy": "objective_front_encounters_use_saved_task_continuity_arrival_risk_gating_and_active_front_support",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
+		"support_case": support_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -183,6 +187,91 @@ func _weak_encounter_objective_regroups_before_clear_case() -> Dictionary:
 		"encounter_arrival_delay_until_day": int(after_raid.get("encounter_arrival_delay_until_day", 0)),
 		"target_public_reason": String(after_raid.get("target_public_reason", "")),
 		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var encounter := _encounter(session, OBJECTIVE_ENCOUNTER_ID)
+	if encounter.is_empty():
+		return {}
+	var staging_tile := _first_encounter_staging_tile(session, encounter)
+	var support_tile := staging_tile + Vector2i(1, 0)
+	var leader := _raid_seed(session, "hero_vaska", "encounter_support_leader_vaska", {"x": staging_tile.x, "y": staging_tile.y})
+	leader["target_kind"] = "encounter"
+	leader["target_placement_id"] = OBJECTIVE_ENCOUNTER_ID
+	leader["target_label"] = _encounter_label(encounter)
+	leader["target_x"] = int(encounter.get("x", 0))
+	leader["target_y"] = int(encounter.get("y", 0))
+	leader["goal_x"] = staging_tile.x
+	leader["goal_y"] = staging_tile.y
+	leader["goal_distance"] = 0
+	leader["arrived"] = false
+	leader["target_reason_codes"] = ["site_contested", "objective_front", "awaiting_support"]
+	leader["target_public_reason"] = "objective front"
+	leader["target_public_importance"] = "high"
+	leader["target_debug_reason"] = "active front support fixture leader"
+	leader = _set_raid_bog_brutes(leader, 7)
+	_remove_mireclaw_encounters(session)
+	_append_encounter(session, leader)
+
+	var support := _raid_seed(session, "hero_sable", "encounter_support_sable", {"x": support_tile.x, "y": support_tile.y})
+	support = _set_raid_bog_brutes(support, 3)
+	var assigned_support := EnemyAdventureRules.assign_target(session, config, support)
+	if String(assigned_support.get("target_kind", "")) != "encounter" or String(assigned_support.get("target_placement_id", "")) != OBJECTIVE_ENCOUNTER_ID:
+		_fail("Active-front support assignment did not reinforce the encounter front: %s" % JSON.stringify(assigned_support))
+		return {}
+	var support_reason_codes := _string_array(assigned_support.get("target_reason_codes", []))
+	if "active_front_support" not in support_reason_codes or "army_consolidation" not in support_reason_codes:
+		_fail("Active-front support assignment missed support reason codes: %s" % JSON.stringify(assigned_support))
+		return {}
+	if String(assigned_support.get("supporting_front_placement_id", "")) != "encounter_support_leader_vaska":
+		_fail("Active-front support assignment did not remember the supported leader: %s" % JSON.stringify(assigned_support))
+		return {}
+	_append_encounter(session, assigned_support)
+	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
+	var support_strength_before := EnemyAdventureRules.raid_strength(assigned_support)
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	var after_leader := _encounter(session, "encounter_support_leader_vaska")
+	if after_leader.is_empty():
+		_fail("Encounter support leader disappeared after grouping.")
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "encounter_support_sable" not in resolved:
+		_fail("Encounter support raid was not removed from active pressure after grouping: %s" % JSON.stringify(resolved))
+		return {}
+	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
+	if leader_strength_after < leader_strength_before + support_strength_before:
+		_fail("Encounter leader did not absorb support strength: before %d support %d after %d" % [leader_strength_before, support_strength_before, leader_strength_after])
+		return {}
+	if int(after_leader.get("grouped_commander_support_count", 0)) < 1:
+		_fail("Encounter commander-led support was not counted on the grouped front: %s" % JSON.stringify(after_leader))
+		return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_raid_grouped" not in event_types:
+		_fail("Encounter active-front support did not emit ai_raid_grouped: %s" % JSON.stringify(advance_result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(advance_result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Encounter active-front support public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	return {
+		"case_id": "active_front_support_groups_for_encounter_objective",
+		"leader_id": "encounter_support_leader_vaska",
+		"support_id": "encounter_support_sable",
+		"target_id": OBJECTIVE_ENCOUNTER_ID,
+		"support_assignment_reason_codes": support_reason_codes,
+		"supporting_front_placement_id": String(assigned_support.get("supporting_front_placement_id", "")),
+		"leader_strength_before": leader_strength_before,
+		"support_strength_before": support_strength_before,
+		"leader_strength_after": leader_strength_after,
+		"grouped_commander_support_count": int(after_leader.get("grouped_commander_support_count", 0)),
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
