@@ -63,8 +63,8 @@ func _assert_report(report: Dictionary) -> bool:
 	if blocker_rows.is_empty():
 		_fail("Strategic AI baseline must identify production blockers.")
 		return false
-	if _blocker_row(blocker_rows, "no_persistent_full_hero_task_board").is_empty():
-		_fail("Strategic AI baseline missed the persistent hero task-board production gap.")
+	if not _blocker_row(blocker_rows, "no_persistent_full_hero_task_board").is_empty():
+		_fail("Strategic AI baseline should not keep the persistent hero task-board blocker after coordinated task planning landed.")
 		return false
 	if _blocker_row(blocker_rows, "no_long_run_seed_matrix").is_empty():
 		_fail("Strategic AI baseline missed the long-run seed matrix production gap.")
@@ -73,8 +73,8 @@ func _assert_report(report: Dictionary) -> bool:
 		_fail("Strategic AI baseline missed generated-map AI turn-health coverage.")
 		return false
 	var recommendations: Array = report.get("recommended_next_slices", []) if report.get("recommended_next_slices", []) is Array else []
-	if "strategic-ai-persistent-hero-task-board-10184" not in recommendations:
-		_fail("Strategic AI baseline did not recommend the persistent hero task-board slice: %s" % JSON.stringify(recommendations))
+	if "strategic-ai-long-run-seed-matrix-10184" not in recommendations:
+		_fail("Strategic AI baseline did not recommend the long-run seed-matrix slice: %s" % JSON.stringify(recommendations))
 		return false
 	var audit_policy: Dictionary = report.get("audit_policy", {}) if report.get("audit_policy", {}) is Dictionary else {}
 	for forbidden_true in ["manual_play_replacement", "automatic_tuning", "runtime_balance_changes", "authored_content_writeback", "campaign_adoption", "production_ready_claim"]:

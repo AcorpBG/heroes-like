@@ -15509,6 +15509,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "authored_scenario_balance_surface",
         "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
         "target_assignment_count",
+        "commander_task_planned_count",
+        "task_board_open_count",
+        "task_board_active_count",
         "startup_source",
         "native_rmg_disk_package",
     ):
@@ -15520,7 +15523,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "`strategic-ai-long-run-seed-matrix-10184`",
             "Native RMG generated-map strategic AI seed-matrix runner",
             "startup_source = native_rmg_disk_package",
-            "target_assignment_count = 2",
+            "`target_assignment_count` tracks active raid target assignment events",
+            "`commander_task_planned_count` tracks coordinated planner events",
+            "`task_board_open_count` and `task_board_active_count` track durable planned/active work",
             "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
             "No production-ready claim",
         ):

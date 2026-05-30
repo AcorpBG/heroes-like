@@ -814,11 +814,6 @@ static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, c
 			"summary": "Medium generated-map strategic AI turn health is not broadly proven.",
 		})
 	rows.append({
-		"blocker_id": "no_persistent_full_hero_task_board",
-		"severity": "production_gap",
-		"summary": "Current AI evidence still relies on commander/raid fixtures rather than a durable full hero task board.",
-	})
-	rows.append({
 		"blocker_id": "no_long_run_seed_matrix",
 		"severity": "production_gap",
 		"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
@@ -836,8 +831,6 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 	var slices := []
 	if has_small_bug:
 		slices.append("strategic-ai-rmg-small-turn-health-fix-10184")
-	else:
-		slices.append("strategic-ai-persistent-hero-task-board-10184")
 	if has_medium_gap:
 		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
 	slices.append("strategic-ai-long-run-seed-matrix-10184")
@@ -1032,6 +1025,8 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var total_stalled_turns := 0
 	var event_counts := {}
 	var terminal_status_counts := {}
+	var task_board_open_count := 0
+	var task_board_active_count := 0
 	for row_value in rows:
 		if not (row_value is Dictionary):
 			continue
@@ -1053,6 +1048,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		var status := String(row.get("final_scenario_status", ""))
 		if status != "":
 			terminal_status_counts[status] = int(terminal_status_counts.get(status, 0)) + 1
+		var final_task_summary: Dictionary = row.get("final_task_summary", {}) if row.get("final_task_summary", {}) is Dictionary else {}
+		task_board_open_count += int(final_task_summary.get("open_count", 0))
+		task_board_active_count += int(final_task_summary.get("active_count", 0))
 	var requested_turn_total: int = max(1, requested_seed_count * requested_turn_count)
 	return {
 		"row_count": rows.size(),
@@ -1071,6 +1069,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"event_counts": event_counts,
 		"terminal_status_counts": terminal_status_counts,
 		"target_assignment_count": int(event_counts.get("ai_target_assigned", 0)),
+		"commander_task_planned_count": int(event_counts.get("ai_commander_task_planned", 0)),
+		"task_board_open_count": task_board_open_count,
+		"task_board_active_count": task_board_active_count,
 		"site_seized_count": int(event_counts.get("ai_site_seized", 0)),
 		"town_battle_queued_count": int(event_counts.get("ai_town_assault_battle_queued", 0)) + int(event_counts.get("ai_town_defense_battle_queued", 0)),
 	}
@@ -1085,7 +1086,11 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 		rows.append({"blocker_id": "strategic_ai_long_run_no_turns", "severity": "bug", "summary": "The long-run matrix completed no generated-map turns."})
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_no_enemy_activity", "severity": "production_gap", "summary": "Generated-map AI turns completed without observable enemy activity."})
-	if int(summary.get("target_assignment_count", 0)) <= 0:
+	var target_planning_count := int(summary.get("target_assignment_count", 0)) \
+		+ int(summary.get("commander_task_planned_count", 0)) \
+		+ int(summary.get("task_board_open_count", 0)) \
+		+ int(summary.get("task_board_active_count", 0))
+	if target_planning_count <= 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_no_target_assignment", "severity": "production_gap", "summary": "Generated-map AI did not assign strategic targets during the matrix."})
 	if int(summary.get("stalled_turn_pct", 0)) > 75:
 		rows.append({"blocker_id": "strategic_ai_long_run_excess_idle_turns", "severity": "production_gap", "summary": "Most generated-map AI turns produced no observable activity."})
@@ -1130,16 +1135,18 @@ static func _strategic_ai_task_summary(session: SessionStateStoreScript.SessionD
 			if not (task is Dictionary):
 				continue
 			summary["task_count"] = int(summary.get("task_count", 0)) + 1
-			var status := String(task.get("status", ""))
-			if status == "open":
+			var status := String(task.get("task_status", task.get("status", "")))
+			if status == "open" or status == "planned":
 				summary["open_count"] = int(summary.get("open_count", 0)) + 1
+			elif status == "active":
+				summary["active_count"] = int(summary.get("active_count", 0)) + 1
 			elif status == "completed":
 				summary["completed_count"] = int(summary.get("completed_count", 0)) + 1
 			elif status == "cancelled":
 				summary["cancelled_count"] = int(summary.get("cancelled_count", 0)) + 1
 			elif status == "suspended":
 				summary["suspended_count"] = int(summary.get("suspended_count", 0)) + 1
-			elif status == "invalidated":
+			elif status == "invalidated" or status == "invalid":
 				summary["invalidated_count"] = int(summary.get("invalidated_count", 0)) + 1
 	return summary
 
