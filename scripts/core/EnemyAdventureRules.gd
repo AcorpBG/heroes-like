@@ -3316,6 +3316,7 @@ static func normalize_all_commander_rosters(session: SessionStateStoreScript.Ses
 	if session == null:
 		return
 	_normalize_town_defender_commander_states(session)
+	_normalize_resource_defender_commander_states(session)
 	var states = session.overworld.get("enemy_states", [])
 	if not (states is Array):
 		return
@@ -4584,6 +4585,17 @@ static func _active_commander_map(
 		if defender_roster_hero_id == "":
 			continue
 		active[defender_roster_hero_id] = defender_entry
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary):
+			continue
+		var defender_entry := _active_resource_defender_entry(session, node, faction_id)
+		if defender_entry.is_empty():
+			continue
+		var defender_state: Dictionary = defender_entry.get("commander_state", {})
+		var defender_roster_hero_id := String(defender_state.get("roster_hero_id", ""))
+		if defender_roster_hero_id == "":
+			continue
+		active[defender_roster_hero_id] = defender_entry
 	return active
 
 static func _normalize_town_defender_commander_states(session: SessionStateStoreScript.SessionData) -> void:
@@ -4665,6 +4677,83 @@ static func _clear_town_defender_metadata(town: Dictionary) -> void:
 	town.erase("ai_defense_until_day")
 	town.erase("ai_defense_rating")
 	town.erase("ai_defense_reinforced_strength")
+
+static func _normalize_resource_defender_commander_states(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var nodes = session.overworld.get("resource_nodes", [])
+	if not (nodes is Array):
+		return
+	var changed := false
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if not _resource_has_ai_defender(node):
+			continue
+		if _active_resource_defender_entry(session, node).is_empty():
+			node = node.duplicate(true)
+			_clear_resource_defender_metadata(node)
+			nodes[index] = node
+			changed = true
+	if changed:
+		session.overworld["resource_nodes"] = nodes
+
+static func _resource_has_ai_defender(node: Dictionary) -> bool:
+	return (
+		node.has("ai_defender_commander_state")
+		or String(node.get("ai_defender_roster_hero_id", "")) != ""
+		or String(node.get("ai_defended_by_faction_id", "")) != ""
+	)
+
+static func _active_resource_defender_entry(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	faction_filter: String = ""
+) -> Dictionary:
+	if session == null or node.is_empty():
+		return {}
+	var commander_state = node.get("ai_defender_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {}
+	var roster_hero_id := String(commander_state.get("roster_hero_id", node.get("ai_defender_roster_hero_id", "")))
+	if roster_hero_id == "":
+		return {}
+	var faction_id := String(node.get("ai_defended_by_faction_id", commander_state.get("faction_id", "")))
+	if faction_filter != "" and faction_id != faction_filter:
+		return {}
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if not _resource_site_is_persistent(site):
+		return {}
+	if faction_id == "" or String(node.get("collected_by_faction_id", "")) != faction_id:
+		return {}
+	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+	var raw_front_state := String(front.get("state", ""))
+	var defense_until: int = max(
+		int(node.get("ai_defense_until_day", 0)),
+		int(front.get("defense_until_day", 0))
+	)
+	if defense_until < int(session.day):
+		return {}
+	if raw_front_state != "" and raw_front_state not in ["defend", "stabilizing"]:
+		return {}
+	var entry_state: Dictionary = commander_state.duplicate(true)
+	entry_state["roster_hero_id"] = roster_hero_id
+	entry_state["faction_id"] = faction_id
+	return {
+		"placement_id": "resource_defense:%s" % String(node.get("placement_id", "")),
+		"commander_state": entry_state,
+	}
+
+static func _clear_resource_defender_metadata(node: Dictionary) -> void:
+	node.erase("ai_defender_commander_state")
+	node.erase("ai_defender_roster_hero_id")
+	node.erase("ai_defender_army")
+	node.erase("ai_defended_by_faction_id")
+	node.erase("ai_defended_day")
+	node.erase("ai_defense_until_day")
+	node.erase("ai_defense_rating")
+	node.erase("ai_defense_reinforced_strength")
 
 static func _normalize_commander_status(value: Variant) -> String:
 	var status := String(value)
@@ -12386,30 +12475,84 @@ static func _defend_resource_target(
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if not _resource_node_defensible_by_faction(node, site, faction_id, reason_codes):
 		return {"encounter": raid, "state": state, "event_message": ""}
+	var army := _normalize_army_payload(raid.get("enemy_army", {}))
+	var transferred_count := 0
+	var transferred_strength := 0
+	for stack_value in army.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		var count: int = max(0, int(stack_value.get("count", 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		transferred_count += count
+		transferred_strength += _unit_strength_value(unit_id) * count
 	var nodes = session.overworld.get("resource_nodes", [])
 	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
 	front["state"] = "defend"
 	front["faction_id"] = faction_id
 	front["last_defended_day"] = int(session.day)
-	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 2)
+	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
 	front["source"] = "strategic_ai_resource_defense"
 	node["front"] = front
 	node["ai_defended_by_faction_id"] = faction_id
 	node["ai_defended_day"] = int(session.day)
-	node["ai_defense_until_day"] = max(int(node.get("ai_defense_until_day", 0)), int(session.day) + 2)
-	node["ai_defense_rating"] = max(int(node.get("ai_defense_rating", 0)), raid_strength(raid))
-	nodes[int(node_result.get("index", -1))] = node
-	session.overworld["resource_nodes"] = nodes
-	state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
+	node["ai_defense_until_day"] = max(int(node.get("ai_defense_until_day", 0)), int(session.day) + 3)
+	node["ai_defense_rating"] = max(int(node.get("ai_defense_rating", 0)), transferred_strength)
+	node["ai_defense_reinforced_strength"] = max(0, int(node.get("ai_defense_reinforced_strength", 0))) + transferred_strength
+	node["ai_defender_army"] = army
 	var updated_raid := _record_adventure_objective_success(
 		session,
 		faction_id,
 		raid,
 		COMMANDER_OUTCOME_SITE_DEFENDED
 	)
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var stationed_commander := sync_commander_army_continuity(
+			commander_state,
+			army,
+			"resource_defense:%s" % String(node.get("placement_id", ""))
+		)
+		node["ai_defender_commander_state"] = stationed_commander
+		node["ai_defender_roster_hero_id"] = String(stationed_commander.get("roster_hero_id", ""))
+		updated_raid["enemy_commander_state"] = stationed_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			stationed_commander,
+			COMMANDER_STATUS_ACTIVE,
+			"resource_defense:%s" % String(node.get("placement_id", "")),
+			-1,
+			COMMANDER_OUTCOME_SITE_DEFENDED
+		)
+	nodes[int(node_result.get("index", -1))] = node
+	session.overworld["resource_nodes"] = nodes
+	updated_raid["enemy_army"] = {
+		"id": String(army.get("id", updated_raid.get("encounter_id", "resource_defense_host"))),
+		"name": String(army.get("name", "Resource Defense Host")),
+		"stacks": [],
+	}
+	updated_raid["arrived"] = true
+	updated_raid["site_defended_day"] = int(session.day)
+	updated_raid["site_defended_strength"] = transferred_strength
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(updated_raid.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + max(1, int(ceili(float(max(1, transferred_strength)) / 240.0)))
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	var defended_codes := ["site_defense", "defend_front", "front_stabilization"]
 	var site_label := String(site.get("name", "the site"))
-	var message := "%s digs in around %s." % [_raid_name(updated_raid), site_label]
+	var message := "%s digs in around %s with %d unit%s." % [
+		_raid_name(updated_raid),
+		site_label,
+		transferred_count,
+		"" if transferred_count == 1 else "s",
+	]
 	var event := build_ai_event_record(
 		session,
 		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
