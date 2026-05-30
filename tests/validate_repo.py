@@ -15958,7 +15958,12 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         for required_token in (
             "AI_TOWN_RETAKE_ASSAULT_REPORT",
             "enemy_retake_front_town_targets_queue_town_defense_battles",
+            "enemy_retake_front_town_targets_queue_town_defense_battles_with_assault_risk_gating",
             "river_pass_retake_front_queues_town_defense_battle",
+            "weak_retake_front_stages_before_town_battle",
+            "assault_risk_regroup",
+            "assault_risk_staging",
+            "staging stronger assault",
             "duskfen_bastion",
             "town_defense",
             "ai_target_assigned",
@@ -15975,11 +15980,28 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Town Retake Assault Report",
             "strategic-ai-live-town-retake-assault-harness-20260523-10184",
+            "strategic-ai-town-assault-risk-gating-10184",
             "player-captured Duskfen Bastion",
             "`town_defense`",
+            "`weak_retake_front_stages_before_town_battle`",
+            "`assault_risk_regroup`",
             "No full strategic AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"AI town retake assault doc is missing required text: {required_text}")
+    risk_doc_path = ROOT / "docs" / "strategic-ai-town-assault-risk-gating-report.md"
+    ensure(risk_doc_path.exists(), errors, "Missing strategic AI town assault risk gating report doc")
+    if risk_doc_path.exists():
+        risk_doc_text = risk_doc_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Town Assault Risk Gating Report",
+            "strategic-ai-town-assault-risk-gating-10184",
+            "`_town_assault_ready_report`",
+            "`redirect_town_assault_for_risk`",
+            "`weak_retake_front_stages_before_town_battle`",
+            "No save migration",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in risk_doc_text, errors, f"AI town assault risk gating doc is missing required text: {required_text}")
 
 
 def validate_ai_raid_assault_grouping(errors: list[str]) -> None:

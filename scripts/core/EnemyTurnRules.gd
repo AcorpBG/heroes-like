@@ -779,10 +779,11 @@ static func _run_empire_cycle(
 			if raid_message != "":
 				messages.append(raid_message)
 			var defense_result = _queue_town_defense_battle(session, config, faction_id)
+			_append_event_records(events, defense_result.get("events", []))
+			var defense_message = String(defense_result.get("message", ""))
+			if defense_message != "":
+				messages.append(defense_message)
 			if bool(defense_result.get("battle_started", false)):
-				var defense_message = String(defense_result.get("message", ""))
-				if defense_message != "":
-					messages.append(defense_message)
 				state["posture"] = "raiding"
 				return {"state": state, "messages": messages, "events": events}
 			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
@@ -861,10 +862,11 @@ static func _run_empire_cycle(
 		messages.append(raid_message)
 
 	var defense_result = _queue_town_defense_battle(session, config, faction_id)
+	_append_event_records(events, defense_result.get("events", []))
+	var defense_message = String(defense_result.get("message", ""))
+	if defense_message != "":
+		messages.append(defense_message)
 	if bool(defense_result.get("battle_started", false)):
-		var defense_message = String(defense_result.get("message", ""))
-		if defense_message != "":
-			messages.append(defense_message)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
@@ -1665,6 +1667,33 @@ static func _queue_town_defense_battle(
 	var encounter = encounters[encounter_index]
 	if not (encounter is Dictionary):
 		return {}
+	var readiness_report := _town_assault_ready_report(session, encounter, town)
+	if not bool(readiness_report.get("ready", false)):
+		var previous_target := _raid_target_snapshot(encounter)
+		encounter = EnemyAdventureRulesScript.redirect_town_assault_for_risk(
+			session,
+			config,
+			encounter,
+			faction_id,
+			readiness_report
+		)
+		encounters[encounter_index] = encounter
+		session.overworld["encounters"] = encounters
+		var assignment_event := EnemyAdventureRulesScript.ai_target_assignment_event(session, config, encounter, previous_target)
+		if assignment_event.is_empty():
+			assignment_event = EnemyAdventureRulesScript.ai_target_assignment_event(session, config, encounter, {})
+		var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
+		return {
+			"battle_started": false,
+			"risk_gated": true,
+			"readiness_report": readiness_report,
+			"events": [assignment_event] if not assignment_event.is_empty() else [],
+			"message": (
+				"%s delays the assault on %s to gather strength." % [commander_name, _town_name(town)]
+				if commander_name != ""
+				else "%s delays the assault on %s to gather strength." % [String(config.get("label", faction_id)), _town_name(town)]
+			),
+		}
 	encounter["battle_context"] = {
 		"type": "town_defense",
 		"town_placement_id": String(town.get("placement_id", "")),
@@ -1688,6 +1717,39 @@ static func _queue_town_defense_battle(
 			if commander_name != ""
 			else "%s launches an assault on %s." % [String(config.get("label", faction_id)), _town_name(town)]
 		),
+	}
+
+static func _town_assault_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	town: Dictionary
+) -> Dictionary:
+	var assault_strength := EnemyAdventureRulesScript.raid_strength(encounter)
+	var desired_strength := EnemyAdventureRulesScript.desired_raid_strength(encounter)
+	var garrison_strength := _army_strength(town.get("garrison", []))
+	var readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
+	var desired_floor := int(round(float(desired_strength) * 0.68))
+	var garrison_floor := int(round(float(garrison_strength) * 0.85))
+	var readiness_floor: int = 60 + (readiness * 2)
+	var required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var ready := assault_strength >= required_strength
+	return {
+		"ready": ready,
+		"assault_strength": assault_strength,
+		"desired_strength": desired_strength,
+		"garrison_strength": garrison_strength,
+		"town_readiness": readiness,
+		"required_strength": required_strength,
+		"reason": "ready_for_town_assault" if ready else "assault_risk_regroup",
+	}
+
+static func _raid_target_snapshot(raid: Dictionary) -> Dictionary:
+	return {
+		"target_kind": String(raid.get("target_kind", "")),
+		"target_placement_id": String(raid.get("target_placement_id", "")),
+		"target_label": String(raid.get("target_label", "")),
+		"target_x": int(raid.get("target_x", raid.get("goal_x", 0))),
+		"target_y": int(raid.get("target_y", raid.get("goal_y", 0))),
 	}
 
 static func _queue_hero_intercept_battle(
@@ -1751,6 +1813,8 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
 		if String(encounter.get("target_kind", "")) != "town":
+			continue
+		if int(encounter.get("assault_delay_until_day", 0)) > int(session.day):
 			continue
 		var town_result = _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
 		var town = town_result.get("town", {})

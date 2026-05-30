@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-town-defender-lifecycle-10184",
-  "currentSliceTitle": "Strategic AI Town Defender Lifecycle",
+  "currentSliceId": "strategic-ai-town-assault-risk-gating-10184",
+  "currentSliceTitle": "Strategic AI Town Assault Risk Gating",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Town-defense defender commanders are now active roster assignments while the town defense is valid, skipped by raid commander selection while stationed, and released with defender metadata cleared when the defense window expires or the town no longer qualifies.",
+  "currentSliceNotes": "Completed. Weak AI town-assault hosts now stage/regroup instead of blindly starting town-defense battles below readiness threshold.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:43:00Z",
+  "updatedAt": "2026-05-30T18:22:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28112,6 +28112,75 @@
           "residualRisk": "This slice improves live multi-army assault consolidation; full release-ready strategic AI still needs long-run generated-map quality, broader objective planning across weeks, retreat risk policy tuning, and live-client pacing review."
         }
       }
+    },
+    {
+      "id": "strategic-ai-town-assault-risk-gating-10184",
+      "title": "Strategic AI Town Assault Risk Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after commander assault consolidation; prevent weak AI town assault hosts from blindly starting town-defense battles against player-held towns",
+      "planRef": "PLAN.md Current strategic AI follow-up / town assault execution risk policy",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_retake_assault_report.gd",
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Town-defense battle queueing must require an AI raid host to meet a readiness threshold derived from raid desired strength and target town defense/readiness. Under-threshold hosts at battle range must not start session.battle; they must retask to a reachable same-faction regroup town or stage briefly for support when no regroup town exists, emit public-safe ai_target_assigned evidence, preserve hero_task_state continuity without a save-version bump, and keep existing strong retake/grouped-assault battle paths passing.",
+      "startedAt": "2026-05-30T18:05:00Z",
+      "updatedAt": "2026-05-30T18:22:00Z",
+      "notes": "Completed. Weak AI town-assault hosts now stage/regroup instead of blindly starting town-defense battles below readiness threshold.",
+      "completedAt": "2026-05-30T18:22:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T18:22:00Z",
+        "sliceId": "strategic-ai-town-assault-risk-gating-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Town-defense battle queueing now runs _town_assault_ready_report before creating the battle payload.",
+            "The readiness threshold compares raid strength against desired town-assault strength, target garrison strength, and OverworldRules.town_battle_readiness.",
+            "Under-threshold town-assault hosts no longer start session.battle; they redirect to a same-faction regroup town when reachable or stage briefly for support when no regroup town exists.",
+            "Risk-gated hosts emit public-safe ai_target_assigned events with staging stronger assault language and no score/task leakage.",
+            "Focused coverage proves the strong Duskfen retake still queues town_defense while the weak Duskfen retake records assault_risk_staging and does not start battle.",
+            "Existing assault grouping, commander support consolidation, regroup retreat, and saved commander spawn selection reports remain passing."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-town-retake-assault-report.md",
+            "docs/strategic-ai-town-assault-risk-gating-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
+          ],
+          "residualRisk": "This slice prevents one real suicide-assault failure mode; full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, army economy pressure review, retreat timing balance, and manual live-client pacing review."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -38178,43 +38247,44 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T13:16:40Z",
-    "sliceId": "strategic-ai-regroup-task-board-10184",
+    "updatedAt": "2026-05-30T18:22:00Z",
+    "sliceId": "strategic-ai-town-assault-risk-gating-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Task-state normalization now accepts target_kind regroup.",
-        "Understrength raid regroup target assignments now persist into normalized enemy_states[].hero_task_state as rebuild_host tasks.",
-        "Saved strategic AI task selection can rebuild regroup plans for reachable owned same-faction towns.",
-        "Regroup tasks reconcile missing towns as invalid_target_missing and towns no longer controlled by the matching AI faction as invalid_controller_changed.",
-        "Successful regroup that rebuilds the host enough to resume completes the matching active regroup task before the raid target is cleared.",
-        "Focused runtime coverage proves River Pass Duskfen Bastion regroup assignment, saved regroup-task reuse, missing/wrong-controller invalidation, garrison transfer, target clearing, task completion, and normalization preservation."
+        "Town-defense battle queueing now runs _town_assault_ready_report before creating the battle payload.",
+        "The readiness threshold compares raid strength against desired town-assault strength, target garrison strength, and OverworldRules.town_battle_readiness.",
+        "Under-threshold town-assault hosts no longer start session.battle; they redirect to a same-faction regroup town when reachable or stage briefly for support when no regroup town exists.",
+        "Risk-gated hosts emit public-safe ai_target_assigned events with staging stronger assault language and no score/task leakage.",
+        "Focused coverage proves the strong Duskfen retake still queues town_defense while the weak Duskfen retake records assault_risk_staging and does not start battle.",
+        "Existing assault grouping, commander support consolidation, regroup retreat, and saved commander spawn selection reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-raid-regroup-retreat-report.md"
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "focusedReport": "AI_RAID_REGROUP_RETREAT_REPORT",
-      "residualRisk": "This slice closes regroup/rebuild target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy tuning, adventure spell planning, and live-client pacing review."
+      "focusedReports": [
+        "AI_TOWN_RETAKE_ASSAULT_REPORT",
+        "AI_RAID_ASSAULT_GROUPING_REPORT",
+        "AI_RAID_REGROUP_RETREAT_REPORT",
+        "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
+      ],
+      "residualRisk": "This slice prevents one real suicide-assault failure mode; full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, army economy pressure review, retreat timing balance, and manual live-client pacing review."
     }
   },
-  "active_slice": "strategic-ai-regroup-task-board-10184",
-  "currentSliceUpdatedAt": "2026-05-30T13:16:40Z",
+  "active_slice": "strategic-ai-town-assault-risk-gating-10184",
+  "currentSliceUpdatedAt": "2026-05-30T18:22:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -40922,41 +40992,13 @@
         "focusedReport": "AI_RAID_REGROUP_RETREAT_REPORT",
         "residualRisk": "This slice closes regroup/rebuild target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy tuning, adventure spell planning, and live-client pacing review."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-commander-assault-consolidation-10184",
-    "title": "Strategic AI Commander Assault Consolidation",
-    "status": "completed",
-    "phase": "phase-5-playable-alpha-baseline",
-    "classification": "implementation_slice",
-    "source": "continuation of owner strategic AI production-readiness goal after adventure objective progression; improve real multi-army behavior by allowing nearby commander-led town assault hosts to consolidate instead of marching as disconnected separate attacks",
-    "planRef": "PLAN.md Current strategic AI target / residual multi-army grouping risk",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md",
-      "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-raid-assault-grouping-report.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_raid_assault_grouping_report.gd",
-      "docs/strategic-ai-raid-assault-grouping-report.md",
-      "docs/strategic-ai-commander-assault-consolidation-report.md",
-      "tests/validate_repo.py",
-      "PLAN.md",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Nearby same-faction raids assigned to the same player-held town assault must be able to consolidate even when the support raid has its own commander, provided the support commander is not the stronger lead host. The support army must transfer into the leader, the support raid must be resolved, the support commander must remain represented in the roster as an available but non-deployable rebuild target with empty current army continuity, matching live tasks must complete, public ai_raid_grouped output must remain non-debug, and focused runtime coverage must prove both commanderless and commander-led grouping without a save-version migration.",
-    "startedAt": "2026-05-30T17:35:00Z",
-    "updatedAt": "2026-05-30T17:46:00Z",
-    "notes": "Completed. Nearby commander-led support raids can now consolidate into a lead town assault, resolve the donor raid, complete matching donor tasks, and preserve the donor commander as a rebuildable roster entry.",
-    "completedAt": "2026-05-30T17:46:00Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T17:46:00Z",
-      "sliceId": "strategic-ai-commander-assault-consolidation-10184",
+      "updatedAt": "2026-05-30T18:22:00Z",
+      "sliceId": "strategic-ai-town-assault-risk-gating-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -40966,61 +41008,135 @@
       ],
       "evidence": {
         "implemented": [
-          "Town assault grouping now accepts nearby commander-led support raids assigned to the same player-held town when the donor is not stronger than the lead commander host.",
-          "The donor support army transfers into the leader, grouped_commander_support_count tracks the commander-led consolidation, and leader commander army continuity refreshes to the combined strength.",
-          "The donor raid is resolved and the donor commander is released to the roster as available with active_placement_id cleared and current_strength 0, making that commander non-deployable until the existing rebuild path reinforces the host.",
-          "Matching active live town tasks for the donor commander complete when that host consolidates into the lead assault.",
-          "Focused runtime coverage proves both commanderless support grouping and Vaska/Sable commander-led grouping against Duskfen Bastion without debug leakage or save migration."
+          "Town-defense battle queueing now runs _town_assault_ready_report before creating the battle payload.",
+          "The readiness threshold compares raid strength against desired town-assault strength, target garrison strength, and OverworldRules.town_battle_readiness.",
+          "Under-threshold town-assault hosts no longer start session.battle; they redirect to a same-faction regroup town when reachable or stage briefly for support when no regroup town exists.",
+          "Risk-gated hosts emit public-safe ai_target_assigned events with staging stronger assault language and no score/task leakage.",
+          "Focused coverage proves the strong Duskfen retake still queues town_defense while the weak Duskfen retake records assault_risk_staging and does not start battle.",
+          "Existing assault grouping, commander support consolidation, regroup retreat, and saved commander spawn selection reports remain passing."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-raid-assault-grouping-report.md",
-          "docs/strategic-ai-commander-assault-consolidation-report.md"
+          "docs/strategic-ai-town-retake-assault-report.md",
+          "docs/strategic-ai-town-assault-risk-gating-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
+          "AI_TOWN_RETAKE_ASSAULT_REPORT",
           "AI_RAID_ASSAULT_GROUPING_REPORT",
           "AI_RAID_REGROUP_RETREAT_REPORT",
           "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
         ],
-        "residualRisk": "This slice improves live multi-army assault consolidation; full release-ready strategic AI still needs long-run generated-map quality, broader objective planning across weeks, retreat risk policy tuning, and live-client pacing review."
+        "residualRisk": "This slice prevents one real suicide-assault failure mode; full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, army economy pressure review, retreat timing balance, and manual live-client pacing review."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-town-assault-risk-gating-10184",
+    "title": "Strategic AI Town Assault Risk Gating",
+    "status": "completed",
+    "phase": "phase-5-playable-alpha-baseline",
+    "classification": "implementation_slice",
+    "source": "continuation of owner strategic AI production-readiness goal after commander assault consolidation; prevent weak AI town assault hosts from blindly starting town-defense battles against player-held towns",
+    "planRef": "PLAN.md Current strategic AI follow-up / town assault execution risk policy",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md",
+      "docs/strategic-ai-foundation.md",
+      "docs/strategic-ai-town-retake-assault-report.md",
+      "docs/strategic-ai-raid-regroup-retreat-report.md"
+    ],
+    "implementationTargets": [
+      "scripts/core/EnemyTurnRules.gd",
+      "scripts/core/EnemyAdventureRules.gd",
+      "tests/ai_town_retake_assault_report.gd",
+      "docs/strategic-ai-town-retake-assault-report.md",
+      "docs/strategic-ai-town-assault-risk-gating-report.md",
+      "tests/validate_repo.py",
+      "PLAN.md",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Town-defense battle queueing must require an AI raid host to meet a readiness threshold derived from raid desired strength and target town defense/readiness. Under-threshold hosts at battle range must not start session.battle; they must retask to a reachable same-faction regroup town or stage briefly for support when no regroup town exists, emit public-safe ai_target_assigned evidence, preserve hero_task_state continuity without a save-version bump, and keep existing strong retake/grouped-assault battle paths passing.",
+    "startedAt": "2026-05-30T18:05:00Z",
+    "updatedAt": "2026-05-30T18:22:00Z",
+    "notes": "Completed. Weak AI town-assault hosts now stage/regroup instead of blindly starting town-defense battles below readiness threshold.",
+    "completedAt": "2026-05-30T18:22:00Z",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T18:22:00Z",
+      "sliceId": "strategic-ai-town-assault-risk-gating-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Town-defense battle queueing now runs _town_assault_ready_report before creating the battle payload.",
+          "The readiness threshold compares raid strength against desired town-assault strength, target garrison strength, and OverworldRules.town_battle_readiness.",
+          "Under-threshold town-assault hosts no longer start session.battle; they redirect to a same-faction regroup town when reachable or stage briefly for support when no regroup town exists.",
+          "Risk-gated hosts emit public-safe ai_target_assigned events with staging stronger assault language and no score/task leakage.",
+          "Focused coverage proves the strong Duskfen retake still queues town_defense while the weak Duskfen retake records assault_risk_staging and does not start battle.",
+          "Existing assault grouping, commander support consolidation, regroup retreat, and saved commander spawn selection reports remain passing."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-town-retake-assault-report.md",
+          "docs/strategic-ai-town-assault-risk-gating-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "focusedReports": [
+          "AI_TOWN_RETAKE_ASSAULT_REPORT",
+          "AI_RAID_ASSAULT_GROUPING_REPORT",
+          "AI_RAID_REGROUP_RETREAT_REPORT",
+          "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
+        ],
+        "residualRisk": "This slice prevents one real suicide-assault failure mode; full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, army economy pressure review, retreat timing balance, and manual live-client pacing review."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:55:34Z",
-    "sliceId": "strategic-ai-artifact-task-board-10184",
+    "updatedAt": "2026-05-30T18:22:00Z",
+    "sliceId": "strategic-ai-town-assault-risk-gating-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Task-state normalization now accepts target_kind artifact.",
-        "Live artifact/relic target assignments now persist into normalized enemy_states[].hero_task_state.",
-        "Saved strategic AI task selection can rebuild artifact plans from live artifact placements.",
-        "Artifact tasks reconcile against live placement state: missing targets invalidate, externally collected relics invalidate, and own collected relics complete.",
-        "Enemy artifact pickup resolution completes matching active artifact tasks when the AI secures the relic.",
-        "Focused runtime coverage proves River Pass warcrest_ruin relic assignment, saved-task reuse, normalization preservation, missing-target invalidation, externally collected invalidation, and completed task closure after pickup."
+        "Town-defense battle queueing now runs _town_assault_ready_report before creating the battle payload.",
+        "The readiness threshold compares raid strength against desired town-assault strength, target garrison strength, and OverworldRules.town_battle_readiness.",
+        "Under-threshold town-assault hosts no longer start session.battle; they redirect to a same-faction regroup town when reachable or stage briefly for support when no regroup town exists.",
+        "Risk-gated hosts emit public-safe ai_target_assigned events with staging stronger assault language and no score/task leakage.",
+        "Focused coverage proves the strong Duskfen retake still queues town_defense while the weak Duskfen retake records assault_risk_staging and does not start battle.",
+        "Existing assault grouping, commander support consolidation, regroup retreat, and saved commander spawn selection reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-artifact-task-board-report.md"
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "focusedReport": "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-      "residualRisk": "This slice closes artifact/relic target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+      "focusedReports": [
+        "AI_TOWN_RETAKE_ASSAULT_REPORT",
+        "AI_RAID_ASSAULT_GROUPING_REPORT",
+        "AI_RAID_REGROUP_RETREAT_REPORT",
+        "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
+      ],
+      "residualRisk": "This slice prevents one real suicide-assault failure mode; full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, army economy pressure review, retreat timing balance, and manual live-client pacing review."
     }
   }
 }
