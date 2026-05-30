@@ -7096,12 +7096,12 @@ static func _ai_hero_task_record_from_assignment(
 	if reason_codes.is_empty():
 		reason_codes = ["strategic_pressure"]
 	var task_class := "contest_site"
-	if target_kind == "town":
-		task_class = "raid_town"
+	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
+		task_class = "defend_front"
 	elif "retake_front" in reason_codes:
 		task_class = "retake_site"
-	elif "site_defense" in reason_codes or "defend_front" in reason_codes:
-		task_class = "defend_front"
+	elif target_kind == "town":
+		task_class = "raid_town"
 	var assigned_day := int(session.day)
 	var task_id := ai_hero_task_candidate_id(
 		String(session.scenario_id),
@@ -7330,10 +7330,16 @@ static func _ai_hero_task_upsert_live_task(
 			if not (existing_value is Dictionary):
 				continue
 			var existing: Dictionary = existing_value
-			if String(existing.get("actor_id", "")) == String(task.get("actor_id", "")):
-				continue
 			if String(existing.get("task_status", "")) in ["completed", "failed", "cancelled", "invalid"]:
 				next_tasks.append(existing)
+				continue
+			if String(existing.get("actor_id", "")) == String(task.get("actor_id", "")):
+				if not _ai_hero_task_same_live_assignment(existing, task):
+					var cancelled := existing.duplicate(true)
+					cancelled["task_status"] = "cancelled"
+					cancelled["last_validation"] = "cancelled_by_retask"
+					cancelled["invalidated_by_task_id"] = String(task.get("task_id", ""))
+					next_tasks.append(cancelled)
 				continue
 			var reservation: Dictionary = existing.get("reservation", {}) if existing.get("reservation", {}) is Dictionary else {}
 			var task_reservation: Dictionary = task.get("reservation", {}) if task.get("reservation", {}) is Dictionary else {}
@@ -7353,6 +7359,16 @@ static func _ai_hero_task_upsert_live_task(
 		states[state_index] = state
 		session.overworld["enemy_states"] = states
 		return
+
+static func _ai_hero_task_same_live_assignment(existing: Dictionary, task: Dictionary) -> bool:
+	if String(existing.get("task_id", "")) != "" and String(existing.get("task_id", "")) == String(task.get("task_id", "")):
+		return true
+	return (
+		String(existing.get("actor_id", "")) == String(task.get("actor_id", ""))
+		and String(existing.get("target_kind", "")) == String(task.get("target_kind", ""))
+		and String(existing.get("target_id", "")) == String(task.get("target_id", ""))
+		and String(existing.get("task_class", "")) == String(task.get("task_class", ""))
+	)
 
 static func _ai_hero_task_finish_live_assignment(
 	session: SessionStateStoreScript.SessionData,

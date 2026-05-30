@@ -201,6 +201,9 @@ AI_HERO_TASK_RESUMPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-tas
 AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_spawn_commander_selection_report.gd"
 AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_spawn_commander_selection_report.tscn"
 AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-spawn-commander-selection-report.md"
+AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.gd"
+AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.tscn"
+AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-task-retask-cancellation-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -14853,6 +14856,49 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
         ):
             ensure(required_text in doc_text, errors, f"AI hero task spawn commander selection doc is missing required text: {required_text}")
 
+def validate_ai_hero_task_retask_cancellation(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCENE_PATH,
+        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task retask cancellation file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    for required_token in (
+        "_ai_hero_task_same_live_assignment",
+        '"cancelled_by_retask"',
+        '"invalidated_by_task_id"',
+        '"task_status"] = "cancelled"',
+        '"town_defense" in reason_codes',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI hero task retask cancellation implementation is missing token: {required_token}")
+    ensure(
+        '"cancelled_by_retask"' in enemy_turn_text,
+        errors,
+        "Enemy task-state normalizer does not accept cancelled_by_retask.",
+    )
+    if AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_RETASK_CANCELLATION_REPORT",
+            "retasked_commanders_cancel_previous_open_task",
+            "town_defense_retask_cancels_previous_resource_task",
+            "cancelled_by_retask",
+            "invalidated_by_task_id",
+            "hero_task_state_live_persist_no_save_migration",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task retask cancellation report is missing token: {required_token}")
+    if AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Task Retask Cancellation Report",
+            "implementation evidence",
+            "retasked_commanders_cancel_previous_open_task",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task retask cancellation doc is missing required text: {required_text}")
+
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
@@ -21411,6 +21457,7 @@ def main() -> int:
     validate_ai_hero_task_actor_lifecycle(errors)
     validate_ai_hero_task_resumption(errors)
     validate_ai_hero_task_spawn_commander_selection(errors)
+    validate_ai_hero_task_retask_cancellation(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_retake_assault(errors)

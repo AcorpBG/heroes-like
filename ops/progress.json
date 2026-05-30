@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
-  "currentSliceTitle": "Strategic AI Spawn Saved-Task Commander Selection",
+  "currentSliceId": "strategic-ai-task-retask-cancellation-10184",
+  "currentSliceTitle": "Strategic AI Task Retask Cancellation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Started. This slice makes durable saved task state influence live commander deployment, not just post-spawn target selection.",
+  "currentSliceNotes": "Started. This slice makes task-board history explicit for live retasks instead of silently dropping the previous open task.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T14:02:00Z",
+  "updatedAt": "2026-05-30T14:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27469,6 +27469,62 @@
           "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
         }
       }
+    },
+    {
+      "id": "strategic-ai-task-retask-cancellation-10184",
+      "title": "Strategic AI Task Retask Cancellation",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after saved-task commander deployment; close stale task-board history when live commanders are redirected",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused strategic AI retask Godot report",
+        "docs strategic AI task retask cancellation report",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "When a live commander/raid is retasked to a different objective, the previous open task for that actor is preserved as cancelled with an explicit retask validation code and invalidated_by_task_id pointing at the replacement task. Reassigning the same actor to the same objective still replaces/refreshes the active task without false cancellation. Focused runtime tests prove a town-defense retask cancels the old resource task, creates the new defense task, preserves public-event safety, and validation passes without a save-version migration.",
+      "startedAt": "2026-05-30T14:14:00Z",
+      "updatedAt": "2026-05-30T14:30:00Z",
+      "notes": "Completed. Live retasks now cancel the actor previous open task explicitly and town-defense retasks persist as defend_front tasks.",
+      "completedAt": "2026-05-30T14:30:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T14:30:00Z",
+        "sliceId": "strategic-ai-task-retask-cancellation-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+            "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+            "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+            "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+            "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-task-retask-cancellation-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -34535,6 +34591,53 @@
           "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
         }
       }
+    },
+    {
+      "id": "strategic-ai-task-retask-cancellation-10184",
+      "title": "Strategic AI Task Retask Cancellation",
+      "completedAt": "2026-05-30T14:30:00Z",
+      "summary": "Completed. Strategic AI task-board upserts now preserve retasked commander history by cancelling the previous open task and linking it to the replacement task; town-defense retasks are classified as defend_front.",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_retask_cancellation_report.gd",
+        "docs/strategic-ai-task-retask-cancellation-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T14:30:00Z",
+        "sliceId": "strategic-ai-task-retask-cancellation-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+            "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+            "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+            "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+            "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-task-retask-cancellation-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -37337,14 +37440,14 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T14:02:00Z",
-    "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+    "updatedAt": "2026-05-30T14:30:00Z",
+    "sliceId": "strategic-ai-task-retask-cancellation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -37352,23 +37455,23 @@
     ],
     "evidence": {
       "implemented": [
-        "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
-        "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
-        "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
-        "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
-        "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+        "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+        "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+        "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+        "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+        "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-spawn-commander-selection-report.md"
+        "docs/strategic-ai-task-retask-cancellation-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+      "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T14:02:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T14:30:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39896,13 +39999,45 @@
         "saveVersion": 9,
         "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-30T14:30:00Z",
+      "sliceId": "strategic-ai-task-retask-cancellation-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+          "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+          "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+          "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+          "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-task-retask-cancellation-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
+      }
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-spawn-saved-task-commander-selection-10184",
-    "title": "Strategic AI Spawn Saved-Task Commander Selection",
+    "id": "strategic-ai-task-retask-cancellation-10184",
+    "title": "Strategic AI Task Retask Cancellation",
     "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after task resumption; close the live spawn path gap so saved tasks influence which commander deploys, not only where an already-picked raid goes",
+    "source": "continuation of owner strategic AI production-readiness goal after saved-task commander deployment; close stale task-board history when live commanders are redirected",
     "planRef": "PLAN.md Current strategic AI target",
     "sourceDocs": [
       "PLAN.md",
@@ -39911,26 +40046,26 @@
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
       "scripts/core/EnemyTurnRules.gd",
-      "focused strategic AI Godot report",
-      "docs strategic AI spawn commander selection report",
+      "focused strategic AI retask Godot report",
+      "docs strategic AI task retask cancellation report",
       "tests/validate_repo.py",
       "ops/progress.json"
     ],
-    "completionCriteria": "Enemy raid spawning prefers an available/deployable commander with a reachable saved strategic hero task before falling back to existing commander rotation. The chosen spawned raid then reuses that saved task through normal target assignment and persists the active task board without a save-version migration. Focused runtime tests prove saved-task commander preference, fallback rotation for unavailable/no-task commanders, public event safety, and existing task lifecycle reports still pass.",
-    "startedAt": "2026-05-30T13:46:00Z",
-    "updatedAt": "2026-05-30T14:02:00Z",
-    "notes": "Completed. Raid spawning now prefers deployable commanders with reachable saved strategic tasks before falling back to the existing roster rotation.",
-    "completedAt": "2026-05-30T14:02:00Z",
+    "completionCriteria": "When a live commander/raid is retasked to a different objective, the previous open task for that actor is preserved as cancelled with an explicit retask validation code and invalidated_by_task_id pointing at the replacement task. Reassigning the same actor to the same objective still replaces/refreshes the active task without false cancellation. Focused runtime tests prove a town-defense retask cancels the old resource task, creates the new defense task, preserves public-event safety, and validation passes without a save-version migration.",
+    "startedAt": "2026-05-30T14:14:00Z",
+    "updatedAt": "2026-05-30T14:30:00Z",
+    "notes": "Completed. Live retasks now cancel the actor previous open task explicitly and town-defense retasks persist as defend_front tasks.",
+    "completedAt": "2026-05-30T14:30:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T14:02:00Z",
-      "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+      "updatedAt": "2026-05-30T14:30:00Z",
+      "sliceId": "strategic-ai-task-retask-cancellation-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -39938,32 +40073,32 @@
       ],
       "evidence": {
         "implemented": [
-          "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
-          "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
-          "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
-          "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
-          "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+          "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+          "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+          "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+          "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+          "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-spawn-commander-selection-report.md"
+          "docs/strategic-ai-task-retask-cancellation-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+        "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T14:02:00Z",
-    "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+    "updatedAt": "2026-05-30T14:30:00Z",
+    "sliceId": "strategic-ai-task-retask-cancellation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -39971,19 +40106,19 @@
     ],
     "evidence": {
       "implemented": [
-        "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
-        "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
-        "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
-        "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
-        "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+        "Same-actor task upserts now preserve a changed previous objective as cancelled instead of silently dropping it.",
+        "Cancelled retask history uses last_validation cancelled_by_retask and invalidated_by_task_id pointing at the replacement task.",
+        "Same actor/same objective refreshes still replace the active task without creating false cancellation history.",
+        "Town-defense retasks now persist as defend_front rather than generic raid_town, so lifecycle reconciliation treats them as owned-front defense.",
+        "Focused runtime coverage proves a live town-defense retask cancels the previous resource task, creates the new defense task, survives normalization, and keeps public events clean."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-spawn-commander-selection-report.md"
+        "docs/strategic-ai-task-retask-cancellation-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+      "residualRisk": "This slice fixes retask history and defense task classification; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, and broader retreat/defense policy."
     }
   }
 }
