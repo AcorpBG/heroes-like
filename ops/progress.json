@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
-  "currentSliceTitle": "Strategic AI Task Lifecycle Reconciliation",
+  "currentSliceId": "strategic-ai-task-actor-lifecycle-10184",
+  "currentSliceTitle": "Strategic AI Task Actor Lifecycle",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Saved strategic AI tasks are reconciled before reuse so stale, missing, already-complete, or expired work no longer drives commander target selection.",
+  "currentSliceNotes": "Completed. Saved strategic AI tasks now suspend or invalidate when their commander actor is missing, recovering, or unable to deploy, preventing stale actor reservations from steering future turns.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T12:24:00Z",
+  "updatedAt": "2026-05-30T12:49:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27308,6 +27308,58 @@
           "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
         }
       }
+    },
+    {
+      "id": "strategic-ai-task-actor-lifecycle-10184",
+      "title": "Strategic AI Task Actor Lifecycle",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after target lifecycle reconciliation",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "focused strategic AI Godot report",
+        "docs strategic AI task actor lifecycle report",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Saved strategic AI hero tasks are reconciled against commander roster state before reuse: missing actors invalidate, recovering/rebuilding actors suspend with explicit validation codes, active/available actors keep valid current tasks, focused runtime tests prove actor lifecycle transitions, validation passes, and no save-version migration is introduced.",
+      "startedAt": "2026-05-30T12:35:00Z",
+      "updatedAt": "2026-05-30T12:49:00Z",
+      "notes": "Completed. Saved strategic AI tasks now suspend or invalidate when their commander actor is missing, recovering, or unable to deploy, preventing stale actor reservations from steering future turns.",
+      "completedAt": "2026-05-30T12:49:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T12:49:00Z",
+        "sliceId": "strategic-ai-task-actor-lifecycle-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
+            "Missing commander actors invalidate with invalid_actor_missing.",
+            "Recovering commanders suspend their tasks with invalid_actor_recovering.",
+            "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
+            "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -37084,9 +37136,10 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:24:00Z",
-    "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+    "updatedAt": "2026-05-30T12:49:00Z",
+    "sliceId": "strategic-ai-task-actor-lifecycle-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
@@ -37096,23 +37149,23 @@
     ],
     "evidence": {
       "implemented": [
-        "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
-        "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
-        "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
-        "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
-        "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
+        "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
+        "Missing commander actors invalidate with invalid_actor_missing.",
+        "Recovering commanders suspend their tasks with invalid_actor_recovering.",
+        "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
+        "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+        "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
+      "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T12:24:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T12:49:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39547,35 +39600,13 @@
         "saveVersion": 9,
         "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-task-lifecycle-reconciliation-10184",
-    "title": "Strategic AI Task Lifecycle Reconciliation",
-    "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after persistent task board adoption",
-    "planRef": "PLAN.md Current strategic AI target",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "scripts/core/EnemyTurnRules.gd if validation enum expansion is required",
-      "focused strategic AI Godot report",
-      "docs strategic AI task lifecycle report",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Saved strategic AI hero tasks are reconciled against current resources/towns before reuse: missing targets are invalidated, already-owned targets are completed, expired active work is not reused, exclusive reservations ignore completed/invalid tasks, focused runtime tests prove saved-task reuse plus stale-task invalidation, validation passes, and no save-version migration is introduced.",
-    "startedAt": "2026-05-30T12:10:00Z",
-    "updatedAt": "2026-05-30T12:24:00Z",
-    "notes": "Completed. Saved strategic AI tasks are reconciled before reuse so stale, missing, already-complete, or expired work no longer drives commander target selection.",
-    "completedAt": "2026-05-30T12:24:00Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T12:24:00Z",
-      "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+      "updatedAt": "2026-05-30T12:49:00Z",
+      "sliceId": "strategic-ai-task-actor-lifecycle-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
@@ -39585,27 +39616,80 @@
       ],
       "evidence": {
         "implemented": [
-          "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
-          "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
-          "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
-          "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
-          "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
+          "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
+          "Missing commander actors invalidate with invalid_actor_missing.",
+          "Recovering commanders suspend their tasks with invalid_actor_recovering.",
+          "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
+          "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+          "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
+        "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-task-actor-lifecycle-10184",
+    "title": "Strategic AI Task Actor Lifecycle",
+    "status": "completed",
+    "source": "continuation of owner strategic AI production-readiness goal after target lifecycle reconciliation",
+    "planRef": "PLAN.md Current strategic AI target",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md"
+    ],
+    "implementationTargets": [
+      "scripts/core/EnemyAdventureRules.gd",
+      "focused strategic AI Godot report",
+      "docs strategic AI task actor lifecycle report",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Saved strategic AI hero tasks are reconciled against commander roster state before reuse: missing actors invalidate, recovering/rebuilding actors suspend with explicit validation codes, active/available actors keep valid current tasks, focused runtime tests prove actor lifecycle transitions, validation passes, and no save-version migration is introduced.",
+    "startedAt": "2026-05-30T12:35:00Z",
+    "updatedAt": "2026-05-30T12:49:00Z",
+    "notes": "Completed. Saved strategic AI tasks now suspend or invalidate when their commander actor is missing, recovering, or unable to deploy, preventing stale actor reservations from steering future turns.",
+    "completedAt": "2026-05-30T12:49:00Z",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T12:49:00Z",
+      "sliceId": "strategic-ai-task-actor-lifecycle-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
+          "Missing commander actors invalidate with invalid_actor_missing.",
+          "Recovering commanders suspend their tasks with invalid_actor_recovering.",
+          "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
+          "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:24:00Z",
-    "sliceId": "strategic-ai-task-lifecycle-reconciliation-10184",
+    "updatedAt": "2026-05-30T12:49:00Z",
+    "sliceId": "strategic-ai-task-actor-lifecycle-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
@@ -39615,19 +39699,19 @@
     ],
     "evidence": {
       "implemented": [
-        "Added task-board lifecycle reconciliation before saved strategic AI task reuse.",
-        "Open resource tasks now complete when the faction already controls the target, invalidate when targets are missing, and invalidate resolved consumed non-persistent targets.",
-        "Open town attack/retake tasks now complete when the faction already controls the town, while town/resource defense tasks invalidate on controller loss.",
-        "Expired planned/reserved/active tasks now cancel with invalid_task_expired and the normalizer preserves that validation code.",
-        "Focused Godot report proves saved-task reuse plus completed, invalid, and cancelled lifecycle transitions surviving enemy-state normalization."
+        "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
+        "Missing commander actors invalidate with invalid_actor_missing.",
+        "Recovering commanders suspend their tasks with invalid_actor_recovering.",
+        "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
+        "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+        "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice hardens task lifecycle for resource/town task targets only; broad multi-week generated-map strategic AI quality, retreat strategy depth, diplomacy, and global production readiness remain active goal work."
+      "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
     }
   }
 }

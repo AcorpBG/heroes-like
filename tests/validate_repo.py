@@ -192,6 +192,9 @@ AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.gd"
 AI_HERO_TASK_LIFECYCLE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.tscn"
 AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-lifecycle-reconciliation-report.md"
+AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_actor_lifecycle_report.gd"
+AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_actor_lifecycle_report.tscn"
+AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-actor-lifecycle-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -14728,6 +14731,44 @@ def validate_ai_hero_task_lifecycle_reconciliation(errors: list[str]) -> None:
         ):
             ensure(required_text in doc_text, errors, f"AI hero task lifecycle doc is missing required text: {required_text}")
 
+def validate_ai_hero_task_actor_lifecycle(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCENE_PATH,
+        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task actor lifecycle file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "func _ai_hero_task_reconcile_actor",
+        "invalid_actor_missing",
+        "invalid_actor_recovering",
+        "invalid_actor_rebuilding",
+        "commander_can_deploy(entry)",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI hero task actor lifecycle implementation is missing token: {required_token}")
+    if AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT",
+            "saved_tasks_require_live_deployable_commander_actors",
+            "river_pass_saved_tasks_require_deployable_commander_actor",
+            "invalid_actor_missing",
+            "invalid_actor_recovering",
+            "invalid_actor_rebuilding",
+            "hero_task_state_live_persist_no_save_migration",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task actor lifecycle report is missing token: {required_token}")
+    if AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Hero Task Actor Lifecycle Report",
+            "implementation evidence",
+            "saved_tasks_require_live_deployable_commander_actors",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task actor lifecycle doc is missing required text: {required_text}")
+
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
@@ -21283,6 +21324,7 @@ def main() -> int:
     validate_ai_hero_task_live_adoption_gate(errors)
     validate_ai_hero_task_live_turn_execution(errors)
     validate_ai_hero_task_lifecycle_reconciliation(errors)
+    validate_ai_hero_task_actor_lifecycle(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_retake_assault(errors)
