@@ -1869,6 +1869,7 @@ static func _queue_town_defense_battle(
 	var encounter = encounters[encounter_index]
 	if not (encounter is Dictionary):
 		return {}
+	var defender_owner := String(town.get("owner", "neutral"))
 	var readiness_report := _town_assault_ready_report(session, encounter, town)
 	if not bool(readiness_report.get("ready", false)):
 		var previous_target := _raid_target_snapshot(encounter)
@@ -1902,6 +1903,7 @@ static func _queue_town_defense_battle(
 		"defending_hero_id": "",
 		"raid_encounter_key": OverworldRulesScript.encounter_key(encounter),
 		"trigger_faction_id": faction_id,
+		"defender_owner": defender_owner,
 	}
 	encounters[encounter_index] = encounter
 	session.overworld["encounters"] = encounters
@@ -2069,7 +2071,14 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 			continue
 		var town_result = _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
 		var town = town_result.get("town", {})
-		if town.is_empty() or String(town.get("owner", "neutral")) != "player":
+		var town_owner := String(town.get("owner", "neutral"))
+		var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+		var neutral_expansion := town_owner == "neutral" and (
+			"town_expansion" in reason_codes
+			or "neutral_town_claim" in reason_codes
+			or "neutral_town_siege" in reason_codes
+		)
+		if town.is_empty() or (town_owner != "player" and not neutral_expansion):
 			continue
 		var goal_distance = int(encounter.get("goal_distance", 9999))
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):

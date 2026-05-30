@@ -17,13 +17,25 @@ func _run() -> void:
 	var capture_case := _arrived_raid_captures_empty_neutral_town()
 	if capture_case.is_empty():
 		return
+	var defended_plan_case := _defended_neutral_town_is_planned_assault_target()
+	if defended_plan_case.is_empty():
+		return
+	var defended_risk_case := _weak_raid_delays_defended_neutral_town_assault()
+	if defended_risk_case.is_empty():
+		return
+	var defended_capture_case := _ready_raid_captures_defended_neutral_town_after_battle()
+	if defended_capture_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_neutral_town_expansion_no_save_migration",
-		"behavior_policy": "ai_commanders_plan_and_capture_empty_neutral_towns",
+		"schema_status": "live_neutral_town_expansion_and_assault_no_save_migration",
+		"behavior_policy": "ai_commanders_plan_capture_and_assault_neutral_towns",
 		"plan_case": plan_case,
 		"capture_case": capture_case,
+		"defended_plan_case": defended_plan_case,
+		"defended_risk_case": defended_risk_case,
+		"defended_capture_case": defended_capture_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -107,7 +119,100 @@ func _arrived_raid_captures_empty_neutral_town() -> Dictionary:
 		"commander_last_outcome": String(commander_state.get("last_outcome", "")),
 	}
 
-func _prepare_neutral_town_only_front(session) -> void:
+func _defended_neutral_town_is_planned_assault_target() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_prepare_neutral_town_only_front(session, _neutral_town_garrison())
+	var result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	var task := _task_for_target(session, "town", NEUTRAL_TOWN_ID)
+	if task.is_empty():
+		_fail("Planner did not create a defended neutral-town expansion task: %s" % JSON.stringify(result))
+		return {}
+	var reason_codes := _string_array(task.get("priority_reason_codes", []))
+	if "town_expansion" not in reason_codes or "neutral_town_claim" not in reason_codes or "neutral_town_siege" not in reason_codes:
+		_fail("Defended neutral-town expansion task missed assault reason codes: %s" % JSON.stringify(task))
+		return {}
+	return {
+		"case_id": "defended_neutral_town_is_planned_assault_target",
+		"planned_count": int(result.get("planned_count", 0)),
+		"task_id": String(task.get("task_id", "")),
+		"target_kind": String(task.get("target_kind", "")),
+		"target_id": String(task.get("target_id", "")),
+		"reason_codes": reason_codes,
+	}
+
+func _weak_raid_delays_defended_neutral_town_assault() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_neutral_town_only_front(session, _neutral_town_garrison(24))
+	var raid := _defended_neutral_town_raid(session, "weak_neutral_town_vaska", 3)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	var result := EnemyTurnRules._queue_town_defense_battle(session, config, MIRECLAW)
+	if bool(result.get("battle_started", false)) or not session.battle.is_empty():
+		_fail("Weak defended neutral-town assault should be delayed, not queued: %s" % JSON.stringify(result))
+		return {}
+	var after_raid := _encounter(session, "weak_neutral_town_vaska")
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "assault_risk_regroup" not in reason_codes and "assault_risk_staging" not in reason_codes:
+		_fail("Weak defended neutral-town assault did not risk-gate: %s" % JSON.stringify(after_raid))
+		return {}
+	return {
+		"case_id": "weak_raid_delays_defended_neutral_town_assault",
+		"battle_started": false,
+		"risk_gated": bool(result.get("risk_gated", false)),
+		"reason_codes": reason_codes,
+		"readiness_reason": String(result.get("readiness_report", {}).get("reason", "")),
+	}
+
+func _ready_raid_captures_defended_neutral_town_after_battle() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_neutral_town_only_front(session, _neutral_town_garrison())
+	_add_safe_player_town(session)
+	_seed_task_board(session, [_town_expansion_task("hero_vaska", NEUTRAL_TOWN_ID, "active", "valid")])
+	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var raid := _defended_neutral_town_raid(session, "defended_neutral_town_vaska", 85)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	var result := EnemyTurnRules._queue_town_defense_battle(session, config, MIRECLAW)
+	if not bool(result.get("battle_started", false)) or session.battle.is_empty():
+		_fail("Ready defended neutral-town assault did not queue battle: %s" % JSON.stringify(result))
+		return {}
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("defender_owner", "")) != "neutral":
+		_fail("Defended neutral-town assault queued wrong battle context: %s" % JSON.stringify(battle_context))
+		return {}
+	_defeat_battle_side(session, "player")
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "town_lost":
+		_fail("Defended neutral-town battle did not resolve as town_lost for neutral defender: %s" % JSON.stringify(outcome))
+		return {}
+	var town := _town(session, NEUTRAL_TOWN_ID)
+	if String(town.get("owner", "neutral")) != "enemy" or String(town.get("controlling_faction_id", "")) != MIRECLAW:
+		_fail("Defended neutral town was not captured into enemy control: %s" % JSON.stringify(town))
+		return {}
+	if JSON.stringify(resources_before) != JSON.stringify(session.overworld.get("resources", {})):
+		_fail("Defended neutral-town loss changed player resources: before=%s after=%s" % [JSON.stringify(resources_before), JSON.stringify(session.overworld.get("resources", {}))])
+		return {}
+	_assert_task_status(session, "hero_vaska", "town", NEUTRAL_TOWN_ID, "completed", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "ready_raid_captures_defended_neutral_town_after_battle",
+		"battle_started": true,
+		"battle_context_type": String(battle_context.get("type", "")),
+		"defender_owner": String(battle_context.get("defender_owner", "")),
+		"outcome_state": String(outcome.get("state", "")),
+		"owner_after": String(town.get("owner", "")),
+		"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+		"player_resources_unchanged": true,
+	}
+
+func _prepare_neutral_town_only_front(session, garrison: Array = []) -> void:
 	session.overworld["resource_nodes"] = []
 	session.overworld["artifact_nodes"] = []
 	session.overworld["encounters"] = []
@@ -126,6 +231,29 @@ func _prepare_neutral_town_only_front(session) -> void:
 		"x": 8,
 		"y": 2,
 		"owner": "neutral",
+		"garrison": garrison.duplicate(true),
+		"available_recruits": {},
+		"buildings": [],
+	})
+	session.overworld["towns"] = towns
+
+func _add_safe_player_town(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if town is Dictionary and String(town.get("placement_id", "")) == "riverwatch_hold":
+			town["owner"] = "player"
+			town["controlling_faction_id"] = ""
+			towns[index] = town
+			session.overworld["towns"] = towns
+			return
+	towns.append({
+		"placement_id": "riverwatch_hold",
+		"town_id": "town_riverwatch",
+		"x": 1,
+		"y": 1,
+		"owner": "player",
+		"controlling_faction_id": "",
 		"garrison": [],
 		"available_recruits": {},
 		"buildings": [],
@@ -164,6 +292,36 @@ func _neutral_town_raid(session) -> Dictionary:
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _defended_neutral_town_raid(session, placement_id: String, mire_count: int) -> Dictionary:
+	var raid := _neutral_town_raid(session)
+	raid["placement_id"] = placement_id
+	raid["combat_seed"] = hash("%s:%s" % [String(session.scenario_id), placement_id])
+	raid["target_reason_codes"] = ["town_expansion", "neutral_town_claim", "neutral_town_siege"]
+	raid["target_debug_reason"] = "defended neutral town expansion fixture"
+	raid["enemy_army"] = {
+		"id": "%s_army" % placement_id,
+		"name": "%s Army" % placement_id,
+		"stacks": [
+			{"unit_id": "unit_blackbranch_cutthroat", "count": mire_count},
+			{"unit_id": "unit_mire_slinger", "count": max(1, int(mire_count / 2))},
+		],
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return raid
+
+func _neutral_town_garrison(count: int = 6) -> Array:
+	return [
+		{"unit_id": "unit_neutral_roadwardens", "count": count},
+		{"unit_id": "unit_neutral_hearthbow_carriers", "count": max(1, int(count / 2))},
+	]
 
 func _base_session():
 	var session = ScenarioFactory.create_session(
@@ -278,6 +436,16 @@ func _event_types(events: Variant) -> Array:
 		if event is Dictionary:
 			output.append(String(event.get("event_type", "")))
 	return output
+
+func _defeat_battle_side(session, side: String) -> void:
+	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+			continue
+		stack["total_health"] = 0
+		stacks[index] = stack
+	session.battle["stacks"] = stacks
 
 func _string_array(value: Variant) -> Array:
 	var output := []
