@@ -19,14 +19,18 @@ func _run() -> void:
 	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
 	if unreachable_route_case.is_empty():
 		return
+	var failed_regroup_case := _empty_garrison_regroup_releases_to_rebuild()
+	if failed_regroup_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_and_failed_regroups_rebuild",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"unreachable_route_case": unreachable_route_case,
+		"failed_regroup_case": failed_regroup_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -290,6 +294,81 @@ func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:
 		"event_types": event_types,
 		"resource_controller_after": _resource_controller(session, "river_free_company"),
 		"goal_distance_after": int(after_raid.get("goal_distance", 9999)),
+		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
+func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_town_garrison(session, "duskfen_bastion", [])
+	var raid := _understrength_raid(session, config)
+	var before_strength := EnemyAdventureRules.raid_strength(raid)
+	if not EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Empty-garrison fixture raid should require regroup before release: %s" % JSON.stringify(raid))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "regroup_vaska_understrength")
+	if after_raid.is_empty():
+		_fail("Failed-regroup raid disappeared from encounter history.")
+		return {}
+	if not bool(after_raid.get("raid_retired_to_rebuild", false)):
+		_fail("Failed-regroup raid did not retire into rebuild: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "" or bool(after_raid.get("arrived", false)):
+		_fail("Retired failed-regroup raid should clear target and stop applying pressure: %s" % JSON.stringify(after_raid))
+		return {}
+	if not _resolved_contains(session, "regroup_vaska_understrength"):
+		_fail("Retired failed-regroup raid was not removed from active encounters.")
+		return {}
+	if _resource_controller(session, "river_free_company") == MIRECLAW:
+		_fail("Failed-regroup raid captured the offensive resource instead of retiring.")
+		return {}
+	var message := String(result.get("message", ""))
+	if "pillages" in message or "press" in message:
+		_fail("Retired failed-regroup raid still produced pressure or pillage text: %s" % message)
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_raid_regrouped" not in event_types:
+		_fail("Failed-regroup retirement did not emit ai_raid_regrouped: %s" % JSON.stringify(result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "suspended", "invalid_actor_rebuilding")
+	if _failed:
+		return {}
+	var occupied := EnemyAdventureRules.occupied_raid_commander_ids(session, MIRECLAW)
+	if occupied.has("hero_vaska"):
+		_fail("Retired failed-regroup commander is still treated as an active raid commander: %s" % JSON.stringify(occupied))
+		return {}
+	var roster_entry := _commander_entry(session, "hero_vaska")
+	if roster_entry.is_empty():
+		_fail("Missing hero_vaska roster entry after failed regroup.")
+		return {}
+	if EnemyAdventureRules.commander_can_deploy(roster_entry):
+		_fail("Failed-regroup commander is deployable before rebuild: %s" % JSON.stringify(roster_entry))
+		return {}
+	var continuity := EnemyAdventureRules.commander_army_continuity(roster_entry)
+	if int(continuity.get("current_strength", 0)) != before_strength or int(continuity.get("rebuild_need", 0)) <= 0:
+		_fail("Failed-regroup commander continuity did not preserve rebuild need: before=%d continuity=%s" % [before_strength, JSON.stringify(continuity)])
+		return {}
+	EnemyTurnRules.normalize_enemy_states(session)
+	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "suspended", "invalid_actor_rebuilding")
+	if _failed:
+		return {}
+	return {
+		"case_id": "empty_garrison_regroup_releases_to_commander_rebuild",
+		"before_strength": before_strength,
+		"retired_to_rebuild": bool(after_raid.get("raid_retired_to_rebuild", false)),
+		"resolved": _resolved_contains(session, "regroup_vaska_understrength"),
+		"event_types": event_types,
+		"resource_controller_after": _resource_controller(session, "river_free_company"),
+		"commander_deployable_after": EnemyAdventureRules.commander_can_deploy(roster_entry),
+		"commander_rebuild_need": int(continuity.get("rebuild_need", 0)),
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
@@ -611,6 +690,28 @@ func _town_garrison_count(session, placement_id: String, unit_id: String) -> int
 			if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
 				return int(stack.get("count", 0))
 	return 0
+
+func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["garrison"] = garrison.duplicate(true)
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not set garrison for town %s" % placement_id)
+
+func _resolved_contains(session, placement_id: String) -> bool:
+	var resolved = session.overworld.get("resolved_encounters", [])
+	return resolved is Array and placement_id in resolved
+
+func _commander_entry(session, roster_hero_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
+	return {}
 
 func _event_types(events: Variant) -> Array:
 	var types := []

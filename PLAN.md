@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-unreachable-route-recovery-10184`, completed to make active raids recover from valid-but-unreachable targets instead of freezing.
+- Current implementation slice: `strategic-ai-regroup-failure-rebuild-10184`, completed to make failed regroup attempts release active raids into commander rebuild instead of cycling on empty garrisons.
+- Latest completed slice: `strategic-ai-regroup-failure-rebuild-10184`.
 - Latest completed slice: `strategic-ai-unreachable-route-recovery-10184`.
 - Latest completed slice: `strategic-ai-shared-support-task-reservations-10184`.
 - Latest completed slice: `strategic-ai-support-overcommit-control-10184`.
