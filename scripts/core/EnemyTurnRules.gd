@@ -646,6 +646,11 @@ static func ai_town_recruit_destination_event(
 			target_kind = "commander"
 			target_id = String(destination.get("roster_hero_id", ""))
 			target_label = String(destination.get("commander_label", target_id))
+		"planned":
+			event_type = "ai_commander_prepared"
+			target_kind = "commander"
+			target_id = String(destination.get("roster_hero_id", ""))
+			target_label = String(destination.get("commander_label", target_id))
 		_:
 			pass
 	if target_label == "":
@@ -1063,6 +1068,7 @@ static func _reinforce_enemy_forces(
 	var garrisoned_towns = []
 	var raid_reinforcements = 0
 	var rebuild_batches = 0
+	var planned_batches = 0
 	var events = []
 	for index in range(towns.size()):
 		var town = towns[index]
@@ -1078,8 +1084,9 @@ static func _reinforce_enemy_forces(
 			garrisoned_towns.append(_town_name(town))
 		raid_reinforcements += int(recruit_result.get("raid_batches", 0))
 		rebuild_batches += int(recruit_result.get("rebuild_batches", 0))
+		planned_batches += int(recruit_result.get("planned_batches", 0))
 	if garrisoned_towns.is_empty() and raid_reinforcements <= 0:
-		if rebuild_batches <= 0:
+		if rebuild_batches <= 0 and planned_batches <= 0:
 			return {"message": "", "events": events}
 
 	var parts = []
@@ -1089,6 +1096,8 @@ static func _reinforce_enemy_forces(
 		parts.append("feeds %d raid host%s" % [raid_reinforcements, "" if raid_reinforcements == 1 else "s"])
 	if rebuild_batches > 0:
 		parts.append("rebuilds %d command host%s" % [rebuild_batches, "" if rebuild_batches == 1 else "s"])
+	if planned_batches > 0:
+		parts.append("prepares %d planned command host%s" % [planned_batches, "" if planned_batches == 1 else "s"])
 	return {
 		"message": "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)],
 		"events": events,
@@ -1104,6 +1113,7 @@ static func _recruit_town_forces(
 	var garrisoned = false
 	var raid_batches = 0
 	var rebuild_batches = 0
+	var planned_batches = 0
 	var events = []
 	var recruit_ids = []
 	for unit_id_value in town.get("available_recruits", {}).keys():
@@ -1136,16 +1146,21 @@ static func _recruit_town_forces(
 			)
 			if applied_count > 0:
 				raid_batches += 1
-		elif String(destination.get("type", "")) == "rebuild":
+		elif String(destination.get("type", "")) in ["rebuild", "planned"]:
 			applied_count = EnemyAdventureRulesScript.reinforce_commander_roster_army(
 				session,
 				faction_id,
 				String(destination.get("roster_hero_id", "")),
 				unit_id,
-				recruit_count
+				recruit_count,
+				String(destination.get("base_encounter_id", "")),
+				int(destination.get("target_strength", 0))
 			)
 			if applied_count > 0:
-				rebuild_batches += 1
+				if String(destination.get("type", "")) == "planned":
+					planned_batches += 1
+				else:
+					rebuild_batches += 1
 		else:
 			town["garrison"] = _add_stack(town.get("garrison", []), unit_id, recruit_count)
 			garrisoned = true
@@ -1170,6 +1185,7 @@ static func _recruit_town_forces(
 		"garrisoned": garrisoned,
 		"raid_batches": raid_batches,
 		"rebuild_batches": rebuild_batches,
+		"planned_batches": planned_batches,
 		"events": events,
 	}
 
@@ -1185,6 +1201,13 @@ static func _choose_recruit_destination(
 			return {"type": "raid", "index": int(breakdown.get("index", -1))}
 		"rebuild":
 			return {"type": "rebuild", "roster_hero_id": String(breakdown.get("roster_hero_id", ""))}
+		"planned":
+			return {
+				"type": "planned",
+				"roster_hero_id": String(breakdown.get("roster_hero_id", "")),
+				"base_encounter_id": String(breakdown.get("base_encounter_id", "")),
+				"target_strength": int(breakdown.get("target_strength", 0)),
+			}
 		_:
 			return {"type": "garrison"}
 
@@ -1200,6 +1223,7 @@ static func _choose_recruit_destination_breakdown(
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
+	var best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
 	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
@@ -1208,6 +1232,7 @@ static func _choose_recruit_destination_breakdown(
 	raid_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.35
 	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
 	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
+	var planned_score = float(best_planned.get("score", 0.0))
 	if current_defense < int(round(float(defense_target) * 0.72)):
 		return _recruit_destination_report_payload(
 			"garrison",
@@ -1222,7 +1247,9 @@ static func _choose_recruit_destination_breakdown(
 			current_defense,
 			best_raid,
 			best_rebuild,
-			local_front
+			local_front,
+			planned_score,
+			best_planned
 		)
 	if (
 		not best_rebuild.is_empty()
@@ -1245,7 +1272,9 @@ static func _choose_recruit_destination_breakdown(
 			current_defense,
 			best_raid,
 			best_rebuild,
-			local_front
+			local_front,
+			planned_score,
+			best_planned
 		)
 	if (
 		bool(local_front.get("active", false))
@@ -1265,7 +1294,9 @@ static func _choose_recruit_destination_breakdown(
 			current_defense,
 			best_raid,
 			best_rebuild,
-			local_front
+			local_front,
+			planned_score,
+			best_planned
 		)
 	if not best_rebuild.is_empty() and rebuild_score > max(garrison_score, raid_score):
 		return _recruit_destination_report_payload(
@@ -1281,7 +1312,9 @@ static func _choose_recruit_destination_breakdown(
 			current_defense,
 			best_raid,
 			best_rebuild,
-			local_front
+			local_front,
+			planned_score,
+			best_planned
 		)
 	if not best_raid.is_empty() and raid_score > garrison_score:
 		return _recruit_destination_report_payload(
@@ -1297,7 +1330,27 @@ static func _choose_recruit_destination_breakdown(
 			current_defense,
 			best_raid,
 			best_rebuild,
-			local_front
+			local_front,
+			planned_score,
+			best_planned
+		)
+	if not best_planned.is_empty() and planned_score > max(garrison_score * 0.9, rebuild_score * 0.8):
+		return _recruit_destination_report_payload(
+			"planned",
+			"planned_task_preparation",
+			"prepares command",
+			["planned_task_preparation", "strategic_task_planner"],
+			"a saved strategic task has a reachable commander host to prepare",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front,
+			planned_score,
+			best_planned
 		)
 	return _recruit_destination_report_payload(
 		"garrison",
@@ -1312,7 +1365,9 @@ static func _choose_recruit_destination_breakdown(
 		current_defense,
 		best_raid,
 		best_rebuild,
-		local_front
+		local_front,
+		planned_score,
+		best_planned
 	)
 
 static func _recruit_destination_report_payload(
@@ -1328,7 +1383,9 @@ static func _recruit_destination_report_payload(
 	current_defense: int,
 	best_raid: Dictionary,
 	best_rebuild: Dictionary,
-	local_front: Dictionary
+	local_front: Dictionary,
+	planned_score: float = 0.0,
+	best_planned: Dictionary = {}
 ) -> Dictionary:
 	var payload := {
 		"type": destination_type,
@@ -1339,6 +1396,7 @@ static func _recruit_destination_report_payload(
 		"garrison_score": garrison_score,
 		"raid_score": raid_score,
 		"rebuild_score": rebuild_score,
+		"planned_score": planned_score,
 		"defense_target": defense_target,
 		"current_defense": current_defense,
 		"garrison_gap": max(0, defense_target - current_defense),
@@ -1358,7 +1416,139 @@ static func _recruit_destination_report_payload(
 		payload["commander_label"] = String(ContentService.get_hero(String(best_rebuild.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
 		payload["rebuild_need"] = int(best_rebuild.get("need", 0))
 		payload["commander_status"] = String(best_rebuild.get("status", ""))
+	elif destination_type == "planned":
+		payload["roster_hero_id"] = String(best_planned.get("roster_hero_id", ""))
+		payload["commander_label"] = String(ContentService.get_hero(String(best_planned.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
+		payload["planned_need"] = int(best_planned.get("need", 0))
+		payload["target_strength"] = int(best_planned.get("target_strength", 0))
+		payload["base_encounter_id"] = String(best_planned.get("base_encounter_id", ""))
+		payload["task_id"] = String(best_planned.get("task_id", ""))
+		payload["target_kind"] = String(best_planned.get("target_kind", ""))
+		payload["target_id"] = String(best_planned.get("target_id", ""))
+		payload["target_label"] = String(best_planned.get("target_label", best_planned.get("target_id", "")))
+		payload["goal_distance"] = int(best_planned.get("goal_distance", 0))
 	return payload
+
+static func _best_planned_task_recruitment_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	support_town: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or support_town.is_empty():
+		return {}
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	if base_encounter_id == "":
+		return {}
+	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+	)
+	var roster_by_id := {}
+	for entry_value in roster:
+		if entry_value is Dictionary:
+			var entry: Dictionary = entry_value
+			var actor_id := String(entry.get("roster_hero_id", ""))
+			if actor_id != "":
+				roster_by_id[actor_id] = entry
+	var base_strength := _enemy_encounter_base_strength(base_encounter_id)
+	if base_strength <= 0:
+		return {}
+	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	var best := {}
+	var best_score := -1.0
+	for task_value in EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("task_status", "")) not in ["planned", "reserved"]:
+			continue
+		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
+			continue
+		var actor_id := String(task.get("actor_id", ""))
+		if actor_id == "" or not roster_by_id.has(actor_id):
+			continue
+		var entry: Dictionary = roster_by_id.get(actor_id, {})
+		if String(entry.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) != EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE:
+			continue
+		if not EnemyAdventureRulesScript.commander_can_deploy(entry):
+			continue
+		var saved_plan := EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
+			session,
+			faction_id,
+			actor_id,
+			{"x": int(support_town.get("x", 0)), "y": int(support_town.get("y", 0))}
+		)
+		if saved_plan.is_empty():
+			continue
+		var target_kind := String(saved_plan.get("target_kind", task.get("target_kind", "")))
+		var target_id := String(saved_plan.get("target_placement_id", task.get("target_id", "")))
+		if target_kind == "" or target_id == "":
+			continue
+		var continuity := EnemyAdventureRulesScript.commander_army_continuity(entry)
+		var current_strength := int(continuity.get("current_strength", base_strength))
+		if continuity.is_empty() or int(continuity.get("base_strength", 0)) <= 0:
+			current_strength = base_strength
+		var target_strength: int = base_strength + _planned_task_prep_strength(base_strength, target_kind, String(task.get("task_class", "")))
+		var need: int = max(0, target_strength - current_strength)
+		if need <= 0:
+			continue
+		var site_family := EnemyAdventureRulesScript.target_site_family(session, target_kind, target_id)
+		var objective_anchor := EnemyAdventureRulesScript.target_is_objective_anchor(session, target_kind, target_id)
+		var score := float(need) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.65
+		score += float(int(saved_plan.get("priority", task.get("priority", 0)))) * 0.35
+		score += float(EnemyAdventureRulesScript.priority_target_bonus(config, target_id)) * 0.35
+		score *= EnemyAdventureRulesScript.strategy_target_weight(config, faction_id, target_kind, target_id, site_family, objective_anchor)
+		score -= float(max(0, int(saved_plan.get("goal_distance", 0))) * 5)
+		if score > best_score:
+			best_score = score
+			best = {
+				"roster_hero_id": actor_id,
+				"need": need,
+				"score": score,
+				"task_id": String(task.get("task_id", saved_plan.get("hero_task_id", ""))),
+				"target_kind": target_kind,
+				"target_id": target_id,
+				"target_label": String(saved_plan.get("target_label", task.get("target_label", target_id))),
+				"goal_distance": int(saved_plan.get("goal_distance", 0)),
+				"base_encounter_id": base_encounter_id,
+				"target_strength": target_strength,
+			}
+	return best
+
+static func _planned_task_prep_strength(base_strength: int, target_kind: String, task_class: String) -> int:
+	var floor_strength := 35
+	match target_kind:
+		"town", "hero":
+			floor_strength = 70
+		"artifact", "encounter":
+			floor_strength = 55
+		"resource":
+			floor_strength = 40
+	var class_bonus := 0
+	if task_class in ["raid_town", "retake_site"]:
+		class_bonus = 25
+	elif task_class in ["contest_site", "defend_front"]:
+		class_bonus = 15
+	return max(floor_strength + class_bonus, int(round(float(max(1, base_strength)) * 0.22)))
+
+static func _primary_raid_encounter_id(config: Dictionary) -> String:
+	var ids: Array = config.get("raid_encounter_ids", []) if config.get("raid_encounter_ids", []) is Array else []
+	for id_value in ids:
+		var encounter_id := String(id_value)
+		if encounter_id != "":
+			return encounter_id
+	return String(config.get("raid_encounter_id", ""))
+
+static func _enemy_encounter_base_strength(encounter_id: String) -> int:
+	if encounter_id == "":
+		return 0
+	var encounter := ContentService.get_encounter(encounter_id)
+	if encounter.is_empty():
+		return 0
+	var army := ContentService.get_army_group(String(encounter.get("enemy_group_id", "")))
+	return _army_strength(army.get("stacks", []) if army.get("stacks", []) is Array else [])
 
 static func _best_raid_reinforcement_target(
 	session: SessionStateStoreScript.SessionData,

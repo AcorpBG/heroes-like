@@ -3430,7 +3430,9 @@ static func reinforce_commander_roster_army(
 	faction_id: String,
 	roster_hero_id: String,
 	unit_id: String,
-	count: int
+	count: int,
+	base_encounter_id: String = "",
+	target_strength: int = 0
 ) -> int:
 	if session == null or faction_id == "" or roster_hero_id == "" or unit_id == "" or count <= 0:
 		return 0
@@ -3452,16 +3454,26 @@ static func reinforce_commander_roster_army(
 			if not (commander_state is Dictionary) or commander_state.is_empty():
 				return 0
 			var continuity: Dictionary = _normalized_commander_army_continuity(entry, commander_state)
-			var rebuild_need: int = max(0, int(continuity.get("rebuild_need", 0)))
+			var continuity_stacks: Array = continuity.get("stacks", []) if continuity.get("stacks", []) is Array else []
+			var resolved_encounter_id := String(continuity.get("encounter_id", base_encounter_id))
+			var base_strength: int = max(0, int(continuity.get("base_strength", 0)))
+			if continuity_stacks.is_empty() and base_encounter_id != "":
+				var base_army := _base_enemy_army(base_encounter_id)
+				continuity_stacks = base_army.get("stacks", []) if base_army.get("stacks", []) is Array else []
+				base_strength = max(base_strength, _army_strength(continuity_stacks))
+				resolved_encounter_id = base_encounter_id
+			var current_strength: int = _army_strength(continuity_stacks)
+			var desired_strength: int = max(base_strength, int(target_strength))
+			var rebuild_need: int = max(0, desired_strength - current_strength)
 			if rebuild_need <= 0:
 				return 0
 			var per_unit_strength: int = max(1, _unit_strength_value(unit_id))
 			var accepted: int = min(count, max(1, int(ceili(float(rebuild_need) / float(per_unit_strength)))))
-			var reinforced_stacks: Array = _add_army_stack(continuity.get("stacks", []), unit_id, accepted)
+			var reinforced_stacks: Array = _add_army_stack(continuity_stacks, unit_id, accepted)
 			var updated_state := sync_commander_army_continuity(
 				commander_state,
 				{"stacks": reinforced_stacks},
-				String(continuity.get("encounter_id", ""))
+				resolved_encounter_id
 			)
 			entry["commander_state"] = build_roster_commander_state(
 				roster_hero_id,
