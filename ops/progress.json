@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-defense-overcommit-control-10184",
-  "currentSliceTitle": "Strategic AI Defense Overcommit Control",
+  "currentSliceId": "strategic-ai-post-move-assault-grouping-10184",
+  "currentSliceTitle": "Strategic AI Post-Move Assault Grouping",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Town and resource defense retasks now subtract current and committed defender strength before pulling another commander off useful pressure.",
+  "currentSliceNotes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T15:58:28Z",
+  "updatedAt": "2026-05-30T16:05:21Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28624,6 +28624,39 @@
       "updatedAt": "2026-05-30T15:58:28Z",
       "notes": "Completed. Town and resource defense retasks now account for already-committed defender strength and leave pressure commanders on their existing targets when defensive fronts are covered.",
       "completedAt": "2026-05-30T15:58:28Z"
+    },
+    {
+      "id": "strategic-ai-post-move-assault-grouping-10184",
+      "title": "Strategic AI Post-Move Assault Grouping",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI coordinated multi-hero planning; support columns that become adjacent after movement should join the assault before battle resolution instead of waiting a turn or leaving the leader unsupported",
+      "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-assault-grouping-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_assault_grouping_report.gd",
+        "docs/strategic-ai-raid-assault-grouping-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Assault leaders targeting a town or objective encounter must attempt same-target support grouping again after movement and before arrival resolution, so support columns that become adjacent that turn can be absorbed into the assault; existing pre-move grouping, commander support release, battle queueing, task completion, and public event behavior must remain intact without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new generated-map matrix gate",
+        "No combat balance tuning"
+      ],
+      "startedAt": "2026-05-30T16:01:50Z",
+      "updatedAt": "2026-05-30T16:05:21Z",
+      "notes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
+      "completedAt": "2026-05-30T16:05:21Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38837,8 +38870,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-defense-overcommit-control-10184",
-  "currentSliceUpdatedAt": "2026-05-30T15:58:28Z",
+  "active_slice": "strategic-ai-post-move-assault-grouping-10184",
+  "currentSliceUpdatedAt": "2026-05-30T16:05:21Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41711,42 +41744,43 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-defense-overcommit-control-10184",
-    "title": "Strategic AI Defense Overcommit Control",
+    "id": "strategic-ai-post-move-assault-grouping-10184",
+    "title": "Strategic AI Post-Move Assault Grouping",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "production strategic AI multi-front planning; commanders should not dogpile already-covered defensive fronts while abandoning useful offensive pressure",
-    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning and defense policy",
+    "source": "production strategic AI coordinated multi-hero planning; support columns that become adjacent after movement should join the assault before battle resolution instead of waiting a turn or leaving the leader unsupported",
+    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-town-defense-retask-report.md"
+      "docs/strategic-ai-raid-assault-grouping-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_town_defense_retask_report.gd",
-      "docs/strategic-ai-town-defense-retask-report.md",
+      "tests/ai_raid_assault_grouping_report.gd",
+      "docs/strategic-ai-raid-assault-grouping-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Town and resource defense retasks must account for already-committed defender strength on the same front, skip additional defensive retasks when the front is covered, and preserve existing first-defender retask, arrival, garrison sync, stationed commander, and release behavior without a save-version bump.",
-    "startedAt": "2026-05-30T15:46:23Z",
-    "updatedAt": "2026-05-30T15:58:28Z",
-    "notes": "Completed. Town and resource defense retasks now account for already-committed defender strength and leave pressure commanders on their existing targets when defensive fronts are covered.",
-    "completedAt": "2026-05-30T15:58:28Z",
+    "completionCriteria": "Assault leaders targeting a town or objective encounter must attempt same-target support grouping again after movement and before arrival resolution, so support columns that become adjacent that turn can be absorbed into the assault; existing pre-move grouping, commander support release, battle queueing, task completion, and public event behavior must remain intact without a save-version bump.",
+    "startedAt": "2026-05-30T16:01:50Z",
+    "updatedAt": "2026-05-30T16:05:21Z",
+    "notes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
+    "completedAt": "2026-05-30T16:05:21Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T15:58:28Z",
-      "sliceId": "strategic-ai-defense-overcommit-control-10184",
+      "updatedAt": "2026-05-30T16:05:21Z",
+      "sliceId": "strategic-ai-post-move-assault-grouping-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -41754,39 +41788,40 @@
       ],
       "evidence": {
         "implemented": [
-          "Town-defense target selection now computes an open defense gap from needed defense minus current garrison and same-faction committed town-defense raid strength.",
-          "Resource-site defense target selection now computes an open defense gap from needed defense minus same-faction committed site-defense raid strength.",
-          "Covered town and resource fronts no longer retask a second pressure commander or rewrite that commander's previous target metadata.",
-          "Retask cancellation evidence now accepts a valid completed replacement task after same-turn defense arrival while still requiring cancelled previous-task history and replacement linkage."
+          "Enemy raid advancement now runs assault grouping before movement and again after movement before arrival resolution.",
+          "Support columns targeting the same town or objective encounter can be absorbed when they become adjacent during the leader's movement turn.",
+          "Focused River Pass evidence proves a non-adjacent leader/support pair becomes adjacent after the leader moves onto the Duskfen staging tile, groups, and then queues the town-defense battle.",
+          "Existing adjacent grouping, commander-led support release/rebuild continuity, retake assault risk gating, live-turn task execution, regroup/retreat, defense retask, and retask-cancellation reports remain passing."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-town-defense-retask-report.md"
+          "docs/strategic-ai-raid-assault-grouping-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_TOWN_DEFENSE_RETASK_REPORT",
-          "AI_HERO_TASK_RETASK_CANCELLATION_REPORT",
+          "AI_RAID_ASSAULT_GROUPING_REPORT",
+          "AI_TOWN_RETAKE_ASSAULT_REPORT",
           "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
           "AI_RAID_REGROUP_RETREAT_REPORT",
-          "AI_RAID_ASSAULT_GROUPING_REPORT"
+          "AI_TOWN_DEFENSE_RETASK_REPORT",
+          "AI_HERO_TASK_RETASK_CANCELLATION_REPORT"
         ],
-        "validationNote": "The broad headless simulation harness was started with --quit-after 180 but did not emit a report after roughly four minutes and was stopped; focused live strategic AI reports and repository validation passed.",
-        "residualRisk": "This controls defensive dogpiling for already-covered town/site fronts. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This closes one same-turn coordination gap for assault grouping. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T15:58:28Z",
-    "sliceId": "strategic-ai-defense-overcommit-control-10184",
+    "updatedAt": "2026-05-30T16:05:21Z",
+    "sliceId": "strategic-ai-post-move-assault-grouping-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -41794,26 +41829,26 @@
     ],
     "evidence": {
       "implemented": [
-        "Town-defense target selection now computes an open defense gap from needed defense minus current garrison and same-faction committed town-defense raid strength.",
-        "Resource-site defense target selection now computes an open defense gap from needed defense minus same-faction committed site-defense raid strength.",
-        "Covered town and resource fronts no longer retask a second pressure commander or rewrite that commander's previous target metadata.",
-        "Retask cancellation evidence now accepts a valid completed replacement task after same-turn defense arrival while still requiring cancelled previous-task history and replacement linkage."
+        "Enemy raid advancement now runs assault grouping before movement and again after movement before arrival resolution.",
+        "Support columns targeting the same town or objective encounter can be absorbed when they become adjacent during the leader's movement turn.",
+        "Focused River Pass evidence proves a non-adjacent leader/support pair becomes adjacent after the leader moves onto the Duskfen staging tile, groups, and then queues the town-defense battle.",
+        "Existing adjacent grouping, commander-led support release/rebuild continuity, retake assault risk gating, live-turn task execution, regroup/retreat, defense retask, and retask-cancellation reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-town-defense-retask-report.md"
+        "docs/strategic-ai-raid-assault-grouping-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_TOWN_DEFENSE_RETASK_REPORT",
-        "AI_HERO_TASK_RETASK_CANCELLATION_REPORT",
+        "AI_RAID_ASSAULT_GROUPING_REPORT",
+        "AI_TOWN_RETAKE_ASSAULT_REPORT",
         "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
         "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_RAID_ASSAULT_GROUPING_REPORT"
+        "AI_TOWN_DEFENSE_RETASK_REPORT",
+        "AI_HERO_TASK_RETASK_CANCELLATION_REPORT"
       ],
-      "validationNote": "The broad headless simulation harness was started with --quit-after 180 but did not emit a report after roughly four minutes and was stopped; focused live strategic AI reports and repository validation passed.",
-      "residualRisk": "This controls defensive dogpiling for already-covered town/site fronts. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
+      "residualRisk": "This closes one same-turn coordination gap for assault grouping. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
     }
   }
 }
