@@ -4,6 +4,7 @@ Task: #10184
 Slice: `strategic-ai-hero-hunt-task-board-10184`
 Follow-up slice: `strategic-ai-hero-intercept-risk-gating-10184`
 Follow-up slice: `strategic-ai-hero-hunt-support-grouping-10184`
+Follow-up slice: `strategic-ai-risk-stall-withdrawal-10184`
 
 ## Purpose
 
@@ -21,6 +22,8 @@ Make exposed player-hero hunt targets durable strategic AI tasks instead of tran
 - The follow-up report case `weak_hero_hunt_regroups_before_intercept` proves an underpowered Vaska hunt host reaches Lyra's tile but does not start `session.battle`, while a reinforced hunt host still queues and closes `hero_intercept`.
 - Exposed-hero hunt fronts now participate in active-front support selection and nearby raid grouping. A support commander can choose the live hero-hunt front, preserve `hero_hunt` / `exposed_hero` reason metadata, and merge into the lead hunter before the intercept decision.
 - The follow-up report case `hero_hunt_support_groups_before_intercept` proves Sable selects Vaska's exposed-hero front through `active_front_support`, the normal raid advance emits `ai_raid_grouped`, Sable's support host is resolved, and the donor hero-hunt task is completed without a save migration.
+- Risk-gated hero-hunt fronts now have a terminal preservation decision: if no regroup town exists, no support is committed, and the commander has waited past the support timeout, the active raid withdraws into commander rebuild instead of looping forever as `awaiting_support`.
+- The follow-up report case `stale_unsupported_hero_hunt_retires_to_rebuild` proves a stale unsupported hunter does not start `hero_intercept`, emits `ai_target_assigned`, resolves the active raid, marks `risk_support_timeout`, suspends the hero task as `invalid_actor_rebuilding`, and preserves commander army continuity for rebuild.
 
 Focused runtime report:
 
@@ -36,4 +39,4 @@ No save migration is introduced. Existing saves without `hero_task_state` still 
 
 ## Residual risk
 
-This closes hero-hunt task-board continuity, intercept risk gating, and same-front support grouping for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.
+This closes hero-hunt task-board continuity, intercept risk gating, same-front support grouping, and stale unsupported hero-hunt withdrawal for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, broader retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.

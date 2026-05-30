@@ -39,6 +39,7 @@ const COMMANDER_EXPERIENCE_ARTIFACT_SECURED := 100
 const COMMANDER_EXPERIENCE_OBJECTIVE_SECURED := 90
 const COMMANDER_EXPERIENCE_SITE_DEFENDED := 45
 const COMMANDER_EXPERIENCE_TOWN_DEFENDED := 65
+const RAID_RISK_SUPPORT_STALL_DAYS := 3
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
@@ -1965,13 +1966,28 @@ static func redirect_town_assault_for_risk(
 	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
 	var debug_reason := "town assault risk gate: strength %d below %d" % [strength, required]
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	var started_day := _risk_started_day(raid, "assault_risk_started_day", int(session.day))
+	if (
+		regroup_town.is_empty()
+		and _risk_support_wait_exceeded(session, started_day)
+		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+	):
+		return _retire_risk_stalled_raid_to_rebuild(
+			session,
+			raid,
+			faction_id,
+			"assault_risk_stalled",
+			"town_siege",
+			strength,
+			required
+		)
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
 	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
 	raid["target_public_reason"] = "staging stronger assault"
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = debug_reason
-	raid["assault_risk_started_day"] = int(session.day)
+	raid["assault_risk_started_day"] = started_day
 	raid["assault_delay_until_day"] = int(session.day) + 1
 	raid["arrived"] = false
 	if not regroup_town.is_empty():
@@ -2004,13 +2020,28 @@ static func redirect_hero_intercept_for_risk(
 	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
 	var debug_reason := "hero intercept risk gate: strength %d below %d" % [strength, required]
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	var started_day := _risk_started_day(raid, "hero_intercept_risk_started_day", int(session.day))
+	if (
+		regroup_town.is_empty()
+		and _risk_support_wait_exceeded(session, started_day)
+		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+	):
+		return _retire_risk_stalled_raid_to_rebuild(
+			session,
+			raid,
+			faction_id,
+			"hero_hunt_risk_stalled",
+			"hero_hunt",
+			strength,
+			required
+		)
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
 	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
 	raid["target_public_reason"] = "stalking stronger hero"
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = debug_reason
-	raid["hero_intercept_risk_started_day"] = int(session.day)
+	raid["hero_intercept_risk_started_day"] = started_day
 	raid["hero_intercept_delay_until_day"] = int(session.day) + 1
 	raid["arrived"] = false
 	if not regroup_town.is_empty():
@@ -2083,13 +2114,28 @@ static func redirect_encounter_objective_for_risk(
 	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
 	var debug_reason := "encounter arrival risk gate: strength %d below %d" % [strength, required]
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	var started_day := _risk_started_day(raid, "encounter_arrival_risk_started_day", int(session.day))
+	if (
+		regroup_town.is_empty()
+		and _risk_support_wait_exceeded(session, started_day)
+		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+	):
+		return _retire_risk_stalled_raid_to_rebuild(
+			session,
+			raid,
+			faction_id,
+			"encounter_risk_stalled",
+			"objective_front",
+			strength,
+			required
+		)
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
 	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
 	raid["target_public_reason"] = "gathering strength for guarded site"
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = debug_reason
-	raid["encounter_arrival_risk_started_day"] = int(session.day)
+	raid["encounter_arrival_risk_started_day"] = started_day
 	raid["encounter_arrival_delay_until_day"] = int(session.day) + 1
 	raid["arrived"] = false
 	if not regroup_town.is_empty():
@@ -2106,6 +2152,104 @@ static func redirect_encounter_objective_for_risk(
 	raid["target_reason_codes"] = reason_codes
 	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
 	return raid
+
+static func _risk_started_day(raid: Dictionary, key: String, fallback_day: int) -> int:
+	var started_day := int(raid.get(key, 0))
+	return started_day if started_day > 0 else fallback_day
+
+static func _risk_support_wait_exceeded(session: SessionStateStoreScript.SessionData, started_day: int) -> bool:
+	if session == null or started_day <= 0:
+		return false
+	return int(session.day) - started_day >= RAID_RISK_SUPPORT_STALL_DAYS
+
+static func _risk_committed_support_strength(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary
+) -> int:
+	if session == null or faction_id == "" or raid.is_empty():
+		return 0
+	return _active_front_committed_support_strength(
+		session,
+		faction_id,
+		String(raid.get("target_kind", "")),
+		String(raid.get("target_placement_id", "")),
+		String(raid.get("placement_id", "")),
+		""
+	)
+
+static func _retire_risk_stalled_raid_to_rebuild(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String,
+	stall_code: String,
+	front_code: String,
+	strength: int,
+	required: int
+) -> Dictionary:
+	var retired := raid.duplicate(true)
+	retired["risk_stalled_to_rebuild"] = true
+	retired["risk_stall_code"] = stall_code
+	retired["risk_stall_day"] = int(session.day)
+	retired["risk_stall_strength"] = max(0, strength)
+	retired["risk_stall_required_strength"] = max(0, required)
+	retired["raid_retired_to_rebuild"] = true
+	retired["retired_to_rebuild_day"] = int(session.day)
+	retired["retired_to_rebuild_reason"] = "risk_support_timeout"
+	retired["previous_target_kind"] = String(raid.get("target_kind", ""))
+	retired["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	retired["previous_target_label"] = String(raid.get("target_label", ""))
+	var commander_state = retired.get("enemy_commander_state", {})
+	var roster_hero_id := ""
+	var commander_label := _raid_name(retired)
+	if commander_state is Dictionary and not commander_state.is_empty():
+		_ai_hero_task_finish_live_assignment(session, faction_id, retired, "suspended", "invalid_actor_rebuilding")
+		var updated_commander := sync_commander_army_continuity(
+			commander_state,
+			retired.get("enemy_army", {}),
+			String(retired.get("encounter_id", retired.get("id", "")))
+		)
+		roster_hero_id = String(updated_commander.get("roster_hero_id", ""))
+		commander_label = String(updated_commander.get("name", commander_label))
+		retired["enemy_commander_state"] = updated_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			updated_commander,
+			COMMANDER_STATUS_AVAILABLE,
+			"",
+			0,
+			String(updated_commander.get("last_outcome", ""))
+		)
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(retired.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+	retired["target_kind"] = "commander"
+	retired["target_placement_id"] = roster_hero_id if roster_hero_id != "" else placement_id
+	retired["target_label"] = commander_label
+	retired["target_x"] = int(retired.get("x", 0))
+	retired["target_y"] = int(retired.get("y", 0))
+	retired["goal_x"] = int(retired.get("x", 0))
+	retired["goal_y"] = int(retired.get("y", 0))
+	retired["goal_distance"] = 9999
+	retired["arrived"] = false
+	var reason_codes := ["risk_support_timeout", "army_consolidation", stall_code]
+	if front_code != "" and front_code not in reason_codes:
+		reason_codes.append(front_code)
+	retired["target_reason_codes"] = reason_codes
+	retired["target_public_reason"] = "falling back to rebuild"
+	retired["target_public_importance"] = "high"
+	retired["target_debug_reason"] = "%s: strength %d below %d after waiting %d days without support" % [
+		stall_code,
+		max(0, strength),
+		max(0, required),
+		RAID_RISK_SUPPORT_STALL_DAYS,
+	]
+	return retired
 
 static func _redirect_claim_to_guard_encounter(
 	session: SessionStateStoreScript.SessionData,
