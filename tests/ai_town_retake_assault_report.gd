@@ -16,14 +16,18 @@ func _run() -> void:
 	var risk_case_report := _weak_river_pass_retake_front_stages_before_town_battle()
 	if risk_case_report.is_empty():
 		return
+	var proactive_risk_case_report := _weak_river_pass_retake_front_regroups_before_marching()
+	if proactive_risk_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_town_retake_assault_no_save_migration",
-		"behavior_policy": "enemy_retake_front_town_targets_queue_town_defense_battles_with_assault_risk_gating",
+		"schema_status": "live_town_retake_assault_proactive_risk_no_save_migration",
+		"behavior_policy": "enemy_retake_front_town_targets_queue_battles_with_proactive_risk_regroup",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
+		"proactive_risk_case": proactive_risk_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -163,12 +167,76 @@ func _weak_river_pass_retake_front_stages_before_town_battle() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
-func _retake_raid_seed(session, placement_id: String, bog_brute_count: int) -> Dictionary:
+func _weak_river_pass_retake_front_regroups_before_marching() -> Dictionary:
+	var session = _base_session()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_captured_retake_front(session, "duskfen_bastion")
+	_add_enemy_regroup_town(session, "risk_regroup_redoubt", {"x": 6, "y": 2})
+	var config := _enemy_config()
+	var raid := _retake_raid_seed(session, "proactive_risk_retake_vaska", 5, 4, 2)
+	if EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Proactive risk fixture should be deployable before target assignment: %s" % JSON.stringify(raid))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if not bool(result.get("ok", false)):
+		_fail("Proactive risk fixture failed enemy turn: %s" % JSON.stringify(result))
+		return {}
+	var after_raid := _encounter(session, "proactive_risk_retake_vaska")
+	if after_raid.is_empty():
+		_fail("Proactive risk raid disappeared after enemy turn.")
+		return {}
+	if not session.battle.is_empty():
+		_fail("Proactive risk raid should not queue a town-defense battle: %s" % JSON.stringify(session.battle.get("context", {})))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "regroup" or String(after_raid.get("target_placement_id", "")) != "risk_regroup_redoubt":
+		_fail("Proactive risk raid should regroup at risk_regroup_redoubt before marching: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("previous_target_kind", "")) != "town" or String(after_raid.get("previous_target_placement_id", "")) != "duskfen_bastion":
+		_fail("Proactive risk regroup did not preserve the risky town target metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "assault_risk_regroup" not in reason_codes or "town_siege" not in reason_codes:
+		_fail("Proactive risk regroup missed assault risk reason codes: %s" % JSON.stringify(after_raid))
+		return {}
+	if int(after_raid.get("x", 0)) != 5 or int(after_raid.get("y", 0)) != 2:
+		_fail("Proactive risk raid should move toward regroup town, not Duskfen: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Proactive risk regroup did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Proactive risk regroup public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	return {
+		"case_id": "weak_retake_front_regroups_before_marching",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"previous_target_kind": String(after_raid.get("previous_target_kind", "")),
+		"previous_target_id": String(after_raid.get("previous_target_placement_id", "")),
+		"position_after": {"x": int(after_raid.get("x", 0)), "y": int(after_raid.get("y", 0))},
+		"battle_started": false,
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _retake_raid_seed(session, placement_id: String, bog_brute_count: int, x: int = 7, y: int = 2) -> Dictionary:
 	var raid := {
 		"placement_id": placement_id,
 		"encounter_id": "encounter_mire_raid",
-		"x": 7,
-		"y": 2,
+		"x": x,
+		"y": y,
 		"difficulty": "pressure",
 		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
 		"spawned_by_faction_id": MIRECLAW,
@@ -248,6 +316,21 @@ func _set_player_captured_retake_front(session, placement_id: String) -> void:
 		session.overworld["towns"] = towns
 		return
 	_fail("Could not find town %s for retake-front fixture." % placement_id)
+
+func _add_enemy_regroup_town(session, placement_id: String, position: Dictionary) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	towns.append(
+		{
+			"placement_id": placement_id,
+			"town_id": "town_duskfen",
+			"x": int(position.get("x", 0)),
+			"y": int(position.get("y", 0)),
+			"owner": "enemy",
+			"controlling_faction_id": MIRECLAW,
+			"garrison": [{"unit_id": "unit_bog_brute", "count": 4}],
+		}
+	)
+	session.overworld["towns"] = towns
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
