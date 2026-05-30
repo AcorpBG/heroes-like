@@ -4926,7 +4926,13 @@ static func _ai_hero_task_planner_task_for_actor(
 	target_claims: Dictionary,
 	sequence: int
 ) -> Dictionary:
-	for candidate_value in candidates:
+	var fitted_candidates := _ai_hero_task_planner_candidates_for_commander(
+		session,
+		faction_id,
+		actor_id,
+		candidates
+	)
+	for candidate_value in fitted_candidates:
 		if not (candidate_value is Dictionary):
 			continue
 		var candidate: Dictionary = candidate_value
@@ -4983,8 +4989,166 @@ static func _ai_hero_task_planner_task_for_actor(
 			"route_policy": "derive_route_on_turn",
 			"last_validation": "valid",
 			"reservation": reservation,
+			"commander_fit_bonus": int(candidate.get("commander_fit_bonus", 0)),
+			"commander_fit_profile": String(candidate.get("commander_fit_profile", "")),
 		}
 	return {}
+
+static func _ai_hero_task_planner_candidates_for_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	candidates: Array
+) -> Array:
+	var output := []
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value.duplicate(true)
+		var fit_bonus := _ai_commander_task_fit_bonus(session, faction_id, actor_id, candidate)
+		candidate["commander_fit_bonus"] = fit_bonus
+		candidate["commander_fit_profile"] = _ai_commander_task_fit_profile(session, faction_id, actor_id)
+		candidate["priority"] = max(0, int(candidate.get("priority", 0)) + fit_bonus)
+		output.append(candidate)
+	output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _candidate_beats(a, b)
+	)
+	return output
+
+static func _ai_commander_task_fit_profile(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String
+) -> String:
+	var template := ContentService.get_hero(actor_id)
+	var entry := _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
+	var commander_state = entry.get("commander_state", {})
+	if not (commander_state is Dictionary):
+		commander_state = {}
+	var archetype := String(commander_state.get("archetype", template.get("archetype", "")))
+	var command_path := String(template.get("command_path", ""))
+	if archetype == "":
+		return command_path
+	if command_path == "":
+		return archetype
+	return "%s/%s" % [archetype, command_path]
+
+static func _ai_commander_task_fit_bonus(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	candidate: Dictionary
+) -> int:
+	if actor_id == "" or candidate.is_empty():
+		return 0
+	var template := ContentService.get_hero(actor_id)
+	var entry := _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
+	var commander_state = entry.get("commander_state", {})
+	if not (commander_state is Dictionary):
+		commander_state = {}
+	var command := _normalize_command_payload(
+		commander_state.get("command", template.get("command", {}))
+	)
+	var attack: int = max(0, int(command.get("attack", 0)))
+	var defense: int = max(0, int(command.get("defense", 0)))
+	var power: int = max(0, int(command.get("power", 0)))
+	var knowledge: int = max(0, int(command.get("knowledge", 0)))
+	var archetype := String(commander_state.get("archetype", template.get("archetype", "")))
+	var command_path := String(template.get("command_path", ""))
+	var focus_ids := _normalized_specialty_focus_ids(
+		_merge_unique_strings(
+			commander_state.get("specialty_focus_ids", []),
+			template.get("specialty_focus_ids", [])
+		)
+	)
+	var battle_traits := _normalize_string_array(
+		_merge_unique_strings(
+			commander_state.get("battle_traits", []),
+			template.get("battle_traits", [])
+		)
+	)
+	var target_kind := String(candidate.get("target_kind", ""))
+	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+	var site_family := String(candidate.get("site_family", target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))))
+	var bonus := 0
+
+	match target_kind:
+		"town":
+			bonus += attack * 12
+			bonus += defense * 4
+			if archetype in ["raider", "marshal"]:
+				bonus += 28
+			if archetype in ["castellan", "warden"]:
+				bonus += 10
+			if command_path == "might":
+				bonus += 8
+		"hero":
+			bonus += attack * 16
+			bonus += max(0, int(template.get("base_movement", 10)) - 10) * 6
+			if archetype in ["raider", "pathfinder", "marshal"]:
+				bonus += 34
+			if "ambusher" in battle_traits:
+				bonus += 18
+			if "vanguard" in battle_traits:
+				bonus += 12
+		"resource":
+			bonus += defense * 7
+			if "persistent_income_denial" in reason_codes or "recruit_denial" in reason_codes:
+				bonus += attack * 7
+			if archetype in ["castellan", "warden"]:
+				bonus += 22
+			if "ledgerkeeper" in focus_ids:
+				bonus += 24
+			if "mustercaptain" in focus_ids and "recruit_denial" in reason_codes:
+				bonus += 18
+			if "ambusher" in battle_traits and ("route_pressure" in reason_codes or "route_vision" in reason_codes):
+				bonus += 16
+		"artifact":
+			bonus += (power + knowledge) * 12
+			if command_path == "magic":
+				bonus += 22
+			if archetype in ["hexcaller", "starseer", "pathfinder"]:
+				bonus += 28
+			if "spellwright" in focus_ids:
+				bonus += 26
+			if "wayfinder" in focus_ids and ("route_tempo" in reason_codes or "scouting_reach" in reason_codes):
+				bonus += 16
+		"encounter":
+			bonus += attack * 8
+			bonus += power * 8
+			if archetype in ["raider", "marshal", "pathfinder", "hexcaller"]:
+				bonus += 18
+			if "armsmaster" in focus_ids or "drillmaster" in focus_ids:
+				bonus += 12
+			if "spellwright" in focus_ids and ("magic_support" in reason_codes or site_family == "frontier_shrine"):
+				bonus += 18
+
+	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes:
+		bonus += defense * 18
+		if archetype in ["warden", "castellan"]:
+			bonus += 38
+		if "borderwarden" in focus_ids:
+			bonus += 24
+		if "linekeeper" in battle_traits:
+			bonus += 16
+	if "objective_front" in reason_codes:
+		bonus += 12
+		if archetype in ["marshal", "raider", "warden"]:
+			bonus += 12
+	if "hero_hunt" in reason_codes:
+		bonus += attack * 10
+		if "packhunter" in battle_traits:
+			bonus += 18
+	if "enemy_scouting" in reason_codes or "scouting_reach" in reason_codes:
+		if "wayfinder" in focus_ids or archetype == "pathfinder":
+			bonus += 22
+	if site_family == "neutral_dwelling" and "mustercaptain" in focus_ids:
+		bonus += 16
+	if site_family == "faction_outpost" and ("borderwarden" in focus_ids or archetype == "warden"):
+		bonus += 16
+	if site_family == "frontier_shrine" and ("spellwright" in focus_ids or command_path == "magic"):
+		bonus += 18
+	return clampi(bonus, -80, 120)
 
 static func _ai_hero_task_planner_class_for_candidate(candidate: Dictionary) -> String:
 	var target_kind := String(candidate.get("target_kind", ""))
@@ -5656,6 +5820,7 @@ static func _append_resource_candidate(
 			"goal_y": goal_tile.y,
 			"goal_distance": goal_distance,
 			"priority": priority,
+			"site_family": String(site.get("family", "")),
 			"target_debug_reason": String(breakdown.get("debug_reason", "")),
 			"target_reason_codes": reason_codes,
 			"target_public_reason": String(breakdown.get("public_reason", "")),

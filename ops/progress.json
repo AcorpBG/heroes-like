@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-site-contest-event-surfacing-10184",
-  "currentSliceTitle": "Strategic AI Site Contest Event Surfacing",
+  "currentSliceId": "strategic-ai-commander-personality-task-fit-10184",
+  "currentSliceTitle": "Strategic AI Commander Personality Task Fit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Resolved encounter/site arrivals now emit compact public ai_site_contested events instead of silently mutating encounter and task state.",
+  "currentSliceNotes": "Completed. Live enemy task planning now scores targets per commander identity instead of treating all available commanders as interchangeable.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:55:00Z",
+  "updatedAt": "2026-05-31T00:40:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,85 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-commander-personality-task-fit-10184",
+      "title": "Strategic AI Commander Personality Task Fit",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / commander personality task fit",
+      "purpose": "Make live enemy commander task planning use commander archetype, command stats, specialties, and battle traits so AI heroes choose roles that fit their identity instead of every available commander consuming the same global target order.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "The live strategic task planner adjusts candidate priority per commander identity; defensive commanders prefer defensive/front tasks, aggressive commanders prefer town/hero/encounter pressure, magic/pathfinder commanders prefer artifact/encounter/scouting pressure, and planned tasks persist the chosen commander fit without changing save version.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding report-only gates",
+        "campaign production",
+        "large faction balance tuning"
+      ],
+      "startedAt": "2026-05-31T00:15:00Z",
+      "updatedAt": "2026-05-31T00:40:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner passes with distinct commander tasks, local multi-origin planning, and a commander personality case proving the raider profile selects exposed-hero pressure while the magic profile selects magic artifact pressure from the same equal-priority candidates."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment prep still prepares and launches ready saved commander tasks below generic pressure with commander-fit task metadata present."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute and complete commander tasks after personality-scored planning."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, support, guarded-claim, and route-recovery behavior still pass after planner scoring changes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. The live strategic task planner now rescales candidate priority per commander archetype, command stats, specialty focus, and battle traits before assigning planned tasks. Tasks persist commander_fit_bonus and commander_fit_profile so later recruitment/spawn continuity keeps the identity-shaped choice."
+      ],
+      "completedAt": "2026-05-31T00:40:00Z"
+    },
     {
       "id": "strategic-ai-site-contest-event-surfacing-10184",
       "title": "Strategic AI Site Contest Event Surfacing",

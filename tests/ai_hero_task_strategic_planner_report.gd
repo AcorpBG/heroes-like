@@ -16,14 +16,18 @@ func _run() -> void:
 	var multi_origin_case := _planner_uses_local_origin_for_remote_front()
 	if multi_origin_case.is_empty():
 		return
+	var personality_case := _planner_uses_commander_personality_fit()
+	if personality_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "coordinated_task_planner_live_behavior",
-		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_before_raid_spawn",
+		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_and_scores_targets_by_commander_identity",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
 		"multi_origin_case": multi_origin_case,
+		"personality_case": personality_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -114,6 +118,85 @@ func _planner_uses_local_origin_for_remote_front() -> Dictionary:
 		"origin_id": String(north_task.get("origin_id", "")),
 		"origin_x": int(north_task.get("origin_x", -1)),
 		"origin_y": int(north_task.get("origin_y", -1)),
+	}
+
+func _planner_uses_commander_personality_fit() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var origin := {"kind": "town", "placement_id": "duskfen_bastion", "x": 7, "y": 2}
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("Personality fixture expected an active hero id")
+		return {}
+	var candidates := [
+		{
+			"target_kind": "artifact",
+			"target_placement_id": "trailsinger_cache",
+			"target_label": "Trailsinger Cache",
+			"target_x": 2,
+			"target_y": 0,
+			"goal_x": 2,
+			"goal_y": 0,
+			"goal_distance": 5,
+			"priority": 100,
+			"target_reason_codes": ["artifact_pressure", "magic_support"],
+			"target_public_reason": "magic relic",
+			"target_public_importance": "medium",
+		},
+		{
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": "Exposed Hero",
+			"target_x": 1,
+			"target_y": 2,
+			"goal_x": 1,
+			"goal_y": 2,
+			"goal_distance": 5,
+			"priority": 100,
+			"target_reason_codes": ["hero_hunt", "exposed_hero"],
+			"target_public_reason": "exposed hero",
+			"target_public_importance": "high",
+		},
+	]
+	var vaska_task := EnemyAdventureRules._ai_hero_task_planner_task_for_actor(
+		session,
+		config,
+		MIRECLAW,
+		"hero_vaska",
+		origin,
+		candidates,
+		{},
+		1
+	)
+	var sable_task := EnemyAdventureRules._ai_hero_task_planner_task_for_actor(
+		session,
+		config,
+		MIRECLAW,
+		"hero_sable",
+		origin,
+		candidates,
+		{},
+		2
+	)
+	if String(vaska_task.get("target_kind", "")) != "hero":
+		_fail("Raider commander should prefer exposed hero pressure, got %s" % JSON.stringify(vaska_task))
+		return {}
+	if String(sable_task.get("target_kind", "")) != "artifact":
+		_fail("Magic commander should prefer magic artifact pressure, got %s" % JSON.stringify(sable_task))
+		return {}
+	if int(vaska_task.get("commander_fit_bonus", 0)) <= 0 or int(sable_task.get("commander_fit_bonus", 0)) <= 0:
+		_fail("Personality-fit tasks should persist positive fit metadata: %s / %s" % [JSON.stringify(vaska_task), JSON.stringify(sable_task)])
+		return {}
+	return {
+		"case_id": "commander_personality_fit_changes_target_choice",
+		"raider_actor_id": "hero_vaska",
+		"raider_target_key": "%s:%s" % [String(vaska_task.get("target_kind", "")), String(vaska_task.get("target_id", ""))],
+		"raider_fit_bonus": int(vaska_task.get("commander_fit_bonus", 0)),
+		"raider_fit_profile": String(vaska_task.get("commander_fit_profile", "")),
+		"magic_actor_id": "hero_sable",
+		"magic_target_key": "%s:%s" % [String(sable_task.get("target_kind", "")), String(sable_task.get("target_id", ""))],
+		"magic_fit_bonus": int(sable_task.get("commander_fit_bonus", 0)),
+		"magic_fit_profile": String(sable_task.get("commander_fit_profile", "")),
 	}
 
 func _base_session():
