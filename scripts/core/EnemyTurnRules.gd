@@ -2842,6 +2842,7 @@ static func _normalize_hero_task_validation_code(value: Variant) -> String:
 		"invalid_origin_controller_changed",
 		"invalid_route_unreachable",
 		"invalid_approach_unavailable",
+		"invalid_task_expired",
 		"invalid_script_lock",
 		"invalid_scenario_complete",
 	]:

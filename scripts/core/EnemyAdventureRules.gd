@@ -7020,10 +7020,127 @@ static func _ai_hero_task_actor_id_from_raid(raid: Dictionary) -> String:
 	return String(raid.get("commander_hero_id", raid.get("placement_id", "")))
 
 static func _ai_hero_task_live_tasks_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	_ai_hero_task_reconcile_live_tasks_for_faction(session, faction_id)
 	var state := _ai_hero_task_enemy_state_for_faction(session, faction_id)
 	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
 	return tasks
+
+static func _ai_hero_task_reconcile_live_tasks_for_faction(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> void:
+	if session == null or faction_id == "":
+		return
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		if tasks.is_empty():
+			return
+		var changed := false
+		var next_tasks := []
+		for task_value in tasks:
+			if not (task_value is Dictionary):
+				continue
+			var task: Dictionary = task_value
+			var reconciled := _ai_hero_task_reconciled_live_task(session, faction_id, task)
+			if not _ai_hero_task_records_equal(task, reconciled):
+				changed = true
+			next_tasks.append(reconciled)
+		if not changed:
+			return
+		state["hero_task_state"] = {
+			"schema_version": 1,
+			"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + 1,
+			"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
+		}
+		states[state_index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _ai_hero_task_reconciled_live_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary
+) -> Dictionary:
+	var status := String(task.get("task_status", ""))
+	if status not in ["planned", "reserved", "active"]:
+		return task
+	var expires_day := int(task.get("expires_day", 0))
+	if expires_day > 0 and expires_day < int(session.day):
+		return _ai_hero_task_with_lifecycle(task, "cancelled", "invalid_task_expired")
+	var target_kind := String(task.get("target_kind", ""))
+	var target_id := String(task.get("target_id", ""))
+	match target_kind:
+		"resource":
+			return _ai_hero_task_reconciled_resource_task(session, faction_id, task, target_id)
+		"town":
+			return _ai_hero_task_reconciled_town_task(session, faction_id, task, target_id)
+	return task
+
+static func _ai_hero_task_reconciled_resource_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var node_result := _find_resource_by_placement(session, target_id)
+	if int(node_result.get("index", -1)) < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var node: Dictionary = node_result.get("node", {})
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var controller_id := String(node.get("collected_by_faction_id", ""))
+	var task_class := String(task.get("task_class", ""))
+	if task_class == "defend_front":
+		if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(task.get("priority_reason_codes", []))):
+			return task
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	if controller_id == faction_id:
+		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+	if not _resource_site_is_persistent(site) and bool(node.get("collected", false)):
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
+	return task
+
+static func _ai_hero_task_reconciled_town_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var town_result := _find_town_by_placement(session, target_id)
+	if int(town_result.get("index", -1)) < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var town: Dictionary = town_result.get("town", {})
+	var owner := String(town.get("owner", "neutral"))
+	var town_faction := _town_faction_id(town)
+	var task_class := String(task.get("task_class", ""))
+	var same_faction_town := owner == "enemy" and town_faction == faction_id
+	if task_class in ["defend_front", "stabilize_front"]:
+		if same_faction_town:
+			return task
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	if same_faction_town:
+		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+	if owner not in ["player", "enemy"]:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	return task
+
+static func _ai_hero_task_with_lifecycle(task: Dictionary, status: String, validation: String) -> Dictionary:
+	var next_task := task.duplicate(true)
+	next_task["task_status"] = status
+	next_task["last_validation"] = validation
+	return next_task
+
+static func _ai_hero_task_records_equal(left: Dictionary, right: Dictionary) -> bool:
+	return JSON.stringify(left) == JSON.stringify(right)
 
 static func _ai_hero_task_upsert_live_task(
 	session: SessionStateStoreScript.SessionData,
