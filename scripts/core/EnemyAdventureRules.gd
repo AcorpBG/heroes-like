@@ -9906,7 +9906,7 @@ static func _resolve_arrived_target(
 					"risk_gated": true,
 					"risk_report": ready_report,
 				}
-			return _contest_encounter_target(session, raid, state, faction_id)
+			return _contest_encounter_target(session, raid, state, faction_id, config)
 		"regroup":
 			return _regroup_raid_at_town(session, raid, state, faction_id)
 		_:
@@ -10312,7 +10312,8 @@ static func _contest_encounter_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
 	var encounter_state = encounter_result.get("encounter", {})
@@ -10390,7 +10391,106 @@ static func _contest_encounter_target(
 			String(encounter_template.get("name", "the frontier camp")),
 			_describe_resource_set(spoils),
 		]
+	var resume_result := _resume_guarded_claim_after_guard_clear(session, config, resolved_raid, state, faction_id)
+	if bool(resume_result.get("resumed", false)):
+		return {
+			"encounter": resume_result.get("encounter", resolved_raid),
+			"state": resume_result.get("state", state),
+			"event_message": message,
+			"ai_event": resume_result.get("ai_event", {}),
+			"guarded_claim_resumed": true,
+		}
 	return {"encounter": resolved_raid, "state": state, "event_message": message}
+
+static func _resume_guarded_claim_after_guard_clear(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var resume_target := _guarded_claim_resume_target(session, raid, faction_id)
+	if resume_target.is_empty():
+		return {"resumed": false, "encounter": raid, "state": state}
+	var previous_target := _current_target_snapshot(raid)
+	var resumed := raid.duplicate(true)
+	resumed.merge(resume_target, true)
+	resumed.erase("guarded_claim_kind")
+	resumed.erase("guarded_claim_target_id")
+	resumed.erase("guarded_claim_target_label")
+	resumed["arrived"] = false
+	resumed["guarded_claim_resumed_day"] = int(session.day)
+	resumed = _refresh_target(session, resumed)
+	var retask_event := ai_target_assignment_event(session, config, resumed, previous_target)
+	if retask_event.is_empty():
+		retask_event = ai_target_assignment_event(session, config, resumed, {})
+	return {
+		"resumed": true,
+		"encounter": resumed,
+		"state": state,
+		"ai_event": retask_event,
+	}
+
+static func _guarded_claim_resume_target(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {}
+	var claim_kind := String(raid.get("guarded_claim_kind", ""))
+	var target_id := String(raid.get("guarded_claim_target_id", ""))
+	if claim_kind == "" or target_id == "":
+		return {}
+	match claim_kind:
+		"resource":
+			var node_result := _find_resource_by_placement(session, target_id)
+			if int(node_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = node_result.get("node", {})
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			if not _resource_guard_encounter_for_node(session, node, site).is_empty():
+				return {}
+			if not _resource_node_contestable_by_faction(node, site, faction_id):
+				return {}
+			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			return {
+				"target_kind": "resource",
+				"target_placement_id": target_id,
+				"target_label": String(site.get("name", "Resource Site")),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_x": tile.x,
+				"goal_y": tile.y,
+				"target_reason_codes": ["guard_cleared", "guarded_resource_claim", "site_contested"],
+				"target_public_reason": "claiming guarded prize",
+				"target_public_importance": "high",
+				"target_debug_reason": "guard cleared; resuming guarded resource claim",
+			}
+		"artifact":
+			var artifact_result := _find_artifact_by_placement(session, target_id)
+			if int(artifact_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = artifact_result.get("node", {})
+			if bool(node.get("collected", false)):
+				return {}
+			if not _artifact_guard_encounter_for_node(session, node).is_empty():
+				return {}
+			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			return {
+				"target_kind": "artifact",
+				"target_placement_id": target_id,
+				"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_x": tile.x,
+				"goal_y": tile.y,
+				"target_reason_codes": ["guard_cleared", "guarded_artifact_claim", "artifact_pressure"],
+				"target_public_reason": "claiming guarded prize",
+				"target_public_importance": "high",
+				"target_debug_reason": "guard cleared; resuming guarded artifact claim",
+			}
+	return {}
 
 static func _regroup_raid_at_town(
 	session: SessionStateStoreScript.SessionData,
