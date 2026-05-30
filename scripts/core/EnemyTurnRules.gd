@@ -1562,10 +1562,11 @@ static func _can_launch_raid(
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		return false
-	return _first_open_spawn_point(session, config).size() > 0
+	return not _best_open_spawn_point(session, config, state, faction_id).is_empty()
 
 static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
-	var spawn_point = _first_open_spawn_point(session, config)
+	var faction_id := String(config.get("faction_id", ""))
+	var spawn_point = _best_open_spawn_point(session, config, state, faction_id)
 	if spawn_point.is_empty():
 		return {}
 
@@ -1574,16 +1575,17 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		return {}
 
 	var raid_counter = int(state.get("raid_counter", 0))
-	var faction_id := String(config.get("faction_id", ""))
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
-	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
-		session,
-		faction_id,
-		spawn_point,
-		int(state.get("commander_counter", 0)),
-		occupied_commander_ids,
-		state.get("commander_roster", [])
-	)
+	var roster_hero_id := String(spawn_point.get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		roster_hero_id = EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
+			session,
+			faction_id,
+			spawn_point,
+			int(state.get("commander_counter", 0)),
+			occupied_commander_ids,
+			state.get("commander_roster", [])
+		)
 	if roster_hero_id == "":
 		return {}
 	var encounter_id = String(encounter_pool[raid_counter % encounter_pool.size()])
@@ -2331,9 +2333,113 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 			return "Scouts report patrols probing for openings"
 
 static func _first_open_spawn_point(session: SessionStateStoreScript.SessionData, config: Dictionary) -> Dictionary:
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	return points[0]
+
+static func _best_open_spawn_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary = {},
+	faction_id: String = ""
+) -> Dictionary:
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", state.get("faction_id", "")))
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
+	var best := {}
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _spawn_point_candidate(
+			session,
+			config,
+			state,
+			resolved_faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if candidate.is_empty():
+			continue
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best if not best.is_empty() else _first_open_spawn_point(session, config)
+
+static func _spawn_point_candidate(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	if faction_id == "" or point.is_empty():
+		return {}
+	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
+		session,
+		faction_id,
+		point,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	if roster_hero_id == "":
+		return {}
+	var plan := EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
+		session,
+		faction_id,
+		roster_hero_id,
+		point
+	)
+	var plan_source := "saved_task"
+	if plan.is_empty():
+		plan_source = "fresh_target"
+		plan = EnemyAdventureRulesScript.choose_target(
+			session,
+			config,
+			point,
+			{"roster_hero_id": roster_hero_id, "faction_id": faction_id}
+		)
+	if plan.is_empty():
+		return {}
+	var priority := int(plan.get("priority", plan.get("final_priority", 0)))
+	var goal_distance := int(plan.get("goal_distance", 9999))
+	if goal_distance >= 9999 and plan.has("target_x") and plan.has("target_y"):
+		goal_distance = abs(int(point.get("x", 0)) - int(plan.get("target_x", 0))) \
+			+ abs(int(point.get("y", 0)) - int(plan.get("target_y", 0)))
+	var score: int = (priority * 100) - (mini(goal_distance, 9999) * 5) - spawn_order
+	if plan_source == "saved_task":
+		score += 100000
+	var candidate := point.duplicate(true)
+	candidate["roster_hero_id"] = roster_hero_id
+	candidate["spawn_plan_source"] = plan_source
+	candidate["spawn_plan_target_kind"] = String(plan.get("target_kind", ""))
+	candidate["spawn_plan_target_id"] = String(plan.get("target_placement_id", ""))
+	candidate["spawn_plan_priority"] = priority
+	candidate["spawn_plan_goal_distance"] = goal_distance
+	candidate["spawn_plan_score"] = score
+	candidate["spawn_order"] = spawn_order
+	return candidate
+
+static func _spawn_point_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
+	if int(candidate.get("spawn_plan_score", 0)) == int(best.get("spawn_plan_score", 0)):
+		if int(candidate.get("spawn_plan_goal_distance", 9999)) == int(best.get("spawn_plan_goal_distance", 9999)):
+			return int(candidate.get("spawn_order", 9999)) < int(best.get("spawn_order", 9999))
+		return int(candidate.get("spawn_plan_goal_distance", 9999)) < int(best.get("spawn_plan_goal_distance", 9999))
+	return int(candidate.get("spawn_plan_score", 0)) > int(best.get("spawn_plan_score", 0))
+
+static func _open_spawn_points(session: SessionStateStoreScript.SessionData, config: Dictionary) -> Array:
+	var points := []
 	var spawn_points = config.get("spawn_points", [])
 	if not (spawn_points is Array):
-		return {}
+		return points
 
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var hero_position = session.overworld.get("hero_position", {"x": -1, "y": -1})
@@ -2357,8 +2463,8 @@ static func _first_open_spawn_point(session: SessionStateStoreScript.SessionData
 			break
 
 		if not occupied:
-			return {"x": x, "y": y}
-	return {}
+			points.append({"x": x, "y": y})
+	return points
 
 static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null:

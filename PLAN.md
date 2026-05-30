@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-town-rebuild-garrison-safety-10184`, completed to keep critically under-defended towns from spending recruit batches on commander rebuild before local safety is restored.
+- Current implementation slice: `strategic-ai-target-aware-spawn-point-selection-10184`, completed to make raid deployment choose an open spawn point that best serves saved commander tasks and live strategic targets instead of using the first open spawn slot.
+- Latest completed slice: `strategic-ai-target-aware-spawn-point-selection-10184`.
 - Latest completed slice: `strategic-ai-town-rebuild-garrison-safety-10184`.
 - Latest completed slice: `strategic-ai-regroup-garrison-aware-routing-10184`.
 - Latest completed slice: `strategic-ai-regroup-failure-rebuild-10184`.
