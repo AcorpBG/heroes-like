@@ -504,7 +504,7 @@ static func town_recruitment_pressure_report(
 	for unit_id in recruit_ids:
 		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
 		var cost := _enemy_recruit_cost(town, unit_id)
-		var recruit_count: int = min(available, _max_affordable_from_pool(treasury, cost))
+		var recruit_count: int = _max_affordable_from_pool_with_town_market(town, treasury, cost, int(session.day), available)
 		candidates.append(
 			{
 				"unit_id": unit_id,
@@ -1136,7 +1136,7 @@ static func _recruit_town_forces(
 		if available <= 0:
 			continue
 		var cost = _enemy_recruit_cost(town, unit_id)
-		var recruit_count = min(available, _max_affordable_from_pool(treasury, cost))
+		var recruit_count = _max_affordable_from_pool_with_town_market(town, treasury, cost, int(session.day), available)
 		if recruit_count <= 0:
 			continue
 		var destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
@@ -1172,7 +1172,9 @@ static func _recruit_town_forces(
 		if applied_count <= 0:
 			continue
 		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
-		_spend_from_pool(treasury, _scale_resource_pool(cost, applied_count))
+		var final_cost := _scale_resource_pool(cost, applied_count)
+		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
+		_spend_from_pool(treasury, final_cost)
 		var selected_recruitment := {
 			"unit_id": unit_id,
 			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
@@ -3605,6 +3607,34 @@ static func _max_affordable_from_pool(pool: Dictionary, unit_cost: Variant) -> i
 		var price = max(1, int(unit_cost[key]))
 		max_affordable = min(max_affordable, int(int(pool.get(String(key), 0)) / price))
 	return max_affordable
+
+static func _max_affordable_from_pool_with_town_market(
+	town: Dictionary,
+	pool: Dictionary,
+	unit_cost: Variant,
+	current_day: int = -1,
+	max_count: int = 999
+) -> int:
+	if not (unit_cost is Dictionary) or unit_cost.is_empty():
+		return max(0, max_count)
+	var direct_affordable: int = _max_affordable_from_pool(pool, unit_cost)
+	var max_probe: int = min(max(0, max_count), max(direct_affordable, 1))
+	var market_state: Dictionary = OverworldRulesScript.town_market_state(town)
+	if bool(market_state.get("active", false)):
+		var gold_price: int = max(1, int(unit_cost.get("gold", 0)))
+		max_probe = min(max(0, max_count), max(max_probe, int(int(pool.get("gold", 0)) / gold_price) + 1))
+		for resource_key in ["wood", "ore"]:
+			var price: int = max(0, int(unit_cost.get(resource_key, 0)))
+			if price > 0:
+				var available_stock := int(pool.get(resource_key, 0)) + int(market_state.get("buy_caps", {}).get(resource_key, 0))
+				max_probe = min(max(0, max_count), max(max_probe, int(available_stock / price) + 1))
+	var affordable := 0
+	for count in range(1, max_probe + 1):
+		var scaled_cost := _scale_resource_pool(unit_cost, count)
+		if not OverworldRulesScript.can_afford_cost_with_town_market(town, pool, scaled_cost, current_day):
+			break
+		affordable = count
+	return affordable
 
 static func _spend_from_pool(pool: Dictionary, cost: Variant) -> void:
 	if not (cost is Dictionary):

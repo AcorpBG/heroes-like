@@ -5,6 +5,7 @@ const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
 const DUSKFEN := "duskfen_bastion"
 const PREP_UNIT := "unit_bog_brute"
+const MARKET_WOOD_UNIT := "unit_mireclaw_mudglass_slingers"
 const TREASURY := {
 	"gold": 16000,
 	"wood": 24,
@@ -32,6 +33,9 @@ func _run() -> void:
 	var unit_fit_case := _recruitment_unit_priority_follows_destination()
 	if unit_fit_case.is_empty():
 		return
+	var market_case := _market_backed_recruitment_covers_unit_material_cost()
+	if market_case.is_empty():
+		return
 	var garrison_case := _critical_garrison_still_wins()
 	if garrison_case.is_empty():
 		return
@@ -47,7 +51,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_recruitment_prepares_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, planned_case, unit_fit_case, garrison_case, ready_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -204,6 +208,55 @@ func _recruitment_unit_priority_follows_destination() -> Dictionary:
 		"magic_artifact_preferred_unit": "unit_mire_slinger",
 		"magic_slinger_score": slinger_magic_score,
 		"magic_cutthroat_score": cutthroat_magic_score,
+	}
+
+func _market_backed_recruitment_covers_unit_material_cost() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var treasury := {
+		"gold": 2000,
+		"wood": 0,
+		"ore": 0,
+		"aetherglass": 0,
+		"embergrain": 0,
+		"peatwax": 0,
+		"verdant_grafts": 0,
+		"brass_scrip": 0,
+		"memory_salt": 0,
+	}
+	_prepare_market_recruiting_town(session)
+	var town := _town_by_id(session, DUSKFEN)
+	var direct_count := EnemyTurnRules._max_affordable_from_pool(treasury, ContentService.get_unit(MARKET_WOOD_UNIT).get("cost", {}))
+	if direct_count != 0:
+		_fail("Market recruitment fixture expected direct raw-stock affordability to be zero, got %d" % direct_count)
+		return {}
+	var report := EnemyTurnRules.town_recruitment_pressure_report(session, config, town, treasury.duplicate(true), FACTION_ID)
+	var selected: Dictionary = report.get("selected_recruitment", {}) if report.get("selected_recruitment", {}) is Dictionary else {}
+	if String(selected.get("unit_id", "")) != MARKET_WOOD_UNIT or int(selected.get("recruit_count", 0)) <= 0:
+		_fail("Recruitment pressure report did not treat market-backed unit as affordable: %s" % JSON.stringify(report))
+		return {}
+	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	var recruited_town: Dictionary = recruit_result.get("town", {}) if recruit_result.get("town", {}) is Dictionary else {}
+	var recruited_count := _garrison_count(recruited_town, MARKET_WOOD_UNIT)
+	if recruited_count <= 0:
+		_fail("Market-backed recruitment did not add wood-cost units to the garrison: %s" % JSON.stringify(recruit_result))
+		return {}
+	var market_usage: Dictionary = recruited_town.get("market_usage", {}) if recruited_town.get("market_usage", {}) is Dictionary else {}
+	var buy_usage: Dictionary = market_usage.get("buy", {}) if market_usage.get("buy", {}) is Dictionary else {}
+	if int(buy_usage.get("wood", 0)) < recruited_count:
+		_fail("Market-backed recruitment did not consume wood buy cap: count=%d usage=%s" % [recruited_count, JSON.stringify(market_usage)])
+		return {}
+	if int(treasury.get("wood", 0)) != 0:
+		_fail("Market-backed recruitment should spend bought wood immediately, treasury=%s" % JSON.stringify(treasury))
+		return {}
+	return {
+		"case_id": "market_backed_recruitment_covers_unit_material_cost",
+		"unit_id": MARKET_WOOD_UNIT,
+		"direct_affordable_count": direct_count,
+		"reported_recruit_count": int(selected.get("recruit_count", 0)),
+		"actual_recruited_count": recruited_count,
+		"market_buy_wood": int(buy_usage.get("wood", 0)),
+		"gold_after": int(treasury.get("gold", 0)),
 	}
 
 func _critical_garrison_still_wins() -> Dictionary:
@@ -369,6 +422,14 @@ func _prepare_critical_recruiting_town(session) -> void:
 		"available_recruits": {PREP_UNIT: 4},
 	})
 
+func _prepare_market_recruiting_town(session) -> void:
+	_update_duskfen_town(session, {
+		"built_buildings": ["building_town_hall", "building_market_square"],
+		"garrison": [],
+		"available_recruits": {MARKET_WOOD_UNIT: 2},
+		"market_usage": {},
+	})
+
 func _update_duskfen_town(session, patch: Dictionary) -> void:
 	var towns: Array = session.overworld.get("towns", [])
 	for index in range(towns.size()):
@@ -413,6 +474,13 @@ func _set_enemy_treasury(session, treasury: Dictionary) -> void:
 
 func _commander_strength(session, actor_id: String) -> int:
 	return int(_commander_continuity(session, actor_id).get("current_strength", 0))
+
+func _garrison_count(town: Dictionary, unit_id: String) -> int:
+	var count := 0
+	for stack in town.get("garrison", []):
+		if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
+			count += int(stack.get("count", 0))
+	return count
 
 func _commander_continuity(session, actor_id: String) -> Dictionary:
 	for entry in EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID):
