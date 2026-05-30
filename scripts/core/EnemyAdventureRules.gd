@@ -755,6 +755,9 @@ static func _active_front_needs_support(front: Dictionary) -> bool:
 		"assault_risk_regroup",
 		"encounter_risk_staging",
 		"encounter_risk_regroup",
+		"hero_hunt_risk_shadow",
+		"hero_hunt_risk_regroup",
+		"hero_hunt",
 		"guard_clearance",
 		"objective_front",
 	]:
@@ -777,10 +780,10 @@ static func _active_front_support_candidate(
 	var target_kind := String(front.get("target_kind", ""))
 	var target_id := String(front.get("target_placement_id", ""))
 	var front_reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
-	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter"]:
+	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero"]:
 		target_kind = String(front.get("previous_target_kind", ""))
 		target_id = String(front.get("previous_target_placement_id", ""))
-	if target_kind not in ["town", "encounter"] or target_id == "":
+	if target_kind not in ["town", "encounter", "hero"] or target_id == "":
 		return {}
 	var target_label := ""
 	var target_x := 0
@@ -813,6 +816,16 @@ static func _active_front_support_candidate(
 			target_y = int(encounter.get("y", 0))
 			goal_tiles = _encounter_staging_tiles(session, encounter)
 			objective_anchor = _encounter_is_objective_anchor(session, encounter)
+		"hero":
+			var hero := _player_hero_snapshot_for_task(session, target_id)
+			if hero.is_empty():
+				return {}
+			var hero_tile := _player_hero_goal_tile(hero)
+			target_label = String(hero.get("name", target_id))
+			target_x = hero_tile.x
+			target_y = hero_tile.y
+			goal_tiles = _hero_target_goal_tiles(session, origin_pos, hero_tile, current_placement_id)
+			objective_anchor = true
 	if goal_tiles.is_empty():
 		return {}
 	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
@@ -820,13 +833,24 @@ static func _active_front_support_candidate(
 		return {}
 	var goal_tile := _best_goal_tile(session, origin_pos, goal_tiles)
 	var reason_codes := ["active_front_support", "army_consolidation"]
-	for code in ["town_siege", "objective_front", "guard_clearance", "site_contested"]:
+	for code in [
+		"town_siege",
+		"objective_front",
+		"guard_clearance",
+		"site_contested",
+		"hero_hunt",
+		"hero_hunt_risk_shadow",
+		"hero_hunt_risk_regroup",
+		"exposed_hero",
+	]:
 		if code in front_reason_codes and code not in reason_codes:
 			reason_codes.append(code)
 	if target_kind == "town" and "town_siege" not in reason_codes:
 		reason_codes.append("town_siege")
 	if target_kind == "encounter" and "objective_front" not in reason_codes and objective_anchor:
 		reason_codes.append("objective_front")
+	if target_kind == "hero" and "hero_hunt" not in reason_codes:
+		reason_codes.append("hero_hunt")
 	var strength_gap: int = max(0, desired_raid_strength(front) - raid_strength(front))
 	var committed_support_strength := _active_front_committed_support_strength(
 		session,
@@ -839,6 +863,9 @@ static func _active_front_support_candidate(
 	var open_support_gap: int = max(0, strength_gap - committed_support_strength)
 	if open_support_gap <= 0:
 		return {}
+	var support_priority_base := 180
+	if target_kind == "hero":
+		support_priority_base = 470
 	var priority: int = int(max(
 		0,
 		_weighted_priority(
@@ -846,7 +873,7 @@ static func _active_front_support_candidate(
 			faction_id,
 			target_kind,
 			target_id,
-			180 + int(ceili(float(open_support_gap) / 4.0)) + priority_target_bonus(config, target_id),
+			support_priority_base + int(ceili(float(open_support_gap) / 4.0)) + priority_target_bonus(config, target_id),
 			"",
 			objective_anchor
 		) - _assignment_penalty(session, target_kind, target_id)
@@ -1150,7 +1177,7 @@ static func group_nearby_raids_for_town_assault(
 	if session == null or leader.is_empty() or leader_index < 0 or leader_index >= encounters.size():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var target_kind := String(leader.get("target_kind", ""))
-	if target_kind not in ["town", "encounter"]:
+	if target_kind not in ["town", "encounter", "hero"]:
 		return {"encounter": leader, "grouped": false, "events": []}
 	if raid_regroup_needed(leader):
 		return {"encounter": leader, "grouped": false, "events": []}
@@ -1281,6 +1308,16 @@ static func _raid_grouping_target_view(
 				"target_x": int(encounter.get("x", 0)),
 				"target_y": int(encounter.get("y", 0)),
 			}
+		"hero":
+			var hero := _player_hero_snapshot_for_task(session, target_id)
+			if hero.is_empty():
+				return {}
+			var hero_tile := _player_hero_goal_tile(hero)
+			return {
+				"target_label": String(hero.get("name", target_id)),
+				"target_x": hero_tile.x,
+				"target_y": hero_tile.y,
+			}
 	return {}
 
 static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes: Array) -> Array:
@@ -1289,7 +1326,16 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		output.append("town_siege")
 	elif target_kind == "encounter":
 		output.append("objective_front")
-	for code in ["guard_clearance", "site_contested", "active_front_support"]:
+	elif target_kind == "hero":
+		output.append("hero_hunt")
+	for code in [
+		"guard_clearance",
+		"site_contested",
+		"active_front_support",
+		"exposed_hero",
+		"hero_hunt_risk_shadow",
+		"hero_hunt_risk_regroup",
+	]:
 		if code in leader_reason_codes and code not in output:
 			output.append(code)
 	return output
@@ -2121,6 +2167,9 @@ static func _redirect_raid_to_threatened_town_defense(
 		return raid
 	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
 		return raid
+	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
+		return raid
 	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id)
 	if defense_town.is_empty():
 		return raid
@@ -2214,6 +2263,8 @@ static func _redirect_raid_to_threatened_resource_defense(
 	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
 		return raid
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
+		return raid
 	if String(raid.get("target_kind", "")) == "town" and "town_defense" in active_reason_codes:
 		return _refresh_target(session, raid)
 	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id)
@@ -5306,6 +5357,28 @@ static func _hero_target_goal_distance(
 	if approach_distance >= 9999:
 		return direct_distance
 	return approach_distance + 1
+
+static func _hero_target_goal_tiles(
+	session: SessionStateStoreScript.SessionData,
+	origin_pos: Vector2i,
+	goal_tile: Vector2i,
+	ignore_placement_id: String = ""
+) -> Array:
+	var occupied := _occupied_tiles(session, ignore_placement_id)
+	if not occupied.has(_pos_key(goal_tile)):
+		return [goal_tile]
+	var approach_tiles: Array = []
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var approach_tile: Vector2i = goal_tile + delta
+		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
+			continue
+		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y):
+			continue
+		if approach_tile != origin_pos and occupied.has(_pos_key(approach_tile)):
+			continue
+		approach_tiles.append(approach_tile)
+	return approach_tiles
 
 static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-town-defender-rotation-10184",
-  "currentSliceTitle": "Strategic AI Town Defender Rotation",
+  "currentSliceId": "strategic-ai-hero-hunt-support-grouping-10184",
+  "currentSliceTitle": "Strategic AI Hero Hunt Support Grouping",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Defended town fronts stay strategically visible and cleared fronts release stationed commanders.",
+  "currentSliceNotes": "Completed. Exposed-hero hunt fronts can attract active-front support, preserve hero-hunt metadata, group adjacent support commanders into the lead hunter, and avoid same-turn defense retarget theft while committed to support consolidation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:23:51Z",
+  "updatedAt": "2026-05-30T16:32:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28730,6 +28730,78 @@
       "updatedAt": "2026-05-30T16:23:51Z",
       "notes": "Completed. Defended town fronts stay strategically visible and cleared fronts release stationed commanders.",
       "completedAt": "2026-05-30T16:23:51Z"
+    },
+    {
+      "id": "strategic-ai-hero-hunt-support-grouping-10184",
+      "title": "Strategic AI Hero Hunt Support Grouping",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner direction to improve strategic AI quality beyond report gates; exposed-hero hunt fronts should request and absorb nearby support before committing to risky intercepts",
+      "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning gap",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "A live exposed-hero hunt front below desired strength can be selected by another deployable commander as active-front support, that support keeps hero-hunt reason metadata, adjacent support groups into the lead hunter through the normal raid grouping path, donor commander task state completes/releases cleanly, and existing hero-intercept risk gating remains intact without a save-version bump.",
+      "nonGoals": [
+        "No full strategic AI release-readiness claim",
+        "No campaign AI work",
+        "No new broad dashboard/report gate"
+      ],
+      "startedAt": "2026-05-30T16:27:18Z",
+      "updatedAt": "2026-05-30T16:32:16Z",
+      "notes": "Completed. Exposed-hero hunt fronts can attract active-front support, preserve hero-hunt metadata, group adjacent support commanders into the lead hunter, and avoid same-turn defense retarget theft while committed to support consolidation.",
+      "completedAt": "2026-05-30T16:32:16Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T16:32:16Z",
+        "sliceId": "strategic-ai-hero-hunt-support-grouping-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Exposed-hero hunt fronts now satisfy active-front support selection when they need help, including hero-hunt risk/waiting reason codes.",
+            "Support commanders can select a live hero-hunt front, preserve hero_hunt/exposed_hero metadata, and merge through the existing ai_raid_grouped path before intercept resolution.",
+            "Hero support pathing can stage adjacent to an occupied hero tile/front instead of failing path resolution when the lead hunter already occupies the target tile.",
+            "Town/resource defensive retargeting now leaves active-front support or awaiting-support hosts committed long enough for same-turn consolidation to occur."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-hunt-task-board-report.md",
+            "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_TOWN_DEFENSE_RETASK_REPORT"
+          ],
+          "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -39062,44 +39134,45 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T16:23:51Z",
-    "sliceId": "strategic-ai-town-defender-rotation-10184",
+    "updatedAt": "2026-05-30T16:32:16Z",
+    "sliceId": "strategic-ai-hero-hunt-support-grouping-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "python3 tests/validate_repo.py (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
+      "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Defended town fronts now preserve defense_until_day and last_defended_day through front-state normalization.",
-        "OverworldRules.town_front_state now treats front state defend as an active stabilization/defender-watch front while the defense window is live, exposing garrison/build/pressure bonuses to strategic AI instead of hiding the front behind commander metadata.",
-        "Stationed town defenders now remain active only while the town still has a live defend/stabilizing front for the same faction; clearing that front releases defender metadata and returns the commander to available roster status before stale timers expire.",
-        "Focused Duskfen evidence proves a defended town remains strategically active after ai_town_defended, then releases Vaska when the front is cleared. Existing town-defense retask, defense overcommit, town retake assault, raid assault grouping, and live-turn execution paths remain passing."
+        "Exposed-hero hunt fronts now satisfy active-front support selection when they need help, including hero-hunt risk/waiting reason codes.",
+        "Support commanders can select a live hero-hunt front, preserve hero_hunt/exposed_hero metadata, and merge through the existing ai_raid_grouped path before intercept resolution.",
+        "Hero support pathing can stage adjacent to an occupied hero tile/front instead of failing path resolution when the lead hunter already occupies the target tile.",
+        "Town/resource defensive retargeting now leaves active-front support or awaiting-support hosts committed long enough for same-turn consolidation to occur."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-town-defense-retask-report.md",
-        "docs/strategic-ai-town-defense-arrival-report.md",
-        "docs/strategic-ai-town-defender-lifecycle-report.md"
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_TOWN_DEFENSE_RETASK_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT",
+        "AI_HERO_TASK_HERO_HUNT_REPORT",
+        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
         "AI_RAID_ASSAULT_GROUPING_REPORT",
-        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT"
+        "AI_TOWN_RETAKE_ASSAULT_REPORT",
+        "AI_TOWN_DEFENSE_RETASK_REPORT"
       ],
-      "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
+      "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-town-defender-rotation-10184",
-  "currentSliceUpdatedAt": "2026-05-30T16:23:51Z",
+  "active_slice": "strategic-ai-hero-hunt-support-grouping-10184",
+  "currentSliceUpdatedAt": "2026-05-30T16:32:16Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -42053,79 +42126,76 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-town-defender-rotation-10184",
-    "title": "Strategic AI Town Defender Rotation",
+    "id": "strategic-ai-hero-hunt-support-grouping-10184",
+    "title": "Strategic AI Hero Hunt Support Grouping",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "owner direction to move from report-only strategic AI work toward production behavior; stationed town defenders should not remain pinned after the defended front is cleared",
-    "planRef": "PLAN.md Current strategic AI follow-up / production defensive rotation gap",
+    "source": "owner direction to improve strategic AI quality beyond report gates; exposed-hero hunt fronts should request and absorb nearby support before committing to risky intercepts",
+    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning gap",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
-      "docs/strategic-ai-town-defense-retask-report.md",
-      "docs/strategic-ai-town-defense-arrival-report.md",
-      "docs/strategic-ai-town-defender-lifecycle-report.md"
+      "docs/strategic-ai-hero-hunt-task-board-report.md",
+      "docs/strategic-ai-hero-intercept-risk-gating-report.md"
     ],
     "implementationTargets": [
-      "scripts/core/OverworldRules.gd",
       "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_town_defense_retask_report.gd",
-      "docs/strategic-ai-town-defense-retask-report.md",
-      "docs/strategic-ai-town-defense-arrival-report.md",
-      "docs/strategic-ai-town-defender-lifecycle-report.md",
+      "tests/ai_hero_task_hero_hunt_report.gd",
+      "docs/strategic-ai-hero-hunt-task-board-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "A defended enemy town must remain visible as an active strategic front while defender watch is live, the stationed commander must stay unavailable while the defended front is valid, and the commander plus defender metadata must be released when that town front is strategically cleared before the stale timer expires; existing defense retask, overcommit control, town assault payload, and public-event behavior must remain intact without a save-version bump.",
+    "completionCriteria": "A live exposed-hero hunt front below desired strength can be selected by another deployable commander as active-front support, that support keeps hero-hunt reason metadata, adjacent support groups into the lead hunter through the normal raid grouping path, donor commander task state completes/releases cleanly, and existing hero-intercept risk gating remains intact without a save-version bump.",
     "nonGoals": [
       "No full strategic AI release-readiness claim",
       "No campaign AI work",
       "No new broad dashboard/report gate"
     ],
-    "startedAt": "2026-05-30T16:22:49Z",
-    "updatedAt": "2026-05-30T16:23:51Z",
-    "notes": "Completed. Defended town fronts stay strategically visible and cleared fronts release stationed commanders.",
+    "startedAt": "2026-05-30T16:27:18Z",
+    "updatedAt": "2026-05-30T16:32:16Z",
+    "notes": "Completed. Exposed-hero hunt fronts can attract active-front support, preserve hero-hunt metadata, group adjacent support commanders into the lead hunter, and avoid same-turn defense retarget theft while committed to support consolidation.",
+    "completedAt": "2026-05-30T16:32:16Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T16:23:51Z",
-      "sliceId": "strategic-ai-town-defender-rotation-10184",
+      "updatedAt": "2026-05-30T16:32:16Z",
+      "sliceId": "strategic-ai-hero-hunt-support-grouping-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-        "python3 tests/validate_repo.py (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Defended town fronts now preserve defense_until_day and last_defended_day through front-state normalization.",
-          "OverworldRules.town_front_state now treats front state defend as an active stabilization/defender-watch front while the defense window is live, exposing garrison/build/pressure bonuses to strategic AI instead of hiding the front behind commander metadata.",
-          "Stationed town defenders now remain active only while the town still has a live defend/stabilizing front for the same faction; clearing that front releases defender metadata and returns the commander to available roster status before stale timers expire.",
-          "Focused Duskfen evidence proves a defended town remains strategically active after ai_town_defended, then releases Vaska when the front is cleared. Existing town-defense retask, defense overcommit, town retake assault, raid assault grouping, and live-turn execution paths remain passing."
+          "Exposed-hero hunt fronts now satisfy active-front support selection when they need help, including hero-hunt risk/waiting reason codes.",
+          "Support commanders can select a live hero-hunt front, preserve hero_hunt/exposed_hero metadata, and merge through the existing ai_raid_grouped path before intercept resolution.",
+          "Hero support pathing can stage adjacent to an occupied hero tile/front instead of failing path resolution when the lead hunter already occupies the target tile.",
+          "Town/resource defensive retargeting now leaves active-front support or awaiting-support hosts committed long enough for same-turn consolidation to occur."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-town-defense-retask-report.md",
-          "docs/strategic-ai-town-defense-arrival-report.md",
-          "docs/strategic-ai-town-defender-lifecycle-report.md"
+          "docs/strategic-ai-hero-hunt-task-board-report.md",
+          "docs/strategic-ai-hero-intercept-risk-gating-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_TOWN_DEFENSE_RETASK_REPORT",
-          "AI_TOWN_RETAKE_ASSAULT_REPORT",
+          "AI_HERO_TASK_HERO_HUNT_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
           "AI_RAID_ASSAULT_GROUPING_REPORT",
-          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT"
+          "AI_TOWN_RETAKE_ASSAULT_REPORT",
+          "AI_TOWN_DEFENSE_RETASK_REPORT"
         ],
-        "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
+        "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
       }
-    },
-    "completedAt": "2026-05-30T16:23:51Z"
+    }
   },
   "validation": {
     "status": "pass",
