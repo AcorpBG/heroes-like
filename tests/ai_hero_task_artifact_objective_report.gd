@@ -81,6 +81,7 @@ func _artifact_task_board_case() -> Dictionary:
 		return {}
 
 	var state := _enemy_state(session)
+	var vaska_progress_before := _commander_progress_snapshot(session, "hero_vaska")
 	var secure_result := EnemyAdventureRules._secure_artifact_target(session, assigned_raid, state, MIRECLAW)
 	if secure_result.is_empty() or String(secure_result.get("event_message", "")) == "":
 		_fail("Artifact secure returned no event result: %s" % JSON.stringify(secure_result))
@@ -89,6 +90,10 @@ func _artifact_task_board_case() -> Dictionary:
 	var secured_commander: Dictionary = secured_raid.get("enemy_commander_state", {}) if secured_raid.get("enemy_commander_state", {}) is Dictionary else {}
 	if String(secured_commander.get("artifacts", {}).get("equipped", {}).get("banner", "")) != "artifact_warcrest_pennon":
 		_fail("Secured commander did not equip Warcrest Pennon: %s" % JSON.stringify(secured_commander.get("artifacts", {})))
+		return {}
+	var vaska_progress_after := _commander_progress_snapshot(session, "hero_vaska")
+	_assert_progression(vaska_progress_before, vaska_progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_ARTIFACT_SECURED, "Vaska artifact secure")
+	if _failed:
 		return {}
 	var bonus_report := ArtifactRules.artifact_equip_runtime_report(secured_commander)
 	if int(bonus_report.get("aggregate_bonuses", {}).get("battle_attack", 0)) < 1 or int(bonus_report.get("aggregate_bonuses", {}).get("battle_initiative", 0)) < 1:
@@ -114,6 +119,8 @@ func _artifact_task_board_case() -> Dictionary:
 		return {}
 	EnemyTurnRules.normalize_enemy_states(session)
 	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "completed", "valid")
+	var vaska_progress_normalized := _commander_progress_snapshot(session, "hero_vaska")
+	_assert_progression(vaska_progress_before, vaska_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_ARTIFACT_SECURED, "normalized Vaska artifact secure")
 	if _failed:
 		return {}
 
@@ -127,6 +134,9 @@ func _artifact_task_board_case() -> Dictionary:
 		"equipped_artifact_id": String(secured_commander.get("artifacts", {}).get("equipped", {}).get("banner", "")),
 		"artifact_bonus_attack": int(bonus_report.get("aggregate_bonuses", {}).get("battle_attack", 0)),
 		"artifact_bonus_initiative": int(bonus_report.get("aggregate_bonuses", {}).get("battle_initiative", 0)),
+		"vaska_progress_before": vaska_progress_before,
+		"vaska_progress_after": vaska_progress_after,
+		"vaska_progress_normalized": vaska_progress_normalized,
 		"artifact_event_type": String(secure_result.get("ai_event", {}).get("event_type", "")),
 		"captured_artifacts": _string_array(secure_result.get("state", {}).get("captured_artifact_ids", []) if secure_result.get("state", {}) is Dictionary else []),
 		"task_status_counts": _task_status_counts(final_task_state),
@@ -233,6 +243,31 @@ func _roster_commander_state(session, roster_hero_id: String) -> Dictionary:
 			return entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
 	_fail("Could not find roster commander state for %s" % roster_hero_id)
 	return {}
+
+func _commander_progress_snapshot(session, roster_hero_id: String) -> Dictionary:
+	var commander_state := _roster_commander_state(session, roster_hero_id)
+	if commander_state.is_empty():
+		return {}
+	return {
+		"roster_hero_id": roster_hero_id,
+		"experience": max(0, int(commander_state.get("experience", 0))),
+		"level": max(1, int(commander_state.get("level", 1))),
+		"strategic_successes": max(0, int(commander_state.get("strategic_successes", 0))),
+		"last_outcome": String(commander_state.get("last_outcome", "")),
+	}
+
+func _assert_progression(before: Dictionary, after: Dictionary, expected_outcome: String, label: String) -> void:
+	if after.is_empty():
+		_fail("%s commander progression snapshot is empty." % label)
+		return
+	if int(after.get("experience", 0)) <= int(before.get("experience", 0)) and int(after.get("level", 1)) <= int(before.get("level", 1)):
+		_fail("%s did not gain adventure objective experience: before=%s after=%s" % [label, JSON.stringify(before), JSON.stringify(after)])
+		return
+	if int(after.get("strategic_successes", 0)) <= int(before.get("strategic_successes", 0)):
+		_fail("%s did not record a strategic_successes increment: before=%s after=%s" % [label, JSON.stringify(before), JSON.stringify(after)])
+		return
+	if String(after.get("last_outcome", "")) != expected_outcome:
+		_fail("%s last_outcome expected %s, got %s" % [label, expected_outcome, JSON.stringify(after)])
 
 func _artifact_node(session, placement_id: String) -> Dictionary:
 	for node in session.overworld.get("artifact_nodes", []):

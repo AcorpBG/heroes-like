@@ -211,6 +211,7 @@ AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_t
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
 AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-equipment-report.md"
+AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-adventure-objective-progression-report.md"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.tscn"
 AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-hunt-task-board-report.md"
@@ -15056,6 +15057,58 @@ def validate_ai_artifact_equipment(errors: list[str]) -> None:
         ):
             ensure(required_text in doc_text, errors, f"AI artifact equipment doc is missing required text: {required_text}")
 
+def validate_ai_adventure_objective_progression(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH,
+        AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI adventure objective progression file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "COMMANDER_OUTCOME_RESOURCE_SECURED",
+        "COMMANDER_OUTCOME_ARTIFACT_SECURED",
+        "COMMANDER_OUTCOME_OBJECTIVE_SECURED",
+        "COMMANDER_OUTCOME_SITE_DEFENDED",
+        "COMMANDER_OUTCOME_TOWN_DEFENDED",
+        "strategic_successes",
+        "func _record_adventure_objective_success",
+        "advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED)",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI adventure objective progression implementation is missing token: {required_token}")
+    live_report_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "vaska_progress_before",
+        "sable_progress_after",
+        "COMMANDER_OUTCOME_RESOURCE_SECURED",
+        "strategic_successes",
+        "_assert_progression",
+    ):
+        ensure(required_token in live_report_text, errors, f"AI live turn report is missing objective progression token: {required_token}")
+    artifact_report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "vaska_progress_before",
+        "vaska_progress_normalized",
+        "COMMANDER_OUTCOME_ARTIFACT_SECURED",
+        "strategic_successes",
+        "_assert_progression",
+    ):
+        ensure(required_token in artifact_report_text, errors, f"AI artifact objective report is missing progression token: {required_token}")
+    if AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH.exists():
+        doc_text = AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Adventure Objective Progression Report",
+            "implementation evidence",
+            "resource_secured",
+            "artifact_secured",
+            "objective_secured",
+            "site_defended",
+            "town_defended",
+            "strategic_successes",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"AI adventure objective progression doc is missing required text: {required_text}")
+
 def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     for path in (
         AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH,
@@ -21907,6 +21960,7 @@ def main() -> int:
     validate_ai_hero_task_encounter_objective(errors)
     validate_ai_hero_task_artifact_objective(errors)
     validate_ai_artifact_equipment(errors)
+    validate_ai_adventure_objective_progression(errors)
     validate_ai_hero_task_hero_hunt(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)

@@ -24,5 +24,6 @@ This slice makes artifact and relic targets participate in the live strategic AI
 - A relic collected by another side invalidates with `invalid_target_resolved`.
 - Securing the relic completes the active task and preserves the completed task through normalization.
 - Securing Warcrest Pennon equips `artifact_warcrest_pennon` in Vaska's banner slot and exposes live `battle_attack` / `battle_initiative` artifact bonuses.
+- Securing the relic also advances the active commander's strategic progression: Vaska gains adventure objective experience, increments `strategic_successes`, records `last_outcome: artifact_secured`, and persists that commander progression through roster normalization.
 
 No save migration is introduced; `SAVE_VERSION` remains unchanged and the save policy is `hero_task_state_live_persist_no_save_migration`.

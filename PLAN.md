@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-town-defender-lifecycle-10184`, completed to make commanders stationed by town-defense arrivals stay unavailable while defending and release cleanly when the defense window or town ownership no longer qualifies.
+- Current implementation slice: `strategic-ai-adventure-objective-progression-10184`, completed to make successful AI adventure-map objectives advance commander progression instead of only changing map/task state.
+- Latest completed slice: `strategic-ai-adventure-objective-progression-10184`.
 - Latest completed slice: `strategic-ai-town-defender-lifecycle-10184`.
 - Latest completed slice: `strategic-ai-town-defense-arrival-10184`.
 - Latest completed slice: `strategic-ai-artifact-equipment-10184`.

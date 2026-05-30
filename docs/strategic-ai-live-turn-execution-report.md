@@ -11,6 +11,7 @@ Validation evidence:
 - The report requires both `ai_target_assigned` and `ai_site_seized` events for each target.
 - Companion reservation remains active in turn execution: Sable does not duplicate Vaska's Free Company target.
 - `enemy_states[].hero_task_state` persists the live assignments, marks the two captured resource tasks completed, and survives `EnemyTurnRules.normalize_enemy_states(...)` without report-only/debug fields.
+- Strategic AI adventure objective progression is now live: resource seizures advance each active commander's experience, increment `strategic_successes`, set `last_outcome: resource_secured`, and persist that progression through the commander roster after normalization.
 - `SAVE_VERSION` remains unchanged; this is an optional normalized state field, not a save migration.
 
 Boundaries:
