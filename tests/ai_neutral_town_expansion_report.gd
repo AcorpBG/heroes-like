@@ -214,6 +214,19 @@ func _ready_raid_captures_defended_neutral_town_after_battle() -> Dictionary:
 	if String(town.get("owner", "neutral")) != "enemy" or String(town.get("controlling_faction_id", "")) != MIRECLAW:
 		_fail("Defended neutral town was not captured into enemy control: %s" % JSON.stringify(town))
 		return {}
+	if _army_strength(town.get("garrison", [])) <= 0:
+		_fail("Defended neutral-town capture did not preserve enemy survivor garrison: %s" % JSON.stringify(town))
+		return {}
+	if String(town.get("ai_defended_by_faction_id", "")) != MIRECLAW or String(town.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
+		_fail("Defended neutral-town capture did not station the assault commander: %s" % JSON.stringify(town))
+		return {}
+	var roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(roster_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
+		_fail("Defended neutral-town capture did not keep commander active in the captured town: %s" % JSON.stringify(roster_entry))
+		return {}
+	if String(roster_entry.get("last_outcome", "")) != EnemyAdventureRules.COMMANDER_OUTCOME_TOWN_CAPTURED:
+		_fail("Defended neutral-town capture did not record town_captured outcome: %s" % JSON.stringify(roster_entry))
+		return {}
 	if JSON.stringify(resources_before) != JSON.stringify(session.overworld.get("resources", {})):
 		_fail("Defended neutral-town loss changed player resources: before=%s after=%s" % [JSON.stringify(resources_before), JSON.stringify(session.overworld.get("resources", {}))])
 		return {}
@@ -228,6 +241,9 @@ func _ready_raid_captures_defended_neutral_town_after_battle() -> Dictionary:
 		"outcome_state": String(outcome.get("state", "")),
 		"owner_after": String(town.get("owner", "")),
 		"controlling_faction_id": String(town.get("controlling_faction_id", "")),
+		"garrison_strength_after": _army_strength(town.get("garrison", [])),
+		"stationed_commander_status": String(roster_entry.get("status", "")),
+		"stationed_commander_outcome": String(roster_entry.get("last_outcome", "")),
 		"player_resources_unchanged": true,
 	}
 
