@@ -19,6 +19,9 @@ func _run() -> void:
 	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
 	if unreachable_route_case.is_empty():
 		return
+	var garrison_routing_case := _regroup_prefers_useful_garrison_town()
+	if garrison_routing_case.is_empty():
+		return
 	var failed_regroup_case := _empty_garrison_regroup_releases_to_rebuild()
 	if failed_regroup_case.is_empty():
 		return
@@ -30,6 +33,7 @@ func _run() -> void:
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"unreachable_route_case": unreachable_route_case,
+		"garrison_routing_case": garrison_routing_case,
 		"failed_regroup_case": failed_regroup_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -294,6 +298,72 @@ func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:
 		"event_types": event_types,
 		"resource_controller_after": _resource_controller(session, "river_free_company"),
 		"goal_distance_after": int(after_raid.get("goal_distance", 9999)),
+		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
+func _regroup_prefers_useful_garrison_town() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_town_garrison(session, "duskfen_bastion", [])
+	_append_enemy_town(
+		session,
+		{
+			"placement_id": "reed_reserve_redoubt",
+			"town_id": "town_duskfen",
+			"x": 7,
+			"y": 1,
+			"owner": "enemy",
+			"garrison": [{"unit_id": "unit_bog_brute", "count": 8}],
+		}
+	)
+	var raid := _understrength_raid(session, config)
+	var before_strength := EnemyAdventureRules.raid_strength(raid)
+	if not EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Garrison-aware fixture raid should require regroup: %s" % JSON.stringify(raid))
+		return {}
+	var reserve_before := _town_garrison_count(session, "reed_reserve_redoubt", "unit_bog_brute")
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "regroup_vaska_understrength")
+	if after_raid.is_empty():
+		_fail("Garrison-aware regroup raid disappeared after advance.")
+		return {}
+	if String(after_raid.get("last_regroup_town_id", "")) != "reed_reserve_redoubt":
+		_fail("Regroup routing did not choose the useful reserve garrison town over empty Duskfen: %s" % JSON.stringify(after_raid))
+		return {}
+	if bool(after_raid.get("raid_retired_to_rebuild", false)):
+		_fail("Garrison-aware regroup retired even though a useful reserve existed: %s" % JSON.stringify(after_raid))
+		return {}
+	var after_strength := EnemyAdventureRules.raid_strength(after_raid)
+	if after_strength <= before_strength:
+		_fail("Garrison-aware regroup did not strengthen host: before=%d after=%d raid=%s" % [before_strength, after_strength, JSON.stringify(after_raid)])
+		return {}
+	var reserve_after := _town_garrison_count(session, "reed_reserve_redoubt", "unit_bog_brute")
+	if reserve_after >= reserve_before:
+		_fail("Garrison-aware regroup did not pull from reserve redoubt: before=%d after=%d" % [reserve_before, reserve_after])
+		return {}
+	if _town_garrison_count(session, "duskfen_bastion", "unit_bog_brute") != 0:
+		_fail("Empty nearest regroup town unexpectedly gained or spent garrison.")
+		return {}
+	_assert_task_status(session, "hero_vaska", "regroup", "reed_reserve_redoubt", "completed", "valid")
+	if _failed:
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	return {
+		"case_id": "regroup_prefers_useful_garrison_town_over_empty_nearest",
+		"before_strength": before_strength,
+		"after_strength": after_strength,
+		"selected_town_id": String(after_raid.get("last_regroup_town_id", "")),
+		"empty_nearest_town_id": "duskfen_bastion",
+		"reserve_before": reserve_before,
+		"reserve_after": reserve_after,
+		"event_types": event_types,
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
@@ -702,6 +772,11 @@ func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:
 		session.overworld["towns"] = towns
 		return
 	_fail("Could not set garrison for town %s" % placement_id)
+
+func _append_enemy_town(session, town: Dictionary) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	towns.append(town.duplicate(true))
+	session.overworld["towns"] = towns
 
 func _resolved_contains(session, placement_id: String) -> bool:
 	var resolved = session.overworld.get("resolved_encounters", [])
