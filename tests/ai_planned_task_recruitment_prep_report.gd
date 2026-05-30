@@ -310,7 +310,7 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 	_mark_contestable_resources(session)
 	var state := _enemy_state(session)
 	state["pressure"] = 0
-	state["raid_counter"] = 0
+	state["raid_counter"] = 1
 	state["commander_counter"] = 0
 	state.erase("hero_task_state")
 	_update_enemy_state(session, state)
@@ -338,6 +338,15 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 	if ready_report.is_empty():
 		_fail("Prepared planned task was not launch-ready below pressure: actor=%s strength=%d" % [actor_id, prepared_strength])
 		return {}
+	var raid_ids: Array = config.get("raid_encounter_ids", []) if config.get("raid_encounter_ids", []) is Array else []
+	if raid_ids.size() < 2:
+		_fail("Ready-launch template-lock fixture needs multiple raid templates: %s" % JSON.stringify(config))
+		return {}
+	var rotated_encounter_id := String(raid_ids[int(state.get("raid_counter", 0)) % raid_ids.size()])
+	var locked_encounter_id := String(ready_report.get("base_encounter_id", ""))
+	if locked_encounter_id == "" or locked_encounter_id == rotated_encounter_id:
+		_fail("Ready-launch fixture did not prove template rotation risk: ready=%s rotated=%s" % [JSON.stringify(ready_report), rotated_encounter_id])
+		return {}
 	if not EnemyTurnRules._can_launch_raid(session, config, state, FACTION_ID):
 		_fail("Ready planned task could not launch below generic pressure: %s" % JSON.stringify(ready_report))
 		return {}
@@ -362,6 +371,9 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 	if String(raid.get("target_placement_id", "")) != String(ready_report.get("target_id", "")):
 		_fail("Ready launch did not preserve planned target: ready=%s raid=%s" % [JSON.stringify(ready_report), JSON.stringify(raid)])
 		return {}
+	if String(raid.get("encounter_id", "")) != locked_encounter_id:
+		_fail("Ready launch did not preserve the prepared host template: ready=%s rotated=%s raid=%s" % [JSON.stringify(ready_report), rotated_encounter_id, JSON.stringify(raid)])
+		return {}
 	if _event_by_type(spawn_result.get("events", []), "ai_target_assigned").is_empty():
 		_fail("Ready launch did not emit target assignment: %s" % JSON.stringify(spawn_result.get("events", [])))
 		return {}
@@ -372,6 +384,9 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 		"actor_id": actor_id,
 		"prepared_strength": prepared_strength,
 		"target_strength": int(ready_report.get("target_strength", 0)),
+		"locked_encounter_id": locked_encounter_id,
+		"rotated_encounter_id": rotated_encounter_id,
+		"spawned_encounter_id": String(raid.get("encounter_id", "")),
 		"target_kind": String(ready_report.get("target_kind", "")),
 		"target_id": String(ready_report.get("target_id", "")),
 		"active_raids_before": before_raids,

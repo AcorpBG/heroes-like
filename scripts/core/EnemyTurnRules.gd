@@ -1850,6 +1850,7 @@ static func _spawn_point_candidate_ready_launch_report(
 		"target_kind": target_kind,
 		"target_id": target_id,
 		"task_id": String(task.get("task_id", "")),
+		"base_encounter_id": base_encounter_id,
 		"current_strength": int(continuity.get("current_strength", 0)),
 		"target_strength": target_strength,
 		"spawn_x": int(candidate.get("x", 0)),
@@ -1921,7 +1922,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		)
 	if roster_hero_id == "":
 		return {}
-	var encounter_id = String(encounter_pool[raid_counter % encounter_pool.size()])
+	var encounter_id := _spawn_raid_encounter_id_from_plan(spawn_point, encounter_pool, raid_counter)
 	state["raid_counter"] = raid_counter + 1
 	state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, String(config.get("faction_id", "")))
@@ -3004,6 +3005,7 @@ static func _spawn_point_candidate(
 		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
 		if not ready_report.is_empty():
 			candidate["spawn_plan_ready_launch"] = true
+			candidate["spawn_plan_encounter_id"] = String(ready_report.get("base_encounter_id", ""))
 			candidate["spawn_plan_current_strength"] = int(ready_report.get("current_strength", 0))
 			candidate["spawn_plan_target_strength"] = int(ready_report.get("target_strength", 0))
 			candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 200000
@@ -3051,6 +3053,7 @@ static func _ready_saved_task_spawn_candidate_for_point(
 		if ready_report.is_empty():
 			continue
 		candidate["spawn_plan_ready_launch"] = true
+		candidate["spawn_plan_encounter_id"] = String(ready_report.get("base_encounter_id", ""))
 		candidate["spawn_plan_current_strength"] = int(ready_report.get("current_strength", 0))
 		candidate["spawn_plan_target_strength"] = int(ready_report.get("target_strength", 0))
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 200000
@@ -3083,6 +3086,16 @@ static func _spawn_point_candidate_from_plan(
 	candidate["spawn_plan_score"] = score
 	candidate["spawn_order"] = spawn_order
 	return candidate
+
+static func _spawn_raid_encounter_id_from_plan(spawn_point: Dictionary, encounter_pool: Array, raid_counter: int) -> String:
+	if encounter_pool.is_empty():
+		return ""
+	var planned_encounter_id := String(spawn_point.get("spawn_plan_encounter_id", ""))
+	if bool(spawn_point.get("spawn_plan_ready_launch", false)) and planned_encounter_id != "":
+		for encounter_id_value in encounter_pool:
+			if String(encounter_id_value) == planned_encounter_id:
+				return planned_encounter_id
+	return String(encounter_pool[raid_counter % encounter_pool.size()])
 
 static func _spawn_point_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
 	if int(candidate.get("spawn_plan_score", 0)) == int(best.get("spawn_plan_score", 0)):
