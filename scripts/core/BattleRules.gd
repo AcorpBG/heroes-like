@@ -6114,6 +6114,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		session,
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_DEFEATED
 	)
+	_finish_enemy_battle_task_assignment(session, "failed", "invalid_battle_defeat")
 	_append_nonempty_message(messages, commander_aftermath)
 	var delivery_summary := _apply_delivery_route_aftermath(session, "victory")
 	_append_nonempty_message(messages, delivery_summary)
@@ -6163,6 +6164,7 @@ static func _finalize_primary_defeat(
 ) -> Dictionary:
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
+	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
@@ -6207,6 +6209,7 @@ static func _finalize_primary_defeat(
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
+	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
@@ -6257,6 +6260,7 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_PURSUIT_VICTORY)
+	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_PURSUIT_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
@@ -6295,6 +6299,7 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_CAPITULATION)
+	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_CAPITULATION)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
@@ -6348,6 +6353,7 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 		session,
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_STALEMATE
 	)
+	_finish_enemy_battle_task_assignment(session, "failed", "invalid_battle_withdrawal")
 	_append_nonempty_message(messages, commander_summary)
 	var delivery_summary := _apply_delivery_route_aftermath(session, "victory")
 	_append_nonempty_message(messages, delivery_summary)
@@ -6387,6 +6393,7 @@ static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) ->
 	messages.append(base_summary)
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_STALEMATE)
+	_finish_enemy_battle_task_assignment(session, "suspended", "battle_stalemate")
 	_sync_enemy_force_from_battle(session, false)
 	var delivery_summary := _apply_delivery_route_aftermath(session, "stalemate")
 	_append_nonempty_message(messages, delivery_summary)
@@ -6435,6 +6442,41 @@ static func _resolve_enemy_commander_aftermath(
 		_battle_enemy_faction_id(session),
 		commander_state,
 		outcome_id
+	)
+
+static func _finish_enemy_battle_task_assignment(
+	session: SessionStateStoreScript.SessionData,
+	task_status: String,
+	validation: String
+) -> void:
+	if session == null or session.battle.is_empty():
+		return
+	var faction_id := _battle_enemy_faction_id(session)
+	if faction_id == "":
+		return
+	var raid := _current_battle_encounter_placement(session)
+	if raid.is_empty():
+		return
+	var context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(raid.get("target_kind", "")) == "":
+		if _is_town_defense_context(context):
+			raid["target_kind"] = "town"
+			raid["target_placement_id"] = String(context.get("town_placement_id", ""))
+		elif String(context.get("type", "")) == "hero_intercept":
+			raid["target_kind"] = "hero"
+			raid["target_placement_id"] = String(context.get("target_hero_id", ""))
+	if not (raid.get("enemy_commander_state", {}) is Dictionary) or raid.get("enemy_commander_state", {}).is_empty():
+		var commander_state = session.battle.get("enemy_hero", {})
+		if commander_state is Dictionary and not commander_state.is_empty():
+			raid["enemy_commander_state"] = commander_state.duplicate(true)
+	if String(raid.get("target_kind", "")) == "" or String(raid.get("target_placement_id", "")) == "":
+		return
+	EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(
+		session,
+		faction_id,
+		raid,
+		task_status,
+		validation
 	)
 
 static func _record_enemy_commander_battle_continuity(
@@ -9021,6 +9063,7 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 		session,
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_ASSAULT_VICTORY
 	)
+	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var collapse_aftermath := {}
 	messages.append(base_summary)
 	_append_nonempty_message(messages, recovery_message)

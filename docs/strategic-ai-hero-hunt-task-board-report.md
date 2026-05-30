@@ -5,6 +5,7 @@ Slice: `strategic-ai-hero-hunt-task-board-10184`
 Follow-up slice: `strategic-ai-hero-intercept-risk-gating-10184`
 Follow-up slice: `strategic-ai-hero-hunt-support-grouping-10184`
 Follow-up slice: `strategic-ai-risk-stall-withdrawal-10184`
+Follow-up slice: `strategic-ai-battle-task-outcome-lifecycle-10184`
 
 ## Purpose
 
@@ -16,7 +17,7 @@ Make exposed player-hero hunt targets durable strategic AI tasks instead of tran
 - `EnemyTurnRules.normalize_optional_hero_task_state(...)` accepts `target_kind: "hero"`.
 - `EnemyAdventureRules.ai_hero_task_saved_target_selection_plan(...)` rebuilds saved hero-hunt plans from the current player hero position, so a moving target is followed instead of replaying stale coordinates.
 - Missing player-hero targets invalidate through task lifecycle reconciliation.
-- Queued hero-intercept battles complete the matching active hero-hunt task.
+- Queued hero-intercept battles keep the matching active hero-hunt task open until battle resolution. Actual battle outcomes now close the task: enemy defeats fail the assignment with `invalid_battle_defeat`, while enemy victories complete it.
 - Hero hunt target candidates now carry public reason codes for exposed hero pressure.
 - Hero-intercept execution now uses a live readiness gate before queueing `hero_intercept`: weak hunters retask to regroup or shadow with `hero_hunt_risk_regroup` / `hero_hunt_risk_shadow` instead of completing the hunt task through a suicide battle.
 - The follow-up report case `weak_hero_hunt_regroups_before_intercept` proves an underpowered Vaska hunt host reaches Lyra's tile but does not start `session.battle`, while a reinforced hunt host still queues and closes `hero_intercept`.
@@ -24,6 +25,7 @@ Make exposed player-hero hunt targets durable strategic AI tasks instead of tran
 - The follow-up report case `hero_hunt_support_groups_before_intercept` proves Sable selects Vaska's exposed-hero front through `active_front_support`, the normal raid advance emits `ai_raid_grouped`, Sable's support host is resolved, and the donor hero-hunt task is completed without a save migration.
 - Risk-gated hero-hunt fronts now have a terminal preservation decision: if no regroup town exists, no support is committed, and the commander has waited past the support timeout, the active raid withdraws into commander rebuild instead of looping forever as `awaiting_support`.
 - The follow-up report case `stale_unsupported_hero_hunt_retires_to_rebuild` proves a stale unsupported hunter does not start `hero_intercept`, emits `ai_target_assigned`, resolves the active raid, marks `risk_support_timeout`, suspends the hero task as `invalid_actor_rebuilding`, and preserves commander army continuity for rebuild.
+- The follow-up report case `hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome` proves battle queueing does not mark a hunt successful, and the task only transitions after the resolved combat outcome.
 
 Focused runtime report:
 
@@ -39,4 +41,4 @@ No save migration is introduced. Existing saves without `hero_task_state` still 
 
 ## Residual risk
 
-This closes hero-hunt task-board continuity, intercept risk gating, same-front support grouping, and stale unsupported hero-hunt withdrawal for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, broader retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.
+This closes hero-hunt task-board continuity, intercept risk gating, same-front support grouping, stale unsupported hero-hunt withdrawal, and battle-outcome task lifecycle for exposed player heroes. It does not claim full release-ready strategic AI: long-run generated-map quality, broader retreat judgment, broader objective planning, adventure spell planning, and live-client pacing still need production passes.
