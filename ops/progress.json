@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-commander-personality-task-fit-10184",
-  "currentSliceTitle": "Strategic AI Commander Personality Task Fit",
+  "currentSliceId": "strategic-ai-destination-aware-recruitment-10184",
+  "currentSliceTitle": "Strategic AI Destination Aware Recruitment",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Live enemy task planning now scores targets per commander identity instead of treating all available commanders as interchangeable.",
+  "currentSliceNotes": "Completed. Enemy town recruitment now chooses unit types for the selected destination instead of using one generic faction priority.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T00:40:00Z",
+  "updatedAt": "2026-05-31T01:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,85 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-destination-aware-recruitment-10184",
+      "title": "Strategic AI Destination Aware Recruitment",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / destination-aware recruitment",
+      "purpose": "Make enemy town recruitment choose unit types for the actual reinforcement destination instead of using one generic faction priority for garrison, raid, rebuild, and planned commander-task preparation.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Enemy recruitment destination scoring includes commander-fit pressure for planned tasks; unit priority changes by selected destination so garrison defense, hero/town raids, artifact/encounter preparation, resource pressure, and commander rebuilds buy different troop profiles; existing planned-task launch and regroup behavior still pass without a save-version bump.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "large combat balance tuning",
+        "new report-only gates",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-31T01:05:00Z",
+      "updatedAt": "2026-05-31T01:05:00Z",
+      "completedAt": "2026-05-31T01:05:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment prep passes with commander-fit destination scoring and destination-aware unit priorities: garrison prefers sturdier melee while magic artifact preparation prefers ranged support from the same faction pool."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner still seeds distinct commander tasks, local origins, and commander personality target choices."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute and complete commander resource-front tasks."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, support, guarded-claim, and route-recovery behavior still pass after destination-aware recruitment changes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Enemy recruitment now first evaluates the selected reinforcement destination and uses destination-aware unit scoring for both pressure reports and real recruitment. Planned commander-task preparation also adds commander_fit_bonus into reinforcement scoring and carries fit metadata into the destination payload."
+      ]
+    },
     {
       "id": "strategic-ai-commander-personality-task-fit-10184",
       "title": "Strategic AI Commander Personality Task Fit",
@@ -43208,7 +43287,10 @@
         "added_town": "north_mire_watch",
         "target_key": "resource:north_wood",
         "selected_origin_id": "north_mire_watch",
-        "selected_origin": {"x": 0, "y": 0}
+        "selected_origin": {
+          "x": 0,
+          "y": 0
+        }
       },
       "remaining_validation": "Full 100-seed eight-week generated-map matrix, Medium/generated-map generalization, deeper economy/army timing, retreat/personality tuning, and live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, automatic tuning, campaign production, or production-ready claim."
