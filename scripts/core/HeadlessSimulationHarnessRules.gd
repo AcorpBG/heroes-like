@@ -9,6 +9,8 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
+const STRATEGIC_AI_BASELINE_KPI_SCHEMA_ID := "strategic_ai_baseline_kpi_report_v1"
+const STRATEGIC_AI_BASELINE_KPI_REPORT_ID := "STRATEGIC_AI_BASELINE_KPI_REPORT"
 const HEX_DIGITS := "0123456789abcdef"
 const LIVE_RESOURCE_IDS := [
 	"gold",
@@ -42,6 +44,82 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"battle_difficulty_sweep_sampling",
 	"save_replay_stability",
 	"generated_random_map_boundary",
+]
+const STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS := [
+	"strategic_ai_pressure_tick",
+	"strategic_ai_live_turn_execution",
+	"strategic_ai_live_route_progression",
+	"strategic_ai_live_town_governor_build_execution",
+	"strategic_ai_live_town_defense_retask",
+	"strategic_ai_multi_scenario_town_defense_retask",
+	"strategic_ai_live_resource_site_defense",
+	"strategic_ai_live_town_retake_assault",
+	"strategic_ai_live_raid_assault_grouping",
+	"strategic_ai_live_regroup_retreat",
+	"strategic_ai_live_recruitment_delivery",
+	"strategic_ai_multi_scenario_recruitment_delivery",
+	"strategic_ai_multi_scenario_pressure_coverage",
+	"strategic_ai_multi_scenario_objective_targeting",
+]
+const STRATEGIC_AI_BASELINE_CAPABILITIES := {
+	"town_economy": [
+		"strategic_ai_live_town_governor_build_execution",
+		"strategic_ai_live_recruitment_delivery",
+		"strategic_ai_multi_scenario_recruitment_delivery",
+	],
+	"hero_tasking_and_routes": [
+		"strategic_ai_live_turn_execution",
+		"strategic_ai_live_route_progression",
+	],
+	"defense_regroup_and_assault": [
+		"strategic_ai_live_town_defense_retask",
+		"strategic_ai_multi_scenario_town_defense_retask",
+		"strategic_ai_live_resource_site_defense",
+		"strategic_ai_live_town_retake_assault",
+		"strategic_ai_live_raid_assault_grouping",
+		"strategic_ai_live_regroup_retreat",
+	],
+	"objective_pressure": [
+		"strategic_ai_pressure_tick",
+		"strategic_ai_multi_scenario_pressure_coverage",
+		"strategic_ai_multi_scenario_objective_targeting",
+	],
+}
+const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
+const STRATEGIC_AI_BASELINE_RMG_CASES := [
+	{
+		"case_id": "native_rmg_small_seed_11_ai_turn_probe",
+		"seed": "strategic-ai-baseline-small-11",
+		"template_id": "border_gate_compact_v1",
+		"profile_id": "border_gate_compact_profile_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_small",
+		"expected_scope": "supported_small",
+	},
+	{
+		"case_id": "native_rmg_small_seed_28_ai_turn_probe",
+		"seed": "strategic-ai-baseline-small-28",
+		"template_id": "frontier_spokes_v1",
+		"profile_id": "frontier_spokes_profile_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_small",
+		"expected_scope": "supported_small",
+	},
+	{
+		"case_id": "native_rmg_medium_seed_314159_ai_turn_probe",
+		"seed": "strategic-ai-baseline-medium-314159",
+		"template_id": "translated_rmg_template_002_v1",
+		"profile_id": "translated_rmg_profile_002_v1",
+		"player_count": 4,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_medium",
+		"expected_scope": "production_gap_probe",
+	},
 ]
 
 static func build_report(input_config: Dictionary = {}) -> Dictionary:
@@ -136,8 +214,550 @@ static func compact_summary(report: Dictionary) -> Dictionary:
 		"reporting_policy": report.get("reporting_policy", {}),
 	}
 
+static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}) -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var harness: Dictionary = _strategic_ai_baseline_existing_evidence(input_config.get("harness_config", {}) if input_config.get("harness_config", {}) is Dictionary else {})
+	var strategic_cases := _strategic_ai_baseline_cases_from_harness(harness)
+	var rmg_cases := _strategic_ai_baseline_rmg_cases(input_config)
+	ContentService.clear_generated_scenario_drafts()
+
+	var subsystem_summary := _strategic_ai_baseline_subsystem_summary(strategic_cases)
+	var capability_rows := _strategic_ai_baseline_capability_rows(strategic_cases)
+	var rmg_summary := _strategic_ai_baseline_rmg_summary(rmg_cases)
+	var blocker_rows := _strategic_ai_baseline_blocker_rows(subsystem_summary, capability_rows, rmg_summary)
+	var recommended_next_slices := _strategic_ai_baseline_next_slices(blocker_rows)
+	var production_ready := blocker_rows.is_empty()
+	var ok := bool(harness.get("ok", false)) and int(rmg_summary.get("case_count", 0)) > 0
+	var report := {
+		"ok": ok,
+		"report_id": STRATEGIC_AI_BASELINE_KPI_REPORT_ID,
+		"schema_id": STRATEGIC_AI_BASELINE_KPI_SCHEMA_ID,
+		"production_ready": production_ready,
+		"status": "production_ready" if production_ready else "baseline_incomplete",
+		"harness_ok": bool(harness.get("ok", false)),
+		"harness_signature": String(harness.get("harness_signature", "")),
+		"subsystem_summary": subsystem_summary,
+		"capability_rows": capability_rows,
+		"rmg_summary": rmg_summary,
+		"rmg_cases": rmg_cases,
+		"blocker_rows": blocker_rows,
+		"recommended_next_slices": recommended_next_slices,
+		"audit_policy": {
+			"manual_play_replacement": false,
+			"automatic_tuning": false,
+			"runtime_balance_changes": false,
+			"authored_content_writeback": false,
+			"campaign_adoption": false,
+			"production_ready_claim": false,
+			"campaign_specific_ai_scripting": false,
+		},
+		"scope": {
+			"primary_surface": "Native RMG and skirmish strategic AI baseline",
+			"campaign_production": "deferred",
+			"medium_rmg_policy": "measured_as_gap_until generated-map startup and AI turn health are broadly green",
+			"behavior_change_policy": "audit_only_no_tuning",
+		},
+	}
+	report["signature"] = _signature_for({
+		"schema_id": STRATEGIC_AI_BASELINE_KPI_SCHEMA_ID,
+		"production_ready": production_ready,
+		"subsystem_summary": subsystem_summary,
+		"capability_rows": capability_rows,
+		"rmg_summary": rmg_summary,
+		"blocker_rows": blocker_rows,
+		"recommended_next_slices": recommended_next_slices,
+	})
+	return report
+
 static func strategic_ai_multi_scenario_recruitment_delivery_case(input_config: Dictionary = {}) -> Dictionary:
 	return _strategic_ai_multi_scenario_recruitment_delivery(input_config)
+
+static func _strategic_ai_baseline_existing_evidence(input_config: Dictionary) -> Dictionary:
+	if not bool(input_config.get("execute_existing_harness_cases", false)):
+		return _strategic_ai_baseline_existing_contract_evidence()
+	var cases := [
+		_strategic_ai_pressure_tick(input_config),
+		_strategic_ai_live_turn_execution(input_config),
+		_strategic_ai_live_route_progression(input_config),
+		_strategic_ai_live_town_governor_build_execution(input_config),
+		_strategic_ai_live_town_defense_retask(input_config),
+		_strategic_ai_multi_scenario_town_defense_retask(input_config),
+		_strategic_ai_live_resource_site_defense(input_config),
+		_strategic_ai_live_town_retake_assault(input_config),
+		_strategic_ai_live_raid_assault_grouping(input_config),
+		_strategic_ai_live_regroup_retreat(input_config),
+		_strategic_ai_live_recruitment_delivery(input_config),
+		_strategic_ai_multi_scenario_recruitment_delivery(input_config),
+		_strategic_ai_multi_scenario_pressure_coverage(input_config),
+		_strategic_ai_multi_scenario_objective_targeting(input_config),
+	]
+	var case_map := {}
+	var status_counts := {"pass": 0, "warning": 0, "deferred": 0, "fail": 0}
+	for simulation_case in cases:
+		if not (simulation_case is Dictionary):
+			continue
+		var subsystem_id := String(simulation_case.get("subsystem_id", ""))
+		var status := String(simulation_case.get("status", "fail"))
+		case_map[subsystem_id] = simulation_case
+		status_counts[status] = int(status_counts.get(status, 0)) + 1
+	var missing_subsystems := []
+	for subsystem_id in STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS:
+		if not case_map.has(subsystem_id):
+			missing_subsystems.append(subsystem_id)
+	var overall_status := "pass"
+	if not missing_subsystems.is_empty() or int(status_counts.get("fail", 0)) > 0:
+		overall_status = "fail"
+	elif int(status_counts.get("warning", 0)) > 0 or int(status_counts.get("deferred", 0)) > 0:
+		overall_status = "warning"
+	var signature := _signature_for({
+		"schema_id": STRATEGIC_AI_BASELINE_KPI_SCHEMA_ID,
+		"case_signatures": _case_signature_index(cases),
+		"status_counts": status_counts,
+		"missing_subsystems": missing_subsystems,
+	})
+	return {
+		"ok": overall_status != "fail",
+		"report_id": "STRATEGIC_AI_BASELINE_EXISTING_EVIDENCE",
+		"schema_id": "strategic_ai_baseline_existing_evidence_v1",
+		"status": overall_status,
+		"status_counts": status_counts,
+		"case_count": cases.size(),
+		"cases": cases,
+		"case_signatures": _case_signature_index(cases),
+		"missing_subsystems": missing_subsystems,
+		"harness_signature": signature,
+	}
+
+static func _strategic_ai_baseline_existing_contract_evidence() -> Dictionary:
+	var cases := [
+		_strategic_ai_baseline_contract_case("strategic_ai_pressure_tick", "enemy_turn_objective_pressure_tick", {
+			"target_assignment_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_turn_execution", "live_commander_resource_front_turn_execution", {
+			"target_assignment_event_count": 2,
+			"site_seizure_event_count": 2,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_route_progression", "live_commander_resource_front_route_progression", {
+			"target_assignment_event_count": 1,
+			"site_seizure_event_count": 1,
+			"turns_simulated": 10,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_town_governor_build_execution", "live_town_governor_builds_and_recruits_through_enemy_turn", {
+			"town_build_event_count": 1,
+			"town_recruit_event_count": 1,
+			"recruit_destination_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_town_defense_retask", "live_raid_retasks_to_stabilizing_owned_town", {
+			"target_assignment_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_multi_scenario_town_defense_retask", "live_enemy_town_defense_retask_across_scenario_breadth", {
+			"target_assignment_event_count": 13,
+			"scenario_count": 5,
+			"faction_case_count": 9,
+			"retasked_faction_count": 9,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_resource_site_defense", "live_raid_defends_owned_persistent_resource_site", {
+			"site_defense_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_town_retake_assault", "live_retake_front_queues_town_defense_battle", {
+			"target_assignment_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_raid_assault_grouping", "live_nearby_raids_group_for_town_assault", {
+			"grouping_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_regroup_retreat", "live_understrength_raid_regroups_at_town", {
+			"regroup_event_count": 1,
+			"target_assignment_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_live_recruitment_delivery", "live_town_recruits_feed_active_raid_host", {
+			"town_recruit_event_count": 1,
+			"raid_reinforcement_event_count": 1,
+			"scenario_count": 1,
+			"faction_case_count": 1,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_multi_scenario_recruitment_delivery", "live_town_recruits_feed_active_raid_hosts_across_scenario_breadth", {
+			"town_recruit_event_count": 5,
+			"raid_reinforcement_event_count": 5,
+			"scenario_count": 5,
+			"faction_case_count": 5,
+			"delivered_faction_count": 5,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_multi_scenario_pressure_coverage", "live_enemy_pressure_launches_across_scenario_breadth", {
+			"target_assignment_event_count": 15,
+			"scenario_count": 5,
+			"faction_case_count": 9,
+			"launched_faction_count": 9,
+		}),
+		_strategic_ai_baseline_contract_case("strategic_ai_multi_scenario_objective_targeting", "live_enemy_objective_priority_targets_across_scenario_breadth", {
+			"target_assignment_event_count": 9,
+			"scenario_count": 5,
+			"faction_case_count": 9,
+			"objective_targeted_count": 9,
+			"priority_reason_count": 9,
+		}),
+	]
+	return {
+		"ok": true,
+		"report_id": "STRATEGIC_AI_BASELINE_EXISTING_EVIDENCE",
+		"schema_id": "strategic_ai_baseline_existing_evidence_v1",
+		"status": "pass",
+		"status_counts": {"pass": cases.size(), "warning": 0, "deferred": 0, "fail": 0},
+		"case_count": cases.size(),
+		"cases": cases,
+		"case_signatures": _case_signature_index(cases),
+		"missing_subsystems": [],
+		"harness_signature": _signature_for({
+			"schema_id": "strategic_ai_baseline_existing_contract_evidence_v1",
+			"case_signatures": _case_signature_index(cases),
+		}),
+		"execution_policy": "fast_contract_summary_existing_harness_reports_not_reexecuted",
+	}
+
+static func _strategic_ai_baseline_contract_case(subsystem_id: String, case_id: String, summary: Dictionary) -> Dictionary:
+	var evidence := {
+		"baseline_source": "existing_headless_harness_contract",
+		"runtime_executed_in_this_report": false,
+		"full_runtime_gate": "tests/headless_simulation_harness_report.tscn",
+	}
+	return _case(subsystem_id, case_id, "pass", summary, evidence, [], [])
+
+static func _strategic_ai_baseline_cases_from_harness(harness: Dictionary) -> Dictionary:
+	var index := {}
+	for simulation_case in harness.get("cases", []):
+		if not (simulation_case is Dictionary):
+			continue
+		var subsystem_id := String(simulation_case.get("subsystem_id", ""))
+		if subsystem_id in STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS:
+			index[subsystem_id] = simulation_case
+	return index
+
+static func _strategic_ai_baseline_subsystem_summary(strategic_cases: Dictionary) -> Dictionary:
+	var status_counts := {"pass": 0, "warning": 0, "deferred": 0, "fail": 0, "missing": 0}
+	var broad_case_count := 0
+	var total_event_counts := {
+		"target_assignment": 0,
+		"site_seizure": 0,
+		"site_defense": 0,
+		"town_build": 0,
+		"town_recruit": 0,
+		"raid_reinforcement": 0,
+		"raid_grouping": 0,
+		"raid_regroup": 0,
+	}
+	var scenario_case_count := 0
+	var faction_case_count := 0
+	for subsystem_id in STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS:
+		var simulation_case: Dictionary = strategic_cases.get(subsystem_id, {}) if strategic_cases.get(subsystem_id, {}) is Dictionary else {}
+		if simulation_case.is_empty():
+			status_counts["missing"] = int(status_counts.get("missing", 0)) + 1
+			continue
+		var status := String(simulation_case.get("status", "fail"))
+		status_counts[status] = int(status_counts.get(status, 0)) + 1
+		if subsystem_id.find("multi_scenario") >= 0:
+			broad_case_count += 1
+		var summary: Dictionary = simulation_case.get("summary", {}) if simulation_case.get("summary", {}) is Dictionary else {}
+		scenario_case_count += int(summary.get("scenario_count", 0))
+		faction_case_count += int(summary.get("faction_case_count", 0))
+		total_event_counts["target_assignment"] = int(total_event_counts.get("target_assignment", 0)) + int(summary.get("target_assignment_event_count", 0))
+		total_event_counts["site_seizure"] = int(total_event_counts.get("site_seizure", 0)) + int(summary.get("site_seizure_event_count", 0))
+		total_event_counts["site_defense"] = int(total_event_counts.get("site_defense", 0)) + int(summary.get("site_defense_event_count", 0))
+		total_event_counts["town_build"] = int(total_event_counts.get("town_build", 0)) + int(summary.get("town_build_event_count", 0))
+		total_event_counts["town_recruit"] = int(total_event_counts.get("town_recruit", 0)) + int(summary.get("town_recruit_event_count", 0))
+		total_event_counts["raid_reinforcement"] = int(total_event_counts.get("raid_reinforcement", 0)) + int(summary.get("raid_reinforcement_event_count", 0))
+		total_event_counts["raid_grouping"] = int(total_event_counts.get("raid_grouping", 0)) + int(summary.get("grouping_event_count", 0))
+		total_event_counts["raid_regroup"] = int(total_event_counts.get("raid_regroup", 0)) + int(summary.get("regroup_event_count", 0))
+	var expected_count := STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS.size()
+	return {
+		"expected_subsystem_count": expected_count,
+		"covered_subsystem_count": strategic_cases.keys().size(),
+		"pass_count": int(status_counts.get("pass", 0)),
+		"warning_count": int(status_counts.get("warning", 0)),
+		"deferred_count": int(status_counts.get("deferred", 0)),
+		"fail_count": int(status_counts.get("fail", 0)),
+		"missing_count": int(status_counts.get("missing", 0)),
+		"broad_multi_scenario_case_count": broad_case_count,
+		"fixture_bound_case_count": max(0, strategic_cases.keys().size() - broad_case_count),
+		"scenario_case_count": scenario_case_count,
+		"faction_case_count": faction_case_count,
+		"event_counts": total_event_counts,
+	}
+
+static func _strategic_ai_baseline_capability_rows(strategic_cases: Dictionary) -> Array:
+	var rows := []
+	for capability_id in STRATEGIC_AI_BASELINE_CAPABILITIES.keys():
+		var subsystem_ids: Array = STRATEGIC_AI_BASELINE_CAPABILITIES.get(capability_id, [])
+		var present_count := 0
+		var pass_count := 0
+		var warning_count := 0
+		var missing_ids := []
+		var statuses := {}
+		for subsystem_id_value in subsystem_ids:
+			var subsystem_id := String(subsystem_id_value)
+			var simulation_case: Dictionary = strategic_cases.get(subsystem_id, {}) if strategic_cases.get(subsystem_id, {}) is Dictionary else {}
+			if simulation_case.is_empty():
+				missing_ids.append(subsystem_id)
+				continue
+			present_count += 1
+			var status := String(simulation_case.get("status", "fail"))
+			statuses[subsystem_id] = status
+			if status == "pass":
+				pass_count += 1
+			elif status == "warning":
+				warning_count += 1
+		var readiness := "covered"
+		if not missing_ids.is_empty() or pass_count < subsystem_ids.size():
+			readiness = "needs_attention"
+		if present_count == 0:
+			readiness = "missing"
+		rows.append({
+			"capability_id": String(capability_id),
+			"readiness": readiness,
+			"expected_subsystem_count": subsystem_ids.size(),
+			"present_subsystem_count": present_count,
+			"pass_count": pass_count,
+			"warning_count": warning_count,
+			"missing_subsystem_ids": missing_ids,
+			"statuses": statuses,
+		})
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return String(a.get("capability_id", "")) < String(b.get("capability_id", ""))
+	)
+	return rows
+
+static func _strategic_ai_baseline_rmg_cases(input_config: Dictionary) -> Array:
+	var configured_cases: Array = input_config.get("rmg_cases", STRATEGIC_AI_BASELINE_RMG_CASES) if input_config.get("rmg_cases", STRATEGIC_AI_BASELINE_RMG_CASES) is Array else STRATEGIC_AI_BASELINE_RMG_CASES
+	var rows := []
+	for case_value in configured_cases:
+		if case_value is Dictionary:
+			rows.append(_strategic_ai_baseline_rmg_case(case_value, input_config))
+	return rows
+
+static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_config: Dictionary) -> Dictionary:
+	var turn_count: int = max(1, int(input_config.get("rmg_turn_count", STRATEGIC_AI_BASELINE_RMG_TURN_COUNT)))
+	var seed := String(case_config.get("seed", "strategic-ai-baseline-rmg"))
+	var expected_scope := String(case_config.get("expected_scope", "supported_small"))
+	var player_config := ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		String(case_config.get("template_id", "")),
+		String(case_config.get("profile_id", "")),
+		int(case_config.get("player_count", 3)),
+		String(case_config.get("water_mode", "land")),
+		bool(case_config.get("underground", false)),
+		String(case_config.get("size_class_id", "homm3_small"))
+	)
+	if not bool(input_config.get("execute_rmg_turn_probes", false)):
+		return {
+			"case_id": String(case_config.get("case_id", seed)),
+			"seed": seed,
+			"size_class_id": String(player_config.get("size", {}).get("size_class_id", "")),
+			"template_id": String(player_config.get("profile", {}).get("template_id", "")),
+			"profile_id": String(player_config.get("profile", {}).get("id", "")),
+			"player_count": int(player_config.get("player_constraints", {}).get("player_count", 0)),
+			"expected_scope": expected_scope,
+			"setup_ok": false,
+			"ok": false,
+			"classification": "measurement_gap",
+			"reason": "rmg_turn_probe_not_executed_by_default",
+			"turn_count_target": turn_count,
+			"turn_results": [],
+		}
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(player_config, "normal")
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	var row := {
+		"case_id": String(case_config.get("case_id", seed)),
+		"seed": seed,
+		"size_class_id": String(player_config.get("size", {}).get("size_class_id", "")),
+		"template_id": String(player_config.get("profile", {}).get("template_id", "")),
+		"profile_id": String(player_config.get("profile", {}).get("id", "")),
+		"player_count": int(player_config.get("player_constraints", {}).get("player_count", 0)),
+		"expected_scope": expected_scope,
+		"setup_ok": bool(setup.get("ok", false)),
+		"validation_status": String(validation.get("status", validation.get("validation_status", ""))),
+		"failure_handoff": String(setup.get("failure_handoff", "")),
+		"turn_count_target": turn_count,
+		"turn_results": [],
+	}
+	if not bool(setup.get("ok", false)):
+		row["ok"] = false
+		row["classification"] = "scope_gap" if expected_scope != "supported_small" else "behavior_bug"
+		row["reason"] = "generated_map_setup_failed"
+		return row
+	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session == null or session.scenario_id == "":
+		row["ok"] = false
+		row["classification"] = "behavior_bug"
+		row["reason"] = "generated_session_start_failed"
+		return row
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	row["scenario_id"] = String(session.scenario_id)
+	row["initial_counts"] = _overworld_counts(session.overworld)
+	row["initial_enemy_state_count"] = session.overworld.get("enemy_states", []).size() if session.overworld.get("enemy_states", []) is Array else 0
+	var all_turns_ok := true
+	var enemy_event_count := 0
+	var public_event_count := 0
+	for turn_index in range(turn_count):
+		var result: Dictionary = OverworldRules.end_turn(session)
+		var events: Array = result.get("enemy_activity_events", []) if result.get("enemy_activity_events", []) is Array else []
+		enemy_event_count += events.size()
+		public_event_count += events.size()
+		var turn_ok := bool(result.get("ok", false))
+		all_turns_ok = all_turns_ok and turn_ok
+		row["turn_results"].append({
+			"turn_index": turn_index + 1,
+			"ok": turn_ok,
+			"day": int(session.day),
+			"enemy_activity_event_count": events.size(),
+			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
+			"scenario_status": String(session.scenario_status),
+		})
+		if not turn_ok:
+			break
+	EnemyTurnRules.normalize_enemy_states(session)
+	row["final_counts"] = _overworld_counts(session.overworld)
+	row["final_enemy_state_count"] = session.overworld.get("enemy_states", []).size() if session.overworld.get("enemy_states", []) is Array else 0
+	row["enemy_activity_event_count"] = enemy_event_count
+	row["public_event_count"] = public_event_count
+	row["final_day"] = int(session.day)
+	row["ok"] = all_turns_ok and int(row.get("initial_enemy_state_count", 0)) > 0
+	row["classification"] = "generated_ai_live_probe" if bool(row.get("ok", false)) else "behavior_bug"
+	row["state_signature"] = _signature_for({
+		"scenario_id": String(session.scenario_id),
+		"seed": seed,
+		"final_day": int(session.day),
+		"final_counts": row.get("final_counts", {}),
+		"enemy_event_count": enemy_event_count,
+	})
+	return row
+
+static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
+	var supported_small_count := 0
+	var supported_small_ok_count := 0
+	var setup_ok_count := 0
+	var turn_ok_count := 0
+	var scope_gap_count := 0
+	var behavior_bug_count := 0
+	var measurement_gap_count := 0
+	var medium_probe_count := 0
+	var medium_ok_count := 0
+	var enemy_event_count := 0
+	for row_value in rmg_cases:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("setup_ok", false)):
+			setup_ok_count += 1
+		if bool(row.get("ok", false)):
+			turn_ok_count += 1
+		if String(row.get("classification", "")) == "scope_gap":
+			scope_gap_count += 1
+		if String(row.get("classification", "")) == "behavior_bug":
+			behavior_bug_count += 1
+		if String(row.get("classification", "")) == "measurement_gap":
+			measurement_gap_count += 1
+		if String(row.get("expected_scope", "")) == "supported_small":
+			supported_small_count += 1
+			if bool(row.get("ok", false)):
+				supported_small_ok_count += 1
+		if String(row.get("size_class_id", "")) == "homm3_medium":
+			medium_probe_count += 1
+			if bool(row.get("ok", false)):
+				medium_ok_count += 1
+		enemy_event_count += int(row.get("enemy_activity_event_count", 0))
+	return {
+		"case_count": rmg_cases.size(),
+		"setup_ok_count": setup_ok_count,
+		"turn_ok_count": turn_ok_count,
+		"supported_small_count": supported_small_count,
+		"supported_small_ok_count": supported_small_ok_count,
+		"medium_probe_count": medium_probe_count,
+		"medium_ok_count": medium_ok_count,
+		"scope_gap_count": scope_gap_count,
+		"behavior_bug_count": behavior_bug_count,
+		"measurement_gap_count": measurement_gap_count,
+		"enemy_activity_event_count": enemy_event_count,
+	}
+
+static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, capability_rows: Array, rmg_summary: Dictionary) -> Array:
+	var rows := []
+	if int(subsystem_summary.get("fail_count", 0)) > 0 or int(subsystem_summary.get("missing_count", 0)) > 0:
+		rows.append({
+			"blocker_id": "strategic_ai_harness_failures",
+			"severity": "bug",
+			"summary": "Existing strategic AI subsystem evidence has failures or missing coverage.",
+		})
+	for capability in capability_rows:
+		if capability is Dictionary and String(capability.get("readiness", "")) != "covered":
+			rows.append({
+				"blocker_id": "capability_%s" % String(capability.get("capability_id", "")),
+				"severity": "implementation_gap",
+				"summary": "Capability %s is not fully covered by passing live evidence." % String(capability.get("capability_id", "")),
+			})
+	if int(rmg_summary.get("behavior_bug_count", 0)) > 0:
+		rows.append({
+			"blocker_id": "native_rmg_small_ai_turn_health",
+			"severity": "bug",
+			"summary": "At least one generated-map AI turn probe failed after execution.",
+		})
+	elif int(rmg_summary.get("supported_small_ok_count", 0)) < int(rmg_summary.get("supported_small_count", 0)):
+		rows.append({
+			"blocker_id": "native_rmg_small_ai_turn_probe_coverage",
+			"severity": "production_gap",
+			"summary": "Supported Small generated-map AI turn health is identified as required coverage but is not executed by the default fast audit.",
+		})
+	if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)):
+		rows.append({
+			"blocker_id": "native_rmg_medium_ai_generalization",
+			"severity": "production_gap",
+			"summary": "Medium generated-map strategic AI turn health is not broadly proven.",
+		})
+	rows.append({
+		"blocker_id": "no_persistent_full_hero_task_board",
+		"severity": "production_gap",
+		"summary": "Current AI evidence still relies on commander/raid fixtures rather than a durable full hero task board.",
+	})
+	rows.append({
+		"blocker_id": "no_long_run_seed_matrix",
+		"severity": "production_gap",
+		"summary": "No 8-week 100-seed strategic AI simulation matrix exists yet.",
+	})
+	return rows
+
+static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
+	var has_small_bug := false
+	var has_medium_gap := false
+	for row in blocker_rows:
+		if not (row is Dictionary):
+			continue
+		has_small_bug = has_small_bug or String(row.get("blocker_id", "")) == "native_rmg_small_ai_turn_health"
+		has_medium_gap = has_medium_gap or String(row.get("blocker_id", "")) == "native_rmg_medium_ai_generalization"
+	var slices := []
+	if has_small_bug:
+		slices.append("strategic-ai-rmg-small-turn-health-fix-10184")
+	else:
+		slices.append("strategic-ai-persistent-hero-task-board-10184")
+	if has_medium_gap:
+		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
+	slices.append("strategic-ai-long-run-seed-matrix-10184")
+	return slices
 
 static func harness_signature_for_cases(cases: Array, status_counts: Dictionary, missing_subsystems: Array) -> String:
 	return _signature_for({
