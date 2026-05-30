@@ -207,6 +207,7 @@ AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.gd"
 AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.tscn"
 AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-encounter-objective-task-board-report.md"
+AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-encounter-arrival-risk-gating-report.md"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.gd"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
@@ -14932,6 +14933,9 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
         'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         'match target_kind:',
         '"encounter":',
+        "func encounter_arrival_ready_report",
+        "func redirect_encounter_objective_for_risk",
+        "_encounter_guard_strength",
         "func _ai_hero_task_reconciled_encounter_task",
         "OverworldRulesScript.is_encounter_resolved(session, encounter)",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
@@ -14946,8 +14950,12 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
         report_text = AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-            "objective_front_encounters_use_saved_task_continuity",
+            "objective_front_encounters_use_saved_task_continuity_and_arrival_risk_gating",
             "objective_front_encounter_assigns_reuses_and_closes_task",
+            "weak_encounter_objective_regroups_before_clear",
+            "encounter_risk_regroup",
+            "encounter_risk_staging",
+            "gathering strength for guarded site",
             "causeway_levee_cutters",
             "saved_hero_task",
             "invalid_target_missing",
@@ -14959,11 +14967,28 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Encounter Objective Task Board Report",
             "implementation evidence",
+            "strategic-ai-encounter-arrival-risk-gating-10184",
             "objective-front encounter targets",
+            "`weak_encounter_objective_regroups_before_clear`",
+            "`encounter_risk_regroup`",
             "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task encounter objective doc is missing required text: {required_text}")
+    ensure(AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH.exists(), errors, "Missing strategic AI encounter arrival risk gating report doc")
+    if AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH.exists():
+        risk_doc_text = AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Encounter Arrival Risk Gating Report",
+            "strategic-ai-encounter-arrival-risk-gating-10184",
+            "`encounter_arrival_ready_report`",
+            "`redirect_encounter_objective_for_risk`",
+            "`_encounter_guard_strength`",
+            "`weak_encounter_objective_regroups_before_clear`",
+            "No save migration",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in risk_doc_text, errors, f"AI encounter arrival risk gating doc is missing required text: {required_text}")
 
 def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     for path in (
