@@ -19,15 +19,19 @@ func _run() -> void:
 	var personality_case := _planner_uses_commander_personality_fit()
 	if personality_case.is_empty():
 		return
+	var adaptive_case := _planner_uses_commander_outcome_memory()
+	if adaptive_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "coordinated_task_planner_live_behavior",
-		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_and_scores_targets_by_commander_identity",
+		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_and_scores_targets_by_commander_identity_and_adaptive_outcome_memory",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
 		"multi_origin_case": multi_origin_case,
 		"personality_case": personality_case,
+		"adaptive_case": adaptive_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -199,6 +203,127 @@ func _planner_uses_commander_personality_fit() -> Dictionary:
 		"magic_fit_profile": String(sable_task.get("commander_fit_profile", "")),
 	}
 
+func _planner_uses_commander_outcome_memory() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var origin := {"kind": "town", "placement_id": "duskfen_bastion", "x": 7, "y": 2}
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("Adaptive-memory fixture expected an active hero id")
+		return {}
+	var candidates := [
+		{
+			"target_kind": "artifact",
+			"target_placement_id": "trailsinger_cache",
+			"target_label": "Trailsinger Cache",
+			"target_x": 2,
+			"target_y": 0,
+			"goal_x": 2,
+			"goal_y": 0,
+			"goal_distance": 5,
+			"priority": 100,
+			"target_reason_codes": ["artifact_pressure", "magic_support"],
+			"target_public_reason": "magic relic",
+			"target_public_importance": "medium",
+		},
+		{
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": "Exposed Hero",
+			"target_x": 1,
+			"target_y": 2,
+			"goal_x": 1,
+			"goal_y": 2,
+			"goal_distance": 5,
+			"priority": 180,
+			"target_reason_codes": ["hero_hunt", "exposed_hero"],
+			"target_public_reason": "exposed hero",
+			"target_public_importance": "high",
+		},
+	]
+	var initial_task := EnemyAdventureRules._ai_hero_task_planner_task_for_actor(
+		session,
+		config,
+		MIRECLAW,
+		"hero_sable",
+		origin,
+		candidates,
+		{},
+		1
+	)
+	if String(initial_task.get("target_kind", "")) != "artifact":
+		_fail("Magic commander fixture should start by preferring artifact pressure before outcome memory, got %s" % JSON.stringify(initial_task))
+		return {}
+	var entry := _commander_entry(session, MIRECLAW, "hero_sable")
+	var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+	commander_state = EnemyAdventureRules.record_target_assignment(
+		commander_state,
+		"hero",
+		hero_id,
+		"Exposed Hero",
+		1,
+		2
+	)
+	commander_state = EnemyAdventureRules.advance_commander_record(
+		commander_state,
+		EnemyAdventureRules.COMMANDER_OUTCOME_FIELD_VICTORY
+	)
+	commander_state = EnemyAdventureRules.record_target_assignment(
+		commander_state,
+		"hero",
+		hero_id,
+		"Exposed Hero",
+		1,
+		2
+	)
+	commander_state = EnemyAdventureRules.advance_commander_record(
+		commander_state,
+		EnemyAdventureRules.COMMANDER_OUTCOME_PURSUIT_VICTORY
+	)
+	var direct_memory := EnemyAdventureRules.commander_target_memory(commander_state)
+	var direct_success_counts: Dictionary = direct_memory.get("target_success_counts", {}) if direct_memory.get("target_success_counts", {}) is Dictionary else {}
+	if int(direct_success_counts.get("hero", 0)) < 2:
+		_fail("Outcome memory did not update on commander state before roster sync: %s" % JSON.stringify(direct_memory))
+		return {}
+	EnemyAdventureRules.sync_commander_state_to_roster(
+		session,
+		MIRECLAW,
+		commander_state,
+		EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE,
+		"",
+		0,
+		EnemyAdventureRules.COMMANDER_OUTCOME_PURSUIT_VICTORY
+	)
+	var adapted_task := EnemyAdventureRules._ai_hero_task_planner_task_for_actor(
+		session,
+		config,
+		MIRECLAW,
+		"hero_sable",
+		origin,
+		candidates,
+		{},
+		2
+	)
+	var memory := EnemyAdventureRules.commander_target_memory(_commander_entry(session, MIRECLAW, "hero_sable"))
+	var artifact_fit := EnemyAdventureRules._ai_commander_task_fit_bonus(session, MIRECLAW, "hero_sable", candidates[0])
+	var hero_fit := EnemyAdventureRules._ai_commander_task_fit_bonus(session, MIRECLAW, "hero_sable", candidates[1])
+	if String(adapted_task.get("target_kind", "")) != "hero":
+		_fail("Outcome memory should shift experienced commander toward successful hero pressure, got %s memory=%s artifact_fit=%d hero_fit=%d" % [JSON.stringify(adapted_task), JSON.stringify(memory), artifact_fit, hero_fit])
+		return {}
+	var success_counts: Dictionary = memory.get("target_success_counts", {}) if memory.get("target_success_counts", {}) is Dictionary else {}
+	if int(success_counts.get("hero", 0)) < 2:
+		_fail("Outcome memory did not preserve hero success counts: %s" % JSON.stringify(memory))
+		return {}
+	return {
+		"case_id": "commander_outcome_memory_changes_future_task_choice",
+		"actor_id": "hero_sable",
+		"initial_target_key": "%s:%s" % [String(initial_task.get("target_kind", "")), String(initial_task.get("target_id", ""))],
+		"adapted_target_key": "%s:%s" % [String(adapted_task.get("target_kind", "")), String(adapted_task.get("target_id", ""))],
+		"hero_success_count": int(success_counts.get("hero", 0)),
+		"adapted_fit_bonus": int(adapted_task.get("commander_fit_bonus", 0)),
+		"adapted_fit_profile": String(adapted_task.get("commander_fit_profile", "")),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -220,6 +345,13 @@ func _enemy_state(session) -> Dictionary:
 		if state is Dictionary and String(state.get("faction_id", "")) == MIRECLAW:
 			return state
 	_fail("Could not find enemy state for %s" % MIRECLAW)
+	return {}
+
+func _commander_entry(session, faction_id: String, roster_hero_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, faction_id):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
+	_fail("Could not find commander %s for %s" % [roster_hero_id, faction_id])
 	return {}
 
 func _add_enemy_town(session, placement_id: String, town_id: String, x: int, y: int) -> void:

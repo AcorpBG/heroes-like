@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-defended-town-capture-stationing-10184",
-  "currentSliceTitle": "Strategic AI Defended Town Capture Stationing",
+  "currentSliceId": "strategic-ai-commander-outcome-adaptation-10184",
+  "currentSliceTitle": "Strategic AI Commander Outcome Adaptation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. AI commanders that win defended town assaults now consolidate as active captured-town defenders with survivor-garrison continuity instead of generic recovery.",
+  "currentSliceNotes": "Completed. AI commander target-selection fit now adapts from live outcome memory: repeated success at a target kind increases future task fit, while defeats reduce it.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:38:00Z",
+  "updatedAt": "2026-05-30T22:12:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,110 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-commander-outcome-adaptation-10184",
+      "title": "Strategic AI Commander Outcome Adaptation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / commander personality and live-loop target choice",
+      "purpose": "Make commander target selection adapt from real live outcomes so successful commanders develop bounded target-kind preferences and defeated commanders damp unsafe repeats instead of relying only on static hero archetype fit.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_adoption_boundary_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Commander outcome memory records bounded per-target-kind success/failure counts, preserves them through roster normalization, feeds them into live strategic task fit scoring, and focused task-planner evidence proves repeated hero-pressure success can change a commander's later target choice while adjacent strategic-AI flows still pass.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new save version or migration",
+        "changing public event schemas",
+        "broad battle balance changes",
+        "report-only gates without behavior"
+      ],
+      "startedAt": "2026-05-30T22:00:00Z",
+      "updatedAt": "2026-05-30T22:12:00Z",
+      "completedAt": "2026-05-30T22:12:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner now proves adaptive outcome memory: hero_sable starts preferring artifact pressure, records two hero-pressure successes, then selects hero pressure from the same candidate set."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy task execution still seizes resource fronts and persists task-board outcomes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "pass",
+          "summary": "Saved-task commander deployment and spawn-point selection still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+          "result": "pass",
+          "summary": "Neutral-town expansion, defended neutral-town assault, and captured-town commander stationing still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded-claim, resource-front support, route recovery, and rebuild behavior still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_state_report.tscn",
+          "result": "pass",
+          "summary": "Commander role state report and compact public leak checks still pass with extended internal outcome memory."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_adoption_boundary_report.tscn",
+          "result": "pass",
+          "summary": "Legacy role-adoption boundary report still passes; new adaptive memory remains internal live task scoring, not public role-event leakage."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Same-turn planning, planned-task recruitment preparation, and ready launch still pass."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Commander memory now records target_success_counts/target_failure_counts by target kind, preserves those fields through memory normalization, and applies a bounded adaptive fit modifier during strategic task scoring."
+      ]
+    },
     {
       "id": "strategic-ai-defended-town-capture-stationing-10184",
       "title": "Strategic AI Defended Town Capture Stationing",
@@ -40694,12 +40798,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-defended-town-capture-stationing-10184",
+    "sliceId": "strategic-ai-commander-outcome-adaptation-10184",
     "status": "completed",
-    "updatedAt": "2026-05-31T04:38:00Z",
-    "summary": "Completed. AI commanders that win defended town assaults now consolidate as active captured-town defenders with survivor-garrison continuity instead of generic recovery; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-30T22:12:00Z",
+    "summary": "Completed. AI commander target-selection fit now adapts from live outcome memory: repeated success at a target kind increases future task fit, while defeats reduce it; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-31T04:38:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T22:12:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -43652,42 +43756,39 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-multi-origin-task-planner-10184 [completed]",
+  "currentSlice": "strategic-ai-commander-outcome-adaptation-10184 [completed]",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T20:04:00Z",
-    "sliceId": "strategic-ai-multi-origin-task-planner-10184",
+    "updatedAt": "2026-05-30T22:12:00Z",
+    "sliceId": "strategic-ai-commander-outcome-adaptation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; multi-origin local-front case covered)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; adaptive outcome-memory case covered)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
-      "python3 -m py_compile tests/validate_repo.py (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_state_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_adoption_boundary_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Task-board planning now evaluates target candidates from every owned enemy town and configured spawn origin.",
-        "Candidates keep the strongest reachable local origin per target before target reservation and commander assignment.",
-        "Planned task records now persist origin_kind, origin_id, origin_x, and origin_y.",
-        "Focused coverage proves a second owned Mireclaw town near north_wood produces a local-origin resource task instead of using the far Duskfen origin."
+        "Commander outcome advancement now preserves target memory through progression updates.",
+        "Commander memory now records bounded target_success_counts and target_failure_counts by target kind.",
+        "Strategic task fit now includes a bounded adaptive bonus/penalty from live commander outcome memory.",
+        "Focused coverage proves repeated hero-pressure success changes hero_sable's later task choice from artifact pressure to hero pressure from the same candidate set."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "added_town": "north_mire_watch",
-        "target_key": "resource:north_wood",
-        "selected_origin_id": "north_mire_watch",
-        "selected_origin": {
-          "x": 0,
-          "y": 0
-        }
+        "actor_id": "hero_sable",
+        "initial_target_key": "artifact:trailsinger_cache",
+        "adapted_target_key": "hero:hero_lyra",
+        "hero_success_count": 2
       },
-      "remaining_validation": "Full 100-seed eight-week generated-map matrix, Medium/generated-map generalization, deeper economy/army timing, retreat/personality tuning, and live-client pacing remain open.",
+      "remaining_validation": "Full 100-seed eight-week generated-map matrix, Medium/generated-map generalization, deeper economy/army timing, broader adaptive doctrine checks, and live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, automatic tuning, campaign production, or production-ready claim."
     }
   }
