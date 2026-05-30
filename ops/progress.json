@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-local-recruitment-support-10184",
-  "currentSliceTitle": "Strategic AI Local Recruitment Support",
+  "currentSliceId": "strategic-ai-adventure-spell-execution-10184",
+  "currentSliceTitle": "Strategic AI Adventure Spell Execution",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy town recruitment support now scores active raid hosts by route/locality from the recruiting town and skips unreachable hosts for direct support.",
+  "currentSliceNotes": "Completed. Enemy commanders can cast bounded self-movement overworld spells during live raid movement when the spell changes objective reach; mana, commander state, movement effect, and public AI events are covered by focused validation.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T13:42:00Z",
+  "updatedAt": "2026-05-30T14:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,35 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-adventure-spell-execution-10184",
+      "title": "Strategic AI Adventure Spell Execution",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after local recruitment support; close the explicit valuation-only enemy adventure spell boundary",
+      "planRef": "PLAN.md Current strategic AI target / Magic Availability And Strategic Influence Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/magic-ai-valuation-casting-hooks-report.md",
+        "docs/magic-adventure-map-spell-hooks-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/magic_ai_valuation_casting_hooks_report.gd",
+        "docs/strategic-ai-adventure-spell-execution-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy commander raid movement can execute supported self-targeted overworld movement spells through SpellRules.cast_overworld_spell when the valuation says casting changes objective reach; commander spellbooks preserve authored overworld spells; mana is spent and persisted on the commander state; raid movement gains bounded extra path steps only from the cast consequence; public AI events surface the spell cast without score/debug leakage; focused runtime coverage proves an enemy raid casts a movement spell and reaches a target it could not reach with normal one-step movement; validation passes; no save-version migration is introduced.",
+      "startedAt": "2026-05-30T14:02:00Z",
+      "updatedAt": "2026-05-30T14:18:00Z",
+      "completedAt": "2026-05-30T14:18:00Z",
+      "notes": "Completed. Existing AI adventure spell valuation no longer stops at valuation_only_no_enemy_adventure_cast_executor; supported enemy movement spells execute through SpellRules.cast_overworld_spell during raid movement and persist mana/commander state without a save-version migration."
+    },
     {
       "id": "strategic-ai-local-recruitment-support-10184",
       "title": "Strategic AI Local Recruitment Support",

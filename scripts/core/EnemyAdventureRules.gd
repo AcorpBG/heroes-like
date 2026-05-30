@@ -30,6 +30,8 @@ const COMMANDER_EXPERIENCE_ASSAULT_VICTORY := 210
 const COMMANDER_EXPERIENCE_DEFEATED := 45
 const COMMANDER_EXPERIENCE_STALEMATE := 30
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
+const RAID_BASE_MOVEMENT_STEPS := 1
+const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
@@ -95,6 +97,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_raid_arrived",
 	"ai_raid_regrouped",
 	"ai_raid_grouped",
+	"ai_adventure_spell_cast",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -319,7 +322,7 @@ static func adventure_spell_valuation_report(
 		"effect_type_counts": effect_type_counts,
 		"runtime_hook_counts": hook_counts,
 		"candidates": candidates,
-		"runtime_policy": "valuation_only_no_enemy_adventure_cast_executor",
+		"runtime_policy": "valuation_with_enemy_movement_spell_executor",
 	}
 
 static func artifact_reward_valuation_report(
@@ -813,12 +816,31 @@ static func advance_raids(
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
-		if goal_distance > 0 and goal_distance < 9999:
+		var movement_steps := RAID_BASE_MOVEMENT_STEPS
+		if goal_distance > RAID_BASE_MOVEMENT_STEPS and goal_distance < 9999:
+			var spell_result := _maybe_cast_raid_adventure_movement_spell(
+				session,
+				config,
+				encounter,
+				goal_distance,
+				faction_id
+			)
+			encounter = spell_result.get("encounter", encounter)
+			movement_steps = max(movement_steps, int(spell_result.get("movement_steps", movement_steps)))
+			for spell_event_value in spell_result.get("events", []):
+				if spell_event_value is Dictionary and not spell_event_value.is_empty():
+					event_records.append(spell_event_value)
+		for step_index in range(max(0, movement_steps)):
+			goal_tiles = _goal_tiles_from_raid(session, encounter)
+			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
+			if goal_distance <= 0 or goal_distance >= 9999:
+				break
 			var next_step = _next_step_toward(session, current, goal_tiles, String(encounter.get("placement_id", "")))
-			if next_step != current:
-				encounter["x"] = next_step.x
-				encounter["y"] = next_step.y
-				current = next_step
+			if next_step == current:
+				break
+			encounter["x"] = next_step.x
+			encounter["y"] = next_step.y
+			current = next_step
 
 		goal_tiles = _goal_tiles_from_raid(session, encounter)
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
@@ -1017,6 +1039,74 @@ static func _best_nearby_assault_support_raid_index(
 			best_strength = donor_strength
 			best_label = donor_label
 	return best_index
+
+static func _maybe_cast_raid_adventure_movement_spell(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	goal_distance: int,
+	faction_id: String
+) -> Dictionary:
+	if goal_distance <= RAID_BASE_MOVEMENT_STEPS or goal_distance >= 9999:
+		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
+	var commander_state = raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
+	var movement := {
+		"current": RAID_BASE_MOVEMENT_STEPS,
+		"max": clampi(goal_distance, RAID_BASE_MOVEMENT_STEPS + 1, RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS),
+	}
+	var context := {
+		"target_kind": String(raid.get("target_kind", "")),
+		"target_label": String(raid.get("target_label", raid.get("target_placement_id", ""))),
+		"objective_steps_remaining": goal_distance,
+		"route_pressure": true,
+	}
+	var report := adventure_spell_valuation_report(commander_state, movement, context)
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if selected.is_empty() or String(selected.get("recommendation", "")) != "cast":
+		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
+	var spell_id := String(selected.get("spell_id", ""))
+	var cast_result := SpellRulesScript.cast_overworld_spell(commander_state, movement, spell_id)
+	if not bool(cast_result.get("ok", false)):
+		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
+	var updated_raid := raid.duplicate(true)
+	updated_raid["enemy_commander_state"] = cast_result.get("hero", commander_state)
+	updated_raid["last_adventure_spell_id"] = spell_id
+	updated_raid["last_adventure_spell_day"] = int(session.day)
+	updated_raid["last_adventure_spell_movement_steps"] = int(cast_result.get("movement", {}).get("current", RAID_BASE_MOVEMENT_STEPS))
+	var steps: int = clampi(
+		int(cast_result.get("movement", {}).get("current", RAID_BASE_MOVEMENT_STEPS)),
+		RAID_BASE_MOVEMENT_STEPS,
+		RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS
+	)
+	var event := build_ai_event_record(
+		session,
+		config,
+		"ai_adventure_spell_cast",
+		updated_raid,
+		{
+			"target_kind": "spell",
+			"target_placement_id": spell_id,
+			"target_label": String(cast_result.get("spell_name", selected.get("spell_name", spell_id))),
+			"target_x": int(updated_raid.get("x", 0)),
+			"target_y": int(updated_raid.get("y", 0)),
+			"target_reason_codes": ["adventure_spell", "route_tempo"],
+			"target_public_reason": "route tempo",
+			"target_public_importance": "medium",
+			"target_debug_reason": "enemy commander cast a movement spell because it changes objective reach",
+		},
+		{
+			"summary": "%s casts %s to press toward %s." % [
+				raid_commander_display_name(updated_raid),
+				String(cast_result.get("spell_name", spell_id)),
+				String(updated_raid.get("target_label", "the front")),
+			],
+			"state_policy": "derived",
+			"faction_id": faction_id,
+		}
+	)
+	return {"encounter": updated_raid, "movement_steps": steps, "events": [event]}
 
 static func _merged_raid_army_payload(leader: Dictionary, donor: Dictionary) -> Dictionary:
 	var leader_army := _normalize_army_payload(leader.get("enemy_army", {}))
@@ -1816,7 +1906,7 @@ static func build_roster_commander_state(
 	)
 	var spell_ids_source = _merge_unique_strings(
 		existing_spellbook.get("known_spell_ids", []),
-		_hero_battle_spell_ids(hero_template)
+		_hero_starting_spell_ids(hero_template)
 	)
 	var commander_state = {
 		"id": String(existing_state.get("id", "enemy_commander:%s:%s" % [faction_id, roster_hero_id])),
@@ -2411,7 +2501,7 @@ static func build_raid_commander_state(
 						"starting_spell_ids": _merge_unique_strings(
 							commander_spellbook.get("known_spell_ids", []),
 							_merge_unique_strings(
-								_hero_battle_spell_ids(hero_template),
+								_hero_starting_spell_ids(hero_template),
 								encounter_commander.get("starting_spell_ids", [])
 							)
 						),
@@ -2941,13 +3031,13 @@ static func _normalized_specialty_focus_ids(value: Variant) -> Array:
 		normalized.append(specialty_id)
 	return normalized
 
-static func _hero_battle_spell_ids(hero_template: Dictionary) -> Array:
+static func _hero_starting_spell_ids(hero_template: Dictionary) -> Array:
 	var spell_ids := []
 	for spell_id_value in hero_template.get("starting_spell_ids", []):
 		var spell_id := String(spell_id_value)
 		if spell_id == "":
 			continue
-		if String(ContentService.get_spell(spell_id).get("context", "")) != SpellRulesScript.CONTEXT_BATTLE:
+		if ContentService.get_spell(spell_id).is_empty():
 			continue
 		if spell_id not in spell_ids:
 			spell_ids.append(spell_id)
