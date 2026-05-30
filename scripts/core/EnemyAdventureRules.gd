@@ -1065,6 +1065,22 @@ static func advance_raids(
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
 		encounter["arrived"] = int(encounter.get("goal_distance", 9999)) == 0
 
+		var post_move_grouping_result := group_nearby_raids_for_town_assault(
+			session,
+			config,
+			encounters,
+			index,
+			encounter,
+			faction_id,
+			resolved_encounters
+		)
+		encounter = post_move_grouping_result.get("encounter", encounter)
+		if bool(post_move_grouping_result.get("grouped", false)):
+			resolved_encounters = session.overworld.get("resolved_encounters", resolved_encounters)
+			for event_value in post_move_grouping_result.get("events", []):
+				if event_value is Dictionary and not event_value.is_empty():
+					event_records.append(event_value)
+
 		if bool(encounter.get("arrived", false)):
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
 			encounter = arrival_result.get("encounter", encounter)

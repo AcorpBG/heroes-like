@@ -4,13 +4,16 @@ Status: implementation evidence.
 
 Slice: `strategic-ai-live-raid-assault-grouping-20260523-10184`.
 Follow-up slice: `strategic-ai-commander-assault-consolidation-10184`.
+Current follow-up: `strategic-ai-post-move-assault-grouping-10184`.
 
 This slice adds focused live evidence for nearby raid-host consolidation before a town assault. A player-captured Duskfen Bastion retake front is seeded in River Pass, a commander-led Mireclaw assault host and an adjacent support column are both assigned to the town, and the normal enemy turn must fold the support column into the assault host before the town-defense battle is queued.
 
 Implemented evidence:
 - `AI_RAID_ASSAULT_GROUPING_REPORT` proves `river_pass_nearby_raids_group_for_town_assault`.
 - The same report now also proves `river_pass_commander_raids_group_for_town_assault`.
+- The same report now also proves `river_pass_raids_group_after_leader_movement_for_town_assault`, where the leader starts non-adjacent to support, moves onto the town staging tile, absorbs the support column, and only then queues the assault battle.
 - `EnemyAdventureRules.group_nearby_raids_for_town_assault(...)` consolidates adjacent same-faction support raids only when both hosts are assigned to the same player-held town.
+- `EnemyAdventureRules.advance_raids(...)` runs assault grouping before movement and again after movement before arrival resolution, so support columns that become adjacent during that turn can still join the push.
 - The support host is recorded in `resolved_encounters`, the leader receives the donor stacks, and commander army continuity is refreshed to the grouped strength.
 - Commander-led support raids can now consolidate too when the support host is not stronger than the lead commander host.
 - When a commander-led support host donates its army, the support raid is resolved, the matching live town task completes, and the donor commander remains in the roster as `available` but non-deployable with empty current army continuity so town recruitment can rebuild that commander later.

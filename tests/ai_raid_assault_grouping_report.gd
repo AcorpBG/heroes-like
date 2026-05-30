@@ -17,14 +17,18 @@ func _run() -> void:
 	var commander_case_report := _river_pass_commander_raids_group_for_town_assault()
 	if commander_case_report.is_empty():
 		return
+	var post_move_case_report := _river_pass_raids_group_after_leader_movement_for_town_assault()
+	if post_move_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_raid_assault_grouping_no_save_migration",
-		"behavior_policy": "nearby_same_town_raids_group_before_assault_including_commander_led_support",
+		"schema_status": "live_raid_assault_grouping_post_move_no_save_migration",
+		"behavior_policy": "nearby_same_town_raids_group_before_assault_or_after_movement_before_assault",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": commanderless_case_report,
 		"commander_case": commander_case_report,
+		"post_move_case": post_move_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -186,6 +190,85 @@ func _river_pass_commander_raids_group_for_town_assault() -> Dictionary:
 		"support_commander_deployable": EnemyAdventureRules.commander_can_deploy(sable_entry),
 		"support_commander_current_strength": int(sable_continuity.get("current_strength", 0)),
 		"support_task_status": "completed",
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _river_pass_raids_group_after_leader_movement_for_town_assault() -> Dictionary:
+	var session = _base_session()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_captured_retake_front(session, TOWN_ID)
+	var config := _enemy_config()
+	var leader := _raid_seed("post_move_grouping_assault_vaska", 6, 2, 7, true, session, config)
+	var support := _raid_seed("post_move_grouping_support_column", 7, 3, 3, false, session, config)
+	if EnemyAdventureRules._raid_tile_distance(leader, support) <= 1:
+		_fail("Post-move grouping fixture started with adjacent support; it should require movement first.")
+		return {}
+	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
+	var support_strength_before := EnemyAdventureRules.raid_strength(support)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(leader)
+	encounters.append(support)
+	session.overworld["encounters"] = encounters
+
+	var active_before := _active_raid_count(session)
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if not bool(result.get("ok", false)):
+		_fail("Enemy turn failed during post-move grouping fixture: %s" % JSON.stringify(result))
+		return {}
+	var after_leader := _encounter(session, "post_move_grouping_assault_vaska")
+	if after_leader.is_empty():
+		_fail("Post-move grouping leader disappeared after enemy turn.")
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "post_move_grouping_support_column" not in resolved:
+		_fail("Post-move support raid was not resolved into the leader: %s" % JSON.stringify(resolved))
+		return {}
+	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
+	if leader_strength_after < leader_strength_before + support_strength_before:
+		_fail("Post-move leader did not absorb support strength: before %d support %d after %d" % [leader_strength_before, support_strength_before, leader_strength_after])
+		return {}
+	if String(after_leader.get("last_grouped_support_placement_id", "")) != "post_move_grouping_support_column":
+		_fail("Post-move leader did not record grouped support id: %s" % JSON.stringify(after_leader))
+		return {}
+	if int(after_leader.get("x", 0)) != 7 or int(after_leader.get("y", 0)) != 2:
+		_fail("Post-move leader did not move onto the town staging tile before grouping: %s" % JSON.stringify(after_leader))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_raid_grouped" not in event_types:
+		_fail("Post-move grouping fixture did not emit ai_raid_grouped: %s" % JSON.stringify(result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Post-move grouping public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	if session.battle.is_empty():
+		_fail("Post-move grouped assault did not continue into a town-defense battle: %s" % JSON.stringify(after_leader))
+		return {}
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != TOWN_ID:
+		_fail("Post-move grouped assault queued wrong battle context: %s" % JSON.stringify(battle_context))
+		return {}
+	return {
+		"case_id": "river_pass_raids_group_after_leader_movement_for_town_assault",
+		"leader_id": "post_move_grouping_assault_vaska",
+		"support_id": "post_move_grouping_support_column",
+		"target_id": TOWN_ID,
+		"active_before": active_before,
+		"active_after": _active_raid_count(session),
+		"leader_position_after": {"x": int(after_leader.get("x", 0)), "y": int(after_leader.get("y", 0))},
+		"leader_strength_before": leader_strength_before,
+		"support_strength_before": support_strength_before,
+		"leader_strength_after": leader_strength_after,
+		"grouped_support_count": int(after_leader.get("grouped_support_count", 0)),
+		"last_grouped_support_id": String(after_leader.get("last_grouped_support_placement_id", "")),
+		"battle_context_type": String(battle_context.get("type", "")),
+		"battle_town_id": String(battle_context.get("town_placement_id", "")),
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),

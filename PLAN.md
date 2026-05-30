@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-defense-overcommit-control-10184`, completed to stop active commanders from abandoning useful pressure for already-covered town/site defense fronts.
+- Current implementation slice: `strategic-ai-post-move-assault-grouping-10184`, completed to let assault leaders absorb same-target support columns that become adjacent after movement before resolving the assault.
+- Latest completed slice: `strategic-ai-post-move-assault-grouping-10184`.
 - Latest completed slice: `strategic-ai-defense-overcommit-control-10184`.
 - Latest completed slice: `strategic-ai-target-aware-spawn-point-selection-10184`.
 - Latest completed slice: `strategic-ai-town-rebuild-garrison-safety-10184`.

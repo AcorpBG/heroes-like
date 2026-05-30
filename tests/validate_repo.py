@@ -16136,6 +16136,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         '"ai_raid_grouped"',
         '"army_consolidation"',
         "sync_commander_army_continuity",
+        "post_move_grouping_result",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid assault grouping token: {required_token}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
@@ -16162,6 +16163,9 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "grouping_support_column",
             "river_pass_commander_raids_group_for_town_assault",
             "grouping_commander_support_sable",
+            "river_pass_raids_group_after_leader_movement_for_town_assault",
+            "post_move_grouping_support_column",
+            "leader_position_after",
             "grouped_support_count",
             "grouped_commander_support_count",
             "support_commander_deployable",
@@ -16179,6 +16183,8 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Raid Assault Grouping Report",
             "strategic-ai-live-raid-assault-grouping-20260523-10184",
+            "strategic-ai-post-move-assault-grouping-10184",
+            "after movement before arrival resolution",
             "Duskfen Bastion",
             "`ai_raid_grouped`",
             "`town_defense`",
