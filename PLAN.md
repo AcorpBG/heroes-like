@@ -23,7 +23,7 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `combat-mireclaw-packhunter-trait-trim-10184`.
+- Current implementation slice: `battle-layout-smoke-followup-10184`, expanded by owner direction into the battle presentation runtime slice.
 - Latest completed slice: `combat-mireclaw-packhunter-trait-trim-10184`.
 - Previous completed slice: `combat-mireclaw-half-anti-ranged-shielding-10184`.
 - Previous completed slice: `combat-mireclaw-t6-t7-hp-revert-10184`.
@@ -39,7 +39,7 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.
 - Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
-- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while magic availability and strategic influence are strengthened.
+- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while the owner-selected battle presentation runtime slice improves player-readable combat flow.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
@@ -59,6 +59,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
+- Current battle-presentation target: battle resolution should emit a readable event stream for movement, strikes, shots, spell casts, damage, healing, status changes, resisted/immune outcomes, deaths, retaliation, morale/cohesion, and momentum; the battle scene should consume that stream with normal/fast/instant playback controls while keeping combat math unchanged.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
 - Latest magic follow-up: resistance and counter-control mechanics now run in live battle and in the fast benchmark before remaining spell-enabled benchmark outliers are treated as pure faction/unit imbalance.

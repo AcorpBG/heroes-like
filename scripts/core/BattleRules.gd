@@ -26,6 +26,14 @@ const STACK_ANIMATION_STATES_KEY := "stack_animation_states"
 const ANIMATION_EVENT_SERIAL_KEY := "animation_event_serial"
 const ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
 const ANIMATION_EVENT_QUEUE_LIMIT := 24
+const PRESENTATION_EVENT_SERIAL_KEY := "battle_presentation_event_serial"
+const PRESENTATION_EVENT_QUEUE_KEY := "battle_presentation_events"
+const PRESENTATION_EVENT_QUEUE_LIMIT := 48
+const PRESENTATION_SPEED_KEY := "battle_presentation_speed"
+const PRESENTATION_SPEED_NORMAL := "normal"
+const PRESENTATION_SPEED_FAST := "fast"
+const PRESENTATION_SPEED_INSTANT := "instant"
+const PRESENTATION_SPEEDS := [PRESENTATION_SPEED_NORMAL, PRESENTATION_SPEED_FAST, PRESENTATION_SPEED_INSTANT]
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
@@ -164,6 +172,9 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"active_stack_id": "",
 		"selected_target_id": "",
 		"recent_events": [],
+		PRESENTATION_EVENT_SERIAL_KEY: 0,
+		PRESENTATION_EVENT_QUEUE_KEY: [],
+		PRESENTATION_SPEED_KEY: PRESENTATION_SPEED_NORMAL,
 		STACK_ANIMATION_STATES_KEY: {},
 		ANIMATION_EVENT_SERIAL_KEY: 0,
 		ANIMATION_EVENT_QUEUE_KEY: [],
@@ -997,6 +1008,9 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		else bool(session.battle.get("surrender_allowed", true))
 	)
 	session.battle["recent_events"] = _normalize_recent_events(session.battle.get("recent_events", []))
+	session.battle[PRESENTATION_EVENT_SERIAL_KEY] = max(0, int(session.battle.get(PRESENTATION_EVENT_SERIAL_KEY, 0)))
+	session.battle[PRESENTATION_EVENT_QUEUE_KEY] = _normalize_presentation_event_queue(session.battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
+	session.battle[PRESENTATION_SPEED_KEY] = _normalize_presentation_speed(String(session.battle.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
 	session.battle[STACK_ANIMATION_STATES_KEY] = _normalize_stack_animation_states(session.battle.get(STACK_ANIMATION_STATES_KEY, {}))
 	session.battle[ANIMATION_EVENT_SERIAL_KEY] = max(0, int(session.battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)))
 	session.battle[ANIMATION_EVENT_QUEUE_KEY] = _normalize_animation_event_queue(session.battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
@@ -4920,6 +4934,57 @@ static func animation_event_states(battle: Dictionary) -> Dictionary:
 static func animation_event_queue(battle: Dictionary) -> Array:
 	return _normalize_animation_event_queue(battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
 
+static func battle_presentation_event_stream(battle: Dictionary) -> Array:
+	return _normalize_presentation_event_queue(battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
+
+static func battle_presentation_speed(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return PRESENTATION_SPEED_NORMAL
+	return _normalize_presentation_speed(String(session.battle.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
+
+static func set_battle_presentation_speed(session: SessionStateStoreScript.SessionData, speed: String) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "speed": PRESENTATION_SPEED_NORMAL, "message": "No battle is active."}
+	var normalized := _normalize_presentation_speed(speed)
+	session.battle[PRESENTATION_SPEED_KEY] = normalized
+	return {
+		"ok": true,
+		"speed": normalized,
+		"message": "Battle playback speed set to %s." % normalized.capitalize(),
+	}
+
+static func battle_presentation_playback_msec(battle: Dictionary) -> int:
+	var speed := _normalize_presentation_speed(String(battle.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
+	match speed:
+		PRESENTATION_SPEED_FAST:
+			return 320
+		PRESENTATION_SPEED_INSTANT:
+			return 1
+	return 760
+
+static func describe_battle_presentation_stream(session: SessionStateStoreScript.SessionData, max_events: int = 5) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	var events := battle_presentation_event_stream(session.battle)
+	var lines := []
+	for index in range(events.size() - 1, -1, -1):
+		if lines.size() >= max(1, max_events):
+			break
+		var event: Dictionary = events[index] if events[index] is Dictionary else {}
+		var text := String(event.get("visible_text", event.get("text", ""))).strip_edges()
+		if text == "":
+			continue
+		lines.append(text)
+	return "\n".join(lines)
+
+static func latest_battle_presentation_event_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var events := battle_presentation_event_stream(session.battle)
+	if events.is_empty():
+		return {}
+	return events[events.size() - 1].duplicate(true)
+
 static func latest_animation_event_presentation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
@@ -5000,11 +5065,12 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	var message = String(resolution.get("message", ""))
 	var animation_resolution: Dictionary = resolution.duplicate(true)
 	animation_resolution["spell_id"] = spell_id
-	var target_before = {}
+	var target_before = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+	var recovered_amount := 0
+	var cleansed_count := 0
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var target_battle_id = String(resolution.get("target_battle_id", ""))
-			target_before = _get_stack_by_id(session.battle, target_battle_id)
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
 			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
@@ -5023,6 +5089,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 				String(resolution.get("target_battle_id", "")),
 				int(resolution.get("recovery_amount", 0))
 			)
+			recovered_amount = recovered
 			if recovered > 0:
 				message += " %s recovers %d health." % [
 					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
@@ -5041,6 +5108,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("cleanse_effect_ids", [])
 			)
+			cleansed_count = cleansed
 			animation_resolution["cleansed_effect_count"] = cleansed
 			if cleansed > 0:
 				message += " %s sheds %d pressure effect%s." % [
@@ -5079,6 +5147,16 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
 	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
+	_append_spell_presentation_events(
+		session.battle,
+		active_stack,
+		resolution,
+		target_before,
+		_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", ""))),
+		recovered_amount,
+		cleansed_count,
+		"cast_spell"
+	)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -5136,10 +5214,17 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
+			_append_presentation_event(
+				session.battle,
+				"move",
+				"%s advances." % _stack_label(active_stack),
+				{"action_id": "advance", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+			)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
+				_append_text_presentation_event(session.battle, "momentum", [advance_pressure], active_stack, {}, "advance")
 			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "enemy", "obstruction_line"):
 				advance_message = _join_messages([
 					advance_message,
@@ -5180,10 +5265,17 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			_clear_selected_target_closing(session.battle)
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
+			_append_presentation_event(
+				session.battle,
+				"buff",
+				"%s braces for impact." % _stack_label(active_stack),
+				{"action_id": "defend", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+			)
 			var defend_message = "%s braces for impact." % _stack_label(active_stack)
 			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
 				defend_message += " %s" % defend_pressure
+				_append_text_presentation_event(session.battle, "morale", [defend_pressure], active_stack, {}, "defend")
 			var defend_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -5279,6 +5371,16 @@ static func _resolve_attack_action(
 		"battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack",
 		{"target_battle_id": String(target.get("battle_id", ""))}
 	)
+	_append_presentation_event(
+		session.battle,
+		"shoot" if is_ranged else "strike",
+		"%s %s %s." % [_stack_label(attacker), "shoots" if is_ranged else "strikes", _stack_label(target)],
+		{
+			"action_id": "shoot" if is_ranged else "strike",
+			"actor_battle_id": String(attacker.get("battle_id", "")),
+			"target_battle_id": String(target.get("battle_id", "")),
+		}
+	)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -5291,7 +5393,11 @@ static func _resolve_attack_action(
 	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
+	_append_damage_presentation_event(session.battle, "damage", attacker, target_before, defender_after, damage, "shoot" if is_ranged else "strike")
+	_append_text_presentation_event(session.battle, "ability", ability_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
+	var damage_pressure_messages := _apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack")
+	messages.append_array(damage_pressure_messages)
+	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
 	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
 	if (
 		not is_ranged
@@ -5311,21 +5417,33 @@ static func _resolve_attack_action(
 			"battle_retaliation",
 			{"target_battle_id": String(attacker.get("battle_id", ""))}
 		)
+		_append_presentation_event(
+			session.battle,
+			"retaliation",
+			"%s retaliates against %s." % [_stack_label(defender_after), _stack_label(attacker_after)],
+			{
+				"action_id": "retaliation",
+				"actor_battle_id": String(defender_after.get("battle_id", "")),
+				"target_battle_id": String(attacker_after.get("battle_id", "")),
+			}
+		)
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
 		messages.append_array(retaliation_ability_messages)
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		messages.append_array(
-			_apply_damage_pressure(
-				session.battle,
-				defender_after,
-				attacker_before_retaliation,
-				attacker_after_retaliation,
-				false,
-				"retaliation"
-			)
+		_append_damage_presentation_event(session.battle, "damage", defender_after, attacker_before_retaliation, attacker_after_retaliation, retaliation_damage, "retaliation")
+		_append_text_presentation_event(session.battle, "ability", retaliation_ability_messages, defender_after, attacker_after_retaliation, "retaliation")
+		var retaliation_pressure_messages := _apply_damage_pressure(
+			session.battle,
+			defender_after,
+			attacker_before_retaliation,
+			attacker_after_retaliation,
+			false,
+			"retaliation"
 		)
+		messages.append_array(retaliation_pressure_messages)
+		_append_text_presentation_event(session.battle, "morale", retaliation_pressure_messages, defender_after, attacker_after_retaliation, "retaliation")
 		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
 		retaliated = true
 
@@ -5572,10 +5690,17 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 		"advance":
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
+			_append_presentation_event(
+				session.battle,
+				"move",
+				"%s advances." % _stack_label(active_stack),
+				{"action_id": "advance", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+			)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
+				_append_text_presentation_event(session.battle, "momentum", [advance_pressure], active_stack, {}, "advance")
 			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
 				advance_message = _join_messages([
 					advance_message,
@@ -5598,10 +5723,17 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 		"defend":
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
+			_append_presentation_event(
+				session.battle,
+				"buff",
+				"%s braces for impact." % _stack_label(active_stack),
+				{"action_id": "defend", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+			)
 			var defend_message = "%s braces for impact." % _stack_label(active_stack)
 			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
 				defend_message += " %s" % defend_pressure
+				_append_text_presentation_event(session.battle, "morale", [defend_pressure], active_stack, {}, "defend")
 			var defend_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -5620,10 +5752,17 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			if int(session.battle.get("distance", 1)) > 0:
 				var fallback_start_distance := int(session.battle.get("distance", 1))
 				var fallback_distance_delta := _apply_auto_advance_movement(session.battle, active_stack, fallback_start_distance)
+				_append_presentation_event(
+					session.battle,
+					"move",
+					"%s advances." % _stack_label(active_stack),
+					{"action_id": "advance", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+				)
 				var fallback_advance_message = "%s advances." % _stack_label(active_stack)
 				var fallback_advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 				if fallback_advance_pressure != "":
 					fallback_advance_message += " %s" % fallback_advance_pressure
+					_append_text_presentation_event(session.battle, "momentum", [fallback_advance_pressure], active_stack, {}, "advance")
 				if fallback_distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
 					fallback_advance_message = _join_messages([
 						fallback_advance_message,
@@ -5663,11 +5802,12 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	var message = String(resolution.get("message", ""))
 	var animation_resolution: Dictionary = resolution.duplicate(true)
 	animation_resolution["spell_id"] = String(action.get("spell_id", ""))
-	var target_before = {}
+	var target_before = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+	var recovered_amount := 0
+	var cleansed_count := 0
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var target_battle_id = String(resolution.get("target_battle_id", ""))
-			target_before = _get_stack_by_id(session.battle, target_battle_id)
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
 			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
@@ -5686,6 +5826,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 				String(resolution.get("target_battle_id", "")),
 				int(resolution.get("recovery_amount", 0))
 			)
+			recovered_amount = recovered
 			if recovered > 0:
 				message += " %s recovers %d health." % [
 					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
@@ -5704,6 +5845,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("cleanse_effect_ids", [])
 			)
+			cleansed_count = cleansed
 			animation_resolution["cleansed_effect_count"] = cleansed
 			if cleansed > 0:
 				message += " %s sheds %d pressure effect%s." % [
@@ -5742,6 +5884,16 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
 	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
+	_append_spell_presentation_events(
+		session.battle,
+		active_stack,
+		resolution,
+		target_before,
+		_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", ""))),
+		recovered_amount,
+		cleansed_count,
+		"cast_spell"
+	)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -5777,6 +5929,16 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		"battle_unit_ranged_attack" if is_ranged else "battle_unit_melee_attack",
 		{"target_battle_id": String(target.get("battle_id", ""))}
 	)
+	_append_presentation_event(
+		session.battle,
+		"shoot" if is_ranged else "strike",
+		"%s %s %s." % [_stack_label(attacker), "fires on" if is_ranged else "batters", _stack_label(target)],
+		{
+			"action_id": "shoot" if is_ranged else "strike",
+			"actor_battle_id": String(attacker.get("battle_id", "")),
+			"target_battle_id": String(target.get("battle_id", "")),
+		}
+	)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -5788,7 +5950,11 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
+	_append_damage_presentation_event(session.battle, "damage", attacker, target_before, defender_after, damage, "shoot" if is_ranged else "strike")
+	_append_text_presentation_event(session.battle, "ability", ability_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
+	var damage_pressure_messages := _apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack")
+	messages.append_array(damage_pressure_messages)
+	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
 	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
 	if (
 		not is_ranged
@@ -5808,21 +5974,33 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 			"battle_retaliation",
 			{"target_battle_id": String(attacker.get("battle_id", ""))}
 		)
+		_append_presentation_event(
+			session.battle,
+			"retaliation",
+			"%s retaliates against %s." % [_stack_label(defender_after), _stack_label(attacker_after)],
+			{
+				"action_id": "retaliation",
+				"actor_battle_id": String(defender_after.get("battle_id", "")),
+				"target_battle_id": String(attacker_after.get("battle_id", "")),
+			}
+		)
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
 		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var retaliation_ability_messages := _apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation)
 		messages.append_array(retaliation_ability_messages)
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		messages.append_array(
-			_apply_damage_pressure(
-				session.battle,
-				defender_after,
-				attacker_before_retaliation,
-				attacker_after_retaliation,
-				false,
-				"retaliation"
-			)
+		_append_damage_presentation_event(session.battle, "damage", defender_after, attacker_before_retaliation, attacker_after_retaliation, retaliation_damage, "retaliation")
+		_append_text_presentation_event(session.battle, "ability", retaliation_ability_messages, defender_after, attacker_after_retaliation, "retaliation")
+		var retaliation_pressure_messages := _apply_damage_pressure(
+			session.battle,
+			defender_after,
+			attacker_before_retaliation,
+			attacker_after_retaliation,
+			false,
+			"retaliation"
 		)
+		messages.append_array(retaliation_pressure_messages)
+		_append_text_presentation_event(session.battle, "morale", retaliation_pressure_messages, defender_after, attacker_after_retaliation, "retaliation")
 		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
@@ -7319,8 +7497,19 @@ static func _resolve_move_action(
 			_hex_label(start_hex),
 			_hex_label(destination),
 		]
+	_append_presentation_event(
+		session.battle,
+		"move",
+		message,
+		{
+			"action_id": "move",
+			"actor_battle_id": String(updated_stack.get("battle_id", "")),
+			"detail_text": "%s to %s." % [_hex_label(start_hex), _hex_label(destination)],
+		}
+	)
 	if pressure_message != "":
 		message = _join_messages([message, pressure_message])
+		_append_text_presentation_event(session.battle, "momentum", [pressure_message], updated_stack, {}, "move")
 	var objective_messages := _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -11035,6 +11224,8 @@ static func _battle_exit_animation_snapshot(battle: Dictionary, outcome: String)
 	snapshot["presentation_policy"] = "pre_resolution_animation_snapshot"
 	snapshot[STACK_ANIMATION_STATES_KEY] = _normalize_stack_animation_states(snapshot.get(STACK_ANIMATION_STATES_KEY, {}))
 	snapshot[ANIMATION_EVENT_QUEUE_KEY] = _normalize_animation_event_queue(snapshot.get(ANIMATION_EVENT_QUEUE_KEY, []))
+	snapshot[PRESENTATION_EVENT_QUEUE_KEY] = _normalize_presentation_event_queue(snapshot.get(PRESENTATION_EVENT_QUEUE_KEY, []))
+	snapshot[PRESENTATION_SPEED_KEY] = _normalize_presentation_speed(String(snapshot.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
 	return snapshot
 
 static func _clear_stack_animation_states(battle: Dictionary) -> void:
@@ -11138,6 +11329,299 @@ static func _append_animation_event_record(battle: Dictionary, record: Dictionar
 	while events.size() > ANIMATION_EVENT_QUEUE_LIMIT:
 		events.pop_front()
 	battle[ANIMATION_EVENT_QUEUE_KEY] = events
+
+static func _append_presentation_event(battle: Dictionary, event_type: String, visible_text: String, context: Dictionary = {}) -> void:
+	if battle.is_empty():
+		return
+	var text := visible_text.strip_edges()
+	if event_type.strip_edges() == "" or text == "":
+		return
+	var actor_id := String(context.get("actor_battle_id", ""))
+	var target_id := String(context.get("target_battle_id", ""))
+	var actor := _get_stack_by_id(battle, actor_id)
+	var target := _get_stack_by_id(battle, target_id)
+	var spell_id := String(context.get("spell_id", "")).strip_edges()
+	var spell_name := String(context.get("spell_name", "")).strip_edges()
+	if spell_id != "" and spell_name == "":
+		spell_name = String(ContentService.get_spell(spell_id).get("name", spell_id))
+	var serial := int(battle.get(PRESENTATION_EVENT_SERIAL_KEY, 0)) + 1
+	battle[PRESENTATION_EVENT_SERIAL_KEY] = serial
+	var record := {
+		"serial": serial,
+		"event_type": event_type,
+		"action_id": String(context.get("action_id", "")),
+		"visible_text": text,
+		"detail_text": String(context.get("detail_text", "")),
+		"side": String(context.get("side", actor.get("side", ""))),
+		"actor_battle_id": actor_id,
+		"actor_name": String(context.get("actor_name", _stack_label(actor) if not actor.is_empty() else "")),
+		"target_battle_id": target_id,
+		"target_name": String(context.get("target_name", _stack_label(target) if not target.is_empty() else "")),
+		"damage": max(0, int(context.get("damage", 0))),
+		"healing": max(0, int(context.get("healing", 0))),
+		"units_lost": max(0, int(context.get("units_lost", 0))),
+		"prevented_damage": max(0, int(context.get("prevented_damage", 0))),
+		"resisted": bool(context.get("resisted", false)),
+		"immune": bool(context.get("immune", false)),
+		"spell_id": spell_id,
+		"spell_name": spell_name,
+		"round": int(battle.get("round", 1)),
+		"turn_index": int(battle.get("turn_index", 0)),
+		"animation_serial": max(0, int(context.get("animation_serial", battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)))),
+	}
+	var events := _normalize_presentation_event_queue(battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
+	events.push_back(record)
+	while events.size() > PRESENTATION_EVENT_QUEUE_LIMIT:
+		events.pop_front()
+	battle[PRESENTATION_EVENT_QUEUE_KEY] = events
+
+static func _append_damage_presentation_event(
+	battle: Dictionary,
+	event_type: String,
+	attacker: Dictionary,
+	target_before: Dictionary,
+	target_after: Dictionary,
+	damage: int,
+	action_id: String,
+	extra_context: Dictionary = {}
+) -> void:
+	if target_before.is_empty():
+		return
+	var target_id := String(target_before.get("battle_id", ""))
+	var health_lost: int = max(0, int(target_before.get("total_health", 0)) - int(target_after.get("total_health", 0)))
+	var units_lost: int = max(0, _alive_count(target_before) - _alive_count(target_after))
+	var target_name := _stack_label(target_before)
+	var text := "%s takes %d damage" % [target_name, max(0, damage)]
+	if units_lost > 0:
+		text += " and loses %d unit%s" % [units_lost, "" if units_lost == 1 else "s"]
+	if not target_after.is_empty() and _alive_count(target_after) <= 0:
+		text += "; %s falls" % target_name
+	text += "."
+	var context := extra_context.duplicate(true)
+	context["action_id"] = action_id
+	context["actor_battle_id"] = String(attacker.get("battle_id", ""))
+	context["target_battle_id"] = target_id
+	context["target_name"] = target_name
+	context["damage"] = max(0, damage)
+	context["units_lost"] = units_lost
+	context["detail_text"] = "%d health lost." % health_lost
+	_append_presentation_event(battle, event_type, text, context)
+	if not target_after.is_empty() and _alive_count(target_after) <= 0:
+		_append_presentation_event(
+			battle,
+			"death",
+			"%s is destroyed." % target_name,
+			context
+		)
+
+static func _append_text_presentation_event(
+	battle: Dictionary,
+	event_type: String,
+	texts: Array,
+	actor: Dictionary,
+	target: Dictionary = {},
+	action_id: String = ""
+) -> void:
+	var lines := []
+	for text_value in texts:
+		var line := String(text_value).strip_edges()
+		if line != "":
+			lines.append(line)
+	if lines.is_empty():
+		return
+	_append_presentation_event(
+		battle,
+		event_type,
+		" ".join(lines),
+		{
+			"action_id": action_id,
+			"actor_battle_id": String(actor.get("battle_id", "")),
+			"target_battle_id": String(target.get("battle_id", "")),
+		}
+	)
+
+static func _append_spell_presentation_events(
+	battle: Dictionary,
+	caster_stack: Dictionary,
+	resolution: Dictionary,
+	target_before: Dictionary,
+	target_after: Dictionary,
+	recovered_amount: int,
+	cleansed_count: int,
+	action_id: String
+) -> void:
+	var spell_id := String(resolution.get("spell_id", "")).strip_edges()
+	var spell_name := String(ContentService.get_spell(spell_id).get("name", spell_id)) if spell_id != "" else "Spell"
+	var target_stack := target_after if not target_after.is_empty() else target_before
+	var target_name := _stack_label(target_stack) if not target_stack.is_empty() else "the target"
+	var base_context := {
+		"action_id": action_id,
+		"actor_battle_id": String(caster_stack.get("battle_id", "")),
+		"target_battle_id": String(target_stack.get("battle_id", "")),
+		"spell_id": spell_id,
+		"spell_name": spell_name,
+	}
+	_append_presentation_event(
+		battle,
+		"cast",
+		"%s casts %s on %s." % [_stack_label(caster_stack), spell_name, target_name],
+		base_context
+	)
+	match String(resolution.get("resolution_type", "")):
+		"damage":
+			_append_damage_presentation_event(
+				battle,
+				"spell_damage",
+				caster_stack,
+				target_before,
+				target_after,
+				int(resolution.get("damage", 0)),
+				action_id,
+				base_context
+			)
+			if int(resolution.get("prevented_damage", 0)) > 0:
+				var resist_context := base_context.duplicate(true)
+				resist_context["prevented_damage"] = int(resolution.get("prevented_damage", 0))
+				resist_context["resisted"] = true
+				_append_presentation_event(
+					battle,
+					"resist",
+					"%s resists %d damage from %s." % [target_name, int(resolution.get("prevented_damage", 0)), spell_name],
+					resist_context
+				)
+			_append_spell_status_resolution_event(
+				battle,
+				resolution,
+				base_context,
+				target_name,
+				"post_damage"
+			)
+		"effect":
+			_append_spell_status_resolution_event(
+				battle,
+				resolution,
+				base_context,
+				target_name,
+				""
+			)
+		"recover_effect":
+			if recovered_amount > 0:
+				var heal_context := base_context.duplicate(true)
+				heal_context["healing"] = recovered_amount
+				_append_presentation_event(
+					battle,
+					"heal",
+					"%s recovers %d health from %s." % [target_name, recovered_amount, spell_name],
+					heal_context
+				)
+			_append_spell_effect_event(battle, "buff", resolution.get("effect", {}), base_context, target_name)
+		"cleanse_effect":
+			if cleansed_count > 0:
+				_append_presentation_event(
+					battle,
+					"cleanse",
+					"%s sheds %d pressure effect%s." % [target_name, cleansed_count, "" if cleansed_count == 1 else "s"],
+					base_context
+				)
+			_append_spell_effect_event(battle, "buff", resolution.get("effect", {}), base_context, target_name)
+
+static func _append_spell_status_resolution_event(
+	battle: Dictionary,
+	resolution: Dictionary,
+	base_context: Dictionary,
+	target_name: String,
+	prefix: String
+) -> void:
+	var resisted_key := "%s_resisted" % prefix if prefix != "" else "resisted"
+	var immune_key := "%s_immune" % prefix if prefix != "" else "immune"
+	var effect_key := "%s_effect" % prefix if prefix != "" else "effect"
+	if bool(resolution.get(immune_key, false)):
+		var immune_context := base_context.duplicate(true)
+		immune_context["immune"] = true
+		_append_presentation_event(
+			battle,
+			"immune",
+			"%s is immune to %s." % [target_name, _spell_effect_label(resolution.get(effect_key, {}))],
+			immune_context
+		)
+		return
+	if bool(resolution.get(resisted_key, false)):
+		var resist_context := base_context.duplicate(true)
+		resist_context["resisted"] = true
+		_append_presentation_event(
+			battle,
+			"resist",
+			"%s resists %s." % [target_name, _spell_effect_label(resolution.get(effect_key, {}))],
+			resist_context
+		)
+		return
+	_append_spell_effect_event(battle, "debuff", resolution.get(effect_key, {}), base_context, target_name)
+
+static func _append_spell_effect_event(
+	battle: Dictionary,
+	event_type: String,
+	effect_payload: Variant,
+	base_context: Dictionary,
+	target_name: String
+) -> void:
+	if not (effect_payload is Dictionary) or effect_payload.is_empty():
+		return
+	var label := _spell_effect_label(effect_payload)
+	_append_presentation_event(
+		battle,
+		event_type,
+		"%s gains %s." % [target_name, label],
+		base_context.merged({"detail_text": JSON.stringify(effect_payload)}, true)
+	)
+
+static func _spell_effect_label(effect_payload: Variant) -> String:
+	if not (effect_payload is Dictionary) or effect_payload.is_empty():
+		return "the effect"
+	return String(effect_payload.get("label", effect_payload.get("effect_id", effect_payload.get("kind", "the effect")))).to_lower()
+
+static func _normalize_presentation_speed(speed: String) -> String:
+	var normalized := speed.strip_edges().to_lower()
+	if normalized in PRESENTATION_SPEEDS:
+		return normalized
+	return PRESENTATION_SPEED_NORMAL
+
+static func _normalize_presentation_event_queue(value: Variant) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for entry in value:
+		if not (entry is Dictionary):
+			continue
+		var event_type := String(entry.get("event_type", "")).strip_edges()
+		var text := String(entry.get("visible_text", entry.get("text", ""))).strip_edges()
+		if event_type == "" or text == "":
+			continue
+		normalized.append({
+			"serial": max(0, int(entry.get("serial", 0))),
+			"event_type": event_type,
+			"action_id": String(entry.get("action_id", "")),
+			"visible_text": text,
+			"detail_text": String(entry.get("detail_text", "")),
+			"side": String(entry.get("side", "")),
+			"actor_battle_id": String(entry.get("actor_battle_id", "")),
+			"actor_name": String(entry.get("actor_name", "")),
+			"target_battle_id": String(entry.get("target_battle_id", "")),
+			"target_name": String(entry.get("target_name", "")),
+			"damage": max(0, int(entry.get("damage", 0))),
+			"healing": max(0, int(entry.get("healing", 0))),
+			"units_lost": max(0, int(entry.get("units_lost", 0))),
+			"prevented_damage": max(0, int(entry.get("prevented_damage", 0))),
+			"resisted": bool(entry.get("resisted", false)),
+			"immune": bool(entry.get("immune", false)),
+			"spell_id": String(entry.get("spell_id", "")),
+			"spell_name": String(entry.get("spell_name", "")),
+			"round": max(1, int(entry.get("round", 1))),
+			"turn_index": max(0, int(entry.get("turn_index", 0))),
+			"animation_serial": max(0, int(entry.get("animation_serial", 0))),
+		})
+	while normalized.size() > PRESENTATION_EVENT_QUEUE_LIMIT:
+		normalized.pop_front()
+	return normalized
 
 static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
 	var normalized := {}
