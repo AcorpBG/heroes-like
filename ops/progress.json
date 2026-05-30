@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-active-front-support-10184",
-  "currentSliceTitle": "Strategic AI Active Front Support",
+  "currentSliceId": "strategic-ai-support-overcommit-control-10184",
+  "currentSliceTitle": "Strategic AI Support Overcommit Control",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Deployable commanders now recognize active fronts needing support and encounter-objective support hosts can consolidate through the normal raid advancement path.",
+  "currentSliceNotes": "Completed. Active-front support assignment now accounts for existing support commitments and avoids support-chain dogpiling.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T20:56:00Z",
+  "updatedAt": "2026-05-30T21:17:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -41482,19 +41482,18 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-active-front-support-10184",
-    "title": "Strategic AI Active Front Support",
+    "id": "strategic-ai-support-overcommit-control-10184",
+    "title": "Strategic AI Support Overcommit Control",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "continuation of owner strategic AI production-readiness goal after guarded claim follow-through; add live commander coordination instead of isolated target picking",
+    "source": "continuation of active-front commander coordination; prevent support assignment from overcommitting several commanders to an already-covered front",
     "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
-      "docs/strategic-ai-commander-assault-consolidation-report.md"
+      "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
@@ -41504,14 +41503,14 @@
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "New deployable commanders must prefer reinforcing active same-faction fronts that explicitly need support, support assignments must carry public-safe reason metadata, and adjacent support hosts must consolidate into encounter-objective fronts without regressing existing town-assault grouping or save version 9.",
-    "startedAt": "2026-05-30T20:44:00Z",
-    "updatedAt": "2026-05-30T20:56:00Z",
-    "notes": "Completed. Deployable commanders now recognize active fronts needing support and encounter-objective support hosts can consolidate through the normal raid advancement path.",
+    "completionCriteria": "Active-front support planning must count already-assigned support strength against the supported front gap, refuse support-chain targets, and keep existing active-front support grouping behavior passing without a save-version bump.",
+    "startedAt": "2026-05-30T21:09:00Z",
+    "updatedAt": "2026-05-30T21:17:00Z",
+    "notes": "Completed. Active-front support assignment now accounts for existing support commitments and avoids support-chain dogpiling.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T20:56:00Z",
-      "sliceId": "strategic-ai-active-front-support-10184",
+      "updatedAt": "2026-05-30T21:17:00Z",
+      "sliceId": "strategic-ai-support-overcommit-control-10184",
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
@@ -41527,32 +41526,29 @@
       ],
       "evidence": {
         "implemented": [
-          "Target assignment now checks active same-faction fronts that need support before falling back to normal retake/saved/live/score target selection.",
-          "New support assignments carry active_front_support and army_consolidation reason codes plus supported-front metadata.",
-          "Adjacent support grouping now works for shared encounter fronts in addition to town assaults.",
-          "Focused encounter evidence proves Sable reinforces Vaska at causeway_levee_cutters and merges into the encounter-objective host through normal advance_raids.",
-          "Existing town-assault grouping, town-assault risk, live turn execution, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
+          "Active-front support planning now subtracts already-committed support strength from the front strength gap before assigning another commander.",
+          "Support columns marked active_front_support are no longer treated as primary fronts that can request their own support chain.",
+          "Focused encounter evidence proves one Sable support assignment covers the open gap and a third Orik probe receives no additional active-front support plan.",
+          "Existing active-front grouping, town assault, live turn, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
-          "docs/strategic-ai-commander-assault-consolidation-report.md"
+          "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_RAID_ASSAULT_GROUPING_REPORT"
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT"
         ],
-        "residualRisk": "This adds live active-front support and encounter-front consolidation. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This controls active-front dogpiling. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
       }
     },
-    "completedAt": "2026-05-30T20:56:00Z"
+    "completedAt": "2026-05-30T21:17:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T20:56:00Z",
-    "sliceId": "strategic-ai-active-front-support-10184",
+    "updatedAt": "2026-05-30T21:17:00Z",
+    "sliceId": "strategic-ai-support-overcommit-control-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
@@ -41568,24 +41564,21 @@
     ],
     "evidence": {
       "implemented": [
-        "Target assignment now checks active same-faction fronts that need support before falling back to normal retake/saved/live/score target selection.",
-        "New support assignments carry active_front_support and army_consolidation reason codes plus supported-front metadata.",
-        "Adjacent support grouping now works for shared encounter fronts in addition to town assaults.",
-        "Focused encounter evidence proves Sable reinforces Vaska at causeway_levee_cutters and merges into the encounter-objective host through normal advance_raids.",
-        "Existing town-assault grouping, town-assault risk, live turn execution, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
+        "Active-front support planning now subtracts already-committed support strength from the front strength gap before assigning another commander.",
+        "Support columns marked active_front_support are no longer treated as primary fronts that can request their own support chain.",
+        "Focused encounter evidence proves one Sable support assignment covers the open gap and a third Orik probe receives no additional active-front support plan.",
+        "Existing active-front grouping, town assault, live turn, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
-        "docs/strategic-ai-commander-assault-consolidation-report.md"
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_RAID_ASSAULT_GROUPING_REPORT"
+        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT"
       ],
-      "residualRisk": "This adds live active-front support and encounter-front consolidation. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
+      "residualRisk": "This controls active-front dogpiling. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
     }
   }
 }

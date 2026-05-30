@@ -747,6 +747,8 @@ static func _active_front_needs_support(front: Dictionary) -> bool:
 	if front.is_empty():
 		return false
 	var reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
+	if "active_front_support" in reason_codes:
+		return false
 	for code in [
 		"awaiting_support",
 		"assault_risk_staging",
@@ -826,6 +828,17 @@ static func _active_front_support_candidate(
 	if target_kind == "encounter" and "objective_front" not in reason_codes and objective_anchor:
 		reason_codes.append("objective_front")
 	var strength_gap: int = max(0, desired_raid_strength(front) - raid_strength(front))
+	var committed_support_strength := _active_front_committed_support_strength(
+		session,
+		faction_id,
+		target_kind,
+		target_id,
+		String(front.get("placement_id", "")),
+		current_placement_id
+	)
+	var open_support_gap: int = max(0, strength_gap - committed_support_strength)
+	if open_support_gap <= 0:
+		return {}
 	var priority: int = int(max(
 		0,
 		_weighted_priority(
@@ -833,7 +846,7 @@ static func _active_front_support_candidate(
 			faction_id,
 			target_kind,
 			target_id,
-			180 + int(ceili(float(strength_gap) / 4.0)) + priority_target_bonus(config, target_id),
+			180 + int(ceili(float(open_support_gap) / 4.0)) + priority_target_bonus(config, target_id),
 			"",
 			objective_anchor
 		) - _assignment_penalty(session, target_kind, target_id)
@@ -855,7 +868,38 @@ static func _active_front_support_candidate(
 		"supporting_front_placement_id": String(front.get("placement_id", "")),
 		"supporting_front_target_kind": target_kind,
 		"supporting_front_target_id": target_id,
+		"support_strength_gap": open_support_gap,
+		"support_committed_strength": committed_support_strength,
 	}
+
+static func _active_front_committed_support_strength(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_kind: String,
+	target_id: String,
+	front_placement_id: String,
+	current_placement_id: String
+) -> int:
+	if session == null or faction_id == "" or target_kind == "" or target_id == "":
+		return 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var committed := 0
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		var placement_id := String(encounter.get("placement_id", ""))
+		if placement_id == "" or placement_id == front_placement_id or placement_id == current_placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != target_kind:
+			continue
+		if String(encounter.get("target_placement_id", "")) != target_id:
+			continue
+		var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+		if "active_front_support" not in reason_codes and String(encounter.get("supporting_front_placement_id", "")) != front_placement_id:
+			continue
+		committed += raid_strength(encounter)
+	return committed
 
 static func _active_front_support_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
 	if int(candidate.get("priority", 0)) == int(best.get("priority", 0)):
