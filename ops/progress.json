@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-defended-neutral-town-assault-10184",
-  "currentSliceTitle": "Strategic AI Defended Neutral Town Assault",
+  "currentSliceId": "strategic-ai-rmg-small-turn-health-10184",
+  "currentSliceTitle": "Strategic AI RMG Small Turn Health",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Strategic AI neutral-town expansion now includes defended neutral towns through live battle routing, assault risk gating, neutral-safe capture aftermath, and active retake priority over planned reservations.",
+  "currentSliceNotes": "Completed. Supported strict-Small Native RMG AI turns now execute in the default strategic AI baseline and generated raid target assignments surface as player-facing threat events. Medium/generalization and full long-run seed-matrix work remain production gaps.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T21:40:00Z",
+  "updatedAt": "2026-05-30T22:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,91 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-rmg-small-turn-health-10184",
+      "title": "Strategic AI RMG Small Turn Health",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / supported Small Native RMG turn health",
+      "purpose": "Make supported strict-Small Native RMG generated-map AI turns execute in the strategic AI baseline by default and ensure generated raid deployments surface player-facing target-assignment threat events, not only pressure summaries.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_baseline_kpi_report.gd",
+        "docs/strategic-ai-baseline-kpi-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "The default baseline executes all supported strict-Small Native RMG AI turn probes, those probes pass turn health with enemy states and observable target-assignment events, generated raid deployments expose visible/rumored target-assignment threat events, and the baseline no longer reports the supported Small turn probe coverage blocker while preserving Medium/generalization and full-matrix blockers.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "claiming Medium or broad generated-map generalization",
+        "running the full 100-seed eight-week matrix in this slice",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T22:05:00Z",
+      "updatedAt": "2026-05-30T22:45:00Z",
+      "completedAt": "2026-05-30T22:45:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "result": "pass",
+          "summary": "Strategic AI baseline passes with 2/2 supported strict-Small Native RMG turn probes executed by default, 2/2 supported Small probes ok, 21 generated-map enemy activity events, 5 ai_target_assigned events, zero generated-map behavior bugs, and remaining blockers limited to Medium generated-map generalization plus the full long-run seed matrix."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "result": "pass",
+          "summary": "Focused Native RMG long-run smoke row passes one generated-map turn with enemy activity, while the report intentionally preserves the full 100-seed eight-week matrix as a remaining-validation blocker."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner still seeds and activates distinct commander tasks."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, guarded-claim retargeting, route-recovery, and support behaviors still emit target-assignment events."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn still executes commander resource tasks and emits target-assignment/site-seizure activity."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Supported strict-Small Native RMG AI turns execute in the default strategic AI baseline instead of remaining unexecuted coverage gaps. Generated raid deployment now promotes assigned raid targets to public threat importance when needed so target assignments surface as visible or rumored player-facing events. Baseline evidence preserves Medium/generalization and full 100-seed eight-week matrix blockers instead of claiming strategic AI production readiness."
+      ]
+    },
     {
       "id": "strategic-ai-defended-neutral-town-assault-10184",
       "title": "Strategic AI Defended Neutral Town Assault",

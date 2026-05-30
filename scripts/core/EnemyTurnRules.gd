@@ -1832,6 +1832,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		config,
 		EnemyAdventureRulesScript.ensure_raid_army(raid_seed, session, occupied_commander_ids)
 	)
+	raid = _promote_spawned_raid_public_threat(raid)
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
@@ -1850,6 +1851,19 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		],
 		"events": [EnemyAdventureRulesScript.ai_target_assignment_event(session, config, raid, {})],
 	}
+
+static func _promote_spawned_raid_public_threat(raid: Dictionary) -> Dictionary:
+	if raid.is_empty() or String(raid.get("target_kind", "")) == "" or String(raid.get("target_placement_id", "")) == "":
+		return raid
+	var promoted := raid.duplicate(true)
+	var importance := String(promoted.get("target_public_importance", ""))
+	if importance not in ["critical", "high"]:
+		promoted["target_public_importance"] = "high"
+	if String(promoted.get("target_public_reason", "")) == "":
+		promoted["target_public_reason"] = EnemyAdventureRulesScript._public_reason_from_codes(
+			promoted.get("target_reason_codes", [])
+		)
+	return promoted
 
 static func _queue_town_defense_battle(
 	session: SessionStateStoreScript.SessionData,

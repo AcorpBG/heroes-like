@@ -647,7 +647,11 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		bool(case_config.get("underground", false)),
 		String(case_config.get("size_class_id", "homm3_small"))
 	)
-	if not bool(input_config.get("execute_rmg_turn_probes", false)):
+	var execute_probe := bool(input_config.get("execute_rmg_turn_probes", false)) or (
+		expected_scope == "supported_small"
+		and bool(input_config.get("execute_supported_small_rmg_turn_probes", true))
+	)
+	if not execute_probe:
 		return {
 			"case_id": String(case_config.get("case_id", seed)),
 			"seed": seed,
@@ -663,7 +667,11 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 			"turn_count_target": turn_count,
 			"turn_results": [],
 		}
-	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(player_config, "normal")
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		player_config,
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
 	var row := {
 		"case_id": String(case_config.get("case_id", seed)),
@@ -678,6 +686,7 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		"failure_handoff": String(setup.get("failure_handoff", "")),
 		"turn_count_target": turn_count,
 		"turn_results": [],
+		"event_counts": {},
 	}
 	if not bool(setup.get("ok", false)):
 		row["ok"] = false
@@ -703,6 +712,13 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		var events: Array = result.get("enemy_activity_events", []) if result.get("enemy_activity_events", []) is Array else []
 		enemy_event_count += events.size()
 		public_event_count += events.size()
+		_strategic_ai_count_event_types(row["event_counts"], events)
+		var event_types := []
+		for event_value in events:
+			if event_value is Dictionary:
+				var event_type := String(event_value.get("event_type", ""))
+				if event_type != "":
+					event_types.append(event_type)
 		var turn_ok := bool(result.get("ok", false))
 		all_turns_ok = all_turns_ok and turn_ok
 		row["turn_results"].append({
@@ -710,6 +726,7 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 			"ok": turn_ok,
 			"day": int(session.day),
 			"enemy_activity_event_count": events.size(),
+			"enemy_activity_event_types": event_types,
 			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
 			"scenario_status": String(session.scenario_status),
 		})
@@ -720,8 +737,9 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 	row["final_enemy_state_count"] = session.overworld.get("enemy_states", []).size() if session.overworld.get("enemy_states", []) is Array else 0
 	row["enemy_activity_event_count"] = enemy_event_count
 	row["public_event_count"] = public_event_count
+	row["target_assignment_event_count"] = int(row.get("event_counts", {}).get("ai_target_assigned", 0)) if row.get("event_counts", {}) is Dictionary else 0
 	row["final_day"] = int(session.day)
-	row["ok"] = all_turns_ok and int(row.get("initial_enemy_state_count", 0)) > 0
+	row["ok"] = all_turns_ok and int(row.get("initial_enemy_state_count", 0)) > 0 and int(row.get("target_assignment_event_count", 0)) > 0
 	row["classification"] = "generated_ai_live_probe" if bool(row.get("ok", false)) else "behavior_bug"
 	row["state_signature"] = _signature_for({
 		"scenario_id": String(session.scenario_id),
@@ -743,6 +761,7 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 	var medium_probe_count := 0
 	var medium_ok_count := 0
 	var enemy_event_count := 0
+	var target_assignment_count := 0
 	for row_value in rmg_cases:
 		if not (row_value is Dictionary):
 			continue
@@ -766,6 +785,7 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 			if bool(row.get("ok", false)):
 				medium_ok_count += 1
 		enemy_event_count += int(row.get("enemy_activity_event_count", 0))
+		target_assignment_count += int(row.get("target_assignment_event_count", 0))
 	return {
 		"case_count": rmg_cases.size(),
 		"setup_ok_count": setup_ok_count,
@@ -778,6 +798,7 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 		"behavior_bug_count": behavior_bug_count,
 		"measurement_gap_count": measurement_gap_count,
 		"enemy_activity_event_count": enemy_event_count,
+		"target_assignment_event_count": target_assignment_count,
 	}
 
 static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, capability_rows: Array, rmg_summary: Dictionary) -> Array:
