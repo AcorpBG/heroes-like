@@ -23,6 +23,9 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var live_turn_case := _live_turn_plans_before_same_turn_recruitment()
+	if live_turn_case.is_empty():
+		return
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
@@ -35,12 +38,62 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_recruitment_prepares_saved_commander_tasks_before_raid_spawn",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [planned_case, garrison_case],
+		"cases": [live_turn_case, planned_case, garrison_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
+	var session = _base_session()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_safe_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var active_before := _active_raid_count(session)
+	if active_before != 0:
+		_fail("Expected no active raids before same-turn prep case, got %d" % active_before)
+		return {}
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = result.get("events", []) if result.get("events", []) is Array else []
+	var planned_index := _event_index(events, "ai_commander_task_planned")
+	var prepared_index := _event_index(events, "ai_commander_prepared")
+	if planned_index < 0:
+		_fail("Live turn did not emit same-turn task planning: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	if prepared_index < 0:
+		_fail("Live turn did not prepare a commander from newly planned tasks: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	if planned_index > prepared_index:
+		_fail("Live turn prepared a commander before planning tasks: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	var prepared_event: Dictionary = events[prepared_index]
+	var actor_id := String(prepared_event.get("target_id", ""))
+	if actor_id == "":
+		_fail("Prepared event missing commander target id: %s" % JSON.stringify(prepared_event))
+		return {}
+	var continuity := _commander_continuity(session, actor_id)
+	if int(continuity.get("current_strength", 0)) <= 0:
+		_fail("Prepared commander did not gain same-turn continuity: actor=%s continuity=%s" % [actor_id, JSON.stringify(continuity)])
+		return {}
+	if not _has_task_for_actor(_enemy_state(session), actor_id):
+		_fail("Prepared commander has no task-board record after live turn: actor=%s" % actor_id)
+		return {}
+	return {
+		"case_id": "live_turn_plans_before_same_turn_recruitment",
+		"active_raids_before": active_before,
+		"prepared_actor_id": actor_id,
+		"prepared_strength": int(continuity.get("current_strength", 0)),
+		"planned_event_index": planned_index,
+		"prepared_event_index": prepared_index,
+		"event_types": _event_types(events),
+	}
 
 func _planned_task_recruitment_prepares_commander() -> Dictionary:
 	var session = _base_session()
@@ -187,10 +240,27 @@ func _set_enemy_treasury(session, treasury: Dictionary) -> void:
 	_fail("Could not set enemy treasury")
 
 func _commander_strength(session, actor_id: String) -> int:
+	return int(_commander_continuity(session, actor_id).get("current_strength", 0))
+
+func _commander_continuity(session, actor_id: String) -> Dictionary:
 	for entry in EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID):
 		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == actor_id:
-			return int(EnemyAdventureRules.commander_army_continuity(entry).get("current_strength", 0))
-	return 0
+			return EnemyAdventureRules.commander_army_continuity(entry)
+	return {}
+
+func _active_raid_count(session) -> int:
+	var count := 0
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("spawned_by_faction_id", "")) == FACTION_ID:
+			count += 1
+	return count
+
+func _has_task_for_actor(state: Dictionary, actor_id: String) -> bool:
+	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+	for task_value in task_state.get("tasks", []):
+		if task_value is Dictionary and String(task_value.get("actor_id", "")) == actor_id:
+			return true
+	return false
 
 func _town_by_id(session, placement_id: String) -> Dictionary:
 	for town in session.overworld.get("towns", []):
@@ -229,6 +299,23 @@ func _event_by_type(events: Array, event_type: String) -> Dictionary:
 		if event is Dictionary and String(event.get("event_type", "")) == event_type:
 			return event
 	return {}
+
+func _event_index(events: Array, event_type: String) -> int:
+	for index in range(events.size()):
+		var event = events[index]
+		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+			return index
+	return -1
+
+func _event_types(events: Array) -> Array:
+	var types := []
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		var event_type := String(event.get("event_type", ""))
+		if event_type != "":
+			types.append(event_type)
+	return types
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}

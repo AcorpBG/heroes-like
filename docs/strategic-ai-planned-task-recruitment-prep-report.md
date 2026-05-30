@@ -9,6 +9,8 @@ This slice makes town recruitment react to the durable commander task board befo
 ## Implementation
 
 - Added a `planned` recruitment destination in `EnemyTurnRules`.
+- Moved coordinated task-board planning earlier in the live enemy empire cycle, after town builds and before recruitment, so newly planned objectives can affect same-turn recruitment.
+- Kept the later pre-spawn task-board planning pass as an idempotent reconciliation point after active raid advancement.
 - Added planned-task scoring from saved reachable commander tasks:
   - actor must be an available deployable commander;
   - saved task must be planned or reserved, unexpired, and reachable from the recruiting town;
@@ -24,6 +26,7 @@ This slice makes town recruitment react to the durable commander task board befo
 
 `tests/ai_planned_task_recruitment_prep_report.gd` proves:
 
+- a full live enemy turn with no starting task board emits task planning before same-turn recruitment and prepares one of the newly planned commanders;
 - safe Duskfen recruitment chooses `planned_task_preparation` for a saved commander task before any active raid exists;
 - recruited units increase the selected commander's army continuity;
 - `ai_commander_prepared` is emitted;

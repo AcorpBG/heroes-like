@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-planned-task-recruitment-prep-10184",
-  "currentSliceTitle": "Strategic AI Planned Task Recruitment Prep",
+  "currentSliceId": "strategic-ai-same-turn-task-prep-10184",
+  "currentSliceTitle": "Strategic AI Same-Turn Task Prep",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Town recruitment can now prepare durable planned commander objectives before those tasks spawn as active raids, while preserving emergency garrison and rebuild priority.",
+  "currentSliceNotes": "Completed. Coordinated task-board planning now runs early enough in the live enemy turn for same-turn recruitment to prepare newly planned objectives.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T18:34:00Z",
+  "updatedAt": "2026-05-30T19:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,66 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-same-turn-task-prep-10184",
+      "title": "Strategic AI Same-Turn Task Prep",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / same-turn task planning and recruitment sequencing",
+      "purpose": "Make the live enemy empire cycle plan commander objectives before town recruitment so newly planned strategic tasks can affect same-turn army preparation, not only a later turn.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-planned-task-recruitment-prep-report.md",
+        "docs/strategic-ai-coordinated-task-planner-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "docs/strategic-ai-planned-task-recruitment-prep-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "A full live enemy turn starting with no task board must emit planned commander tasks before same-turn recruitment, recruitment must prepare one of those newly planned commanders, the later pre-spawn planner must remain idempotent, and existing strategic AI reports stay green.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding a broad report-only gate",
+        "running the full 100-seed eight-week generated-map matrix in this slice",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T19:03:00Z",
+      "updatedAt": "2026-05-30T19:20:00Z",
+      "completedAt": "2026-05-30T19:20:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed; full live turn emitted ai_commander_task_planned before same-turn ai_commander_prepared)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. The live enemy empire cycle now seeds/reconciles the durable task board after town builds and before recruitment, so newly planned objectives can influence same-turn planned-task recruitment preparation. The later pre-spawn planner remains as an idempotent reconciliation point after active raid advancement.",
+      "notes": [
+        "Selected after finding the previous planned-task recruitment prep could only act on tasks persisted from an earlier turn because planning happened after recruitment in the empire cycle.",
+        "No production-ready strategic AI claim. Full 100-seed eight-week generated-map matrix, Medium/generalized RMG behavior, deeper army/economy timing, retreat/personality tuning, and live-client pacing remain open."
+      ]
+    },
     {
       "id": "strategic-ai-planned-task-recruitment-prep-10184",
       "title": "Strategic AI Planned Task Recruitment Prep",
@@ -42558,22 +42618,19 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-planned-task-recruitment-prep-10184 [completed]",
+  "currentSlice": "strategic-ai-same-turn-task-prep-10184 [completed]",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T18:34:00Z",
-    "sliceId": "strategic-ai-planned-task-recruitment-prep-10184",
+    "updatedAt": "2026-05-30T19:20:00Z",
+    "sliceId": "strategic-ai-same-turn-task-prep-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed; full live turn plans before same-turn recruitment)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -42581,16 +42638,16 @@
     ],
     "evidence": {
       "implemented": [
-        "Added planned-task recruitment destination scoring from durable hero_task_state plans.",
-        "Town recruitment can prepare an available deployable commander for a saved reachable objective before the active raid is spawned.",
-        "Added compact ai_commander_prepared event surfacing for planned-task recruitment prep.",
-        "Commander roster reinforcement can initialize planned-prep continuity from the faction raid baseline and add recruits above it.",
-        "Focused coverage preserves critical garrison and true commander rebuild priority."
+        "Moved coordinated task-board planning earlier in the live enemy empire cycle, after town builds and before recruitment.",
+        "Kept the later pre-spawn planner as an idempotent post-raid-advance reconciliation point.",
+        "Extended planned-task recruitment coverage to exercise the full run_enemy_turn path, not only helper calls.",
+        "Full live-turn evidence now proves ai_commander_task_planned is emitted before same-turn ai_commander_prepared when the turn starts with no task board."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
+        "start_task_board": "absent",
         "prepared_commander": "hero_sable",
-        "destination_rule": "planned_task_preparation",
+        "event_order": "ai_commander_task_planned before ai_commander_prepared",
         "event_type": "ai_commander_prepared",
         "critical_garrison_rule": "critical_garrison_gap"
       },
