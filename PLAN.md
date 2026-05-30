@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-artifact-task-board-10184`, completed to make artifact/relic targets first-class durable strategic AI tasks with saved-task reuse, lifecycle cleanup, and no save-version migration.
+- Current implementation slice: `strategic-ai-hero-hunt-task-board-10184`, completed to make exposed player-hero hunt targets first-class durable strategic AI tasks with saved-task reuse, lifecycle cleanup, intercept closure, and no save-version migration.
+- Latest completed slice: `strategic-ai-hero-hunt-task-board-10184`.
 - Latest completed slice: `strategic-ai-artifact-task-board-10184`.
 - Latest completed slice: `strategic-ai-encounter-objective-task-board-10184`.
 - Latest completed slice: `strategic-ai-task-retask-cancellation-10184`.

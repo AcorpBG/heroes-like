@@ -3932,6 +3932,9 @@ static func _append_hero_target_candidate(
 			"goal_x": goal_tile.x,
 			"goal_y": goal_tile.y,
 			"goal_distance": goal_distance,
+			"target_reason_codes": ["hero_hunt", "exposed_hero"],
+			"target_public_reason": "exposed hero",
+			"target_public_importance": "high",
 			"priority": max(
 				0,
 				_weighted_priority(config, faction_id, "hero", hero_id, priority, "", false)
@@ -3977,6 +3980,26 @@ static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero
 		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
 			return hero
 	return {}
+
+static func _player_hero_snapshot_for_task(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if session == null or hero_id == "":
+		return {}
+	var hero := _find_player_hero(session, hero_id)
+	if not hero.is_empty():
+		return hero
+	if hero_id != String(session.overworld.get("active_hero_id", "")):
+		return {}
+	var active_hero_value = session.overworld.get("hero", {})
+	if not (active_hero_value is Dictionary) or active_hero_value.is_empty():
+		return {}
+	var active_hero: Dictionary = active_hero_value.duplicate(true)
+	active_hero["id"] = hero_id
+	var position_value = active_hero.get("position", {})
+	if not (position_value is Dictionary) or position_value.is_empty():
+		var position_source = session.overworld.get("hero_position", {"x": 0, "y": 0})
+		if position_source is Dictionary:
+			active_hero["position"] = position_source.duplicate(true)
+	return active_hero
 
 static func _player_hero_goal_tile(hero: Dictionary) -> Vector2i:
 	var hero_position: Dictionary = hero.get("position", {})
@@ -6954,6 +6977,17 @@ static func _ai_hero_task_target_snapshot_for_plan(
 				"target_y": int(encounter.get("y", 0)),
 				"goal_tiles": _encounter_staging_tiles(session, encounter),
 			}
+		"hero":
+			var hero := _player_hero_snapshot_for_task(session, target_id)
+			if hero.is_empty():
+				return {}
+			var tile := _player_hero_goal_tile(hero)
+			return {
+				"target_label": String(hero.get("name", target_id)),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_tiles": [tile],
+			}
 	return {}
 
 static func _saved_task_plan_beats(candidate: Dictionary, best: Dictionary) -> bool:
@@ -7040,7 +7074,7 @@ static func _ai_hero_task_record_live_assignment(
 		return
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
-	if target_kind not in ["resource", "town", "artifact", "encounter"] or target_id == "":
+	if target_kind not in ["resource", "town", "artifact", "encounter", "hero"] or target_id == "":
 		return
 	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
 	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
@@ -7244,6 +7278,8 @@ static func _ai_hero_task_reconciled_live_task(
 			return _ai_hero_task_reconciled_artifact_task(session, faction_id, task, target_id)
 		"encounter":
 			return _ai_hero_task_reconciled_encounter_task(session, faction_id, task, target_id)
+		"hero":
+			return _ai_hero_task_reconciled_hero_task(session, faction_id, task, target_id)
 	return task
 
 static func _ai_hero_task_reconcile_actor(
@@ -7370,6 +7406,19 @@ static func _ai_hero_task_reconciled_encounter_task(
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
 	if String(encounter.get("contested_by_faction_id", "")) == faction_id:
 		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+	return task
+
+static func _ai_hero_task_reconciled_hero_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var hero := _player_hero_snapshot_for_task(session, target_id)
+	if hero.is_empty():
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
 	return task
 
 static func _ai_hero_task_with_lifecycle(task: Dictionary, status: String, validation: String) -> Dictionary:

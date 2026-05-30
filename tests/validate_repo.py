@@ -210,6 +210,9 @@ AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.gd"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
+AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
+AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.tscn"
+AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-hunt-task-board-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -14915,7 +14918,7 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter"]',
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
         'match target_kind:',
         '"encounter":',
         "func _ai_hero_task_reconciled_encounter_task",
@@ -14924,7 +14927,7 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task encounter objective implementation is missing token: {required_token}")
     ensure(
-        '["resource", "town", "artifact", "encounter", "commander", "front"]' in enemy_turn_text,
+        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]' in enemy_turn_text,
         errors,
         "Enemy task-state normalizer does not accept target_kind encounter.",
     )
@@ -14961,7 +14964,7 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter"]',
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
         "func _ai_hero_task_reconciled_artifact_task",
         '"artifact":',
         "ArtifactRulesScript.describe_artifact",
@@ -14970,7 +14973,7 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task artifact objective implementation is missing token: {required_token}")
     ensure(
-        '["resource", "town", "artifact", "encounter", "commander", "front"]' in enemy_turn_text,
+        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]' in enemy_turn_text,
         errors,
         "Enemy task-state normalizer does not accept target_kind artifact.",
     )
@@ -14997,6 +15000,52 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task artifact objective doc is missing required text: {required_text}")
+
+def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH,
+        AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task hero hunt file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    for required_token in (
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
+        "func _player_hero_snapshot_for_task",
+        "func _ai_hero_task_reconciled_hero_task",
+        '"hero":',
+        '"hero_hunt"',
+        '"exposed_hero"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI hero task hero hunt implementation is missing token: {required_token}")
+    for required_token in (
+        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]',
+        'EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")',
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
+    if AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "hero_targets_use_saved_task_continuity",
+            "hero_hunt_assigns_reuses_follows_and_closes_task",
+            "saved_hero_task",
+            "invalid_target_missing",
+            "hero_intercept",
+            "hero_task_state_live_persist_no_save_migration",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task hero hunt report is missing token: {required_token}")
+    if AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Hero Hunt Task Board Report",
+            "Implementation evidence",
+            "player-hero hunt targets",
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task hero hunt doc is missing required text: {required_text}")
 
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
@@ -21559,6 +21608,7 @@ def main() -> int:
     validate_ai_hero_task_retask_cancellation(errors)
     validate_ai_hero_task_encounter_objective(errors)
     validate_ai_hero_task_artifact_objective(errors)
+    validate_ai_hero_task_hero_hunt(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_retake_assault(errors)
