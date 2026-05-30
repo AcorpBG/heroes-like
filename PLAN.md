@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-target-aware-spawn-point-selection-10184`, completed to make raid deployment choose an open spawn point that best serves saved commander tasks and live strategic targets instead of using the first open spawn slot.
+- Current implementation slice: `strategic-ai-defense-overcommit-control-10184`, completed to stop active commanders from abandoning useful pressure for already-covered town/site defense fronts.
+- Latest completed slice: `strategic-ai-defense-overcommit-control-10184`.
 - Latest completed slice: `strategic-ai-target-aware-spawn-point-selection-10184`.
 - Latest completed slice: `strategic-ai-town-rebuild-garrison-safety-10184`.
 - Latest completed slice: `strategic-ai-regroup-garrison-aware-routing-10184`.
