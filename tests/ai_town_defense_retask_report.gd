@@ -19,6 +19,9 @@ func _run() -> void:
 	var resource_overcommit_case := _covered_resource_defense_does_not_retask_second_commander()
 	if resource_overcommit_case.is_empty():
 		return
+	var resource_stationing_case := _resource_defender_stations_and_releases()
+	if resource_stationing_case.is_empty():
+		return
 	var release_case := _stationed_town_defender_releases_when_front_clears()
 	if release_case.is_empty():
 		return
@@ -26,11 +29,12 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_town_defense_retask_rotation_no_save_migration",
-		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
+		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders_and_resource_fronts_station_defenders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"overcommit_case": overcommit_case,
 		"resource_overcommit_case": resource_overcommit_case,
+		"resource_stationing_case": resource_stationing_case,
 		"release_case": release_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -59,7 +63,7 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 
 	var result := {}
 	var all_events := []
-	for _turn_index in range(4):
+	for _turn_index in range(8):
 		result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
 		state = result.get("state", state)
 		all_events.append_array(result.get("events", []))
@@ -190,7 +194,7 @@ func _stationed_town_defender_releases_when_front_clears() -> Dictionary:
 	session.overworld["encounters"] = encounters
 
 	var all_events := []
-	for _turn_index in range(4):
+	for _turn_index in range(8):
 		var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
 		state = result.get("state", state)
 		all_events.append_array(result.get("events", []))
@@ -226,6 +230,103 @@ func _stationed_town_defender_releases_when_front_clears() -> Dictionary:
 		"stationed_status_before_clear": String(stationed_entry.get("status", "")),
 		"released_status_after_clear": String(released_entry.get("status", "")),
 		"defender_metadata_cleared": not released_town.has("ai_defender_commander_state"),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _resource_defender_stations_and_releases() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 0, "y": 4})
+	_set_resource_controller(session, "river_free_company", MIRECLAW)
+	_set_resource_controller(session, "river_signal_post", "player")
+	_set_resource_defense_front(session, "river_free_company")
+	var raid := _defense_retask_raid(session)
+	raid["target_placement_id"] = "river_signal_post"
+	raid["target_label"] = "Signal Post"
+	raid["target_x"] = 2
+	raid["target_y"] = 3
+	raid["goal_x"] = 2
+	raid["goal_y"] = 3
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var all_events := []
+	for _turn_index in range(8):
+		var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		state = result.get("state", state)
+		all_events.append_array(result.get("events", []))
+		if "ai_site_defended" in _event_types(all_events):
+			break
+	var event_types := _event_types(all_events)
+	if "ai_target_assigned" not in event_types or "ai_site_defended" not in event_types:
+		_fail("Resource defender did not retask and resolve site defense: events=%s raid=%s" % [JSON.stringify(event_types), JSON.stringify(_encounter(session, "defense_retask_vaska"))])
+		return {}
+	var defended_node := _resource_node(session, "river_free_company")
+	if String(defended_node.get("ai_defended_by_faction_id", "")) != MIRECLAW:
+		_fail("Resource defense did not mark node as AI defended: %s" % JSON.stringify(defended_node))
+		return {}
+	if int(defended_node.get("ai_defense_rating", 0)) <= 0 or int(defended_node.get("ai_defense_reinforced_strength", 0)) <= 0:
+		_fail("Resource defense did not persist defender strength: %s" % JSON.stringify(defended_node))
+		return {}
+	var defender_commander: Dictionary = defended_node.get("ai_defender_commander_state", {}) if defended_node.get("ai_defender_commander_state", {}) is Dictionary else {}
+	if String(defender_commander.get("roster_hero_id", "")) != "hero_vaska":
+		_fail("Resource defense did not station Vaska on the resource: %s" % JSON.stringify(defender_commander))
+		return {}
+	var defender_army: Dictionary = defended_node.get("ai_defender_army", {}) if defended_node.get("ai_defender_army", {}) is Dictionary else {}
+	if EnemyAdventureRules._army_strength(defender_army.get("stacks", [])) <= 0:
+		_fail("Resource defense did not persist defender army stacks: %s" % JSON.stringify(defender_army))
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "defense_retask_vaska" not in resolved:
+		_fail("Stationed resource defender field raid remained active: %s" % JSON.stringify(resolved))
+		return {}
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	OverworldRules.normalize_overworld_state(session)
+	var normalized_node := _resource_node(session, "river_free_company")
+	if String(normalized_node.get("ai_defender_roster_hero_id", "")) != "hero_vaska" or not normalized_node.has("ai_defender_commander_state"):
+		_fail("Resource defender metadata did not survive normalization: %s" % JSON.stringify(normalized_node))
+		return {}
+	var active_roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(active_roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE:
+		_fail("Resource defender commander was not retained as active after roster normalization: %s" % JSON.stringify(active_roster_entry))
+		return {}
+	if String(active_roster_entry.get("active_placement_id", "")) != "resource_defense:river_free_company":
+		_fail("Resource defender active placement was not retained: %s" % JSON.stringify(active_roster_entry))
+		return {}
+	var replacement_selection := EnemyAdventureRules.select_raid_commander_roster_hero_id(session, MIRECLAW, 0)
+	if replacement_selection == "hero_vaska":
+		_fail("Resource defender commander was selectable for a second raid while stationed.")
+		return {}
+	session.day = max(
+		int(normalized_node.get("ai_defense_until_day", 0)),
+		int((normalized_node.get("front", {}) if normalized_node.get("front", {}) is Dictionary else {}).get("defense_until_day", 0))
+	) + 1
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var released_node := _resource_node(session, "river_free_company")
+	if released_node.has("ai_defender_commander_state") or String(released_node.get("ai_defender_roster_hero_id", "")) != "":
+		_fail("Expired resource defender metadata was not cleared: %s" % JSON.stringify(released_node))
+		return {}
+	var released_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(released_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE:
+		_fail("Expired resource defender commander did not return to available roster status: %s" % JSON.stringify(released_entry))
+		return {}
+	return {
+		"case_id": "resource_defender_stations_and_releases",
+		"target_id": "river_free_company",
+		"event_types": event_types,
+		"defense_rating": int(defended_node.get("ai_defense_rating", 0)),
+		"defense_reinforced_strength": int(defended_node.get("ai_defense_reinforced_strength", 0)),
+		"stationed_commander_id": String(defender_commander.get("roster_hero_id", "")),
+		"stationed_active_placement_id": String(active_roster_entry.get("active_placement_id", "")),
+		"replacement_selection_while_stationed": replacement_selection,
+		"released_commander_status": String(released_entry.get("status", "")),
+		"defender_metadata_cleared_after_expiry": not released_node.has("ai_defender_commander_state"),
+		"resolved_field_raid": "defense_retask_vaska" in resolved,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -502,6 +603,12 @@ func _resource_controller(session, placement_id: String) -> String:
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return String(node.get("collected_by_faction_id", ""))
 	return ""
+
+func _resource_node(session, placement_id: String) -> Dictionary:
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return node
+	return {}
 
 func _town(session, placement_id: String) -> Dictionary:
 	for town in session.overworld.get("towns", []):
