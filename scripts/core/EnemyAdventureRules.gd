@@ -3794,6 +3794,14 @@ static func _active_town_defender_entry(
 	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
 		return {}
 	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var raw_front_state := String(front.get("state", ""))
+	if raw_front_state not in ["defend", "stabilizing"]:
+		return {}
+	if not bool(front_state.get("active", false)) or String(front_state.get("mode", "")) != "stabilizing":
+		return {}
+	if String(front_state.get("faction_id", "")) != "" and String(front_state.get("faction_id", "")) != faction_id:
+		return {}
 	var defense_until: int = max(
 		int(town.get("ai_defense_until_day", 0)),
 		int(front.get("defense_until_day", 0))

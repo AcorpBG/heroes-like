@@ -15912,6 +15912,9 @@ def validate_ai_town_defense_retask(errors: list[str]) -> None:
             "river_pass_active_raid_defends_stabilizing_duskfen",
             "duskfen_bastion",
             "river_free_company",
+            "stationed_town_defender_releases_when_front_clears",
+            "live_town_defense_retask_rotation_no_save_migration",
+            "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
             "town_defense",
             "front_stabilization",
             "ai_target_assigned",
@@ -15927,6 +15930,8 @@ def validate_ai_town_defense_retask(errors: list[str]) -> None:
             "strategic-ai-town-defense-retask-20260523-10184",
             "active enemy raid hosts",
             "Duskfen",
+            "strategic-ai-town-defender-rotation-10184",
+            "Stationed town defenders release back to the commander roster when the defended front is cleared",
             "No broad strategic AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"AI town defense retask doc is missing required text: {required_text}")
@@ -15964,6 +15969,9 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
         '"ai_defender_commander_state"',
         '"ai_defense_rating"',
         '"ai_defense_reinforced_strength"',
+        '"defense_until_day"',
+        '"last_defended_day"',
+        '"defend"',
     ):
         ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing town defense arrival persistence token: {required_token}")
     if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
@@ -15973,6 +15981,8 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
             "garrison_strength_before",
             "garrison_strength_after",
             "stationed_commander_id",
+            "front_active_after_defense",
+            "front_mode_after_defense",
             "town_assault_enemy_commander_id",
             "unit_bog_brute",
             "BattleRules.create_town_assault_payload",
@@ -16006,6 +16016,8 @@ def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
         '"ai_defender_commander_state"',
         '"ai_defense_until_day"',
         "defense_until < int(session.day)",
+        "raw_front_state not in [\"defend\", \"stabilizing\"]",
+        "OverworldRulesScript.town_front_state(session, town)",
         "active[defender_roster_hero_id] = defender_entry",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defender lifecycle token: {required_token}")
@@ -16017,6 +16029,8 @@ def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
             "replacement_selection_while_stationed",
             "released_commander_status",
             "defender_metadata_cleared_after_expiry",
+            "stationed_town_defender_releases_when_front_clears",
+            "defender_metadata_cleared",
             "EnemyAdventureRules.select_raid_commander_roster_hero_id",
             "EnemyAdventureRules.COMMANDER_STATUS_ACTIVE",
             "EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE",
@@ -16027,9 +16041,11 @@ def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Town Defender Lifecycle Report",
             "strategic-ai-town-defender-lifecycle-10184",
+            "strategic-ai-town-defender-rotation-10184",
             "stationed_commander_status = active",
             "replacement_selection_while_stationed = hero_sable",
             "released_commander_status = available",
+            "stationed_town_defender_releases_when_front_clears",
             "No save migration",
             "No broad strategic-AI production-ready claim",
         ):

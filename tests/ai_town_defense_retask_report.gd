@@ -19,15 +19,19 @@ func _run() -> void:
 	var resource_overcommit_case := _covered_resource_defense_does_not_retask_second_commander()
 	if resource_overcommit_case.is_empty():
 		return
+	var release_case := _stationed_town_defender_releases_when_front_clears()
+	if release_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_town_defense_retask_no_save_migration",
-		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_covered_fronts",
+		"schema_status": "live_town_defense_retask_rotation_no_save_migration",
+		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"overcommit_case": overcommit_case,
 		"resource_overcommit_case": resource_overcommit_case,
+		"release_case": release_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -96,6 +100,10 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 	if String(town_after.get("ai_defended_by_faction_id", "")) != MIRECLAW:
 		_fail("Town-defense arrival did not mark Duskfen as AI defended: %s" % JSON.stringify(town_after))
 		return {}
+	var front_after := OverworldRules.town_front_state(session, town_after)
+	if not bool(front_after.get("active", false)) or String(front_after.get("mode", "")) != "stabilizing":
+		_fail("Town-defense arrival did not keep Duskfen as an active defended front: %s" % JSON.stringify(front_after))
+		return {}
 	var defender_commander: Dictionary = town_after.get("ai_defender_commander_state", {}) if town_after.get("ai_defender_commander_state", {}) is Dictionary else {}
 	if String(defender_commander.get("roster_hero_id", "")) != "hero_vaska":
 		_fail("Town-defense arrival did not station Vaska as Duskfen defender: %s" % JSON.stringify(defender_commander))
@@ -151,6 +159,8 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"town_defended_event": "ai_town_defended" in event_types,
 		"garrison_strength_before": garrison_strength_before,
 		"garrison_strength_after": garrison_strength_after,
+		"front_active_after_defense": bool(front_after.get("active", false)),
+		"front_mode_after_defense": String(front_after.get("mode", "")),
 		"stationed_commander_id": String(defender_commander.get("roster_hero_id", "")),
 		"stationed_commander_status": String(active_roster_entry.get("status", "")),
 		"stationed_active_placement_id": String(active_roster_entry.get("active_placement_id", "")),
@@ -163,6 +173,59 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"event_types": event_types,
 		"resource_controller_after": _resource_controller(session, "river_free_company"),
 		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _stationed_town_defender_releases_when_front_clears() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_stabilizing_front(session, "duskfen_bastion")
+	_set_player_position(session, {"x": 6, "y": 2})
+	var raid := _defense_retask_raid(session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var all_events := []
+	for _turn_index in range(4):
+		var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		state = result.get("state", state)
+		all_events.append_array(result.get("events", []))
+		if "ai_town_defended" in _event_types(all_events):
+			break
+	if "ai_town_defended" not in _event_types(all_events):
+		_fail("Defender release fixture did not station a town defender before release check.")
+		return {}
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var stationed_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(stationed_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE:
+		_fail("Defender release fixture did not mark Vaska active before front clear: %s" % JSON.stringify(stationed_entry))
+		return {}
+	var town_before_clear := _town(session, "duskfen_bastion")
+	var front_before_clear := OverworldRules.town_front_state(session, town_before_clear)
+	if not bool(front_before_clear.get("active", false)):
+		_fail("Defender release fixture did not expose an active defended front before clear: %s" % JSON.stringify(front_before_clear))
+		return {}
+	_clear_town_front(session, "duskfen_bastion")
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var released_town := _town(session, "duskfen_bastion")
+	if released_town.has("ai_defender_commander_state") or String(released_town.get("ai_defender_roster_hero_id", "")) != "":
+		_fail("Cleared town front did not release stationed defender metadata: %s" % JSON.stringify(released_town))
+		return {}
+	var released_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(released_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE:
+		_fail("Cleared town front did not return defender commander to available roster: %s" % JSON.stringify(released_entry))
+		return {}
+	return {
+		"case_id": "stationed_town_defender_releases_when_front_clears",
+		"front_active_before_clear": bool(front_before_clear.get("active", false)),
+		"front_mode_before_clear": String(front_before_clear.get("mode", "")),
+		"stationed_status_before_clear": String(stationed_entry.get("status", "")),
+		"released_status_after_clear": String(released_entry.get("status", "")),
+		"defender_metadata_cleared": not released_town.has("ai_defender_commander_state"),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -372,6 +435,18 @@ func _set_stabilizing_front(session, placement_id: String) -> void:
 		session.overworld["towns"] = towns
 		return
 	_fail("Could not find town %s for stabilizing front fixture." % placement_id)
+
+func _clear_town_front(session, placement_id: String) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["front"] = {}
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not find town %s for front-clear fixture." % placement_id)
 
 func _set_player_position(session, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
