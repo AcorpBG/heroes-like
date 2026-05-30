@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-active-front-support-10184`, completed to make deployable commanders reinforce active high-value fronts and consolidate adjacent encounter-objective support hosts.
+- Current implementation slice: `strategic-ai-support-overcommit-control-10184`, completed to stop active-front support planning from dogpiling covered fronts or chaining support onto support hosts.
+- Latest completed slice: `strategic-ai-support-overcommit-control-10184`.
 - Latest completed slice: `strategic-ai-active-front-support-10184`.
 - Latest completed slice: `strategic-ai-guarded-claim-resumption-10184`.
 - Latest completed slice: `strategic-ai-guarded-object-claim-routing-10184`.

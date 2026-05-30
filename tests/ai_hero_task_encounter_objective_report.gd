@@ -233,6 +233,12 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 		_fail("Active-front support assignment did not remember the supported leader: %s" % JSON.stringify(assigned_support))
 		return {}
 	_append_encounter(session, assigned_support)
+	var overcommit_probe := _raid_seed(session, "hero_orrik", "encounter_support_orrik_probe", {"x": support_tile.x + 1, "y": support_tile.y})
+	overcommit_probe = _set_raid_bog_brutes(overcommit_probe, 3)
+	var overcommit_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(session, config, overcommit_probe)
+	if not overcommit_plan.is_empty():
+		_fail("Active-front support planner overcommitted after existing support filled the gap: %s" % JSON.stringify(overcommit_plan))
+		return {}
 	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
 	var support_strength_before := EnemyAdventureRules.raid_strength(assigned_support)
 	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
@@ -268,6 +274,9 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 		"target_id": OBJECTIVE_ENCOUNTER_ID,
 		"support_assignment_reason_codes": support_reason_codes,
 		"supporting_front_placement_id": String(assigned_support.get("supporting_front_placement_id", "")),
+		"support_strength_gap": int(assigned_support.get("support_strength_gap", 0)),
+		"support_committed_strength": int(assigned_support.get("support_committed_strength", 0)),
+		"overcommit_plan_empty_after_support": overcommit_plan.is_empty(),
 		"leader_strength_before": leader_strength_before,
 		"support_strength_before": support_strength_before,
 		"leader_strength_after": leader_strength_after,
