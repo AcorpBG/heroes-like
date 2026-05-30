@@ -101,9 +101,25 @@ func _arrived_raid_captures_empty_neutral_town() -> Dictionary:
 	if after_raid.is_empty():
 		_fail("Neutral-town raid disappeared after capture.")
 		return {}
+	if _army_strength(town.get("garrison", [])) <= 0:
+		_fail("Captured neutral town did not receive the capturing host as garrison: %s" % JSON.stringify(town))
+		return {}
+	if String(town.get("ai_defended_by_faction_id", "")) != MIRECLAW or String(town.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
+		_fail("Captured neutral town did not station the capturing commander as defender: %s" % JSON.stringify(town))
+		return {}
+	if not _resolved_has(session, "neutral_town_vaska"):
+		_fail("Captured neutral-town field raid was not retired/resolved.")
+		return {}
+	if _army_strength(after_raid.get("enemy_army", {}).get("stacks", [])) > 0:
+		_fail("Captured neutral-town raid kept field army after garrison transfer: %s" % JSON.stringify(after_raid))
+		return {}
 	var commander_state: Dictionary = after_raid.get("enemy_commander_state", {}) if after_raid.get("enemy_commander_state", {}) is Dictionary else {}
 	if String(commander_state.get("last_outcome", "")) != "town_captured":
 		_fail("Neutral-town commander did not record town_captured outcome: %s" % JSON.stringify(commander_state))
+		return {}
+	var roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(roster_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
+		_fail("Neutral-town capture did not leave commander stationed on town defense: %s" % JSON.stringify(roster_entry))
 		return {}
 	_assert_task_status(session, "hero_vaska", "town", NEUTRAL_TOWN_ID, "completed", "valid")
 	if _failed:
@@ -117,6 +133,9 @@ func _arrived_raid_captures_empty_neutral_town() -> Dictionary:
 		"pressure_before": pressure_before,
 		"pressure_after": int(result.get("state", state).get("pressure", 0)),
 		"commander_last_outcome": String(commander_state.get("last_outcome", "")),
+		"garrison_strength_after": _army_strength(town.get("garrison", [])),
+		"field_raid_resolved": _resolved_has(session, "neutral_town_vaska"),
+		"stationed_commander_status": String(roster_entry.get("status", "")),
 	}
 
 func _defended_neutral_town_is_planned_assault_target() -> Dictionary:
@@ -427,6 +446,26 @@ func _encounter(session, placement_id: String) -> Dictionary:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return encounter
 	return {}
+
+func _resolved_has(session, placement_id: String) -> bool:
+	var resolved = session.overworld.get("resolved_encounters", [])
+	return resolved is Array and placement_id in resolved
+
+func _commander_roster_entry(session, actor_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == actor_id:
+			return entry
+	return {}
+
+func _army_strength(stacks_value: Variant) -> int:
+	var total := 0
+	if not (stacks_value is Array):
+		return total
+	for stack in stacks_value:
+		if not (stack is Dictionary):
+			continue
+		total += EnemyAdventureRules._unit_strength_value(String(stack.get("unit_id", ""))) * max(0, int(stack.get("count", 0)))
+	return total
 
 func _event_types(events: Variant) -> Array:
 	var output := []

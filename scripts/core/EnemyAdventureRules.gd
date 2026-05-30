@@ -11883,6 +11883,71 @@ static func _secure_neutral_town_target(
 		raid,
 		COMMANDER_OUTCOME_TOWN_CAPTURED
 	)
+	var army := _normalize_army_payload(updated_raid.get("enemy_army", {}))
+	var garrison: Array = captured_town.get("garrison", []).duplicate(true) if captured_town.get("garrison", []) is Array else []
+	var transferred_count := 0
+	var transferred_strength := 0
+	for stack_value in army.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		var count: int = max(0, int(stack_value.get("count", 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		garrison = _add_army_stack(garrison, unit_id, count)
+		transferred_count += count
+		transferred_strength += _unit_strength_value(unit_id) * count
+	var front: Dictionary = captured_town.get("front", {}) if captured_town.get("front", {}) is Dictionary else {}
+	front["state"] = String(front.get("state", "stabilizing")) if String(front.get("state", "")) != "" else "stabilizing"
+	front["faction_id"] = faction_id
+	front["last_defended_day"] = int(session.day)
+	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
+	front["stabilize_until_day"] = max(int(front.get("stabilize_until_day", 0)), int(session.day) + 3)
+	front["source"] = "strategic_ai_neutral_town_post_capture_garrison"
+	captured_town["front"] = front
+	captured_town["garrison"] = garrison
+	captured_town["ai_defended_by_faction_id"] = faction_id
+	captured_town["ai_defended_day"] = int(session.day)
+	captured_town["ai_defense_until_day"] = max(int(captured_town.get("ai_defense_until_day", 0)), int(session.day) + 3)
+	captured_town["ai_defense_rating"] = max(int(captured_town.get("ai_defense_rating", 0)), _army_strength(garrison))
+	captured_town["ai_defense_reinforced_strength"] = max(0, int(captured_town.get("ai_defense_reinforced_strength", 0))) + transferred_strength
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var stationed_commander := sync_commander_army_continuity(
+			commander_state,
+			{"stacks": garrison},
+			"town_defense:%s" % String(captured_town.get("placement_id", ""))
+		)
+		captured_town["ai_defender_commander_state"] = stationed_commander
+		captured_town["ai_defender_roster_hero_id"] = String(stationed_commander.get("roster_hero_id", ""))
+		updated_raid["enemy_commander_state"] = stationed_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			stationed_commander,
+			COMMANDER_STATUS_ACTIVE,
+			"town_defense:%s" % String(captured_town.get("placement_id", "")),
+			-1,
+			COMMANDER_OUTCOME_TOWN_CAPTURED
+		)
+	var towns = session.overworld.get("towns", [])
+	towns[int(town_result.get("index", -1))] = captured_town
+	session.overworld["towns"] = towns
+	updated_raid["enemy_army"] = {
+		"id": String(army.get("id", updated_raid.get("encounter_id", "neutral_town_capture_host"))),
+		"name": String(army.get("name", "Neutral Town Capture Host")),
+		"stacks": [],
+	}
+	updated_raid["arrived"] = true
+	updated_raid["town_captured_day"] = int(session.day)
+	updated_raid["town_captured_strength"] = transferred_strength
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(updated_raid.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
 	var reason_codes := ["town_expansion", "neutral_town_claim"]
 	var town_label := _town_name(captured_town)
 	var message := "%s claims %s for %s." % [
@@ -11890,6 +11955,12 @@ static func _secure_neutral_town_target(
 		town_label,
 		String(ContentService.get_faction(faction_id).get("name", faction_id)),
 	]
+	if transferred_count > 0:
+		message = "%s %d unit%s stay behind to hold the new front." % [
+			message,
+			transferred_count,
+			"" if transferred_count == 1 else "s",
+		]
 	var event := build_ai_event_record(
 		session,
 		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},

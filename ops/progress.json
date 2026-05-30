@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-planned-task-build-prep-10184",
-  "currentSliceTitle": "Strategic AI Planned Task Build Prep",
+  "currentSliceId": "strategic-ai-neutral-town-post-capture-garrison-10184",
+  "currentSliceTitle": "Strategic AI Neutral Town Post-Capture Garrison",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Same-turn commander task planning now happens before town construction, and town build scoring explicitly rewards objective-supporting infrastructure for planned commander tasks.",
+  "currentSliceNotes": "Completed. AI neutral-town expansion now stations the capturing host as town garrison/defender, marks the field raid resolved, and keeps the commander active on town-defense duty.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:25:00Z",
+  "updatedAt": "2026-05-31T04:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,84 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-neutral-town-post-capture-garrison-10184",
+      "title": "Strategic AI Neutral Town Post-Capture Garrison",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / neutral expansion stabilization",
+      "purpose": "Make AI expansion armies convert captured empty neutral towns into defended holdings by transferring the host into the town garrison, stationing the commander as defender, and retiring the field encounter.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_neutral_town_expansion_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "When an arrived AI raid captures an empty neutral town, the captured town gains the raid army as garrison, defender metadata is written, the commander roster is stationed on town-defense duty, the raid encounter is resolved with an empty field army, and existing neutral-town planning/assault behavior still passes.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "changing player town capture flow",
+        "broad RMG expansion rebalance",
+        "new report-only gates"
+      ],
+      "startedAt": "2026-05-31T03:42:00Z",
+      "updatedAt": "2026-05-31T04:00:00Z",
+      "completedAt": "2026-05-31T04:00:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+          "result": "pass",
+          "summary": "Neutral-town expansion now proves empty-town capture leaves garrison strength, a stationed active commander, and a resolved field raid while defended neutral-town planning/risk/battle capture still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+          "result": "pass",
+          "summary": "Town defense retask, overcommit protection, and defender release behavior still pass after post-capture garrisoning."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy task execution still seizes resource fronts and persists task-board outcomes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded-claim, active support, route recovery, and failed-regroup rebuild behavior still pass."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. _secure_neutral_town_target now transfers the raid army into the captured town garrison, writes defense/front metadata, syncs the commander into town-defense roster state, empties the field army, and marks the encounter resolved."
+      ]
+    },
     {
       "id": "strategic-ai-planned-task-build-prep-10184",
       "title": "Strategic AI Planned Task Build Prep",
@@ -40538,12 +40616,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-planned-task-build-prep-10184",
+    "sliceId": "strategic-ai-neutral-town-post-capture-garrison-10184",
     "status": "completed",
-    "updatedAt": "2026-05-31T03:25:00Z",
-    "summary": "Completed. Same-turn commander task planning now happens before town construction, and town build scoring explicitly rewards objective-supporting infrastructure for planned commander tasks; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-31T04:00:00Z",
+    "summary": "Completed. AI neutral-town expansion now stations the capturing host as town garrison/defender, marks the field raid resolved, and keeps the commander active on town-defense duty; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-31T03:25:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:00:00Z",
   "validationHistory": [
     {
       "status": "pass",
