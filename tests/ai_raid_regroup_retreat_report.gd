@@ -19,6 +19,9 @@ func _run() -> void:
 	var resource_support_case := _resource_front_risk_requests_support()
 	if resource_support_case.is_empty():
 		return
+	var resource_consolidation_case := _resource_front_support_consolidates_into_capture_ready_host()
+	if resource_consolidation_case.is_empty():
+		return
 	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
 	if unreachable_route_case.is_empty():
 		return
@@ -35,10 +38,11 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_support_failed_regroups_rebuild_and_commander_risk_tolerance_shapes_live_gates",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_and_commander_risk_tolerance_shapes_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
+		"resource_consolidation_case": resource_consolidation_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
 		"failed_regroup_case": failed_regroup_case,
@@ -312,6 +316,98 @@ func _resource_front_risk_requests_support() -> Dictionary:
 		"support_target_id": String(support_plan.get("target_placement_id", "")),
 		"support_reason_codes": support_reason_codes,
 		"support_strength_gap": int(support_plan.get("support_strength_gap", 0)),
+	}
+
+func _resource_front_support_consolidates_into_capture_ready_host() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	var leader := _fragile_resource_claim_raid(session)
+	leader["target_reason_codes"] = ["resource_risk_staging", "awaiting_support", "site_contested", "persistent_income_denial"]
+	leader["target_public_reason"] = "gathering strength for resource claim"
+	var before_report := EnemyAdventureRules.resource_arrival_ready_report(session, leader, MIRECLAW, config)
+	if bool(before_report.get("ready", true)):
+		_fail("Resource-front consolidation fixture should start below capture readiness: %s" % JSON.stringify(before_report))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	var leader_index := encounters.size()
+	encounters.append(leader)
+	session.overworld["encounters"] = encounters
+	var support_probe := _regroup_probe_raid(session, "hero_sable", "resource_support_sable_merge", {"x": 9, "y": 1})
+	var support := support_probe.duplicate(true)
+	support.merge({
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_reason_codes": ["active_front_support", "army_consolidation", "site_contested", "resource_risk_staging"],
+		"target_public_reason": "reinforcing active front",
+		"target_public_importance": "high",
+		"supporting_front_placement_id": "resource_risk_vaska",
+	}, true)
+	support["enemy_army"] = {
+		"id": "resource_support_merge_host",
+		"name": "Resource Support Merge Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": 4}],
+	}
+	support = EnemyAdventureRules.ensure_raid_army(support, session)
+	encounters = session.overworld.get("encounters", [])
+	encounters.append(support)
+	session.overworld["encounters"] = encounters
+	var leader_before_strength := EnemyAdventureRules.raid_strength(leader)
+	var support_strength := EnemyAdventureRules.raid_strength(support)
+	var grouping_result := EnemyAdventureRules.group_nearby_raids_for_town_assault(
+		session,
+		config,
+		session.overworld.get("encounters", []),
+		leader_index,
+		leader,
+		MIRECLAW,
+		session.overworld.get("resolved_encounters", [])
+	)
+	if not bool(grouping_result.get("grouped", false)):
+		_fail("Resource-front support did not consolidate into the lead host: %s" % JSON.stringify(grouping_result))
+		return {}
+	var grouped: Dictionary = grouping_result.get("encounter", {})
+	var grouped_strength := EnemyAdventureRules.raid_strength(grouped)
+	if grouped_strength <= leader_before_strength:
+		_fail("Resource-front grouping did not increase lead host strength: leader=%d support=%d grouped=%d" % [leader_before_strength, support_strength, grouped_strength])
+		return {}
+	if int(grouped.get("grouped_support_count", 0)) < 1:
+		_fail("Resource-front grouping did not record support consolidation: %s" % JSON.stringify(grouped))
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "resource_support_sable_merge" not in resolved:
+		_fail("Grouped resource-front support was not removed from active pressure: %s" % JSON.stringify(resolved))
+		return {}
+	var event_types := _event_types(grouping_result.get("events", []))
+	if "ai_raid_grouped" not in event_types:
+		_fail("Resource-front grouping did not emit ai_raid_grouped: %s" % JSON.stringify(grouping_result.get("events", [])))
+		return {}
+	var after_report := EnemyAdventureRules.resource_arrival_ready_report(session, grouped, MIRECLAW, config)
+	if not bool(after_report.get("ready", false)):
+		_fail("Merged resource-front host still failed capture readiness: %s" % JSON.stringify(after_report))
+		return {}
+	grouped["arrived"] = true
+	var arrival_result := EnemyAdventureRules._resolve_arrived_target(session, grouped, state, MIRECLAW, config)
+	if String(_resource_controller(session, "river_free_company")) != MIRECLAW:
+		_fail("Merged resource-front host did not seize the resource: %s" % JSON.stringify(arrival_result))
+		return {}
+	return {
+		"case_id": "resource_front_support_consolidates_into_capture_ready_host",
+		"leader_strength_before": leader_before_strength,
+		"support_strength": support_strength,
+		"grouped_strength": grouped_strength,
+		"ready_before": bool(before_report.get("ready", true)),
+		"ready_after": bool(after_report.get("ready", false)),
+		"resolved_support_id": "resource_support_sable_merge",
+		"group_event_types": event_types,
+		"resource_controller_after_capture": _resource_controller(session, "river_free_company"),
 	}
 
 func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:

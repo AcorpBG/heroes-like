@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-live-commander-role-adoption-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-resource-front-support-consolidation-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:20:16Z",
+  "updatedAt": "2026-05-30T23:30:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30926,6 +30926,80 @@
         "This is a live strategic-AI behavior change, not a report-only audit.",
         "Full strategic AI production readiness remains open for broader generated-map long-run behavior, economy timing, coordinated multi-front doctrine, and live-client pacing."
       ]
+    },
+    {
+      "id": "strategic-ai-resource-front-support-consolidation-10184",
+      "title": "Strategic AI Resource Front Support Consolidation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner direction to prioritize production-ready strategic AI behavior over reports/audits",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Resource-front support requested by strategic AI becomes live consolidation: nearby support hosts targeting the same contested resource merge into the lead host, close support tasks, emit public grouping events, and improve capture readiness.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Contested resource fronts that request active support can consolidate adjacent support hosts through the same live turn grouping path as towns/encounters/heroes, preserve public event boundaries, retire grouped support correctly, and use the merged strength to satisfy resource capture readiness.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new report-only gates",
+        "battle balance tuning",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T23:23:55Z",
+      "updatedAt": "2026-05-30T23:30:32Z",
+      "completedAt": "2026-05-30T23:30:32Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Resource-front support now consolidates into the lead host, flips capture readiness from false to true, emits ai_raid_grouped, removes the support column from active pressure, and seizes Riverwatch Free Company."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn",
+          "result": "pass",
+          "summary": "Encounter active-front support grouping still works, shared-front reservation prevents overcommit, and the leader/support task lifecycle resolves from actual grouping/arrival outcomes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+          "result": "pass",
+          "summary": "Ready commanders still reserve distinct live resource targets when no active front needs support."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner role adoption and commander fit behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute and complete reserved commander resource tasks."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "pass",
+          "summary": "Saved-task commander spawn selection remains compatible with the support-precedence change."
+        }
+      ],
+      "summary": "Completed. Resource-targeted support hosts can now consolidate through the live grouping path, resource grouping emits the same public ai_raid_grouped event family, support columns close out of active pressure, and active-front support now outranks opportunistic live target selection while saved commander tasks still take precedence.",
+      "notes": [
+        "This is a live strategic-AI behavior change, not a report-only audit.",
+        "Full strategic AI production readiness remains open for broader generated-map long-run behavior, economy timing, coordinated multi-front doctrine, stronger retreat/rebuild pacing, and live-client pacing."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -41314,23 +41388,23 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:20:16Z",
-    "sliceId": "strategic-ai-live-commander-role-adoption-10184",
+    "updatedAt": "2026-05-30T23:30:32Z",
+    "sliceId": "strategic-ai-resource-front-support-consolidation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (pass)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (pass)",
       "python3 tests/validate_repo.py (pass)",
       "jq empty ops/progress.json (pass)",
       "git diff --check (pass)"
     ],
-    "summary": "Live commander-role adoption and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
+    "summary": "Resource-front support consolidation and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-30T23:20:16Z",
+  "currentSliceUpdatedAt": "2026-05-30T23:30:32Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44286,34 +44360,35 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:20:16Z",
-    "sliceId": "strategic-ai-live-commander-role-adoption-10184",
+    "updatedAt": "2026-05-30T23:30:32Z",
+    "sliceId": "strategic-ai-resource-front-support-consolidation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Strategic planner assignments now persist compact commander_role_state on commander roster entries.",
-        "Runtime target assignment now adopts live commander role state for the assigned target and source policy.",
-        "Planned task source roles now follow task purpose instead of being hard-coded as raider.",
-        "Future commander task fit scoring now rewards live role/front continuity.",
-        "Saved and live task targets now outrank generic active-front support after urgent town retake logic."
+        "Resource target kind is now accepted by the live front grouping path.",
+        "Resource-front grouping builds public target metadata and site-contested reason codes.",
+        "Grouped resource support columns close out of active pressure through resolved_encounters.",
+        "Merged resource-front strength can satisfy resource capture readiness and immediately seize the contested resource.",
+        "Active-front support now outranks opportunistic live target selection while saved commander tasks still take precedence."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "planner_actor_id": "hero_mireclaw_kessa_chainboom",
-        "runtime_primary_actor_id": "hero_vaska",
-        "runtime_companion_actor_id": "hero_sable",
-        "source_policy": "live_target_assignment",
-        "continuity_scoring": "same target fit beats rival fit"
+        "leader_id": "resource_risk_vaska",
+        "support_id": "resource_support_sable_merge",
+        "target_id": "river_free_company",
+        "ready_before": false,
+        "ready_after": true,
+        "controller_after_capture": "faction_mireclaw"
       },
       "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full long-run generated-map strategic-AI matrix remains open, and live-client pacing/manual play remains needed.",
       "policy": "Live strategic AI behavior slice; no report-only gate creation, campaign production, or production-ready claim."

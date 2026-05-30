@@ -289,7 +289,7 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 		return {}
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
-	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "completed", "valid")
 	_assert_task_status(session, "hero_sable", "encounter", OBJECTIVE_ENCOUNTER_ID, "completed", "valid")
 	if _failed:
 		return {}
