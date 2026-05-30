@@ -7068,11 +7068,15 @@ static func _ai_hero_task_reconciled_live_task(
 	task: Dictionary
 ) -> Dictionary:
 	var status := String(task.get("task_status", ""))
-	if status not in ["planned", "reserved", "active"]:
+	if status not in ["planned", "reserved", "active", "suspended"]:
 		return task
 	var actor_status_task := _ai_hero_task_reconcile_actor(session, faction_id, task)
 	if not _ai_hero_task_records_equal(actor_status_task, task):
 		return actor_status_task
+	if status == "suspended":
+		if not _ai_hero_task_actor_can_resume(session, faction_id, task):
+			return task
+		task = _ai_hero_task_with_lifecycle(task, "planned", "valid")
 	var expires_day := int(task.get("expires_day", 0))
 	if expires_day > 0 and expires_day < int(session.day):
 		return _ai_hero_task_with_lifecycle(task, "cancelled", "invalid_task_expired")
@@ -7105,6 +7109,24 @@ static func _ai_hero_task_reconcile_actor(
 	if not commander_can_deploy(entry):
 		return _ai_hero_task_with_lifecycle(task, "suspended", "invalid_actor_rebuilding")
 	return task
+
+static func _ai_hero_task_actor_can_resume(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary
+) -> bool:
+	if String(task.get("actor_kind", "commander_roster")) != "commander_roster":
+		return false
+	var actor_id := String(task.get("actor_id", ""))
+	if actor_id == "":
+		return false
+	var roster := commander_roster_for_faction(session, faction_id)
+	var entry := _commander_roster_entry(roster, actor_id)
+	if entry.is_empty():
+		return false
+	if _normalize_commander_status(entry.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
+		return false
+	return commander_can_deploy(entry)
 
 static func _ai_hero_task_reconciled_resource_task(
 	session: SessionStateStoreScript.SessionData,
