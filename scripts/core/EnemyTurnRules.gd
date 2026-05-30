@@ -787,10 +787,11 @@ static func _run_empire_cycle(
 				state["posture"] = "raiding"
 				return {"state": state, "messages": messages, "events": events}
 			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
+			_append_event_records(events, intercept_result.get("events", []))
+			var intercept_message = String(intercept_result.get("message", ""))
+			if intercept_message != "":
+				messages.append(intercept_message)
 			if bool(intercept_result.get("battle_started", false)):
-				var intercept_message = String(intercept_result.get("message", ""))
-				if intercept_message != "":
-					messages.append(intercept_message)
 				state["posture"] = "raiding"
 				return {"state": state, "messages": messages, "events": events}
 			state["posture"] = "raiding"
@@ -872,10 +873,11 @@ static func _run_empire_cycle(
 		return {"state": state, "messages": messages, "events": events}
 
 	var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
+	_append_event_records(events, intercept_result.get("events", []))
+	var intercept_message = String(intercept_result.get("message", ""))
+	if intercept_message != "":
+		messages.append(intercept_message)
 	if bool(intercept_result.get("battle_started", false)):
-		var intercept_message = String(intercept_result.get("message", ""))
-		if intercept_message != "":
-			messages.append(intercept_message)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
@@ -1770,10 +1772,37 @@ static func _queue_hero_intercept_battle(
 	var hero_id := String(hero.get("id", ""))
 	if hero_id == "":
 		return {}
+	var encounters = session.overworld.get("encounters", [])
+	var readiness_report := _hero_intercept_ready_report(session, encounter, hero)
+	if not bool(readiness_report.get("ready", false)):
+		var previous_target := _raid_target_snapshot(encounter)
+		encounter = EnemyAdventureRulesScript.redirect_hero_intercept_for_risk(
+			session,
+			config,
+			encounter,
+			faction_id,
+			readiness_report
+		)
+		encounters[encounter_index] = encounter
+		session.overworld["encounters"] = encounters
+		var assignment_event := EnemyAdventureRulesScript.ai_target_assignment_event(session, config, encounter, previous_target)
+		if assignment_event.is_empty():
+			assignment_event = EnemyAdventureRulesScript.ai_target_assignment_event(session, config, encounter, {})
+		var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
+		return {
+			"battle_started": false,
+			"risk_gated": true,
+			"readiness_report": readiness_report,
+			"events": [assignment_event] if not assignment_event.is_empty() else [],
+			"message": (
+				"%s shadows %s while gathering strength." % [commander_name, String(hero.get("name", "the hero"))]
+				if commander_name != ""
+				else "%s shadows %s while gathering strength." % [String(config.get("label", faction_id)), String(hero.get("name", "the hero"))]
+			),
+		}
 	var switch_result: Dictionary = HeroCommandRulesScript.set_active_hero(session, hero_id)
 	if not bool(switch_result.get("ok", false)):
 		return {}
-	var encounters = session.overworld.get("encounters", [])
 	encounter["battle_context"] = {
 		"type": "hero_intercept",
 		"target_hero_id": hero_id,
@@ -1796,6 +1825,27 @@ static func _queue_hero_intercept_battle(
 			if commander_name != ""
 			else "%s cuts off %s in the field." % [String(config.get("label", faction_id)), String(hero.get("name", "the hero"))]
 		),
+	}
+
+static func _hero_intercept_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	hero: Dictionary
+) -> Dictionary:
+	var hunter_strength := EnemyAdventureRulesScript.raid_strength(encounter)
+	var desired_strength := EnemyAdventureRulesScript.desired_raid_strength(encounter)
+	var hero_strength := _army_strength(hero.get("army", {}).get("stacks", []))
+	var desired_floor := int(round(float(desired_strength) * 0.65))
+	var hero_floor := int(round(float(hero_strength) * 0.85))
+	var required_strength: int = max(75, desired_floor, hero_floor)
+	var ready := hunter_strength >= required_strength
+	return {
+		"ready": ready,
+		"hunter_strength": hunter_strength,
+		"desired_strength": desired_strength,
+		"hero_strength": hero_strength,
+		"required_strength": required_strength,
+		"reason": "ready_for_hero_intercept" if ready else "hero_hunt_risk_regroup",
 	}
 
 static func _town_defense_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
@@ -1845,6 +1895,8 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
 		if String(encounter.get("target_kind", "")) != "hero":
+			continue
+		if int(encounter.get("hero_intercept_delay_until_day", 0)) > int(session.day):
 			continue
 		var hero = _find_player_hero(session, String(encounter.get("target_placement_id", "")))
 		if hero.is_empty() or _hero_is_sheltered_in_player_town(session, hero):

@@ -1540,6 +1540,45 @@ static func redirect_town_assault_for_risk(
 	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
 	return raid
 
+static func redirect_hero_intercept_for_risk(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	risk_report: Dictionary = {}
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) != "hero":
+		return raid
+	var strength := int(risk_report.get("hunter_strength", raid_strength(raid)))
+	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
+	var debug_reason := "hero intercept risk gate: strength %d below %d" % [strength, required]
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_public_reason"] = "stalking stronger hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = debug_reason
+	raid["hero_intercept_risk_started_day"] = int(session.day)
+	raid["hero_intercept_delay_until_day"] = int(session.day) + 1
+	raid["arrived"] = false
+	if not regroup_town.is_empty():
+		raid["target_kind"] = "regroup"
+		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
+		raid["target_reason_codes"] = ["hero_hunt_risk_regroup", "regroup_understrength", "army_consolidation", "hero_hunt"]
+		raid["hero_hunt_regroup_started_day"] = int(session.day)
+		return _refresh_target(session, raid)
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for code in ["hero_hunt_risk_shadow", "awaiting_support", "hero_hunt"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	raid["target_reason_codes"] = reason_codes
+	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
+	return raid
+
 static func _redirect_raid_to_threatened_town_defense(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,

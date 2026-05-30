@@ -2,6 +2,7 @@
 
 Task: #10184
 Slice: `strategic-ai-hero-hunt-task-board-10184`
+Follow-up slice: `strategic-ai-hero-intercept-risk-gating-10184`
 
 ## Purpose
 
@@ -15,6 +16,8 @@ Make exposed player-hero hunt targets durable strategic AI tasks instead of tran
 - Missing player-hero targets invalidate through task lifecycle reconciliation.
 - Queued hero-intercept battles complete the matching active hero-hunt task.
 - Hero hunt target candidates now carry public reason codes for exposed hero pressure.
+- Hero-intercept execution now uses a live readiness gate before queueing `hero_intercept`: weak hunters retask to regroup or shadow with `hero_hunt_risk_regroup` / `hero_hunt_risk_shadow` instead of completing the hunt task through a suicide battle.
+- The follow-up report case `weak_hero_hunt_regroups_before_intercept` proves an underpowered Vaska hunt host reaches Lyra's tile but does not start `session.battle`, while a reinforced hunt host still queues and closes `hero_intercept`.
 
 Focused runtime report:
 
