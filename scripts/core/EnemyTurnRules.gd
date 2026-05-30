@@ -1548,9 +1548,10 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 	var raid_counter = int(state.get("raid_counter", 0))
 	var faction_id := String(config.get("faction_id", ""))
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
-	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id(
+	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
 		session,
 		faction_id,
+		spawn_point,
 		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
 		state.get("commander_roster", [])

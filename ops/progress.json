@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-task-resumption-10184",
-  "currentSliceTitle": "Strategic AI Task Resumption",
+  "currentSliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+  "currentSliceTitle": "Strategic AI Spawn Saved-Task Commander Selection",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Started. This slice makes suspended task state recoverable instead of a permanent dead end after commander recovery or rebuild.",
+  "currentSliceNotes": "Started. This slice makes durable saved task state influence live commander deployment, not just post-spawn target selection.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T13:32:00Z",
+  "updatedAt": "2026-05-30T14:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27413,6 +27413,62 @@
           "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
         }
       }
+    },
+    {
+      "id": "strategic-ai-spawn-saved-task-commander-selection-10184",
+      "title": "Strategic AI Spawn Saved-Task Commander Selection",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after task resumption; close the live spawn path gap so saved tasks influence which commander deploys, not only where an already-picked raid goes",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused strategic AI Godot report",
+        "docs strategic AI spawn commander selection report",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy raid spawning prefers an available/deployable commander with a reachable saved strategic hero task before falling back to existing commander rotation. The chosen spawned raid then reuses that saved task through normal target assignment and persists the active task board without a save-version migration. Focused runtime tests prove saved-task commander preference, fallback rotation for unavailable/no-task commanders, public event safety, and existing task lifecycle reports still pass.",
+      "startedAt": "2026-05-30T13:46:00Z",
+      "updatedAt": "2026-05-30T14:02:00Z",
+      "notes": "Completed. Raid spawning now prefers deployable commanders with reachable saved strategic tasks before falling back to the existing roster rotation.",
+      "completedAt": "2026-05-30T14:02:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T14:02:00Z",
+        "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+            "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+            "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+            "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+            "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-spawn-commander-selection-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -34432,6 +34488,53 @@
           "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
         }
       }
+    },
+    {
+      "id": "strategic-ai-spawn-saved-task-commander-selection-10184",
+      "title": "Strategic AI Spawn Saved-Task Commander Selection",
+      "completedAt": "2026-05-30T14:02:00Z",
+      "summary": "Completed. Enemy raid spawning now deploys an available commander with reachable saved strategic work ahead of the normal roster rotation, then uses the normal assignment path to reuse and persist that task.",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "docs/strategic-ai-spawn-commander-selection-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T14:02:00Z",
+        "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+            "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+            "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+            "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+            "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-spawn-commander-selection-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -37234,9 +37337,10 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T13:32:00Z",
-    "sliceId": "strategic-ai-task-resumption-10184",
+    "updatedAt": "2026-05-30T14:02:00Z",
+    "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
@@ -37248,23 +37352,23 @@
     ],
     "evidence": {
       "implemented": [
-        "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
-        "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
-        "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
-        "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
-        "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+        "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+        "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+        "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+        "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+        "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-resumption-report.md"
+        "docs/strategic-ai-spawn-commander-selection-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+      "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T13:32:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T14:02:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39760,34 +39864,13 @@
         "saveVersion": 9,
         "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-task-resumption-10184",
-    "title": "Strategic AI Task Resumption",
-    "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after actor lifecycle reconciliation",
-    "planRef": "PLAN.md Current strategic AI target",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "focused strategic AI Godot report",
-      "docs strategic AI task resumption report",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Suspended saved strategic AI tasks reactivate when their commander is again present and deployable, then run through the same target lifecycle checks before reuse. Focused runtime tests prove deployable commanders resume valid saved objectives, still-unavailable commanders remain suspended, and stale resumed tasks still complete/invalidate correctly. Validation passes and no save-version migration is introduced.",
-    "startedAt": "2026-05-30T13:05:00Z",
-    "updatedAt": "2026-05-30T13:32:00Z",
-    "notes": "Completed. Suspended saved strategic AI tasks now resume only when their commander is again deployable, and resumed work still expires, completes, or invalidates through the normal lifecycle before reuse.",
-    "completedAt": "2026-05-30T13:32:00Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T13:32:00Z",
-      "sliceId": "strategic-ai-task-resumption-10184",
+      "updatedAt": "2026-05-30T14:02:00Z",
+      "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
@@ -39799,27 +39882,84 @@
       ],
       "evidence": {
         "implemented": [
-          "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
-          "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
-          "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
-          "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
-          "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+          "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+          "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+          "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+          "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+          "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-hero-task-resumption-report.md"
+          "docs/strategic-ai-spawn-commander-selection-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+        "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-spawn-saved-task-commander-selection-10184",
+    "title": "Strategic AI Spawn Saved-Task Commander Selection",
+    "status": "completed",
+    "source": "continuation of owner strategic AI production-readiness goal after task resumption; close the live spawn path gap so saved tasks influence which commander deploys, not only where an already-picked raid goes",
+    "planRef": "PLAN.md Current strategic AI target",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md"
+    ],
+    "implementationTargets": [
+      "scripts/core/EnemyAdventureRules.gd",
+      "scripts/core/EnemyTurnRules.gd",
+      "focused strategic AI Godot report",
+      "docs strategic AI spawn commander selection report",
+      "tests/validate_repo.py",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Enemy raid spawning prefers an available/deployable commander with a reachable saved strategic hero task before falling back to existing commander rotation. The chosen spawned raid then reuses that saved task through normal target assignment and persists the active task board without a save-version migration. Focused runtime tests prove saved-task commander preference, fallback rotation for unavailable/no-task commanders, public event safety, and existing task lifecycle reports still pass.",
+    "startedAt": "2026-05-30T13:46:00Z",
+    "updatedAt": "2026-05-30T14:02:00Z",
+    "notes": "Completed. Raid spawning now prefers deployable commanders with reachable saved strategic tasks before falling back to the existing roster rotation.",
+    "completedAt": "2026-05-30T14:02:00Z",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T14:02:00Z",
+      "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+          "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+          "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+          "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+          "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-spawn-commander-selection-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T13:32:00Z",
-    "sliceId": "strategic-ai-task-resumption-10184",
+    "updatedAt": "2026-05-30T14:02:00Z",
+    "sliceId": "strategic-ai-spawn-saved-task-commander-selection-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
@@ -39831,19 +39971,19 @@
     ],
     "evidence": {
       "implemented": [
-        "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
-        "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
-        "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
-        "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
-        "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+        "Enemy raid spawning now uses saved-task-aware commander selection before building the raid commander state.",
+        "Deployable commanders with reachable saved strategic tasks are preferred over normal roster rotation.",
+        "Still-recovering or rebuilding commanders with saved tasks remain ineligible for spawn selection.",
+        "When a saved-task commander is spawned, normal target assignment reuses the saved target and persists the active task board.",
+        "Existing saved-task lifecycle, actor lifecycle, resumption, live target selection, and live turn execution reports remain green."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-resumption-report.md"
+        "docs/strategic-ai-spawn-commander-selection-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+      "residualRisk": "This slice makes saved task state affect live commander deployment; full release-ready strategic AI still needs long-run generated-map quality, deeper army grouping, better defense/retreat policy, and broader objective planning evidence."
     }
   }
 }
