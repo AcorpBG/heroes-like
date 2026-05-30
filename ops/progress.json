@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "battle-layout-smoke-followup-10184",
-  "currentSliceTitle": "Battle Layout Smoke Followup",
+  "currentSliceId": "strategic-ai-quality-pass-10184",
+  "currentSliceTitle": "Strategic AI Quality Pass",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed battle presentation runtime event stream and speed-control slice.",
+  "currentSliceNotes": "Implemented strategic AI baseline KPI audit: fast existing-evidence capability summary, Native RMG turn-health coverage rows, production blocker rows, and focused Godot report. Validation: strategic_ai_baseline_kpi_report.tscn, validate_repo.py, jq empty, git diff --check passed; full headless harness was attempted but exceeded practical wait and was stopped.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T10:07:18Z",
+  "updatedAt": "2026-05-30T11:32:23Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24895,41 +24895,70 @@
     {
       "id": "strategic-ai-quality-pass-10184",
       "title": "Strategic AI Quality Pass",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
       "planRef": "PLAN.md Selectable Near-Term Work",
-      "purpose": "Improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.",
+      "purpose": "Establish a strategic AI baseline KPI audit before behavior tuning: summarize current live evidence, identify production blockers, and select the next highest-value strategic AI slice.",
       "sourceDocs": [
         "project.md",
-        "PLAN.md"
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md"
       ],
       "implementationTargets": [
-        "scripts/core/EnemyTurnRules.gd",
-        "scripts/core/EnemyAdventureRules.gd",
-        "strategic AI reports"
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_baseline_kpi_report.gd",
+        "tests/strategic_ai_baseline_kpi_report.tscn",
+        "docs/strategic-ai-baseline-kpi-report.md"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "completionCriteria": "Baseline KPI report emits capability rows, Native RMG coverage gaps, blocker rows, next-slice recommendations, and no production-ready claim; focused report and repository validation pass.",
       "nonGoals": [
         "campaign production unless explicitly selected",
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
       "validation": {
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "status": "passed",
+        "updatedAt": "2026-05-30T11:32:23Z",
         "sliceId": "strategic-ai-quality-pass-10184",
-        "commands": [],
-        "evidence": {}
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "report_id": "STRATEGIC_AI_BASELINE_KPI_REPORT",
+          "schema_id": "strategic_ai_baseline_kpi_report_v1",
+          "production_ready": false,
+          "covered_subsystem_count": 14,
+          "broad_multi_scenario_case_count": 4,
+          "rmg_case_count": 3,
+          "blockers": [
+            "native_rmg_small_ai_turn_probe_coverage",
+            "native_rmg_medium_ai_generalization",
+            "no_persistent_full_hero_task_board",
+            "no_long_run_seed_matrix"
+          ],
+          "recommended_next_slices": [
+            "strategic-ai-persistent-hero-task-board-10184",
+            "strategic-ai-rmg-medium-generalization-probe-10184",
+            "strategic-ai-long-run-seed-matrix-10184"
+          ],
+          "full_headless_harness_attempt": "attempted and stopped after exceeding practical wait; existing full harness remains extended validation, not the focused KPI smoke"
+        }
       },
-      "summary": "Pending. Improve enemy recruiting, grouping, town defense, objective selection, retreat, and map pressure using live scenario evidence.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "summary": "Completed. Added strategic AI baseline KPI audit with fast existing-evidence capability summary, Native RMG turn-health coverage rows, production blocker rows, and focused Godot report.",
+      "updatedAt": "2026-05-30T11:32:23Z",
+      "startedAt": "2026-05-30T11:09:19Z",
+      "notes": "Implemented strategic AI baseline KPI audit: fast existing-evidence capability summary, Native RMG turn-health coverage rows, production blocker rows, and focused Godot report. Validation: strategic_ai_baseline_kpi_report.tscn, validate_repo.py, jq empty, git diff --check passed; full headless harness was attempted but exceeded practical wait and was stopped.",
+      "completedAt": "2026-05-30T11:32:23Z"
     },
     {
       "id": "rmg-small-generalization-hardening-10184",
