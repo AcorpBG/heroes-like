@@ -26,9 +26,10 @@ func _run() -> void:
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "hero_hunt_tasks_are_durable_with_support_grouping_and_stall_withdrawal",
-		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
+		"schema_status": "hero_hunt_tasks_are_durable_with_support_grouping_stall_withdrawal_and_battle_outcomes",
+		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_stall_withdrawal_and_battle_outcome_lifecycle",
 		"behavior_policy_previous": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
+		"behavior_policy_previous_stall": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
@@ -115,23 +116,28 @@ func _hero_hunt_task_board_case() -> Dictionary:
 	if String(battle_context.get("type", "")) != "hero_intercept" or String(battle_context.get("target_hero_id", "")) != hero_id:
 		_fail("Hero hunt queued wrong battle context: %s" % JSON.stringify(battle_context))
 		return {}
-	_assert_task_status(session, "hero_vaska", "hero", hero_id, "completed", "valid")
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "active", "valid")
 	if _failed:
 		return {}
-	EnemyTurnRules.normalize_enemy_states(session)
-	_assert_task_status(session, "hero_vaska", "hero", hero_id, "completed", "valid")
+	_defeat_battle_side(session, "enemy")
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		_fail("Hero hunt battle defeat fixture did not resolve as player victory: %s" % JSON.stringify(outcome))
+		return {}
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "failed", "invalid_battle_defeat")
 	if _failed:
 		return {}
 
 	var final_task_state := _task_state(session)
 	return {
-		"case_id": "hero_hunt_assigns_reuses_follows_and_closes_task",
+		"case_id": "hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome",
 		"target_kind": String(saved_plan.get("target_kind", "")),
 		"target_id": String(saved_plan.get("target_placement_id", "")),
 		"reason_codes": reason_codes,
 		"first_target": {"x": first_tile.x, "y": first_tile.y},
 		"moved_target": {"x": second_tile.x, "y": second_tile.y},
 		"battle_context_type": String(battle_context.get("type", "")),
+		"battle_outcome": String(outcome.get("state", "")),
 		"task_status_counts": _task_status_counts(final_task_state),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -521,6 +527,16 @@ func _assert_task_status(session, actor_id: String, target_kind: String, target_
 				_fail("Task %s/%s/%s expected %s/%s, got %s" % [actor_id, target_kind, target_id, expected_status, expected_validation, JSON.stringify(task)])
 			return
 	_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(task_state)])
+
+func _defeat_battle_side(session, side: String) -> void:
+	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+			continue
+		stack["total_health"] = 0
+		stacks[index] = stack
+	session.battle["stacks"] = stacks
 
 func _move_player_hero(session, hero_id: String, tile: Vector2i) -> void:
 	var heroes: Array = session.overworld.get("player_heroes", [])

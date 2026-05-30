@@ -89,6 +89,15 @@ func _river_pass_retake_front_queues_town_battle() -> Dictionary:
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
 	_assert_saved_task_state(session)
+	_assert_task_status(session, "hero_vaska", "town", "duskfen_bastion", "active", "valid")
+	if _failed:
+		return {}
+	_defeat_battle_side(session, "player")
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) not in ["town_lost", "defeat"]:
+		_fail("Retake assault battle fixture did not resolve as town loss: %s" % JSON.stringify(outcome))
+		return {}
+	_assert_task_status(session, "hero_vaska", "town", "duskfen_bastion", "completed", "valid")
 	if _failed:
 		return {}
 	return {
@@ -99,6 +108,7 @@ func _river_pass_retake_front_queues_town_battle() -> Dictionary:
 		"arrived": bool(after_raid.get("arrived", false)),
 		"battle_context_type": String(battle_context.get("type", "")),
 		"battle_town_id": String(battle_context.get("town_placement_id", "")),
+		"battle_outcome": String(outcome.get("state", "")),
 		"live_selector_target_kind": String(live_plan.get("target_kind", "")),
 		"live_selector_target_id": String(live_plan.get("target_placement_id", "")),
 		"event_types": event_types,
@@ -366,6 +376,32 @@ func _assert_saved_task_state(session) -> void:
 		if state is Dictionary and String(state.get("faction_id", "")) == MIRECLAW and state.has("hero_task_state"):
 			return
 	_fail("Retake assault did not persist hero_task_state.")
+
+func _assert_task_status(session, actor_id: String, target_kind: String, target_id: String, expected_status: String, expected_validation: String) -> void:
+	var task_state := {}
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == MIRECLAW:
+			task_state = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+			break
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	for task in tasks:
+		if not (task is Dictionary):
+			continue
+		if String(task.get("actor_id", "")) == actor_id and String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
+			if String(task.get("task_status", "")) != expected_status or String(task.get("last_validation", "")) != expected_validation:
+				_fail("Task %s/%s/%s expected %s/%s, got %s" % [actor_id, target_kind, target_id, expected_status, expected_validation, JSON.stringify(task)])
+			return
+	_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(task_state)])
+
+func _defeat_battle_side(session, side: String) -> void:
+	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+			continue
+		stack["total_health"] = 0
+		stacks[index] = stack
+	session.battle["stacks"] = stacks
 
 func _public_event_leaks(public_events: Variant) -> bool:
 	var forbidden_tokens := ["target_debug_reason", "hero_task_state", "task_id", "reservation_key", "garrison_score", "raid_score"]

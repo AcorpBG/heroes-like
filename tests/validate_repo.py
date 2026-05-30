@@ -14731,6 +14731,8 @@ def validate_ai_hero_task_lifecycle_reconciliation(errors: list[str]) -> None:
         ensure(path.exists(), errors, f"Missing AI hero task lifecycle reconciliation file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
     for required_token in (
         "func _ai_hero_task_reconcile_live_tasks_for_faction",
         "func _ai_hero_task_reconciled_live_task",
@@ -15191,6 +15193,7 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         ensure(path.exists(), errors, f"Missing AI hero task hero hunt file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
     for required_token in (
         'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         "func _player_hero_snapshot_for_task",
@@ -15205,12 +15208,27 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task hero hunt implementation is missing token: {required_token}")
     for required_token in (
         '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]',
-        'EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")',
         "func _hero_intercept_ready_report",
         "redirect_hero_intercept_for_risk",
         "hero_intercept_delay_until_day",
+        "invalid_battle_defeat",
+        "invalid_battle_withdrawal",
+        "battle_stalemate",
     ):
         ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
+    ensure(
+        'EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")' not in enemy_turn_text,
+        errors,
+        "AI hero intercept task lifecycle must not complete at battle queue time",
+    )
+    for required_token in (
+        "func _finish_enemy_battle_task_assignment",
+        '"failed", "invalid_battle_defeat"',
+        '"completed", "valid"',
+        '"suspended", "battle_stalemate"',
+        "invalid_battle_withdrawal",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"AI battle task outcome lifecycle is missing token: {required_token}")
     if AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.exists():
         report_text = AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
@@ -15219,10 +15237,12 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
             "hero_targets_use_saved_task_continuity_with_intercept_risk_gating",
             "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
             "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
-            "hero_hunt_assigns_reuses_follows_and_closes_task",
+            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_stall_withdrawal_and_battle_outcome_lifecycle",
+            "hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome",
             "weak_hero_hunt_regroups_before_intercept",
             "hero_hunt_support_groups_before_intercept",
             "stale_unsupported_hero_hunt_retires_to_rebuild",
+            "invalid_battle_defeat",
             "active_front_support",
             "ai_raid_grouped",
             "risk_support_timeout",
@@ -15244,7 +15264,9 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
             "strategic-ai-hero-intercept-risk-gating-10184",
             "strategic-ai-hero-hunt-support-grouping-10184",
             "strategic-ai-risk-stall-withdrawal-10184",
+            "strategic-ai-battle-task-outcome-lifecycle-10184",
             "player-hero hunt targets",
+            "`hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome`",
             "`weak_hero_hunt_regroups_before_intercept`",
             "`hero_hunt_support_groups_before_intercept`",
             "`stale_unsupported_hero_hunt_retires_to_rebuild`",

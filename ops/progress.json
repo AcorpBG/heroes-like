@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-risk-stall-withdrawal-10184",
-  "currentSliceTitle": "Strategic AI Risk Stall Withdrawal",
+  "currentSliceId": "strategic-ai-battle-task-outcome-lifecycle-10184",
+  "currentSliceTitle": "Strategic AI Battle Task Outcome Lifecycle",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:38:00Z",
+  "updatedAt": "2026-05-30T17:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28870,6 +28870,67 @@
           "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
         }
       }
+    },
+    {
+      "id": "strategic-ai-battle-task-outcome-lifecycle-10184",
+      "title": "Strategic AI Battle Task Outcome Lifecycle",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "owner-directed strategic AI quality pass",
+      "planRef": "PLAN.md Current product focus / Strategic AI quality follow-up",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "tests/ai_town_retake_assault_report.gd",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Hero-hunt and town-assault task status is derived from actual battle outcome, not battle queueing.",
+        "Enemy combat defeats fail or suspend the live assignment and enemy combat success completes it.",
+        "Commander recovery/rebuild lifecycle remains synchronized with task-board reservations without a save-version bump."
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T17:05:00Z",
+        "sliceId": "strategic-ai-battle-task-outcome-lifecycle-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Hero-intercept queueing no longer completes the matching hero-hunt task before combat is resolved.",
+            "Battle finalization now closes live enemy battle tasks from actual outcomes: enemy defeats fail assignments, enemy victories complete assignments, enemy withdrawals fail assignments, and stalemates suspend assignments.",
+            "The hero-task normalizer preserves battle-outcome validation codes across scenario evaluation and enemy-state normalization.",
+            "Focused hero-hunt and town-retake reports prove active tasks remain active at battle queue time and transition only after resolved battle outcome."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-hunt-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_TOWN_DEFENSE_RETASK_REPORT"
+          ],
+          "residualRisk": "This fixes battle-outcome task lifecycle for focused hero-hunt and town-retake battle surfaces. Full strategic AI release readiness still needs long-run generated-map behavior evidence, richer retreat doctrine, strategic economy timing, coordinated multi-front planning, and live-client pacing checks."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -39235,8 +39296,8 @@
       "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-risk-stall-withdrawal-10184",
-  "currentSliceUpdatedAt": "2026-05-30T16:38:00Z",
+  "active_slice": "strategic-ai-battle-task-outcome-lifecycle-10184",
+  "currentSliceUpdatedAt": "2026-05-30T17:05:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -42189,74 +42250,7 @@
       }
     }
   ],
-  "currentSlice": {
-    "id": "strategic-ai-risk-stall-withdrawal-10184",
-    "title": "Strategic AI Risk Stall Withdrawal",
-    "status": "completed",
-    "phase": "phase-5-playable-alpha-baseline",
-    "classification": "implementation_slice",
-    "source": "active goal to implement production-ready strategic AI behavior, not only focused harness reports; risk-gated commanders need a terminal preservation decision when support/regroup is unavailable",
-    "planRef": "PLAN.md Current strategic AI follow-up / retreat judgment and coordinated planning gap",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md",
-      "docs/strategic-ai-hero-hunt-task-board-report.md",
-      "docs/strategic-ai-hero-intercept-risk-gating-report.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_hero_task_hero_hunt_report.gd",
-      "docs/strategic-ai-hero-hunt-task-board-report.md",
-      "tests/validate_repo.py",
-      "PLAN.md",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "A commander stalled on a risky town, hero, or guarded-encounter front without a reachable regroup town or committed support must preserve its army continuity, resolve the active raid, suspend the matching task as rebuilding, and stop applying map pressure instead of looping as awaiting-support forever; existing risk gates and support grouping must remain intact without a save-version bump.",
-    "nonGoals": [
-      "No full strategic AI release-readiness claim",
-      "No campaign AI work",
-      "No broad report-only gate"
-    ],
-    "startedAt": "2026-05-30T16:35:02Z",
-    "updatedAt": "2026-05-30T16:38:00Z",
-    "notes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
-    "completedAt": "2026-05-30T16:38:00Z",
-    "validation": {
-      "status": "pass",
-      "updatedAt": "2026-05-30T16:38:00Z",
-      "sliceId": "strategic-ai-risk-stall-withdrawal-10184",
-      "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "python3 -m py_compile tests/validate_repo.py (passed)",
-        "python3 tests/validate_repo.py (passed)",
-        "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)"
-      ],
-      "evidence": {
-        "implemented": [
-          "Town, hero, and guarded-encounter risk redirects now preserve their original risk-start day instead of resetting the wait timer each turn.",
-          "Risk-gated fronts with no regroup town and no committed support retire into commander rebuild after the support timeout, preserving army continuity and resolving the active raid.",
-          "Hero-hunt runtime evidence proves a stale unsupported hunter does not queue battle, emits a retarget event, suspends the live hero task as rebuilding, and stops being an active pressure encounter."
-        ],
-        "sourceDocs": [
-          "PLAN.md",
-          "docs/strategic-ai-hero-hunt-task-board-report.md"
-        ],
-        "savePolicy": "hero_task_state_live_persist_no_save_migration",
-        "saveVersion": 9,
-        "focusedReports": [
-          "AI_HERO_TASK_HERO_HUNT_REPORT",
-          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_TOWN_RETAKE_ASSAULT_REPORT",
-          "AI_RAID_REGROUP_RETREAT_REPORT"
-        ],
-        "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
-      }
-    }
-  },
+  "currentSlice": "strategic-ai-battle-task-outcome-lifecycle-10184 [completed]",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-30T16:23:51Z",
