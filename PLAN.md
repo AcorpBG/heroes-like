@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-adventure-objective-progression-10184`, completed to make successful AI adventure-map objectives advance commander progression instead of only changing map/task state.
+- Current implementation slice: `strategic-ai-commander-assault-consolidation-10184`, completed to make nearby commander-led town assault hosts consolidate into one stronger attack while preserving donor commander lifecycle.
+- Latest completed slice: `strategic-ai-commander-assault-consolidation-10184`.
 - Latest completed slice: `strategic-ai-adventure-objective-progression-10184`.
 - Latest completed slice: `strategic-ai-town-defender-lifecycle-10184`.
 - Latest completed slice: `strategic-ai-town-defense-arrival-10184`.

@@ -958,12 +958,15 @@ static func group_nearby_raids_for_town_assault(
 		return {"encounter": leader, "grouped": false, "events": []}
 	var donor: Dictionary = encounters[donor_index]
 	var donor_id := String(donor.get("placement_id", ""))
+	var donor_has_commander := _raid_has_commander(donor)
 	var donor_strength := raid_strength(donor)
 	var before_strength := raid_strength(leader)
 	leader = ensure_raid_army(leader, session)
 	leader["enemy_army"] = _merged_raid_army_payload(leader, donor)
 	leader["grouped_support_count"] = max(0, int(leader.get("grouped_support_count", 0))) + 1
 	leader["grouped_support_strength"] = max(0, int(leader.get("grouped_support_strength", 0))) + donor_strength
+	if donor_has_commander:
+		leader["grouped_commander_support_count"] = max(0, int(leader.get("grouped_commander_support_count", 0))) + 1
 	leader["last_grouped_support_placement_id"] = donor_id
 	leader["last_grouped_support_day"] = int(session.day)
 	var reason_codes := _normalize_string_array(leader.get("target_reason_codes", []))
@@ -985,6 +988,14 @@ static func group_nearby_raids_for_town_assault(
 	donor["grouped_into_target_id"] = town_id
 	donor["grouped_day"] = int(session.day)
 	donor["arrived"] = true
+	if donor_has_commander:
+		donor = _release_grouped_support_commander_to_rebuild_roster(
+			session,
+			faction_id,
+			donor,
+			leader_id
+		)
+		_ai_hero_task_finish_live_assignment(session, faction_id, donor, "completed", "valid")
 	encounters[donor_index] = donor
 	if donor_id != "" and donor_id not in resolved_encounters:
 		resolved_encounters.append(donor_id)
@@ -1036,6 +1047,8 @@ static func _best_nearby_assault_support_raid_index(
 	var best_index := -1
 	var best_strength := -1
 	var best_label := ""
+	var leader_strength := raid_strength(leader)
+	var leader_has_commander := _raid_has_commander(leader)
 	for index in range(encounters.size()):
 		if index == leader_index:
 			continue
@@ -1049,17 +1062,49 @@ static func _best_nearby_assault_support_raid_index(
 			continue
 		if String(donor.get("target_placement_id", "")) != town_id:
 			continue
-		if _raid_has_commander(donor):
-			continue
 		if _raid_tile_distance(leader, donor) > 1:
 			continue
 		var donor_strength := raid_strength(donor)
+		if _raid_has_commander(donor):
+			if not leader_has_commander:
+				continue
+			if donor_strength > leader_strength:
+				continue
 		var donor_label := _raid_name(donor)
 		if donor_strength > best_strength or (donor_strength == best_strength and donor_label < best_label):
 			best_index = index
 			best_strength = donor_strength
 			best_label = donor_label
 	return best_index
+
+static func _release_grouped_support_commander_to_rebuild_roster(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	donor: Dictionary,
+	leader_placement_id: String
+) -> Dictionary:
+	var updated_donor := donor.duplicate(true)
+	var commander_state = updated_donor.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return updated_donor
+	var donor_encounter_id := String(updated_donor.get("encounter_id", updated_donor.get("id", "")))
+	var released_commander := sync_commander_army_continuity(
+		commander_state,
+		{"stacks": []},
+		donor_encounter_id
+	)
+	released_commander["grouped_into_placement_id"] = leader_placement_id
+	released_commander["last_outcome"] = String(commander_state.get("last_outcome", released_commander.get("last_outcome", "")))
+	updated_donor["enemy_commander_state"] = released_commander
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		released_commander,
+		COMMANDER_STATUS_AVAILABLE,
+		"",
+		0
+	)
+	return updated_donor
 
 static func _maybe_cast_raid_adventure_movement_spell(
 	session: SessionStateStoreScript.SessionData,
@@ -2393,7 +2438,7 @@ static func sync_commander_state_to_roster(
 				entry["status"] = _normalize_commander_status(status_override)
 			if active_placement_id != "":
 				entry["active_placement_id"] = active_placement_id
-			elif status_override == COMMANDER_STATUS_RECOVERING:
+			elif status_override in [COMMANDER_STATUS_AVAILABLE, COMMANDER_STATUS_RECOVERING]:
 				entry["active_placement_id"] = ""
 			if status_override == COMMANDER_STATUS_ACTIVE and recovery_day < 0:
 				entry["recovery_day"] = 0
