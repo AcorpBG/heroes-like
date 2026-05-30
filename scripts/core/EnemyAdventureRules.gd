@@ -19,6 +19,11 @@ const COMMANDER_OUTCOME_PURSUIT_VICTORY := "pursuit_victory"
 const COMMANDER_OUTCOME_CAPITULATION := "capitulation"
 const COMMANDER_OUTCOME_ROUT_VICTORY := "rout_victory"
 const COMMANDER_OUTCOME_STALEMATE := "stalemate"
+const COMMANDER_OUTCOME_RESOURCE_SECURED := "resource_secured"
+const COMMANDER_OUTCOME_ARTIFACT_SECURED := "artifact_secured"
+const COMMANDER_OUTCOME_OBJECTIVE_SECURED := "objective_secured"
+const COMMANDER_OUTCOME_SITE_DEFENDED := "site_defended"
+const COMMANDER_OUTCOME_TOWN_DEFENDED := "town_defended"
 const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
 const COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY := 1
 const COMMANDER_EXPERIENCE_DEPLOYED := 90
@@ -29,6 +34,11 @@ const COMMANDER_EXPERIENCE_ROUT_VICTORY := 230
 const COMMANDER_EXPERIENCE_ASSAULT_VICTORY := 210
 const COMMANDER_EXPERIENCE_DEFEATED := 45
 const COMMANDER_EXPERIENCE_STALEMATE := 30
+const COMMANDER_EXPERIENCE_RESOURCE_SECURED := 70
+const COMMANDER_EXPERIENCE_ARTIFACT_SECURED := 100
+const COMMANDER_EXPERIENCE_OBJECTIVE_SECURED := 90
+const COMMANDER_EXPERIENCE_SITE_DEFENDED := 45
+const COMMANDER_EXPERIENCE_TOWN_DEFENDED := 65
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
@@ -1785,6 +1795,7 @@ static func normalize_commander_roster(
 			"deployments": max(0, int(record.get("deployments", 0))),
 			"battle_wins": max(0, int(record.get("battle_wins", 0))),
 			"times_defeated": max(0, int(record.get("times_defeated", 0))),
+			"strategic_successes": max(0, int(record.get("strategic_successes", 0))),
 			"renown": max(0, int(record.get("renown", 0))),
 			"target_memory": target_memory,
 			"army_continuity": commander_army_continuity(commander_state),
@@ -1843,7 +1854,8 @@ static func commander_record_summary(source: Variant) -> String:
 	var deployments: int = max(0, int(record.get("deployments", 0)))
 	var wins: int = max(0, int(record.get("battle_wins", 0)))
 	var defeats: int = max(0, int(record.get("times_defeated", 0)))
-	if deployments <= 0 and wins <= 0 and defeats <= 0:
+	var strategic_successes: int = max(0, int(record.get("strategic_successes", 0)))
+	if deployments <= 0 and wins <= 0 and defeats <= 0 and strategic_successes <= 0:
 		return ""
 	var parts := []
 	var veterancy := commander_veterancy_label(record)
@@ -1852,6 +1864,8 @@ static func commander_record_summary(source: Variant) -> String:
 	parts.append("%d raid%s" % [deployments, "" if deployments == 1 else "s"])
 	if wins > 0:
 		parts.append("%d win%s" % [wins, "" if wins == 1 else "s"])
+	if strategic_successes > 0:
+		parts.append("%d objective%s" % [strategic_successes, "" if strategic_successes == 1 else "s"])
 	if defeats > 0:
 		parts.append("%d defeat%s" % [defeats, "" if defeats == 1 else "s"])
 	elif wins > 0:
@@ -2120,6 +2134,7 @@ static func apply_resolved_commander_aftermath(
 			entry["deployments"] = max(0, int(updated_state.get("deployments", entry.get("deployments", 0))))
 			entry["battle_wins"] = max(0, int(updated_state.get("battle_wins", entry.get("battle_wins", 0))))
 			entry["times_defeated"] = max(0, int(updated_state.get("times_defeated", entry.get("times_defeated", 0))))
+			entry["strategic_successes"] = max(0, int(updated_state.get("strategic_successes", entry.get("strategic_successes", 0))))
 			entry["renown"] = commander_renown(updated_state)
 			entry["commander_state"] = build_roster_commander_state(
 				roster_hero_id,
@@ -2263,6 +2278,21 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_DEFEATED)
 		COMMANDER_OUTCOME_STALEMATE:
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_STALEMATE)
+		COMMANDER_OUTCOME_RESOURCE_SECURED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_RESOURCE_SECURED)
+		COMMANDER_OUTCOME_ARTIFACT_SECURED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_ARTIFACT_SECURED)
+		COMMANDER_OUTCOME_OBJECTIVE_SECURED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_OBJECTIVE_SECURED)
+		COMMANDER_OUTCOME_SITE_DEFENDED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_SITE_DEFENDED)
+		COMMANDER_OUTCOME_TOWN_DEFENDED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_TOWN_DEFENDED)
 		_:
 			updated = _normalize_enemy_progression(updated)
 	updated["last_outcome"] = outcome_id
@@ -2313,6 +2343,7 @@ static func record_commander_deployment(
 		entry["deployments"] = max(0, int(updated_state.get("deployments", entry.get("deployments", 0))))
 		entry["battle_wins"] = max(0, int(updated_state.get("battle_wins", entry.get("battle_wins", 0))))
 		entry["times_defeated"] = max(0, int(updated_state.get("times_defeated", entry.get("times_defeated", 0))))
+		entry["strategic_successes"] = max(0, int(updated_state.get("strategic_successes", entry.get("strategic_successes", 0))))
 		entry["renown"] = commander_renown(updated_state)
 		entry["commander_state"] = build_roster_commander_state(
 			roster_hero_id,
@@ -2356,6 +2387,7 @@ static func sync_commander_state_to_roster(
 			entry["deployments"] = max(0, int(record.get("deployments", 0)))
 			entry["battle_wins"] = max(0, int(record.get("battle_wins", 0)))
 			entry["times_defeated"] = max(0, int(record.get("times_defeated", 0)))
+			entry["strategic_successes"] = max(0, int(record.get("strategic_successes", 0)))
 			entry["renown"] = max(0, int(record.get("renown", 0)))
 			if status_override != "":
 				entry["status"] = _normalize_commander_status(status_override)
@@ -2382,6 +2414,33 @@ static func sync_commander_state_to_roster(
 			states[state_index] = state
 			session.overworld["enemy_states"] = states
 			return
+
+static func _record_adventure_objective_success(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	outcome_id: String,
+	active_placement_id: String = ""
+) -> Dictionary:
+	var updated_raid := raid.duplicate(true)
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return updated_raid
+	var updated_commander := advance_commander_record(commander_state, outcome_id)
+	updated_raid["enemy_commander_state"] = updated_commander
+	var placement_id := active_placement_id
+	if placement_id == "":
+		placement_id = String(updated_raid.get("placement_id", ""))
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_commander,
+		COMMANDER_STATUS_ACTIVE,
+		placement_id,
+		-1,
+		outcome_id
+	)
+	return updated_raid
 
 static func reinforce_commander_roster_army(
 	session: SessionStateStoreScript.SessionData,
@@ -3067,6 +3126,7 @@ static func _normalized_commander_record(entry_value: Variant, commander_state_v
 	var deployments: int = max(0, max(int(entry.get("deployments", 0)), int(commander_state.get("deployments", 0))))
 	var battle_wins: int = max(0, max(int(entry.get("battle_wins", 0)), int(commander_state.get("battle_wins", 0))))
 	var times_defeated: int = max(0, max(int(entry.get("times_defeated", 0)), int(commander_state.get("times_defeated", 0))))
+	var strategic_successes: int = max(0, max(int(entry.get("strategic_successes", 0)), int(commander_state.get("strategic_successes", 0))))
 	var last_outcome := String(commander_state.get("last_outcome", ""))
 	if last_outcome == "":
 		last_outcome = String(entry.get("last_outcome", ""))
@@ -3074,6 +3134,7 @@ static func _normalized_commander_record(entry_value: Variant, commander_state_v
 		"deployments": deployments,
 		"battle_wins": battle_wins,
 		"times_defeated": times_defeated,
+		"strategic_successes": strategic_successes,
 		"last_outcome": last_outcome,
 	}
 	record["renown"] = _commander_renown_from_record(record)
@@ -3145,7 +3206,8 @@ static func _commander_renown_from_record(record: Dictionary) -> int:
 	var deployments: int = max(0, int(record.get("deployments", 0)))
 	var battle_wins: int = max(0, int(record.get("battle_wins", 0)))
 	var times_defeated: int = max(0, int(record.get("times_defeated", 0)))
-	return clamp((deployments + (battle_wins * 2)) - times_defeated, 0, 9)
+	var strategic_successes: int = max(0, int(record.get("strategic_successes", 0)))
+	return clamp((deployments + (battle_wins * 2) + int(floor(float(strategic_successes) / 2.0))) - times_defeated, 0, 9)
 
 static func _commander_veterancy_rank_from_record(record: Dictionary) -> int:
 	var deployments: int = max(0, int(record.get("deployments", 0)))
@@ -3165,6 +3227,7 @@ static func _apply_commander_record_metadata(commander_state: Dictionary, record
 	commander["deployments"] = max(0, int(record.get("deployments", 0)))
 	commander["battle_wins"] = max(0, int(record.get("battle_wins", 0)))
 	commander["times_defeated"] = max(0, int(record.get("times_defeated", 0)))
+	commander["strategic_successes"] = max(0, int(record.get("strategic_successes", 0)))
 	commander["renown"] = max(0, int(record.get("renown", 0)))
 	commander["veterancy_rank"] = _commander_veterancy_rank_from_record(record)
 	commander["veterancy_label"] = commander_veterancy_label(record)
@@ -9623,10 +9686,16 @@ static func _secure_resource_target(
 		state["pressure"] += max(1, escort_strength)
 	if delivery_value > 0:
 		state["pressure"] = max(0, int(state.get("pressure", 0))) + clamp(int(ceili(float(delivery_value) / 220.0)), 1, 3)
-	var message = "%s seizes %s." % [_raid_name(raid), String(site.get("name", "the site"))]
+	var updated_raid := _record_adventure_objective_success(
+		session,
+		faction_id,
+		raid,
+		COMMANDER_OUTCOME_RESOURCE_SECURED
+	)
+	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
 	if not spoils.is_empty():
 		message = "%s seizes %s and strips %s." % [
-			_raid_name(raid),
+			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
 			_describe_resource_set(spoils),
 		]
@@ -9634,12 +9703,12 @@ static func _secure_resource_target(
 		message = "%s The convoy bound for %s is scattered." % [message.trim_suffix("."), delivery_target_label]
 	elif escorted_route:
 		message = "%s seizes %s and breaks its escorted logistics route." % [
-			_raid_name(raid),
+			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
 		]
 	elif _resource_site_is_persistent(site):
 		message = "%s seizes %s and denies its logistics route." % [
-			_raid_name(raid),
+			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
@@ -9667,25 +9736,25 @@ static func _secure_resource_target(
 		session,
 		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
 		"ai_site_seized",
-		raid,
+		updated_raid,
 		{
 			"target_kind": "resource",
-			"target_placement_id": String(raid.get("target_placement_id", "")),
+			"target_placement_id": String(updated_raid.get("target_placement_id", "")),
 			"target_label": String(site.get("name", "the site")),
 			"target_x": int(node.get("x", 0)),
 			"target_y": int(node.get("y", 0)),
 			"target_reason_codes": seized_codes,
 			"target_public_reason": _public_reason_from_codes(seized_codes),
 			"target_public_importance": "high" if previous_controller == "player" or _resource_site_is_persistent(site) else "medium",
-			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+			"target_debug_reason": String(updated_raid.get("target_debug_reason", "")),
 		},
 		{
 			"summary": message,
 			"state_policy": "durable_state_reference",
 		}
 	)
-	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
-	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _defend_resource_target(
 	session: SessionStateStoreScript.SessionData,
@@ -9716,31 +9785,37 @@ static func _defend_resource_target(
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
+	var updated_raid := _record_adventure_objective_success(
+		session,
+		faction_id,
+		raid,
+		COMMANDER_OUTCOME_SITE_DEFENDED
+	)
 	var defended_codes := ["site_defense", "defend_front", "front_stabilization"]
 	var site_label := String(site.get("name", "the site"))
-	var message := "%s digs in around %s." % [_raid_name(raid), site_label]
+	var message := "%s digs in around %s." % [_raid_name(updated_raid), site_label]
 	var event := build_ai_event_record(
 		session,
 		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
 		"ai_site_defended",
-		raid,
+		updated_raid,
 		{
 			"target_kind": "resource",
-			"target_placement_id": String(raid.get("target_placement_id", "")),
+			"target_placement_id": String(updated_raid.get("target_placement_id", "")),
 			"target_label": site_label,
 			"target_x": int(node.get("x", 0)),
 			"target_y": int(node.get("y", 0)),
 			"target_reason_codes": defended_codes,
 			"target_public_reason": _public_reason_from_codes(defended_codes),
 			"target_public_importance": "medium",
-			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+			"target_debug_reason": String(updated_raid.get("target_debug_reason", "")),
 		},
 		{
 			"summary": message,
 			"state_policy": "durable_state_reference",
 		}
 	)
-	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _defend_town_target(
 	session: SessionStateStoreScript.SessionData,
@@ -9789,6 +9864,7 @@ static func _defend_town_target(
 	var updated_raid := raid.duplicate(true)
 	var commander_state = updated_raid.get("enemy_commander_state", {})
 	if commander_state is Dictionary and not commander_state.is_empty():
+		commander_state = advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED)
 		var stationed_commander := sync_commander_army_continuity(
 			commander_state,
 			{"stacks": garrison},
@@ -9802,7 +9878,9 @@ static func _defend_town_target(
 			faction_id,
 			stationed_commander,
 			COMMANDER_STATUS_ACTIVE,
-			"town_defense:%s" % String(town.get("placement_id", ""))
+			"town_defense:%s" % String(town.get("placement_id", "")),
+			-1,
+			COMMANDER_OUTCOME_TOWN_DEFENDED
 		)
 
 	var towns = session.overworld.get("towns", [])
@@ -9902,13 +9980,15 @@ static func _secure_artifact_target(
 				var updated_commander: Dictionary = claim_result.get("hero", commander_state)
 				updated_raid["enemy_commander_state"] = updated_commander
 				artifact_bonus_report = ArtifactRulesScript.artifact_equip_runtime_report(updated_commander)
-				sync_commander_state_to_roster(
-					session,
-					faction_id,
-					updated_commander,
-					COMMANDER_STATUS_ACTIVE,
-					String(updated_raid.get("placement_id", ""))
-				)
+	updated_raid = _record_adventure_objective_success(
+		session,
+		faction_id,
+		updated_raid,
+		COMMANDER_OUTCOME_ARTIFACT_SECURED
+	)
+	var progressed_commander = updated_raid.get("enemy_commander_state", {})
+	if progressed_commander is Dictionary and not progressed_commander.is_empty():
+		artifact_bonus_report = ArtifactRulesScript.artifact_equip_runtime_report(progressed_commander)
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	var secured_message := "%s secures %s for the warhost." % [
 		_raid_name(updated_raid),
@@ -9971,16 +10051,22 @@ static func _contest_encounter_target(
 		session.overworld["encounters"] = encounters
 		if claimed_now:
 			state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
-			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
+			var updated_raid := _record_adventure_objective_success(
+				session,
+				faction_id,
+				raid,
+				COMMANDER_OUTCOME_OBJECTIVE_SECURED
+			)
+			_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 			var contest_message := "%s locks down %s and turns it into a live front." % [
-				_raid_name(raid),
+				_raid_name(updated_raid),
 				String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
 			]
 			var contest_event := build_ai_event_record(
 				session,
 				{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
 				"ai_site_contested",
-				raid,
+				updated_raid,
 				{
 					"target_kind": "encounter",
 					"target_placement_id": String(encounter_state.get("placement_id", "")),
@@ -9998,7 +10084,7 @@ static func _contest_encounter_target(
 				}
 			)
 			return {
-				"encounter": raid,
+				"encounter": updated_raid,
 				"state": state,
 				"event_message": contest_message,
 				"ai_event": contest_event,
@@ -10010,19 +10096,25 @@ static func _contest_encounter_target(
 	if resolved is Array and placement_id not in resolved:
 		resolved.append(placement_id)
 		session.overworld["resolved_encounters"] = resolved
-	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
+	var resolved_raid := _record_adventure_objective_success(
+		session,
+		faction_id,
+		raid,
+		COMMANDER_OUTCOME_OBJECTIVE_SECURED
+	)
+	_ai_hero_task_finish_live_assignment(session, faction_id, resolved_raid, "completed", "valid")
 	var encounter_template = ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", ""))))
 	var spoils = _reward_resources_for_empire(encounter_template.get("rewards", {}))
 	state["treasury"] = _merge_resources(state.get("treasury", {}), spoils)
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + _pressure_from_rewards(encounter_template.get("rewards", {}))
-	var message = "%s breaks %s." % [_raid_name(raid), String(encounter_template.get("name", "the frontier camp"))]
+	var message = "%s breaks %s." % [_raid_name(resolved_raid), String(encounter_template.get("name", "the frontier camp"))]
 	if not spoils.is_empty():
 		message = "%s breaks %s and absorbs %s." % [
-			_raid_name(raid),
+			_raid_name(resolved_raid),
 			String(encounter_template.get("name", "the frontier camp")),
 			_describe_resource_set(spoils),
 		]
-	return {"encounter": raid, "state": state, "event_message": message}
+	return {"encounter": resolved_raid, "state": state, "event_message": message}
 
 static func _regroup_raid_at_town(
 	session: SessionStateStoreScript.SessionData,

@@ -27976,6 +27976,78 @@
           "residualRisk": "This slice closes regroup/rebuild target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy tuning, adventure spell planning, and live-client pacing review."
         }
       }
+    },
+    {
+      "id": "strategic-ai-adventure-objective-progression-10184",
+      "title": "Strategic AI Adventure Objective Progression",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after town defender lifecycle; make successful adventure-map objectives advance live AI commander progression instead of only map/task state",
+      "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation commander progression",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-live-turn-execution-report.md",
+        "docs/strategic-ai-artifact-task-board-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "tests/ai_hero_task_artifact_objective_report.gd",
+        "docs/strategic-ai-adventure-objective-progression-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md",
+        "docs/strategic-ai-artifact-task-board-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Successful AI adventure-map objectives must award bounded commander experience and a non-battle strategic_successes record for resource seizures, artifact pickups, objective encounter control, resource-front defense, and town-defense arrival. Focused runtime coverage must prove resource and artifact objective progression persists through enemy commander roster normalization without treating those successes as battle wins or requiring a save-version migration.",
+      "startedAt": "2026-05-30T17:05:00Z",
+      "updatedAt": "2026-05-30T17:18:00Z",
+      "notes": "Completed. AI commanders now gain bounded progression from successful resource, artifact, objective, resource-defense, and town-defense adventure-map objectives; focused runtime reports prove resource/artifact progression persists through roster normalization.",
+      "completedAt": "2026-05-30T17:18:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T17:18:00Z",
+        "sliceId": "strategic-ai-adventure-objective-progression-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "AI commander records now include strategic_successes as a non-battle objective-success counter that contributes slowly to renown/veterancy without incrementing battle_wins.",
+            "Resource-site seizure records resource_secured, awards bounded commander experience, persists the commander state to the roster, and completes the matching live task.",
+            "Artifact pickup records artifact_secured after claim/equip resolution, preserves equipped artifact bonuses, awards commander experience, persists the commander state to the roster, and completes the matching live task.",
+            "Objective encounter control/breaks, resource-front defense arrivals, and town-defense arrivals now also record bounded adventure objective progression.",
+            "Focused resource and artifact reports assert experience, strategic_successes, and last_outcome persistence through commander roster normalization."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-adventure-objective-progression-report.md",
+            "docs/strategic-ai-live-turn-execution-report.md",
+            "docs/strategic-ai-artifact-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+            "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+            "AI_TOWN_DEFENSE_RETASK_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT"
+          ],
+          "residualRisk": "This slice makes real map-object successes progress AI commanders; full release-ready strategic AI still needs long-run generated-map quality, stronger multi-week objective planning, multi-army grouping, retreat policy tuning, and live-client pacing review."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -40789,65 +40861,74 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-regroup-task-board-10184",
-    "title": "Strategic AI Regroup Task Board",
+    "id": "strategic-ai-adventure-objective-progression-10184",
+    "title": "Strategic AI Adventure Objective Progression",
     "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after hero-hunt task-board continuity; make understrength raid regroup/rebuild orders durable instead of transient target state",
-    "planRef": "PLAN.md Current strategic AI target",
+    "phase": "phase-5-playable-alpha-baseline",
+    "classification": "implementation_slice",
+    "source": "continuation of owner strategic AI production-readiness goal after town defender lifecycle; make successful adventure-map objectives advance live AI commander progression instead of only map/task state",
+    "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation commander progression",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-raid-regroup-retreat-report.md"
+      "docs/strategic-ai-live-turn-execution-report.md",
+      "docs/strategic-ai-artifact-task-board-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
-      "scripts/core/EnemyTurnRules.gd",
-      "tests/ai_raid_regroup_retreat_report.gd",
-      "docs/strategic-ai-raid-regroup-retreat-report.md",
+      "tests/ai_hero_task_live_turn_execution_report.gd",
+      "tests/ai_hero_task_artifact_objective_report.gd",
+      "docs/strategic-ai-adventure-objective-progression-report.md",
+      "docs/strategic-ai-live-turn-execution-report.md",
+      "docs/strategic-ai-artifact-task-board-report.md",
       "tests/validate_repo.py",
+      "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Understrength raid regroup target assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable regroup tasks at owned same-faction towns, missing or captured regroup towns invalidate through lifecycle reconciliation, successful regroup that rebuilds the host completes the matching task before target clearing, normalized task state accepts target_kind regroup, focused runtime tests prove assignment/reuse/invalidation/completion behavior, validation passes, and no save-version migration is introduced.",
-    "startedAt": "2026-05-30T13:07:38Z",
-    "updatedAt": "2026-05-30T13:16:40Z",
-    "notes": "Completed. Understrength regroup orders now persist as strategic AI hero tasks, can be reused from saved-task selection, and complete when the host rebuilds enough to resume.",
-    "completedAt": "2026-05-30T13:16:40Z",
+    "completionCriteria": "Successful AI adventure-map objectives must award bounded commander experience and a non-battle strategic_successes record for resource seizures, artifact pickups, objective encounter control, resource-front defense, and town-defense arrival. Focused runtime coverage must prove resource and artifact objective progression persists through enemy commander roster normalization without treating those successes as battle wins or requiring a save-version migration.",
+    "startedAt": "2026-05-30T17:05:00Z",
+    "updatedAt": "2026-05-30T17:18:00Z",
+    "notes": "Completed. AI commanders now gain bounded progression from successful resource, artifact, objective, resource-defense, and town-defense adventure-map objectives; focused runtime reports prove resource/artifact progression persists through roster normalization.",
+    "completedAt": "2026-05-30T17:18:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T13:16:40Z",
-      "sliceId": "strategic-ai-regroup-task-board-10184",
+      "updatedAt": "2026-05-30T17:18:00Z",
+      "sliceId": "strategic-ai-adventure-objective-progression-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Task-state normalization now accepts target_kind regroup.",
-          "Understrength raid regroup target assignments now persist into normalized enemy_states[].hero_task_state as rebuild_host tasks.",
-          "Saved strategic AI task selection can rebuild regroup plans for reachable owned same-faction towns.",
-          "Regroup tasks reconcile missing towns as invalid_target_missing and towns no longer controlled by the matching AI faction as invalid_controller_changed.",
-          "Successful regroup that rebuilds the host enough to resume completes the matching active regroup task before the raid target is cleared.",
-          "Focused runtime coverage proves River Pass Duskfen Bastion regroup assignment, saved regroup-task reuse, missing/wrong-controller invalidation, garrison transfer, target clearing, task completion, and normalization preservation."
+          "AI commander records now include strategic_successes as a non-battle objective-success counter that contributes slowly to renown/veterancy without incrementing battle_wins.",
+          "Resource-site seizure records resource_secured, awards bounded commander experience, persists the commander state to the roster, and completes the matching live task.",
+          "Artifact pickup records artifact_secured after claim/equip resolution, preserves equipped artifact bonuses, awards commander experience, persists the commander state to the roster, and completes the matching live task.",
+          "Objective encounter control/breaks, resource-front defense arrivals, and town-defense arrivals now also record bounded adventure objective progression.",
+          "Focused resource and artifact reports assert experience, strategic_successes, and last_outcome persistence through commander roster normalization."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-raid-regroup-retreat-report.md"
+          "docs/strategic-ai-adventure-objective-progression-report.md",
+          "docs/strategic-ai-live-turn-execution-report.md",
+          "docs/strategic-ai-artifact-task-board-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "focusedReport": "AI_RAID_REGROUP_RETREAT_REPORT",
-        "residualRisk": "This slice closes regroup/rebuild target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy tuning, adventure spell planning, and live-client pacing review."
+        "focusedReports": [
+          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+          "AI_TOWN_DEFENSE_RETASK_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "AI_TOWN_RETAKE_ASSAULT_REPORT"
+        ],
+        "residualRisk": "This slice makes real map-object successes progress AI commanders; full release-ready strategic AI still needs long-run generated-map quality, stronger multi-week objective planning, multi-army grouping, retreat policy tuning, and live-client pacing review."
       }
     }
   },

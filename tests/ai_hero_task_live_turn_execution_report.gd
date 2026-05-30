@@ -41,6 +41,8 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	encounters.append(_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3}))
 	session.overworld["encounters"] = encounters
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var vaska_progress_before := _commander_progress_snapshot(session, "hero_vaska")
+	var sable_progress_before := _commander_progress_snapshot(session, "hero_sable")
 
 	var result := EnemyTurnRules.run_enemy_turn(session)
 	if not bool(result.get("ok", false)):
@@ -70,8 +72,18 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	var task_board := _assert_live_task_board(session)
 	if _failed:
 		return {}
+	var vaska_progress_after := _commander_progress_snapshot(session, "hero_vaska")
+	var sable_progress_after := _commander_progress_snapshot(session, "hero_sable")
+	_assert_progression(vaska_progress_before, vaska_progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "Vaska")
+	_assert_progression(sable_progress_before, sable_progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "Sable")
+	if _failed:
+		return {}
 	EnemyTurnRules.normalize_enemy_states(session)
 	var normalized_task_board := _assert_live_task_board(session)
+	var vaska_progress_normalized := _commander_progress_snapshot(session, "hero_vaska")
+	var sable_progress_normalized := _commander_progress_snapshot(session, "hero_sable")
+	_assert_progression(vaska_progress_before, vaska_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized Vaska")
+	_assert_progression(sable_progress_before, sable_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized Sable")
 	if _failed:
 		return {}
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
@@ -91,6 +103,12 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		"vaska_arrived": bool(vaska.get("arrived", false)),
 		"sable_arrived": bool(sable.get("arrived", false)),
 		"event_types": event_types,
+		"vaska_progress_before": vaska_progress_before,
+		"vaska_progress_after": vaska_progress_after,
+		"vaska_progress_normalized": vaska_progress_normalized,
+		"sable_progress_before": sable_progress_before,
+		"sable_progress_after": sable_progress_after,
+		"sable_progress_normalized": sable_progress_normalized,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"task_board": task_board,
 		"normalized_task_board": normalized_task_board,
@@ -185,6 +203,22 @@ func _encounter(session, placement_id: String) -> Dictionary:
 			return encounter
 	return {}
 
+func _commander_progress_snapshot(session, roster_hero_id: String) -> Dictionary:
+	var state := _enemy_state(session)
+	for entry in state.get("commander_roster", []):
+		if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+			continue
+		var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+		return {
+			"roster_hero_id": roster_hero_id,
+			"experience": max(0, int(commander_state.get("experience", entry.get("experience", 0)))),
+			"level": max(1, int(commander_state.get("level", entry.get("level", 1)))),
+			"strategic_successes": max(0, int(commander_state.get("strategic_successes", entry.get("strategic_successes", 0)))),
+			"last_outcome": String(commander_state.get("last_outcome", entry.get("last_outcome", ""))),
+		}
+	_fail("Could not find commander progress for %s" % roster_hero_id)
+	return {}
+
 func _assert_target(raid: Dictionary, expected_target_id: String, label: String) -> void:
 	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != expected_target_id:
 		_fail("%s expected resource %s, got %s" % [label, expected_target_id, JSON.stringify(raid)])
@@ -200,6 +234,19 @@ func _assert_event(events: Variant, event_type: String, target_id: String) -> vo
 		if event is Dictionary and String(event.get("event_type", "")) == event_type and String(event.get("target_id", "")) == target_id:
 			return
 	_fail("Missing event %s for %s in %s" % [event_type, target_id, JSON.stringify(events)])
+
+func _assert_progression(before: Dictionary, after: Dictionary, expected_outcome: String, label: String) -> void:
+	if after.is_empty():
+		_fail("%s commander progression snapshot is empty." % label)
+		return
+	if int(after.get("experience", 0)) <= int(before.get("experience", 0)) and int(after.get("level", 1)) <= int(before.get("level", 1)):
+		_fail("%s did not gain adventure objective experience: before=%s after=%s" % [label, JSON.stringify(before), JSON.stringify(after)])
+		return
+	if int(after.get("strategic_successes", 0)) <= int(before.get("strategic_successes", 0)):
+		_fail("%s did not record a strategic_successes increment: before=%s after=%s" % [label, JSON.stringify(before), JSON.stringify(after)])
+		return
+	if String(after.get("last_outcome", "")) != expected_outcome:
+		_fail("%s last_outcome expected %s, got %s" % [label, expected_outcome, JSON.stringify(after)])
 
 func _event_types(events: Variant) -> Array:
 	var types := []
