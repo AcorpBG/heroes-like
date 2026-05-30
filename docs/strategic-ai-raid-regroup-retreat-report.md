@@ -3,6 +3,7 @@
 Slice: `strategic-ai-raid-regroup-retreat-20260523-10184`
 Follow-up slice: `strategic-ai-regroup-task-board-10184`
 Related follow-up slice: `strategic-ai-guarded-object-claim-routing-10184`
+Related follow-up slice: `strategic-ai-unreachable-route-recovery-10184`
 
 Status: implementation evidence.
 
@@ -27,12 +28,15 @@ No full strategic AI quality claim.
 - A successful regroup that rebuilds the host enough to resume completes the matching active task before the raid target is cleared.
 - `EnemyTurnRules.normalize_enemy_states(...)` preserves `target_kind: regroup` task records without a save-version migration.
 - Guarded resource claim execution now refuses to seize the target while an unresolved explicit guard protects it. The raid retargets to the guard encounter with `guard_clearance` and `guarded_resource_claim`, while the original resource task remains active.
+- Active raids whose current target still exists but no longer has a passable route now invalidate the current live task with `invalid_route_unreachable` and retarget to a reachable same-faction regroup town with `route_unreachable` and `regroup_route_recovery` instead of standing still on an impossible objective.
 
 ## Focused Fixture
 
 `tests/ai_raid_regroup_retreat_report.tscn` uses River Pass with a damaged Mireclaw Vaska raid initially aimed at the player-controlled Free Company Camp. The raid starts understrength, chooses Duskfen Bastion instead of the original resource objective, folds the town's `unit_bog_brute` garrison into the host, records `last_regroup_town_id`, completes the durable regroup task, and leaves the original resource under player control. The same fixture also proves saved regroup-task reuse, missing-town invalidation, wrong-controller invalidation, and normalization preservation.
 
 The same report includes `guarded_resource_claim_retargets_to_guard`: a strong Vaska host reaches `river_free_company` while `river_free_company_guard` has an explicit `guards_resource_node` link. The Free Company stays player-held, the raid retargets to the guard encounter, public-safe `ai_target_assigned` is emitted, and no `ai_site_seized` event is produced.
+
+The same report includes `valid_resource_target_unreachable_reroutes_to_regroup`: a strong Vaska host keeps a valid Free Company target, but the target tile is isolated by impassable terrain. The raid does not freeze or seize the site. It marks the resource task `invalid_route_unreachable`, emits `ai_target_assigned`, preserves previous-target metadata, and recovers through Duskfen Bastion regroup.
 
 ## Validation
 

@@ -1010,6 +1010,7 @@ static func advance_raids(
 				if scouting_event_value is Dictionary and not scouting_event_value.is_empty():
 					event_records.append(scouting_event_value)
 		encounter = assign_target(session, config, encounter)
+		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
 			event_records.append(assignment_event)
@@ -1738,6 +1739,61 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["arrived"] = false
 	raid["regroup_started_day"] = int(session.day)
 	return _refresh_target(session, raid)
+
+static func _redirect_unreachable_raid_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) == "" or String(raid.get("target_kind", "")) == "regroup":
+		return raid
+	if not _raid_target_valid(session, raid):
+		return raid
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var goal_tiles := _goal_tiles_from_raid(session, raid)
+	var distance := _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")))
+	if distance < 9999 or current in goal_tiles:
+		return raid
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	if regroup_town.is_empty():
+		var waiting := raid.duplicate(true)
+		waiting["route_unreachable_day"] = int(session.day)
+		waiting["goal_distance"] = 9999
+		var waiting_codes := _normalize_string_array(waiting.get("target_reason_codes", []))
+		for code in ["route_unreachable", "awaiting_route"]:
+			if code not in waiting_codes:
+				waiting_codes.append(code)
+		waiting["target_reason_codes"] = waiting_codes
+		waiting["target_public_reason"] = "seeking reachable route"
+		waiting["target_public_importance"] = "medium"
+		waiting["target_debug_reason"] = "target exists but no passable route is currently available"
+		return waiting
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "invalid", "invalid_route_unreachable")
+	var redirected := raid.duplicate(true)
+	redirected["previous_target_kind"] = String(raid.get("target_kind", ""))
+	redirected["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	redirected["previous_target_label"] = String(raid.get("target_label", ""))
+	redirected["target_kind"] = "regroup"
+	redirected["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+	redirected["target_label"] = "%s regroup" % _town_name(regroup_town)
+	redirected["target_public_reason"] = "rerouting blocked host"
+	redirected["target_reason_codes"] = ["route_unreachable", "army_consolidation", "regroup_route_recovery"]
+	redirected["target_public_importance"] = "high"
+	redirected["target_debug_reason"] = "current target exists but has no passable route"
+	redirected["arrived"] = false
+	redirected["route_recovery_started_day"] = int(session.day)
+	redirected = _refresh_target(session, redirected)
+	_ai_hero_task_record_live_assignment(
+		session,
+		config,
+		redirected,
+		_current_target_snapshot(redirected),
+		{}
+	)
+	return redirected
 
 static func redirect_town_assault_for_risk(
 	session: SessionStateStoreScript.SessionData,
