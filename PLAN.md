@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-town-defense-arrival-10184`, completed to make enemy commanders who are redirected to defend owned threatened towns actually harden the town on arrival instead of only carrying a target label.
+- Current implementation slice: `strategic-ai-town-defender-lifecycle-10184`, completed to make commanders stationed by town-defense arrivals stay unavailable while defending and release cleanly when the defense window or town ownership no longer qualifies.
+- Latest completed slice: `strategic-ai-town-defender-lifecycle-10184`.
 - Latest completed slice: `strategic-ai-town-defense-arrival-10184`.
 - Latest completed slice: `strategic-ai-artifact-equipment-10184`.
 - Latest completed slice: `strategic-ai-scouting-spell-execution-10184`.

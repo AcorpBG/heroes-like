@@ -12,6 +12,7 @@ Implemented behavior:
 - The stationed commander is synced to the enemy commander roster as active on `town_defense:<town_id>` so the same commander cannot immediately be redeployed elsewhere.
 - `BattleRules.create_town_assault_payload(...)` uses a stationed AI defender commander when present, so the strengthened town assault battle uses the actual defending commander instead of always falling back to the generic town captain.
 - Town-assault survivor sync preserves or clears stationed defender metadata as the town remains enemy-owned or changes owner.
+- Later follow-up `strategic-ai-town-defender-lifecycle-10184` makes the stationed defender count as an active roster assignment until the defense window expires or the town no longer qualifies.
 
 Focused evidence:
 - `AI_TOWN_DEFENSE_RETASK_REPORT`

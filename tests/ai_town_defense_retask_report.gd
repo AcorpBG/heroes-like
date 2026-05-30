@@ -92,6 +92,18 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 	if String(defender_commander.get("roster_hero_id", "")) != "hero_vaska":
 		_fail("Town-defense arrival did not station Vaska as Duskfen defender: %s" % JSON.stringify(defender_commander))
 		return {}
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var active_roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(active_roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE:
+		_fail("Town defender commander was not retained as active after roster normalization: %s" % JSON.stringify(active_roster_entry))
+		return {}
+	if String(active_roster_entry.get("active_placement_id", "")) != "town_defense:duskfen_bastion":
+		_fail("Town defender active placement was not retained after roster normalization: %s" % JSON.stringify(active_roster_entry))
+		return {}
+	var replacement_selection := EnemyAdventureRules.select_raid_commander_roster_hero_id(session, MIRECLAW, 0)
+	if replacement_selection == "hero_vaska":
+		_fail("Town defender commander was selectable for a second raid while stationed.")
+		return {}
 	var assault_payload := BattleRules.create_town_assault_payload(session, "duskfen_bastion")
 	if String(assault_payload.get("enemy_hero", {}).get("roster_hero_id", "")) != "hero_vaska":
 		_fail("Town assault payload did not use stationed AI defender commander: %s" % JSON.stringify(assault_payload.get("enemy_hero", {})))
@@ -106,6 +118,21 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
 	_assert_saved_task_state(session)
+	var town_after_front: Dictionary = town_after.get("front", {}) if town_after.get("front", {}) is Dictionary else {}
+	var defense_until: int = max(
+		int(town_after.get("ai_defense_until_day", 0)),
+		int(town_after_front.get("defense_until_day", 0))
+	)
+	session.day = defense_until + 1
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var released_town := _town(session, "duskfen_bastion")
+	if released_town.has("ai_defender_commander_state") or String(released_town.get("ai_defender_roster_hero_id", "")) != "":
+		_fail("Expired town defender metadata was not cleared: %s" % JSON.stringify(released_town))
+		return {}
+	var released_roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(released_roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE:
+		_fail("Expired town defender commander did not return to available roster status: %s" % JSON.stringify(released_roster_entry))
+		return {}
 	if _failed:
 		return {}
 	return {
@@ -117,6 +144,11 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"garrison_strength_before": garrison_strength_before,
 		"garrison_strength_after": garrison_strength_after,
 		"stationed_commander_id": String(defender_commander.get("roster_hero_id", "")),
+		"stationed_commander_status": String(active_roster_entry.get("status", "")),
+		"stationed_active_placement_id": String(active_roster_entry.get("active_placement_id", "")),
+		"replacement_selection_while_stationed": replacement_selection,
+		"released_commander_status": String(released_roster_entry.get("status", "")),
+		"defender_metadata_cleared_after_expiry": not released_town.has("ai_defender_commander_state"),
 		"town_assault_enemy_commander_id": String(assault_payload.get("enemy_hero", {}).get("roster_hero_id", "")),
 		"target_public_reason": String(after_raid.get("target_public_reason", "")),
 		"target_reason_codes": reason_codes,
@@ -255,6 +287,12 @@ func _town(session, placement_id: String) -> Dictionary:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return town
+	return {}
+
+func _commander_roster_entry(session, roster_hero_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
 	return {}
 
 func _garrison_strength(town: Dictionary) -> int:

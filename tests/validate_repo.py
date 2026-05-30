@@ -229,6 +229,7 @@ AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_re
 AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
 AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
 AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-arrival-report.md"
+AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defender-lifecycle-report.md"
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_retake_assault_report.gd"
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_retake_assault_report.tscn"
 AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-retake-assault-report.md"
@@ -15824,6 +15825,51 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI town defense arrival doc is missing required text: {required_text}")
 
 
+def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
+    for path in (
+        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
+        AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI town defender lifecycle file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "_normalize_town_defender_commander_states",
+        "_active_town_defender_entry",
+        "_clear_town_defender_metadata",
+        '"town_defense:%s"',
+        '"ai_defender_commander_state"',
+        '"ai_defense_until_day"',
+        "defense_until < int(session.day)",
+        "active[defender_roster_hero_id] = defender_entry",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defender lifecycle token: {required_token}")
+    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "stationed_commander_status",
+            "stationed_active_placement_id",
+            "replacement_selection_while_stationed",
+            "released_commander_status",
+            "defender_metadata_cleared_after_expiry",
+            "EnemyAdventureRules.select_raid_commander_roster_hero_id",
+            "EnemyAdventureRules.COMMANDER_STATUS_ACTIVE",
+            "EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE",
+        ):
+            ensure(required_token in report_text, errors, f"AI town defender lifecycle report coverage is missing token: {required_token}")
+    if AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH.exists():
+        doc_text = AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Town Defender Lifecycle Report",
+            "strategic-ai-town-defender-lifecycle-10184",
+            "stationed_commander_status = active",
+            "replacement_selection_while_stationed = hero_sable",
+            "released_commander_status = available",
+            "No save migration",
+            "No broad strategic-AI production-ready claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI town defender lifecycle doc is missing required text: {required_text}")
+
+
 def validate_ai_town_retake_assault(errors: list[str]) -> None:
     for path in (
         AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH,
@@ -21865,6 +21911,7 @@ def main() -> int:
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_defense_arrival(errors)
+    validate_ai_town_defender_lifecycle(errors)
     validate_ai_town_retake_assault(errors)
     validate_ai_raid_assault_grouping(errors)
     validate_ai_raid_regroup_retreat(errors)
