@@ -13,12 +13,16 @@ func _run() -> void:
 	var case_report := _river_pass_understrength_raid_regroups()
 	if case_report.is_empty():
 		return
+	var guarded_claim_case := _guarded_resource_claim_retargets_to_guard()
+	if guarded_claim_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_to_owned_town_and_pull_garrison",
+		"behavior_policy": "understrength_raids_retreat_to_owned_town_and_guarded_claims_retarget_to_guard",
 		"case": case_report,
+		"guarded_claim_case": guarded_claim_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -114,6 +118,67 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 		"task_status_counts": _task_status_counts(task_state),
 	}
 
+func _guarded_resource_claim_retargets_to_guard() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	_seed_task_board(session, [_resource_task("hero_vaska", "river_free_company", "active", "valid")])
+	var guard := _resource_guard_encounter()
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(guard)
+	var raid := _guarded_resource_claim_raid(session)
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "guarded_resource_claim_vaska")
+	if after_raid.is_empty():
+		_fail("Guarded resource claim raid disappeared after advance.")
+		return {}
+	if _resource_controller(session, "river_free_company") != "player":
+		_fail("Guarded resource was seized before its guard was cleared: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "encounter" or String(after_raid.get("target_placement_id", "")) != "river_free_company_guard":
+		_fail("Guarded resource claim did not retarget to the guard encounter: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "guard_clearance" not in reason_codes or "guarded_resource_claim" not in reason_codes:
+		_fail("Guarded resource redirect missed guard-clearance reason codes: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("guarded_claim_target_id", "")) != "river_free_company":
+		_fail("Guarded resource redirect did not retain original claim target: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_public_reason", "")) != "clearing guard before claim":
+		_fail("Guarded resource redirect has wrong public reason: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Guarded resource redirect did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	if "ai_site_seized" in event_types:
+		_fail("Guarded resource redirect incorrectly emitted ai_site_seized: %s" % JSON.stringify(result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "active", "valid")
+	if _failed:
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Guarded resource redirect public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	return {
+		"case_id": "guarded_resource_claim_retargets_to_guard",
+		"resource_controller_after": _resource_controller(session, "river_free_company"),
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"guarded_claim_target_id": String(after_raid.get("guarded_claim_target_id", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
 func _understrength_raid(session, config: Dictionary) -> Dictionary:
 	var raid := {
 		"placement_id": "regroup_vaska_understrength",
@@ -148,6 +213,62 @@ func _understrength_raid(session, config: Dictionary) -> Dictionary:
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _guarded_resource_claim_raid(session) -> Dictionary:
+	var raid := {
+		"placement_id": "guarded_resource_claim_vaska",
+		"encounter_id": "encounter_mire_raid",
+		"x": 0,
+		"y": 4,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:guarded_resource_claim_vaska" % String(session.scenario_id)),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 0,
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_reason_codes": ["persistent_income_denial", "recruit_denial"],
+		"target_public_reason": "site denial pressure",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "guarded_resource_claim_host",
+			"name": "Guarded Claim Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 12}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _resource_guard_encounter() -> Dictionary:
+	return {
+		"placement_id": "river_free_company_guard",
+		"encounter_id": "encounter_roadward_lodge_watch",
+		"x": 2,
+		"y": 4,
+		"difficulty": "medium",
+		"combat_seed": 44101,
+		"guard_link": {
+			"guard_role": "guards_resource_node",
+			"target_kind": "resource_node",
+			"target_id": "river_free_company",
+			"target_placement_id": "river_free_company",
+			"blocks_approach": true,
+			"clear_required_for_target": true,
+		},
+	}
 
 func _regroup_probe_raid(session, roster_hero_id: String, placement_id: String, origin: Dictionary) -> Dictionary:
 	var raid := {
@@ -243,6 +364,34 @@ func _regroup_task(actor_id: String, target_id: String, status: String, validati
 			"reservation_status": "none",
 			"reservation_scope": "none",
 			"reservation_key": "",
+		},
+	}
+
+func _resource_task(actor_id: String, target_id: String, status: String, validation: String) -> Dictionary:
+	return {
+		"task_id": "task:resource:%s:%s" % [actor_id, target_id],
+		"owner_faction_id": MIRECLAW,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": "saved_task_state",
+		"source_id": "guarded_resource_claim_fixture",
+		"task_class": "contest_site",
+		"task_status": status,
+		"target_kind": "resource",
+		"target_id": target_id,
+		"front_id": "resource:%s" % target_id,
+		"origin_kind": "resource",
+		"origin_id": "guarded_resource_claim_fixture",
+		"priority_reason_codes": ["persistent_income_denial", "recruit_denial", "guarded_resource_claim_fixture"],
+		"assigned_day": 2,
+		"expires_day": 9,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"last_validation": validation,
+		"reservation": {
+			"reservation_status": "primary",
+			"reservation_scope": "exclusive_target",
+			"reservation_key": "resource:%s" % target_id,
 		},
 	}
 

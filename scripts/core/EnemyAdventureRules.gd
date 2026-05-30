@@ -1658,6 +1658,56 @@ static func redirect_encounter_objective_for_risk(
 	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
 	return raid
 
+static func _redirect_claim_to_guard_encounter(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	guard_encounter: Dictionary,
+	claim_kind: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or guard_encounter.is_empty():
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var previous_target := _current_target_snapshot(raid)
+	var redirected := raid.duplicate(true)
+	var guard_id := String(guard_encounter.get("placement_id", ""))
+	var guard_label := String(ContentService.get_encounter(String(guard_encounter.get("encounter_id", guard_encounter.get("id", "")))).get("name", "the guard"))
+	redirected["previous_target_kind"] = String(raid.get("target_kind", ""))
+	redirected["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	redirected["previous_target_label"] = String(raid.get("target_label", ""))
+	redirected["guarded_claim_kind"] = claim_kind
+	redirected["guarded_claim_target_id"] = String(raid.get("target_placement_id", ""))
+	redirected["guarded_claim_target_label"] = String(raid.get("target_label", ""))
+	redirected["target_kind"] = "encounter"
+	redirected["target_placement_id"] = guard_id
+	redirected["target_label"] = guard_label
+	redirected["target_x"] = int(guard_encounter.get("x", 0))
+	redirected["target_y"] = int(guard_encounter.get("y", 0))
+	redirected["target_public_reason"] = "clearing guard before claim"
+	redirected["target_public_importance"] = "high"
+	redirected["target_debug_reason"] = "guarded %s claim requires guard clearance" % claim_kind
+	var reason_codes := ["guard_clearance", "guarded_%s_claim" % claim_kind]
+	if claim_kind == "resource":
+		reason_codes.append("site_contested")
+	elif claim_kind == "artifact":
+		reason_codes.append("artifact_pressure")
+	redirected["target_reason_codes"] = reason_codes
+	redirected["arrived"] = false
+	redirected["guard_claim_redirect_day"] = int(session.day)
+	redirected = _refresh_target(session, redirected)
+	var retask_event := ai_target_assignment_event(session, config, redirected, previous_target)
+	if retask_event.is_empty():
+		retask_event = ai_target_assignment_event(session, config, redirected, {})
+	return {
+		"encounter": redirected,
+		"state": state,
+		"event_message": "",
+		"ai_event": retask_event,
+		"guard_redirected": true,
+		"guard_placement_id": guard_id,
+	}
+
 static func _redirect_raid_to_threatened_town_defense(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -9829,8 +9879,16 @@ static func _resolve_arrived_target(
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(raid.get("target_reason_codes", []))):
 				return _defend_resource_target(session, raid, state, faction_id)
+			var resource_guard := _resource_guard_encounter_for_node(session, node, site)
+			if not resource_guard.is_empty():
+				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, resource_guard, "resource")
 			return _secure_resource_target(session, raid, state, faction_id)
 		"artifact":
+			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
+			var artifact_node: Dictionary = artifact_result.get("node", {})
+			var artifact_guard := _artifact_guard_encounter_for_node(session, artifact_node)
+			if not artifact_guard.is_empty():
+				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, artifact_guard, "artifact")
 			return _secure_artifact_target(session, raid, state, faction_id)
 		"encounter":
 			var ready_report := encounter_arrival_ready_report(session, raid, faction_id)
@@ -10846,6 +10904,91 @@ static func _find_resource_by_placement(session: SessionStateStoreScript.Session
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
+
+static func _guard_link_for_encounter(encounter: Dictionary) -> Dictionary:
+	var guard = encounter.get("guard_link", {})
+	if guard is Dictionary and not guard.is_empty():
+		return guard
+	var neutral_metadata = encounter.get("neutral_encounter", {})
+	if neutral_metadata is Dictionary:
+		guard = neutral_metadata.get("guard_link", {})
+		if guard is Dictionary:
+			return guard
+	return {}
+
+static func _resource_guard_encounter_for_node(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	if session == null or node.is_empty():
+		return {}
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
+			continue
+		var encounter: Dictionary = encounter_value
+		var guard := _guard_link_for_encounter(encounter)
+		if not guard.is_empty() and _resource_guard_link_targets_node(guard, node, site):
+			return encounter
+		if _generated_object_guard_targets(encounter, "resource", String(node.get("placement_id", ""))):
+			return encounter
+	return {}
+
+static func _resource_guard_link_targets_node(guard: Dictionary, node: Dictionary, site: Dictionary) -> bool:
+	var role := String(guard.get("guard_role", ""))
+	var target_kind := String(guard.get("target_kind", ""))
+	if role != "guards_resource_node" and target_kind != "resource_node":
+		return false
+	if not bool(guard.get("clear_required_for_target", false)) and not bool(guard.get("blocks_approach", false)):
+		return false
+	var node_placement_id := String(node.get("placement_id", ""))
+	var site_id := String(site.get("id", node.get("site_id", "")))
+	var target_placement_id := String(guard.get("target_placement_id", ""))
+	var target_id := String(guard.get("target_id", ""))
+	return (
+		(target_placement_id != "" and target_placement_id == node_placement_id)
+		or (target_id != "" and target_id in [node_placement_id, site_id])
+	)
+
+static func _artifact_guard_encounter_for_node(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
+	if session == null or node.is_empty():
+		return {}
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
+			continue
+		var encounter: Dictionary = encounter_value
+		var guard := _guard_link_for_encounter(encounter)
+		if not guard.is_empty() and _artifact_guard_link_targets_node(guard, node):
+			return encounter
+		if _generated_object_guard_targets(encounter, "artifact", String(node.get("placement_id", ""))):
+			return encounter
+	return {}
+
+static func _artifact_guard_link_targets_node(guard: Dictionary, node: Dictionary) -> bool:
+	var role := String(guard.get("guard_role", ""))
+	var target_kind := String(guard.get("target_kind", ""))
+	if role not in ["guards_reward", "guards_object"] and target_kind not in ["artifact", "artifact_node", "reward", "object"]:
+		return false
+	if not bool(guard.get("clear_required_for_target", false)) and not bool(guard.get("blocks_approach", false)):
+		return false
+	var node_placement_id := String(node.get("placement_id", ""))
+	var artifact_id := String(node.get("artifact_id", ""))
+	var target_placement_id := String(guard.get("target_placement_id", ""))
+	var target_id := String(guard.get("target_id", ""))
+	return (
+		(target_placement_id != "" and target_placement_id == node_placement_id)
+		or (target_id != "" and target_id in [node_placement_id, artifact_id])
+	)
+
+static func _generated_object_guard_targets(encounter: Dictionary, target_kind: String, target_placement_id: String) -> bool:
+	if target_placement_id == "":
+		return false
+	if String(encounter.get("guarded_object_placement_id", "")) != target_placement_id:
+		return false
+	var guarded_kind := String(encounter.get("guarded_object_kind", ""))
+	if target_kind == "artifact":
+		return guarded_kind == "artifact"
+	return guarded_kind in ["resource", "resource_site", "mine", "neutral_dwelling", "faction_outpost", "frontier_shrine", "reward_reference", "mine_placeholder"]
 
 static func _resource_site_is_persistent(site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false))
