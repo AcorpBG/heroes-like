@@ -25,7 +25,7 @@ Focused evidence:
 Boundaries:
 - No save migration.
 - No broad strategic-AI production-ready claim.
-- No targeted scouting/reveal execution yet.
+- Targeted scouting/reveal execution is handled by the later `strategic-ai-scouting-spell-execution-10184` slice.
 - No rare-resource spell costs, school mastery, or final magic balance claim.
 
 Validation:

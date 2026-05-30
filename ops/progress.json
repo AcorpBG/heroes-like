@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-adventure-spell-execution-10184",
-  "currentSliceTitle": "Strategic AI Adventure Spell Execution",
+  "currentSliceId": "strategic-ai-scouting-spell-execution-10184",
+  "currentSliceTitle": "Strategic AI Scouting Spell Execution",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy commanders can cast bounded self-movement overworld spells during live raid movement when the spell changes objective reach; mana, commander state, movement effect, and public AI events are covered by focused validation.",
+  "currentSliceNotes": "Completed. Enemy commanders can cast scouting overworld spells before target assignment, write compact known_world_memory target records, and bias target choice toward freshly scouted actionable map targets without a save-version migration.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T14:18:00Z",
+  "updatedAt": "2026-05-30T14:52:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,35 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-scouting-spell-execution-10184",
+      "title": "Strategic AI Scouting Spell Execution",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after movement spell execution; close the targeted scouting/reveal execution boundary without claiming full AI fog parity",
+      "planRef": "PLAN.md Current strategic AI target / Magic Availability And Strategic Influence Target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-adventure-spell-execution-report.md",
+        "docs/magic-adventure-map-spell-hooks-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/magic_ai_valuation_casting_hooks_report.gd",
+        "docs/strategic-ai-scouting-spell-execution-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy commander raid movement can execute supported self-targeted overworld reveal spells through SpellRules.cast_overworld_spell when there are unscouted actionable targets inside the reveal radius; the cast spends and persists commander mana; enemy_states[].known_world_memory records compact scouted target records without a save-version migration; target selection gives a bounded priority/reason-code bonus to scouted targets; public AI spell events surface the scouting cast without score/debug leakage; focused runtime coverage proves a raid casts a scouting spell, records knowledge memory, and then selects the freshly scouted resource target over an unscouted alternative; validation passes.",
+      "startedAt": "2026-05-30T14:32:00Z",
+      "updatedAt": "2026-05-30T14:52:00Z",
+      "completedAt": "2026-05-30T14:52:00Z",
+      "notes": "Completed. This is a live behavior slice, not a broad AI fog-of-war production claim. Focused runtime coverage proves Survey Chain scouting writes known_world_memory, spends commander mana, emits ai_adventure_spell_cast, and selects the freshly scouted target with enemy_scouting reason code."
+    },
     {
       "id": "strategic-ai-adventure-spell-execution-10184",
       "title": "Strategic AI Adventure Spell Execution",
