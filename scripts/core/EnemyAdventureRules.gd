@@ -101,6 +101,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_raid_regrouped",
 	"ai_raid_grouped",
 	"ai_adventure_spell_cast",
+	"ai_artifact_secured",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -2186,6 +2187,10 @@ static func build_roster_commander_state(
 		existing_spellbook.get("known_spell_ids", []),
 		_hero_starting_spell_ids(hero_template)
 	)
+	var artifacts_source = existing_state.get(
+		"artifacts",
+		record_source.get("artifacts", {}) if record_source is Dictionary else {}
+	)
 	var commander_state = {
 		"id": String(existing_state.get("id", "enemy_commander:%s:%s" % [faction_id, roster_hero_id])),
 		"roster_hero_id": roster_hero_id,
@@ -2204,6 +2209,7 @@ static func build_roster_commander_state(
 		"next_level_experience": max(250, int(existing_state.get("next_level_experience", 250))),
 		"pending_specialty_choices": existing_state.get("pending_specialty_choices", []),
 		"last_outcome": String(existing_state.get("last_outcome", record.get("last_outcome", ""))),
+		"artifacts": ArtifactRulesScript.normalize_hero_artifacts(artifacts_source),
 	}
 	commander_state = _normalize_enemy_progression(commander_state)
 	return _apply_commander_army_metadata(
@@ -2764,6 +2770,9 @@ static func build_raid_commander_state(
 	)
 	commander_state["last_outcome"] = String(
 		commander_state.get("last_outcome", commander_seed.get("last_outcome", ""))
+	)
+	commander_state["artifacts"] = ArtifactRulesScript.normalize_hero_artifacts(
+		commander_state.get("artifacts", commander_seed.get("artifacts", {}))
 	)
 	commander_state = _normalize_enemy_progression(commander_state)
 	var commander_spellbook = commander_state.get("spellbook", {})
@@ -5710,6 +5719,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "site seized"
 	if "site_contested" in codes:
 		return "site contested"
+	if "artifact_secured" in codes:
+		return "artifact secured"
 	if "commander_memory" in codes:
 		return "known commander focus"
 	if "enemy_scouting" in codes:
@@ -9662,14 +9673,70 @@ static func _secure_artifact_target(
 		captured_artifacts.append(claimed_artifact_id)
 	state["captured_artifact_ids"] = captured_artifacts
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + _artifact_pressure_value(claimed_artifact_id)
-	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
+	var updated_raid := raid.duplicate(true)
+	var claim_result := {}
+	var artifact_bonus_report := {}
+	if claimed_artifact_id != "":
+		var commander_state = updated_raid.get("enemy_commander_state", {})
+		if commander_state is Dictionary and not commander_state.is_empty():
+			claim_result = ArtifactRulesScript.claim_artifact(
+				commander_state,
+				claimed_artifact_id,
+				"Secured",
+				true
+			)
+			if bool(claim_result.get("ok", false)):
+				var updated_commander: Dictionary = claim_result.get("hero", commander_state)
+				updated_raid["enemy_commander_state"] = updated_commander
+				artifact_bonus_report = ArtifactRulesScript.artifact_equip_runtime_report(updated_commander)
+				sync_commander_state_to_roster(
+					session,
+					faction_id,
+					updated_commander,
+					COMMANDER_STATUS_ACTIVE,
+					String(updated_raid.get("placement_id", ""))
+				)
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+	var secured_message := "%s secures %s for the warhost." % [
+		_raid_name(updated_raid),
+		ArtifactRulesScript.describe_artifact(claimed_artifact_id),
+	]
+	if bool(claim_result.get("ok", false)) and bool(claim_result.get("auto_equipped", false)):
+		secured_message = "%s %s equips it immediately." % [
+			secured_message,
+			raid_commander_display_name(updated_raid),
+		]
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "artifact_secured" not in reason_codes:
+		reason_codes.push_front("artifact_secured")
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_artifact_secured",
+		updated_raid,
+		{
+			"target_kind": "artifact",
+			"target_placement_id": String(raid.get("target_placement_id", "")),
+			"target_label": ArtifactRulesScript.describe_artifact(claimed_artifact_id),
+			"target_x": int(node.get("x", 0)),
+			"target_y": int(node.get("y", 0)),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": _public_reason_from_codes(reason_codes),
+			"target_public_importance": String(raid.get("target_public_importance", "high")),
+			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+		},
+		{
+			"summary": secured_message,
+			"state_policy": "durable_state_reference",
+		}
+	)
 	return {
-		"encounter": raid,
+		"encounter": updated_raid,
 		"state": state,
-		"event_message": "%s secures %s for the warhost." % [
-			_raid_name(raid),
-			ArtifactRulesScript.describe_artifact(claimed_artifact_id),
-		],
+		"event_message": secured_message,
+		"ai_event": event,
+		"artifact_claim": claim_result,
+		"artifact_bonus_report": artifact_bonus_report,
 	}
 
 static func _contest_encounter_target(

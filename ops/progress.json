@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-scouting-spell-execution-10184",
-  "currentSliceTitle": "Strategic AI Scouting Spell Execution",
+  "currentSliceId": "strategic-ai-artifact-equipment-10184",
+  "currentSliceTitle": "Strategic AI Artifact Equipment",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy commanders can cast scouting overworld spells before target assignment, write compact known_world_memory target records, and bias target choice toward freshly scouted actionable map targets without a save-version migration.",
+  "currentSliceNotes": "Completed. Enemy commanders claim and auto-equip secured artifacts through live ArtifactRules, persist equipment on active commander and roster state, and emit ai_artifact_secured public events without a save-version migration.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T14:52:00Z",
+  "updatedAt": "2026-05-30T15:24:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-artifact-equipment-10184",
+      "title": "Strategic AI Artifact Equipment",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after scouting spell execution; make artifact objectives produce live commander equipment consequences",
+      "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation artifact handling",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-artifact-task-board-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_artifact_objective_report.gd",
+        "docs/strategic-ai-artifact-equipment-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "When an enemy raid secures an artifact target, the active commander claims it through ArtifactRules.claim_artifact, auto-equips valid empty-slot artifacts, persists the updated artifacts payload on enemy_commander_state and commander_roster, preserves artifact state through commander rebuild/sync normalization, emits public ai_artifact_secured activity without score/debug leakage, and focused runtime coverage proves Warcrest Pennon is collected, equipped in the banner slot, contributes live artifact bonuses, and keeps the artifact task completion semantics without a save-version migration.",
+      "startedAt": "2026-05-30T15:08:00Z",
+      "updatedAt": "2026-05-30T15:24:00Z",
+      "completedAt": "2026-05-30T15:24:00Z",
+      "notes": "Completed. Focused runtime coverage proves Warcrest Pennon is collected, equipped in the active commander's banner slot, preserved on the commander roster, contributes battle attack/initiative bonuses, emits ai_artifact_secured, and keeps artifact task completion semantics without a save-version migration."
+    },
     {
       "id": "strategic-ai-scouting-spell-execution-10184",
       "title": "Strategic AI Scouting Spell Execution",

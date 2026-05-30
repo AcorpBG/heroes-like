@@ -85,6 +85,26 @@ func _artifact_task_board_case() -> Dictionary:
 	if secure_result.is_empty() or String(secure_result.get("event_message", "")) == "":
 		_fail("Artifact secure returned no event result: %s" % JSON.stringify(secure_result))
 		return {}
+	var secured_raid: Dictionary = secure_result.get("encounter", {}) if secure_result.get("encounter", {}) is Dictionary else {}
+	var secured_commander: Dictionary = secured_raid.get("enemy_commander_state", {}) if secured_raid.get("enemy_commander_state", {}) is Dictionary else {}
+	if String(secured_commander.get("artifacts", {}).get("equipped", {}).get("banner", "")) != "artifact_warcrest_pennon":
+		_fail("Secured commander did not equip Warcrest Pennon: %s" % JSON.stringify(secured_commander.get("artifacts", {})))
+		return {}
+	var bonus_report := ArtifactRules.artifact_equip_runtime_report(secured_commander)
+	if int(bonus_report.get("aggregate_bonuses", {}).get("battle_attack", 0)) < 1 or int(bonus_report.get("aggregate_bonuses", {}).get("battle_initiative", 0)) < 1:
+		_fail("Equipped Warcrest Pennon did not contribute live artifact bonuses: %s" % JSON.stringify(bonus_report))
+		return {}
+	var roster_commander := _roster_commander_state(session, "hero_vaska")
+	if String(roster_commander.get("artifacts", {}).get("equipped", {}).get("banner", "")) != "artifact_warcrest_pennon":
+		_fail("Commander roster did not persist equipped Warcrest Pennon: %s" % JSON.stringify(roster_commander.get("artifacts", {})))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report([secure_result.get("ai_event", {})], 4)
+	if not bool(public_log.get("ok", false)):
+		_fail("Artifact secure public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if String(secure_result.get("ai_event", {}).get("event_type", "")) != "ai_artifact_secured":
+		_fail("Artifact secure did not emit ai_artifact_secured: %s" % JSON.stringify(secure_result.get("ai_event", {})))
+		return {}
 	var secured_node := _artifact_node(session, RELIC_TARGET_ID)
 	if not bool(secured_node.get("collected", false)) or String(secured_node.get("collected_by_faction_id", "")) != MIRECLAW:
 		_fail("Artifact node was not marked collected by Mireclaw: %s" % JSON.stringify(secured_node))
@@ -104,6 +124,10 @@ func _artifact_task_board_case() -> Dictionary:
 		"target_id": String(saved_plan.get("target_placement_id", "")),
 		"reason_codes": reason_codes,
 		"secured_relic_id": RELIC_TARGET_ID,
+		"equipped_artifact_id": String(secured_commander.get("artifacts", {}).get("equipped", {}).get("banner", "")),
+		"artifact_bonus_attack": int(bonus_report.get("aggregate_bonuses", {}).get("battle_attack", 0)),
+		"artifact_bonus_initiative": int(bonus_report.get("aggregate_bonuses", {}).get("battle_initiative", 0)),
+		"artifact_event_type": String(secure_result.get("ai_event", {}).get("event_type", "")),
 		"captured_artifacts": _string_array(secure_result.get("state", {}).get("captured_artifact_ids", []) if secure_result.get("state", {}) is Dictionary else []),
 		"task_status_counts": _task_status_counts(final_task_state),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
@@ -201,6 +225,14 @@ func _update_enemy_state(session, replacement: Dictionary) -> void:
 			session.overworld["enemy_states"] = states
 			return
 	_fail("Could not update enemy state for %s" % String(replacement.get("faction_id", "")))
+
+func _roster_commander_state(session, roster_hero_id: String) -> Dictionary:
+	var state := _enemy_state(session)
+	for entry in state.get("commander_roster", []):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+	_fail("Could not find roster commander state for %s" % roster_hero_id)
+	return {}
 
 func _artifact_node(session, placement_id: String) -> Dictionary:
 	for node in session.overworld.get("artifact_nodes", []):
