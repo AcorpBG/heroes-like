@@ -24,6 +24,8 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue with the next production-impacting strategic AI behavior gap.
+- Latest completed slice: `strategic-ai-commander-risk-tolerance-10184`.
+- Blocked slice: `strategic-ai-rmg-medium-generalization-probe-10184` is blocked on Medium Native RMG package generation (`archived_legacy_native_rmg_disabled`) before strategic-AI turn execution.
 - Latest completed slice: `strategic-ai-planned-launch-host-template-lock-10184`.
 - Latest completed slice: `strategic-ai-post-regroup-target-resumption-10184`.
 - Latest completed slice: `strategic-ai-commander-outcome-adaptation-10184`.

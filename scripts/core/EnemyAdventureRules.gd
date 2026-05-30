@@ -1934,21 +1934,21 @@ static func _redirect_fragile_raid_for_known_target_risk(
 			var town: Dictionary = town_result.get("town", {})
 			if int(town_result.get("index", -1)) < 0 or town.is_empty() or String(town.get("owner", "neutral")) != "player":
 				return raid
-			var readiness_report := _town_assault_advance_risk_report(session, raid, town)
+			var readiness_report := _town_assault_advance_risk_report(session, raid, town, config)
 			if bool(readiness_report.get("ready", true)):
 				return raid
 			return redirect_town_assault_for_risk(session, config, raid, faction_id, readiness_report)
 		"encounter":
 			if int(raid.get("encounter_arrival_delay_until_day", 0)) > int(session.day):
 				return raid
-			var encounter_report := encounter_arrival_ready_report(session, raid, faction_id)
+			var encounter_report := encounter_arrival_ready_report(session, raid, faction_id, config)
 			if bool(encounter_report.get("ready", true)):
 				return raid
 			return redirect_encounter_objective_for_risk(session, config, raid, faction_id, encounter_report)
 		"resource":
 			if int(raid.get("resource_arrival_delay_until_day", 0)) > int(session.day):
 				return raid
-			var resource_report := resource_arrival_ready_report(session, raid, faction_id)
+			var resource_report := resource_arrival_ready_report(session, raid, faction_id, config)
 			if bool(resource_report.get("ready", true)):
 				return raid
 			return redirect_resource_objective_for_risk(session, config, raid, faction_id, resource_report)
@@ -1958,7 +1958,7 @@ static func _redirect_fragile_raid_for_known_target_risk(
 			var hero := _player_hero_snapshot_for_task(session, String(raid.get("target_placement_id", "")))
 			if hero.is_empty():
 				return raid
-			var hero_report := _hero_intercept_advance_risk_report(raid, hero)
+			var hero_report := _hero_intercept_advance_risk_report(raid, hero, config)
 			if bool(hero_report.get("ready", true)):
 				return raid
 			return redirect_hero_intercept_for_risk(session, config, raid, faction_id, hero_report)
@@ -2015,7 +2015,7 @@ static func _redirect_raid_to_nearby_exposed_hero(
 		probe["target_public_reason"] = "exposed hero"
 		probe["target_public_importance"] = "high"
 		probe["target_debug_reason"] = "opportunistic hero intercept"
-		var readiness_report := _hero_intercept_advance_risk_report(probe, hero)
+		var readiness_report := _hero_intercept_advance_risk_report(probe, hero, config)
 		if not bool(readiness_report.get("ready", false)):
 			continue
 		var strength: int = raid_strength(probe)
@@ -2185,7 +2185,8 @@ static func _player_hero_sheltered_in_town(session: SessionStateStoreScript.Sess
 static func resource_arrival_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return {"ready": true, "reason": "no_live_context"}
@@ -2202,21 +2203,25 @@ static func resource_arrival_ready_report(
 	var desired_strength := desired_raid_strength(raid)
 	var guard := _resource_guard_encounter_for_node(session, node, site)
 	var guard_strength := _encounter_guard_strength(guard) if not guard.is_empty() else 0
-	var required_strength: int = max(60, int(ceili(float(desired_strength) * 0.70)))
+	var base_required_strength: int = max(60, int(ceili(float(desired_strength) * 0.70)))
 	if String(node.get("collected_by_faction_id", "")) == "player" and _resource_site_is_persistent(site):
-		required_strength = max(required_strength, 70)
+		base_required_strength = max(base_required_strength, 70)
 	if guard_strength > 0:
-		required_strength = max(
-			required_strength,
+		base_required_strength = max(
+			base_required_strength,
 			int(ceili(float(guard_strength) * 0.90)),
 			int(ceili(float(desired_strength) * 0.75))
 		)
+	var risk_tolerance_scale := commander_risk_tolerance_scale(raid, config, "resource")
+	var required_strength: int = _scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := host_strength >= required_strength
 	return {
 		"ready": ready,
 		"host_strength": host_strength,
 		"guard_strength": guard_strength,
 		"desired_strength": desired_strength,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"target_placement_id": String(node.get("placement_id", "")),
 		"target_site_id": String(node.get("site_id", "")),
@@ -2286,7 +2291,8 @@ static func redirect_resource_objective_for_risk(
 static func _town_assault_advance_risk_report(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	town: Dictionary
+	town: Dictionary,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var assault_strength := raid_strength(raid)
 	var desired_strength := desired_raid_strength(raid)
@@ -2295,7 +2301,9 @@ static func _town_assault_advance_risk_report(
 	var desired_floor := int(round(float(desired_strength) * 0.68))
 	var garrison_floor := int(round(float(garrison_strength) * 0.85))
 	var readiness_floor: int = 60 + (readiness * 2)
-	var required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var base_required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var risk_tolerance_scale := commander_risk_tolerance_scale(raid, config, "town")
+	var required_strength: int = _scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := assault_strength >= required_strength
 	return {
 		"ready": ready,
@@ -2303,26 +2311,130 @@ static func _town_assault_advance_risk_report(
 		"desired_strength": desired_strength,
 		"garrison_strength": garrison_strength,
 		"town_readiness": readiness,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"reason": "ready_for_town_assault" if ready else "assault_risk_regroup",
 	}
 
-static func _hero_intercept_advance_risk_report(raid: Dictionary, hero: Dictionary) -> Dictionary:
+static func _hero_intercept_advance_risk_report(raid: Dictionary, hero: Dictionary, config: Dictionary = {}) -> Dictionary:
 	var hunter_strength := raid_strength(raid)
 	var desired_strength := desired_raid_strength(raid)
 	var hero_strength := _army_strength(hero.get("army", {}).get("stacks", []))
 	var desired_floor := int(round(float(desired_strength) * 0.65))
 	var hero_floor := int(round(float(hero_strength) * 0.85))
-	var required_strength: int = max(75, desired_floor, hero_floor)
+	var base_required_strength: int = max(75, desired_floor, hero_floor)
+	var risk_tolerance_scale := commander_risk_tolerance_scale(raid, config, "hero")
+	var required_strength: int = _scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := hunter_strength >= required_strength
 	return {
 		"ready": ready,
 		"hunter_strength": hunter_strength,
 		"desired_strength": desired_strength,
 		"hero_strength": hero_strength,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"reason": "ready_for_hero_intercept" if ready else "hero_hunt_risk_regroup",
 	}
+
+static func _scaled_required_strength(base_required_strength: int, risk_tolerance_scale: float) -> int:
+	return max(1, int(ceili(float(max(1, base_required_strength)) * clamp(risk_tolerance_scale, 0.82, 1.24))))
+
+static func commander_risk_tolerance_scale(raid: Dictionary, config: Dictionary = {}, target_kind: String = "") -> float:
+	var commander := _commander_state_from_risk_actor(raid)
+	var scale := 1.0
+	var archetype := String(commander.get("archetype", "")).to_lower()
+	var command_path := String(commander.get("command_path", "")).to_lower()
+	var battle_traits := _normalize_string_array(commander.get("battle_traits", []))
+	var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
+	var attack := int(command.get("attack", 0))
+	var defense := int(command.get("defense", 0))
+	var power := int(command.get("power", 0))
+	var knowledge := int(command.get("knowledge", 0))
+	var aggressive_tokens := [
+		"raider",
+		"marshal",
+		"vanguard",
+		"outrider",
+		"warrenhunter",
+		"packlord",
+		"chainbreaker",
+		"batterycaptain",
+		"duelline",
+		"siegecaptain",
+		"pitmarshal",
+		"admiral",
+		"harpoon",
+		"backline",
+	]
+	var cautious_tokens := [
+		"warden",
+		"castellan",
+		"governor",
+		"scribe",
+		"scholar",
+		"physician",
+		"keeper",
+		"defender",
+		"recovery",
+		"oracle",
+		"doctor",
+		"memory",
+		"diviner",
+	]
+	for token in aggressive_tokens:
+		if archetype.contains(String(token)):
+			scale -= 0.055
+			break
+	for token in cautious_tokens:
+		if archetype.contains(String(token)):
+			scale += 0.045
+			break
+	if command_path == "might":
+		scale -= 0.012
+	elif command_path == "magic":
+		scale += 0.012
+	scale -= clamp(float(attack - defense) * 0.018, -0.05, 0.05)
+	if power + knowledge > attack + defense + 1:
+		scale += 0.02
+	for trait_value in battle_traits:
+		var trait_id := String(trait_value).to_lower()
+		if trait_id in ["vanguard", "ambusher", "artillerist", "pursuit", "linebreaker"]:
+			scale -= 0.024
+		elif trait_id in ["linekeeper", "bogwise", "ward", "support", "defensive"]:
+			scale += 0.018
+	if target_kind == "hero":
+		if archetype.contains("hunter") or archetype.contains("raider") or "ambusher" in battle_traits:
+			scale -= 0.025
+		elif command_path == "magic":
+			scale += 0.018
+	elif target_kind == "town":
+		if archetype.contains("siege") or archetype.contains("marshal") or archetype.contains("captain"):
+			scale -= 0.018
+		elif archetype.contains("scout") or archetype.contains("scribe"):
+			scale += 0.018
+	elif target_kind == "resource":
+		if "ambusher" in battle_traits or archetype.contains("raider") or archetype.contains("roadwarden"):
+			scale -= 0.018
+	var last_outcome := String(commander.get("last_outcome", "")).to_lower()
+	if last_outcome in ["defeated", "routed", "assault_failed", "pursuit_failed"]:
+		scale += 0.06
+	elif last_outcome in ["field_victory", "assault_victory", "pursuit_victory", "rout_victory", "town_captured", "resource_secured", "artifact_secured"]:
+		scale -= 0.03
+	var strategy := config
+	var faction_id := String(config.get("faction_id", ""))
+	if faction_id != "":
+		strategy = enemy_strategy(config, faction_id)
+	scale *= float(strategy_scalar(strategy, "risk", "commander_tolerance_scale", 1.0))
+	return clamp(scale, 0.88, 1.16)
+
+static func _commander_state_from_risk_actor(raid: Dictionary) -> Dictionary:
+	if raid.get("enemy_commander_state", {}) is Dictionary:
+		var commander: Dictionary = raid.get("enemy_commander_state", {})
+		if not commander.is_empty():
+			return commander
+	return raid
 
 static func redirect_town_assault_for_risk(
 	session: SessionStateStoreScript.SessionData,
@@ -2442,7 +2554,8 @@ static func redirect_hero_intercept_for_risk(
 static func encounter_arrival_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return {"ready": true, "reason": "no_live_context"}
@@ -2459,19 +2572,23 @@ static func encounter_arrival_ready_report(
 		return {"ready": true, "reason": "no_guard_strength"}
 	var host_strength := raid_strength(raid)
 	var desired_strength := desired_raid_strength(raid)
-	var required_strength: int = max(
+	var base_required_strength: int = max(
 		60,
 		max(
 			int(ceili(float(guard_strength) * 0.90)),
 			int(ceili(float(desired_strength) * 0.75))
 		)
 	)
+	var risk_tolerance_scale := commander_risk_tolerance_scale(raid, config, "encounter")
+	var required_strength: int = _scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := host_strength >= required_strength
 	return {
 		"ready": ready,
 		"host_strength": host_strength,
 		"guard_strength": guard_strength,
 		"desired_strength": desired_strength,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"target_placement_id": String(encounter_state.get("placement_id", "")),
 		"target_encounter_id": String(encounter_state.get("encounter_id", encounter_state.get("id", ""))),
@@ -11739,7 +11856,7 @@ static func _resolve_arrived_target(
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(raid.get("target_reason_codes", []))):
 				return _defend_resource_target(session, raid, state, faction_id)
-			var ready_report := resource_arrival_ready_report(session, raid, faction_id)
+			var ready_report := resource_arrival_ready_report(session, raid, faction_id, config)
 			if not bool(ready_report.get("ready", true)):
 				var previous_target := _current_target_snapshot(raid)
 				var redirected := redirect_resource_objective_for_risk(session, config, raid, faction_id, ready_report)
@@ -11766,7 +11883,7 @@ static func _resolve_arrived_target(
 				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, artifact_guard, "artifact")
 			return _secure_artifact_target(session, raid, state, faction_id)
 		"encounter":
-			var ready_report := encounter_arrival_ready_report(session, raid, faction_id)
+			var ready_report := encounter_arrival_ready_report(session, raid, faction_id, config)
 			if not bool(ready_report.get("ready", true)):
 				var previous_target := _current_target_snapshot(raid)
 				var redirected := redirect_encounter_objective_for_risk(session, config, raid, faction_id, ready_report)
